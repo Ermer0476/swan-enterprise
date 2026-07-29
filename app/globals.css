@@ -1,0 +1,97 @@
+@import "tailwindcss";
+
+/* ─── SWAN Enterprise theme tokens ──────────────────────────────────────────
+   Professional, minimal, gray. Light + dark. Inspired by SAP / Microsoft 365 /
+   Linear / Vercel. Colors are expressed as HSL channels so Tailwind's
+   `hsl(var(--token))` pattern works for both themes. */
+
+:root {
+  --background: 0 0% 100%;
+  --foreground: 222 15% 12%;
+  --card: 0 0% 100%;
+  --card-foreground: 222 15% 12%;
+  --muted: 220 14% 96%;
+  --muted-foreground: 220 9% 46%;
+  --border: 220 13% 91%;
+  --input: 220 13% 88%;
+  --primary: 222 47% 20%;
+  --primary-foreground: 0 0% 100%;
+  --accent: 217 91% 45%;
+  --accent-foreground: 0 0% 100%;
+  --success: 142 71% 40%;
+  --danger: 0 72% 48%;
+  --warning: 38 92% 45%;
+  --ring: 217 91% 45%;
+  --sidebar: 222 30% 13%;
+  --sidebar-foreground: 220 14% 88%;
+  --sidebar-muted: 220 12% 60%;
+  --radius: 0.5rem;
+}
+
+.dark {
+  --background: 222 22% 9%;
+  --foreground: 220 14% 92%;
+  --card: 222 20% 12%;
+  --card-foreground: 220 14% 92%;
+  --muted: 222 16% 16%;
+  --muted-foreground: 220 10% 60%;
+  --border: 222 16% 20%;
+  --input: 222 16% 24%;
+  --primary: 220 14% 92%;
+  --primary-foreground: 222 22% 9%;
+  --accent: 217 91% 60%;
+  --accent-foreground: 222 22% 9%;
+  --success: 142 60% 48%;
+  --danger: 0 70% 58%;
+  --warning: 38 92% 55%;
+  --ring: 217 91% 60%;
+  --sidebar: 222 26% 8%;
+  --sidebar-foreground: 220 14% 82%;
+  --sidebar-muted: 220 10% 52%;
+}
+
+@theme inline {
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+  --color-success: hsl(var(--success));
+  --color-danger: hsl(var(--danger));
+  --color-warning: hsl(var(--warning));
+  --color-ring: hsl(var(--ring));
+  --color-sidebar: hsl(var(--sidebar));
+  --color-sidebar-foreground: hsl(var(--sidebar-foreground));
+  --color-sidebar-muted: hsl(var(--sidebar-muted));
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
+}
+
+* {
+  border-color: hsl(var(--border));
+}
+
+body {
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  font-feature-settings: "rlig" 1, "calt" 1;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Thin, unobtrusive scrollbars for the enterprise data-heavy look. */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background-color: hsl(var(--border));
+  border-radius: 9999px;
+}

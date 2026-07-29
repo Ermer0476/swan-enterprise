@@ -1,0 +1,1118 @@
+// ═══════════════════════════════════════════════════════════════════════════
+//  SWAN Enterprise — Prisma schema (PostgreSQL)
+//
+//  Conventions (enforced across every business table):
+//    • id         String  @id @default(uuid())         — UUID primary key
+//    • companyId  String                                — multi-tenant scope
+//    • createdAt / updatedAt                            — timestamps
+//    • createdBy / updatedBy / deletedBy  String?       — actor user ids
+//    • deletedAt  DateTime?                             — soft delete
+//
+//  Audit-column actor ids (createdBy/updatedBy/deletedBy) are stored as scalar
+//  strings rather than enforced foreign keys. This is deliberate: enforcing a
+//  User relation for each would create dozens of ambiguous back-relations on
+//  User. The AuditLog table is the system of record for "who did what".
+// ═══════════════════════════════════════════════════════════════════════════
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─── Enums ───────────────────────────────────────────────────────────────────
+
+enum DepartmentType {
+  EXECUTIVE
+  MARINE
+  TECHNICAL
+  OPERATIONS
+  CREWING
+  PURCHASING
+  ACCOUNTING
+  ADMIN
+  HR
+  IT
+  QHSE
+  SHIPBOARD
+}
+
+enum VesselStatus {
+  ACTIVE
+  LAID_UP
+  DRYDOCK
+  SOLD
+}
+
+enum AuditAction {
+  CREATE
+  UPDATE
+  DELETE
+  APPROVE
+  REJECT
+  SUBMIT
+  LOGIN
+  LOGOUT
+  SYNC
+  UPLOAD
+  DOWNLOAD
+  PRINT
+  EXPORT
+}
+
+enum NotificationType {
+  INFO
+  APPROVAL_REQUEST
+  APPROVAL_RESULT
+  MENTION
+  ASSIGNMENT
+  DEADLINE
+  SYSTEM
+}
+
+enum WorkflowInstanceStatus {
+  DRAFT
+  IN_PROGRESS
+  APPROVED
+  REJECTED
+  CANCELLED
+}
+
+enum ApproverType {
+  ROLE
+  DEPARTMENT
+  SPECIFIC_USER
+}
+
+enum WorkflowDecision {
+  APPROVE
+  REJECT
+}
+
+enum DocumentStatus {
+  DRAFT
+  IN_REVIEW
+  APPROVED
+  ARCHIVED
+}
+
+// An incident may be tagged with several types at once (multi-select). Each
+// tagged type carries its own sub-category (see IncidentTypeEntry) — the
+// specific sub-category list is app-defined per type, not enforced here.
+enum IncidentType {
+  PERSONAL_INJURY
+  OCCUPATIONAL_ILLNESS
+  ENVIRONMENTAL
+  PROPERTY_EQUIPMENT_DAMAGE
+  LOSS_OF_CONTAINMENT
+  FIRE_EXPLOSION
+  NAVIGATION_MARINE
+  CARGO_OPERATION
+  MOORING_OPERATION
+  SECURITY
+  CYBER_SECURITY
+  REGULATORY_COMPLIANCE
+  OPERATIONAL
+}
+
+enum IncidentStatus {
+  REPORTED
+  UNDER_INVESTIGATION
+  ACTION_PENDING
+  CLOSED
+}
+
+// Structured root-cause category (the 6M + governance).
+enum RootCauseCategory {
+  PROCESS_METHODS
+  HUMAN_FACTORS
+  EQUIPMENT_SOFTWARE
+  MATERIALS
+  MEASUREMENT_INFORMATION
+  ENVIRONMENT_WORK_CONDITIONS
+  MANAGEMENT_GOVERNANCE
+}
+
+// Human-factor tags — used for the primary factor (one) and contributing
+// factors (up to two, enforced in the form and server action).
+enum HumanFactor {
+  FATIGUE
+  WORKLOAD_MULTITASKING
+  SITUATIONAL_AWARENESS
+  COMMUNICATION_BREAKDOWN
+  DECISION_MAKING_PRESSURE
+  CULTURAL_SPEAKING_UP
+}
+
+// CAPA tracker (TMSA-style) — corrective (CA-##) and preventive (PA-##) actions.
+enum CapaKind {
+  CORRECTIVE
+  PREVENTIVE
+}
+
+enum CapaStatus {
+  OPEN
+  IN_PROGRESS
+  CLOSED
+}
+
+// Shared risk severity used by Incident, Near Miss, Hazard and NCR modules.
+enum Severity {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+// ─── Near Miss ────────────────────────────────────────────────────────────
+enum NearMissStatus {
+  REPORTED
+  UNDER_REVIEW
+  CLOSED
+}
+
+// Potential consequence type — the kind of event that could have happened.
+enum NearMissConsequenceType {
+  INJURY_ILL_HEALTH
+  ENVIRONMENTAL_DAMAGE
+  PROPERTY_DAMAGE
+  FIRE_EXPLOSION
+  LOSS_OF_CONTAINMENT
+  NAVIGATION_MARINE_INCIDENT
+  SECURITY
+  REGULATORY
+}
+
+// ─── Hazard Observation (HOR) ───────────────────────────────────────────────
+enum HazardType {
+  UNSAFE_ACT
+  UNSAFE_CONDITION
+}
+
+enum HazardStatus {
+  OPEN
+  IN_PROGRESS
+  CLOSED
+}
+
+// ─── Non-Conformity (NCR) ────────────────────────────────────────────────────
+enum NcrSource {
+  INTERNAL_AUDIT
+  EXTERNAL_AUDIT
+  PSC
+  SIRE
+  CDI
+  VETTING
+  FLAG_STATE
+  OTHER
+}
+
+enum NcrStatus {
+  OPEN
+  IN_PROGRESS
+  VERIFIED
+  CLOSED
+}
+
+// ─── External Inspections (SIRE / PSC / CDI) ────────────────────────────────
+//  Each regime is its own module but shares the inspection/finding lifecycle.
+enum InspectionStatus {
+  OPEN
+  IN_PROGRESS
+  CLOSED
+}
+
+enum FindingStatus {
+  OPEN
+  CLOSED
+}
+
+// Audit finding severity (Internal & External audits share this).
+enum AuditFindingCategory {
+  MAJOR_NC
+  MINOR_NC
+  OBSERVATION
+}
+
+// ─── Tenancy & Organization ───────────────────────────────────────────────────
+
+model Company {
+  id        String   @id @default(uuid())
+  name      String
+  code      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  users           User[]
+  roles           Role[]
+  vessels         Vessel[]
+  smsDocuments    SmsDocument[]
+  workflows       WorkflowDefinition[]
+  incidents       Incident[]
+  nearMisses      NearMiss[]
+  hazards         HazardObservation[]
+  nonConformities NonConformity[]
+  sireInspections SireInspection[]
+  pscInspections  PscInspection[]
+  cdiInspections  CdiInspection[]
+  internalAudits  InternalAudit[]
+  externalAudits  ExternalAudit[]
+}
+
+model User {
+  id           String         @id @default(uuid())
+  companyId    String
+  company      Company        @relation(fields: [companyId], references: [id])
+  fullName     String
+  email        String         @unique
+  passwordHash String
+  department   DepartmentType
+  rank         String? // e.g. Master, Chief Engineer — for shipboard users
+  active       Boolean        @default(true)
+  lastLoginAt  DateTime?
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  createdBy String?
+  updatedBy String?
+  deletedAt DateTime?
+  deletedBy String?
+
+  roles              UserRole[]
+  ownedDocs          SmsDocument[]       @relation("DocumentOwner")
+  reportedIncidents  Incident[]          @relation("IncidentReporter")
+  reportedNearMisses NearMiss[]          @relation("NearMissReporter")
+  reportedHazards    HazardObservation[] @relation("HazardReporter")
+  raisedNcrs         NonConformity[]     @relation("NcrRaisedBy")
+  notifications      Notification[]
+
+  @@index([companyId])
+  @@index([department])
+}
+
+// ─── RBAC (data-driven, not hardcoded) ─────────────────────────────────────────
+
+model Role {
+  id          String   @id @default(uuid())
+  companyId   String
+  company     Company  @relation(fields: [companyId], references: [id])
+  name        String
+  description String?
+  isSystem    Boolean  @default(false) // system roles can't be deleted
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  users       UserRole[]
+  permissions RolePermission[]
+
+  @@unique([companyId, name])
+  @@index([companyId])
+}
+
+model Permission {
+  id          String  @id @default(uuid())
+  key         String  @unique // e.g. "sms:read", "sms:approve", "incident:create"
+  module      String // e.g. "sms", "incident"
+  description String?
+
+  roles RolePermission[]
+}
+
+model RolePermission {
+  roleId       String
+  role         Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permissionId String
+  permission   Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@id([roleId, permissionId])
+}
+
+model UserRole {
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  roleId String
+  role   Role   @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  @@id([userId, roleId])
+}
+
+// ─── Fleet ──────────────────────────────────────────────────────────────────
+
+model Vessel {
+  id                    String       @id @default(uuid())
+  companyId             String
+  company               Company      @relation(fields: [companyId], references: [id])
+  name                  String
+  imo                   String       @unique
+  officialNumber        String?
+  callSign              String?
+  mmsi                  String?
+  flag                  String?
+  type                  String       @default("LPG Carrier")
+  classificationSociety String?
+  yearBuilt             Int?
+  grossTonnage          Float?
+  loa                   Float? // Length Overall (m)
+  breadth               Float? // (m)
+  depth                 Float? // (m)
+  status                VesselStatus @default(ACTIVE)
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  createdBy String?
+  updatedBy String?
+  deletedAt DateTime?
+  deletedBy String?
+
+  smsDocuments    SmsDocument[]
+  incidents       Incident[]
+  nearMisses      NearMiss[]
+  hazards         HazardObservation[]
+  nonConformities NonConformity[]
+  sireInspections SireInspection[]
+  pscInspections  PscInspection[]
+  cdiInspections  CdiInspection[]
+  internalAudits  InternalAudit[]
+  externalAudits  ExternalAudit[]
+
+  @@index([companyId])
+}
+
+// ─── Shared services ──────────────────────────────────────────────────────────
+
+/// Immutable audit trail — the system of record for "who did what, when".
+model AuditLog {
+  id         String      @id @default(uuid())
+  companyId  String
+  actorId    String? // null for anonymous/system events
+  actorName  String? // denormalized snapshot — survives user deletion
+  action     AuditAction
+  entityType String // e.g. "SmsDocument"
+  entityId   String?
+  summary    String?
+  metadata   Json?
+  ipAddress  String?
+  createdAt  DateTime    @default(now())
+
+  @@index([companyId, entityType, entityId])
+  @@index([companyId, createdAt])
+  @@index([actorId])
+}
+
+/// Polymorphic attachment — belongs to any entity via (entityType, entityId).
+model Attachment {
+  id         String @id @default(uuid())
+  companyId  String
+  entityType String
+  entityId   String
+  fileName   String
+  fileKey    String // storage key — local disk path today, DigitalOcean Spaces object key later
+  mimeType   String
+  sizeBytes  Int
+
+  createdAt DateTime  @default(now())
+  createdBy String?
+  deletedAt DateTime?
+  deletedBy String?
+
+  @@index([companyId, entityType, entityId])
+}
+
+/// Polymorphic comment thread — belongs to any entity.
+model Comment {
+  id         String @id @default(uuid())
+  companyId  String
+  entityType String
+  entityId   String
+  authorId   String
+  authorName String // denormalized snapshot
+  body       String
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+  deletedBy String?
+
+  @@index([companyId, entityType, entityId])
+}
+
+/// A TMSA-style CAPA tracker row — polymorphic, so any module (Incident, NCR,
+/// Audits, …) can attach a corrective/preventive action plan without its own
+/// table. `code` is denormalized at creation time (e.g. "CA-01", "PA-03"),
+/// numbered per (entityType, entityId, kind) starting at 01.
+model CapaAction {
+  id         String   @id @default(uuid())
+  companyId  String
+  entityType String
+  entityId   String
+  kind       CapaKind
+  code       String // e.g. "CA-01" (corrective) or "PA-01" (preventive)
+
+  action      String
+  responsible String? // ownership — who is accountable
+  targetDate  DateTime?
+  status      CapaStatus @default(OPEN)
+  closedDate  DateTime?
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  createdBy String?
+  updatedBy String?
+  deletedAt DateTime?
+  deletedBy String?
+
+  @@index([companyId, entityType, entityId, kind])
+}
+
+model Notification {
+  id        String           @id @default(uuid())
+  companyId String
+  userId    String
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type      NotificationType
+  title     String
+  body      String?
+  link      String?
+  readAt    DateTime?
+  createdAt DateTime         @default(now())
+
+  @@index([userId, readAt])
+}
+
+// ─── Workflow engine (configurable approval chains) ─────────────────────────────
+
+/// A reusable approval-chain template bound to an entity type.
+model WorkflowDefinition {
+  id          String  @id @default(uuid())
+  companyId   String
+  company     Company @relation(fields: [companyId], references: [id])
+  key         String // e.g. "sms-document-approval"
+  name        String
+  entityType  String // which entity this workflow governs
+  description String?
+  active      Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  steps     WorkflowStep[]
+  instances WorkflowInstance[]
+
+  @@unique([companyId, key])
+  @@index([companyId, entityType])
+}
+
+model WorkflowStep {
+  id           String             @id @default(uuid())
+  definitionId String
+  definition   WorkflowDefinition @relation(fields: [definitionId], references: [id], onDelete: Cascade)
+  order        Int
+  name         String // e.g. "Master Review"
+  approverType ApproverType
+  approverRole String? // role name when approverType = ROLE
+  approverDept DepartmentType? // when approverType = DEPARTMENT
+  approverUser String? // user id when approverType = SPECIFIC_USER
+  slaHours     Int?
+
+  actions WorkflowAction[]
+
+  @@unique([definitionId, order])
+}
+
+/// A live run of a workflow against one concrete record.
+model WorkflowInstance {
+  id           String                 @id @default(uuid())
+  companyId    String
+  definitionId String
+  definition   WorkflowDefinition     @relation(fields: [definitionId], references: [id])
+  entityType   String
+  entityId     String
+  status       WorkflowInstanceStatus @default(DRAFT)
+  currentOrder Int                    @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  actions WorkflowAction[]
+
+  @@index([companyId, entityType, entityId])
+  @@index([companyId, status])
+}
+
+model WorkflowAction {
+  id         String           @id @default(uuid())
+  instanceId String
+  instance   WorkflowInstance @relation(fields: [instanceId], references: [id], onDelete: Cascade)
+  stepId     String
+  step       WorkflowStep     @relation(fields: [stepId], references: [id])
+  actorId    String
+  actorName  String
+  decision   WorkflowDecision
+  comment    String?
+  createdAt  DateTime         @default(now())
+
+  @@index([instanceId])
+}
+
+// ─── Phase 1 reference module: SMS Manual ───────────────────────────────────────
+//  The SMS Manual is the governing document set. Every controlled document is
+//  versioned via SmsRevision; the document's `currentRevisionId` points at the
+//  approved, in-force revision. This module is the pattern all other Phase 1
+//  modules copy: entity + revision history + workflow + attachments + audit.
+
+model SmsDocument {
+  id          String         @id @default(uuid())
+  companyId   String
+  company     Company        @relation(fields: [companyId], references: [id])
+  code        String // controlled document code, e.g. "ADM-10"
+  title       String
+  description String?
+  category    String // e.g. "Administration", "Marine", "Technical"
+  department  DepartmentType
+  status      DocumentStatus @default(DRAFT)
+
+  ownerId String?
+  owner   User?   @relation("DocumentOwner", fields: [ownerId], references: [id])
+
+  // Optional vessel scope — null means fleet-wide / shore document.
+  vesselId String?
+  vessel   Vessel? @relation(fields: [vesselId], references: [id])
+
+  currentRevisionId String?      @unique
+  currentRevision   SmsRevision? @relation("CurrentRevision", fields: [currentRevisionId], references: [id])
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  createdBy String?
+  updatedBy String?
+  deletedAt DateTime?
+  deletedBy String?
+
+  revisions SmsRevision[] @relation("DocumentRevisions")
+
+  @@unique([companyId, code])
+  @@index([companyId, department])
+  @@index([companyId, status])
+}
+
+model SmsRevision {
+  id            String         @id @default(uuid())
+  companyId     String
+  documentId    String
+  document      SmsDocument    @relation("DocumentRevisions", fields: [documentId], references: [id], onDelete: Cascade)
+  revisionNo    Int
+  changeSummary String?
+  content       String? // markdown body (for text-authored procedures)
+  fileKey       String? // Spaces key when the revision is an uploaded file
+  status        DocumentStatus @default(DRAFT)
+  effectiveDate DateTime?
+  approvedBy    String?
+  approvedAt    DateTime?
+
+  createdAt DateTime @default(now())
+  createdBy String?
+
+  currentOf SmsDocument? @relation("CurrentRevision")
+
+  @@unique([documentId, revisionNo])
+  @@index([companyId, documentId])
+}
+
+// ─── Phase 1 module: Incident Management ────────────────────────────────────
+//  Records shipboard/shore incidents and drives them through an investigation
+//  lifecycle (REPORTED → UNDER_INVESTIGATION → ACTION_PENDING → CLOSED),
+//  capturing root cause and corrective/preventive actions (CAPA). Built on the
+//  same feature pattern as the SMS Manual module.
+
+model Incident {
+  id        String  @id @default(uuid())
+  companyId String
+  company   Company @relation(fields: [companyId], references: [id])
+  refNo     String // human reference, unique per company (e.g. INC-2026-0001)
+
+  title    String
+  severity Severity? // office-assessed, set during investigation — not by the reporter
+  status   IncidentStatus @default(REPORTED)
+
+  vesselId String?
+  vessel   Vessel? @relation(fields: [vesselId], references: [id])
+
+  occurredAt  DateTime
+  location    String?
+  description String
+
+  // Type of incident (multi-select) — each tagged type carries its own
+  // sub-category, captured as a child row (see IncidentTypeEntry).
+  typeEntries IncidentTypeEntry[]
+
+  // Investigation narrative — the office's OWN account of what happened,
+  // written from the ECFA investigation (separate from `description`, which
+  // is the vessel's initial report). Unset until investigation starts.
+  investigationDetails String?
+
+  // Root cause classification — unset on the initial report; the office fills
+  // this in during investigation (ECFA), never at the moment of reporting.
+  rootCauseCategory       RootCauseCategory?
+  humanFactorPrimary      HumanFactor? // when rootCauseCategory = HUMAN_FACTORS
+  humanFactorContributing HumanFactor[] // 0–2 contributing factors
+
+  // Investigation (narrative). Corrective/preventive actions are tracked as
+  // structured CapaAction rows (see below), not free text.
+  immediateAction String?
+  rootCause       String?
+  closedAt        DateTime?
+
+  // Management verification — closing IS the verification act in this SMS's
+  // workflow (only users with incident:close hold that authority). WHO
+  // verified is captured automatically from the session (never typed in, so
+  // it can't be spoofed); WHEN is entered manually by that same person at the
+  // moment of closing, since the actual verification may not be "right now".
+  verifiedById   String?
+  verifiedByName String?
+  verifiedAt     DateTime?
+
+  reportedById String?
+  reportedBy   User?   @relation("IncidentReporter", fields: [reportedById], references: [id])
+
+  sofEntries IncidentSofEntry[]
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  createdBy String?
+  updatedBy String?
+  deletedAt DateTime?
+  deletedBy String?
+
+  @@unique([companyId, refNo])
+  @@index([companyId, status])
+  @@index([companyId, severity])
+}
+
+// Statement of Facts — chronological timeline of events/response actions,
+// captured as part of the initial report (distinct from the free-text
+// `description` summary). Time is kept as free text (e.g. "0840 LT") since
+// that's how these are written on paper/PDF incident reports.
+model IncidentSofEntry {
+  id         String   @id @default(uuid())
+  incidentId String
+  incident   Incident @relation(fields: [incidentId], references: [id], onDelete: Cascade)
+  time       String
+  event      String
+  order      Int
+  createdAt  DateTime @default(now())
+
+  @@index([incidentId])
+}
+
+// One row per Type of incident tagged on the report — each carries its own
+// sub-category (the allowed sub-category values per type are app-defined in
+// features/incidents/schema.ts, not enforced at the DB level, since each of
+// the 13 types has a different sub-category list).
+model IncidentTypeEntry {
+  id          String       @id @default(uuid())
+  incidentId  String
+  incident    Incident     @relation(fields: [incidentId], references: [id], onDelete: Cascade)
+  type        IncidentType
+  subCategory String
+  order       Int
+  createdAt   DateTime     @default(now())
+
+  @@index([incidentId])
+}
+
+// ─── Phase 1 module: Near Miss ──────────────────────────────────────────────
+//  A near miss had the potential to cause harm but did not — nothing actually
+//  happened, so only potential severity is captured (no "actual severity").
+
+model NearMiss {
+  id        String  @id @default(uuid())
+  companyId String
+  company   Company @relation(fields: [companyId], references: [id])
+  refNo     String
+
+  title       String
+  vesselId    String?
+  vessel      Vessel?  @relation(fields: [vesselId], references: [id])
+  occurredAt  DateTime
+  location    String?
+  description String
+
+  potentialConsequence NearMissConsequenceType
+  potentialSeverity    Severity
+  immediateAction      String?
+
+  // Root cause — captured in the same report, by the same reporter (no
+  // separate office-investigation phase like Incidents). Corrective actions
+  // are tracked as structured CapaAction rows (see CAPA REGISTRY), not free
+  // text.
+  rootCauseCategory       RootCauseCategory
+  humanFactorPrimary      HumanFactor? // when rootCauseCategory = HUMAN_FACTORS
+  humanFactorContributing HumanFactor[] // 0–2 contributing factors
+
+  status   NearMissStatus @default(REPORTED)
+  closedAt DateTime?
+
+  // Office review — the office's oversight comment, separate from the
+  // vessel-owned report + corrective actions above. No CAPA duplication
+  // here; the vessel already tracks/monitors that in their own section.
+  // reviewedAt is entered manually by the reviewer, not auto-captured.
+  companyComments String?
+  reviewedAt      DateTime?
+
+  reportedById String?
+  reportedBy   User?   @relation("NearMissReporter", fields: [reportedById], references: [id])
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  createdBy String?
+  updatedBy String?
+  deletedAt DateTime?
+  deletedBy String?
+
+  @@unique([companyId, refNo])
+  @@index([companyId, status])
+}
+
+// ─── Phase 1 module: Hazard Observation (HOR) ───────────────────────────────
+//  Proactive reporting of unsafe acts / conditions before they cause harm.
+
+model HazardObservation {
+  id        String  @id @default(uuid())
+  companyId String
+  company   Company @relation(fields: [companyId], references: [id])
+  refNo     String
+
+  title       String
+  vesselId    String?
+  vessel      Vessel?    @relation(fields: [vesselId], references: [id])
+  observedAt  DateTime
+  location    String?
+  category    String // hazard category, e.g. PPE, Housekeeping, Machinery
+  hazardType  HazardType
+  riskLevel   Severity
+  observation String
+
+  immediateAction  String?
+  correctiveAction String?
+
+  status   HazardStatus @default(OPEN)
+  closedAt DateTime?
+
+  reportedById String?
+  reportedBy   User?   @relation("HazardReporter", fields: [reportedById], references: [id])
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  createdBy String?
+  updatedBy String?
+  deletedAt DateTime?
+  deletedBy String?
+
+  @@unique([companyId, refNo])
+  @@index([companyId, status])
+}
+
+// ─── Phase 1 module: Non-Conformity (NCR) ───────────────────────────────────
+//  A finding that a requirement (SMS clause, regulation, standard) is not met.
+//  Raised from audits/inspections; closed after corrective action is verified.
+
+model NonConformity {
+  id        String  @id @default(uuid())
+  companyId String
+  company   Company @relation(fields: [companyId], references: [id])
+  refNo     String
+
+  title       String
+  vesselId    String?
+  vessel      Vessel?   @relation(fields: [vesselId], references: [id])
+  source      NcrSource
+  requirement String // the clause / requirement that is breached
+  description String
+  severity    Severity
+  raisedAt    DateTime
+  targetDate  DateTime?
+
+  rootCause        String?
+  correctiveAction String?
+  verification     String?
+
+  status   NcrStatus @default(OPEN)
+  closedAt DateTime?
+
+  raisedById String?
+  raisedBy   User?   @relation("NcrRaisedBy", fields: [raisedById], references: [id])
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  createdBy String?
+  updatedBy String?
+  deletedAt DateTime?
+  deletedBy String?
+
+  @@unique([companyId, refNo])
+  @@index([companyId, status])
+}
+
+// ─── Phase 1 module: SIRE Inspection (OCIMF tanker vetting) ──────────────────
+
+model SireInspection {
+  id        String  @id @default(uuid())
+  companyId String
+  company   Company @relation(fields: [companyId], references: [id])
+  refNo     String
+
+  vesselId String?
+  vessel   Vessel? @relation(fields: [vesselId], references: [id])
+
+  inspectingCompany String // OCIMF operator / oil major that vetted
+  inspectorName     String?
+  port              String?
+  inspectionDate    DateTime
+  sireVersion       String?  @default("2.0")
+  summary           String?
+
+  status   InspectionStatus @default(OPEN)
+  closedAt DateTime?
+
+  observations SireObservation[]
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  createdBy String?
+  updatedBy String?
+  deletedAt DateTime?
+  deletedBy String?
+
+  @@unique([companyId, refNo])
+  @@index([companyId, status])
+}
+
+model SireObservation {
+  id           String         @id @default(uuid())
+  companyId    String
+  inspectionId String
+  inspection   SireInspection @relation(fields: [inspectionId], references: [id], onDelete: Cascade)
+  viqRef       String? // VIQ chapter / question reference
+  category     String? // Hardware / Process / Human / Photograph
+  observation  String
+  response     String? // operator response / corrective action
+  status       FindingStatus  @default(OPEN)
+
+  createdAt DateTime  @default(now())
+  createdBy String?
+  deletedAt DateTime?
+
+  @@index([inspectionId])
+}
+
+// ─── Phase 1 module: PSC Inspection (Port State Control) ─────────────────────
+
+model PscInspection {
+  id        String  @id @default(uuid())
+  companyId String
+  company   Company @relation(fields: [companyId], references: [id])
+  refNo     String
+
+  vesselId String?
+  vessel   Vessel? @relation(fields: [vesselId], references: [id])
+
+  authority      String // port state authority
+  mouRegion      String? // e.g. Tokyo MOU, Paris MOU, USCG
+  port           String?
+  inspectionDate DateTime
+  detained       Boolean  @default(false)
+  summary        String?
+
+  status   InspectionStatus @default(OPEN)
+  closedAt DateTime?
+
+  deficiencies PscDeficiency[]
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  createdBy String?
+  updatedBy String?
+  deletedAt DateTime?
+  deletedBy String?
+
+  @@unique([companyId, refNo])
+  @@index([companyId, status])
+}
+
+model PscDeficiency {
+  id            String        @id @default(uuid())
+  companyId     String
+  inspectionId  String
+  inspection    PscInspection @relation(fields: [inspectionId], references: [id], onDelete: Cascade)
+  natureCode    String? // PSC nature-of-deficiency code
+  reference     String? // convention reference (e.g. SOLAS III/19)
+  description   String
+  actionCode    String? // PSC action code, e.g. 17 (rectify), 30 (detainable)
+  rectification String? // corrective action taken
+  status        FindingStatus @default(OPEN)
+
+  createdAt DateTime  @default(now())
+  createdBy String?
+  deletedAt DateTime?
+
+  @@index([inspectionId])
+}
+
+// ─── Phase 1 module: CDI Inspection (Chemical Distribution Institute) ────────
+
+model CdiInspection {
+  id        String  @id @default(uuid())
+  companyId String
+  company   Company @relation(fields: [companyId], references: [id])
+  refNo     String
+
+  vesselId String?
+  vessel   Vessel? @relation(fields: [vesselId], references: [id])
+
+  inspectorName  String?
+  scheme         String?  @default("CDI-M") // CDI-M (marine)
+  port           String?
+  inspectionDate DateTime
+  summary        String?
+
+  status   InspectionStatus @default(OPEN)
+  closedAt DateTime?
+
+  observations CdiObservation[]
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  createdBy String?
+  updatedBy String?
+  deletedAt DateTime?
+  deletedBy String?
+
+  @@unique([companyId, refNo])
+  @@index([companyId, status])
+}
+
+model CdiObservation {
+  id           String        @id @default(uuid())
+  companyId    String
+  inspectionId String
+  inspection   CdiInspection @relation(fields: [inspectionId], references: [id], onDelete: Cascade)
+  questionRef  String? // CDI question reference
+  observation  String
+  response     String?
+  status       FindingStatus @default(OPEN)
+
+  createdAt DateTime  @default(now())
+  createdBy String?
+  deletedAt DateTime?
+
+  @@index([inspectionId])
+}
+
+// ─── Phase 1 modules: Internal & External Audits ────────────────────────────
+//  Two separate modules with an identical structure: an audit header plus a
+//  list of findings graded Major NC / Minor NC / Observation. The audit closes
+//  only once every finding is closed.
+
+model InternalAudit {
+  id        String  @id @default(uuid())
+  companyId String
+  company   Company @relation(fields: [companyId], references: [id])
+  refNo     String
+
+  vesselId String?
+  vessel   Vessel? @relation(fields: [vesselId], references: [id])
+
+  scope       String // what was audited, e.g. "Full SMS", "Navigation"
+  standard    String // ISM, ISO 9001, TMSA, MLC, …
+  auditorName String? // lead auditor
+  auditBody   String? // department / team (kept for structural parity)
+  auditDate   DateTime
+  summary     String?
+
+  status   InspectionStatus @default(OPEN)
+  closedAt DateTime?
+
+  findings InternalAuditFinding[]
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  createdBy String?
+  updatedBy String?
+  deletedAt DateTime?
+  deletedBy String?
+
+  @@unique([companyId, refNo])
+  @@index([companyId, status])
+}
+
+model InternalAuditFinding {
+  id               String               @id @default(uuid())
+  companyId        String
+  auditId          String
+  audit            InternalAudit        @relation(fields: [auditId], references: [id], onDelete: Cascade)
+  category         AuditFindingCategory
+  reference        String? // clause / requirement
+  description      String
+  correctiveAction String?
+  status           FindingStatus        @default(OPEN)
+
+  createdAt DateTime  @default(now())
+  createdBy String?
+  deletedAt DateTime?
+
+  @@index([auditId])
+}
+
+model ExternalAudit {
+  id        String  @id @default(uuid())
+  companyId String
+  company   Company @relation(fields: [companyId], references: [id])
+  refNo     String
+
+  vesselId String?
+  vessel   Vessel? @relation(fields: [vesselId], references: [id])
+
+  scope       String
+  standard    String
+  auditorName String? // lead external auditor
+  auditBody   String? // certifying / verification body (RO, class, flag)
+  auditDate   DateTime
+  summary     String?
+
+  status   InspectionStatus @default(OPEN)
+  closedAt DateTime?
+
+  findings ExternalAuditFinding[]
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  createdBy String?
+  updatedBy String?
+  deletedAt DateTime?
+  deletedBy String?
+
+  @@unique([companyId, refNo])
+  @@index([companyId, status])
+}
+
+model ExternalAuditFinding {
+  id               String               @id @default(uuid())
+  companyId        String
+  auditId          String
+  audit            ExternalAudit        @relation(fields: [auditId], references: [id], onDelete: Cascade)
+  category         AuditFindingCategory
+  reference        String?
+  description      String
+  correctiveAction String?
+  status           FindingStatus        @default(OPEN)
+
+  createdAt DateTime  @default(now())
+  createdBy String?
+  deletedAt DateTime?
+
+  @@index([auditId])
+}

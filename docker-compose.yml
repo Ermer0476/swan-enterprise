@@ -1,0 +1,18 @@
+# Local PostgreSQL for SWAN Enterprise development.
+# Usage:  docker compose up -d   (then set DATABASE_URL to the value in .env)
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: swan-enterprise-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: swan_enterprise
+    ports:
+      - "5432:5432"
+    volumes:
+      - swan_pgdata:/var/lib/postgresql/data
+
+volumes:
+  swan_pgdata:

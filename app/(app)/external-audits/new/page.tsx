@@ -1,0 +1,25 @@
+import { requirePermission } from "@/lib/rbac";
+import { listVesselOptions } from "@/features/external-audits/queries";
+import { createExternalAuditAction } from "@/features/external-audits/actions";
+import { PageHeader } from "@/components/ui/page-header";
+import { AuditForm } from "@/components/audit/audit-form";
+
+export default async function NewExternalAuditPage() {
+  const user = await requirePermission("eaudit:create");
+  const vessels = await listVesselOptions(user.companyId);
+  return (
+    <div className="mx-auto max-w-2xl">
+      <PageHeader
+        title="New External Audit"
+        description="Create the audit header, then record findings on the detail page."
+      />
+      <AuditForm
+        createAction={createExternalAuditAction}
+        vessels={vessels}
+        cancelHref="/external-audits"
+        bodyLabel="Certifying / verification body"
+        bodyPlaceholder="e.g. DNV, Lloyd's Register, Flag State"
+      />
+    </div>
+  );
+}
