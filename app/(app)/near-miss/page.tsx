@@ -28,13 +28,13 @@ export default async function NearMissPage({
   return (
     <>
       <PageHeader
-        title="Near Miss Reporting"
-        description="Report events that could have caused harm — captured by potential severity."
+        title="Near Miss/HOR Reporting"
+        description="Report near misses and hazard observations — captured by potential severity."
         actions={
           canCreate ? (
             <Link href="/near-miss/new">
               <Button>
-                <Plus className="h-4 w-4" /> Report Near Miss
+                <Plus className="h-4 w-4" /> Report Near Miss/HOR
               </Button>
             </Link>
           ) : undefined
@@ -79,6 +79,7 @@ export default async function NearMissPage({
                 refNo: r.refNo,
                 title: r.title,
                 vesselName: r.vessel?.name ?? null,
+                kind: r.kind,
                 potentialSeverity: r.potentialSeverity,
                 occurredAt: r.occurredAt.toISOString(),
                 status: r.status,

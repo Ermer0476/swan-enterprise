@@ -16,7 +16,7 @@ import {
   INCIDENT_TYPE_LABELS,
   INCIDENT_SUBCATEGORY_LABELS,
   ROOT_CAUSE_LABELS,
-  HUMAN_FACTOR_LABELS,
+  ROOT_CAUSE_SUBCATEGORY_LABELS,
   humanize,
 } from "@/features/incidents/schema";
 import { severityTone, incidentStatusTone } from "@/features/incidents/ui";
@@ -78,7 +78,12 @@ export default async function IncidentReportPage({
         ? ROOT_CAUSE_LABELS[inc.rootCauseCategory]
         : "Pending investigation",
     },
-    { label: "Reported by", value: inc.reportedBy?.fullName ?? "—" },
+    {
+      label: "Reported by",
+      value: inc.reporterName
+        ? `${inc.reporterName} — ${inc.reporterPosition}`
+        : (inc.reportedBy?.fullName ?? "—"),
+    },
     { label: "Closed", value: inc.closedAt ? formatDate(inc.closedAt) : "—" },
     {
       label: "Verified by Management",
@@ -172,16 +177,13 @@ export default async function IncidentReportPage({
             </div>
           </div>
 
-          {inc.rootCauseCategory === "HUMAN_FACTORS" && (
+          {inc.rootCauseCategory && inc.rootCauseSubCategory && (
             <div>
-              <div className="text-xs uppercase tracking-wide text-muted-foreground">Human factors</div>
-              <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
-                {inc.humanFactorPrimary && (
-                  <Badge tone="warning">Primary: {HUMAN_FACTOR_LABELS[inc.humanFactorPrimary]}</Badge>
-                )}
-                {inc.humanFactorContributing.map((f) => (
-                  <Badge key={f} tone="neutral">{HUMAN_FACTOR_LABELS[f]}</Badge>
-                ))}
+              <div className="text-xs uppercase tracking-wide text-muted-foreground">Root cause sub-category</div>
+              <div className="mt-1.5">
+                <Badge tone="warning">
+                  {ROOT_CAUSE_SUBCATEGORY_LABELS[inc.rootCauseCategory][inc.rootCauseSubCategory]}
+                </Badge>
               </div>
             </div>
           )}
@@ -251,6 +253,14 @@ export default async function IncidentReportPage({
               <div>
                 <div className="text-xs uppercase tracking-wide text-muted-foreground">Severity</div>
                 <p className="mt-1 text-sm">{inc.severity ? humanize(inc.severity) : "—"}</p>
+              </div>
+              <div>
+                <div className="text-xs uppercase tracking-wide text-muted-foreground">Root cause sub-category</div>
+                <p className="mt-1 text-sm">
+                  {inc.rootCauseCategory && inc.rootCauseSubCategory
+                    ? ROOT_CAUSE_SUBCATEGORY_LABELS[inc.rootCauseCategory][inc.rootCauseSubCategory]
+                    : "—"}
+                </p>
               </div>
               <div>
                 <div className="text-xs uppercase tracking-wide text-muted-foreground">Root cause</div>

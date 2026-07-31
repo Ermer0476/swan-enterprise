@@ -139,15 +139,6 @@ enum RootCauseCategory {
 
 // Human-factor tags — used for the primary factor (one) and contributing
 // factors (up to two, enforced in the form and server action).
-enum HumanFactor {
-  FATIGUE
-  WORKLOAD_MULTITASKING
-  SITUATIONAL_AWARENESS
-  COMMUNICATION_BREAKDOWN
-  DECISION_MAKING_PRESSURE
-  CULTURAL_SPEAKING_UP
-}
-
 // CAPA tracker (TMSA-style) — corrective (CA-##) and preventive (PA-##) actions.
 enum CapaKind {
   CORRECTIVE
@@ -187,16 +178,17 @@ enum NearMissConsequenceType {
   REGULATORY
 }
 
-// ─── Hazard Observation (HOR) ───────────────────────────────────────────────
+// Near Miss vs Hazard Observation (HOR) — one merged report/module; a HOR
+// additionally carries a HazardType (Unsafe Act / Unsafe Condition).
+enum NearMissKind {
+  NEAR_MISS
+  HOR
+}
+
+// Reused as NearMiss.horCategory when kind = HOR.
 enum HazardType {
   UNSAFE_ACT
   UNSAFE_CONDITION
-}
-
-enum HazardStatus {
-  OPEN
-  IN_PROGRESS
-  CLOSED
 }
 
 // ─── Non-Conformity (NCR) ────────────────────────────────────────────────────
@@ -211,10 +203,12 @@ enum NcrSource {
   OTHER
 }
 
+// Simple user-facing lifecycle. Verification IS the closing act — only DPA /
+// General Manager hold ncr:close, mirroring how Incident "Verified by
+// Management" is captured (closing = verification, not a separate step).
 enum NcrStatus {
   OPEN
-  IN_PROGRESS
-  VERIFIED
+  SUBMITTED_TO_OFFICE
   CLOSED
 }
 
@@ -254,7 +248,6 @@ model Company {
   workflows       WorkflowDefinition[]
   incidents       Incident[]
   nearMisses      NearMiss[]
-  hazards         HazardObservation[]
   nonConformities NonConformity[]
   sireInspections SireInspection[]
   pscInspections  PscInspection[]
@@ -283,11 +276,10 @@ model User {
   deletedBy String?
 
   roles              UserRole[]
-  ownedDocs          SmsDocument[]       @relation("DocumentOwner")
-  reportedIncidents  Incident[]          @relation("IncidentReporter")
-  reportedNearMisses NearMiss[]          @relation("NearMissReporter")
-  reportedHazards    HazardObservation[] @relation("HazardReporter")
-  raisedNcrs         NonConformity[]     @relation("NcrRaisedBy")
+  ownedDocs          SmsDocument[]   @relation("DocumentOwner")
+  reportedIncidents  Incident[]      @relation("IncidentReporter")
+  reportedNearMisses NearMiss[]      @relation("NearMissReporter")
+  raisedNcrs         NonConformity[] @relation("NcrRaisedBy")
   notifications      Notification[]
 
   @@index([companyId])
@@ -371,7 +363,6 @@ model Vessel {
   smsDocuments    SmsDocument[]
   incidents       Incident[]
   nearMisses      NearMiss[]
-  hazards         HazardObservation[]
   nonConformities NonConformity[]
   sireInspections SireInspection[]
   pscInspections  PscInspection[]
@@ -656,9 +647,8 @@ model Incident {
 
   // Root cause classification — unset on the initial report; the office fills
   // this in during investigation (ECFA), never at the moment of reporting.
-  rootCauseCategory       RootCauseCategory?
-  humanFactorPrimary      HumanFactor? // when rootCauseCategory = HUMAN_FACTORS
-  humanFactorContributing HumanFactor[] // 0–2 contributing factors
+  rootCauseCategory    RootCauseCategory?
+  rootCauseSubCategory String? // one flat sub-cause per category — see lib/root-cause.ts
 
   // Investigation (narrative). Corrective/preventive actions are tracked as
   // structured CapaAction rows (see below), not free text.
@@ -675,8 +665,13 @@ model Incident {
   verifiedByName String?
   verifiedAt     DateTime?
 
-  reportedById String?
-  reportedBy   User?   @relation("IncidentReporter", fields: [reportedById], references: [id])
+  reportedById     String?
+  reportedBy       User?   @relation("IncidentReporter", fields: [reportedById], references: [id])
+  // Manual — the vessel shares just 2 logins (Master + one Crew account used
+  // by whoever is encoding), so the logged-in account does not reliably
+  // identify the actual individual reporter. Typed in on the report form.
+  reporterName     String?
+  reporterPosition String?
 
   sofEntries IncidentSofEntry[]
 
@@ -734,12 +729,17 @@ model NearMiss {
   company   Company @relation(fields: [companyId], references: [id])
   refNo     String
 
-  title       String
-  vesselId    String?
-  vessel      Vessel?  @relation(fields: [vesselId], references: [id])
-  occurredAt  DateTime
-  location    String?
-  description String
+  title                  String
+  // Near Miss vs Hazard Observation (HOR) — one merged report; a HOR
+  // additionally carries horCategory (Unsafe Act / Unsafe Condition).
+  kind                   NearMissKind @default(NEAR_MISS)
+  horCategory            HazardType? // set only when kind = HOR
+  stopAuthorityExercised Boolean      @default(false) // Stop Work Authority — HOR only; feeds future stop-card counts per reporter
+  vesselId               String?
+  vessel                 Vessel?      @relation(fields: [vesselId], references: [id])
+  occurredAt             DateTime
+  location               String?
+  description            String
 
   potentialConsequence NearMissConsequenceType
   potentialSeverity    Severity
@@ -749,9 +749,8 @@ model NearMiss {
   // separate office-investigation phase like Incidents). Corrective actions
   // are tracked as structured CapaAction rows (see CAPA REGISTRY), not free
   // text.
-  rootCauseCategory       RootCauseCategory
-  humanFactorPrimary      HumanFactor? // when rootCauseCategory = HUMAN_FACTORS
-  humanFactorContributing HumanFactor[] // 0–2 contributing factors
+  rootCauseCategory    RootCauseCategory
+  rootCauseSubCategory String? // one flat sub-cause per category — see lib/root-cause.ts
 
   status   NearMissStatus @default(REPORTED)
   closedAt DateTime?
@@ -763,8 +762,13 @@ model NearMiss {
   companyComments String?
   reviewedAt      DateTime?
 
-  reportedById String?
-  reportedBy   User?   @relation("NearMissReporter", fields: [reportedById], references: [id])
+  reportedById     String?
+  reportedBy       User?   @relation("NearMissReporter", fields: [reportedById], references: [id])
+  // Manual — the vessel shares just 2 logins (Master + one Crew account used
+  // by whoever is encoding), so the logged-in account does not reliably
+  // identify the actual individual reporter. Typed in on the report form.
+  reporterName     String?
+  reporterPosition String?
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
@@ -775,45 +779,7 @@ model NearMiss {
 
   @@unique([companyId, refNo])
   @@index([companyId, status])
-}
-
-// ─── Phase 1 module: Hazard Observation (HOR) ───────────────────────────────
-//  Proactive reporting of unsafe acts / conditions before they cause harm.
-
-model HazardObservation {
-  id        String  @id @default(uuid())
-  companyId String
-  company   Company @relation(fields: [companyId], references: [id])
-  refNo     String
-
-  title       String
-  vesselId    String?
-  vessel      Vessel?    @relation(fields: [vesselId], references: [id])
-  observedAt  DateTime
-  location    String?
-  category    String // hazard category, e.g. PPE, Housekeeping, Machinery
-  hazardType  HazardType
-  riskLevel   Severity
-  observation String
-
-  immediateAction  String?
-  correctiveAction String?
-
-  status   HazardStatus @default(OPEN)
-  closedAt DateTime?
-
-  reportedById String?
-  reportedBy   User?   @relation("HazardReporter", fields: [reportedById], references: [id])
-
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  createdBy String?
-  updatedBy String?
-  deletedAt DateTime?
-  deletedBy String?
-
-  @@unique([companyId, refNo])
-  @@index([companyId, status])
+  @@index([companyId, kind])
 }
 
 // ─── Phase 1 module: Non-Conformity (NCR) ───────────────────────────────────
@@ -826,19 +792,29 @@ model NonConformity {
   company   Company @relation(fields: [companyId], references: [id])
   refNo     String
 
-  title       String
-  vesselId    String?
-  vessel      Vessel?   @relation(fields: [vesselId], references: [id])
-  source      NcrSource
-  requirement String // the clause / requirement that is breached
-  description String
-  severity    Severity
-  raisedAt    DateTime
-  targetDate  DateTime?
+  title          String
+  vesselId       String?
+  vessel         Vessel?   @relation(fields: [vesselId], references: [id])
+  source         NcrSource
+  // Soft link to the specific finding/deficiency row that raised this NCR
+  // (PscDeficiency / InternalAuditFinding / ExternalAuditFinding, etc. —
+  // which table depends on `source`). One finding = one NCR; no enforced FK
+  // since each source type lives in a different table (same pattern as
+  // CapaAction.entityId).
+  sourceEntityId String?
+  requirement    String // the clause / requirement that is breached
+  description    String
+  severity       Severity
+  raisedAt       DateTime
+  targetDate     DateTime?
 
   rootCause        String?
   correctiveAction String?
   verification     String?
+  // Single owner of the corrective action — a person (by title/rank) or a
+  // whole department; office NCRs are often owned by a department, not one
+  // named individual.
+  personInCharge   String?
 
   status   NcrStatus @default(OPEN)
   closedAt DateTime?

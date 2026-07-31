@@ -31,8 +31,10 @@ function SubmitButton() {
 
 export function NewIncidentForm({
   vessels,
+  positions,
 }: {
   vessels: { id: string; name: string }[];
+  positions: readonly string[];
 }) {
   const [state, formAction] = useActionState<ActionResult, FormData>(
     createIncidentAction,
@@ -59,6 +61,22 @@ export function NewIncidentForm({
           <div className="space-y-1.5">
             <Label htmlFor="title">Title</Label>
             <AutoGrowInput id="title" name="title" placeholder="Brief summary of the incident" required />
+          </div>
+
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div className="space-y-1.5">
+              <Label htmlFor="reporterName">Name of Reporter</Label>
+              <AutoGrowInput id="reporterName" name="reporterName" placeholder="Full name" required />
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="reporterPosition">Position / Rank</Label>
+              <Select id="reporterPosition" name="reporterPosition" defaultValue="" required>
+                <option value="" disabled>— Select position —</option>
+                {positions.map((p) => (
+                  <option key={p} value={p}>{p}</option>
+                ))}
+              </Select>
+            </div>
           </div>
 
           {/* FIELD 1 — Type of Incident (multi-select), each with its own

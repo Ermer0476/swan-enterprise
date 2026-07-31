@@ -1,17 +1,20 @@
 "use client";
 
+import Link from "next/link";
 import { useState, useTransition, useActionState, useRef, useEffect } from "react";
 import { useFormStatus } from "react-dom";
 import { Plus, Trash2 } from "lucide-react";
 import { AutoGrowInput, Label, Select } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { ncrPrefillHref } from "@/lib/ncr-link";
 import {
   AUDIT_FINDING_CATEGORIES,
   auditCategoryLabel,
   auditCategoryTone,
   type AuditActionResult,
   type AuditFindingView,
+  type AuditNcrContext,
 } from "./types";
 
 // Server actions are passed in by each module (internal / external audits).
@@ -35,11 +38,17 @@ function FindingRow({
   editable,
   updateAction,
   deleteAction,
+  canCreateNcr,
+  existingNcr,
+  ncrContext,
 }: {
   finding: AuditFindingView;
   editable: boolean;
   updateAction: FindingAction;
   deleteAction: FindingAction;
+  canCreateNcr: boolean;
+  existingNcr?: { id: string; refNo: string };
+  ncrContext: AuditNcrContext;
 }) {
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
@@ -81,6 +90,28 @@ function FindingRow({
             </Badge>
           </div>
           <p className="mt-1 text-sm">{finding.description}</p>
+          {existingNcr ? (
+            <Link href={`/non-conformities/${existingNcr.id}`} className="mt-1 inline-block text-xs text-primary hover:underline">
+              View {existingNcr.refNo}
+            </Link>
+          ) : (
+            canCreateNcr && (
+              <Link
+                href={ncrPrefillHref({
+                  vesselId: ncrContext.vesselId,
+                  source: ncrContext.source,
+                  sourceEntityId: finding.id,
+                  requirement: finding.reference,
+                  description: finding.description,
+                  raisedAt: ncrContext.raisedAt,
+                  reportRefNo: ncrContext.reportRefNo,
+                })}
+                className="mt-1 inline-block text-xs text-primary hover:underline"
+              >
+                Raise NCR
+              </Link>
+            )
+          )}
         </div>
         {editable && (
           <button
@@ -136,6 +167,9 @@ export function AuditFindingsPanel({
   addAction,
   updateAction,
   deleteAction,
+  canCreateNcr,
+  ncrBySourceId,
+  ncrContext,
 }: {
   auditId: string;
   findings: AuditFindingView[];
@@ -143,6 +177,9 @@ export function AuditFindingsPanel({
   addAction: AddAction;
   updateAction: FindingAction;
   deleteAction: FindingAction;
+  canCreateNcr: boolean;
+  ncrBySourceId: Record<string, { id: string; refNo: string }>;
+  ncrContext: AuditNcrContext;
 }) {
   const [addState, formAction] = useActionState<AuditActionResult, FormData>(
     addAction,
@@ -166,6 +203,9 @@ export function AuditFindingsPanel({
               editable={editable}
               updateAction={updateAction}
               deleteAction={deleteAction}
+              canCreateNcr={canCreateNcr}
+              existingNcr={ncrBySourceId[f.id]}
+              ncrContext={ncrContext}
             />
           ))}
         </ul>

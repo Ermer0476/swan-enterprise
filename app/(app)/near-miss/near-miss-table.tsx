@@ -5,12 +5,14 @@ import { Badge } from "@/components/ui/badge";
 import { SortableHeader } from "@/components/ui/sortable-header";
 import { useSortableRows } from "@/lib/use-sortable-rows";
 import { formatDate, humanize, severityTone } from "@/lib/utils";
+import { NEARMISS_KIND_LABELS } from "@/features/near-miss/schema";
 
 export type NearMissRowView = {
   id: string;
   refNo: string;
   title: string;
   vesselName: string | null;
+  kind: keyof typeof NEARMISS_KIND_LABELS;
   potentialSeverity: string;
   occurredAt: string; // ISO
   status: string;
@@ -18,6 +20,9 @@ export type NearMissRowView = {
 
 function statusTone(s: string) {
   return s === "CLOSED" ? "success" : s === "UNDER_REVIEW" ? "warning" : "accent";
+}
+function kindTone(k: string) {
+  return k === "HOR" ? "warning" : "accent";
 }
 
 export function NearMissTable({ rows }: { rows: NearMissRowView[] }) {
@@ -29,6 +34,8 @@ export function NearMissTable({ rows }: { rows: NearMissRowView[] }) {
           return r.vesselName ?? "";
         case "ref":
           return r.refNo;
+        case "kind":
+          return NEARMISS_KIND_LABELS[r.kind];
         case "title":
           return r.title;
         case "potential":
@@ -49,6 +56,7 @@ export function NearMissTable({ rows }: { rows: NearMissRowView[] }) {
         <tr>
           <SortableHeader label="Vessel" sortKey="vessel" activeKey={sortKey} dir={sortDir} onSort={toggleSort} />
           <SortableHeader label="Ref" sortKey="ref" activeKey={sortKey} dir={sortDir} onSort={toggleSort} />
+          <SortableHeader label="Kind" sortKey="kind" activeKey={sortKey} dir={sortDir} onSort={toggleSort} />
           <SortableHeader label="Title" sortKey="title" activeKey={sortKey} dir={sortDir} onSort={toggleSort} />
           <SortableHeader label="Potential" sortKey="potential" activeKey={sortKey} dir={sortDir} onSort={toggleSort} />
           <SortableHeader label="Occurred" sortKey="occurred" activeKey={sortKey} dir={sortDir} onSort={toggleSort} />
@@ -63,6 +71,9 @@ export function NearMissTable({ rows }: { rows: NearMissRowView[] }) {
               <Link href={`/near-miss/${r.id}`} className="text-accent hover:underline">
                 {r.refNo}
               </Link>
+            </td>
+            <td className="px-4 py-2.5">
+              <Badge tone={kindTone(r.kind)}>{NEARMISS_KIND_LABELS[r.kind]}</Badge>
             </td>
             <td className="px-4 py-2.5">
               <Link href={`/near-miss/${r.id}`} className="hover:underline">{r.title}</Link>

@@ -5,13 +5,14 @@ import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { requirePermission } from "@/lib/rbac";
 import { writeAudit } from "@/lib/audit";
-import type { NearMissStatus } from "@/lib/generated/prisma";
+import type { NearMissStatus, NearMissKind } from "@/lib/generated/prisma";
 import { CAPA_PREFIX } from "@/features/capa/schema";
 import {
   createNearMissSchema,
   officeReviewSchema,
   buildCapaRows,
   NM_STATUSES,
+  positionsFor,
 } from "./schema";
 
 export type ActionResult = { ok: boolean; error: string | null };
@@ -23,11 +24,13 @@ function nextStatus(current: NearMissStatus): NearMissStatus | null {
   return (NM_STATUSES[i + 1] as NearMissStatus | undefined) ?? null;
 }
 
-async function nextRefNo(companyId: string): Promise<string> {
+// Near Miss and HOR keep their own familiar ref-number prefixes even though
+// they now share one table — each counted independently by kind.
+async function nextRefNo(companyId: string, kind: NearMissKind): Promise<string> {
   const year = new Date().getFullYear();
-  const prefix = `NM-${year}-`;
+  const prefix = kind === "HOR" ? `HOR-${year}-` : `NM-${year}-`;
   const count = await prisma.nearMiss.count({
-    where: { companyId, refNo: { startsWith: prefix } },
+    where: { companyId, kind, refNo: { startsWith: prefix } },
   });
   return `${prefix}${String(count + 1).padStart(4, "0")}`;
 }
@@ -39,6 +42,11 @@ export async function createNearMissAction(
   const user = await requirePermission("nm:create");
   const parsed = createNearMissSchema.safeParse({
     title: formData.get("title"),
+    reporterName: formData.get("reporterName"),
+    reporterPosition: formData.get("reporterPosition"),
+    kind: formData.get("kind") || "NEAR_MISS",
+    horCategory: formData.get("horCategory") || undefined,
+    stopAuthorityExercised: formData.get("stopAuthorityExercised") === "on",
     vesselId: formData.get("vesselId"),
     occurredAt: formData.get("occurredAt"),
     location: formData.get("location"),
@@ -47,8 +55,7 @@ export async function createNearMissAction(
     potentialSeverity: formData.get("potentialSeverity"),
     immediateAction: formData.get("immediateAction"),
     rootCauseCategory: formData.get("rootCauseCategory"),
-    humanFactorPrimary: formData.get("humanFactorPrimary") || undefined,
-    humanFactorContributing: formData.getAll("humanFactorContributing").map(String),
+    rootCauseSubCategory: formData.get("rootCauseSubCategory"),
     caAction: formData.getAll("caAction").map(String),
     caResponsible: formData.getAll("caResponsible").map(String),
     caTargetDate: formData.getAll("caTargetDate").map(String),
@@ -57,13 +64,23 @@ export async function createNearMissAction(
     return fail(parsed.error.issues[0]?.message ?? "Invalid input");
   }
   const d = parsed.data;
-  const isHumanFactors = d.rootCauseCategory === "HUMAN_FACTORS";
+
+  // Position options are department-scoped (ship ranks vs office positions —
+  // never mixed); re-check server-side since the client list is just the UI.
+  if (!positionsFor(user.department).includes(d.reporterPosition)) {
+    return fail("Select a valid position for your department");
+  }
 
   const nm = await prisma.nearMiss.create({
     data: {
       companyId: user.companyId,
-      refNo: await nextRefNo(user.companyId),
+      refNo: await nextRefNo(user.companyId, d.kind),
       title: d.title,
+      reporterName: d.reporterName,
+      reporterPosition: d.reporterPosition,
+      kind: d.kind,
+      horCategory: d.kind === "HOR" ? d.horCategory : null,
+      stopAuthorityExercised: d.kind === "HOR" ? d.stopAuthorityExercised : false,
       vesselId: d.vesselId || null,
       occurredAt: new Date(d.occurredAt),
       location: d.location || null,
@@ -72,8 +89,7 @@ export async function createNearMissAction(
       potentialSeverity: d.potentialSeverity,
       immediateAction: d.immediateAction || null,
       rootCauseCategory: d.rootCauseCategory,
-      humanFactorPrimary: isHumanFactors ? (d.humanFactorPrimary ?? null) : null,
-      humanFactorContributing: isHumanFactors ? d.humanFactorContributing : [],
+      rootCauseSubCategory: d.rootCauseSubCategory,
       status: "REPORTED",
       reportedById: user.id,
       createdBy: user.id,

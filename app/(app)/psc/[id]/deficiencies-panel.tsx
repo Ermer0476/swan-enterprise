@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState, useTransition, useActionState, useRef, useEffect } from "react";
 import { useFormStatus } from "react-dom";
 import { Plus, Trash2 } from "lucide-react";
@@ -9,9 +10,17 @@ import {
   deleteDeficiencyAction,
   type ActionResult,
 } from "@/features/psc/actions";
+import { ncrPrefillHref } from "@/lib/ncr-link";
 import { AutoGrowInput, Label, Select } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+
+export type NcrContext = {
+  vesselId: string | null;
+  reportRefNo: string;
+  port: string | null;
+  raisedAt: string;
+};
 
 export type DeficiencyView = {
   id: string;
@@ -32,7 +41,19 @@ function AddButton() {
   );
 }
 
-function DeficiencyRow({ def, editable }: { def: DeficiencyView; editable: boolean }) {
+function DeficiencyRow({
+  def,
+  editable,
+  canCreateNcr,
+  existingNcr,
+  ncrContext,
+}: {
+  def: DeficiencyView;
+  editable: boolean;
+  canCreateNcr: boolean;
+  existingNcr?: { id: string; refNo: string };
+  ncrContext: NcrContext;
+}) {
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
   const [rectification, setRectification] = useState(def.rectification ?? "");
@@ -70,6 +91,29 @@ function DeficiencyRow({ def, editable }: { def: DeficiencyView; editable: boole
             </Badge>
           </div>
           <p className="mt-1 text-sm">{def.description}</p>
+          {existingNcr ? (
+            <Link href={`/non-conformities/${existingNcr.id}`} className="mt-1 inline-block text-xs text-primary hover:underline">
+              View {existingNcr.refNo}
+            </Link>
+          ) : (
+            canCreateNcr && (
+              <Link
+                href={ncrPrefillHref({
+                  vesselId: ncrContext.vesselId,
+                  source: "PSC",
+                  sourceEntityId: def.id,
+                  requirement: def.reference,
+                  description: def.description,
+                  raisedAt: ncrContext.raisedAt,
+                  reportRefNo: ncrContext.reportRefNo,
+                  port: ncrContext.port,
+                })}
+                className="mt-1 inline-block text-xs text-primary hover:underline"
+              >
+                Raise NCR
+              </Link>
+            )
+          )}
         </div>
         {editable && (
           <button type="button" onClick={remove} disabled={pending} aria-label="Delete deficiency"
@@ -103,10 +147,16 @@ export function DeficienciesPanel({
   inspectionId,
   deficiencies,
   editable,
+  canCreateNcr,
+  ncrBySourceId,
+  ncrContext,
 }: {
   inspectionId: string;
   deficiencies: DeficiencyView[];
   editable: boolean;
+  canCreateNcr: boolean;
+  ncrBySourceId: Record<string, { id: string; refNo: string }>;
+  ncrContext: NcrContext;
 }) {
   const [addState, addAction] = useActionState<ActionResult, FormData>(
     addDeficiencyAction,
@@ -123,7 +173,16 @@ export function DeficienciesPanel({
         <p className="text-sm text-muted-foreground">No deficiencies recorded.</p>
       ) : (
         <ul className="divide-y divide-border rounded-md border border-border">
-          {deficiencies.map((d) => <DeficiencyRow key={d.id} def={d} editable={editable} />)}
+          {deficiencies.map((d) => (
+            <DeficiencyRow
+              key={d.id}
+              def={d}
+              editable={editable}
+              canCreateNcr={canCreateNcr}
+              existingNcr={ncrBySourceId[d.id]}
+              ncrContext={ncrContext}
+            />
+          ))}
         </ul>
       )}
 

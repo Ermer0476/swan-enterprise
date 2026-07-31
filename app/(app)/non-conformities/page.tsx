@@ -13,8 +13,7 @@ import type { NcrStatus, NcrSource } from "@/lib/generated/prisma";
 
 function statusTone(s: string) {
   if (s === "CLOSED") return "success";
-  if (s === "VERIFIED") return "accent";
-  if (s === "IN_PROGRESS") return "warning";
+  if (s === "SUBMITTED_TO_OFFICE") return "warning";
   return "danger"; // OPEN
 }
 

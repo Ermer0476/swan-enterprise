@@ -13,6 +13,7 @@ import {
   INCIDENT_SUBCATEGORIES,
   INCIDENT_TYPE_LABELS,
   buildSofRows,
+  positionsFor,
   type IncidentTypeValue,
 } from "./schema";
 
@@ -43,6 +44,8 @@ export async function createIncidentAction(
   const user = await requirePermission("incident:create");
   const parsed = createIncidentSchema.safeParse({
     title: formData.get("title"),
+    reporterName: formData.get("reporterName"),
+    reporterPosition: formData.get("reporterPosition"),
     types: formData.getAll("types").map(String),
     vesselId: formData.get("vesselId"),
     occurredAt: formData.get("occurredAt"),
@@ -56,6 +59,12 @@ export async function createIncidentAction(
     return fail(parsed.error.issues[0]?.message ?? "Invalid input");
   }
   const d = parsed.data;
+
+  // Position options are department-scoped (ship ranks vs office positions —
+  // never mixed); re-check server-side since the client list is just the UI.
+  if (!positionsFor(user.department).includes(d.reporterPosition)) {
+    return fail("Select a valid position for your department");
+  }
 
   // Each selected Type has its own sub-category list — parsed here from
   // `sub_<TYPE>` form fields rather than a single static Zod field, since the
@@ -75,6 +84,8 @@ export async function createIncidentAction(
       companyId: user.companyId,
       refNo: await nextRefNo(user.companyId),
       title: d.title,
+      reporterName: d.reporterName,
+      reporterPosition: d.reporterPosition,
       status: "REPORTED",
       vesselId: d.vesselId || null,
       occurredAt: new Date(d.occurredAt),
@@ -130,15 +141,13 @@ export async function saveInvestigationAction(
     investigationDetails: formData.get("investigationDetails"),
     severity: formData.get("severity"),
     rootCauseCategory: formData.get("rootCauseCategory"),
+    rootCauseSubCategory: formData.get("rootCauseSubCategory"),
     rootCause: formData.get("rootCause"),
-    humanFactorPrimary: formData.get("humanFactorPrimary") || undefined,
-    humanFactorContributing: formData.getAll("humanFactorContributing").map(String),
   });
   if (!parsed.success) {
     return fail(parsed.error.issues[0]?.message ?? "Invalid input");
   }
   const d = parsed.data;
-  const isHumanFactors = d.rootCauseCategory === "HUMAN_FACTORS";
 
   const incident = await prisma.incident.findFirst({
     where: { id: d.incidentId, companyId: user.companyId, deletedAt: null },
@@ -152,8 +161,7 @@ export async function saveInvestigationAction(
       investigationDetails: d.investigationDetails,
       severity: d.severity,
       rootCauseCategory: d.rootCauseCategory,
-      humanFactorPrimary: isHumanFactors ? (d.humanFactorPrimary ?? null) : null,
-      humanFactorContributing: isHumanFactors ? d.humanFactorContributing : [],
+      rootCauseSubCategory: d.rootCauseSubCategory,
       rootCause: d.rootCause || null,
       // Recording findings moves a freshly reported incident into investigation.
       status: incident.status === "REPORTED" ? "UNDER_INVESTIGATION" : incident.status,

@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { requirePermission, can } from "@/lib/rbac";
 import { getPsc } from "@/features/psc/queries";
+import { listNcrsBySourceEntityIds } from "@/features/non-conformities/queries";
 import { PageHeader } from "@/components/ui/page-header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -27,6 +28,11 @@ export default async function PscDetailPage({
   const editable = can(user, "psc:update") && insp.status !== "CLOSED";
   const canClose = can(user, "psc:close");
   const canDelete = can(user, "psc:delete");
+  const canCreateNcr = can(user, "ncr:create");
+  const ncrBySourceId = await listNcrsBySourceEntityIds(
+    user.companyId,
+    insp.deficiencies.map((d) => d.id),
+  );
 
   const meta = [
     { label: "Vessel", value: insp.vessel?.name ?? "—" },
@@ -90,6 +96,14 @@ export default async function PscDetailPage({
               rectification: d.rectification,
               status: d.status,
             }))}
+            canCreateNcr={canCreateNcr}
+            ncrBySourceId={ncrBySourceId}
+            ncrContext={{
+              vesselId: insp.vesselId,
+              reportRefNo: insp.refNo,
+              port: insp.port,
+              raisedAt: insp.inspectionDate.toISOString().slice(0, 10),
+            }}
           />
         </CardContent>
       </Card>

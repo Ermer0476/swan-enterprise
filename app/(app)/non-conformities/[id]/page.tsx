@@ -18,8 +18,7 @@ function nextOf(status: NcrStatus): NcrStatus | null {
 }
 function statusTone(s: string) {
   if (s === "CLOSED") return "success";
-  if (s === "VERIFIED") return "accent";
-  if (s === "IN_PROGRESS") return "warning";
+  if (s === "SUBMITTED_TO_OFFICE") return "warning";
   return "danger";
 }
 
@@ -38,7 +37,7 @@ export default async function NcrDetailPage({
   const canDelete = can(user, "ncr:delete");
   const next = nextOf(ncr.status);
   const canAdvance =
-    canUpdate && !!next && (["VERIFIED", "CLOSED"].includes(next) ? canClose : true);
+    canUpdate && !!next && (next === "CLOSED" ? canClose : true);
   const editable = canUpdate && ncr.status !== "CLOSED";
 
   const meta = [

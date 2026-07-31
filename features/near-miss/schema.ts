@@ -1,12 +1,29 @@
 import { z } from "zod";
 import {
   ROOT_CAUSE_CATEGORIES,
-  HUMAN_FACTORS,
-  MAX_CONTRIBUTING_FACTORS,
+  ROOT_CAUSE_SUBCATEGORIES,
+  type RootCauseCategoryValue,
 } from "@/lib/root-cause";
+import { REPORTER_POSITIONS, SHIP_POSITIONS, OFFICE_POSITIONS, positionsFor } from "@/lib/crew-ranks";
+
+export { REPORTER_POSITIONS, SHIP_POSITIONS, OFFICE_POSITIONS, positionsFor };
 
 export const SEVERITIES = ["LOW", "MEDIUM", "HIGH", "CRITICAL"] as const;
 export const NM_STATUSES = ["REPORTED", "UNDER_REVIEW", "CLOSED"] as const;
+
+// Near Miss vs Hazard Observation (HOR) — one merged report/module.
+export const NEARMISS_KINDS = ["NEAR_MISS", "HOR"] as const;
+export const NEARMISS_KIND_LABELS: Record<(typeof NEARMISS_KINDS)[number], string> = {
+  NEAR_MISS: "Near Miss",
+  HOR: "Hazard Observation (HOR)",
+};
+
+// HOR-only classification — which type of incident could have happened.
+export const HOR_CATEGORIES = ["UNSAFE_ACT", "UNSAFE_CONDITION"] as const;
+export const HOR_CATEGORY_LABELS: Record<(typeof HOR_CATEGORIES)[number], string> = {
+  UNSAFE_ACT: "Unsafe Act",
+  UNSAFE_CONDITION: "Unsafe Condition",
+};
 
 export const NEARMISS_LOCATIONS = [
   "Bridge",
@@ -42,6 +59,11 @@ export const NEARMISS_CONSEQUENCE_LABELS: Record<(typeof NEARMISS_CONSEQUENCE_TY
 export const createNearMissSchema = z
   .object({
     title: z.string().trim().min(3, "Title is required").max(200),
+    reporterName: z.string().trim().min(2, "Enter the reporter's name").max(120),
+    reporterPosition: z.enum(REPORTER_POSITIONS),
+    kind: z.enum(NEARMISS_KINDS),
+    horCategory: z.enum(HOR_CATEGORIES).optional(),
+    stopAuthorityExercised: z.boolean(),
     vesselId: z.string().uuid().optional().or(z.literal("")),
     occurredAt: z
       .string()
@@ -56,10 +78,7 @@ export const createNearMissSchema = z
     // Root cause — captured in the same report (no separate investigation
     // phase for Near Miss).
     rootCauseCategory: z.enum(ROOT_CAUSE_CATEGORIES),
-    humanFactorPrimary: z.enum(HUMAN_FACTORS).optional(),
-    humanFactorContributing: z
-      .array(z.enum(HUMAN_FACTORS))
-      .max(MAX_CONTRIBUTING_FACTORS, "Choose at most two contributing factors"),
+    rootCauseSubCategory: z.string().trim().min(1, "Select the root cause sub-category"),
 
     // Corrective action plan — captured in the same report too (paired by
     // index, like the SOF rows on Incidents). Blank rows (no action text)
@@ -69,11 +88,19 @@ export const createNearMissSchema = z
     caTargetDate: z.array(z.string()).default([]),
   })
   .superRefine((v, ctx) => {
-    if (v.rootCauseCategory === "HUMAN_FACTORS" && !v.humanFactorPrimary) {
+    const allowed = ROOT_CAUSE_SUBCATEGORIES[v.rootCauseCategory as RootCauseCategoryValue];
+    if (!allowed.includes(v.rootCauseSubCategory)) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        message: "Select the primary human factor",
-        path: ["humanFactorPrimary"],
+        message: "Select a valid sub-category for the chosen root cause",
+        path: ["rootCauseSubCategory"],
+      });
+    }
+    if (v.kind === "HOR" && !v.horCategory) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Select the HOR category (Unsafe Act / Unsafe Condition)",
+        path: ["horCategory"],
       });
     }
   });

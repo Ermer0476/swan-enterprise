@@ -10,12 +10,13 @@ import {
 import {
   ROOT_CAUSE_CATEGORIES,
   ROOT_CAUSE_LABELS,
+  ROOT_CAUSE_SUBCATEGORIES,
+  ROOT_CAUSE_SUBCATEGORY_LABELS,
   INCIDENT_SEVERITIES,
   humanize,
 } from "@/features/incidents/schema";
 import { Textarea, Label, Select } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { HumanFactorsPicker } from "@/components/incidents/human-factors-picker";
 
 function SaveButton() {
   const { pending } = useFormStatus();
@@ -31,24 +32,30 @@ export function InvestigationForm({
   investigationDetails,
   severity,
   rootCauseCategory,
+  rootCauseSubCategory,
   rootCause,
-  humanFactorPrimary,
-  humanFactorContributing,
 }: {
   incidentId: string;
   investigationDetails: string;
   severity: string;
   rootCauseCategory: string;
+  rootCauseSubCategory: string;
   rootCause: string;
-  humanFactorPrimary: string;
-  humanFactorContributing: string[];
 }) {
   const [state, formAction] = useActionState<ActionResult, FormData>(
     saveInvestigationAction,
     { ok: false, error: null },
   );
   const [category, setCategory] = useState(rootCauseCategory);
-  const isHumanFactors = category === "HUMAN_FACTORS";
+  const [subCategory, setSubCategory] = useState(rootCauseSubCategory);
+
+  function handleCategoryChange(next: string) {
+    setCategory(next);
+    setSubCategory(""); // sub-category list differs per category — reset on change
+  }
+
+  const subOptions =
+    category && (ROOT_CAUSE_SUBCATEGORIES as Record<string, readonly string[]>)[category];
 
   return (
     <form action={formAction} className="space-y-4">
@@ -80,7 +87,7 @@ export function InvestigationForm({
           name="rootCauseCategory"
           required
           value={category}
-          onChange={(e) => setCategory(e.target.value)}
+          onChange={(e) => handleCategoryChange(e.target.value)}
         >
           <option value="" disabled>— Select root cause —</option>
           {ROOT_CAUSE_CATEGORIES.map((c) => (
@@ -90,12 +97,24 @@ export function InvestigationForm({
           ))}
         </Select>
       </div>
-      {/* Human factors (shown only for the Human Factors category) */}
-      {isHumanFactors && (
-        <HumanFactorsPicker
-          initialPrimary={humanFactorPrimary}
-          initialContributing={humanFactorContributing}
-        />
+      {subOptions && (
+        <div className="space-y-1.5">
+          <Label htmlFor="rootCauseSubCategory">Sub-category</Label>
+          <Select
+            id="rootCauseSubCategory"
+            name="rootCauseSubCategory"
+            required
+            value={subCategory}
+            onChange={(e) => setSubCategory(e.target.value)}
+          >
+            <option value="" disabled>— Select sub-category —</option>
+            {subOptions.map((s) => (
+              <option key={s} value={s}>
+                {ROOT_CAUSE_SUBCATEGORY_LABELS[category as keyof typeof ROOT_CAUSE_SUBCATEGORY_LABELS][s]}
+              </option>
+            ))}
+          </Select>
+        </div>
       )}
 
       <div className="space-y-1.5">

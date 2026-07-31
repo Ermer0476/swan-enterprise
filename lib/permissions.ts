@@ -26,19 +26,13 @@ export const PERMISSIONS = {
   "incident:close": "Close investigated incidents",
   "incident:delete": "Delete incidents",
 
-  // Near Miss module
-  "nm:read": "View near misses",
-  "nm:create": "Report near misses",
-  "nm:update": "Review near misses and record actions",
-  "nm:close": "Close near misses",
-  "nm:delete": "Delete near misses",
-
-  // Hazard Observation (HOR) module
-  "hazard:read": "View hazard observations",
-  "hazard:create": "Submit hazard observations",
-  "hazard:update": "Action hazard observations",
-  "hazard:close": "Close hazard observations",
-  "hazard:delete": "Delete hazard observations",
+  // Near Miss / Hazard Observation (HOR) module — merged: one report kind,
+  // Near Miss or HOR, tagged via NearMiss.kind.
+  "nm:read": "View near misses / hazard observations",
+  "nm:create": "Report near misses / hazard observations",
+  "nm:update": "Review near misses / hazard observations and record actions",
+  "nm:close": "Close near misses / hazard observations",
+  "nm:delete": "Delete near misses / hazard observations",
 
   // Non-Conformity (NCR) module
   "ncr:read": "View non-conformities",

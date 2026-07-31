@@ -15,6 +15,15 @@ export type AuditFindingView = {
   status: "OPEN" | "CLOSED";
 };
 
+// Context needed to build a "Raise NCR" prefill link from a finding —
+// internal/external audits have no "port" equivalent, unlike PSC.
+export type AuditNcrContext = {
+  vesselId: string | null;
+  reportRefNo: string;
+  raisedAt: string; // yyyy-mm-dd
+  source: "INTERNAL_AUDIT" | "EXTERNAL_AUDIT";
+};
+
 export const AUDIT_FINDING_CATEGORIES: AuditFindingCategory[] = [
   "MAJOR_NC",
   "MINOR_NC",

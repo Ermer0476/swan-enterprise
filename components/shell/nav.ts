@@ -4,7 +4,6 @@ import {
   BookText,
   AlertTriangle,
   ShieldAlert,
-  Eye,
   ClipboardCheck,
   Anchor,
   FlaskConical,
@@ -54,8 +53,7 @@ export const NAV: NavGroup[] = [
     items: [
       { label: "SMS Manual", href: "/sms-manual", icon: BookText, permission: "sms:read" },
       { label: "Incidents", href: "/incidents", icon: AlertTriangle, permission: "incident:read" },
-      { label: "Near Miss", href: "/near-miss", icon: ShieldAlert, permission: "nm:read" },
-      { label: "Hazard Observations", href: "/hazards", icon: Eye, permission: "hazard:read" },
+      { label: "Near Miss/HOR", href: "/near-miss", icon: ShieldAlert, permission: "nm:read" },
       { label: "Non-Conformities", href: "/non-conformities", icon: FileWarning, permission: "ncr:read" },
       { label: "SIRE Inspections", href: "/sire", icon: ClipboardCheck, permission: "sire:read" },
       { label: "PSC Inspections", href: "/psc", icon: Anchor, permission: "psc:read" },

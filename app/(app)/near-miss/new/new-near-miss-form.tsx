@@ -14,13 +14,19 @@ import {
   NEARMISS_CONSEQUENCE_TYPES,
   NEARMISS_CONSEQUENCE_LABELS,
   NEARMISS_LOCATIONS,
+  HOR_CATEGORIES,
+  HOR_CATEGORY_LABELS,
 } from "@/features/near-miss/schema";
-import { ROOT_CAUSE_CATEGORIES, ROOT_CAUSE_LABELS } from "@/lib/root-cause";
+import {
+  ROOT_CAUSE_CATEGORIES,
+  ROOT_CAUSE_LABELS,
+  ROOT_CAUSE_SUBCATEGORIES,
+  ROOT_CAUSE_SUBCATEGORY_LABELS,
+} from "@/lib/root-cause";
 import { humanize } from "@/lib/utils";
 import { Card, CardContent } from "@/components/ui/card";
 import { AutoGrowInput, Input, Textarea, Label, Select } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { HumanFactorsPicker } from "@/components/incidents/human-factors-picker";
 
 function SubmitButton() {
   const { pending } = useFormStatus();
@@ -33,16 +39,21 @@ function SubmitButton() {
 
 export function NewNearMissForm({
   vessels,
+  positions,
 }: {
   vessels: { id: string; name: string }[];
+  positions: readonly string[];
 }) {
   const [state, formAction] = useActionState<ActionResult, FormData>(
     createNearMissAction,
     { ok: false, error: null },
   );
   const [rootCause, setRootCause] = useState("");
-  const isHumanFactors = rootCause === "HUMAN_FACTORS";
+  const [rootCauseSub, setRootCauseSub] = useState("");
+  const rootCauseSubOptions =
+    rootCause && (ROOT_CAUSE_SUBCATEGORIES as Record<string, readonly string[]>)[rootCause];
   const [capaRowCount, setCapaRowCount] = useState(1);
+  const [isHor, setIsHor] = useState(false);
 
   return (
     <Card>
@@ -51,6 +62,51 @@ export function NewNearMissForm({
           <div className="space-y-1.5">
             <Label htmlFor="title">Title</Label>
             <AutoGrowInput id="title" name="title" placeholder="Brief summary" required />
+          </div>
+
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div className="space-y-1.5">
+              <Label htmlFor="reporterName">Name of Reporter</Label>
+              <AutoGrowInput id="reporterName" name="reporterName" placeholder="Full name" required />
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="reporterPosition">Position / Rank</Label>
+              <Select id="reporterPosition" name="reporterPosition" defaultValue="" required>
+                <option value="" disabled>— Select position —</option>
+                {positions.map((p) => (
+                  <option key={p} value={p}>{p}</option>
+                ))}
+              </Select>
+            </div>
+          </div>
+
+          <div className="rounded-md border border-border">
+            <label className="flex items-center gap-2 px-3 py-2 text-sm hover:bg-muted/40">
+              <input
+                type="checkbox"
+                name="kind"
+                value="HOR"
+                checked={isHor}
+                onChange={(e) => setIsHor(e.target.checked)}
+                className="h-4 w-4"
+              />
+              This is a Hazard Observation (HOR)
+            </label>
+            {isHor && (
+              <div className="space-y-1.5 border-t border-border bg-muted/40 p-3">
+                <Label htmlFor="horCategory">Category</Label>
+                <Select id="horCategory" name="horCategory" defaultValue="">
+                  <option value="" disabled>— Select category —</option>
+                  {HOR_CATEGORIES.map((c) => (
+                    <option key={c} value={c}>{HOR_CATEGORY_LABELS[c]}</option>
+                  ))}
+                </Select>
+                <label className="flex items-center gap-2 pt-1 text-sm">
+                  <input type="checkbox" name="stopAuthorityExercised" className="h-4 w-4" />
+                  Stop Work Authority Exercised?
+                </label>
+              </div>
+            )}
           </div>
 
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
@@ -115,7 +171,10 @@ export function NewNearMissForm({
               name="rootCauseCategory"
               required
               value={rootCause}
-              onChange={(e) => setRootCause(e.target.value)}
+              onChange={(e) => {
+                setRootCause(e.target.value);
+                setRootCauseSub(""); // sub-category list differs per category — reset on change
+              }}
             >
               <option value="" disabled>— Select root cause —</option>
               {ROOT_CAUSE_CATEGORIES.map((c) => (
@@ -124,7 +183,25 @@ export function NewNearMissForm({
             </Select>
           </div>
 
-          {isHumanFactors && <HumanFactorsPicker />}
+          {rootCauseSubOptions && (
+            <div className="space-y-1.5">
+              <Label htmlFor="rootCauseSubCategory">Sub-category</Label>
+              <Select
+                id="rootCauseSubCategory"
+                name="rootCauseSubCategory"
+                required
+                value={rootCauseSub}
+                onChange={(e) => setRootCauseSub(e.target.value)}
+              >
+                <option value="" disabled>— Select sub-category —</option>
+                {rootCauseSubOptions.map((s) => (
+                  <option key={s} value={s}>
+                    {ROOT_CAUSE_SUBCATEGORY_LABELS[rootCause as keyof typeof ROOT_CAUSE_SUBCATEGORY_LABELS][s]}
+                  </option>
+                ))}
+              </Select>
+            </div>
+          )}
 
           {/* Corrective Action Plan — captured in the same report; the
               vessel monitors/updates these rows afterward on the near miss

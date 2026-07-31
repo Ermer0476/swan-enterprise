@@ -127,11 +127,6 @@ export type IncidentTypeEntry = $Result.DefaultSelection<Prisma.$IncidentTypeEnt
  */
 export type NearMiss = $Result.DefaultSelection<Prisma.$NearMissPayload>
 /**
- * Model HazardObservation
- * 
- */
-export type HazardObservation = $Result.DefaultSelection<Prisma.$HazardObservationPayload>
-/**
  * Model NonConformity
  * 
  */
@@ -331,18 +326,6 @@ export const RootCauseCategory: {
 export type RootCauseCategory = (typeof RootCauseCategory)[keyof typeof RootCauseCategory]
 
 
-export const HumanFactor: {
-  FATIGUE: 'FATIGUE',
-  WORKLOAD_MULTITASKING: 'WORKLOAD_MULTITASKING',
-  SITUATIONAL_AWARENESS: 'SITUATIONAL_AWARENESS',
-  COMMUNICATION_BREAKDOWN: 'COMMUNICATION_BREAKDOWN',
-  DECISION_MAKING_PRESSURE: 'DECISION_MAKING_PRESSURE',
-  CULTURAL_SPEAKING_UP: 'CULTURAL_SPEAKING_UP'
-};
-
-export type HumanFactor = (typeof HumanFactor)[keyof typeof HumanFactor]
-
-
 export const CapaKind: {
   CORRECTIVE: 'CORRECTIVE',
   PREVENTIVE: 'PREVENTIVE'
@@ -393,21 +376,20 @@ export const NearMissConsequenceType: {
 export type NearMissConsequenceType = (typeof NearMissConsequenceType)[keyof typeof NearMissConsequenceType]
 
 
+export const NearMissKind: {
+  NEAR_MISS: 'NEAR_MISS',
+  HOR: 'HOR'
+};
+
+export type NearMissKind = (typeof NearMissKind)[keyof typeof NearMissKind]
+
+
 export const HazardType: {
   UNSAFE_ACT: 'UNSAFE_ACT',
   UNSAFE_CONDITION: 'UNSAFE_CONDITION'
 };
 
 export type HazardType = (typeof HazardType)[keyof typeof HazardType]
-
-
-export const HazardStatus: {
-  OPEN: 'OPEN',
-  IN_PROGRESS: 'IN_PROGRESS',
-  CLOSED: 'CLOSED'
-};
-
-export type HazardStatus = (typeof HazardStatus)[keyof typeof HazardStatus]
 
 
 export const NcrSource: {
@@ -426,8 +408,7 @@ export type NcrSource = (typeof NcrSource)[keyof typeof NcrSource]
 
 export const NcrStatus: {
   OPEN: 'OPEN',
-  IN_PROGRESS: 'IN_PROGRESS',
-  VERIFIED: 'VERIFIED',
+  SUBMITTED_TO_OFFICE: 'SUBMITTED_TO_OFFICE',
   CLOSED: 'CLOSED'
 };
 
@@ -505,10 +486,6 @@ export type RootCauseCategory = $Enums.RootCauseCategory
 
 export const RootCauseCategory: typeof $Enums.RootCauseCategory
 
-export type HumanFactor = $Enums.HumanFactor
-
-export const HumanFactor: typeof $Enums.HumanFactor
-
 export type CapaKind = $Enums.CapaKind
 
 export const CapaKind: typeof $Enums.CapaKind
@@ -529,13 +506,13 @@ export type NearMissConsequenceType = $Enums.NearMissConsequenceType
 
 export const NearMissConsequenceType: typeof $Enums.NearMissConsequenceType
 
+export type NearMissKind = $Enums.NearMissKind
+
+export const NearMissKind: typeof $Enums.NearMissKind
+
 export type HazardType = $Enums.HazardType
 
 export const HazardType: typeof $Enums.HazardType
-
-export type HazardStatus = $Enums.HazardStatus
-
-export const HazardStatus: typeof $Enums.HazardStatus
 
 export type NcrSource = $Enums.NcrSource
 
@@ -894,16 +871,6 @@ export class PrismaClient<
     * ```
     */
   get nearMiss(): Prisma.NearMissDelegate<ExtArgs, ClientOptions>;
-
-  /**
-   * `prisma.hazardObservation`: Exposes CRUD operations for the **HazardObservation** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more HazardObservations
-    * const hazardObservations = await prisma.hazardObservation.findMany()
-    * ```
-    */
-  get hazardObservation(): Prisma.HazardObservationDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.nonConformity`: Exposes CRUD operations for the **NonConformity** model.
@@ -1477,7 +1444,6 @@ export namespace Prisma {
     IncidentSofEntry: 'IncidentSofEntry',
     IncidentTypeEntry: 'IncidentTypeEntry',
     NearMiss: 'NearMiss',
-    HazardObservation: 'HazardObservation',
     NonConformity: 'NonConformity',
     SireInspection: 'SireInspection',
     SireObservation: 'SireObservation',
@@ -1507,7 +1473,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "company" | "user" | "role" | "permission" | "rolePermission" | "userRole" | "vessel" | "auditLog" | "attachment" | "comment" | "capaAction" | "notification" | "workflowDefinition" | "workflowStep" | "workflowInstance" | "workflowAction" | "smsDocument" | "smsRevision" | "incident" | "incidentSofEntry" | "incidentTypeEntry" | "nearMiss" | "hazardObservation" | "nonConformity" | "sireInspection" | "sireObservation" | "pscInspection" | "pscDeficiency" | "cdiInspection" | "cdiObservation" | "internalAudit" | "internalAuditFinding" | "externalAudit" | "externalAuditFinding"
+      modelProps: "company" | "user" | "role" | "permission" | "rolePermission" | "userRole" | "vessel" | "auditLog" | "attachment" | "comment" | "capaAction" | "notification" | "workflowDefinition" | "workflowStep" | "workflowInstance" | "workflowAction" | "smsDocument" | "smsRevision" | "incident" | "incidentSofEntry" | "incidentTypeEntry" | "nearMiss" | "nonConformity" | "sireInspection" | "sireObservation" | "pscInspection" | "pscDeficiency" | "cdiInspection" | "cdiObservation" | "internalAudit" | "internalAuditFinding" | "externalAudit" | "externalAuditFinding"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -3139,80 +3105,6 @@ export namespace Prisma {
           }
         }
       }
-      HazardObservation: {
-        payload: Prisma.$HazardObservationPayload<ExtArgs>
-        fields: Prisma.HazardObservationFieldRefs
-        operations: {
-          findUnique: {
-            args: Prisma.HazardObservationFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$HazardObservationPayload> | null
-          }
-          findUniqueOrThrow: {
-            args: Prisma.HazardObservationFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$HazardObservationPayload>
-          }
-          findFirst: {
-            args: Prisma.HazardObservationFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$HazardObservationPayload> | null
-          }
-          findFirstOrThrow: {
-            args: Prisma.HazardObservationFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$HazardObservationPayload>
-          }
-          findMany: {
-            args: Prisma.HazardObservationFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$HazardObservationPayload>[]
-          }
-          create: {
-            args: Prisma.HazardObservationCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$HazardObservationPayload>
-          }
-          createMany: {
-            args: Prisma.HazardObservationCreateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          createManyAndReturn: {
-            args: Prisma.HazardObservationCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$HazardObservationPayload>[]
-          }
-          delete: {
-            args: Prisma.HazardObservationDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$HazardObservationPayload>
-          }
-          update: {
-            args: Prisma.HazardObservationUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$HazardObservationPayload>
-          }
-          deleteMany: {
-            args: Prisma.HazardObservationDeleteManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateMany: {
-            args: Prisma.HazardObservationUpdateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateManyAndReturn: {
-            args: Prisma.HazardObservationUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$HazardObservationPayload>[]
-          }
-          upsert: {
-            args: Prisma.HazardObservationUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$HazardObservationPayload>
-          }
-          aggregate: {
-            args: Prisma.HazardObservationAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateHazardObservation>
-          }
-          groupBy: {
-            args: Prisma.HazardObservationGroupByArgs<ExtArgs>
-            result: $Utils.Optional<HazardObservationGroupByOutputType>[]
-          }
-          count: {
-            args: Prisma.HazardObservationCountArgs<ExtArgs>
-            result: $Utils.Optional<HazardObservationCountAggregateOutputType> | number
-          }
-        }
-      }
       NonConformity: {
         payload: Prisma.$NonConformityPayload<ExtArgs>
         fields: Prisma.NonConformityFieldRefs
@@ -4145,7 +4037,6 @@ export namespace Prisma {
     incidentSofEntry?: IncidentSofEntryOmit
     incidentTypeEntry?: IncidentTypeEntryOmit
     nearMiss?: NearMissOmit
-    hazardObservation?: HazardObservationOmit
     nonConformity?: NonConformityOmit
     sireInspection?: SireInspectionOmit
     sireObservation?: SireObservationOmit
@@ -4244,7 +4135,6 @@ export namespace Prisma {
     workflows: number
     incidents: number
     nearMisses: number
-    hazards: number
     nonConformities: number
     sireInspections: number
     pscInspections: number
@@ -4261,7 +4151,6 @@ export namespace Prisma {
     workflows?: boolean | CompanyCountOutputTypeCountWorkflowsArgs
     incidents?: boolean | CompanyCountOutputTypeCountIncidentsArgs
     nearMisses?: boolean | CompanyCountOutputTypeCountNearMissesArgs
-    hazards?: boolean | CompanyCountOutputTypeCountHazardsArgs
     nonConformities?: boolean | CompanyCountOutputTypeCountNonConformitiesArgs
     sireInspections?: boolean | CompanyCountOutputTypeCountSireInspectionsArgs
     pscInspections?: boolean | CompanyCountOutputTypeCountPscInspectionsArgs
@@ -4333,13 +4222,6 @@ export namespace Prisma {
   /**
    * CompanyCountOutputType without action
    */
-  export type CompanyCountOutputTypeCountHazardsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: HazardObservationWhereInput
-  }
-
-  /**
-   * CompanyCountOutputType without action
-   */
   export type CompanyCountOutputTypeCountNonConformitiesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: NonConformityWhereInput
   }
@@ -4389,7 +4271,6 @@ export namespace Prisma {
     ownedDocs: number
     reportedIncidents: number
     reportedNearMisses: number
-    reportedHazards: number
     raisedNcrs: number
     notifications: number
   }
@@ -4399,7 +4280,6 @@ export namespace Prisma {
     ownedDocs?: boolean | UserCountOutputTypeCountOwnedDocsArgs
     reportedIncidents?: boolean | UserCountOutputTypeCountReportedIncidentsArgs
     reportedNearMisses?: boolean | UserCountOutputTypeCountReportedNearMissesArgs
-    reportedHazards?: boolean | UserCountOutputTypeCountReportedHazardsArgs
     raisedNcrs?: boolean | UserCountOutputTypeCountRaisedNcrsArgs
     notifications?: boolean | UserCountOutputTypeCountNotificationsArgs
   }
@@ -4441,13 +4321,6 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountReportedNearMissesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: NearMissWhereInput
-  }
-
-  /**
-   * UserCountOutputType without action
-   */
-  export type UserCountOutputTypeCountReportedHazardsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: HazardObservationWhereInput
   }
 
   /**
@@ -4544,7 +4417,6 @@ export namespace Prisma {
     smsDocuments: number
     incidents: number
     nearMisses: number
-    hazards: number
     nonConformities: number
     sireInspections: number
     pscInspections: number
@@ -4557,7 +4429,6 @@ export namespace Prisma {
     smsDocuments?: boolean | VesselCountOutputTypeCountSmsDocumentsArgs
     incidents?: boolean | VesselCountOutputTypeCountIncidentsArgs
     nearMisses?: boolean | VesselCountOutputTypeCountNearMissesArgs
-    hazards?: boolean | VesselCountOutputTypeCountHazardsArgs
     nonConformities?: boolean | VesselCountOutputTypeCountNonConformitiesArgs
     sireInspections?: boolean | VesselCountOutputTypeCountSireInspectionsArgs
     pscInspections?: boolean | VesselCountOutputTypeCountPscInspectionsArgs
@@ -4596,13 +4467,6 @@ export namespace Prisma {
    */
   export type VesselCountOutputTypeCountNearMissesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: NearMissWhereInput
-  }
-
-  /**
-   * VesselCountOutputType without action
-   */
-  export type VesselCountOutputTypeCountHazardsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: HazardObservationWhereInput
   }
 
   /**
@@ -5151,7 +5015,6 @@ export namespace Prisma {
     workflows?: boolean | Company$workflowsArgs<ExtArgs>
     incidents?: boolean | Company$incidentsArgs<ExtArgs>
     nearMisses?: boolean | Company$nearMissesArgs<ExtArgs>
-    hazards?: boolean | Company$hazardsArgs<ExtArgs>
     nonConformities?: boolean | Company$nonConformitiesArgs<ExtArgs>
     sireInspections?: boolean | Company$sireInspectionsArgs<ExtArgs>
     pscInspections?: boolean | Company$pscInspectionsArgs<ExtArgs>
@@ -5194,7 +5057,6 @@ export namespace Prisma {
     workflows?: boolean | Company$workflowsArgs<ExtArgs>
     incidents?: boolean | Company$incidentsArgs<ExtArgs>
     nearMisses?: boolean | Company$nearMissesArgs<ExtArgs>
-    hazards?: boolean | Company$hazardsArgs<ExtArgs>
     nonConformities?: boolean | Company$nonConformitiesArgs<ExtArgs>
     sireInspections?: boolean | Company$sireInspectionsArgs<ExtArgs>
     pscInspections?: boolean | Company$pscInspectionsArgs<ExtArgs>
@@ -5216,7 +5078,6 @@ export namespace Prisma {
       workflows: Prisma.$WorkflowDefinitionPayload<ExtArgs>[]
       incidents: Prisma.$IncidentPayload<ExtArgs>[]
       nearMisses: Prisma.$NearMissPayload<ExtArgs>[]
-      hazards: Prisma.$HazardObservationPayload<ExtArgs>[]
       nonConformities: Prisma.$NonConformityPayload<ExtArgs>[]
       sireInspections: Prisma.$SireInspectionPayload<ExtArgs>[]
       pscInspections: Prisma.$PscInspectionPayload<ExtArgs>[]
@@ -5631,7 +5492,6 @@ export namespace Prisma {
     workflows<T extends Company$workflowsArgs<ExtArgs> = {}>(args?: Subset<T, Company$workflowsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WorkflowDefinitionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     incidents<T extends Company$incidentsArgs<ExtArgs> = {}>(args?: Subset<T, Company$incidentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IncidentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     nearMisses<T extends Company$nearMissesArgs<ExtArgs> = {}>(args?: Subset<T, Company$nearMissesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NearMissPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    hazards<T extends Company$hazardsArgs<ExtArgs> = {}>(args?: Subset<T, Company$hazardsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$HazardObservationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     nonConformities<T extends Company$nonConformitiesArgs<ExtArgs> = {}>(args?: Subset<T, Company$nonConformitiesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NonConformityPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     sireInspections<T extends Company$sireInspectionsArgs<ExtArgs> = {}>(args?: Subset<T, Company$sireInspectionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SireInspectionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     pscInspections<T extends Company$pscInspectionsArgs<ExtArgs> = {}>(args?: Subset<T, Company$pscInspectionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PscInspectionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -6228,30 +6088,6 @@ export namespace Prisma {
   }
 
   /**
-   * Company.hazards
-   */
-  export type Company$hazardsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the HazardObservation
-     */
-    select?: HazardObservationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the HazardObservation
-     */
-    omit?: HazardObservationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: HazardObservationInclude<ExtArgs> | null
-    where?: HazardObservationWhereInput
-    orderBy?: HazardObservationOrderByWithRelationInput | HazardObservationOrderByWithRelationInput[]
-    cursor?: HazardObservationWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: HazardObservationScalarFieldEnum | HazardObservationScalarFieldEnum[]
-  }
-
-  /**
    * Company.nonConformities
    */
   export type Company$nonConformitiesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -6663,7 +6499,6 @@ export namespace Prisma {
     ownedDocs?: boolean | User$ownedDocsArgs<ExtArgs>
     reportedIncidents?: boolean | User$reportedIncidentsArgs<ExtArgs>
     reportedNearMisses?: boolean | User$reportedNearMissesArgs<ExtArgs>
-    reportedHazards?: boolean | User$reportedHazardsArgs<ExtArgs>
     raisedNcrs?: boolean | User$raisedNcrsArgs<ExtArgs>
     notifications?: boolean | User$notificationsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -6732,7 +6567,6 @@ export namespace Prisma {
     ownedDocs?: boolean | User$ownedDocsArgs<ExtArgs>
     reportedIncidents?: boolean | User$reportedIncidentsArgs<ExtArgs>
     reportedNearMisses?: boolean | User$reportedNearMissesArgs<ExtArgs>
-    reportedHazards?: boolean | User$reportedHazardsArgs<ExtArgs>
     raisedNcrs?: boolean | User$raisedNcrsArgs<ExtArgs>
     notifications?: boolean | User$notificationsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -6752,7 +6586,6 @@ export namespace Prisma {
       ownedDocs: Prisma.$SmsDocumentPayload<ExtArgs>[]
       reportedIncidents: Prisma.$IncidentPayload<ExtArgs>[]
       reportedNearMisses: Prisma.$NearMissPayload<ExtArgs>[]
-      reportedHazards: Prisma.$HazardObservationPayload<ExtArgs>[]
       raisedNcrs: Prisma.$NonConformityPayload<ExtArgs>[]
       notifications: Prisma.$NotificationPayload<ExtArgs>[]
     }
@@ -7171,7 +7004,6 @@ export namespace Prisma {
     ownedDocs<T extends User$ownedDocsArgs<ExtArgs> = {}>(args?: Subset<T, User$ownedDocsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SmsDocumentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     reportedIncidents<T extends User$reportedIncidentsArgs<ExtArgs> = {}>(args?: Subset<T, User$reportedIncidentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IncidentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     reportedNearMisses<T extends User$reportedNearMissesArgs<ExtArgs> = {}>(args?: Subset<T, User$reportedNearMissesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NearMissPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    reportedHazards<T extends User$reportedHazardsArgs<ExtArgs> = {}>(args?: Subset<T, User$reportedHazardsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$HazardObservationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     raisedNcrs<T extends User$raisedNcrsArgs<ExtArgs> = {}>(args?: Subset<T, User$raisedNcrsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NonConformityPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     notifications<T extends User$notificationsArgs<ExtArgs> = {}>(args?: Subset<T, User$notificationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
@@ -7707,30 +7539,6 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: NearMissScalarFieldEnum | NearMissScalarFieldEnum[]
-  }
-
-  /**
-   * User.reportedHazards
-   */
-  export type User$reportedHazardsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the HazardObservation
-     */
-    select?: HazardObservationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the HazardObservation
-     */
-    omit?: HazardObservationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: HazardObservationInclude<ExtArgs> | null
-    where?: HazardObservationWhereInput
-    orderBy?: HazardObservationOrderByWithRelationInput | HazardObservationOrderByWithRelationInput[]
-    cursor?: HazardObservationWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: HazardObservationScalarFieldEnum | HazardObservationScalarFieldEnum[]
   }
 
   /**
@@ -12407,7 +12215,6 @@ export namespace Prisma {
     smsDocuments?: boolean | Vessel$smsDocumentsArgs<ExtArgs>
     incidents?: boolean | Vessel$incidentsArgs<ExtArgs>
     nearMisses?: boolean | Vessel$nearMissesArgs<ExtArgs>
-    hazards?: boolean | Vessel$hazardsArgs<ExtArgs>
     nonConformities?: boolean | Vessel$nonConformitiesArgs<ExtArgs>
     sireInspections?: boolean | Vessel$sireInspectionsArgs<ExtArgs>
     pscInspections?: boolean | Vessel$pscInspectionsArgs<ExtArgs>
@@ -12500,7 +12307,6 @@ export namespace Prisma {
     smsDocuments?: boolean | Vessel$smsDocumentsArgs<ExtArgs>
     incidents?: boolean | Vessel$incidentsArgs<ExtArgs>
     nearMisses?: boolean | Vessel$nearMissesArgs<ExtArgs>
-    hazards?: boolean | Vessel$hazardsArgs<ExtArgs>
     nonConformities?: boolean | Vessel$nonConformitiesArgs<ExtArgs>
     sireInspections?: boolean | Vessel$sireInspectionsArgs<ExtArgs>
     pscInspections?: boolean | Vessel$pscInspectionsArgs<ExtArgs>
@@ -12523,7 +12329,6 @@ export namespace Prisma {
       smsDocuments: Prisma.$SmsDocumentPayload<ExtArgs>[]
       incidents: Prisma.$IncidentPayload<ExtArgs>[]
       nearMisses: Prisma.$NearMissPayload<ExtArgs>[]
-      hazards: Prisma.$HazardObservationPayload<ExtArgs>[]
       nonConformities: Prisma.$NonConformityPayload<ExtArgs>[]
       sireInspections: Prisma.$SireInspectionPayload<ExtArgs>[]
       pscInspections: Prisma.$PscInspectionPayload<ExtArgs>[]
@@ -12952,7 +12757,6 @@ export namespace Prisma {
     smsDocuments<T extends Vessel$smsDocumentsArgs<ExtArgs> = {}>(args?: Subset<T, Vessel$smsDocumentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SmsDocumentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     incidents<T extends Vessel$incidentsArgs<ExtArgs> = {}>(args?: Subset<T, Vessel$incidentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IncidentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     nearMisses<T extends Vessel$nearMissesArgs<ExtArgs> = {}>(args?: Subset<T, Vessel$nearMissesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NearMissPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    hazards<T extends Vessel$hazardsArgs<ExtArgs> = {}>(args?: Subset<T, Vessel$hazardsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$HazardObservationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     nonConformities<T extends Vessel$nonConformitiesArgs<ExtArgs> = {}>(args?: Subset<T, Vessel$nonConformitiesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NonConformityPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     sireInspections<T extends Vessel$sireInspectionsArgs<ExtArgs> = {}>(args?: Subset<T, Vessel$sireInspectionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SireInspectionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     pscInspections<T extends Vessel$pscInspectionsArgs<ExtArgs> = {}>(args?: Subset<T, Vessel$pscInspectionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PscInspectionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -13475,30 +13279,6 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: NearMissScalarFieldEnum | NearMissScalarFieldEnum[]
-  }
-
-  /**
-   * Vessel.hazards
-   */
-  export type Vessel$hazardsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the HazardObservation
-     */
-    select?: HazardObservationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the HazardObservation
-     */
-    omit?: HazardObservationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: HazardObservationInclude<ExtArgs> | null
-    where?: HazardObservationWhereInput
-    orderBy?: HazardObservationOrderByWithRelationInput | HazardObservationOrderByWithRelationInput[]
-    cursor?: HazardObservationWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: HazardObservationScalarFieldEnum | HazardObservationScalarFieldEnum[]
   }
 
   /**
@@ -26379,7 +26159,7 @@ export namespace Prisma {
     description: string | null
     investigationDetails: string | null
     rootCauseCategory: $Enums.RootCauseCategory | null
-    humanFactorPrimary: $Enums.HumanFactor | null
+    rootCauseSubCategory: string | null
     immediateAction: string | null
     rootCause: string | null
     closedAt: Date | null
@@ -26387,6 +26167,8 @@ export namespace Prisma {
     verifiedByName: string | null
     verifiedAt: Date | null
     reportedById: string | null
+    reporterName: string | null
+    reporterPosition: string | null
     createdAt: Date | null
     updatedAt: Date | null
     createdBy: string | null
@@ -26408,7 +26190,7 @@ export namespace Prisma {
     description: string | null
     investigationDetails: string | null
     rootCauseCategory: $Enums.RootCauseCategory | null
-    humanFactorPrimary: $Enums.HumanFactor | null
+    rootCauseSubCategory: string | null
     immediateAction: string | null
     rootCause: string | null
     closedAt: Date | null
@@ -26416,6 +26198,8 @@ export namespace Prisma {
     verifiedByName: string | null
     verifiedAt: Date | null
     reportedById: string | null
+    reporterName: string | null
+    reporterPosition: string | null
     createdAt: Date | null
     updatedAt: Date | null
     createdBy: string | null
@@ -26437,8 +26221,7 @@ export namespace Prisma {
     description: number
     investigationDetails: number
     rootCauseCategory: number
-    humanFactorPrimary: number
-    humanFactorContributing: number
+    rootCauseSubCategory: number
     immediateAction: number
     rootCause: number
     closedAt: number
@@ -26446,6 +26229,8 @@ export namespace Prisma {
     verifiedByName: number
     verifiedAt: number
     reportedById: number
+    reporterName: number
+    reporterPosition: number
     createdAt: number
     updatedAt: number
     createdBy: number
@@ -26469,7 +26254,7 @@ export namespace Prisma {
     description?: true
     investigationDetails?: true
     rootCauseCategory?: true
-    humanFactorPrimary?: true
+    rootCauseSubCategory?: true
     immediateAction?: true
     rootCause?: true
     closedAt?: true
@@ -26477,6 +26262,8 @@ export namespace Prisma {
     verifiedByName?: true
     verifiedAt?: true
     reportedById?: true
+    reporterName?: true
+    reporterPosition?: true
     createdAt?: true
     updatedAt?: true
     createdBy?: true
@@ -26498,7 +26285,7 @@ export namespace Prisma {
     description?: true
     investigationDetails?: true
     rootCauseCategory?: true
-    humanFactorPrimary?: true
+    rootCauseSubCategory?: true
     immediateAction?: true
     rootCause?: true
     closedAt?: true
@@ -26506,6 +26293,8 @@ export namespace Prisma {
     verifiedByName?: true
     verifiedAt?: true
     reportedById?: true
+    reporterName?: true
+    reporterPosition?: true
     createdAt?: true
     updatedAt?: true
     createdBy?: true
@@ -26527,8 +26316,7 @@ export namespace Prisma {
     description?: true
     investigationDetails?: true
     rootCauseCategory?: true
-    humanFactorPrimary?: true
-    humanFactorContributing?: true
+    rootCauseSubCategory?: true
     immediateAction?: true
     rootCause?: true
     closedAt?: true
@@ -26536,6 +26324,8 @@ export namespace Prisma {
     verifiedByName?: true
     verifiedAt?: true
     reportedById?: true
+    reporterName?: true
+    reporterPosition?: true
     createdAt?: true
     updatedAt?: true
     createdBy?: true
@@ -26630,8 +26420,7 @@ export namespace Prisma {
     description: string
     investigationDetails: string | null
     rootCauseCategory: $Enums.RootCauseCategory | null
-    humanFactorPrimary: $Enums.HumanFactor | null
-    humanFactorContributing: $Enums.HumanFactor[]
+    rootCauseSubCategory: string | null
     immediateAction: string | null
     rootCause: string | null
     closedAt: Date | null
@@ -26639,6 +26428,8 @@ export namespace Prisma {
     verifiedByName: string | null
     verifiedAt: Date | null
     reportedById: string | null
+    reporterName: string | null
+    reporterPosition: string | null
     createdAt: Date
     updatedAt: Date
     createdBy: string | null
@@ -26677,8 +26468,7 @@ export namespace Prisma {
     description?: boolean
     investigationDetails?: boolean
     rootCauseCategory?: boolean
-    humanFactorPrimary?: boolean
-    humanFactorContributing?: boolean
+    rootCauseSubCategory?: boolean
     immediateAction?: boolean
     rootCause?: boolean
     closedAt?: boolean
@@ -26686,6 +26476,8 @@ export namespace Prisma {
     verifiedByName?: boolean
     verifiedAt?: boolean
     reportedById?: boolean
+    reporterName?: boolean
+    reporterPosition?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     createdBy?: boolean
@@ -26713,8 +26505,7 @@ export namespace Prisma {
     description?: boolean
     investigationDetails?: boolean
     rootCauseCategory?: boolean
-    humanFactorPrimary?: boolean
-    humanFactorContributing?: boolean
+    rootCauseSubCategory?: boolean
     immediateAction?: boolean
     rootCause?: boolean
     closedAt?: boolean
@@ -26722,6 +26513,8 @@ export namespace Prisma {
     verifiedByName?: boolean
     verifiedAt?: boolean
     reportedById?: boolean
+    reporterName?: boolean
+    reporterPosition?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     createdBy?: boolean
@@ -26746,8 +26539,7 @@ export namespace Prisma {
     description?: boolean
     investigationDetails?: boolean
     rootCauseCategory?: boolean
-    humanFactorPrimary?: boolean
-    humanFactorContributing?: boolean
+    rootCauseSubCategory?: boolean
     immediateAction?: boolean
     rootCause?: boolean
     closedAt?: boolean
@@ -26755,6 +26547,8 @@ export namespace Prisma {
     verifiedByName?: boolean
     verifiedAt?: boolean
     reportedById?: boolean
+    reporterName?: boolean
+    reporterPosition?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     createdBy?: boolean
@@ -26779,8 +26573,7 @@ export namespace Prisma {
     description?: boolean
     investigationDetails?: boolean
     rootCauseCategory?: boolean
-    humanFactorPrimary?: boolean
-    humanFactorContributing?: boolean
+    rootCauseSubCategory?: boolean
     immediateAction?: boolean
     rootCause?: boolean
     closedAt?: boolean
@@ -26788,6 +26581,8 @@ export namespace Prisma {
     verifiedByName?: boolean
     verifiedAt?: boolean
     reportedById?: boolean
+    reporterName?: boolean
+    reporterPosition?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     createdBy?: boolean
@@ -26796,7 +26591,7 @@ export namespace Prisma {
     deletedBy?: boolean
   }
 
-  export type IncidentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "companyId" | "refNo" | "title" | "severity" | "status" | "vesselId" | "occurredAt" | "location" | "description" | "investigationDetails" | "rootCauseCategory" | "humanFactorPrimary" | "humanFactorContributing" | "immediateAction" | "rootCause" | "closedAt" | "verifiedById" | "verifiedByName" | "verifiedAt" | "reportedById" | "createdAt" | "updatedAt" | "createdBy" | "updatedBy" | "deletedAt" | "deletedBy", ExtArgs["result"]["incident"]>
+  export type IncidentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "companyId" | "refNo" | "title" | "severity" | "status" | "vesselId" | "occurredAt" | "location" | "description" | "investigationDetails" | "rootCauseCategory" | "rootCauseSubCategory" | "immediateAction" | "rootCause" | "closedAt" | "verifiedById" | "verifiedByName" | "verifiedAt" | "reportedById" | "reporterName" | "reporterPosition" | "createdAt" | "updatedAt" | "createdBy" | "updatedBy" | "deletedAt" | "deletedBy", ExtArgs["result"]["incident"]>
   export type IncidentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     company?: boolean | CompanyDefaultArgs<ExtArgs>
     vessel?: boolean | Incident$vesselArgs<ExtArgs>
@@ -26838,8 +26633,7 @@ export namespace Prisma {
       description: string
       investigationDetails: string | null
       rootCauseCategory: $Enums.RootCauseCategory | null
-      humanFactorPrimary: $Enums.HumanFactor | null
-      humanFactorContributing: $Enums.HumanFactor[]
+      rootCauseSubCategory: string | null
       immediateAction: string | null
       rootCause: string | null
       closedAt: Date | null
@@ -26847,6 +26641,8 @@ export namespace Prisma {
       verifiedByName: string | null
       verifiedAt: Date | null
       reportedById: string | null
+      reporterName: string | null
+      reporterPosition: string | null
       createdAt: Date
       updatedAt: Date
       createdBy: string | null
@@ -27293,8 +27089,7 @@ export namespace Prisma {
     readonly description: FieldRef<"Incident", 'String'>
     readonly investigationDetails: FieldRef<"Incident", 'String'>
     readonly rootCauseCategory: FieldRef<"Incident", 'RootCauseCategory'>
-    readonly humanFactorPrimary: FieldRef<"Incident", 'HumanFactor'>
-    readonly humanFactorContributing: FieldRef<"Incident", 'HumanFactor[]'>
+    readonly rootCauseSubCategory: FieldRef<"Incident", 'String'>
     readonly immediateAction: FieldRef<"Incident", 'String'>
     readonly rootCause: FieldRef<"Incident", 'String'>
     readonly closedAt: FieldRef<"Incident", 'DateTime'>
@@ -27302,6 +27097,8 @@ export namespace Prisma {
     readonly verifiedByName: FieldRef<"Incident", 'String'>
     readonly verifiedAt: FieldRef<"Incident", 'DateTime'>
     readonly reportedById: FieldRef<"Incident", 'String'>
+    readonly reporterName: FieldRef<"Incident", 'String'>
+    readonly reporterPosition: FieldRef<"Incident", 'String'>
     readonly createdAt: FieldRef<"Incident", 'DateTime'>
     readonly updatedAt: FieldRef<"Incident", 'DateTime'>
     readonly createdBy: FieldRef<"Incident", 'String'>
@@ -30033,6 +29830,9 @@ export namespace Prisma {
     companyId: string | null
     refNo: string | null
     title: string | null
+    kind: $Enums.NearMissKind | null
+    horCategory: $Enums.HazardType | null
+    stopAuthorityExercised: boolean | null
     vesselId: string | null
     occurredAt: Date | null
     location: string | null
@@ -30041,12 +29841,14 @@ export namespace Prisma {
     potentialSeverity: $Enums.Severity | null
     immediateAction: string | null
     rootCauseCategory: $Enums.RootCauseCategory | null
-    humanFactorPrimary: $Enums.HumanFactor | null
+    rootCauseSubCategory: string | null
     status: $Enums.NearMissStatus | null
     closedAt: Date | null
     companyComments: string | null
     reviewedAt: Date | null
     reportedById: string | null
+    reporterName: string | null
+    reporterPosition: string | null
     createdAt: Date | null
     updatedAt: Date | null
     createdBy: string | null
@@ -30060,6 +29862,9 @@ export namespace Prisma {
     companyId: string | null
     refNo: string | null
     title: string | null
+    kind: $Enums.NearMissKind | null
+    horCategory: $Enums.HazardType | null
+    stopAuthorityExercised: boolean | null
     vesselId: string | null
     occurredAt: Date | null
     location: string | null
@@ -30068,12 +29873,14 @@ export namespace Prisma {
     potentialSeverity: $Enums.Severity | null
     immediateAction: string | null
     rootCauseCategory: $Enums.RootCauseCategory | null
-    humanFactorPrimary: $Enums.HumanFactor | null
+    rootCauseSubCategory: string | null
     status: $Enums.NearMissStatus | null
     closedAt: Date | null
     companyComments: string | null
     reviewedAt: Date | null
     reportedById: string | null
+    reporterName: string | null
+    reporterPosition: string | null
     createdAt: Date | null
     updatedAt: Date | null
     createdBy: string | null
@@ -30087,6 +29894,9 @@ export namespace Prisma {
     companyId: number
     refNo: number
     title: number
+    kind: number
+    horCategory: number
+    stopAuthorityExercised: number
     vesselId: number
     occurredAt: number
     location: number
@@ -30095,13 +29905,14 @@ export namespace Prisma {
     potentialSeverity: number
     immediateAction: number
     rootCauseCategory: number
-    humanFactorPrimary: number
-    humanFactorContributing: number
+    rootCauseSubCategory: number
     status: number
     closedAt: number
     companyComments: number
     reviewedAt: number
     reportedById: number
+    reporterName: number
+    reporterPosition: number
     createdAt: number
     updatedAt: number
     createdBy: number
@@ -30117,6 +29928,9 @@ export namespace Prisma {
     companyId?: true
     refNo?: true
     title?: true
+    kind?: true
+    horCategory?: true
+    stopAuthorityExercised?: true
     vesselId?: true
     occurredAt?: true
     location?: true
@@ -30125,12 +29939,14 @@ export namespace Prisma {
     potentialSeverity?: true
     immediateAction?: true
     rootCauseCategory?: true
-    humanFactorPrimary?: true
+    rootCauseSubCategory?: true
     status?: true
     closedAt?: true
     companyComments?: true
     reviewedAt?: true
     reportedById?: true
+    reporterName?: true
+    reporterPosition?: true
     createdAt?: true
     updatedAt?: true
     createdBy?: true
@@ -30144,6 +29960,9 @@ export namespace Prisma {
     companyId?: true
     refNo?: true
     title?: true
+    kind?: true
+    horCategory?: true
+    stopAuthorityExercised?: true
     vesselId?: true
     occurredAt?: true
     location?: true
@@ -30152,12 +29971,14 @@ export namespace Prisma {
     potentialSeverity?: true
     immediateAction?: true
     rootCauseCategory?: true
-    humanFactorPrimary?: true
+    rootCauseSubCategory?: true
     status?: true
     closedAt?: true
     companyComments?: true
     reviewedAt?: true
     reportedById?: true
+    reporterName?: true
+    reporterPosition?: true
     createdAt?: true
     updatedAt?: true
     createdBy?: true
@@ -30171,6 +29992,9 @@ export namespace Prisma {
     companyId?: true
     refNo?: true
     title?: true
+    kind?: true
+    horCategory?: true
+    stopAuthorityExercised?: true
     vesselId?: true
     occurredAt?: true
     location?: true
@@ -30179,13 +30003,14 @@ export namespace Prisma {
     potentialSeverity?: true
     immediateAction?: true
     rootCauseCategory?: true
-    humanFactorPrimary?: true
-    humanFactorContributing?: true
+    rootCauseSubCategory?: true
     status?: true
     closedAt?: true
     companyComments?: true
     reviewedAt?: true
     reportedById?: true
+    reporterName?: true
+    reporterPosition?: true
     createdAt?: true
     updatedAt?: true
     createdBy?: true
@@ -30272,6 +30097,9 @@ export namespace Prisma {
     companyId: string
     refNo: string
     title: string
+    kind: $Enums.NearMissKind
+    horCategory: $Enums.HazardType | null
+    stopAuthorityExercised: boolean
     vesselId: string | null
     occurredAt: Date
     location: string | null
@@ -30280,13 +30108,14 @@ export namespace Prisma {
     potentialSeverity: $Enums.Severity
     immediateAction: string | null
     rootCauseCategory: $Enums.RootCauseCategory
-    humanFactorPrimary: $Enums.HumanFactor | null
-    humanFactorContributing: $Enums.HumanFactor[]
+    rootCauseSubCategory: string | null
     status: $Enums.NearMissStatus
     closedAt: Date | null
     companyComments: string | null
     reviewedAt: Date | null
     reportedById: string | null
+    reporterName: string | null
+    reporterPosition: string | null
     createdAt: Date
     updatedAt: Date
     createdBy: string | null
@@ -30317,6 +30146,9 @@ export namespace Prisma {
     companyId?: boolean
     refNo?: boolean
     title?: boolean
+    kind?: boolean
+    horCategory?: boolean
+    stopAuthorityExercised?: boolean
     vesselId?: boolean
     occurredAt?: boolean
     location?: boolean
@@ -30325,13 +30157,14 @@ export namespace Prisma {
     potentialSeverity?: boolean
     immediateAction?: boolean
     rootCauseCategory?: boolean
-    humanFactorPrimary?: boolean
-    humanFactorContributing?: boolean
+    rootCauseSubCategory?: boolean
     status?: boolean
     closedAt?: boolean
     companyComments?: boolean
     reviewedAt?: boolean
     reportedById?: boolean
+    reporterName?: boolean
+    reporterPosition?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     createdBy?: boolean
@@ -30348,6 +30181,9 @@ export namespace Prisma {
     companyId?: boolean
     refNo?: boolean
     title?: boolean
+    kind?: boolean
+    horCategory?: boolean
+    stopAuthorityExercised?: boolean
     vesselId?: boolean
     occurredAt?: boolean
     location?: boolean
@@ -30356,13 +30192,14 @@ export namespace Prisma {
     potentialSeverity?: boolean
     immediateAction?: boolean
     rootCauseCategory?: boolean
-    humanFactorPrimary?: boolean
-    humanFactorContributing?: boolean
+    rootCauseSubCategory?: boolean
     status?: boolean
     closedAt?: boolean
     companyComments?: boolean
     reviewedAt?: boolean
     reportedById?: boolean
+    reporterName?: boolean
+    reporterPosition?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     createdBy?: boolean
@@ -30379,6 +30216,9 @@ export namespace Prisma {
     companyId?: boolean
     refNo?: boolean
     title?: boolean
+    kind?: boolean
+    horCategory?: boolean
+    stopAuthorityExercised?: boolean
     vesselId?: boolean
     occurredAt?: boolean
     location?: boolean
@@ -30387,13 +30227,14 @@ export namespace Prisma {
     potentialSeverity?: boolean
     immediateAction?: boolean
     rootCauseCategory?: boolean
-    humanFactorPrimary?: boolean
-    humanFactorContributing?: boolean
+    rootCauseSubCategory?: boolean
     status?: boolean
     closedAt?: boolean
     companyComments?: boolean
     reviewedAt?: boolean
     reportedById?: boolean
+    reporterName?: boolean
+    reporterPosition?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     createdBy?: boolean
@@ -30410,6 +30251,9 @@ export namespace Prisma {
     companyId?: boolean
     refNo?: boolean
     title?: boolean
+    kind?: boolean
+    horCategory?: boolean
+    stopAuthorityExercised?: boolean
     vesselId?: boolean
     occurredAt?: boolean
     location?: boolean
@@ -30418,13 +30262,14 @@ export namespace Prisma {
     potentialSeverity?: boolean
     immediateAction?: boolean
     rootCauseCategory?: boolean
-    humanFactorPrimary?: boolean
-    humanFactorContributing?: boolean
+    rootCauseSubCategory?: boolean
     status?: boolean
     closedAt?: boolean
     companyComments?: boolean
     reviewedAt?: boolean
     reportedById?: boolean
+    reporterName?: boolean
+    reporterPosition?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     createdBy?: boolean
@@ -30433,7 +30278,7 @@ export namespace Prisma {
     deletedBy?: boolean
   }
 
-  export type NearMissOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "companyId" | "refNo" | "title" | "vesselId" | "occurredAt" | "location" | "description" | "potentialConsequence" | "potentialSeverity" | "immediateAction" | "rootCauseCategory" | "humanFactorPrimary" | "humanFactorContributing" | "status" | "closedAt" | "companyComments" | "reviewedAt" | "reportedById" | "createdAt" | "updatedAt" | "createdBy" | "updatedBy" | "deletedAt" | "deletedBy", ExtArgs["result"]["nearMiss"]>
+  export type NearMissOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "companyId" | "refNo" | "title" | "kind" | "horCategory" | "stopAuthorityExercised" | "vesselId" | "occurredAt" | "location" | "description" | "potentialConsequence" | "potentialSeverity" | "immediateAction" | "rootCauseCategory" | "rootCauseSubCategory" | "status" | "closedAt" | "companyComments" | "reviewedAt" | "reportedById" | "reporterName" | "reporterPosition" | "createdAt" | "updatedAt" | "createdBy" | "updatedBy" | "deletedAt" | "deletedBy", ExtArgs["result"]["nearMiss"]>
   export type NearMissInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     company?: boolean | CompanyDefaultArgs<ExtArgs>
     vessel?: boolean | NearMiss$vesselArgs<ExtArgs>
@@ -30462,6 +30307,9 @@ export namespace Prisma {
       companyId: string
       refNo: string
       title: string
+      kind: $Enums.NearMissKind
+      horCategory: $Enums.HazardType | null
+      stopAuthorityExercised: boolean
       vesselId: string | null
       occurredAt: Date
       location: string | null
@@ -30470,13 +30318,14 @@ export namespace Prisma {
       potentialSeverity: $Enums.Severity
       immediateAction: string | null
       rootCauseCategory: $Enums.RootCauseCategory
-      humanFactorPrimary: $Enums.HumanFactor | null
-      humanFactorContributing: $Enums.HumanFactor[]
+      rootCauseSubCategory: string | null
       status: $Enums.NearMissStatus
       closedAt: Date | null
       companyComments: string | null
       reviewedAt: Date | null
       reportedById: string | null
+      reporterName: string | null
+      reporterPosition: string | null
       createdAt: Date
       updatedAt: Date
       createdBy: string | null
@@ -30913,6 +30762,9 @@ export namespace Prisma {
     readonly companyId: FieldRef<"NearMiss", 'String'>
     readonly refNo: FieldRef<"NearMiss", 'String'>
     readonly title: FieldRef<"NearMiss", 'String'>
+    readonly kind: FieldRef<"NearMiss", 'NearMissKind'>
+    readonly horCategory: FieldRef<"NearMiss", 'HazardType'>
+    readonly stopAuthorityExercised: FieldRef<"NearMiss", 'Boolean'>
     readonly vesselId: FieldRef<"NearMiss", 'String'>
     readonly occurredAt: FieldRef<"NearMiss", 'DateTime'>
     readonly location: FieldRef<"NearMiss", 'String'>
@@ -30921,13 +30773,14 @@ export namespace Prisma {
     readonly potentialSeverity: FieldRef<"NearMiss", 'Severity'>
     readonly immediateAction: FieldRef<"NearMiss", 'String'>
     readonly rootCauseCategory: FieldRef<"NearMiss", 'RootCauseCategory'>
-    readonly humanFactorPrimary: FieldRef<"NearMiss", 'HumanFactor'>
-    readonly humanFactorContributing: FieldRef<"NearMiss", 'HumanFactor[]'>
+    readonly rootCauseSubCategory: FieldRef<"NearMiss", 'String'>
     readonly status: FieldRef<"NearMiss", 'NearMissStatus'>
     readonly closedAt: FieldRef<"NearMiss", 'DateTime'>
     readonly companyComments: FieldRef<"NearMiss", 'String'>
     readonly reviewedAt: FieldRef<"NearMiss", 'DateTime'>
     readonly reportedById: FieldRef<"NearMiss", 'String'>
+    readonly reporterName: FieldRef<"NearMiss", 'String'>
+    readonly reporterPosition: FieldRef<"NearMiss", 'String'>
     readonly createdAt: FieldRef<"NearMiss", 'DateTime'>
     readonly updatedAt: FieldRef<"NearMiss", 'DateTime'>
     readonly createdBy: FieldRef<"NearMiss", 'String'>
@@ -31387,1339 +31240,6 @@ export namespace Prisma {
 
 
   /**
-   * Model HazardObservation
-   */
-
-  export type AggregateHazardObservation = {
-    _count: HazardObservationCountAggregateOutputType | null
-    _min: HazardObservationMinAggregateOutputType | null
-    _max: HazardObservationMaxAggregateOutputType | null
-  }
-
-  export type HazardObservationMinAggregateOutputType = {
-    id: string | null
-    companyId: string | null
-    refNo: string | null
-    title: string | null
-    vesselId: string | null
-    observedAt: Date | null
-    location: string | null
-    category: string | null
-    hazardType: $Enums.HazardType | null
-    riskLevel: $Enums.Severity | null
-    observation: string | null
-    immediateAction: string | null
-    correctiveAction: string | null
-    status: $Enums.HazardStatus | null
-    closedAt: Date | null
-    reportedById: string | null
-    createdAt: Date | null
-    updatedAt: Date | null
-    createdBy: string | null
-    updatedBy: string | null
-    deletedAt: Date | null
-    deletedBy: string | null
-  }
-
-  export type HazardObservationMaxAggregateOutputType = {
-    id: string | null
-    companyId: string | null
-    refNo: string | null
-    title: string | null
-    vesselId: string | null
-    observedAt: Date | null
-    location: string | null
-    category: string | null
-    hazardType: $Enums.HazardType | null
-    riskLevel: $Enums.Severity | null
-    observation: string | null
-    immediateAction: string | null
-    correctiveAction: string | null
-    status: $Enums.HazardStatus | null
-    closedAt: Date | null
-    reportedById: string | null
-    createdAt: Date | null
-    updatedAt: Date | null
-    createdBy: string | null
-    updatedBy: string | null
-    deletedAt: Date | null
-    deletedBy: string | null
-  }
-
-  export type HazardObservationCountAggregateOutputType = {
-    id: number
-    companyId: number
-    refNo: number
-    title: number
-    vesselId: number
-    observedAt: number
-    location: number
-    category: number
-    hazardType: number
-    riskLevel: number
-    observation: number
-    immediateAction: number
-    correctiveAction: number
-    status: number
-    closedAt: number
-    reportedById: number
-    createdAt: number
-    updatedAt: number
-    createdBy: number
-    updatedBy: number
-    deletedAt: number
-    deletedBy: number
-    _all: number
-  }
-
-
-  export type HazardObservationMinAggregateInputType = {
-    id?: true
-    companyId?: true
-    refNo?: true
-    title?: true
-    vesselId?: true
-    observedAt?: true
-    location?: true
-    category?: true
-    hazardType?: true
-    riskLevel?: true
-    observation?: true
-    immediateAction?: true
-    correctiveAction?: true
-    status?: true
-    closedAt?: true
-    reportedById?: true
-    createdAt?: true
-    updatedAt?: true
-    createdBy?: true
-    updatedBy?: true
-    deletedAt?: true
-    deletedBy?: true
-  }
-
-  export type HazardObservationMaxAggregateInputType = {
-    id?: true
-    companyId?: true
-    refNo?: true
-    title?: true
-    vesselId?: true
-    observedAt?: true
-    location?: true
-    category?: true
-    hazardType?: true
-    riskLevel?: true
-    observation?: true
-    immediateAction?: true
-    correctiveAction?: true
-    status?: true
-    closedAt?: true
-    reportedById?: true
-    createdAt?: true
-    updatedAt?: true
-    createdBy?: true
-    updatedBy?: true
-    deletedAt?: true
-    deletedBy?: true
-  }
-
-  export type HazardObservationCountAggregateInputType = {
-    id?: true
-    companyId?: true
-    refNo?: true
-    title?: true
-    vesselId?: true
-    observedAt?: true
-    location?: true
-    category?: true
-    hazardType?: true
-    riskLevel?: true
-    observation?: true
-    immediateAction?: true
-    correctiveAction?: true
-    status?: true
-    closedAt?: true
-    reportedById?: true
-    createdAt?: true
-    updatedAt?: true
-    createdBy?: true
-    updatedBy?: true
-    deletedAt?: true
-    deletedBy?: true
-    _all?: true
-  }
-
-  export type HazardObservationAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which HazardObservation to aggregate.
-     */
-    where?: HazardObservationWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of HazardObservations to fetch.
-     */
-    orderBy?: HazardObservationOrderByWithRelationInput | HazardObservationOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the start position
-     */
-    cursor?: HazardObservationWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` HazardObservations from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` HazardObservations.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Count returned HazardObservations
-    **/
-    _count?: true | HazardObservationCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the minimum value
-    **/
-    _min?: HazardObservationMinAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the maximum value
-    **/
-    _max?: HazardObservationMaxAggregateInputType
-  }
-
-  export type GetHazardObservationAggregateType<T extends HazardObservationAggregateArgs> = {
-        [P in keyof T & keyof AggregateHazardObservation]: P extends '_count' | 'count'
-      ? T[P] extends true
-        ? number
-        : GetScalarType<T[P], AggregateHazardObservation[P]>
-      : GetScalarType<T[P], AggregateHazardObservation[P]>
-  }
-
-
-
-
-  export type HazardObservationGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: HazardObservationWhereInput
-    orderBy?: HazardObservationOrderByWithAggregationInput | HazardObservationOrderByWithAggregationInput[]
-    by: HazardObservationScalarFieldEnum[] | HazardObservationScalarFieldEnum
-    having?: HazardObservationScalarWhereWithAggregatesInput
-    take?: number
-    skip?: number
-    _count?: HazardObservationCountAggregateInputType | true
-    _min?: HazardObservationMinAggregateInputType
-    _max?: HazardObservationMaxAggregateInputType
-  }
-
-  export type HazardObservationGroupByOutputType = {
-    id: string
-    companyId: string
-    refNo: string
-    title: string
-    vesselId: string | null
-    observedAt: Date
-    location: string | null
-    category: string
-    hazardType: $Enums.HazardType
-    riskLevel: $Enums.Severity
-    observation: string
-    immediateAction: string | null
-    correctiveAction: string | null
-    status: $Enums.HazardStatus
-    closedAt: Date | null
-    reportedById: string | null
-    createdAt: Date
-    updatedAt: Date
-    createdBy: string | null
-    updatedBy: string | null
-    deletedAt: Date | null
-    deletedBy: string | null
-    _count: HazardObservationCountAggregateOutputType | null
-    _min: HazardObservationMinAggregateOutputType | null
-    _max: HazardObservationMaxAggregateOutputType | null
-  }
-
-  type GetHazardObservationGroupByPayload<T extends HazardObservationGroupByArgs> = Prisma.PrismaPromise<
-    Array<
-      PickEnumerable<HazardObservationGroupByOutputType, T['by']> &
-        {
-          [P in ((keyof T) & (keyof HazardObservationGroupByOutputType))]: P extends '_count'
-            ? T[P] extends boolean
-              ? number
-              : GetScalarType<T[P], HazardObservationGroupByOutputType[P]>
-            : GetScalarType<T[P], HazardObservationGroupByOutputType[P]>
-        }
-      >
-    >
-
-
-  export type HazardObservationSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    companyId?: boolean
-    refNo?: boolean
-    title?: boolean
-    vesselId?: boolean
-    observedAt?: boolean
-    location?: boolean
-    category?: boolean
-    hazardType?: boolean
-    riskLevel?: boolean
-    observation?: boolean
-    immediateAction?: boolean
-    correctiveAction?: boolean
-    status?: boolean
-    closedAt?: boolean
-    reportedById?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    createdBy?: boolean
-    updatedBy?: boolean
-    deletedAt?: boolean
-    deletedBy?: boolean
-    company?: boolean | CompanyDefaultArgs<ExtArgs>
-    vessel?: boolean | HazardObservation$vesselArgs<ExtArgs>
-    reportedBy?: boolean | HazardObservation$reportedByArgs<ExtArgs>
-  }, ExtArgs["result"]["hazardObservation"]>
-
-  export type HazardObservationSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    companyId?: boolean
-    refNo?: boolean
-    title?: boolean
-    vesselId?: boolean
-    observedAt?: boolean
-    location?: boolean
-    category?: boolean
-    hazardType?: boolean
-    riskLevel?: boolean
-    observation?: boolean
-    immediateAction?: boolean
-    correctiveAction?: boolean
-    status?: boolean
-    closedAt?: boolean
-    reportedById?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    createdBy?: boolean
-    updatedBy?: boolean
-    deletedAt?: boolean
-    deletedBy?: boolean
-    company?: boolean | CompanyDefaultArgs<ExtArgs>
-    vessel?: boolean | HazardObservation$vesselArgs<ExtArgs>
-    reportedBy?: boolean | HazardObservation$reportedByArgs<ExtArgs>
-  }, ExtArgs["result"]["hazardObservation"]>
-
-  export type HazardObservationSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    companyId?: boolean
-    refNo?: boolean
-    title?: boolean
-    vesselId?: boolean
-    observedAt?: boolean
-    location?: boolean
-    category?: boolean
-    hazardType?: boolean
-    riskLevel?: boolean
-    observation?: boolean
-    immediateAction?: boolean
-    correctiveAction?: boolean
-    status?: boolean
-    closedAt?: boolean
-    reportedById?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    createdBy?: boolean
-    updatedBy?: boolean
-    deletedAt?: boolean
-    deletedBy?: boolean
-    company?: boolean | CompanyDefaultArgs<ExtArgs>
-    vessel?: boolean | HazardObservation$vesselArgs<ExtArgs>
-    reportedBy?: boolean | HazardObservation$reportedByArgs<ExtArgs>
-  }, ExtArgs["result"]["hazardObservation"]>
-
-  export type HazardObservationSelectScalar = {
-    id?: boolean
-    companyId?: boolean
-    refNo?: boolean
-    title?: boolean
-    vesselId?: boolean
-    observedAt?: boolean
-    location?: boolean
-    category?: boolean
-    hazardType?: boolean
-    riskLevel?: boolean
-    observation?: boolean
-    immediateAction?: boolean
-    correctiveAction?: boolean
-    status?: boolean
-    closedAt?: boolean
-    reportedById?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    createdBy?: boolean
-    updatedBy?: boolean
-    deletedAt?: boolean
-    deletedBy?: boolean
-  }
-
-  export type HazardObservationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "companyId" | "refNo" | "title" | "vesselId" | "observedAt" | "location" | "category" | "hazardType" | "riskLevel" | "observation" | "immediateAction" | "correctiveAction" | "status" | "closedAt" | "reportedById" | "createdAt" | "updatedAt" | "createdBy" | "updatedBy" | "deletedAt" | "deletedBy", ExtArgs["result"]["hazardObservation"]>
-  export type HazardObservationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    company?: boolean | CompanyDefaultArgs<ExtArgs>
-    vessel?: boolean | HazardObservation$vesselArgs<ExtArgs>
-    reportedBy?: boolean | HazardObservation$reportedByArgs<ExtArgs>
-  }
-  export type HazardObservationIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    company?: boolean | CompanyDefaultArgs<ExtArgs>
-    vessel?: boolean | HazardObservation$vesselArgs<ExtArgs>
-    reportedBy?: boolean | HazardObservation$reportedByArgs<ExtArgs>
-  }
-  export type HazardObservationIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    company?: boolean | CompanyDefaultArgs<ExtArgs>
-    vessel?: boolean | HazardObservation$vesselArgs<ExtArgs>
-    reportedBy?: boolean | HazardObservation$reportedByArgs<ExtArgs>
-  }
-
-  export type $HazardObservationPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "HazardObservation"
-    objects: {
-      company: Prisma.$CompanyPayload<ExtArgs>
-      vessel: Prisma.$VesselPayload<ExtArgs> | null
-      reportedBy: Prisma.$UserPayload<ExtArgs> | null
-    }
-    scalars: $Extensions.GetPayloadResult<{
-      id: string
-      companyId: string
-      refNo: string
-      title: string
-      vesselId: string | null
-      observedAt: Date
-      location: string | null
-      category: string
-      hazardType: $Enums.HazardType
-      riskLevel: $Enums.Severity
-      observation: string
-      immediateAction: string | null
-      correctiveAction: string | null
-      status: $Enums.HazardStatus
-      closedAt: Date | null
-      reportedById: string | null
-      createdAt: Date
-      updatedAt: Date
-      createdBy: string | null
-      updatedBy: string | null
-      deletedAt: Date | null
-      deletedBy: string | null
-    }, ExtArgs["result"]["hazardObservation"]>
-    composites: {}
-  }
-
-  type HazardObservationGetPayload<S extends boolean | null | undefined | HazardObservationDefaultArgs> = $Result.GetResult<Prisma.$HazardObservationPayload, S>
-
-  type HazardObservationCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<HazardObservationFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-      select?: HazardObservationCountAggregateInputType | true
-    }
-
-  export interface HazardObservationDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['HazardObservation'], meta: { name: 'HazardObservation' } }
-    /**
-     * Find zero or one HazardObservation that matches the filter.
-     * @param {HazardObservationFindUniqueArgs} args - Arguments to find a HazardObservation
-     * @example
-     * // Get one HazardObservation
-     * const hazardObservation = await prisma.hazardObservation.findUnique({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUnique<T extends HazardObservationFindUniqueArgs>(args: SelectSubset<T, HazardObservationFindUniqueArgs<ExtArgs>>): Prisma__HazardObservationClient<$Result.GetResult<Prisma.$HazardObservationPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find one HazardObservation that matches the filter or throw an error with `error.code='P2025'`
-     * if no matches were found.
-     * @param {HazardObservationFindUniqueOrThrowArgs} args - Arguments to find a HazardObservation
-     * @example
-     * // Get one HazardObservation
-     * const hazardObservation = await prisma.hazardObservation.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUniqueOrThrow<T extends HazardObservationFindUniqueOrThrowArgs>(args: SelectSubset<T, HazardObservationFindUniqueOrThrowArgs<ExtArgs>>): Prisma__HazardObservationClient<$Result.GetResult<Prisma.$HazardObservationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first HazardObservation that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {HazardObservationFindFirstArgs} args - Arguments to find a HazardObservation
-     * @example
-     * // Get one HazardObservation
-     * const hazardObservation = await prisma.hazardObservation.findFirst({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirst<T extends HazardObservationFindFirstArgs>(args?: SelectSubset<T, HazardObservationFindFirstArgs<ExtArgs>>): Prisma__HazardObservationClient<$Result.GetResult<Prisma.$HazardObservationPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first HazardObservation that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {HazardObservationFindFirstOrThrowArgs} args - Arguments to find a HazardObservation
-     * @example
-     * // Get one HazardObservation
-     * const hazardObservation = await prisma.hazardObservation.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirstOrThrow<T extends HazardObservationFindFirstOrThrowArgs>(args?: SelectSubset<T, HazardObservationFindFirstOrThrowArgs<ExtArgs>>): Prisma__HazardObservationClient<$Result.GetResult<Prisma.$HazardObservationPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find zero or more HazardObservations that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {HazardObservationFindManyArgs} args - Arguments to filter and select certain fields only.
-     * @example
-     * // Get all HazardObservations
-     * const hazardObservations = await prisma.hazardObservation.findMany()
-     * 
-     * // Get first 10 HazardObservations
-     * const hazardObservations = await prisma.hazardObservation.findMany({ take: 10 })
-     * 
-     * // Only select the `id`
-     * const hazardObservationWithIdOnly = await prisma.hazardObservation.findMany({ select: { id: true } })
-     * 
-     */
-    findMany<T extends HazardObservationFindManyArgs>(args?: SelectSubset<T, HazardObservationFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$HazardObservationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
-
-    /**
-     * Create a HazardObservation.
-     * @param {HazardObservationCreateArgs} args - Arguments to create a HazardObservation.
-     * @example
-     * // Create one HazardObservation
-     * const HazardObservation = await prisma.hazardObservation.create({
-     *   data: {
-     *     // ... data to create a HazardObservation
-     *   }
-     * })
-     * 
-     */
-    create<T extends HazardObservationCreateArgs>(args: SelectSubset<T, HazardObservationCreateArgs<ExtArgs>>): Prisma__HazardObservationClient<$Result.GetResult<Prisma.$HazardObservationPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Create many HazardObservations.
-     * @param {HazardObservationCreateManyArgs} args - Arguments to create many HazardObservations.
-     * @example
-     * // Create many HazardObservations
-     * const hazardObservation = await prisma.hazardObservation.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     *     
-     */
-    createMany<T extends HazardObservationCreateManyArgs>(args?: SelectSubset<T, HazardObservationCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create many HazardObservations and returns the data saved in the database.
-     * @param {HazardObservationCreateManyAndReturnArgs} args - Arguments to create many HazardObservations.
-     * @example
-     * // Create many HazardObservations
-     * const hazardObservation = await prisma.hazardObservation.createManyAndReturn({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Create many HazardObservations and only return the `id`
-     * const hazardObservationWithIdOnly = await prisma.hazardObservation.createManyAndReturn({
-     *   select: { id: true },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    createManyAndReturn<T extends HazardObservationCreateManyAndReturnArgs>(args?: SelectSubset<T, HazardObservationCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$HazardObservationPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Delete a HazardObservation.
-     * @param {HazardObservationDeleteArgs} args - Arguments to delete one HazardObservation.
-     * @example
-     * // Delete one HazardObservation
-     * const HazardObservation = await prisma.hazardObservation.delete({
-     *   where: {
-     *     // ... filter to delete one HazardObservation
-     *   }
-     * })
-     * 
-     */
-    delete<T extends HazardObservationDeleteArgs>(args: SelectSubset<T, HazardObservationDeleteArgs<ExtArgs>>): Prisma__HazardObservationClient<$Result.GetResult<Prisma.$HazardObservationPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Update one HazardObservation.
-     * @param {HazardObservationUpdateArgs} args - Arguments to update one HazardObservation.
-     * @example
-     * // Update one HazardObservation
-     * const hazardObservation = await prisma.hazardObservation.update({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    update<T extends HazardObservationUpdateArgs>(args: SelectSubset<T, HazardObservationUpdateArgs<ExtArgs>>): Prisma__HazardObservationClient<$Result.GetResult<Prisma.$HazardObservationPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Delete zero or more HazardObservations.
-     * @param {HazardObservationDeleteManyArgs} args - Arguments to filter HazardObservations to delete.
-     * @example
-     * // Delete a few HazardObservations
-     * const { count } = await prisma.hazardObservation.deleteMany({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     * 
-     */
-    deleteMany<T extends HazardObservationDeleteManyArgs>(args?: SelectSubset<T, HazardObservationDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more HazardObservations.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {HazardObservationUpdateManyArgs} args - Arguments to update one or more rows.
-     * @example
-     * // Update many HazardObservations
-     * const hazardObservation = await prisma.hazardObservation.updateMany({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    updateMany<T extends HazardObservationUpdateManyArgs>(args: SelectSubset<T, HazardObservationUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more HazardObservations and returns the data updated in the database.
-     * @param {HazardObservationUpdateManyAndReturnArgs} args - Arguments to update many HazardObservations.
-     * @example
-     * // Update many HazardObservations
-     * const hazardObservation = await prisma.hazardObservation.updateManyAndReturn({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Update zero or more HazardObservations and only return the `id`
-     * const hazardObservationWithIdOnly = await prisma.hazardObservation.updateManyAndReturn({
-     *   select: { id: true },
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    updateManyAndReturn<T extends HazardObservationUpdateManyAndReturnArgs>(args: SelectSubset<T, HazardObservationUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$HazardObservationPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Create or update one HazardObservation.
-     * @param {HazardObservationUpsertArgs} args - Arguments to update or create a HazardObservation.
-     * @example
-     * // Update or create a HazardObservation
-     * const hazardObservation = await prisma.hazardObservation.upsert({
-     *   create: {
-     *     // ... data to create a HazardObservation
-     *   },
-     *   update: {
-     *     // ... in case it already exists, update
-     *   },
-     *   where: {
-     *     // ... the filter for the HazardObservation we want to update
-     *   }
-     * })
-     */
-    upsert<T extends HazardObservationUpsertArgs>(args: SelectSubset<T, HazardObservationUpsertArgs<ExtArgs>>): Prisma__HazardObservationClient<$Result.GetResult<Prisma.$HazardObservationPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-
-    /**
-     * Count the number of HazardObservations.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {HazardObservationCountArgs} args - Arguments to filter HazardObservations to count.
-     * @example
-     * // Count the number of HazardObservations
-     * const count = await prisma.hazardObservation.count({
-     *   where: {
-     *     // ... the filter for the HazardObservations we want to count
-     *   }
-     * })
-    **/
-    count<T extends HazardObservationCountArgs>(
-      args?: Subset<T, HazardObservationCountArgs>,
-    ): Prisma.PrismaPromise<
-      T extends $Utils.Record<'select', any>
-        ? T['select'] extends true
-          ? number
-          : GetScalarType<T['select'], HazardObservationCountAggregateOutputType>
-        : number
-    >
-
-    /**
-     * Allows you to perform aggregations operations on a HazardObservation.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {HazardObservationAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
-     * @example
-     * // Ordered by age ascending
-     * // Where email contains prisma.io
-     * // Limited to the 10 users
-     * const aggregations = await prisma.user.aggregate({
-     *   _avg: {
-     *     age: true,
-     *   },
-     *   where: {
-     *     email: {
-     *       contains: "prisma.io",
-     *     },
-     *   },
-     *   orderBy: {
-     *     age: "asc",
-     *   },
-     *   take: 10,
-     * })
-    **/
-    aggregate<T extends HazardObservationAggregateArgs>(args: Subset<T, HazardObservationAggregateArgs>): Prisma.PrismaPromise<GetHazardObservationAggregateType<T>>
-
-    /**
-     * Group by HazardObservation.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {HazardObservationGroupByArgs} args - Group by arguments.
-     * @example
-     * // Group by city, order by createdAt, get count
-     * const result = await prisma.user.groupBy({
-     *   by: ['city', 'createdAt'],
-     *   orderBy: {
-     *     createdAt: true
-     *   },
-     *   _count: {
-     *     _all: true
-     *   },
-     * })
-     * 
-    **/
-    groupBy<
-      T extends HazardObservationGroupByArgs,
-      HasSelectOrTake extends Or<
-        Extends<'skip', Keys<T>>,
-        Extends<'take', Keys<T>>
-      >,
-      OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: HazardObservationGroupByArgs['orderBy'] }
-        : { orderBy?: HazardObservationGroupByArgs['orderBy'] },
-      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
-      ByValid extends Has<ByFields, OrderFields>,
-      HavingFields extends GetHavingFields<T['having']>,
-      HavingValid extends Has<ByFields, HavingFields>,
-      ByEmpty extends T['by'] extends never[] ? True : False,
-      InputErrors extends ByEmpty extends True
-      ? `Error: "by" must not be empty.`
-      : HavingValid extends False
-      ? {
-          [P in HavingFields]: P extends ByFields
-            ? never
-            : P extends string
-            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-            : [
-                Error,
-                'Field ',
-                P,
-                ` in "having" needs to be provided in "by"`,
-              ]
-        }[HavingFields]
-      : 'take' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "take", you also need to provide "orderBy"'
-      : 'skip' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "skip", you also need to provide "orderBy"'
-      : ByValid extends True
-      ? {}
-      : {
-          [P in OrderFields]: P extends ByFields
-            ? never
-            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-        }[OrderFields]
-    >(args: SubsetIntersection<T, HazardObservationGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetHazardObservationGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the HazardObservation model
-   */
-  readonly fields: HazardObservationFieldRefs;
-  }
-
-  /**
-   * The delegate class that acts as a "Promise-like" for HazardObservation.
-   * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in
-   * https://github.com/prisma/prisma-client-js/issues/707
-   */
-  export interface Prisma__HazardObservationClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: "PrismaPromise"
-    company<T extends CompanyDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CompanyDefaultArgs<ExtArgs>>): Prisma__CompanyClient<$Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    vessel<T extends HazardObservation$vesselArgs<ExtArgs> = {}>(args?: Subset<T, HazardObservation$vesselArgs<ExtArgs>>): Prisma__VesselClient<$Result.GetResult<Prisma.$VesselPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-    reportedBy<T extends HazardObservation$reportedByArgs<ExtArgs> = {}>(args?: Subset<T, HazardObservation$reportedByArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-    /**
-     * Attaches callbacks for the resolution and/or rejection of the Promise.
-     * @param onfulfilled The callback to execute when the Promise is resolved.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of which ever callback is executed.
-     */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
-    /**
-     * Attaches a callback for only the rejection of the Promise.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of the callback.
-     */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
-    /**
-     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
-     * resolved value cannot be modified from the callback.
-     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
-     * @returns A Promise for the completion of the callback.
-     */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
-  }
-
-
-
-
-  /**
-   * Fields of the HazardObservation model
-   */
-  interface HazardObservationFieldRefs {
-    readonly id: FieldRef<"HazardObservation", 'String'>
-    readonly companyId: FieldRef<"HazardObservation", 'String'>
-    readonly refNo: FieldRef<"HazardObservation", 'String'>
-    readonly title: FieldRef<"HazardObservation", 'String'>
-    readonly vesselId: FieldRef<"HazardObservation", 'String'>
-    readonly observedAt: FieldRef<"HazardObservation", 'DateTime'>
-    readonly location: FieldRef<"HazardObservation", 'String'>
-    readonly category: FieldRef<"HazardObservation", 'String'>
-    readonly hazardType: FieldRef<"HazardObservation", 'HazardType'>
-    readonly riskLevel: FieldRef<"HazardObservation", 'Severity'>
-    readonly observation: FieldRef<"HazardObservation", 'String'>
-    readonly immediateAction: FieldRef<"HazardObservation", 'String'>
-    readonly correctiveAction: FieldRef<"HazardObservation", 'String'>
-    readonly status: FieldRef<"HazardObservation", 'HazardStatus'>
-    readonly closedAt: FieldRef<"HazardObservation", 'DateTime'>
-    readonly reportedById: FieldRef<"HazardObservation", 'String'>
-    readonly createdAt: FieldRef<"HazardObservation", 'DateTime'>
-    readonly updatedAt: FieldRef<"HazardObservation", 'DateTime'>
-    readonly createdBy: FieldRef<"HazardObservation", 'String'>
-    readonly updatedBy: FieldRef<"HazardObservation", 'String'>
-    readonly deletedAt: FieldRef<"HazardObservation", 'DateTime'>
-    readonly deletedBy: FieldRef<"HazardObservation", 'String'>
-  }
-    
-
-  // Custom InputTypes
-  /**
-   * HazardObservation findUnique
-   */
-  export type HazardObservationFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the HazardObservation
-     */
-    select?: HazardObservationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the HazardObservation
-     */
-    omit?: HazardObservationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: HazardObservationInclude<ExtArgs> | null
-    /**
-     * Filter, which HazardObservation to fetch.
-     */
-    where: HazardObservationWhereUniqueInput
-  }
-
-  /**
-   * HazardObservation findUniqueOrThrow
-   */
-  export type HazardObservationFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the HazardObservation
-     */
-    select?: HazardObservationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the HazardObservation
-     */
-    omit?: HazardObservationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: HazardObservationInclude<ExtArgs> | null
-    /**
-     * Filter, which HazardObservation to fetch.
-     */
-    where: HazardObservationWhereUniqueInput
-  }
-
-  /**
-   * HazardObservation findFirst
-   */
-  export type HazardObservationFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the HazardObservation
-     */
-    select?: HazardObservationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the HazardObservation
-     */
-    omit?: HazardObservationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: HazardObservationInclude<ExtArgs> | null
-    /**
-     * Filter, which HazardObservation to fetch.
-     */
-    where?: HazardObservationWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of HazardObservations to fetch.
-     */
-    orderBy?: HazardObservationOrderByWithRelationInput | HazardObservationOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for HazardObservations.
-     */
-    cursor?: HazardObservationWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` HazardObservations from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` HazardObservations.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of HazardObservations.
-     */
-    distinct?: HazardObservationScalarFieldEnum | HazardObservationScalarFieldEnum[]
-  }
-
-  /**
-   * HazardObservation findFirstOrThrow
-   */
-  export type HazardObservationFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the HazardObservation
-     */
-    select?: HazardObservationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the HazardObservation
-     */
-    omit?: HazardObservationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: HazardObservationInclude<ExtArgs> | null
-    /**
-     * Filter, which HazardObservation to fetch.
-     */
-    where?: HazardObservationWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of HazardObservations to fetch.
-     */
-    orderBy?: HazardObservationOrderByWithRelationInput | HazardObservationOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for HazardObservations.
-     */
-    cursor?: HazardObservationWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` HazardObservations from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` HazardObservations.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of HazardObservations.
-     */
-    distinct?: HazardObservationScalarFieldEnum | HazardObservationScalarFieldEnum[]
-  }
-
-  /**
-   * HazardObservation findMany
-   */
-  export type HazardObservationFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the HazardObservation
-     */
-    select?: HazardObservationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the HazardObservation
-     */
-    omit?: HazardObservationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: HazardObservationInclude<ExtArgs> | null
-    /**
-     * Filter, which HazardObservations to fetch.
-     */
-    where?: HazardObservationWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of HazardObservations to fetch.
-     */
-    orderBy?: HazardObservationOrderByWithRelationInput | HazardObservationOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for listing HazardObservations.
-     */
-    cursor?: HazardObservationWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` HazardObservations from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` HazardObservations.
-     */
-    skip?: number
-    distinct?: HazardObservationScalarFieldEnum | HazardObservationScalarFieldEnum[]
-  }
-
-  /**
-   * HazardObservation create
-   */
-  export type HazardObservationCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the HazardObservation
-     */
-    select?: HazardObservationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the HazardObservation
-     */
-    omit?: HazardObservationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: HazardObservationInclude<ExtArgs> | null
-    /**
-     * The data needed to create a HazardObservation.
-     */
-    data: XOR<HazardObservationCreateInput, HazardObservationUncheckedCreateInput>
-  }
-
-  /**
-   * HazardObservation createMany
-   */
-  export type HazardObservationCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to create many HazardObservations.
-     */
-    data: HazardObservationCreateManyInput | HazardObservationCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * HazardObservation createManyAndReturn
-   */
-  export type HazardObservationCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the HazardObservation
-     */
-    select?: HazardObservationSelectCreateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the HazardObservation
-     */
-    omit?: HazardObservationOmit<ExtArgs> | null
-    /**
-     * The data used to create many HazardObservations.
-     */
-    data: HazardObservationCreateManyInput | HazardObservationCreateManyInput[]
-    skipDuplicates?: boolean
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: HazardObservationIncludeCreateManyAndReturn<ExtArgs> | null
-  }
-
-  /**
-   * HazardObservation update
-   */
-  export type HazardObservationUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the HazardObservation
-     */
-    select?: HazardObservationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the HazardObservation
-     */
-    omit?: HazardObservationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: HazardObservationInclude<ExtArgs> | null
-    /**
-     * The data needed to update a HazardObservation.
-     */
-    data: XOR<HazardObservationUpdateInput, HazardObservationUncheckedUpdateInput>
-    /**
-     * Choose, which HazardObservation to update.
-     */
-    where: HazardObservationWhereUniqueInput
-  }
-
-  /**
-   * HazardObservation updateMany
-   */
-  export type HazardObservationUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to update HazardObservations.
-     */
-    data: XOR<HazardObservationUpdateManyMutationInput, HazardObservationUncheckedUpdateManyInput>
-    /**
-     * Filter which HazardObservations to update
-     */
-    where?: HazardObservationWhereInput
-    /**
-     * Limit how many HazardObservations to update.
-     */
-    limit?: number
-  }
-
-  /**
-   * HazardObservation updateManyAndReturn
-   */
-  export type HazardObservationUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the HazardObservation
-     */
-    select?: HazardObservationSelectUpdateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the HazardObservation
-     */
-    omit?: HazardObservationOmit<ExtArgs> | null
-    /**
-     * The data used to update HazardObservations.
-     */
-    data: XOR<HazardObservationUpdateManyMutationInput, HazardObservationUncheckedUpdateManyInput>
-    /**
-     * Filter which HazardObservations to update
-     */
-    where?: HazardObservationWhereInput
-    /**
-     * Limit how many HazardObservations to update.
-     */
-    limit?: number
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: HazardObservationIncludeUpdateManyAndReturn<ExtArgs> | null
-  }
-
-  /**
-   * HazardObservation upsert
-   */
-  export type HazardObservationUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the HazardObservation
-     */
-    select?: HazardObservationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the HazardObservation
-     */
-    omit?: HazardObservationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: HazardObservationInclude<ExtArgs> | null
-    /**
-     * The filter to search for the HazardObservation to update in case it exists.
-     */
-    where: HazardObservationWhereUniqueInput
-    /**
-     * In case the HazardObservation found by the `where` argument doesn't exist, create a new HazardObservation with this data.
-     */
-    create: XOR<HazardObservationCreateInput, HazardObservationUncheckedCreateInput>
-    /**
-     * In case the HazardObservation was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<HazardObservationUpdateInput, HazardObservationUncheckedUpdateInput>
-  }
-
-  /**
-   * HazardObservation delete
-   */
-  export type HazardObservationDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the HazardObservation
-     */
-    select?: HazardObservationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the HazardObservation
-     */
-    omit?: HazardObservationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: HazardObservationInclude<ExtArgs> | null
-    /**
-     * Filter which HazardObservation to delete.
-     */
-    where: HazardObservationWhereUniqueInput
-  }
-
-  /**
-   * HazardObservation deleteMany
-   */
-  export type HazardObservationDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which HazardObservations to delete
-     */
-    where?: HazardObservationWhereInput
-    /**
-     * Limit how many HazardObservations to delete.
-     */
-    limit?: number
-  }
-
-  /**
-   * HazardObservation.vessel
-   */
-  export type HazardObservation$vesselArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Vessel
-     */
-    select?: VesselSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Vessel
-     */
-    omit?: VesselOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: VesselInclude<ExtArgs> | null
-    where?: VesselWhereInput
-  }
-
-  /**
-   * HazardObservation.reportedBy
-   */
-  export type HazardObservation$reportedByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the User
-     */
-    select?: UserSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the User
-     */
-    omit?: UserOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserInclude<ExtArgs> | null
-    where?: UserWhereInput
-  }
-
-  /**
-   * HazardObservation without action
-   */
-  export type HazardObservationDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the HazardObservation
-     */
-    select?: HazardObservationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the HazardObservation
-     */
-    omit?: HazardObservationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: HazardObservationInclude<ExtArgs> | null
-  }
-
-
-  /**
    * Model NonConformity
    */
 
@@ -32736,6 +31256,7 @@ export namespace Prisma {
     title: string | null
     vesselId: string | null
     source: $Enums.NcrSource | null
+    sourceEntityId: string | null
     requirement: string | null
     description: string | null
     severity: $Enums.Severity | null
@@ -32744,6 +31265,7 @@ export namespace Prisma {
     rootCause: string | null
     correctiveAction: string | null
     verification: string | null
+    personInCharge: string | null
     status: $Enums.NcrStatus | null
     closedAt: Date | null
     raisedById: string | null
@@ -32762,6 +31284,7 @@ export namespace Prisma {
     title: string | null
     vesselId: string | null
     source: $Enums.NcrSource | null
+    sourceEntityId: string | null
     requirement: string | null
     description: string | null
     severity: $Enums.Severity | null
@@ -32770,6 +31293,7 @@ export namespace Prisma {
     rootCause: string | null
     correctiveAction: string | null
     verification: string | null
+    personInCharge: string | null
     status: $Enums.NcrStatus | null
     closedAt: Date | null
     raisedById: string | null
@@ -32788,6 +31312,7 @@ export namespace Prisma {
     title: number
     vesselId: number
     source: number
+    sourceEntityId: number
     requirement: number
     description: number
     severity: number
@@ -32796,6 +31321,7 @@ export namespace Prisma {
     rootCause: number
     correctiveAction: number
     verification: number
+    personInCharge: number
     status: number
     closedAt: number
     raisedById: number
@@ -32816,6 +31342,7 @@ export namespace Prisma {
     title?: true
     vesselId?: true
     source?: true
+    sourceEntityId?: true
     requirement?: true
     description?: true
     severity?: true
@@ -32824,6 +31351,7 @@ export namespace Prisma {
     rootCause?: true
     correctiveAction?: true
     verification?: true
+    personInCharge?: true
     status?: true
     closedAt?: true
     raisedById?: true
@@ -32842,6 +31370,7 @@ export namespace Prisma {
     title?: true
     vesselId?: true
     source?: true
+    sourceEntityId?: true
     requirement?: true
     description?: true
     severity?: true
@@ -32850,6 +31379,7 @@ export namespace Prisma {
     rootCause?: true
     correctiveAction?: true
     verification?: true
+    personInCharge?: true
     status?: true
     closedAt?: true
     raisedById?: true
@@ -32868,6 +31398,7 @@ export namespace Prisma {
     title?: true
     vesselId?: true
     source?: true
+    sourceEntityId?: true
     requirement?: true
     description?: true
     severity?: true
@@ -32876,6 +31407,7 @@ export namespace Prisma {
     rootCause?: true
     correctiveAction?: true
     verification?: true
+    personInCharge?: true
     status?: true
     closedAt?: true
     raisedById?: true
@@ -32967,6 +31499,7 @@ export namespace Prisma {
     title: string
     vesselId: string | null
     source: $Enums.NcrSource
+    sourceEntityId: string | null
     requirement: string
     description: string
     severity: $Enums.Severity
@@ -32975,6 +31508,7 @@ export namespace Prisma {
     rootCause: string | null
     correctiveAction: string | null
     verification: string | null
+    personInCharge: string | null
     status: $Enums.NcrStatus
     closedAt: Date | null
     raisedById: string | null
@@ -33010,6 +31544,7 @@ export namespace Prisma {
     title?: boolean
     vesselId?: boolean
     source?: boolean
+    sourceEntityId?: boolean
     requirement?: boolean
     description?: boolean
     severity?: boolean
@@ -33018,6 +31553,7 @@ export namespace Prisma {
     rootCause?: boolean
     correctiveAction?: boolean
     verification?: boolean
+    personInCharge?: boolean
     status?: boolean
     closedAt?: boolean
     raisedById?: boolean
@@ -33039,6 +31575,7 @@ export namespace Prisma {
     title?: boolean
     vesselId?: boolean
     source?: boolean
+    sourceEntityId?: boolean
     requirement?: boolean
     description?: boolean
     severity?: boolean
@@ -33047,6 +31584,7 @@ export namespace Prisma {
     rootCause?: boolean
     correctiveAction?: boolean
     verification?: boolean
+    personInCharge?: boolean
     status?: boolean
     closedAt?: boolean
     raisedById?: boolean
@@ -33068,6 +31606,7 @@ export namespace Prisma {
     title?: boolean
     vesselId?: boolean
     source?: boolean
+    sourceEntityId?: boolean
     requirement?: boolean
     description?: boolean
     severity?: boolean
@@ -33076,6 +31615,7 @@ export namespace Prisma {
     rootCause?: boolean
     correctiveAction?: boolean
     verification?: boolean
+    personInCharge?: boolean
     status?: boolean
     closedAt?: boolean
     raisedById?: boolean
@@ -33097,6 +31637,7 @@ export namespace Prisma {
     title?: boolean
     vesselId?: boolean
     source?: boolean
+    sourceEntityId?: boolean
     requirement?: boolean
     description?: boolean
     severity?: boolean
@@ -33105,6 +31646,7 @@ export namespace Prisma {
     rootCause?: boolean
     correctiveAction?: boolean
     verification?: boolean
+    personInCharge?: boolean
     status?: boolean
     closedAt?: boolean
     raisedById?: boolean
@@ -33116,7 +31658,7 @@ export namespace Prisma {
     deletedBy?: boolean
   }
 
-  export type NonConformityOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "companyId" | "refNo" | "title" | "vesselId" | "source" | "requirement" | "description" | "severity" | "raisedAt" | "targetDate" | "rootCause" | "correctiveAction" | "verification" | "status" | "closedAt" | "raisedById" | "createdAt" | "updatedAt" | "createdBy" | "updatedBy" | "deletedAt" | "deletedBy", ExtArgs["result"]["nonConformity"]>
+  export type NonConformityOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "companyId" | "refNo" | "title" | "vesselId" | "source" | "sourceEntityId" | "requirement" | "description" | "severity" | "raisedAt" | "targetDate" | "rootCause" | "correctiveAction" | "verification" | "personInCharge" | "status" | "closedAt" | "raisedById" | "createdAt" | "updatedAt" | "createdBy" | "updatedBy" | "deletedAt" | "deletedBy", ExtArgs["result"]["nonConformity"]>
   export type NonConformityInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     company?: boolean | CompanyDefaultArgs<ExtArgs>
     vessel?: boolean | NonConformity$vesselArgs<ExtArgs>
@@ -33147,6 +31689,7 @@ export namespace Prisma {
       title: string
       vesselId: string | null
       source: $Enums.NcrSource
+      sourceEntityId: string | null
       requirement: string
       description: string
       severity: $Enums.Severity
@@ -33155,6 +31698,7 @@ export namespace Prisma {
       rootCause: string | null
       correctiveAction: string | null
       verification: string | null
+      personInCharge: string | null
       status: $Enums.NcrStatus
       closedAt: Date | null
       raisedById: string | null
@@ -33596,6 +32140,7 @@ export namespace Prisma {
     readonly title: FieldRef<"NonConformity", 'String'>
     readonly vesselId: FieldRef<"NonConformity", 'String'>
     readonly source: FieldRef<"NonConformity", 'NcrSource'>
+    readonly sourceEntityId: FieldRef<"NonConformity", 'String'>
     readonly requirement: FieldRef<"NonConformity", 'String'>
     readonly description: FieldRef<"NonConformity", 'String'>
     readonly severity: FieldRef<"NonConformity", 'Severity'>
@@ -33604,6 +32149,7 @@ export namespace Prisma {
     readonly rootCause: FieldRef<"NonConformity", 'String'>
     readonly correctiveAction: FieldRef<"NonConformity", 'String'>
     readonly verification: FieldRef<"NonConformity", 'String'>
+    readonly personInCharge: FieldRef<"NonConformity", 'String'>
     readonly status: FieldRef<"NonConformity", 'NcrStatus'>
     readonly closedAt: FieldRef<"NonConformity", 'DateTime'>
     readonly raisedById: FieldRef<"NonConformity", 'String'>
@@ -46469,8 +45015,7 @@ export namespace Prisma {
     description: 'description',
     investigationDetails: 'investigationDetails',
     rootCauseCategory: 'rootCauseCategory',
-    humanFactorPrimary: 'humanFactorPrimary',
-    humanFactorContributing: 'humanFactorContributing',
+    rootCauseSubCategory: 'rootCauseSubCategory',
     immediateAction: 'immediateAction',
     rootCause: 'rootCause',
     closedAt: 'closedAt',
@@ -46478,6 +45023,8 @@ export namespace Prisma {
     verifiedByName: 'verifiedByName',
     verifiedAt: 'verifiedAt',
     reportedById: 'reportedById',
+    reporterName: 'reporterName',
+    reporterPosition: 'reporterPosition',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
     createdBy: 'createdBy',
@@ -46518,6 +45065,9 @@ export namespace Prisma {
     companyId: 'companyId',
     refNo: 'refNo',
     title: 'title',
+    kind: 'kind',
+    horCategory: 'horCategory',
+    stopAuthorityExercised: 'stopAuthorityExercised',
     vesselId: 'vesselId',
     occurredAt: 'occurredAt',
     location: 'location',
@@ -46526,13 +45076,14 @@ export namespace Prisma {
     potentialSeverity: 'potentialSeverity',
     immediateAction: 'immediateAction',
     rootCauseCategory: 'rootCauseCategory',
-    humanFactorPrimary: 'humanFactorPrimary',
-    humanFactorContributing: 'humanFactorContributing',
+    rootCauseSubCategory: 'rootCauseSubCategory',
     status: 'status',
     closedAt: 'closedAt',
     companyComments: 'companyComments',
     reviewedAt: 'reviewedAt',
     reportedById: 'reportedById',
+    reporterName: 'reporterName',
+    reporterPosition: 'reporterPosition',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
     createdBy: 'createdBy',
@@ -46544,34 +45095,6 @@ export namespace Prisma {
   export type NearMissScalarFieldEnum = (typeof NearMissScalarFieldEnum)[keyof typeof NearMissScalarFieldEnum]
 
 
-  export const HazardObservationScalarFieldEnum: {
-    id: 'id',
-    companyId: 'companyId',
-    refNo: 'refNo',
-    title: 'title',
-    vesselId: 'vesselId',
-    observedAt: 'observedAt',
-    location: 'location',
-    category: 'category',
-    hazardType: 'hazardType',
-    riskLevel: 'riskLevel',
-    observation: 'observation',
-    immediateAction: 'immediateAction',
-    correctiveAction: 'correctiveAction',
-    status: 'status',
-    closedAt: 'closedAt',
-    reportedById: 'reportedById',
-    createdAt: 'createdAt',
-    updatedAt: 'updatedAt',
-    createdBy: 'createdBy',
-    updatedBy: 'updatedBy',
-    deletedAt: 'deletedAt',
-    deletedBy: 'deletedBy'
-  };
-
-  export type HazardObservationScalarFieldEnum = (typeof HazardObservationScalarFieldEnum)[keyof typeof HazardObservationScalarFieldEnum]
-
-
   export const NonConformityScalarFieldEnum: {
     id: 'id',
     companyId: 'companyId',
@@ -46579,6 +45102,7 @@ export namespace Prisma {
     title: 'title',
     vesselId: 'vesselId',
     source: 'source',
+    sourceEntityId: 'sourceEntityId',
     requirement: 'requirement',
     description: 'description',
     severity: 'severity',
@@ -46587,6 +45111,7 @@ export namespace Prisma {
     rootCause: 'rootCause',
     correctiveAction: 'correctiveAction',
     verification: 'verification',
+    personInCharge: 'personInCharge',
     status: 'status',
     closedAt: 'closedAt',
     raisedById: 'raisedById',
@@ -47111,20 +45636,6 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'HumanFactor'
-   */
-  export type EnumHumanFactorFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'HumanFactor'>
-    
-
-
-  /**
-   * Reference to a field of type 'HumanFactor[]'
-   */
-  export type ListEnumHumanFactorFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'HumanFactor[]'>
-    
-
-
-  /**
    * Reference to a field of type 'IncidentType'
    */
   export type EnumIncidentTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'IncidentType'>
@@ -47135,6 +45646,34 @@ export namespace Prisma {
    * Reference to a field of type 'IncidentType[]'
    */
   export type ListEnumIncidentTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'IncidentType[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'NearMissKind'
+   */
+  export type EnumNearMissKindFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'NearMissKind'>
+    
+
+
+  /**
+   * Reference to a field of type 'NearMissKind[]'
+   */
+  export type ListEnumNearMissKindFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'NearMissKind[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'HazardType'
+   */
+  export type EnumHazardTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'HazardType'>
+    
+
+
+  /**
+   * Reference to a field of type 'HazardType[]'
+   */
+  export type ListEnumHazardTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'HazardType[]'>
     
 
 
@@ -47163,34 +45702,6 @@ export namespace Prisma {
    * Reference to a field of type 'NearMissStatus[]'
    */
   export type ListEnumNearMissStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'NearMissStatus[]'>
-    
-
-
-  /**
-   * Reference to a field of type 'HazardType'
-   */
-  export type EnumHazardTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'HazardType'>
-    
-
-
-  /**
-   * Reference to a field of type 'HazardType[]'
-   */
-  export type ListEnumHazardTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'HazardType[]'>
-    
-
-
-  /**
-   * Reference to a field of type 'HazardStatus'
-   */
-  export type EnumHazardStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'HazardStatus'>
-    
-
-
-  /**
-   * Reference to a field of type 'HazardStatus[]'
-   */
-  export type ListEnumHazardStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'HazardStatus[]'>
     
 
 
@@ -47283,7 +45794,6 @@ export namespace Prisma {
     workflows?: WorkflowDefinitionListRelationFilter
     incidents?: IncidentListRelationFilter
     nearMisses?: NearMissListRelationFilter
-    hazards?: HazardObservationListRelationFilter
     nonConformities?: NonConformityListRelationFilter
     sireInspections?: SireInspectionListRelationFilter
     pscInspections?: PscInspectionListRelationFilter
@@ -47305,7 +45815,6 @@ export namespace Prisma {
     workflows?: WorkflowDefinitionOrderByRelationAggregateInput
     incidents?: IncidentOrderByRelationAggregateInput
     nearMisses?: NearMissOrderByRelationAggregateInput
-    hazards?: HazardObservationOrderByRelationAggregateInput
     nonConformities?: NonConformityOrderByRelationAggregateInput
     sireInspections?: SireInspectionOrderByRelationAggregateInput
     pscInspections?: PscInspectionOrderByRelationAggregateInput
@@ -47330,7 +45839,6 @@ export namespace Prisma {
     workflows?: WorkflowDefinitionListRelationFilter
     incidents?: IncidentListRelationFilter
     nearMisses?: NearMissListRelationFilter
-    hazards?: HazardObservationListRelationFilter
     nonConformities?: NonConformityListRelationFilter
     sireInspections?: SireInspectionListRelationFilter
     pscInspections?: PscInspectionListRelationFilter
@@ -47385,7 +45893,6 @@ export namespace Prisma {
     ownedDocs?: SmsDocumentListRelationFilter
     reportedIncidents?: IncidentListRelationFilter
     reportedNearMisses?: NearMissListRelationFilter
-    reportedHazards?: HazardObservationListRelationFilter
     raisedNcrs?: NonConformityListRelationFilter
     notifications?: NotificationListRelationFilter
   }
@@ -47411,7 +45918,6 @@ export namespace Prisma {
     ownedDocs?: SmsDocumentOrderByRelationAggregateInput
     reportedIncidents?: IncidentOrderByRelationAggregateInput
     reportedNearMisses?: NearMissOrderByRelationAggregateInput
-    reportedHazards?: HazardObservationOrderByRelationAggregateInput
     raisedNcrs?: NonConformityOrderByRelationAggregateInput
     notifications?: NotificationOrderByRelationAggregateInput
   }
@@ -47440,7 +45946,6 @@ export namespace Prisma {
     ownedDocs?: SmsDocumentListRelationFilter
     reportedIncidents?: IncidentListRelationFilter
     reportedNearMisses?: NearMissListRelationFilter
-    reportedHazards?: HazardObservationListRelationFilter
     raisedNcrs?: NonConformityListRelationFilter
     notifications?: NotificationListRelationFilter
   }, "id" | "email">
@@ -47727,7 +46232,6 @@ export namespace Prisma {
     smsDocuments?: SmsDocumentListRelationFilter
     incidents?: IncidentListRelationFilter
     nearMisses?: NearMissListRelationFilter
-    hazards?: HazardObservationListRelationFilter
     nonConformities?: NonConformityListRelationFilter
     sireInspections?: SireInspectionListRelationFilter
     pscInspections?: PscInspectionListRelationFilter
@@ -47763,7 +46267,6 @@ export namespace Prisma {
     smsDocuments?: SmsDocumentOrderByRelationAggregateInput
     incidents?: IncidentOrderByRelationAggregateInput
     nearMisses?: NearMissOrderByRelationAggregateInput
-    hazards?: HazardObservationOrderByRelationAggregateInput
     nonConformities?: NonConformityOrderByRelationAggregateInput
     sireInspections?: SireInspectionOrderByRelationAggregateInput
     pscInspections?: PscInspectionOrderByRelationAggregateInput
@@ -47802,7 +46305,6 @@ export namespace Prisma {
     smsDocuments?: SmsDocumentListRelationFilter
     incidents?: IncidentListRelationFilter
     nearMisses?: NearMissListRelationFilter
-    hazards?: HazardObservationListRelationFilter
     nonConformities?: NonConformityListRelationFilter
     sireInspections?: SireInspectionListRelationFilter
     pscInspections?: PscInspectionListRelationFilter
@@ -48870,8 +47372,7 @@ export namespace Prisma {
     description?: StringFilter<"Incident"> | string
     investigationDetails?: StringNullableFilter<"Incident"> | string | null
     rootCauseCategory?: EnumRootCauseCategoryNullableFilter<"Incident"> | $Enums.RootCauseCategory | null
-    humanFactorPrimary?: EnumHumanFactorNullableFilter<"Incident"> | $Enums.HumanFactor | null
-    humanFactorContributing?: EnumHumanFactorNullableListFilter<"Incident">
+    rootCauseSubCategory?: StringNullableFilter<"Incident"> | string | null
     immediateAction?: StringNullableFilter<"Incident"> | string | null
     rootCause?: StringNullableFilter<"Incident"> | string | null
     closedAt?: DateTimeNullableFilter<"Incident"> | Date | string | null
@@ -48879,6 +47380,8 @@ export namespace Prisma {
     verifiedByName?: StringNullableFilter<"Incident"> | string | null
     verifiedAt?: DateTimeNullableFilter<"Incident"> | Date | string | null
     reportedById?: StringNullableFilter<"Incident"> | string | null
+    reporterName?: StringNullableFilter<"Incident"> | string | null
+    reporterPosition?: StringNullableFilter<"Incident"> | string | null
     createdAt?: DateTimeFilter<"Incident"> | Date | string
     updatedAt?: DateTimeFilter<"Incident"> | Date | string
     createdBy?: StringNullableFilter<"Incident"> | string | null
@@ -48905,8 +47408,7 @@ export namespace Prisma {
     description?: SortOrder
     investigationDetails?: SortOrderInput | SortOrder
     rootCauseCategory?: SortOrderInput | SortOrder
-    humanFactorPrimary?: SortOrderInput | SortOrder
-    humanFactorContributing?: SortOrder
+    rootCauseSubCategory?: SortOrderInput | SortOrder
     immediateAction?: SortOrderInput | SortOrder
     rootCause?: SortOrderInput | SortOrder
     closedAt?: SortOrderInput | SortOrder
@@ -48914,6 +47416,8 @@ export namespace Prisma {
     verifiedByName?: SortOrderInput | SortOrder
     verifiedAt?: SortOrderInput | SortOrder
     reportedById?: SortOrderInput | SortOrder
+    reporterName?: SortOrderInput | SortOrder
+    reporterPosition?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     createdBy?: SortOrderInput | SortOrder
@@ -48944,8 +47448,7 @@ export namespace Prisma {
     description?: StringFilter<"Incident"> | string
     investigationDetails?: StringNullableFilter<"Incident"> | string | null
     rootCauseCategory?: EnumRootCauseCategoryNullableFilter<"Incident"> | $Enums.RootCauseCategory | null
-    humanFactorPrimary?: EnumHumanFactorNullableFilter<"Incident"> | $Enums.HumanFactor | null
-    humanFactorContributing?: EnumHumanFactorNullableListFilter<"Incident">
+    rootCauseSubCategory?: StringNullableFilter<"Incident"> | string | null
     immediateAction?: StringNullableFilter<"Incident"> | string | null
     rootCause?: StringNullableFilter<"Incident"> | string | null
     closedAt?: DateTimeNullableFilter<"Incident"> | Date | string | null
@@ -48953,6 +47456,8 @@ export namespace Prisma {
     verifiedByName?: StringNullableFilter<"Incident"> | string | null
     verifiedAt?: DateTimeNullableFilter<"Incident"> | Date | string | null
     reportedById?: StringNullableFilter<"Incident"> | string | null
+    reporterName?: StringNullableFilter<"Incident"> | string | null
+    reporterPosition?: StringNullableFilter<"Incident"> | string | null
     createdAt?: DateTimeFilter<"Incident"> | Date | string
     updatedAt?: DateTimeFilter<"Incident"> | Date | string
     createdBy?: StringNullableFilter<"Incident"> | string | null
@@ -48979,8 +47484,7 @@ export namespace Prisma {
     description?: SortOrder
     investigationDetails?: SortOrderInput | SortOrder
     rootCauseCategory?: SortOrderInput | SortOrder
-    humanFactorPrimary?: SortOrderInput | SortOrder
-    humanFactorContributing?: SortOrder
+    rootCauseSubCategory?: SortOrderInput | SortOrder
     immediateAction?: SortOrderInput | SortOrder
     rootCause?: SortOrderInput | SortOrder
     closedAt?: SortOrderInput | SortOrder
@@ -48988,6 +47492,8 @@ export namespace Prisma {
     verifiedByName?: SortOrderInput | SortOrder
     verifiedAt?: SortOrderInput | SortOrder
     reportedById?: SortOrderInput | SortOrder
+    reporterName?: SortOrderInput | SortOrder
+    reporterPosition?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     createdBy?: SortOrderInput | SortOrder
@@ -49015,8 +47521,7 @@ export namespace Prisma {
     description?: StringWithAggregatesFilter<"Incident"> | string
     investigationDetails?: StringNullableWithAggregatesFilter<"Incident"> | string | null
     rootCauseCategory?: EnumRootCauseCategoryNullableWithAggregatesFilter<"Incident"> | $Enums.RootCauseCategory | null
-    humanFactorPrimary?: EnumHumanFactorNullableWithAggregatesFilter<"Incident"> | $Enums.HumanFactor | null
-    humanFactorContributing?: EnumHumanFactorNullableListFilter<"Incident">
+    rootCauseSubCategory?: StringNullableWithAggregatesFilter<"Incident"> | string | null
     immediateAction?: StringNullableWithAggregatesFilter<"Incident"> | string | null
     rootCause?: StringNullableWithAggregatesFilter<"Incident"> | string | null
     closedAt?: DateTimeNullableWithAggregatesFilter<"Incident"> | Date | string | null
@@ -49024,6 +47529,8 @@ export namespace Prisma {
     verifiedByName?: StringNullableWithAggregatesFilter<"Incident"> | string | null
     verifiedAt?: DateTimeNullableWithAggregatesFilter<"Incident"> | Date | string | null
     reportedById?: StringNullableWithAggregatesFilter<"Incident"> | string | null
+    reporterName?: StringNullableWithAggregatesFilter<"Incident"> | string | null
+    reporterPosition?: StringNullableWithAggregatesFilter<"Incident"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Incident"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Incident"> | Date | string
     createdBy?: StringNullableWithAggregatesFilter<"Incident"> | string | null
@@ -49164,6 +47671,9 @@ export namespace Prisma {
     companyId?: StringFilter<"NearMiss"> | string
     refNo?: StringFilter<"NearMiss"> | string
     title?: StringFilter<"NearMiss"> | string
+    kind?: EnumNearMissKindFilter<"NearMiss"> | $Enums.NearMissKind
+    horCategory?: EnumHazardTypeNullableFilter<"NearMiss"> | $Enums.HazardType | null
+    stopAuthorityExercised?: BoolFilter<"NearMiss"> | boolean
     vesselId?: StringNullableFilter<"NearMiss"> | string | null
     occurredAt?: DateTimeFilter<"NearMiss"> | Date | string
     location?: StringNullableFilter<"NearMiss"> | string | null
@@ -49172,13 +47682,14 @@ export namespace Prisma {
     potentialSeverity?: EnumSeverityFilter<"NearMiss"> | $Enums.Severity
     immediateAction?: StringNullableFilter<"NearMiss"> | string | null
     rootCauseCategory?: EnumRootCauseCategoryFilter<"NearMiss"> | $Enums.RootCauseCategory
-    humanFactorPrimary?: EnumHumanFactorNullableFilter<"NearMiss"> | $Enums.HumanFactor | null
-    humanFactorContributing?: EnumHumanFactorNullableListFilter<"NearMiss">
+    rootCauseSubCategory?: StringNullableFilter<"NearMiss"> | string | null
     status?: EnumNearMissStatusFilter<"NearMiss"> | $Enums.NearMissStatus
     closedAt?: DateTimeNullableFilter<"NearMiss"> | Date | string | null
     companyComments?: StringNullableFilter<"NearMiss"> | string | null
     reviewedAt?: DateTimeNullableFilter<"NearMiss"> | Date | string | null
     reportedById?: StringNullableFilter<"NearMiss"> | string | null
+    reporterName?: StringNullableFilter<"NearMiss"> | string | null
+    reporterPosition?: StringNullableFilter<"NearMiss"> | string | null
     createdAt?: DateTimeFilter<"NearMiss"> | Date | string
     updatedAt?: DateTimeFilter<"NearMiss"> | Date | string
     createdBy?: StringNullableFilter<"NearMiss"> | string | null
@@ -49195,6 +47706,9 @@ export namespace Prisma {
     companyId?: SortOrder
     refNo?: SortOrder
     title?: SortOrder
+    kind?: SortOrder
+    horCategory?: SortOrderInput | SortOrder
+    stopAuthorityExercised?: SortOrder
     vesselId?: SortOrderInput | SortOrder
     occurredAt?: SortOrder
     location?: SortOrderInput | SortOrder
@@ -49203,13 +47717,14 @@ export namespace Prisma {
     potentialSeverity?: SortOrder
     immediateAction?: SortOrderInput | SortOrder
     rootCauseCategory?: SortOrder
-    humanFactorPrimary?: SortOrderInput | SortOrder
-    humanFactorContributing?: SortOrder
+    rootCauseSubCategory?: SortOrderInput | SortOrder
     status?: SortOrder
     closedAt?: SortOrderInput | SortOrder
     companyComments?: SortOrderInput | SortOrder
     reviewedAt?: SortOrderInput | SortOrder
     reportedById?: SortOrderInput | SortOrder
+    reporterName?: SortOrderInput | SortOrder
+    reporterPosition?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     createdBy?: SortOrderInput | SortOrder
@@ -49230,6 +47745,9 @@ export namespace Prisma {
     companyId?: StringFilter<"NearMiss"> | string
     refNo?: StringFilter<"NearMiss"> | string
     title?: StringFilter<"NearMiss"> | string
+    kind?: EnumNearMissKindFilter<"NearMiss"> | $Enums.NearMissKind
+    horCategory?: EnumHazardTypeNullableFilter<"NearMiss"> | $Enums.HazardType | null
+    stopAuthorityExercised?: BoolFilter<"NearMiss"> | boolean
     vesselId?: StringNullableFilter<"NearMiss"> | string | null
     occurredAt?: DateTimeFilter<"NearMiss"> | Date | string
     location?: StringNullableFilter<"NearMiss"> | string | null
@@ -49238,13 +47756,14 @@ export namespace Prisma {
     potentialSeverity?: EnumSeverityFilter<"NearMiss"> | $Enums.Severity
     immediateAction?: StringNullableFilter<"NearMiss"> | string | null
     rootCauseCategory?: EnumRootCauseCategoryFilter<"NearMiss"> | $Enums.RootCauseCategory
-    humanFactorPrimary?: EnumHumanFactorNullableFilter<"NearMiss"> | $Enums.HumanFactor | null
-    humanFactorContributing?: EnumHumanFactorNullableListFilter<"NearMiss">
+    rootCauseSubCategory?: StringNullableFilter<"NearMiss"> | string | null
     status?: EnumNearMissStatusFilter<"NearMiss"> | $Enums.NearMissStatus
     closedAt?: DateTimeNullableFilter<"NearMiss"> | Date | string | null
     companyComments?: StringNullableFilter<"NearMiss"> | string | null
     reviewedAt?: DateTimeNullableFilter<"NearMiss"> | Date | string | null
     reportedById?: StringNullableFilter<"NearMiss"> | string | null
+    reporterName?: StringNullableFilter<"NearMiss"> | string | null
+    reporterPosition?: StringNullableFilter<"NearMiss"> | string | null
     createdAt?: DateTimeFilter<"NearMiss"> | Date | string
     updatedAt?: DateTimeFilter<"NearMiss"> | Date | string
     createdBy?: StringNullableFilter<"NearMiss"> | string | null
@@ -49261,6 +47780,9 @@ export namespace Prisma {
     companyId?: SortOrder
     refNo?: SortOrder
     title?: SortOrder
+    kind?: SortOrder
+    horCategory?: SortOrderInput | SortOrder
+    stopAuthorityExercised?: SortOrder
     vesselId?: SortOrderInput | SortOrder
     occurredAt?: SortOrder
     location?: SortOrderInput | SortOrder
@@ -49269,13 +47791,14 @@ export namespace Prisma {
     potentialSeverity?: SortOrder
     immediateAction?: SortOrderInput | SortOrder
     rootCauseCategory?: SortOrder
-    humanFactorPrimary?: SortOrderInput | SortOrder
-    humanFactorContributing?: SortOrder
+    rootCauseSubCategory?: SortOrderInput | SortOrder
     status?: SortOrder
     closedAt?: SortOrderInput | SortOrder
     companyComments?: SortOrderInput | SortOrder
     reviewedAt?: SortOrderInput | SortOrder
     reportedById?: SortOrderInput | SortOrder
+    reporterName?: SortOrderInput | SortOrder
+    reporterPosition?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     createdBy?: SortOrderInput | SortOrder
@@ -49295,6 +47818,9 @@ export namespace Prisma {
     companyId?: StringWithAggregatesFilter<"NearMiss"> | string
     refNo?: StringWithAggregatesFilter<"NearMiss"> | string
     title?: StringWithAggregatesFilter<"NearMiss"> | string
+    kind?: EnumNearMissKindWithAggregatesFilter<"NearMiss"> | $Enums.NearMissKind
+    horCategory?: EnumHazardTypeNullableWithAggregatesFilter<"NearMiss"> | $Enums.HazardType | null
+    stopAuthorityExercised?: BoolWithAggregatesFilter<"NearMiss"> | boolean
     vesselId?: StringNullableWithAggregatesFilter<"NearMiss"> | string | null
     occurredAt?: DateTimeWithAggregatesFilter<"NearMiss"> | Date | string
     location?: StringNullableWithAggregatesFilter<"NearMiss"> | string | null
@@ -49303,166 +47829,20 @@ export namespace Prisma {
     potentialSeverity?: EnumSeverityWithAggregatesFilter<"NearMiss"> | $Enums.Severity
     immediateAction?: StringNullableWithAggregatesFilter<"NearMiss"> | string | null
     rootCauseCategory?: EnumRootCauseCategoryWithAggregatesFilter<"NearMiss"> | $Enums.RootCauseCategory
-    humanFactorPrimary?: EnumHumanFactorNullableWithAggregatesFilter<"NearMiss"> | $Enums.HumanFactor | null
-    humanFactorContributing?: EnumHumanFactorNullableListFilter<"NearMiss">
+    rootCauseSubCategory?: StringNullableWithAggregatesFilter<"NearMiss"> | string | null
     status?: EnumNearMissStatusWithAggregatesFilter<"NearMiss"> | $Enums.NearMissStatus
     closedAt?: DateTimeNullableWithAggregatesFilter<"NearMiss"> | Date | string | null
     companyComments?: StringNullableWithAggregatesFilter<"NearMiss"> | string | null
     reviewedAt?: DateTimeNullableWithAggregatesFilter<"NearMiss"> | Date | string | null
     reportedById?: StringNullableWithAggregatesFilter<"NearMiss"> | string | null
+    reporterName?: StringNullableWithAggregatesFilter<"NearMiss"> | string | null
+    reporterPosition?: StringNullableWithAggregatesFilter<"NearMiss"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"NearMiss"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"NearMiss"> | Date | string
     createdBy?: StringNullableWithAggregatesFilter<"NearMiss"> | string | null
     updatedBy?: StringNullableWithAggregatesFilter<"NearMiss"> | string | null
     deletedAt?: DateTimeNullableWithAggregatesFilter<"NearMiss"> | Date | string | null
     deletedBy?: StringNullableWithAggregatesFilter<"NearMiss"> | string | null
-  }
-
-  export type HazardObservationWhereInput = {
-    AND?: HazardObservationWhereInput | HazardObservationWhereInput[]
-    OR?: HazardObservationWhereInput[]
-    NOT?: HazardObservationWhereInput | HazardObservationWhereInput[]
-    id?: StringFilter<"HazardObservation"> | string
-    companyId?: StringFilter<"HazardObservation"> | string
-    refNo?: StringFilter<"HazardObservation"> | string
-    title?: StringFilter<"HazardObservation"> | string
-    vesselId?: StringNullableFilter<"HazardObservation"> | string | null
-    observedAt?: DateTimeFilter<"HazardObservation"> | Date | string
-    location?: StringNullableFilter<"HazardObservation"> | string | null
-    category?: StringFilter<"HazardObservation"> | string
-    hazardType?: EnumHazardTypeFilter<"HazardObservation"> | $Enums.HazardType
-    riskLevel?: EnumSeverityFilter<"HazardObservation"> | $Enums.Severity
-    observation?: StringFilter<"HazardObservation"> | string
-    immediateAction?: StringNullableFilter<"HazardObservation"> | string | null
-    correctiveAction?: StringNullableFilter<"HazardObservation"> | string | null
-    status?: EnumHazardStatusFilter<"HazardObservation"> | $Enums.HazardStatus
-    closedAt?: DateTimeNullableFilter<"HazardObservation"> | Date | string | null
-    reportedById?: StringNullableFilter<"HazardObservation"> | string | null
-    createdAt?: DateTimeFilter<"HazardObservation"> | Date | string
-    updatedAt?: DateTimeFilter<"HazardObservation"> | Date | string
-    createdBy?: StringNullableFilter<"HazardObservation"> | string | null
-    updatedBy?: StringNullableFilter<"HazardObservation"> | string | null
-    deletedAt?: DateTimeNullableFilter<"HazardObservation"> | Date | string | null
-    deletedBy?: StringNullableFilter<"HazardObservation"> | string | null
-    company?: XOR<CompanyScalarRelationFilter, CompanyWhereInput>
-    vessel?: XOR<VesselNullableScalarRelationFilter, VesselWhereInput> | null
-    reportedBy?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
-  }
-
-  export type HazardObservationOrderByWithRelationInput = {
-    id?: SortOrder
-    companyId?: SortOrder
-    refNo?: SortOrder
-    title?: SortOrder
-    vesselId?: SortOrderInput | SortOrder
-    observedAt?: SortOrder
-    location?: SortOrderInput | SortOrder
-    category?: SortOrder
-    hazardType?: SortOrder
-    riskLevel?: SortOrder
-    observation?: SortOrder
-    immediateAction?: SortOrderInput | SortOrder
-    correctiveAction?: SortOrderInput | SortOrder
-    status?: SortOrder
-    closedAt?: SortOrderInput | SortOrder
-    reportedById?: SortOrderInput | SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    createdBy?: SortOrderInput | SortOrder
-    updatedBy?: SortOrderInput | SortOrder
-    deletedAt?: SortOrderInput | SortOrder
-    deletedBy?: SortOrderInput | SortOrder
-    company?: CompanyOrderByWithRelationInput
-    vessel?: VesselOrderByWithRelationInput
-    reportedBy?: UserOrderByWithRelationInput
-  }
-
-  export type HazardObservationWhereUniqueInput = Prisma.AtLeast<{
-    id?: string
-    companyId_refNo?: HazardObservationCompanyIdRefNoCompoundUniqueInput
-    AND?: HazardObservationWhereInput | HazardObservationWhereInput[]
-    OR?: HazardObservationWhereInput[]
-    NOT?: HazardObservationWhereInput | HazardObservationWhereInput[]
-    companyId?: StringFilter<"HazardObservation"> | string
-    refNo?: StringFilter<"HazardObservation"> | string
-    title?: StringFilter<"HazardObservation"> | string
-    vesselId?: StringNullableFilter<"HazardObservation"> | string | null
-    observedAt?: DateTimeFilter<"HazardObservation"> | Date | string
-    location?: StringNullableFilter<"HazardObservation"> | string | null
-    category?: StringFilter<"HazardObservation"> | string
-    hazardType?: EnumHazardTypeFilter<"HazardObservation"> | $Enums.HazardType
-    riskLevel?: EnumSeverityFilter<"HazardObservation"> | $Enums.Severity
-    observation?: StringFilter<"HazardObservation"> | string
-    immediateAction?: StringNullableFilter<"HazardObservation"> | string | null
-    correctiveAction?: StringNullableFilter<"HazardObservation"> | string | null
-    status?: EnumHazardStatusFilter<"HazardObservation"> | $Enums.HazardStatus
-    closedAt?: DateTimeNullableFilter<"HazardObservation"> | Date | string | null
-    reportedById?: StringNullableFilter<"HazardObservation"> | string | null
-    createdAt?: DateTimeFilter<"HazardObservation"> | Date | string
-    updatedAt?: DateTimeFilter<"HazardObservation"> | Date | string
-    createdBy?: StringNullableFilter<"HazardObservation"> | string | null
-    updatedBy?: StringNullableFilter<"HazardObservation"> | string | null
-    deletedAt?: DateTimeNullableFilter<"HazardObservation"> | Date | string | null
-    deletedBy?: StringNullableFilter<"HazardObservation"> | string | null
-    company?: XOR<CompanyScalarRelationFilter, CompanyWhereInput>
-    vessel?: XOR<VesselNullableScalarRelationFilter, VesselWhereInput> | null
-    reportedBy?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
-  }, "id" | "companyId_refNo">
-
-  export type HazardObservationOrderByWithAggregationInput = {
-    id?: SortOrder
-    companyId?: SortOrder
-    refNo?: SortOrder
-    title?: SortOrder
-    vesselId?: SortOrderInput | SortOrder
-    observedAt?: SortOrder
-    location?: SortOrderInput | SortOrder
-    category?: SortOrder
-    hazardType?: SortOrder
-    riskLevel?: SortOrder
-    observation?: SortOrder
-    immediateAction?: SortOrderInput | SortOrder
-    correctiveAction?: SortOrderInput | SortOrder
-    status?: SortOrder
-    closedAt?: SortOrderInput | SortOrder
-    reportedById?: SortOrderInput | SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    createdBy?: SortOrderInput | SortOrder
-    updatedBy?: SortOrderInput | SortOrder
-    deletedAt?: SortOrderInput | SortOrder
-    deletedBy?: SortOrderInput | SortOrder
-    _count?: HazardObservationCountOrderByAggregateInput
-    _max?: HazardObservationMaxOrderByAggregateInput
-    _min?: HazardObservationMinOrderByAggregateInput
-  }
-
-  export type HazardObservationScalarWhereWithAggregatesInput = {
-    AND?: HazardObservationScalarWhereWithAggregatesInput | HazardObservationScalarWhereWithAggregatesInput[]
-    OR?: HazardObservationScalarWhereWithAggregatesInput[]
-    NOT?: HazardObservationScalarWhereWithAggregatesInput | HazardObservationScalarWhereWithAggregatesInput[]
-    id?: StringWithAggregatesFilter<"HazardObservation"> | string
-    companyId?: StringWithAggregatesFilter<"HazardObservation"> | string
-    refNo?: StringWithAggregatesFilter<"HazardObservation"> | string
-    title?: StringWithAggregatesFilter<"HazardObservation"> | string
-    vesselId?: StringNullableWithAggregatesFilter<"HazardObservation"> | string | null
-    observedAt?: DateTimeWithAggregatesFilter<"HazardObservation"> | Date | string
-    location?: StringNullableWithAggregatesFilter<"HazardObservation"> | string | null
-    category?: StringWithAggregatesFilter<"HazardObservation"> | string
-    hazardType?: EnumHazardTypeWithAggregatesFilter<"HazardObservation"> | $Enums.HazardType
-    riskLevel?: EnumSeverityWithAggregatesFilter<"HazardObservation"> | $Enums.Severity
-    observation?: StringWithAggregatesFilter<"HazardObservation"> | string
-    immediateAction?: StringNullableWithAggregatesFilter<"HazardObservation"> | string | null
-    correctiveAction?: StringNullableWithAggregatesFilter<"HazardObservation"> | string | null
-    status?: EnumHazardStatusWithAggregatesFilter<"HazardObservation"> | $Enums.HazardStatus
-    closedAt?: DateTimeNullableWithAggregatesFilter<"HazardObservation"> | Date | string | null
-    reportedById?: StringNullableWithAggregatesFilter<"HazardObservation"> | string | null
-    createdAt?: DateTimeWithAggregatesFilter<"HazardObservation"> | Date | string
-    updatedAt?: DateTimeWithAggregatesFilter<"HazardObservation"> | Date | string
-    createdBy?: StringNullableWithAggregatesFilter<"HazardObservation"> | string | null
-    updatedBy?: StringNullableWithAggregatesFilter<"HazardObservation"> | string | null
-    deletedAt?: DateTimeNullableWithAggregatesFilter<"HazardObservation"> | Date | string | null
-    deletedBy?: StringNullableWithAggregatesFilter<"HazardObservation"> | string | null
   }
 
   export type NonConformityWhereInput = {
@@ -49475,6 +47855,7 @@ export namespace Prisma {
     title?: StringFilter<"NonConformity"> | string
     vesselId?: StringNullableFilter<"NonConformity"> | string | null
     source?: EnumNcrSourceFilter<"NonConformity"> | $Enums.NcrSource
+    sourceEntityId?: StringNullableFilter<"NonConformity"> | string | null
     requirement?: StringFilter<"NonConformity"> | string
     description?: StringFilter<"NonConformity"> | string
     severity?: EnumSeverityFilter<"NonConformity"> | $Enums.Severity
@@ -49483,6 +47864,7 @@ export namespace Prisma {
     rootCause?: StringNullableFilter<"NonConformity"> | string | null
     correctiveAction?: StringNullableFilter<"NonConformity"> | string | null
     verification?: StringNullableFilter<"NonConformity"> | string | null
+    personInCharge?: StringNullableFilter<"NonConformity"> | string | null
     status?: EnumNcrStatusFilter<"NonConformity"> | $Enums.NcrStatus
     closedAt?: DateTimeNullableFilter<"NonConformity"> | Date | string | null
     raisedById?: StringNullableFilter<"NonConformity"> | string | null
@@ -49504,6 +47886,7 @@ export namespace Prisma {
     title?: SortOrder
     vesselId?: SortOrderInput | SortOrder
     source?: SortOrder
+    sourceEntityId?: SortOrderInput | SortOrder
     requirement?: SortOrder
     description?: SortOrder
     severity?: SortOrder
@@ -49512,6 +47895,7 @@ export namespace Prisma {
     rootCause?: SortOrderInput | SortOrder
     correctiveAction?: SortOrderInput | SortOrder
     verification?: SortOrderInput | SortOrder
+    personInCharge?: SortOrderInput | SortOrder
     status?: SortOrder
     closedAt?: SortOrderInput | SortOrder
     raisedById?: SortOrderInput | SortOrder
@@ -49537,6 +47921,7 @@ export namespace Prisma {
     title?: StringFilter<"NonConformity"> | string
     vesselId?: StringNullableFilter<"NonConformity"> | string | null
     source?: EnumNcrSourceFilter<"NonConformity"> | $Enums.NcrSource
+    sourceEntityId?: StringNullableFilter<"NonConformity"> | string | null
     requirement?: StringFilter<"NonConformity"> | string
     description?: StringFilter<"NonConformity"> | string
     severity?: EnumSeverityFilter<"NonConformity"> | $Enums.Severity
@@ -49545,6 +47930,7 @@ export namespace Prisma {
     rootCause?: StringNullableFilter<"NonConformity"> | string | null
     correctiveAction?: StringNullableFilter<"NonConformity"> | string | null
     verification?: StringNullableFilter<"NonConformity"> | string | null
+    personInCharge?: StringNullableFilter<"NonConformity"> | string | null
     status?: EnumNcrStatusFilter<"NonConformity"> | $Enums.NcrStatus
     closedAt?: DateTimeNullableFilter<"NonConformity"> | Date | string | null
     raisedById?: StringNullableFilter<"NonConformity"> | string | null
@@ -49566,6 +47952,7 @@ export namespace Prisma {
     title?: SortOrder
     vesselId?: SortOrderInput | SortOrder
     source?: SortOrder
+    sourceEntityId?: SortOrderInput | SortOrder
     requirement?: SortOrder
     description?: SortOrder
     severity?: SortOrder
@@ -49574,6 +47961,7 @@ export namespace Prisma {
     rootCause?: SortOrderInput | SortOrder
     correctiveAction?: SortOrderInput | SortOrder
     verification?: SortOrderInput | SortOrder
+    personInCharge?: SortOrderInput | SortOrder
     status?: SortOrder
     closedAt?: SortOrderInput | SortOrder
     raisedById?: SortOrderInput | SortOrder
@@ -49598,6 +47986,7 @@ export namespace Prisma {
     title?: StringWithAggregatesFilter<"NonConformity"> | string
     vesselId?: StringNullableWithAggregatesFilter<"NonConformity"> | string | null
     source?: EnumNcrSourceWithAggregatesFilter<"NonConformity"> | $Enums.NcrSource
+    sourceEntityId?: StringNullableWithAggregatesFilter<"NonConformity"> | string | null
     requirement?: StringWithAggregatesFilter<"NonConformity"> | string
     description?: StringWithAggregatesFilter<"NonConformity"> | string
     severity?: EnumSeverityWithAggregatesFilter<"NonConformity"> | $Enums.Severity
@@ -49606,6 +47995,7 @@ export namespace Prisma {
     rootCause?: StringNullableWithAggregatesFilter<"NonConformity"> | string | null
     correctiveAction?: StringNullableWithAggregatesFilter<"NonConformity"> | string | null
     verification?: StringNullableWithAggregatesFilter<"NonConformity"> | string | null
+    personInCharge?: StringNullableWithAggregatesFilter<"NonConformity"> | string | null
     status?: EnumNcrStatusWithAggregatesFilter<"NonConformity"> | $Enums.NcrStatus
     closedAt?: DateTimeNullableWithAggregatesFilter<"NonConformity"> | Date | string | null
     raisedById?: StringNullableWithAggregatesFilter<"NonConformity"> | string | null
@@ -50685,7 +49075,6 @@ export namespace Prisma {
     workflows?: WorkflowDefinitionCreateNestedManyWithoutCompanyInput
     incidents?: IncidentCreateNestedManyWithoutCompanyInput
     nearMisses?: NearMissCreateNestedManyWithoutCompanyInput
-    hazards?: HazardObservationCreateNestedManyWithoutCompanyInput
     nonConformities?: NonConformityCreateNestedManyWithoutCompanyInput
     sireInspections?: SireInspectionCreateNestedManyWithoutCompanyInput
     pscInspections?: PscInspectionCreateNestedManyWithoutCompanyInput
@@ -50707,7 +49096,6 @@ export namespace Prisma {
     workflows?: WorkflowDefinitionUncheckedCreateNestedManyWithoutCompanyInput
     incidents?: IncidentUncheckedCreateNestedManyWithoutCompanyInput
     nearMisses?: NearMissUncheckedCreateNestedManyWithoutCompanyInput
-    hazards?: HazardObservationUncheckedCreateNestedManyWithoutCompanyInput
     nonConformities?: NonConformityUncheckedCreateNestedManyWithoutCompanyInput
     sireInspections?: SireInspectionUncheckedCreateNestedManyWithoutCompanyInput
     pscInspections?: PscInspectionUncheckedCreateNestedManyWithoutCompanyInput
@@ -50729,7 +49117,6 @@ export namespace Prisma {
     workflows?: WorkflowDefinitionUpdateManyWithoutCompanyNestedInput
     incidents?: IncidentUpdateManyWithoutCompanyNestedInput
     nearMisses?: NearMissUpdateManyWithoutCompanyNestedInput
-    hazards?: HazardObservationUpdateManyWithoutCompanyNestedInput
     nonConformities?: NonConformityUpdateManyWithoutCompanyNestedInput
     sireInspections?: SireInspectionUpdateManyWithoutCompanyNestedInput
     pscInspections?: PscInspectionUpdateManyWithoutCompanyNestedInput
@@ -50751,7 +49138,6 @@ export namespace Prisma {
     workflows?: WorkflowDefinitionUncheckedUpdateManyWithoutCompanyNestedInput
     incidents?: IncidentUncheckedUpdateManyWithoutCompanyNestedInput
     nearMisses?: NearMissUncheckedUpdateManyWithoutCompanyNestedInput
-    hazards?: HazardObservationUncheckedUpdateManyWithoutCompanyNestedInput
     nonConformities?: NonConformityUncheckedUpdateManyWithoutCompanyNestedInput
     sireInspections?: SireInspectionUncheckedUpdateManyWithoutCompanyNestedInput
     pscInspections?: PscInspectionUncheckedUpdateManyWithoutCompanyNestedInput
@@ -50804,7 +49190,6 @@ export namespace Prisma {
     ownedDocs?: SmsDocumentCreateNestedManyWithoutOwnerInput
     reportedIncidents?: IncidentCreateNestedManyWithoutReportedByInput
     reportedNearMisses?: NearMissCreateNestedManyWithoutReportedByInput
-    reportedHazards?: HazardObservationCreateNestedManyWithoutReportedByInput
     raisedNcrs?: NonConformityCreateNestedManyWithoutRaisedByInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
   }
@@ -50829,7 +49214,6 @@ export namespace Prisma {
     ownedDocs?: SmsDocumentUncheckedCreateNestedManyWithoutOwnerInput
     reportedIncidents?: IncidentUncheckedCreateNestedManyWithoutReportedByInput
     reportedNearMisses?: NearMissUncheckedCreateNestedManyWithoutReportedByInput
-    reportedHazards?: HazardObservationUncheckedCreateNestedManyWithoutReportedByInput
     raisedNcrs?: NonConformityUncheckedCreateNestedManyWithoutRaisedByInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
   }
@@ -50854,7 +49238,6 @@ export namespace Prisma {
     ownedDocs?: SmsDocumentUpdateManyWithoutOwnerNestedInput
     reportedIncidents?: IncidentUpdateManyWithoutReportedByNestedInput
     reportedNearMisses?: NearMissUpdateManyWithoutReportedByNestedInput
-    reportedHazards?: HazardObservationUpdateManyWithoutReportedByNestedInput
     raisedNcrs?: NonConformityUpdateManyWithoutRaisedByNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
   }
@@ -50879,7 +49262,6 @@ export namespace Prisma {
     ownedDocs?: SmsDocumentUncheckedUpdateManyWithoutOwnerNestedInput
     reportedIncidents?: IncidentUncheckedUpdateManyWithoutReportedByNestedInput
     reportedNearMisses?: NearMissUncheckedUpdateManyWithoutReportedByNestedInput
-    reportedHazards?: HazardObservationUncheckedUpdateManyWithoutReportedByNestedInput
     raisedNcrs?: NonConformityUncheckedUpdateManyWithoutRaisedByNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -51161,7 +49543,6 @@ export namespace Prisma {
     smsDocuments?: SmsDocumentCreateNestedManyWithoutVesselInput
     incidents?: IncidentCreateNestedManyWithoutVesselInput
     nearMisses?: NearMissCreateNestedManyWithoutVesselInput
-    hazards?: HazardObservationCreateNestedManyWithoutVesselInput
     nonConformities?: NonConformityCreateNestedManyWithoutVesselInput
     sireInspections?: SireInspectionCreateNestedManyWithoutVesselInput
     pscInspections?: PscInspectionCreateNestedManyWithoutVesselInput
@@ -51196,7 +49577,6 @@ export namespace Prisma {
     smsDocuments?: SmsDocumentUncheckedCreateNestedManyWithoutVesselInput
     incidents?: IncidentUncheckedCreateNestedManyWithoutVesselInput
     nearMisses?: NearMissUncheckedCreateNestedManyWithoutVesselInput
-    hazards?: HazardObservationUncheckedCreateNestedManyWithoutVesselInput
     nonConformities?: NonConformityUncheckedCreateNestedManyWithoutVesselInput
     sireInspections?: SireInspectionUncheckedCreateNestedManyWithoutVesselInput
     pscInspections?: PscInspectionUncheckedCreateNestedManyWithoutVesselInput
@@ -51231,7 +49611,6 @@ export namespace Prisma {
     smsDocuments?: SmsDocumentUpdateManyWithoutVesselNestedInput
     incidents?: IncidentUpdateManyWithoutVesselNestedInput
     nearMisses?: NearMissUpdateManyWithoutVesselNestedInput
-    hazards?: HazardObservationUpdateManyWithoutVesselNestedInput
     nonConformities?: NonConformityUpdateManyWithoutVesselNestedInput
     sireInspections?: SireInspectionUpdateManyWithoutVesselNestedInput
     pscInspections?: PscInspectionUpdateManyWithoutVesselNestedInput
@@ -51266,7 +49645,6 @@ export namespace Prisma {
     smsDocuments?: SmsDocumentUncheckedUpdateManyWithoutVesselNestedInput
     incidents?: IncidentUncheckedUpdateManyWithoutVesselNestedInput
     nearMisses?: NearMissUncheckedUpdateManyWithoutVesselNestedInput
-    hazards?: HazardObservationUncheckedUpdateManyWithoutVesselNestedInput
     nonConformities?: NonConformityUncheckedUpdateManyWithoutVesselNestedInput
     sireInspections?: SireInspectionUncheckedUpdateManyWithoutVesselNestedInput
     pscInspections?: PscInspectionUncheckedUpdateManyWithoutVesselNestedInput
@@ -52479,14 +50857,15 @@ export namespace Prisma {
     description: string
     investigationDetails?: string | null
     rootCauseCategory?: $Enums.RootCauseCategory | null
-    humanFactorPrimary?: $Enums.HumanFactor | null
-    humanFactorContributing?: IncidentCreatehumanFactorContributingInput | $Enums.HumanFactor[]
+    rootCauseSubCategory?: string | null
     immediateAction?: string | null
     rootCause?: string | null
     closedAt?: Date | string | null
     verifiedById?: string | null
     verifiedByName?: string | null
     verifiedAt?: Date | string | null
+    reporterName?: string | null
+    reporterPosition?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -52513,8 +50892,7 @@ export namespace Prisma {
     description: string
     investigationDetails?: string | null
     rootCauseCategory?: $Enums.RootCauseCategory | null
-    humanFactorPrimary?: $Enums.HumanFactor | null
-    humanFactorContributing?: IncidentCreatehumanFactorContributingInput | $Enums.HumanFactor[]
+    rootCauseSubCategory?: string | null
     immediateAction?: string | null
     rootCause?: string | null
     closedAt?: Date | string | null
@@ -52522,6 +50900,8 @@ export namespace Prisma {
     verifiedByName?: string | null
     verifiedAt?: Date | string | null
     reportedById?: string | null
+    reporterName?: string | null
+    reporterPosition?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -52543,14 +50923,15 @@ export namespace Prisma {
     description?: StringFieldUpdateOperationsInput | string
     investigationDetails?: NullableStringFieldUpdateOperationsInput | string | null
     rootCauseCategory?: NullableEnumRootCauseCategoryFieldUpdateOperationsInput | $Enums.RootCauseCategory | null
-    humanFactorPrimary?: NullableEnumHumanFactorFieldUpdateOperationsInput | $Enums.HumanFactor | null
-    humanFactorContributing?: IncidentUpdatehumanFactorContributingInput | $Enums.HumanFactor[]
+    rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
     immediateAction?: NullableStringFieldUpdateOperationsInput | string | null
     rootCause?: NullableStringFieldUpdateOperationsInput | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     verifiedById?: NullableStringFieldUpdateOperationsInput | string | null
     verifiedByName?: NullableStringFieldUpdateOperationsInput | string | null
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reporterName?: NullableStringFieldUpdateOperationsInput | string | null
+    reporterPosition?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -52577,8 +50958,7 @@ export namespace Prisma {
     description?: StringFieldUpdateOperationsInput | string
     investigationDetails?: NullableStringFieldUpdateOperationsInput | string | null
     rootCauseCategory?: NullableEnumRootCauseCategoryFieldUpdateOperationsInput | $Enums.RootCauseCategory | null
-    humanFactorPrimary?: NullableEnumHumanFactorFieldUpdateOperationsInput | $Enums.HumanFactor | null
-    humanFactorContributing?: IncidentUpdatehumanFactorContributingInput | $Enums.HumanFactor[]
+    rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
     immediateAction?: NullableStringFieldUpdateOperationsInput | string | null
     rootCause?: NullableStringFieldUpdateOperationsInput | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -52586,6 +50966,8 @@ export namespace Prisma {
     verifiedByName?: NullableStringFieldUpdateOperationsInput | string | null
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     reportedById?: NullableStringFieldUpdateOperationsInput | string | null
+    reporterName?: NullableStringFieldUpdateOperationsInput | string | null
+    reporterPosition?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -52609,8 +50991,7 @@ export namespace Prisma {
     description: string
     investigationDetails?: string | null
     rootCauseCategory?: $Enums.RootCauseCategory | null
-    humanFactorPrimary?: $Enums.HumanFactor | null
-    humanFactorContributing?: IncidentCreatehumanFactorContributingInput | $Enums.HumanFactor[]
+    rootCauseSubCategory?: string | null
     immediateAction?: string | null
     rootCause?: string | null
     closedAt?: Date | string | null
@@ -52618,6 +50999,8 @@ export namespace Prisma {
     verifiedByName?: string | null
     verifiedAt?: Date | string | null
     reportedById?: string | null
+    reporterName?: string | null
+    reporterPosition?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -52637,14 +51020,15 @@ export namespace Prisma {
     description?: StringFieldUpdateOperationsInput | string
     investigationDetails?: NullableStringFieldUpdateOperationsInput | string | null
     rootCauseCategory?: NullableEnumRootCauseCategoryFieldUpdateOperationsInput | $Enums.RootCauseCategory | null
-    humanFactorPrimary?: NullableEnumHumanFactorFieldUpdateOperationsInput | $Enums.HumanFactor | null
-    humanFactorContributing?: IncidentUpdatehumanFactorContributingInput | $Enums.HumanFactor[]
+    rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
     immediateAction?: NullableStringFieldUpdateOperationsInput | string | null
     rootCause?: NullableStringFieldUpdateOperationsInput | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     verifiedById?: NullableStringFieldUpdateOperationsInput | string | null
     verifiedByName?: NullableStringFieldUpdateOperationsInput | string | null
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reporterName?: NullableStringFieldUpdateOperationsInput | string | null
+    reporterPosition?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -52666,8 +51050,7 @@ export namespace Prisma {
     description?: StringFieldUpdateOperationsInput | string
     investigationDetails?: NullableStringFieldUpdateOperationsInput | string | null
     rootCauseCategory?: NullableEnumRootCauseCategoryFieldUpdateOperationsInput | $Enums.RootCauseCategory | null
-    humanFactorPrimary?: NullableEnumHumanFactorFieldUpdateOperationsInput | $Enums.HumanFactor | null
-    humanFactorContributing?: IncidentUpdatehumanFactorContributingInput | $Enums.HumanFactor[]
+    rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
     immediateAction?: NullableStringFieldUpdateOperationsInput | string | null
     rootCause?: NullableStringFieldUpdateOperationsInput | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -52675,6 +51058,8 @@ export namespace Prisma {
     verifiedByName?: NullableStringFieldUpdateOperationsInput | string | null
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     reportedById?: NullableStringFieldUpdateOperationsInput | string | null
+    reporterName?: NullableStringFieldUpdateOperationsInput | string | null
+    reporterPosition?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -52811,6 +51196,9 @@ export namespace Prisma {
     id?: string
     refNo: string
     title: string
+    kind?: $Enums.NearMissKind
+    horCategory?: $Enums.HazardType | null
+    stopAuthorityExercised?: boolean
     occurredAt: Date | string
     location?: string | null
     description: string
@@ -52818,12 +51206,13 @@ export namespace Prisma {
     potentialSeverity: $Enums.Severity
     immediateAction?: string | null
     rootCauseCategory: $Enums.RootCauseCategory
-    humanFactorPrimary?: $Enums.HumanFactor | null
-    humanFactorContributing?: NearMissCreatehumanFactorContributingInput | $Enums.HumanFactor[]
+    rootCauseSubCategory?: string | null
     status?: $Enums.NearMissStatus
     closedAt?: Date | string | null
     companyComments?: string | null
     reviewedAt?: Date | string | null
+    reporterName?: string | null
+    reporterPosition?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -52840,6 +51229,9 @@ export namespace Prisma {
     companyId: string
     refNo: string
     title: string
+    kind?: $Enums.NearMissKind
+    horCategory?: $Enums.HazardType | null
+    stopAuthorityExercised?: boolean
     vesselId?: string | null
     occurredAt: Date | string
     location?: string | null
@@ -52848,13 +51240,14 @@ export namespace Prisma {
     potentialSeverity: $Enums.Severity
     immediateAction?: string | null
     rootCauseCategory: $Enums.RootCauseCategory
-    humanFactorPrimary?: $Enums.HumanFactor | null
-    humanFactorContributing?: NearMissCreatehumanFactorContributingInput | $Enums.HumanFactor[]
+    rootCauseSubCategory?: string | null
     status?: $Enums.NearMissStatus
     closedAt?: Date | string | null
     companyComments?: string | null
     reviewedAt?: Date | string | null
     reportedById?: string | null
+    reporterName?: string | null
+    reporterPosition?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -52867,6 +51260,9 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     refNo?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
+    kind?: EnumNearMissKindFieldUpdateOperationsInput | $Enums.NearMissKind
+    horCategory?: NullableEnumHazardTypeFieldUpdateOperationsInput | $Enums.HazardType | null
+    stopAuthorityExercised?: BoolFieldUpdateOperationsInput | boolean
     occurredAt?: DateTimeFieldUpdateOperationsInput | Date | string
     location?: NullableStringFieldUpdateOperationsInput | string | null
     description?: StringFieldUpdateOperationsInput | string
@@ -52874,12 +51270,13 @@ export namespace Prisma {
     potentialSeverity?: EnumSeverityFieldUpdateOperationsInput | $Enums.Severity
     immediateAction?: NullableStringFieldUpdateOperationsInput | string | null
     rootCauseCategory?: EnumRootCauseCategoryFieldUpdateOperationsInput | $Enums.RootCauseCategory
-    humanFactorPrimary?: NullableEnumHumanFactorFieldUpdateOperationsInput | $Enums.HumanFactor | null
-    humanFactorContributing?: NearMissUpdatehumanFactorContributingInput | $Enums.HumanFactor[]
+    rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumNearMissStatusFieldUpdateOperationsInput | $Enums.NearMissStatus
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     companyComments?: NullableStringFieldUpdateOperationsInput | string | null
     reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reporterName?: NullableStringFieldUpdateOperationsInput | string | null
+    reporterPosition?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -52896,6 +51293,9 @@ export namespace Prisma {
     companyId?: StringFieldUpdateOperationsInput | string
     refNo?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
+    kind?: EnumNearMissKindFieldUpdateOperationsInput | $Enums.NearMissKind
+    horCategory?: NullableEnumHazardTypeFieldUpdateOperationsInput | $Enums.HazardType | null
+    stopAuthorityExercised?: BoolFieldUpdateOperationsInput | boolean
     vesselId?: NullableStringFieldUpdateOperationsInput | string | null
     occurredAt?: DateTimeFieldUpdateOperationsInput | Date | string
     location?: NullableStringFieldUpdateOperationsInput | string | null
@@ -52904,13 +51304,14 @@ export namespace Prisma {
     potentialSeverity?: EnumSeverityFieldUpdateOperationsInput | $Enums.Severity
     immediateAction?: NullableStringFieldUpdateOperationsInput | string | null
     rootCauseCategory?: EnumRootCauseCategoryFieldUpdateOperationsInput | $Enums.RootCauseCategory
-    humanFactorPrimary?: NullableEnumHumanFactorFieldUpdateOperationsInput | $Enums.HumanFactor | null
-    humanFactorContributing?: NearMissUpdatehumanFactorContributingInput | $Enums.HumanFactor[]
+    rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumNearMissStatusFieldUpdateOperationsInput | $Enums.NearMissStatus
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     companyComments?: NullableStringFieldUpdateOperationsInput | string | null
     reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     reportedById?: NullableStringFieldUpdateOperationsInput | string | null
+    reporterName?: NullableStringFieldUpdateOperationsInput | string | null
+    reporterPosition?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -52924,6 +51325,9 @@ export namespace Prisma {
     companyId: string
     refNo: string
     title: string
+    kind?: $Enums.NearMissKind
+    horCategory?: $Enums.HazardType | null
+    stopAuthorityExercised?: boolean
     vesselId?: string | null
     occurredAt: Date | string
     location?: string | null
@@ -52932,13 +51336,14 @@ export namespace Prisma {
     potentialSeverity: $Enums.Severity
     immediateAction?: string | null
     rootCauseCategory: $Enums.RootCauseCategory
-    humanFactorPrimary?: $Enums.HumanFactor | null
-    humanFactorContributing?: NearMissCreatehumanFactorContributingInput | $Enums.HumanFactor[]
+    rootCauseSubCategory?: string | null
     status?: $Enums.NearMissStatus
     closedAt?: Date | string | null
     companyComments?: string | null
     reviewedAt?: Date | string | null
     reportedById?: string | null
+    reporterName?: string | null
+    reporterPosition?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -52951,6 +51356,9 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     refNo?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
+    kind?: EnumNearMissKindFieldUpdateOperationsInput | $Enums.NearMissKind
+    horCategory?: NullableEnumHazardTypeFieldUpdateOperationsInput | $Enums.HazardType | null
+    stopAuthorityExercised?: BoolFieldUpdateOperationsInput | boolean
     occurredAt?: DateTimeFieldUpdateOperationsInput | Date | string
     location?: NullableStringFieldUpdateOperationsInput | string | null
     description?: StringFieldUpdateOperationsInput | string
@@ -52958,12 +51366,13 @@ export namespace Prisma {
     potentialSeverity?: EnumSeverityFieldUpdateOperationsInput | $Enums.Severity
     immediateAction?: NullableStringFieldUpdateOperationsInput | string | null
     rootCauseCategory?: EnumRootCauseCategoryFieldUpdateOperationsInput | $Enums.RootCauseCategory
-    humanFactorPrimary?: NullableEnumHumanFactorFieldUpdateOperationsInput | $Enums.HumanFactor | null
-    humanFactorContributing?: NearMissUpdatehumanFactorContributingInput | $Enums.HumanFactor[]
+    rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumNearMissStatusFieldUpdateOperationsInput | $Enums.NearMissStatus
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     companyComments?: NullableStringFieldUpdateOperationsInput | string | null
     reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reporterName?: NullableStringFieldUpdateOperationsInput | string | null
+    reporterPosition?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -52977,6 +51386,9 @@ export namespace Prisma {
     companyId?: StringFieldUpdateOperationsInput | string
     refNo?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
+    kind?: EnumNearMissKindFieldUpdateOperationsInput | $Enums.NearMissKind
+    horCategory?: NullableEnumHazardTypeFieldUpdateOperationsInput | $Enums.HazardType | null
+    stopAuthorityExercised?: BoolFieldUpdateOperationsInput | boolean
     vesselId?: NullableStringFieldUpdateOperationsInput | string | null
     occurredAt?: DateTimeFieldUpdateOperationsInput | Date | string
     location?: NullableStringFieldUpdateOperationsInput | string | null
@@ -52985,185 +51397,14 @@ export namespace Prisma {
     potentialSeverity?: EnumSeverityFieldUpdateOperationsInput | $Enums.Severity
     immediateAction?: NullableStringFieldUpdateOperationsInput | string | null
     rootCauseCategory?: EnumRootCauseCategoryFieldUpdateOperationsInput | $Enums.RootCauseCategory
-    humanFactorPrimary?: NullableEnumHumanFactorFieldUpdateOperationsInput | $Enums.HumanFactor | null
-    humanFactorContributing?: NearMissUpdatehumanFactorContributingInput | $Enums.HumanFactor[]
+    rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumNearMissStatusFieldUpdateOperationsInput | $Enums.NearMissStatus
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     companyComments?: NullableStringFieldUpdateOperationsInput | string | null
     reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     reportedById?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
-    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
-    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
-  }
-
-  export type HazardObservationCreateInput = {
-    id?: string
-    refNo: string
-    title: string
-    observedAt: Date | string
-    location?: string | null
-    category: string
-    hazardType: $Enums.HazardType
-    riskLevel: $Enums.Severity
-    observation: string
-    immediateAction?: string | null
-    correctiveAction?: string | null
-    status?: $Enums.HazardStatus
-    closedAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    createdBy?: string | null
-    updatedBy?: string | null
-    deletedAt?: Date | string | null
-    deletedBy?: string | null
-    company: CompanyCreateNestedOneWithoutHazardsInput
-    vessel?: VesselCreateNestedOneWithoutHazardsInput
-    reportedBy?: UserCreateNestedOneWithoutReportedHazardsInput
-  }
-
-  export type HazardObservationUncheckedCreateInput = {
-    id?: string
-    companyId: string
-    refNo: string
-    title: string
-    vesselId?: string | null
-    observedAt: Date | string
-    location?: string | null
-    category: string
-    hazardType: $Enums.HazardType
-    riskLevel: $Enums.Severity
-    observation: string
-    immediateAction?: string | null
-    correctiveAction?: string | null
-    status?: $Enums.HazardStatus
-    closedAt?: Date | string | null
-    reportedById?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    createdBy?: string | null
-    updatedBy?: string | null
-    deletedAt?: Date | string | null
-    deletedBy?: string | null
-  }
-
-  export type HazardObservationUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    refNo?: StringFieldUpdateOperationsInput | string
-    title?: StringFieldUpdateOperationsInput | string
-    observedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    location?: NullableStringFieldUpdateOperationsInput | string | null
-    category?: StringFieldUpdateOperationsInput | string
-    hazardType?: EnumHazardTypeFieldUpdateOperationsInput | $Enums.HazardType
-    riskLevel?: EnumSeverityFieldUpdateOperationsInput | $Enums.Severity
-    observation?: StringFieldUpdateOperationsInput | string
-    immediateAction?: NullableStringFieldUpdateOperationsInput | string | null
-    correctiveAction?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: EnumHazardStatusFieldUpdateOperationsInput | $Enums.HazardStatus
-    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
-    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
-    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
-    company?: CompanyUpdateOneRequiredWithoutHazardsNestedInput
-    vessel?: VesselUpdateOneWithoutHazardsNestedInput
-    reportedBy?: UserUpdateOneWithoutReportedHazardsNestedInput
-  }
-
-  export type HazardObservationUncheckedUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    companyId?: StringFieldUpdateOperationsInput | string
-    refNo?: StringFieldUpdateOperationsInput | string
-    title?: StringFieldUpdateOperationsInput | string
-    vesselId?: NullableStringFieldUpdateOperationsInput | string | null
-    observedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    location?: NullableStringFieldUpdateOperationsInput | string | null
-    category?: StringFieldUpdateOperationsInput | string
-    hazardType?: EnumHazardTypeFieldUpdateOperationsInput | $Enums.HazardType
-    riskLevel?: EnumSeverityFieldUpdateOperationsInput | $Enums.Severity
-    observation?: StringFieldUpdateOperationsInput | string
-    immediateAction?: NullableStringFieldUpdateOperationsInput | string | null
-    correctiveAction?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: EnumHazardStatusFieldUpdateOperationsInput | $Enums.HazardStatus
-    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    reportedById?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
-    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
-    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
-  }
-
-  export type HazardObservationCreateManyInput = {
-    id?: string
-    companyId: string
-    refNo: string
-    title: string
-    vesselId?: string | null
-    observedAt: Date | string
-    location?: string | null
-    category: string
-    hazardType: $Enums.HazardType
-    riskLevel: $Enums.Severity
-    observation: string
-    immediateAction?: string | null
-    correctiveAction?: string | null
-    status?: $Enums.HazardStatus
-    closedAt?: Date | string | null
-    reportedById?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    createdBy?: string | null
-    updatedBy?: string | null
-    deletedAt?: Date | string | null
-    deletedBy?: string | null
-  }
-
-  export type HazardObservationUpdateManyMutationInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    refNo?: StringFieldUpdateOperationsInput | string
-    title?: StringFieldUpdateOperationsInput | string
-    observedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    location?: NullableStringFieldUpdateOperationsInput | string | null
-    category?: StringFieldUpdateOperationsInput | string
-    hazardType?: EnumHazardTypeFieldUpdateOperationsInput | $Enums.HazardType
-    riskLevel?: EnumSeverityFieldUpdateOperationsInput | $Enums.Severity
-    observation?: StringFieldUpdateOperationsInput | string
-    immediateAction?: NullableStringFieldUpdateOperationsInput | string | null
-    correctiveAction?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: EnumHazardStatusFieldUpdateOperationsInput | $Enums.HazardStatus
-    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
-    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
-    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
-  }
-
-  export type HazardObservationUncheckedUpdateManyInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    companyId?: StringFieldUpdateOperationsInput | string
-    refNo?: StringFieldUpdateOperationsInput | string
-    title?: StringFieldUpdateOperationsInput | string
-    vesselId?: NullableStringFieldUpdateOperationsInput | string | null
-    observedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    location?: NullableStringFieldUpdateOperationsInput | string | null
-    category?: StringFieldUpdateOperationsInput | string
-    hazardType?: EnumHazardTypeFieldUpdateOperationsInput | $Enums.HazardType
-    riskLevel?: EnumSeverityFieldUpdateOperationsInput | $Enums.Severity
-    observation?: StringFieldUpdateOperationsInput | string
-    immediateAction?: NullableStringFieldUpdateOperationsInput | string | null
-    correctiveAction?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: EnumHazardStatusFieldUpdateOperationsInput | $Enums.HazardStatus
-    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    reportedById?: NullableStringFieldUpdateOperationsInput | string | null
+    reporterName?: NullableStringFieldUpdateOperationsInput | string | null
+    reporterPosition?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -53177,6 +51418,7 @@ export namespace Prisma {
     refNo: string
     title: string
     source: $Enums.NcrSource
+    sourceEntityId?: string | null
     requirement: string
     description: string
     severity: $Enums.Severity
@@ -53185,6 +51427,7 @@ export namespace Prisma {
     rootCause?: string | null
     correctiveAction?: string | null
     verification?: string | null
+    personInCharge?: string | null
     status?: $Enums.NcrStatus
     closedAt?: Date | string | null
     createdAt?: Date | string
@@ -53205,6 +51448,7 @@ export namespace Prisma {
     title: string
     vesselId?: string | null
     source: $Enums.NcrSource
+    sourceEntityId?: string | null
     requirement: string
     description: string
     severity: $Enums.Severity
@@ -53213,6 +51457,7 @@ export namespace Prisma {
     rootCause?: string | null
     correctiveAction?: string | null
     verification?: string | null
+    personInCharge?: string | null
     status?: $Enums.NcrStatus
     closedAt?: Date | string | null
     raisedById?: string | null
@@ -53229,6 +51474,7 @@ export namespace Prisma {
     refNo?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     source?: EnumNcrSourceFieldUpdateOperationsInput | $Enums.NcrSource
+    sourceEntityId?: NullableStringFieldUpdateOperationsInput | string | null
     requirement?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     severity?: EnumSeverityFieldUpdateOperationsInput | $Enums.Severity
@@ -53237,6 +51483,7 @@ export namespace Prisma {
     rootCause?: NullableStringFieldUpdateOperationsInput | string | null
     correctiveAction?: NullableStringFieldUpdateOperationsInput | string | null
     verification?: NullableStringFieldUpdateOperationsInput | string | null
+    personInCharge?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumNcrStatusFieldUpdateOperationsInput | $Enums.NcrStatus
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -53257,6 +51504,7 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     vesselId?: NullableStringFieldUpdateOperationsInput | string | null
     source?: EnumNcrSourceFieldUpdateOperationsInput | $Enums.NcrSource
+    sourceEntityId?: NullableStringFieldUpdateOperationsInput | string | null
     requirement?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     severity?: EnumSeverityFieldUpdateOperationsInput | $Enums.Severity
@@ -53265,6 +51513,7 @@ export namespace Prisma {
     rootCause?: NullableStringFieldUpdateOperationsInput | string | null
     correctiveAction?: NullableStringFieldUpdateOperationsInput | string | null
     verification?: NullableStringFieldUpdateOperationsInput | string | null
+    personInCharge?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumNcrStatusFieldUpdateOperationsInput | $Enums.NcrStatus
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     raisedById?: NullableStringFieldUpdateOperationsInput | string | null
@@ -53283,6 +51532,7 @@ export namespace Prisma {
     title: string
     vesselId?: string | null
     source: $Enums.NcrSource
+    sourceEntityId?: string | null
     requirement: string
     description: string
     severity: $Enums.Severity
@@ -53291,6 +51541,7 @@ export namespace Prisma {
     rootCause?: string | null
     correctiveAction?: string | null
     verification?: string | null
+    personInCharge?: string | null
     status?: $Enums.NcrStatus
     closedAt?: Date | string | null
     raisedById?: string | null
@@ -53307,6 +51558,7 @@ export namespace Prisma {
     refNo?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     source?: EnumNcrSourceFieldUpdateOperationsInput | $Enums.NcrSource
+    sourceEntityId?: NullableStringFieldUpdateOperationsInput | string | null
     requirement?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     severity?: EnumSeverityFieldUpdateOperationsInput | $Enums.Severity
@@ -53315,6 +51567,7 @@ export namespace Prisma {
     rootCause?: NullableStringFieldUpdateOperationsInput | string | null
     correctiveAction?: NullableStringFieldUpdateOperationsInput | string | null
     verification?: NullableStringFieldUpdateOperationsInput | string | null
+    personInCharge?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumNcrStatusFieldUpdateOperationsInput | $Enums.NcrStatus
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -53332,6 +51585,7 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     vesselId?: NullableStringFieldUpdateOperationsInput | string | null
     source?: EnumNcrSourceFieldUpdateOperationsInput | $Enums.NcrSource
+    sourceEntityId?: NullableStringFieldUpdateOperationsInput | string | null
     requirement?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     severity?: EnumSeverityFieldUpdateOperationsInput | $Enums.Severity
@@ -53340,6 +51594,7 @@ export namespace Prisma {
     rootCause?: NullableStringFieldUpdateOperationsInput | string | null
     correctiveAction?: NullableStringFieldUpdateOperationsInput | string | null
     verification?: NullableStringFieldUpdateOperationsInput | string | null
+    personInCharge?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumNcrStatusFieldUpdateOperationsInput | $Enums.NcrStatus
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     raisedById?: NullableStringFieldUpdateOperationsInput | string | null
@@ -54642,12 +52897,6 @@ export namespace Prisma {
     none?: NearMissWhereInput
   }
 
-  export type HazardObservationListRelationFilter = {
-    every?: HazardObservationWhereInput
-    some?: HazardObservationWhereInput
-    none?: HazardObservationWhereInput
-  }
-
   export type NonConformityListRelationFilter = {
     every?: NonConformityWhereInput
     some?: NonConformityWhereInput
@@ -54709,10 +52958,6 @@ export namespace Prisma {
   }
 
   export type NearMissOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type HazardObservationOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -56107,21 +54352,6 @@ export namespace Prisma {
     not?: NestedEnumRootCauseCategoryNullableFilter<$PrismaModel> | $Enums.RootCauseCategory | null
   }
 
-  export type EnumHumanFactorNullableFilter<$PrismaModel = never> = {
-    equals?: $Enums.HumanFactor | EnumHumanFactorFieldRefInput<$PrismaModel> | null
-    in?: $Enums.HumanFactor[] | ListEnumHumanFactorFieldRefInput<$PrismaModel> | null
-    notIn?: $Enums.HumanFactor[] | ListEnumHumanFactorFieldRefInput<$PrismaModel> | null
-    not?: NestedEnumHumanFactorNullableFilter<$PrismaModel> | $Enums.HumanFactor | null
-  }
-
-  export type EnumHumanFactorNullableListFilter<$PrismaModel = never> = {
-    equals?: $Enums.HumanFactor[] | ListEnumHumanFactorFieldRefInput<$PrismaModel> | null
-    has?: $Enums.HumanFactor | EnumHumanFactorFieldRefInput<$PrismaModel> | null
-    hasEvery?: $Enums.HumanFactor[] | ListEnumHumanFactorFieldRefInput<$PrismaModel>
-    hasSome?: $Enums.HumanFactor[] | ListEnumHumanFactorFieldRefInput<$PrismaModel>
-    isEmpty?: boolean
-  }
-
   export type IncidentTypeEntryListRelationFilter = {
     every?: IncidentTypeEntryWhereInput
     some?: IncidentTypeEntryWhereInput
@@ -56160,8 +54390,7 @@ export namespace Prisma {
     description?: SortOrder
     investigationDetails?: SortOrder
     rootCauseCategory?: SortOrder
-    humanFactorPrimary?: SortOrder
-    humanFactorContributing?: SortOrder
+    rootCauseSubCategory?: SortOrder
     immediateAction?: SortOrder
     rootCause?: SortOrder
     closedAt?: SortOrder
@@ -56169,6 +54398,8 @@ export namespace Prisma {
     verifiedByName?: SortOrder
     verifiedAt?: SortOrder
     reportedById?: SortOrder
+    reporterName?: SortOrder
+    reporterPosition?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     createdBy?: SortOrder
@@ -56190,7 +54421,7 @@ export namespace Prisma {
     description?: SortOrder
     investigationDetails?: SortOrder
     rootCauseCategory?: SortOrder
-    humanFactorPrimary?: SortOrder
+    rootCauseSubCategory?: SortOrder
     immediateAction?: SortOrder
     rootCause?: SortOrder
     closedAt?: SortOrder
@@ -56198,6 +54429,8 @@ export namespace Prisma {
     verifiedByName?: SortOrder
     verifiedAt?: SortOrder
     reportedById?: SortOrder
+    reporterName?: SortOrder
+    reporterPosition?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     createdBy?: SortOrder
@@ -56219,7 +54452,7 @@ export namespace Prisma {
     description?: SortOrder
     investigationDetails?: SortOrder
     rootCauseCategory?: SortOrder
-    humanFactorPrimary?: SortOrder
+    rootCauseSubCategory?: SortOrder
     immediateAction?: SortOrder
     rootCause?: SortOrder
     closedAt?: SortOrder
@@ -56227,6 +54460,8 @@ export namespace Prisma {
     verifiedByName?: SortOrder
     verifiedAt?: SortOrder
     reportedById?: SortOrder
+    reporterName?: SortOrder
+    reporterPosition?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     createdBy?: SortOrder
@@ -56263,16 +54498,6 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedEnumRootCauseCategoryNullableFilter<$PrismaModel>
     _max?: NestedEnumRootCauseCategoryNullableFilter<$PrismaModel>
-  }
-
-  export type EnumHumanFactorNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.HumanFactor | EnumHumanFactorFieldRefInput<$PrismaModel> | null
-    in?: $Enums.HumanFactor[] | ListEnumHumanFactorFieldRefInput<$PrismaModel> | null
-    notIn?: $Enums.HumanFactor[] | ListEnumHumanFactorFieldRefInput<$PrismaModel> | null
-    not?: NestedEnumHumanFactorNullableWithAggregatesFilter<$PrismaModel> | $Enums.HumanFactor | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedEnumHumanFactorNullableFilter<$PrismaModel>
-    _max?: NestedEnumHumanFactorNullableFilter<$PrismaModel>
   }
 
   export type IncidentScalarRelationFilter = {
@@ -56367,6 +54592,20 @@ export namespace Prisma {
     _max?: NestedEnumIncidentTypeFilter<$PrismaModel>
   }
 
+  export type EnumNearMissKindFilter<$PrismaModel = never> = {
+    equals?: $Enums.NearMissKind | EnumNearMissKindFieldRefInput<$PrismaModel>
+    in?: $Enums.NearMissKind[] | ListEnumNearMissKindFieldRefInput<$PrismaModel>
+    notIn?: $Enums.NearMissKind[] | ListEnumNearMissKindFieldRefInput<$PrismaModel>
+    not?: NestedEnumNearMissKindFilter<$PrismaModel> | $Enums.NearMissKind
+  }
+
+  export type EnumHazardTypeNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.HazardType | EnumHazardTypeFieldRefInput<$PrismaModel> | null
+    in?: $Enums.HazardType[] | ListEnumHazardTypeFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.HazardType[] | ListEnumHazardTypeFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumHazardTypeNullableFilter<$PrismaModel> | $Enums.HazardType | null
+  }
+
   export type EnumNearMissConsequenceTypeFilter<$PrismaModel = never> = {
     equals?: $Enums.NearMissConsequenceType | EnumNearMissConsequenceTypeFieldRefInput<$PrismaModel>
     in?: $Enums.NearMissConsequenceType[] | ListEnumNearMissConsequenceTypeFieldRefInput<$PrismaModel>
@@ -56405,6 +54644,9 @@ export namespace Prisma {
     companyId?: SortOrder
     refNo?: SortOrder
     title?: SortOrder
+    kind?: SortOrder
+    horCategory?: SortOrder
+    stopAuthorityExercised?: SortOrder
     vesselId?: SortOrder
     occurredAt?: SortOrder
     location?: SortOrder
@@ -56413,13 +54655,14 @@ export namespace Prisma {
     potentialSeverity?: SortOrder
     immediateAction?: SortOrder
     rootCauseCategory?: SortOrder
-    humanFactorPrimary?: SortOrder
-    humanFactorContributing?: SortOrder
+    rootCauseSubCategory?: SortOrder
     status?: SortOrder
     closedAt?: SortOrder
     companyComments?: SortOrder
     reviewedAt?: SortOrder
     reportedById?: SortOrder
+    reporterName?: SortOrder
+    reporterPosition?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     createdBy?: SortOrder
@@ -56433,6 +54676,9 @@ export namespace Prisma {
     companyId?: SortOrder
     refNo?: SortOrder
     title?: SortOrder
+    kind?: SortOrder
+    horCategory?: SortOrder
+    stopAuthorityExercised?: SortOrder
     vesselId?: SortOrder
     occurredAt?: SortOrder
     location?: SortOrder
@@ -56441,12 +54687,14 @@ export namespace Prisma {
     potentialSeverity?: SortOrder
     immediateAction?: SortOrder
     rootCauseCategory?: SortOrder
-    humanFactorPrimary?: SortOrder
+    rootCauseSubCategory?: SortOrder
     status?: SortOrder
     closedAt?: SortOrder
     companyComments?: SortOrder
     reviewedAt?: SortOrder
     reportedById?: SortOrder
+    reporterName?: SortOrder
+    reporterPosition?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     createdBy?: SortOrder
@@ -56460,6 +54708,9 @@ export namespace Prisma {
     companyId?: SortOrder
     refNo?: SortOrder
     title?: SortOrder
+    kind?: SortOrder
+    horCategory?: SortOrder
+    stopAuthorityExercised?: SortOrder
     vesselId?: SortOrder
     occurredAt?: SortOrder
     location?: SortOrder
@@ -56468,18 +54719,40 @@ export namespace Prisma {
     potentialSeverity?: SortOrder
     immediateAction?: SortOrder
     rootCauseCategory?: SortOrder
-    humanFactorPrimary?: SortOrder
+    rootCauseSubCategory?: SortOrder
     status?: SortOrder
     closedAt?: SortOrder
     companyComments?: SortOrder
     reviewedAt?: SortOrder
     reportedById?: SortOrder
+    reporterName?: SortOrder
+    reporterPosition?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     createdBy?: SortOrder
     updatedBy?: SortOrder
     deletedAt?: SortOrder
     deletedBy?: SortOrder
+  }
+
+  export type EnumNearMissKindWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.NearMissKind | EnumNearMissKindFieldRefInput<$PrismaModel>
+    in?: $Enums.NearMissKind[] | ListEnumNearMissKindFieldRefInput<$PrismaModel>
+    notIn?: $Enums.NearMissKind[] | ListEnumNearMissKindFieldRefInput<$PrismaModel>
+    not?: NestedEnumNearMissKindWithAggregatesFilter<$PrismaModel> | $Enums.NearMissKind
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumNearMissKindFilter<$PrismaModel>
+    _max?: NestedEnumNearMissKindFilter<$PrismaModel>
+  }
+
+  export type EnumHazardTypeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.HazardType | EnumHazardTypeFieldRefInput<$PrismaModel> | null
+    in?: $Enums.HazardType[] | ListEnumHazardTypeFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.HazardType[] | ListEnumHazardTypeFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumHazardTypeNullableWithAggregatesFilter<$PrismaModel> | $Enums.HazardType | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumHazardTypeNullableFilter<$PrismaModel>
+    _max?: NestedEnumHazardTypeNullableFilter<$PrismaModel>
   }
 
   export type EnumNearMissConsequenceTypeWithAggregatesFilter<$PrismaModel = never> = {
@@ -56522,120 +54795,6 @@ export namespace Prisma {
     _max?: NestedEnumNearMissStatusFilter<$PrismaModel>
   }
 
-  export type EnumHazardTypeFilter<$PrismaModel = never> = {
-    equals?: $Enums.HazardType | EnumHazardTypeFieldRefInput<$PrismaModel>
-    in?: $Enums.HazardType[] | ListEnumHazardTypeFieldRefInput<$PrismaModel>
-    notIn?: $Enums.HazardType[] | ListEnumHazardTypeFieldRefInput<$PrismaModel>
-    not?: NestedEnumHazardTypeFilter<$PrismaModel> | $Enums.HazardType
-  }
-
-  export type EnumHazardStatusFilter<$PrismaModel = never> = {
-    equals?: $Enums.HazardStatus | EnumHazardStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.HazardStatus[] | ListEnumHazardStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.HazardStatus[] | ListEnumHazardStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumHazardStatusFilter<$PrismaModel> | $Enums.HazardStatus
-  }
-
-  export type HazardObservationCompanyIdRefNoCompoundUniqueInput = {
-    companyId: string
-    refNo: string
-  }
-
-  export type HazardObservationCountOrderByAggregateInput = {
-    id?: SortOrder
-    companyId?: SortOrder
-    refNo?: SortOrder
-    title?: SortOrder
-    vesselId?: SortOrder
-    observedAt?: SortOrder
-    location?: SortOrder
-    category?: SortOrder
-    hazardType?: SortOrder
-    riskLevel?: SortOrder
-    observation?: SortOrder
-    immediateAction?: SortOrder
-    correctiveAction?: SortOrder
-    status?: SortOrder
-    closedAt?: SortOrder
-    reportedById?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    createdBy?: SortOrder
-    updatedBy?: SortOrder
-    deletedAt?: SortOrder
-    deletedBy?: SortOrder
-  }
-
-  export type HazardObservationMaxOrderByAggregateInput = {
-    id?: SortOrder
-    companyId?: SortOrder
-    refNo?: SortOrder
-    title?: SortOrder
-    vesselId?: SortOrder
-    observedAt?: SortOrder
-    location?: SortOrder
-    category?: SortOrder
-    hazardType?: SortOrder
-    riskLevel?: SortOrder
-    observation?: SortOrder
-    immediateAction?: SortOrder
-    correctiveAction?: SortOrder
-    status?: SortOrder
-    closedAt?: SortOrder
-    reportedById?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    createdBy?: SortOrder
-    updatedBy?: SortOrder
-    deletedAt?: SortOrder
-    deletedBy?: SortOrder
-  }
-
-  export type HazardObservationMinOrderByAggregateInput = {
-    id?: SortOrder
-    companyId?: SortOrder
-    refNo?: SortOrder
-    title?: SortOrder
-    vesselId?: SortOrder
-    observedAt?: SortOrder
-    location?: SortOrder
-    category?: SortOrder
-    hazardType?: SortOrder
-    riskLevel?: SortOrder
-    observation?: SortOrder
-    immediateAction?: SortOrder
-    correctiveAction?: SortOrder
-    status?: SortOrder
-    closedAt?: SortOrder
-    reportedById?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    createdBy?: SortOrder
-    updatedBy?: SortOrder
-    deletedAt?: SortOrder
-    deletedBy?: SortOrder
-  }
-
-  export type EnumHazardTypeWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.HazardType | EnumHazardTypeFieldRefInput<$PrismaModel>
-    in?: $Enums.HazardType[] | ListEnumHazardTypeFieldRefInput<$PrismaModel>
-    notIn?: $Enums.HazardType[] | ListEnumHazardTypeFieldRefInput<$PrismaModel>
-    not?: NestedEnumHazardTypeWithAggregatesFilter<$PrismaModel> | $Enums.HazardType
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumHazardTypeFilter<$PrismaModel>
-    _max?: NestedEnumHazardTypeFilter<$PrismaModel>
-  }
-
-  export type EnumHazardStatusWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.HazardStatus | EnumHazardStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.HazardStatus[] | ListEnumHazardStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.HazardStatus[] | ListEnumHazardStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumHazardStatusWithAggregatesFilter<$PrismaModel> | $Enums.HazardStatus
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumHazardStatusFilter<$PrismaModel>
-    _max?: NestedEnumHazardStatusFilter<$PrismaModel>
-  }
-
   export type EnumNcrSourceFilter<$PrismaModel = never> = {
     equals?: $Enums.NcrSource | EnumNcrSourceFieldRefInput<$PrismaModel>
     in?: $Enums.NcrSource[] | ListEnumNcrSourceFieldRefInput<$PrismaModel>
@@ -56662,6 +54821,7 @@ export namespace Prisma {
     title?: SortOrder
     vesselId?: SortOrder
     source?: SortOrder
+    sourceEntityId?: SortOrder
     requirement?: SortOrder
     description?: SortOrder
     severity?: SortOrder
@@ -56670,6 +54830,7 @@ export namespace Prisma {
     rootCause?: SortOrder
     correctiveAction?: SortOrder
     verification?: SortOrder
+    personInCharge?: SortOrder
     status?: SortOrder
     closedAt?: SortOrder
     raisedById?: SortOrder
@@ -56688,6 +54849,7 @@ export namespace Prisma {
     title?: SortOrder
     vesselId?: SortOrder
     source?: SortOrder
+    sourceEntityId?: SortOrder
     requirement?: SortOrder
     description?: SortOrder
     severity?: SortOrder
@@ -56696,6 +54858,7 @@ export namespace Prisma {
     rootCause?: SortOrder
     correctiveAction?: SortOrder
     verification?: SortOrder
+    personInCharge?: SortOrder
     status?: SortOrder
     closedAt?: SortOrder
     raisedById?: SortOrder
@@ -56714,6 +54877,7 @@ export namespace Prisma {
     title?: SortOrder
     vesselId?: SortOrder
     source?: SortOrder
+    sourceEntityId?: SortOrder
     requirement?: SortOrder
     description?: SortOrder
     severity?: SortOrder
@@ -56722,6 +54886,7 @@ export namespace Prisma {
     rootCause?: SortOrder
     correctiveAction?: SortOrder
     verification?: SortOrder
+    personInCharge?: SortOrder
     status?: SortOrder
     closedAt?: SortOrder
     raisedById?: SortOrder
@@ -57475,13 +55640,6 @@ export namespace Prisma {
     connect?: NearMissWhereUniqueInput | NearMissWhereUniqueInput[]
   }
 
-  export type HazardObservationCreateNestedManyWithoutCompanyInput = {
-    create?: XOR<HazardObservationCreateWithoutCompanyInput, HazardObservationUncheckedCreateWithoutCompanyInput> | HazardObservationCreateWithoutCompanyInput[] | HazardObservationUncheckedCreateWithoutCompanyInput[]
-    connectOrCreate?: HazardObservationCreateOrConnectWithoutCompanyInput | HazardObservationCreateOrConnectWithoutCompanyInput[]
-    createMany?: HazardObservationCreateManyCompanyInputEnvelope
-    connect?: HazardObservationWhereUniqueInput | HazardObservationWhereUniqueInput[]
-  }
-
   export type NonConformityCreateNestedManyWithoutCompanyInput = {
     create?: XOR<NonConformityCreateWithoutCompanyInput, NonConformityUncheckedCreateWithoutCompanyInput> | NonConformityCreateWithoutCompanyInput[] | NonConformityUncheckedCreateWithoutCompanyInput[]
     connectOrCreate?: NonConformityCreateOrConnectWithoutCompanyInput | NonConformityCreateOrConnectWithoutCompanyInput[]
@@ -57571,13 +55729,6 @@ export namespace Prisma {
     connectOrCreate?: NearMissCreateOrConnectWithoutCompanyInput | NearMissCreateOrConnectWithoutCompanyInput[]
     createMany?: NearMissCreateManyCompanyInputEnvelope
     connect?: NearMissWhereUniqueInput | NearMissWhereUniqueInput[]
-  }
-
-  export type HazardObservationUncheckedCreateNestedManyWithoutCompanyInput = {
-    create?: XOR<HazardObservationCreateWithoutCompanyInput, HazardObservationUncheckedCreateWithoutCompanyInput> | HazardObservationCreateWithoutCompanyInput[] | HazardObservationUncheckedCreateWithoutCompanyInput[]
-    connectOrCreate?: HazardObservationCreateOrConnectWithoutCompanyInput | HazardObservationCreateOrConnectWithoutCompanyInput[]
-    createMany?: HazardObservationCreateManyCompanyInputEnvelope
-    connect?: HazardObservationWhereUniqueInput | HazardObservationWhereUniqueInput[]
   }
 
   export type NonConformityUncheckedCreateNestedManyWithoutCompanyInput = {
@@ -57726,20 +55877,6 @@ export namespace Prisma {
     update?: NearMissUpdateWithWhereUniqueWithoutCompanyInput | NearMissUpdateWithWhereUniqueWithoutCompanyInput[]
     updateMany?: NearMissUpdateManyWithWhereWithoutCompanyInput | NearMissUpdateManyWithWhereWithoutCompanyInput[]
     deleteMany?: NearMissScalarWhereInput | NearMissScalarWhereInput[]
-  }
-
-  export type HazardObservationUpdateManyWithoutCompanyNestedInput = {
-    create?: XOR<HazardObservationCreateWithoutCompanyInput, HazardObservationUncheckedCreateWithoutCompanyInput> | HazardObservationCreateWithoutCompanyInput[] | HazardObservationUncheckedCreateWithoutCompanyInput[]
-    connectOrCreate?: HazardObservationCreateOrConnectWithoutCompanyInput | HazardObservationCreateOrConnectWithoutCompanyInput[]
-    upsert?: HazardObservationUpsertWithWhereUniqueWithoutCompanyInput | HazardObservationUpsertWithWhereUniqueWithoutCompanyInput[]
-    createMany?: HazardObservationCreateManyCompanyInputEnvelope
-    set?: HazardObservationWhereUniqueInput | HazardObservationWhereUniqueInput[]
-    disconnect?: HazardObservationWhereUniqueInput | HazardObservationWhereUniqueInput[]
-    delete?: HazardObservationWhereUniqueInput | HazardObservationWhereUniqueInput[]
-    connect?: HazardObservationWhereUniqueInput | HazardObservationWhereUniqueInput[]
-    update?: HazardObservationUpdateWithWhereUniqueWithoutCompanyInput | HazardObservationUpdateWithWhereUniqueWithoutCompanyInput[]
-    updateMany?: HazardObservationUpdateManyWithWhereWithoutCompanyInput | HazardObservationUpdateManyWithWhereWithoutCompanyInput[]
-    deleteMany?: HazardObservationScalarWhereInput | HazardObservationScalarWhereInput[]
   }
 
   export type NonConformityUpdateManyWithoutCompanyNestedInput = {
@@ -57924,20 +56061,6 @@ export namespace Prisma {
     deleteMany?: NearMissScalarWhereInput | NearMissScalarWhereInput[]
   }
 
-  export type HazardObservationUncheckedUpdateManyWithoutCompanyNestedInput = {
-    create?: XOR<HazardObservationCreateWithoutCompanyInput, HazardObservationUncheckedCreateWithoutCompanyInput> | HazardObservationCreateWithoutCompanyInput[] | HazardObservationUncheckedCreateWithoutCompanyInput[]
-    connectOrCreate?: HazardObservationCreateOrConnectWithoutCompanyInput | HazardObservationCreateOrConnectWithoutCompanyInput[]
-    upsert?: HazardObservationUpsertWithWhereUniqueWithoutCompanyInput | HazardObservationUpsertWithWhereUniqueWithoutCompanyInput[]
-    createMany?: HazardObservationCreateManyCompanyInputEnvelope
-    set?: HazardObservationWhereUniqueInput | HazardObservationWhereUniqueInput[]
-    disconnect?: HazardObservationWhereUniqueInput | HazardObservationWhereUniqueInput[]
-    delete?: HazardObservationWhereUniqueInput | HazardObservationWhereUniqueInput[]
-    connect?: HazardObservationWhereUniqueInput | HazardObservationWhereUniqueInput[]
-    update?: HazardObservationUpdateWithWhereUniqueWithoutCompanyInput | HazardObservationUpdateWithWhereUniqueWithoutCompanyInput[]
-    updateMany?: HazardObservationUpdateManyWithWhereWithoutCompanyInput | HazardObservationUpdateManyWithWhereWithoutCompanyInput[]
-    deleteMany?: HazardObservationScalarWhereInput | HazardObservationScalarWhereInput[]
-  }
-
   export type NonConformityUncheckedUpdateManyWithoutCompanyNestedInput = {
     create?: XOR<NonConformityCreateWithoutCompanyInput, NonConformityUncheckedCreateWithoutCompanyInput> | NonConformityCreateWithoutCompanyInput[] | NonConformityUncheckedCreateWithoutCompanyInput[]
     connectOrCreate?: NonConformityCreateOrConnectWithoutCompanyInput | NonConformityCreateOrConnectWithoutCompanyInput[]
@@ -58056,13 +56179,6 @@ export namespace Prisma {
     connect?: NearMissWhereUniqueInput | NearMissWhereUniqueInput[]
   }
 
-  export type HazardObservationCreateNestedManyWithoutReportedByInput = {
-    create?: XOR<HazardObservationCreateWithoutReportedByInput, HazardObservationUncheckedCreateWithoutReportedByInput> | HazardObservationCreateWithoutReportedByInput[] | HazardObservationUncheckedCreateWithoutReportedByInput[]
-    connectOrCreate?: HazardObservationCreateOrConnectWithoutReportedByInput | HazardObservationCreateOrConnectWithoutReportedByInput[]
-    createMany?: HazardObservationCreateManyReportedByInputEnvelope
-    connect?: HazardObservationWhereUniqueInput | HazardObservationWhereUniqueInput[]
-  }
-
   export type NonConformityCreateNestedManyWithoutRaisedByInput = {
     create?: XOR<NonConformityCreateWithoutRaisedByInput, NonConformityUncheckedCreateWithoutRaisedByInput> | NonConformityCreateWithoutRaisedByInput[] | NonConformityUncheckedCreateWithoutRaisedByInput[]
     connectOrCreate?: NonConformityCreateOrConnectWithoutRaisedByInput | NonConformityCreateOrConnectWithoutRaisedByInput[]
@@ -58103,13 +56219,6 @@ export namespace Prisma {
     connectOrCreate?: NearMissCreateOrConnectWithoutReportedByInput | NearMissCreateOrConnectWithoutReportedByInput[]
     createMany?: NearMissCreateManyReportedByInputEnvelope
     connect?: NearMissWhereUniqueInput | NearMissWhereUniqueInput[]
-  }
-
-  export type HazardObservationUncheckedCreateNestedManyWithoutReportedByInput = {
-    create?: XOR<HazardObservationCreateWithoutReportedByInput, HazardObservationUncheckedCreateWithoutReportedByInput> | HazardObservationCreateWithoutReportedByInput[] | HazardObservationUncheckedCreateWithoutReportedByInput[]
-    connectOrCreate?: HazardObservationCreateOrConnectWithoutReportedByInput | HazardObservationCreateOrConnectWithoutReportedByInput[]
-    createMany?: HazardObservationCreateManyReportedByInputEnvelope
-    connect?: HazardObservationWhereUniqueInput | HazardObservationWhereUniqueInput[]
   }
 
   export type NonConformityUncheckedCreateNestedManyWithoutRaisedByInput = {
@@ -58206,20 +56315,6 @@ export namespace Prisma {
     deleteMany?: NearMissScalarWhereInput | NearMissScalarWhereInput[]
   }
 
-  export type HazardObservationUpdateManyWithoutReportedByNestedInput = {
-    create?: XOR<HazardObservationCreateWithoutReportedByInput, HazardObservationUncheckedCreateWithoutReportedByInput> | HazardObservationCreateWithoutReportedByInput[] | HazardObservationUncheckedCreateWithoutReportedByInput[]
-    connectOrCreate?: HazardObservationCreateOrConnectWithoutReportedByInput | HazardObservationCreateOrConnectWithoutReportedByInput[]
-    upsert?: HazardObservationUpsertWithWhereUniqueWithoutReportedByInput | HazardObservationUpsertWithWhereUniqueWithoutReportedByInput[]
-    createMany?: HazardObservationCreateManyReportedByInputEnvelope
-    set?: HazardObservationWhereUniqueInput | HazardObservationWhereUniqueInput[]
-    disconnect?: HazardObservationWhereUniqueInput | HazardObservationWhereUniqueInput[]
-    delete?: HazardObservationWhereUniqueInput | HazardObservationWhereUniqueInput[]
-    connect?: HazardObservationWhereUniqueInput | HazardObservationWhereUniqueInput[]
-    update?: HazardObservationUpdateWithWhereUniqueWithoutReportedByInput | HazardObservationUpdateWithWhereUniqueWithoutReportedByInput[]
-    updateMany?: HazardObservationUpdateManyWithWhereWithoutReportedByInput | HazardObservationUpdateManyWithWhereWithoutReportedByInput[]
-    deleteMany?: HazardObservationScalarWhereInput | HazardObservationScalarWhereInput[]
-  }
-
   export type NonConformityUpdateManyWithoutRaisedByNestedInput = {
     create?: XOR<NonConformityCreateWithoutRaisedByInput, NonConformityUncheckedCreateWithoutRaisedByInput> | NonConformityCreateWithoutRaisedByInput[] | NonConformityUncheckedCreateWithoutRaisedByInput[]
     connectOrCreate?: NonConformityCreateOrConnectWithoutRaisedByInput | NonConformityCreateOrConnectWithoutRaisedByInput[]
@@ -58302,20 +56397,6 @@ export namespace Prisma {
     update?: NearMissUpdateWithWhereUniqueWithoutReportedByInput | NearMissUpdateWithWhereUniqueWithoutReportedByInput[]
     updateMany?: NearMissUpdateManyWithWhereWithoutReportedByInput | NearMissUpdateManyWithWhereWithoutReportedByInput[]
     deleteMany?: NearMissScalarWhereInput | NearMissScalarWhereInput[]
-  }
-
-  export type HazardObservationUncheckedUpdateManyWithoutReportedByNestedInput = {
-    create?: XOR<HazardObservationCreateWithoutReportedByInput, HazardObservationUncheckedCreateWithoutReportedByInput> | HazardObservationCreateWithoutReportedByInput[] | HazardObservationUncheckedCreateWithoutReportedByInput[]
-    connectOrCreate?: HazardObservationCreateOrConnectWithoutReportedByInput | HazardObservationCreateOrConnectWithoutReportedByInput[]
-    upsert?: HazardObservationUpsertWithWhereUniqueWithoutReportedByInput | HazardObservationUpsertWithWhereUniqueWithoutReportedByInput[]
-    createMany?: HazardObservationCreateManyReportedByInputEnvelope
-    set?: HazardObservationWhereUniqueInput | HazardObservationWhereUniqueInput[]
-    disconnect?: HazardObservationWhereUniqueInput | HazardObservationWhereUniqueInput[]
-    delete?: HazardObservationWhereUniqueInput | HazardObservationWhereUniqueInput[]
-    connect?: HazardObservationWhereUniqueInput | HazardObservationWhereUniqueInput[]
-    update?: HazardObservationUpdateWithWhereUniqueWithoutReportedByInput | HazardObservationUpdateWithWhereUniqueWithoutReportedByInput[]
-    updateMany?: HazardObservationUpdateManyWithWhereWithoutReportedByInput | HazardObservationUpdateManyWithWhereWithoutReportedByInput[]
-    deleteMany?: HazardObservationScalarWhereInput | HazardObservationScalarWhereInput[]
   }
 
   export type NonConformityUncheckedUpdateManyWithoutRaisedByNestedInput = {
@@ -58569,13 +56650,6 @@ export namespace Prisma {
     connect?: NearMissWhereUniqueInput | NearMissWhereUniqueInput[]
   }
 
-  export type HazardObservationCreateNestedManyWithoutVesselInput = {
-    create?: XOR<HazardObservationCreateWithoutVesselInput, HazardObservationUncheckedCreateWithoutVesselInput> | HazardObservationCreateWithoutVesselInput[] | HazardObservationUncheckedCreateWithoutVesselInput[]
-    connectOrCreate?: HazardObservationCreateOrConnectWithoutVesselInput | HazardObservationCreateOrConnectWithoutVesselInput[]
-    createMany?: HazardObservationCreateManyVesselInputEnvelope
-    connect?: HazardObservationWhereUniqueInput | HazardObservationWhereUniqueInput[]
-  }
-
   export type NonConformityCreateNestedManyWithoutVesselInput = {
     create?: XOR<NonConformityCreateWithoutVesselInput, NonConformityUncheckedCreateWithoutVesselInput> | NonConformityCreateWithoutVesselInput[] | NonConformityUncheckedCreateWithoutVesselInput[]
     connectOrCreate?: NonConformityCreateOrConnectWithoutVesselInput | NonConformityCreateOrConnectWithoutVesselInput[]
@@ -58637,13 +56711,6 @@ export namespace Prisma {
     connectOrCreate?: NearMissCreateOrConnectWithoutVesselInput | NearMissCreateOrConnectWithoutVesselInput[]
     createMany?: NearMissCreateManyVesselInputEnvelope
     connect?: NearMissWhereUniqueInput | NearMissWhereUniqueInput[]
-  }
-
-  export type HazardObservationUncheckedCreateNestedManyWithoutVesselInput = {
-    create?: XOR<HazardObservationCreateWithoutVesselInput, HazardObservationUncheckedCreateWithoutVesselInput> | HazardObservationCreateWithoutVesselInput[] | HazardObservationUncheckedCreateWithoutVesselInput[]
-    connectOrCreate?: HazardObservationCreateOrConnectWithoutVesselInput | HazardObservationCreateOrConnectWithoutVesselInput[]
-    createMany?: HazardObservationCreateManyVesselInputEnvelope
-    connect?: HazardObservationWhereUniqueInput | HazardObservationWhereUniqueInput[]
   }
 
   export type NonConformityUncheckedCreateNestedManyWithoutVesselInput = {
@@ -58756,20 +56823,6 @@ export namespace Prisma {
     update?: NearMissUpdateWithWhereUniqueWithoutVesselInput | NearMissUpdateWithWhereUniqueWithoutVesselInput[]
     updateMany?: NearMissUpdateManyWithWhereWithoutVesselInput | NearMissUpdateManyWithWhereWithoutVesselInput[]
     deleteMany?: NearMissScalarWhereInput | NearMissScalarWhereInput[]
-  }
-
-  export type HazardObservationUpdateManyWithoutVesselNestedInput = {
-    create?: XOR<HazardObservationCreateWithoutVesselInput, HazardObservationUncheckedCreateWithoutVesselInput> | HazardObservationCreateWithoutVesselInput[] | HazardObservationUncheckedCreateWithoutVesselInput[]
-    connectOrCreate?: HazardObservationCreateOrConnectWithoutVesselInput | HazardObservationCreateOrConnectWithoutVesselInput[]
-    upsert?: HazardObservationUpsertWithWhereUniqueWithoutVesselInput | HazardObservationUpsertWithWhereUniqueWithoutVesselInput[]
-    createMany?: HazardObservationCreateManyVesselInputEnvelope
-    set?: HazardObservationWhereUniqueInput | HazardObservationWhereUniqueInput[]
-    disconnect?: HazardObservationWhereUniqueInput | HazardObservationWhereUniqueInput[]
-    delete?: HazardObservationWhereUniqueInput | HazardObservationWhereUniqueInput[]
-    connect?: HazardObservationWhereUniqueInput | HazardObservationWhereUniqueInput[]
-    update?: HazardObservationUpdateWithWhereUniqueWithoutVesselInput | HazardObservationUpdateWithWhereUniqueWithoutVesselInput[]
-    updateMany?: HazardObservationUpdateManyWithWhereWithoutVesselInput | HazardObservationUpdateManyWithWhereWithoutVesselInput[]
-    deleteMany?: HazardObservationScalarWhereInput | HazardObservationScalarWhereInput[]
   }
 
   export type NonConformityUpdateManyWithoutVesselNestedInput = {
@@ -58896,20 +56949,6 @@ export namespace Prisma {
     update?: NearMissUpdateWithWhereUniqueWithoutVesselInput | NearMissUpdateWithWhereUniqueWithoutVesselInput[]
     updateMany?: NearMissUpdateManyWithWhereWithoutVesselInput | NearMissUpdateManyWithWhereWithoutVesselInput[]
     deleteMany?: NearMissScalarWhereInput | NearMissScalarWhereInput[]
-  }
-
-  export type HazardObservationUncheckedUpdateManyWithoutVesselNestedInput = {
-    create?: XOR<HazardObservationCreateWithoutVesselInput, HazardObservationUncheckedCreateWithoutVesselInput> | HazardObservationCreateWithoutVesselInput[] | HazardObservationUncheckedCreateWithoutVesselInput[]
-    connectOrCreate?: HazardObservationCreateOrConnectWithoutVesselInput | HazardObservationCreateOrConnectWithoutVesselInput[]
-    upsert?: HazardObservationUpsertWithWhereUniqueWithoutVesselInput | HazardObservationUpsertWithWhereUniqueWithoutVesselInput[]
-    createMany?: HazardObservationCreateManyVesselInputEnvelope
-    set?: HazardObservationWhereUniqueInput | HazardObservationWhereUniqueInput[]
-    disconnect?: HazardObservationWhereUniqueInput | HazardObservationWhereUniqueInput[]
-    delete?: HazardObservationWhereUniqueInput | HazardObservationWhereUniqueInput[]
-    connect?: HazardObservationWhereUniqueInput | HazardObservationWhereUniqueInput[]
-    update?: HazardObservationUpdateWithWhereUniqueWithoutVesselInput | HazardObservationUpdateWithWhereUniqueWithoutVesselInput[]
-    updateMany?: HazardObservationUpdateManyWithWhereWithoutVesselInput | HazardObservationUpdateManyWithWhereWithoutVesselInput[]
-    deleteMany?: HazardObservationScalarWhereInput | HazardObservationScalarWhereInput[]
   }
 
   export type NonConformityUncheckedUpdateManyWithoutVesselNestedInput = {
@@ -59442,10 +57481,6 @@ export namespace Prisma {
     update?: XOR<XOR<SmsDocumentUpdateToOneWithWhereWithoutCurrentRevisionInput, SmsDocumentUpdateWithoutCurrentRevisionInput>, SmsDocumentUncheckedUpdateWithoutCurrentRevisionInput>
   }
 
-  export type IncidentCreatehumanFactorContributingInput = {
-    set: $Enums.HumanFactor[]
-  }
-
   export type CompanyCreateNestedOneWithoutIncidentsInput = {
     create?: XOR<CompanyCreateWithoutIncidentsInput, CompanyUncheckedCreateWithoutIncidentsInput>
     connectOrCreate?: CompanyCreateOrConnectWithoutIncidentsInput
@@ -59502,15 +57537,6 @@ export namespace Prisma {
 
   export type NullableEnumRootCauseCategoryFieldUpdateOperationsInput = {
     set?: $Enums.RootCauseCategory | null
-  }
-
-  export type NullableEnumHumanFactorFieldUpdateOperationsInput = {
-    set?: $Enums.HumanFactor | null
-  }
-
-  export type IncidentUpdatehumanFactorContributingInput = {
-    set?: $Enums.HumanFactor[]
-    push?: $Enums.HumanFactor | $Enums.HumanFactor[]
   }
 
   export type CompanyUpdateOneRequiredWithoutIncidentsNestedInput = {
@@ -59629,10 +57655,6 @@ export namespace Prisma {
     update?: XOR<XOR<IncidentUpdateToOneWithWhereWithoutTypeEntriesInput, IncidentUpdateWithoutTypeEntriesInput>, IncidentUncheckedUpdateWithoutTypeEntriesInput>
   }
 
-  export type NearMissCreatehumanFactorContributingInput = {
-    set: $Enums.HumanFactor[]
-  }
-
   export type CompanyCreateNestedOneWithoutNearMissesInput = {
     create?: XOR<CompanyCreateWithoutNearMissesInput, CompanyUncheckedCreateWithoutNearMissesInput>
     connectOrCreate?: CompanyCreateOrConnectWithoutNearMissesInput
@@ -59651,6 +57673,14 @@ export namespace Prisma {
     connect?: UserWhereUniqueInput
   }
 
+  export type EnumNearMissKindFieldUpdateOperationsInput = {
+    set?: $Enums.NearMissKind
+  }
+
+  export type NullableEnumHazardTypeFieldUpdateOperationsInput = {
+    set?: $Enums.HazardType | null
+  }
+
   export type EnumNearMissConsequenceTypeFieldUpdateOperationsInput = {
     set?: $Enums.NearMissConsequenceType
   }
@@ -59661,11 +57691,6 @@ export namespace Prisma {
 
   export type EnumRootCauseCategoryFieldUpdateOperationsInput = {
     set?: $Enums.RootCauseCategory
-  }
-
-  export type NearMissUpdatehumanFactorContributingInput = {
-    set?: $Enums.HumanFactor[]
-    push?: $Enums.HumanFactor | $Enums.HumanFactor[]
   }
 
   export type EnumNearMissStatusFieldUpdateOperationsInput = {
@@ -59698,60 +57723,6 @@ export namespace Prisma {
     delete?: UserWhereInput | boolean
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutReportedNearMissesInput, UserUpdateWithoutReportedNearMissesInput>, UserUncheckedUpdateWithoutReportedNearMissesInput>
-  }
-
-  export type CompanyCreateNestedOneWithoutHazardsInput = {
-    create?: XOR<CompanyCreateWithoutHazardsInput, CompanyUncheckedCreateWithoutHazardsInput>
-    connectOrCreate?: CompanyCreateOrConnectWithoutHazardsInput
-    connect?: CompanyWhereUniqueInput
-  }
-
-  export type VesselCreateNestedOneWithoutHazardsInput = {
-    create?: XOR<VesselCreateWithoutHazardsInput, VesselUncheckedCreateWithoutHazardsInput>
-    connectOrCreate?: VesselCreateOrConnectWithoutHazardsInput
-    connect?: VesselWhereUniqueInput
-  }
-
-  export type UserCreateNestedOneWithoutReportedHazardsInput = {
-    create?: XOR<UserCreateWithoutReportedHazardsInput, UserUncheckedCreateWithoutReportedHazardsInput>
-    connectOrCreate?: UserCreateOrConnectWithoutReportedHazardsInput
-    connect?: UserWhereUniqueInput
-  }
-
-  export type EnumHazardTypeFieldUpdateOperationsInput = {
-    set?: $Enums.HazardType
-  }
-
-  export type EnumHazardStatusFieldUpdateOperationsInput = {
-    set?: $Enums.HazardStatus
-  }
-
-  export type CompanyUpdateOneRequiredWithoutHazardsNestedInput = {
-    create?: XOR<CompanyCreateWithoutHazardsInput, CompanyUncheckedCreateWithoutHazardsInput>
-    connectOrCreate?: CompanyCreateOrConnectWithoutHazardsInput
-    upsert?: CompanyUpsertWithoutHazardsInput
-    connect?: CompanyWhereUniqueInput
-    update?: XOR<XOR<CompanyUpdateToOneWithWhereWithoutHazardsInput, CompanyUpdateWithoutHazardsInput>, CompanyUncheckedUpdateWithoutHazardsInput>
-  }
-
-  export type VesselUpdateOneWithoutHazardsNestedInput = {
-    create?: XOR<VesselCreateWithoutHazardsInput, VesselUncheckedCreateWithoutHazardsInput>
-    connectOrCreate?: VesselCreateOrConnectWithoutHazardsInput
-    upsert?: VesselUpsertWithoutHazardsInput
-    disconnect?: VesselWhereInput | boolean
-    delete?: VesselWhereInput | boolean
-    connect?: VesselWhereUniqueInput
-    update?: XOR<XOR<VesselUpdateToOneWithWhereWithoutHazardsInput, VesselUpdateWithoutHazardsInput>, VesselUncheckedUpdateWithoutHazardsInput>
-  }
-
-  export type UserUpdateOneWithoutReportedHazardsNestedInput = {
-    create?: XOR<UserCreateWithoutReportedHazardsInput, UserUncheckedCreateWithoutReportedHazardsInput>
-    connectOrCreate?: UserCreateOrConnectWithoutReportedHazardsInput
-    upsert?: UserUpsertWithoutReportedHazardsInput
-    disconnect?: UserWhereInput | boolean
-    delete?: UserWhereInput | boolean
-    connect?: UserWhereUniqueInput
-    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutReportedHazardsInput, UserUpdateWithoutReportedHazardsInput>, UserUncheckedUpdateWithoutReportedHazardsInput>
   }
 
   export type CompanyCreateNestedOneWithoutNonConformitiesInput = {
@@ -60698,13 +58669,6 @@ export namespace Prisma {
     not?: NestedEnumRootCauseCategoryNullableFilter<$PrismaModel> | $Enums.RootCauseCategory | null
   }
 
-  export type NestedEnumHumanFactorNullableFilter<$PrismaModel = never> = {
-    equals?: $Enums.HumanFactor | EnumHumanFactorFieldRefInput<$PrismaModel> | null
-    in?: $Enums.HumanFactor[] | ListEnumHumanFactorFieldRefInput<$PrismaModel> | null
-    notIn?: $Enums.HumanFactor[] | ListEnumHumanFactorFieldRefInput<$PrismaModel> | null
-    not?: NestedEnumHumanFactorNullableFilter<$PrismaModel> | $Enums.HumanFactor | null
-  }
-
   export type NestedEnumSeverityNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.Severity | EnumSeverityFieldRefInput<$PrismaModel> | null
     in?: $Enums.Severity[] | ListEnumSeverityFieldRefInput<$PrismaModel> | null
@@ -60735,16 +58699,6 @@ export namespace Prisma {
     _max?: NestedEnumRootCauseCategoryNullableFilter<$PrismaModel>
   }
 
-  export type NestedEnumHumanFactorNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.HumanFactor | EnumHumanFactorFieldRefInput<$PrismaModel> | null
-    in?: $Enums.HumanFactor[] | ListEnumHumanFactorFieldRefInput<$PrismaModel> | null
-    notIn?: $Enums.HumanFactor[] | ListEnumHumanFactorFieldRefInput<$PrismaModel> | null
-    not?: NestedEnumHumanFactorNullableWithAggregatesFilter<$PrismaModel> | $Enums.HumanFactor | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedEnumHumanFactorNullableFilter<$PrismaModel>
-    _max?: NestedEnumHumanFactorNullableFilter<$PrismaModel>
-  }
-
   export type NestedEnumIncidentTypeFilter<$PrismaModel = never> = {
     equals?: $Enums.IncidentType | EnumIncidentTypeFieldRefInput<$PrismaModel>
     in?: $Enums.IncidentType[] | ListEnumIncidentTypeFieldRefInput<$PrismaModel>
@@ -60760,6 +58714,20 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumIncidentTypeFilter<$PrismaModel>
     _max?: NestedEnumIncidentTypeFilter<$PrismaModel>
+  }
+
+  export type NestedEnumNearMissKindFilter<$PrismaModel = never> = {
+    equals?: $Enums.NearMissKind | EnumNearMissKindFieldRefInput<$PrismaModel>
+    in?: $Enums.NearMissKind[] | ListEnumNearMissKindFieldRefInput<$PrismaModel>
+    notIn?: $Enums.NearMissKind[] | ListEnumNearMissKindFieldRefInput<$PrismaModel>
+    not?: NestedEnumNearMissKindFilter<$PrismaModel> | $Enums.NearMissKind
+  }
+
+  export type NestedEnumHazardTypeNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.HazardType | EnumHazardTypeFieldRefInput<$PrismaModel> | null
+    in?: $Enums.HazardType[] | ListEnumHazardTypeFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.HazardType[] | ListEnumHazardTypeFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumHazardTypeNullableFilter<$PrismaModel> | $Enums.HazardType | null
   }
 
   export type NestedEnumNearMissConsequenceTypeFilter<$PrismaModel = never> = {
@@ -60788,6 +58756,26 @@ export namespace Prisma {
     in?: $Enums.NearMissStatus[] | ListEnumNearMissStatusFieldRefInput<$PrismaModel>
     notIn?: $Enums.NearMissStatus[] | ListEnumNearMissStatusFieldRefInput<$PrismaModel>
     not?: NestedEnumNearMissStatusFilter<$PrismaModel> | $Enums.NearMissStatus
+  }
+
+  export type NestedEnumNearMissKindWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.NearMissKind | EnumNearMissKindFieldRefInput<$PrismaModel>
+    in?: $Enums.NearMissKind[] | ListEnumNearMissKindFieldRefInput<$PrismaModel>
+    notIn?: $Enums.NearMissKind[] | ListEnumNearMissKindFieldRefInput<$PrismaModel>
+    not?: NestedEnumNearMissKindWithAggregatesFilter<$PrismaModel> | $Enums.NearMissKind
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumNearMissKindFilter<$PrismaModel>
+    _max?: NestedEnumNearMissKindFilter<$PrismaModel>
+  }
+
+  export type NestedEnumHazardTypeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.HazardType | EnumHazardTypeFieldRefInput<$PrismaModel> | null
+    in?: $Enums.HazardType[] | ListEnumHazardTypeFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.HazardType[] | ListEnumHazardTypeFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumHazardTypeNullableWithAggregatesFilter<$PrismaModel> | $Enums.HazardType | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumHazardTypeNullableFilter<$PrismaModel>
+    _max?: NestedEnumHazardTypeNullableFilter<$PrismaModel>
   }
 
   export type NestedEnumNearMissConsequenceTypeWithAggregatesFilter<$PrismaModel = never> = {
@@ -60828,40 +58816,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumNearMissStatusFilter<$PrismaModel>
     _max?: NestedEnumNearMissStatusFilter<$PrismaModel>
-  }
-
-  export type NestedEnumHazardTypeFilter<$PrismaModel = never> = {
-    equals?: $Enums.HazardType | EnumHazardTypeFieldRefInput<$PrismaModel>
-    in?: $Enums.HazardType[] | ListEnumHazardTypeFieldRefInput<$PrismaModel>
-    notIn?: $Enums.HazardType[] | ListEnumHazardTypeFieldRefInput<$PrismaModel>
-    not?: NestedEnumHazardTypeFilter<$PrismaModel> | $Enums.HazardType
-  }
-
-  export type NestedEnumHazardStatusFilter<$PrismaModel = never> = {
-    equals?: $Enums.HazardStatus | EnumHazardStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.HazardStatus[] | ListEnumHazardStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.HazardStatus[] | ListEnumHazardStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumHazardStatusFilter<$PrismaModel> | $Enums.HazardStatus
-  }
-
-  export type NestedEnumHazardTypeWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.HazardType | EnumHazardTypeFieldRefInput<$PrismaModel>
-    in?: $Enums.HazardType[] | ListEnumHazardTypeFieldRefInput<$PrismaModel>
-    notIn?: $Enums.HazardType[] | ListEnumHazardTypeFieldRefInput<$PrismaModel>
-    not?: NestedEnumHazardTypeWithAggregatesFilter<$PrismaModel> | $Enums.HazardType
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumHazardTypeFilter<$PrismaModel>
-    _max?: NestedEnumHazardTypeFilter<$PrismaModel>
-  }
-
-  export type NestedEnumHazardStatusWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.HazardStatus | EnumHazardStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.HazardStatus[] | ListEnumHazardStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.HazardStatus[] | ListEnumHazardStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumHazardStatusWithAggregatesFilter<$PrismaModel> | $Enums.HazardStatus
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumHazardStatusFilter<$PrismaModel>
-    _max?: NestedEnumHazardStatusFilter<$PrismaModel>
   }
 
   export type NestedEnumNcrSourceFilter<$PrismaModel = never> = {
@@ -60968,7 +58922,6 @@ export namespace Prisma {
     ownedDocs?: SmsDocumentCreateNestedManyWithoutOwnerInput
     reportedIncidents?: IncidentCreateNestedManyWithoutReportedByInput
     reportedNearMisses?: NearMissCreateNestedManyWithoutReportedByInput
-    reportedHazards?: HazardObservationCreateNestedManyWithoutReportedByInput
     raisedNcrs?: NonConformityCreateNestedManyWithoutRaisedByInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
   }
@@ -60992,7 +58945,6 @@ export namespace Prisma {
     ownedDocs?: SmsDocumentUncheckedCreateNestedManyWithoutOwnerInput
     reportedIncidents?: IncidentUncheckedCreateNestedManyWithoutReportedByInput
     reportedNearMisses?: NearMissUncheckedCreateNestedManyWithoutReportedByInput
-    reportedHazards?: HazardObservationUncheckedCreateNestedManyWithoutReportedByInput
     raisedNcrs?: NonConformityUncheckedCreateNestedManyWithoutRaisedByInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
   }
@@ -61064,7 +59016,6 @@ export namespace Prisma {
     smsDocuments?: SmsDocumentCreateNestedManyWithoutVesselInput
     incidents?: IncidentCreateNestedManyWithoutVesselInput
     nearMisses?: NearMissCreateNestedManyWithoutVesselInput
-    hazards?: HazardObservationCreateNestedManyWithoutVesselInput
     nonConformities?: NonConformityCreateNestedManyWithoutVesselInput
     sireInspections?: SireInspectionCreateNestedManyWithoutVesselInput
     pscInspections?: PscInspectionCreateNestedManyWithoutVesselInput
@@ -61098,7 +59049,6 @@ export namespace Prisma {
     smsDocuments?: SmsDocumentUncheckedCreateNestedManyWithoutVesselInput
     incidents?: IncidentUncheckedCreateNestedManyWithoutVesselInput
     nearMisses?: NearMissUncheckedCreateNestedManyWithoutVesselInput
-    hazards?: HazardObservationUncheckedCreateNestedManyWithoutVesselInput
     nonConformities?: NonConformityUncheckedCreateNestedManyWithoutVesselInput
     sireInspections?: SireInspectionUncheckedCreateNestedManyWithoutVesselInput
     pscInspections?: PscInspectionUncheckedCreateNestedManyWithoutVesselInput
@@ -61214,14 +59164,15 @@ export namespace Prisma {
     description: string
     investigationDetails?: string | null
     rootCauseCategory?: $Enums.RootCauseCategory | null
-    humanFactorPrimary?: $Enums.HumanFactor | null
-    humanFactorContributing?: IncidentCreatehumanFactorContributingInput | $Enums.HumanFactor[]
+    rootCauseSubCategory?: string | null
     immediateAction?: string | null
     rootCause?: string | null
     closedAt?: Date | string | null
     verifiedById?: string | null
     verifiedByName?: string | null
     verifiedAt?: Date | string | null
+    reporterName?: string | null
+    reporterPosition?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -61246,8 +59197,7 @@ export namespace Prisma {
     description: string
     investigationDetails?: string | null
     rootCauseCategory?: $Enums.RootCauseCategory | null
-    humanFactorPrimary?: $Enums.HumanFactor | null
-    humanFactorContributing?: IncidentCreatehumanFactorContributingInput | $Enums.HumanFactor[]
+    rootCauseSubCategory?: string | null
     immediateAction?: string | null
     rootCause?: string | null
     closedAt?: Date | string | null
@@ -61255,6 +59205,8 @@ export namespace Prisma {
     verifiedByName?: string | null
     verifiedAt?: Date | string | null
     reportedById?: string | null
+    reporterName?: string | null
+    reporterPosition?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -61279,6 +59231,9 @@ export namespace Prisma {
     id?: string
     refNo: string
     title: string
+    kind?: $Enums.NearMissKind
+    horCategory?: $Enums.HazardType | null
+    stopAuthorityExercised?: boolean
     occurredAt: Date | string
     location?: string | null
     description: string
@@ -61286,12 +59241,13 @@ export namespace Prisma {
     potentialSeverity: $Enums.Severity
     immediateAction?: string | null
     rootCauseCategory: $Enums.RootCauseCategory
-    humanFactorPrimary?: $Enums.HumanFactor | null
-    humanFactorContributing?: NearMissCreatehumanFactorContributingInput | $Enums.HumanFactor[]
+    rootCauseSubCategory?: string | null
     status?: $Enums.NearMissStatus
     closedAt?: Date | string | null
     companyComments?: string | null
     reviewedAt?: Date | string | null
+    reporterName?: string | null
+    reporterPosition?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -61306,6 +59262,9 @@ export namespace Prisma {
     id?: string
     refNo: string
     title: string
+    kind?: $Enums.NearMissKind
+    horCategory?: $Enums.HazardType | null
+    stopAuthorityExercised?: boolean
     vesselId?: string | null
     occurredAt: Date | string
     location?: string | null
@@ -61314,13 +59273,14 @@ export namespace Prisma {
     potentialSeverity: $Enums.Severity
     immediateAction?: string | null
     rootCauseCategory: $Enums.RootCauseCategory
-    humanFactorPrimary?: $Enums.HumanFactor | null
-    humanFactorContributing?: NearMissCreatehumanFactorContributingInput | $Enums.HumanFactor[]
+    rootCauseSubCategory?: string | null
     status?: $Enums.NearMissStatus
     closedAt?: Date | string | null
     companyComments?: string | null
     reviewedAt?: Date | string | null
     reportedById?: string | null
+    reporterName?: string | null
+    reporterPosition?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -61339,69 +59299,12 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type HazardObservationCreateWithoutCompanyInput = {
-    id?: string
-    refNo: string
-    title: string
-    observedAt: Date | string
-    location?: string | null
-    category: string
-    hazardType: $Enums.HazardType
-    riskLevel: $Enums.Severity
-    observation: string
-    immediateAction?: string | null
-    correctiveAction?: string | null
-    status?: $Enums.HazardStatus
-    closedAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    createdBy?: string | null
-    updatedBy?: string | null
-    deletedAt?: Date | string | null
-    deletedBy?: string | null
-    vessel?: VesselCreateNestedOneWithoutHazardsInput
-    reportedBy?: UserCreateNestedOneWithoutReportedHazardsInput
-  }
-
-  export type HazardObservationUncheckedCreateWithoutCompanyInput = {
-    id?: string
-    refNo: string
-    title: string
-    vesselId?: string | null
-    observedAt: Date | string
-    location?: string | null
-    category: string
-    hazardType: $Enums.HazardType
-    riskLevel: $Enums.Severity
-    observation: string
-    immediateAction?: string | null
-    correctiveAction?: string | null
-    status?: $Enums.HazardStatus
-    closedAt?: Date | string | null
-    reportedById?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    createdBy?: string | null
-    updatedBy?: string | null
-    deletedAt?: Date | string | null
-    deletedBy?: string | null
-  }
-
-  export type HazardObservationCreateOrConnectWithoutCompanyInput = {
-    where: HazardObservationWhereUniqueInput
-    create: XOR<HazardObservationCreateWithoutCompanyInput, HazardObservationUncheckedCreateWithoutCompanyInput>
-  }
-
-  export type HazardObservationCreateManyCompanyInputEnvelope = {
-    data: HazardObservationCreateManyCompanyInput | HazardObservationCreateManyCompanyInput[]
-    skipDuplicates?: boolean
-  }
-
   export type NonConformityCreateWithoutCompanyInput = {
     id?: string
     refNo: string
     title: string
     source: $Enums.NcrSource
+    sourceEntityId?: string | null
     requirement: string
     description: string
     severity: $Enums.Severity
@@ -61410,6 +59313,7 @@ export namespace Prisma {
     rootCause?: string | null
     correctiveAction?: string | null
     verification?: string | null
+    personInCharge?: string | null
     status?: $Enums.NcrStatus
     closedAt?: Date | string | null
     createdAt?: Date | string
@@ -61428,6 +59332,7 @@ export namespace Prisma {
     title: string
     vesselId?: string | null
     source: $Enums.NcrSource
+    sourceEntityId?: string | null
     requirement: string
     description: string
     severity: $Enums.Severity
@@ -61436,6 +59341,7 @@ export namespace Prisma {
     rootCause?: string | null
     correctiveAction?: string | null
     verification?: string | null
+    personInCharge?: string | null
     status?: $Enums.NcrStatus
     closedAt?: Date | string | null
     raisedById?: string | null
@@ -61927,8 +59833,7 @@ export namespace Prisma {
     description?: StringFilter<"Incident"> | string
     investigationDetails?: StringNullableFilter<"Incident"> | string | null
     rootCauseCategory?: EnumRootCauseCategoryNullableFilter<"Incident"> | $Enums.RootCauseCategory | null
-    humanFactorPrimary?: EnumHumanFactorNullableFilter<"Incident"> | $Enums.HumanFactor | null
-    humanFactorContributing?: EnumHumanFactorNullableListFilter<"Incident">
+    rootCauseSubCategory?: StringNullableFilter<"Incident"> | string | null
     immediateAction?: StringNullableFilter<"Incident"> | string | null
     rootCause?: StringNullableFilter<"Incident"> | string | null
     closedAt?: DateTimeNullableFilter<"Incident"> | Date | string | null
@@ -61936,6 +59841,8 @@ export namespace Prisma {
     verifiedByName?: StringNullableFilter<"Incident"> | string | null
     verifiedAt?: DateTimeNullableFilter<"Incident"> | Date | string | null
     reportedById?: StringNullableFilter<"Incident"> | string | null
+    reporterName?: StringNullableFilter<"Incident"> | string | null
+    reporterPosition?: StringNullableFilter<"Incident"> | string | null
     createdAt?: DateTimeFilter<"Incident"> | Date | string
     updatedAt?: DateTimeFilter<"Incident"> | Date | string
     createdBy?: StringNullableFilter<"Incident"> | string | null
@@ -61968,6 +59875,9 @@ export namespace Prisma {
     companyId?: StringFilter<"NearMiss"> | string
     refNo?: StringFilter<"NearMiss"> | string
     title?: StringFilter<"NearMiss"> | string
+    kind?: EnumNearMissKindFilter<"NearMiss"> | $Enums.NearMissKind
+    horCategory?: EnumHazardTypeNullableFilter<"NearMiss"> | $Enums.HazardType | null
+    stopAuthorityExercised?: BoolFilter<"NearMiss"> | boolean
     vesselId?: StringNullableFilter<"NearMiss"> | string | null
     occurredAt?: DateTimeFilter<"NearMiss"> | Date | string
     location?: StringNullableFilter<"NearMiss"> | string | null
@@ -61976,63 +59886,20 @@ export namespace Prisma {
     potentialSeverity?: EnumSeverityFilter<"NearMiss"> | $Enums.Severity
     immediateAction?: StringNullableFilter<"NearMiss"> | string | null
     rootCauseCategory?: EnumRootCauseCategoryFilter<"NearMiss"> | $Enums.RootCauseCategory
-    humanFactorPrimary?: EnumHumanFactorNullableFilter<"NearMiss"> | $Enums.HumanFactor | null
-    humanFactorContributing?: EnumHumanFactorNullableListFilter<"NearMiss">
+    rootCauseSubCategory?: StringNullableFilter<"NearMiss"> | string | null
     status?: EnumNearMissStatusFilter<"NearMiss"> | $Enums.NearMissStatus
     closedAt?: DateTimeNullableFilter<"NearMiss"> | Date | string | null
     companyComments?: StringNullableFilter<"NearMiss"> | string | null
     reviewedAt?: DateTimeNullableFilter<"NearMiss"> | Date | string | null
     reportedById?: StringNullableFilter<"NearMiss"> | string | null
+    reporterName?: StringNullableFilter<"NearMiss"> | string | null
+    reporterPosition?: StringNullableFilter<"NearMiss"> | string | null
     createdAt?: DateTimeFilter<"NearMiss"> | Date | string
     updatedAt?: DateTimeFilter<"NearMiss"> | Date | string
     createdBy?: StringNullableFilter<"NearMiss"> | string | null
     updatedBy?: StringNullableFilter<"NearMiss"> | string | null
     deletedAt?: DateTimeNullableFilter<"NearMiss"> | Date | string | null
     deletedBy?: StringNullableFilter<"NearMiss"> | string | null
-  }
-
-  export type HazardObservationUpsertWithWhereUniqueWithoutCompanyInput = {
-    where: HazardObservationWhereUniqueInput
-    update: XOR<HazardObservationUpdateWithoutCompanyInput, HazardObservationUncheckedUpdateWithoutCompanyInput>
-    create: XOR<HazardObservationCreateWithoutCompanyInput, HazardObservationUncheckedCreateWithoutCompanyInput>
-  }
-
-  export type HazardObservationUpdateWithWhereUniqueWithoutCompanyInput = {
-    where: HazardObservationWhereUniqueInput
-    data: XOR<HazardObservationUpdateWithoutCompanyInput, HazardObservationUncheckedUpdateWithoutCompanyInput>
-  }
-
-  export type HazardObservationUpdateManyWithWhereWithoutCompanyInput = {
-    where: HazardObservationScalarWhereInput
-    data: XOR<HazardObservationUpdateManyMutationInput, HazardObservationUncheckedUpdateManyWithoutCompanyInput>
-  }
-
-  export type HazardObservationScalarWhereInput = {
-    AND?: HazardObservationScalarWhereInput | HazardObservationScalarWhereInput[]
-    OR?: HazardObservationScalarWhereInput[]
-    NOT?: HazardObservationScalarWhereInput | HazardObservationScalarWhereInput[]
-    id?: StringFilter<"HazardObservation"> | string
-    companyId?: StringFilter<"HazardObservation"> | string
-    refNo?: StringFilter<"HazardObservation"> | string
-    title?: StringFilter<"HazardObservation"> | string
-    vesselId?: StringNullableFilter<"HazardObservation"> | string | null
-    observedAt?: DateTimeFilter<"HazardObservation"> | Date | string
-    location?: StringNullableFilter<"HazardObservation"> | string | null
-    category?: StringFilter<"HazardObservation"> | string
-    hazardType?: EnumHazardTypeFilter<"HazardObservation"> | $Enums.HazardType
-    riskLevel?: EnumSeverityFilter<"HazardObservation"> | $Enums.Severity
-    observation?: StringFilter<"HazardObservation"> | string
-    immediateAction?: StringNullableFilter<"HazardObservation"> | string | null
-    correctiveAction?: StringNullableFilter<"HazardObservation"> | string | null
-    status?: EnumHazardStatusFilter<"HazardObservation"> | $Enums.HazardStatus
-    closedAt?: DateTimeNullableFilter<"HazardObservation"> | Date | string | null
-    reportedById?: StringNullableFilter<"HazardObservation"> | string | null
-    createdAt?: DateTimeFilter<"HazardObservation"> | Date | string
-    updatedAt?: DateTimeFilter<"HazardObservation"> | Date | string
-    createdBy?: StringNullableFilter<"HazardObservation"> | string | null
-    updatedBy?: StringNullableFilter<"HazardObservation"> | string | null
-    deletedAt?: DateTimeNullableFilter<"HazardObservation"> | Date | string | null
-    deletedBy?: StringNullableFilter<"HazardObservation"> | string | null
   }
 
   export type NonConformityUpsertWithWhereUniqueWithoutCompanyInput = {
@@ -62061,6 +59928,7 @@ export namespace Prisma {
     title?: StringFilter<"NonConformity"> | string
     vesselId?: StringNullableFilter<"NonConformity"> | string | null
     source?: EnumNcrSourceFilter<"NonConformity"> | $Enums.NcrSource
+    sourceEntityId?: StringNullableFilter<"NonConformity"> | string | null
     requirement?: StringFilter<"NonConformity"> | string
     description?: StringFilter<"NonConformity"> | string
     severity?: EnumSeverityFilter<"NonConformity"> | $Enums.Severity
@@ -62069,6 +59937,7 @@ export namespace Prisma {
     rootCause?: StringNullableFilter<"NonConformity"> | string | null
     correctiveAction?: StringNullableFilter<"NonConformity"> | string | null
     verification?: StringNullableFilter<"NonConformity"> | string | null
+    personInCharge?: StringNullableFilter<"NonConformity"> | string | null
     status?: EnumNcrStatusFilter<"NonConformity"> | $Enums.NcrStatus
     closedAt?: DateTimeNullableFilter<"NonConformity"> | Date | string | null
     raisedById?: StringNullableFilter<"NonConformity"> | string | null
@@ -62291,7 +60160,6 @@ export namespace Prisma {
     workflows?: WorkflowDefinitionCreateNestedManyWithoutCompanyInput
     incidents?: IncidentCreateNestedManyWithoutCompanyInput
     nearMisses?: NearMissCreateNestedManyWithoutCompanyInput
-    hazards?: HazardObservationCreateNestedManyWithoutCompanyInput
     nonConformities?: NonConformityCreateNestedManyWithoutCompanyInput
     sireInspections?: SireInspectionCreateNestedManyWithoutCompanyInput
     pscInspections?: PscInspectionCreateNestedManyWithoutCompanyInput
@@ -62312,7 +60180,6 @@ export namespace Prisma {
     workflows?: WorkflowDefinitionUncheckedCreateNestedManyWithoutCompanyInput
     incidents?: IncidentUncheckedCreateNestedManyWithoutCompanyInput
     nearMisses?: NearMissUncheckedCreateNestedManyWithoutCompanyInput
-    hazards?: HazardObservationUncheckedCreateNestedManyWithoutCompanyInput
     nonConformities?: NonConformityUncheckedCreateNestedManyWithoutCompanyInput
     sireInspections?: SireInspectionUncheckedCreateNestedManyWithoutCompanyInput
     pscInspections?: PscInspectionUncheckedCreateNestedManyWithoutCompanyInput
@@ -62405,14 +60272,15 @@ export namespace Prisma {
     description: string
     investigationDetails?: string | null
     rootCauseCategory?: $Enums.RootCauseCategory | null
-    humanFactorPrimary?: $Enums.HumanFactor | null
-    humanFactorContributing?: IncidentCreatehumanFactorContributingInput | $Enums.HumanFactor[]
+    rootCauseSubCategory?: string | null
     immediateAction?: string | null
     rootCause?: string | null
     closedAt?: Date | string | null
     verifiedById?: string | null
     verifiedByName?: string | null
     verifiedAt?: Date | string | null
+    reporterName?: string | null
+    reporterPosition?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -62438,14 +60306,15 @@ export namespace Prisma {
     description: string
     investigationDetails?: string | null
     rootCauseCategory?: $Enums.RootCauseCategory | null
-    humanFactorPrimary?: $Enums.HumanFactor | null
-    humanFactorContributing?: IncidentCreatehumanFactorContributingInput | $Enums.HumanFactor[]
+    rootCauseSubCategory?: string | null
     immediateAction?: string | null
     rootCause?: string | null
     closedAt?: Date | string | null
     verifiedById?: string | null
     verifiedByName?: string | null
     verifiedAt?: Date | string | null
+    reporterName?: string | null
+    reporterPosition?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -62470,6 +60339,9 @@ export namespace Prisma {
     id?: string
     refNo: string
     title: string
+    kind?: $Enums.NearMissKind
+    horCategory?: $Enums.HazardType | null
+    stopAuthorityExercised?: boolean
     occurredAt: Date | string
     location?: string | null
     description: string
@@ -62477,12 +60349,13 @@ export namespace Prisma {
     potentialSeverity: $Enums.Severity
     immediateAction?: string | null
     rootCauseCategory: $Enums.RootCauseCategory
-    humanFactorPrimary?: $Enums.HumanFactor | null
-    humanFactorContributing?: NearMissCreatehumanFactorContributingInput | $Enums.HumanFactor[]
+    rootCauseSubCategory?: string | null
     status?: $Enums.NearMissStatus
     closedAt?: Date | string | null
     companyComments?: string | null
     reviewedAt?: Date | string | null
+    reporterName?: string | null
+    reporterPosition?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -62498,6 +60371,9 @@ export namespace Prisma {
     companyId: string
     refNo: string
     title: string
+    kind?: $Enums.NearMissKind
+    horCategory?: $Enums.HazardType | null
+    stopAuthorityExercised?: boolean
     vesselId?: string | null
     occurredAt: Date | string
     location?: string | null
@@ -62506,12 +60382,13 @@ export namespace Prisma {
     potentialSeverity: $Enums.Severity
     immediateAction?: string | null
     rootCauseCategory: $Enums.RootCauseCategory
-    humanFactorPrimary?: $Enums.HumanFactor | null
-    humanFactorContributing?: NearMissCreatehumanFactorContributingInput | $Enums.HumanFactor[]
+    rootCauseSubCategory?: string | null
     status?: $Enums.NearMissStatus
     closedAt?: Date | string | null
     companyComments?: string | null
     reviewedAt?: Date | string | null
+    reporterName?: string | null
+    reporterPosition?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -62530,69 +60407,12 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type HazardObservationCreateWithoutReportedByInput = {
-    id?: string
-    refNo: string
-    title: string
-    observedAt: Date | string
-    location?: string | null
-    category: string
-    hazardType: $Enums.HazardType
-    riskLevel: $Enums.Severity
-    observation: string
-    immediateAction?: string | null
-    correctiveAction?: string | null
-    status?: $Enums.HazardStatus
-    closedAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    createdBy?: string | null
-    updatedBy?: string | null
-    deletedAt?: Date | string | null
-    deletedBy?: string | null
-    company: CompanyCreateNestedOneWithoutHazardsInput
-    vessel?: VesselCreateNestedOneWithoutHazardsInput
-  }
-
-  export type HazardObservationUncheckedCreateWithoutReportedByInput = {
-    id?: string
-    companyId: string
-    refNo: string
-    title: string
-    vesselId?: string | null
-    observedAt: Date | string
-    location?: string | null
-    category: string
-    hazardType: $Enums.HazardType
-    riskLevel: $Enums.Severity
-    observation: string
-    immediateAction?: string | null
-    correctiveAction?: string | null
-    status?: $Enums.HazardStatus
-    closedAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    createdBy?: string | null
-    updatedBy?: string | null
-    deletedAt?: Date | string | null
-    deletedBy?: string | null
-  }
-
-  export type HazardObservationCreateOrConnectWithoutReportedByInput = {
-    where: HazardObservationWhereUniqueInput
-    create: XOR<HazardObservationCreateWithoutReportedByInput, HazardObservationUncheckedCreateWithoutReportedByInput>
-  }
-
-  export type HazardObservationCreateManyReportedByInputEnvelope = {
-    data: HazardObservationCreateManyReportedByInput | HazardObservationCreateManyReportedByInput[]
-    skipDuplicates?: boolean
-  }
-
   export type NonConformityCreateWithoutRaisedByInput = {
     id?: string
     refNo: string
     title: string
     source: $Enums.NcrSource
+    sourceEntityId?: string | null
     requirement: string
     description: string
     severity: $Enums.Severity
@@ -62601,6 +60421,7 @@ export namespace Prisma {
     rootCause?: string | null
     correctiveAction?: string | null
     verification?: string | null
+    personInCharge?: string | null
     status?: $Enums.NcrStatus
     closedAt?: Date | string | null
     createdAt?: Date | string
@@ -62620,6 +60441,7 @@ export namespace Prisma {
     title: string
     vesselId?: string | null
     source: $Enums.NcrSource
+    sourceEntityId?: string | null
     requirement: string
     description: string
     severity: $Enums.Severity
@@ -62628,6 +60450,7 @@ export namespace Prisma {
     rootCause?: string | null
     correctiveAction?: string | null
     verification?: string | null
+    personInCharge?: string | null
     status?: $Enums.NcrStatus
     closedAt?: Date | string | null
     createdAt?: Date | string
@@ -62703,7 +60526,6 @@ export namespace Prisma {
     workflows?: WorkflowDefinitionUpdateManyWithoutCompanyNestedInput
     incidents?: IncidentUpdateManyWithoutCompanyNestedInput
     nearMisses?: NearMissUpdateManyWithoutCompanyNestedInput
-    hazards?: HazardObservationUpdateManyWithoutCompanyNestedInput
     nonConformities?: NonConformityUpdateManyWithoutCompanyNestedInput
     sireInspections?: SireInspectionUpdateManyWithoutCompanyNestedInput
     pscInspections?: PscInspectionUpdateManyWithoutCompanyNestedInput
@@ -62724,7 +60546,6 @@ export namespace Prisma {
     workflows?: WorkflowDefinitionUncheckedUpdateManyWithoutCompanyNestedInput
     incidents?: IncidentUncheckedUpdateManyWithoutCompanyNestedInput
     nearMisses?: NearMissUncheckedUpdateManyWithoutCompanyNestedInput
-    hazards?: HazardObservationUncheckedUpdateManyWithoutCompanyNestedInput
     nonConformities?: NonConformityUncheckedUpdateManyWithoutCompanyNestedInput
     sireInspections?: SireInspectionUncheckedUpdateManyWithoutCompanyNestedInput
     pscInspections?: PscInspectionUncheckedUpdateManyWithoutCompanyNestedInput
@@ -62805,22 +60626,6 @@ export namespace Prisma {
     data: XOR<NearMissUpdateManyMutationInput, NearMissUncheckedUpdateManyWithoutReportedByInput>
   }
 
-  export type HazardObservationUpsertWithWhereUniqueWithoutReportedByInput = {
-    where: HazardObservationWhereUniqueInput
-    update: XOR<HazardObservationUpdateWithoutReportedByInput, HazardObservationUncheckedUpdateWithoutReportedByInput>
-    create: XOR<HazardObservationCreateWithoutReportedByInput, HazardObservationUncheckedCreateWithoutReportedByInput>
-  }
-
-  export type HazardObservationUpdateWithWhereUniqueWithoutReportedByInput = {
-    where: HazardObservationWhereUniqueInput
-    data: XOR<HazardObservationUpdateWithoutReportedByInput, HazardObservationUncheckedUpdateWithoutReportedByInput>
-  }
-
-  export type HazardObservationUpdateManyWithWhereWithoutReportedByInput = {
-    where: HazardObservationScalarWhereInput
-    data: XOR<HazardObservationUpdateManyMutationInput, HazardObservationUncheckedUpdateManyWithoutReportedByInput>
-  }
-
   export type NonConformityUpsertWithWhereUniqueWithoutRaisedByInput = {
     where: NonConformityWhereUniqueInput
     update: XOR<NonConformityUpdateWithoutRaisedByInput, NonConformityUncheckedUpdateWithoutRaisedByInput>
@@ -62880,7 +60685,6 @@ export namespace Prisma {
     workflows?: WorkflowDefinitionCreateNestedManyWithoutCompanyInput
     incidents?: IncidentCreateNestedManyWithoutCompanyInput
     nearMisses?: NearMissCreateNestedManyWithoutCompanyInput
-    hazards?: HazardObservationCreateNestedManyWithoutCompanyInput
     nonConformities?: NonConformityCreateNestedManyWithoutCompanyInput
     sireInspections?: SireInspectionCreateNestedManyWithoutCompanyInput
     pscInspections?: PscInspectionCreateNestedManyWithoutCompanyInput
@@ -62901,7 +60705,6 @@ export namespace Prisma {
     workflows?: WorkflowDefinitionUncheckedCreateNestedManyWithoutCompanyInput
     incidents?: IncidentUncheckedCreateNestedManyWithoutCompanyInput
     nearMisses?: NearMissUncheckedCreateNestedManyWithoutCompanyInput
-    hazards?: HazardObservationUncheckedCreateNestedManyWithoutCompanyInput
     nonConformities?: NonConformityUncheckedCreateNestedManyWithoutCompanyInput
     sireInspections?: SireInspectionUncheckedCreateNestedManyWithoutCompanyInput
     pscInspections?: PscInspectionUncheckedCreateNestedManyWithoutCompanyInput
@@ -62974,7 +60777,6 @@ export namespace Prisma {
     workflows?: WorkflowDefinitionUpdateManyWithoutCompanyNestedInput
     incidents?: IncidentUpdateManyWithoutCompanyNestedInput
     nearMisses?: NearMissUpdateManyWithoutCompanyNestedInput
-    hazards?: HazardObservationUpdateManyWithoutCompanyNestedInput
     nonConformities?: NonConformityUpdateManyWithoutCompanyNestedInput
     sireInspections?: SireInspectionUpdateManyWithoutCompanyNestedInput
     pscInspections?: PscInspectionUpdateManyWithoutCompanyNestedInput
@@ -62995,7 +60797,6 @@ export namespace Prisma {
     workflows?: WorkflowDefinitionUncheckedUpdateManyWithoutCompanyNestedInput
     incidents?: IncidentUncheckedUpdateManyWithoutCompanyNestedInput
     nearMisses?: NearMissUncheckedUpdateManyWithoutCompanyNestedInput
-    hazards?: HazardObservationUncheckedUpdateManyWithoutCompanyNestedInput
     nonConformities?: NonConformityUncheckedUpdateManyWithoutCompanyNestedInput
     sireInspections?: SireInspectionUncheckedUpdateManyWithoutCompanyNestedInput
     pscInspections?: PscInspectionUncheckedUpdateManyWithoutCompanyNestedInput
@@ -63201,7 +61002,6 @@ export namespace Prisma {
     ownedDocs?: SmsDocumentCreateNestedManyWithoutOwnerInput
     reportedIncidents?: IncidentCreateNestedManyWithoutReportedByInput
     reportedNearMisses?: NearMissCreateNestedManyWithoutReportedByInput
-    reportedHazards?: HazardObservationCreateNestedManyWithoutReportedByInput
     raisedNcrs?: NonConformityCreateNestedManyWithoutRaisedByInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
   }
@@ -63225,7 +61025,6 @@ export namespace Prisma {
     ownedDocs?: SmsDocumentUncheckedCreateNestedManyWithoutOwnerInput
     reportedIncidents?: IncidentUncheckedCreateNestedManyWithoutReportedByInput
     reportedNearMisses?: NearMissUncheckedCreateNestedManyWithoutReportedByInput
-    reportedHazards?: HazardObservationUncheckedCreateNestedManyWithoutReportedByInput
     raisedNcrs?: NonConformityUncheckedCreateNestedManyWithoutRaisedByInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
   }
@@ -63292,7 +61091,6 @@ export namespace Prisma {
     ownedDocs?: SmsDocumentUpdateManyWithoutOwnerNestedInput
     reportedIncidents?: IncidentUpdateManyWithoutReportedByNestedInput
     reportedNearMisses?: NearMissUpdateManyWithoutReportedByNestedInput
-    reportedHazards?: HazardObservationUpdateManyWithoutReportedByNestedInput
     raisedNcrs?: NonConformityUpdateManyWithoutRaisedByNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
   }
@@ -63316,7 +61114,6 @@ export namespace Prisma {
     ownedDocs?: SmsDocumentUncheckedUpdateManyWithoutOwnerNestedInput
     reportedIncidents?: IncidentUncheckedUpdateManyWithoutReportedByNestedInput
     reportedNearMisses?: NearMissUncheckedUpdateManyWithoutReportedByNestedInput
-    reportedHazards?: HazardObservationUncheckedUpdateManyWithoutReportedByNestedInput
     raisedNcrs?: NonConformityUncheckedUpdateManyWithoutRaisedByNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -63366,7 +61163,6 @@ export namespace Prisma {
     workflows?: WorkflowDefinitionCreateNestedManyWithoutCompanyInput
     incidents?: IncidentCreateNestedManyWithoutCompanyInput
     nearMisses?: NearMissCreateNestedManyWithoutCompanyInput
-    hazards?: HazardObservationCreateNestedManyWithoutCompanyInput
     nonConformities?: NonConformityCreateNestedManyWithoutCompanyInput
     sireInspections?: SireInspectionCreateNestedManyWithoutCompanyInput
     pscInspections?: PscInspectionCreateNestedManyWithoutCompanyInput
@@ -63387,7 +61183,6 @@ export namespace Prisma {
     workflows?: WorkflowDefinitionUncheckedCreateNestedManyWithoutCompanyInput
     incidents?: IncidentUncheckedCreateNestedManyWithoutCompanyInput
     nearMisses?: NearMissUncheckedCreateNestedManyWithoutCompanyInput
-    hazards?: HazardObservationUncheckedCreateNestedManyWithoutCompanyInput
     nonConformities?: NonConformityUncheckedCreateNestedManyWithoutCompanyInput
     sireInspections?: SireInspectionUncheckedCreateNestedManyWithoutCompanyInput
     pscInspections?: PscInspectionUncheckedCreateNestedManyWithoutCompanyInput
@@ -63462,14 +61257,15 @@ export namespace Prisma {
     description: string
     investigationDetails?: string | null
     rootCauseCategory?: $Enums.RootCauseCategory | null
-    humanFactorPrimary?: $Enums.HumanFactor | null
-    humanFactorContributing?: IncidentCreatehumanFactorContributingInput | $Enums.HumanFactor[]
+    rootCauseSubCategory?: string | null
     immediateAction?: string | null
     rootCause?: string | null
     closedAt?: Date | string | null
     verifiedById?: string | null
     verifiedByName?: string | null
     verifiedAt?: Date | string | null
+    reporterName?: string | null
+    reporterPosition?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -63494,8 +61290,7 @@ export namespace Prisma {
     description: string
     investigationDetails?: string | null
     rootCauseCategory?: $Enums.RootCauseCategory | null
-    humanFactorPrimary?: $Enums.HumanFactor | null
-    humanFactorContributing?: IncidentCreatehumanFactorContributingInput | $Enums.HumanFactor[]
+    rootCauseSubCategory?: string | null
     immediateAction?: string | null
     rootCause?: string | null
     closedAt?: Date | string | null
@@ -63503,6 +61298,8 @@ export namespace Prisma {
     verifiedByName?: string | null
     verifiedAt?: Date | string | null
     reportedById?: string | null
+    reporterName?: string | null
+    reporterPosition?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -63527,6 +61324,9 @@ export namespace Prisma {
     id?: string
     refNo: string
     title: string
+    kind?: $Enums.NearMissKind
+    horCategory?: $Enums.HazardType | null
+    stopAuthorityExercised?: boolean
     occurredAt: Date | string
     location?: string | null
     description: string
@@ -63534,12 +61334,13 @@ export namespace Prisma {
     potentialSeverity: $Enums.Severity
     immediateAction?: string | null
     rootCauseCategory: $Enums.RootCauseCategory
-    humanFactorPrimary?: $Enums.HumanFactor | null
-    humanFactorContributing?: NearMissCreatehumanFactorContributingInput | $Enums.HumanFactor[]
+    rootCauseSubCategory?: string | null
     status?: $Enums.NearMissStatus
     closedAt?: Date | string | null
     companyComments?: string | null
     reviewedAt?: Date | string | null
+    reporterName?: string | null
+    reporterPosition?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -63555,6 +61356,9 @@ export namespace Prisma {
     companyId: string
     refNo: string
     title: string
+    kind?: $Enums.NearMissKind
+    horCategory?: $Enums.HazardType | null
+    stopAuthorityExercised?: boolean
     occurredAt: Date | string
     location?: string | null
     description: string
@@ -63562,13 +61366,14 @@ export namespace Prisma {
     potentialSeverity: $Enums.Severity
     immediateAction?: string | null
     rootCauseCategory: $Enums.RootCauseCategory
-    humanFactorPrimary?: $Enums.HumanFactor | null
-    humanFactorContributing?: NearMissCreatehumanFactorContributingInput | $Enums.HumanFactor[]
+    rootCauseSubCategory?: string | null
     status?: $Enums.NearMissStatus
     closedAt?: Date | string | null
     companyComments?: string | null
     reviewedAt?: Date | string | null
     reportedById?: string | null
+    reporterName?: string | null
+    reporterPosition?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -63587,69 +61392,12 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type HazardObservationCreateWithoutVesselInput = {
-    id?: string
-    refNo: string
-    title: string
-    observedAt: Date | string
-    location?: string | null
-    category: string
-    hazardType: $Enums.HazardType
-    riskLevel: $Enums.Severity
-    observation: string
-    immediateAction?: string | null
-    correctiveAction?: string | null
-    status?: $Enums.HazardStatus
-    closedAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    createdBy?: string | null
-    updatedBy?: string | null
-    deletedAt?: Date | string | null
-    deletedBy?: string | null
-    company: CompanyCreateNestedOneWithoutHazardsInput
-    reportedBy?: UserCreateNestedOneWithoutReportedHazardsInput
-  }
-
-  export type HazardObservationUncheckedCreateWithoutVesselInput = {
-    id?: string
-    companyId: string
-    refNo: string
-    title: string
-    observedAt: Date | string
-    location?: string | null
-    category: string
-    hazardType: $Enums.HazardType
-    riskLevel: $Enums.Severity
-    observation: string
-    immediateAction?: string | null
-    correctiveAction?: string | null
-    status?: $Enums.HazardStatus
-    closedAt?: Date | string | null
-    reportedById?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    createdBy?: string | null
-    updatedBy?: string | null
-    deletedAt?: Date | string | null
-    deletedBy?: string | null
-  }
-
-  export type HazardObservationCreateOrConnectWithoutVesselInput = {
-    where: HazardObservationWhereUniqueInput
-    create: XOR<HazardObservationCreateWithoutVesselInput, HazardObservationUncheckedCreateWithoutVesselInput>
-  }
-
-  export type HazardObservationCreateManyVesselInputEnvelope = {
-    data: HazardObservationCreateManyVesselInput | HazardObservationCreateManyVesselInput[]
-    skipDuplicates?: boolean
-  }
-
   export type NonConformityCreateWithoutVesselInput = {
     id?: string
     refNo: string
     title: string
     source: $Enums.NcrSource
+    sourceEntityId?: string | null
     requirement: string
     description: string
     severity: $Enums.Severity
@@ -63658,6 +61406,7 @@ export namespace Prisma {
     rootCause?: string | null
     correctiveAction?: string | null
     verification?: string | null
+    personInCharge?: string | null
     status?: $Enums.NcrStatus
     closedAt?: Date | string | null
     createdAt?: Date | string
@@ -63676,6 +61425,7 @@ export namespace Prisma {
     refNo: string
     title: string
     source: $Enums.NcrSource
+    sourceEntityId?: string | null
     requirement: string
     description: string
     severity: $Enums.Severity
@@ -63684,6 +61434,7 @@ export namespace Prisma {
     rootCause?: string | null
     correctiveAction?: string | null
     verification?: string | null
+    personInCharge?: string | null
     status?: $Enums.NcrStatus
     closedAt?: Date | string | null
     raisedById?: string | null
@@ -63986,7 +61737,6 @@ export namespace Prisma {
     workflows?: WorkflowDefinitionUpdateManyWithoutCompanyNestedInput
     incidents?: IncidentUpdateManyWithoutCompanyNestedInput
     nearMisses?: NearMissUpdateManyWithoutCompanyNestedInput
-    hazards?: HazardObservationUpdateManyWithoutCompanyNestedInput
     nonConformities?: NonConformityUpdateManyWithoutCompanyNestedInput
     sireInspections?: SireInspectionUpdateManyWithoutCompanyNestedInput
     pscInspections?: PscInspectionUpdateManyWithoutCompanyNestedInput
@@ -64007,7 +61757,6 @@ export namespace Prisma {
     workflows?: WorkflowDefinitionUncheckedUpdateManyWithoutCompanyNestedInput
     incidents?: IncidentUncheckedUpdateManyWithoutCompanyNestedInput
     nearMisses?: NearMissUncheckedUpdateManyWithoutCompanyNestedInput
-    hazards?: HazardObservationUncheckedUpdateManyWithoutCompanyNestedInput
     nonConformities?: NonConformityUncheckedUpdateManyWithoutCompanyNestedInput
     sireInspections?: SireInspectionUncheckedUpdateManyWithoutCompanyNestedInput
     pscInspections?: PscInspectionUncheckedUpdateManyWithoutCompanyNestedInput
@@ -64062,22 +61811,6 @@ export namespace Prisma {
   export type NearMissUpdateManyWithWhereWithoutVesselInput = {
     where: NearMissScalarWhereInput
     data: XOR<NearMissUpdateManyMutationInput, NearMissUncheckedUpdateManyWithoutVesselInput>
-  }
-
-  export type HazardObservationUpsertWithWhereUniqueWithoutVesselInput = {
-    where: HazardObservationWhereUniqueInput
-    update: XOR<HazardObservationUpdateWithoutVesselInput, HazardObservationUncheckedUpdateWithoutVesselInput>
-    create: XOR<HazardObservationCreateWithoutVesselInput, HazardObservationUncheckedCreateWithoutVesselInput>
-  }
-
-  export type HazardObservationUpdateWithWhereUniqueWithoutVesselInput = {
-    where: HazardObservationWhereUniqueInput
-    data: XOR<HazardObservationUpdateWithoutVesselInput, HazardObservationUncheckedUpdateWithoutVesselInput>
-  }
-
-  export type HazardObservationUpdateManyWithWhereWithoutVesselInput = {
-    where: HazardObservationScalarWhereInput
-    data: XOR<HazardObservationUpdateManyMutationInput, HazardObservationUncheckedUpdateManyWithoutVesselInput>
   }
 
   export type NonConformityUpsertWithWhereUniqueWithoutVesselInput = {
@@ -64196,7 +61929,6 @@ export namespace Prisma {
     ownedDocs?: SmsDocumentCreateNestedManyWithoutOwnerInput
     reportedIncidents?: IncidentCreateNestedManyWithoutReportedByInput
     reportedNearMisses?: NearMissCreateNestedManyWithoutReportedByInput
-    reportedHazards?: HazardObservationCreateNestedManyWithoutReportedByInput
     raisedNcrs?: NonConformityCreateNestedManyWithoutRaisedByInput
   }
 
@@ -64220,7 +61952,6 @@ export namespace Prisma {
     ownedDocs?: SmsDocumentUncheckedCreateNestedManyWithoutOwnerInput
     reportedIncidents?: IncidentUncheckedCreateNestedManyWithoutReportedByInput
     reportedNearMisses?: NearMissUncheckedCreateNestedManyWithoutReportedByInput
-    reportedHazards?: HazardObservationUncheckedCreateNestedManyWithoutReportedByInput
     raisedNcrs?: NonConformityUncheckedCreateNestedManyWithoutRaisedByInput
   }
 
@@ -64260,7 +61991,6 @@ export namespace Prisma {
     ownedDocs?: SmsDocumentUpdateManyWithoutOwnerNestedInput
     reportedIncidents?: IncidentUpdateManyWithoutReportedByNestedInput
     reportedNearMisses?: NearMissUpdateManyWithoutReportedByNestedInput
-    reportedHazards?: HazardObservationUpdateManyWithoutReportedByNestedInput
     raisedNcrs?: NonConformityUpdateManyWithoutRaisedByNestedInput
   }
 
@@ -64284,7 +62014,6 @@ export namespace Prisma {
     ownedDocs?: SmsDocumentUncheckedUpdateManyWithoutOwnerNestedInput
     reportedIncidents?: IncidentUncheckedUpdateManyWithoutReportedByNestedInput
     reportedNearMisses?: NearMissUncheckedUpdateManyWithoutReportedByNestedInput
-    reportedHazards?: HazardObservationUncheckedUpdateManyWithoutReportedByNestedInput
     raisedNcrs?: NonConformityUncheckedUpdateManyWithoutRaisedByNestedInput
   }
 
@@ -64300,7 +62029,6 @@ export namespace Prisma {
     smsDocuments?: SmsDocumentCreateNestedManyWithoutCompanyInput
     incidents?: IncidentCreateNestedManyWithoutCompanyInput
     nearMisses?: NearMissCreateNestedManyWithoutCompanyInput
-    hazards?: HazardObservationCreateNestedManyWithoutCompanyInput
     nonConformities?: NonConformityCreateNestedManyWithoutCompanyInput
     sireInspections?: SireInspectionCreateNestedManyWithoutCompanyInput
     pscInspections?: PscInspectionCreateNestedManyWithoutCompanyInput
@@ -64321,7 +62049,6 @@ export namespace Prisma {
     smsDocuments?: SmsDocumentUncheckedCreateNestedManyWithoutCompanyInput
     incidents?: IncidentUncheckedCreateNestedManyWithoutCompanyInput
     nearMisses?: NearMissUncheckedCreateNestedManyWithoutCompanyInput
-    hazards?: HazardObservationUncheckedCreateNestedManyWithoutCompanyInput
     nonConformities?: NonConformityUncheckedCreateNestedManyWithoutCompanyInput
     sireInspections?: SireInspectionUncheckedCreateNestedManyWithoutCompanyInput
     pscInspections?: PscInspectionUncheckedCreateNestedManyWithoutCompanyInput
@@ -64426,7 +62153,6 @@ export namespace Prisma {
     smsDocuments?: SmsDocumentUpdateManyWithoutCompanyNestedInput
     incidents?: IncidentUpdateManyWithoutCompanyNestedInput
     nearMisses?: NearMissUpdateManyWithoutCompanyNestedInput
-    hazards?: HazardObservationUpdateManyWithoutCompanyNestedInput
     nonConformities?: NonConformityUpdateManyWithoutCompanyNestedInput
     sireInspections?: SireInspectionUpdateManyWithoutCompanyNestedInput
     pscInspections?: PscInspectionUpdateManyWithoutCompanyNestedInput
@@ -64447,7 +62173,6 @@ export namespace Prisma {
     smsDocuments?: SmsDocumentUncheckedUpdateManyWithoutCompanyNestedInput
     incidents?: IncidentUncheckedUpdateManyWithoutCompanyNestedInput
     nearMisses?: NearMissUncheckedUpdateManyWithoutCompanyNestedInput
-    hazards?: HazardObservationUncheckedUpdateManyWithoutCompanyNestedInput
     nonConformities?: NonConformityUncheckedUpdateManyWithoutCompanyNestedInput
     sireInspections?: SireInspectionUncheckedUpdateManyWithoutCompanyNestedInput
     pscInspections?: PscInspectionUncheckedUpdateManyWithoutCompanyNestedInput
@@ -64900,7 +62625,6 @@ export namespace Prisma {
     workflows?: WorkflowDefinitionCreateNestedManyWithoutCompanyInput
     incidents?: IncidentCreateNestedManyWithoutCompanyInput
     nearMisses?: NearMissCreateNestedManyWithoutCompanyInput
-    hazards?: HazardObservationCreateNestedManyWithoutCompanyInput
     nonConformities?: NonConformityCreateNestedManyWithoutCompanyInput
     sireInspections?: SireInspectionCreateNestedManyWithoutCompanyInput
     pscInspections?: PscInspectionCreateNestedManyWithoutCompanyInput
@@ -64921,7 +62645,6 @@ export namespace Prisma {
     workflows?: WorkflowDefinitionUncheckedCreateNestedManyWithoutCompanyInput
     incidents?: IncidentUncheckedCreateNestedManyWithoutCompanyInput
     nearMisses?: NearMissUncheckedCreateNestedManyWithoutCompanyInput
-    hazards?: HazardObservationUncheckedCreateNestedManyWithoutCompanyInput
     nonConformities?: NonConformityUncheckedCreateNestedManyWithoutCompanyInput
     sireInspections?: SireInspectionUncheckedCreateNestedManyWithoutCompanyInput
     pscInspections?: PscInspectionUncheckedCreateNestedManyWithoutCompanyInput
@@ -64954,7 +62677,6 @@ export namespace Prisma {
     roles?: UserRoleCreateNestedManyWithoutUserInput
     reportedIncidents?: IncidentCreateNestedManyWithoutReportedByInput
     reportedNearMisses?: NearMissCreateNestedManyWithoutReportedByInput
-    reportedHazards?: HazardObservationCreateNestedManyWithoutReportedByInput
     raisedNcrs?: NonConformityCreateNestedManyWithoutRaisedByInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
   }
@@ -64978,7 +62700,6 @@ export namespace Prisma {
     roles?: UserRoleUncheckedCreateNestedManyWithoutUserInput
     reportedIncidents?: IncidentUncheckedCreateNestedManyWithoutReportedByInput
     reportedNearMisses?: NearMissUncheckedCreateNestedManyWithoutReportedByInput
-    reportedHazards?: HazardObservationUncheckedCreateNestedManyWithoutReportedByInput
     raisedNcrs?: NonConformityUncheckedCreateNestedManyWithoutRaisedByInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
   }
@@ -65013,7 +62734,6 @@ export namespace Prisma {
     company: CompanyCreateNestedOneWithoutVesselsInput
     incidents?: IncidentCreateNestedManyWithoutVesselInput
     nearMisses?: NearMissCreateNestedManyWithoutVesselInput
-    hazards?: HazardObservationCreateNestedManyWithoutVesselInput
     nonConformities?: NonConformityCreateNestedManyWithoutVesselInput
     sireInspections?: SireInspectionCreateNestedManyWithoutVesselInput
     pscInspections?: PscInspectionCreateNestedManyWithoutVesselInput
@@ -65047,7 +62767,6 @@ export namespace Prisma {
     deletedBy?: string | null
     incidents?: IncidentUncheckedCreateNestedManyWithoutVesselInput
     nearMisses?: NearMissUncheckedCreateNestedManyWithoutVesselInput
-    hazards?: HazardObservationUncheckedCreateNestedManyWithoutVesselInput
     nonConformities?: NonConformityUncheckedCreateNestedManyWithoutVesselInput
     sireInspections?: SireInspectionUncheckedCreateNestedManyWithoutVesselInput
     pscInspections?: PscInspectionUncheckedCreateNestedManyWithoutVesselInput
@@ -65163,7 +62882,6 @@ export namespace Prisma {
     workflows?: WorkflowDefinitionUpdateManyWithoutCompanyNestedInput
     incidents?: IncidentUpdateManyWithoutCompanyNestedInput
     nearMisses?: NearMissUpdateManyWithoutCompanyNestedInput
-    hazards?: HazardObservationUpdateManyWithoutCompanyNestedInput
     nonConformities?: NonConformityUpdateManyWithoutCompanyNestedInput
     sireInspections?: SireInspectionUpdateManyWithoutCompanyNestedInput
     pscInspections?: PscInspectionUpdateManyWithoutCompanyNestedInput
@@ -65184,7 +62902,6 @@ export namespace Prisma {
     workflows?: WorkflowDefinitionUncheckedUpdateManyWithoutCompanyNestedInput
     incidents?: IncidentUncheckedUpdateManyWithoutCompanyNestedInput
     nearMisses?: NearMissUncheckedUpdateManyWithoutCompanyNestedInput
-    hazards?: HazardObservationUncheckedUpdateManyWithoutCompanyNestedInput
     nonConformities?: NonConformityUncheckedUpdateManyWithoutCompanyNestedInput
     sireInspections?: SireInspectionUncheckedUpdateManyWithoutCompanyNestedInput
     pscInspections?: PscInspectionUncheckedUpdateManyWithoutCompanyNestedInput
@@ -65223,7 +62940,6 @@ export namespace Prisma {
     roles?: UserRoleUpdateManyWithoutUserNestedInput
     reportedIncidents?: IncidentUpdateManyWithoutReportedByNestedInput
     reportedNearMisses?: NearMissUpdateManyWithoutReportedByNestedInput
-    reportedHazards?: HazardObservationUpdateManyWithoutReportedByNestedInput
     raisedNcrs?: NonConformityUpdateManyWithoutRaisedByNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
   }
@@ -65247,7 +62963,6 @@ export namespace Prisma {
     roles?: UserRoleUncheckedUpdateManyWithoutUserNestedInput
     reportedIncidents?: IncidentUncheckedUpdateManyWithoutReportedByNestedInput
     reportedNearMisses?: NearMissUncheckedUpdateManyWithoutReportedByNestedInput
-    reportedHazards?: HazardObservationUncheckedUpdateManyWithoutReportedByNestedInput
     raisedNcrs?: NonConformityUncheckedUpdateManyWithoutRaisedByNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -65288,7 +63003,6 @@ export namespace Prisma {
     company?: CompanyUpdateOneRequiredWithoutVesselsNestedInput
     incidents?: IncidentUpdateManyWithoutVesselNestedInput
     nearMisses?: NearMissUpdateManyWithoutVesselNestedInput
-    hazards?: HazardObservationUpdateManyWithoutVesselNestedInput
     nonConformities?: NonConformityUpdateManyWithoutVesselNestedInput
     sireInspections?: SireInspectionUpdateManyWithoutVesselNestedInput
     pscInspections?: PscInspectionUpdateManyWithoutVesselNestedInput
@@ -65322,7 +63036,6 @@ export namespace Prisma {
     deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     incidents?: IncidentUncheckedUpdateManyWithoutVesselNestedInput
     nearMisses?: NearMissUncheckedUpdateManyWithoutVesselNestedInput
-    hazards?: HazardObservationUncheckedUpdateManyWithoutVesselNestedInput
     nonConformities?: NonConformityUncheckedUpdateManyWithoutVesselNestedInput
     sireInspections?: SireInspectionUncheckedUpdateManyWithoutVesselNestedInput
     pscInspections?: PscInspectionUncheckedUpdateManyWithoutVesselNestedInput
@@ -65613,7 +63326,6 @@ export namespace Prisma {
     smsDocuments?: SmsDocumentCreateNestedManyWithoutCompanyInput
     workflows?: WorkflowDefinitionCreateNestedManyWithoutCompanyInput
     nearMisses?: NearMissCreateNestedManyWithoutCompanyInput
-    hazards?: HazardObservationCreateNestedManyWithoutCompanyInput
     nonConformities?: NonConformityCreateNestedManyWithoutCompanyInput
     sireInspections?: SireInspectionCreateNestedManyWithoutCompanyInput
     pscInspections?: PscInspectionCreateNestedManyWithoutCompanyInput
@@ -65634,7 +63346,6 @@ export namespace Prisma {
     smsDocuments?: SmsDocumentUncheckedCreateNestedManyWithoutCompanyInput
     workflows?: WorkflowDefinitionUncheckedCreateNestedManyWithoutCompanyInput
     nearMisses?: NearMissUncheckedCreateNestedManyWithoutCompanyInput
-    hazards?: HazardObservationUncheckedCreateNestedManyWithoutCompanyInput
     nonConformities?: NonConformityUncheckedCreateNestedManyWithoutCompanyInput
     sireInspections?: SireInspectionUncheckedCreateNestedManyWithoutCompanyInput
     pscInspections?: PscInspectionUncheckedCreateNestedManyWithoutCompanyInput
@@ -65673,7 +63384,6 @@ export namespace Prisma {
     company: CompanyCreateNestedOneWithoutVesselsInput
     smsDocuments?: SmsDocumentCreateNestedManyWithoutVesselInput
     nearMisses?: NearMissCreateNestedManyWithoutVesselInput
-    hazards?: HazardObservationCreateNestedManyWithoutVesselInput
     nonConformities?: NonConformityCreateNestedManyWithoutVesselInput
     sireInspections?: SireInspectionCreateNestedManyWithoutVesselInput
     pscInspections?: PscInspectionCreateNestedManyWithoutVesselInput
@@ -65707,7 +63417,6 @@ export namespace Prisma {
     deletedBy?: string | null
     smsDocuments?: SmsDocumentUncheckedCreateNestedManyWithoutVesselInput
     nearMisses?: NearMissUncheckedCreateNestedManyWithoutVesselInput
-    hazards?: HazardObservationUncheckedCreateNestedManyWithoutVesselInput
     nonConformities?: NonConformityUncheckedCreateNestedManyWithoutVesselInput
     sireInspections?: SireInspectionUncheckedCreateNestedManyWithoutVesselInput
     pscInspections?: PscInspectionUncheckedCreateNestedManyWithoutVesselInput
@@ -65766,7 +63475,6 @@ export namespace Prisma {
     roles?: UserRoleCreateNestedManyWithoutUserInput
     ownedDocs?: SmsDocumentCreateNestedManyWithoutOwnerInput
     reportedNearMisses?: NearMissCreateNestedManyWithoutReportedByInput
-    reportedHazards?: HazardObservationCreateNestedManyWithoutReportedByInput
     raisedNcrs?: NonConformityCreateNestedManyWithoutRaisedByInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
   }
@@ -65790,7 +63498,6 @@ export namespace Prisma {
     roles?: UserRoleUncheckedCreateNestedManyWithoutUserInput
     ownedDocs?: SmsDocumentUncheckedCreateNestedManyWithoutOwnerInput
     reportedNearMisses?: NearMissUncheckedCreateNestedManyWithoutReportedByInput
-    reportedHazards?: HazardObservationUncheckedCreateNestedManyWithoutReportedByInput
     raisedNcrs?: NonConformityUncheckedCreateNestedManyWithoutRaisedByInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
   }
@@ -65849,7 +63556,6 @@ export namespace Prisma {
     smsDocuments?: SmsDocumentUpdateManyWithoutCompanyNestedInput
     workflows?: WorkflowDefinitionUpdateManyWithoutCompanyNestedInput
     nearMisses?: NearMissUpdateManyWithoutCompanyNestedInput
-    hazards?: HazardObservationUpdateManyWithoutCompanyNestedInput
     nonConformities?: NonConformityUpdateManyWithoutCompanyNestedInput
     sireInspections?: SireInspectionUpdateManyWithoutCompanyNestedInput
     pscInspections?: PscInspectionUpdateManyWithoutCompanyNestedInput
@@ -65870,7 +63576,6 @@ export namespace Prisma {
     smsDocuments?: SmsDocumentUncheckedUpdateManyWithoutCompanyNestedInput
     workflows?: WorkflowDefinitionUncheckedUpdateManyWithoutCompanyNestedInput
     nearMisses?: NearMissUncheckedUpdateManyWithoutCompanyNestedInput
-    hazards?: HazardObservationUncheckedUpdateManyWithoutCompanyNestedInput
     nonConformities?: NonConformityUncheckedUpdateManyWithoutCompanyNestedInput
     sireInspections?: SireInspectionUncheckedUpdateManyWithoutCompanyNestedInput
     pscInspections?: PscInspectionUncheckedUpdateManyWithoutCompanyNestedInput
@@ -65915,7 +63620,6 @@ export namespace Prisma {
     company?: CompanyUpdateOneRequiredWithoutVesselsNestedInput
     smsDocuments?: SmsDocumentUpdateManyWithoutVesselNestedInput
     nearMisses?: NearMissUpdateManyWithoutVesselNestedInput
-    hazards?: HazardObservationUpdateManyWithoutVesselNestedInput
     nonConformities?: NonConformityUpdateManyWithoutVesselNestedInput
     sireInspections?: SireInspectionUpdateManyWithoutVesselNestedInput
     pscInspections?: PscInspectionUpdateManyWithoutVesselNestedInput
@@ -65949,7 +63653,6 @@ export namespace Prisma {
     deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     smsDocuments?: SmsDocumentUncheckedUpdateManyWithoutVesselNestedInput
     nearMisses?: NearMissUncheckedUpdateManyWithoutVesselNestedInput
-    hazards?: HazardObservationUncheckedUpdateManyWithoutVesselNestedInput
     nonConformities?: NonConformityUncheckedUpdateManyWithoutVesselNestedInput
     sireInspections?: SireInspectionUncheckedUpdateManyWithoutVesselNestedInput
     pscInspections?: PscInspectionUncheckedUpdateManyWithoutVesselNestedInput
@@ -66016,7 +63719,6 @@ export namespace Prisma {
     roles?: UserRoleUpdateManyWithoutUserNestedInput
     ownedDocs?: SmsDocumentUpdateManyWithoutOwnerNestedInput
     reportedNearMisses?: NearMissUpdateManyWithoutReportedByNestedInput
-    reportedHazards?: HazardObservationUpdateManyWithoutReportedByNestedInput
     raisedNcrs?: NonConformityUpdateManyWithoutRaisedByNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
   }
@@ -66040,7 +63742,6 @@ export namespace Prisma {
     roles?: UserRoleUncheckedUpdateManyWithoutUserNestedInput
     ownedDocs?: SmsDocumentUncheckedUpdateManyWithoutOwnerNestedInput
     reportedNearMisses?: NearMissUncheckedUpdateManyWithoutReportedByNestedInput
-    reportedHazards?: HazardObservationUncheckedUpdateManyWithoutReportedByNestedInput
     raisedNcrs?: NonConformityUncheckedUpdateManyWithoutRaisedByNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -66084,14 +63785,15 @@ export namespace Prisma {
     description: string
     investigationDetails?: string | null
     rootCauseCategory?: $Enums.RootCauseCategory | null
-    humanFactorPrimary?: $Enums.HumanFactor | null
-    humanFactorContributing?: IncidentCreatehumanFactorContributingInput | $Enums.HumanFactor[]
+    rootCauseSubCategory?: string | null
     immediateAction?: string | null
     rootCause?: string | null
     closedAt?: Date | string | null
     verifiedById?: string | null
     verifiedByName?: string | null
     verifiedAt?: Date | string | null
+    reporterName?: string | null
+    reporterPosition?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -66117,8 +63819,7 @@ export namespace Prisma {
     description: string
     investigationDetails?: string | null
     rootCauseCategory?: $Enums.RootCauseCategory | null
-    humanFactorPrimary?: $Enums.HumanFactor | null
-    humanFactorContributing?: IncidentCreatehumanFactorContributingInput | $Enums.HumanFactor[]
+    rootCauseSubCategory?: string | null
     immediateAction?: string | null
     rootCause?: string | null
     closedAt?: Date | string | null
@@ -66126,6 +63827,8 @@ export namespace Prisma {
     verifiedByName?: string | null
     verifiedAt?: Date | string | null
     reportedById?: string | null
+    reporterName?: string | null
+    reporterPosition?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -66162,14 +63865,15 @@ export namespace Prisma {
     description?: StringFieldUpdateOperationsInput | string
     investigationDetails?: NullableStringFieldUpdateOperationsInput | string | null
     rootCauseCategory?: NullableEnumRootCauseCategoryFieldUpdateOperationsInput | $Enums.RootCauseCategory | null
-    humanFactorPrimary?: NullableEnumHumanFactorFieldUpdateOperationsInput | $Enums.HumanFactor | null
-    humanFactorContributing?: IncidentUpdatehumanFactorContributingInput | $Enums.HumanFactor[]
+    rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
     immediateAction?: NullableStringFieldUpdateOperationsInput | string | null
     rootCause?: NullableStringFieldUpdateOperationsInput | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     verifiedById?: NullableStringFieldUpdateOperationsInput | string | null
     verifiedByName?: NullableStringFieldUpdateOperationsInput | string | null
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reporterName?: NullableStringFieldUpdateOperationsInput | string | null
+    reporterPosition?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -66195,8 +63899,7 @@ export namespace Prisma {
     description?: StringFieldUpdateOperationsInput | string
     investigationDetails?: NullableStringFieldUpdateOperationsInput | string | null
     rootCauseCategory?: NullableEnumRootCauseCategoryFieldUpdateOperationsInput | $Enums.RootCauseCategory | null
-    humanFactorPrimary?: NullableEnumHumanFactorFieldUpdateOperationsInput | $Enums.HumanFactor | null
-    humanFactorContributing?: IncidentUpdatehumanFactorContributingInput | $Enums.HumanFactor[]
+    rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
     immediateAction?: NullableStringFieldUpdateOperationsInput | string | null
     rootCause?: NullableStringFieldUpdateOperationsInput | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -66204,6 +63907,8 @@ export namespace Prisma {
     verifiedByName?: NullableStringFieldUpdateOperationsInput | string | null
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     reportedById?: NullableStringFieldUpdateOperationsInput | string | null
+    reporterName?: NullableStringFieldUpdateOperationsInput | string | null
+    reporterPosition?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -66224,14 +63929,15 @@ export namespace Prisma {
     description: string
     investigationDetails?: string | null
     rootCauseCategory?: $Enums.RootCauseCategory | null
-    humanFactorPrimary?: $Enums.HumanFactor | null
-    humanFactorContributing?: IncidentCreatehumanFactorContributingInput | $Enums.HumanFactor[]
+    rootCauseSubCategory?: string | null
     immediateAction?: string | null
     rootCause?: string | null
     closedAt?: Date | string | null
     verifiedById?: string | null
     verifiedByName?: string | null
     verifiedAt?: Date | string | null
+    reporterName?: string | null
+    reporterPosition?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -66257,8 +63963,7 @@ export namespace Prisma {
     description: string
     investigationDetails?: string | null
     rootCauseCategory?: $Enums.RootCauseCategory | null
-    humanFactorPrimary?: $Enums.HumanFactor | null
-    humanFactorContributing?: IncidentCreatehumanFactorContributingInput | $Enums.HumanFactor[]
+    rootCauseSubCategory?: string | null
     immediateAction?: string | null
     rootCause?: string | null
     closedAt?: Date | string | null
@@ -66266,6 +63971,8 @@ export namespace Prisma {
     verifiedByName?: string | null
     verifiedAt?: Date | string | null
     reportedById?: string | null
+    reporterName?: string | null
+    reporterPosition?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -66302,14 +64009,15 @@ export namespace Prisma {
     description?: StringFieldUpdateOperationsInput | string
     investigationDetails?: NullableStringFieldUpdateOperationsInput | string | null
     rootCauseCategory?: NullableEnumRootCauseCategoryFieldUpdateOperationsInput | $Enums.RootCauseCategory | null
-    humanFactorPrimary?: NullableEnumHumanFactorFieldUpdateOperationsInput | $Enums.HumanFactor | null
-    humanFactorContributing?: IncidentUpdatehumanFactorContributingInput | $Enums.HumanFactor[]
+    rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
     immediateAction?: NullableStringFieldUpdateOperationsInput | string | null
     rootCause?: NullableStringFieldUpdateOperationsInput | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     verifiedById?: NullableStringFieldUpdateOperationsInput | string | null
     verifiedByName?: NullableStringFieldUpdateOperationsInput | string | null
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reporterName?: NullableStringFieldUpdateOperationsInput | string | null
+    reporterPosition?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -66335,8 +64043,7 @@ export namespace Prisma {
     description?: StringFieldUpdateOperationsInput | string
     investigationDetails?: NullableStringFieldUpdateOperationsInput | string | null
     rootCauseCategory?: NullableEnumRootCauseCategoryFieldUpdateOperationsInput | $Enums.RootCauseCategory | null
-    humanFactorPrimary?: NullableEnumHumanFactorFieldUpdateOperationsInput | $Enums.HumanFactor | null
-    humanFactorContributing?: IncidentUpdatehumanFactorContributingInput | $Enums.HumanFactor[]
+    rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
     immediateAction?: NullableStringFieldUpdateOperationsInput | string | null
     rootCause?: NullableStringFieldUpdateOperationsInput | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -66344,6 +64051,8 @@ export namespace Prisma {
     verifiedByName?: NullableStringFieldUpdateOperationsInput | string | null
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     reportedById?: NullableStringFieldUpdateOperationsInput | string | null
+    reporterName?: NullableStringFieldUpdateOperationsInput | string | null
+    reporterPosition?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -66365,7 +64074,6 @@ export namespace Prisma {
     smsDocuments?: SmsDocumentCreateNestedManyWithoutCompanyInput
     workflows?: WorkflowDefinitionCreateNestedManyWithoutCompanyInput
     incidents?: IncidentCreateNestedManyWithoutCompanyInput
-    hazards?: HazardObservationCreateNestedManyWithoutCompanyInput
     nonConformities?: NonConformityCreateNestedManyWithoutCompanyInput
     sireInspections?: SireInspectionCreateNestedManyWithoutCompanyInput
     pscInspections?: PscInspectionCreateNestedManyWithoutCompanyInput
@@ -66386,7 +64094,6 @@ export namespace Prisma {
     smsDocuments?: SmsDocumentUncheckedCreateNestedManyWithoutCompanyInput
     workflows?: WorkflowDefinitionUncheckedCreateNestedManyWithoutCompanyInput
     incidents?: IncidentUncheckedCreateNestedManyWithoutCompanyInput
-    hazards?: HazardObservationUncheckedCreateNestedManyWithoutCompanyInput
     nonConformities?: NonConformityUncheckedCreateNestedManyWithoutCompanyInput
     sireInspections?: SireInspectionUncheckedCreateNestedManyWithoutCompanyInput
     pscInspections?: PscInspectionUncheckedCreateNestedManyWithoutCompanyInput
@@ -66425,7 +64132,6 @@ export namespace Prisma {
     company: CompanyCreateNestedOneWithoutVesselsInput
     smsDocuments?: SmsDocumentCreateNestedManyWithoutVesselInput
     incidents?: IncidentCreateNestedManyWithoutVesselInput
-    hazards?: HazardObservationCreateNestedManyWithoutVesselInput
     nonConformities?: NonConformityCreateNestedManyWithoutVesselInput
     sireInspections?: SireInspectionCreateNestedManyWithoutVesselInput
     pscInspections?: PscInspectionCreateNestedManyWithoutVesselInput
@@ -66459,7 +64165,6 @@ export namespace Prisma {
     deletedBy?: string | null
     smsDocuments?: SmsDocumentUncheckedCreateNestedManyWithoutVesselInput
     incidents?: IncidentUncheckedCreateNestedManyWithoutVesselInput
-    hazards?: HazardObservationUncheckedCreateNestedManyWithoutVesselInput
     nonConformities?: NonConformityUncheckedCreateNestedManyWithoutVesselInput
     sireInspections?: SireInspectionUncheckedCreateNestedManyWithoutVesselInput
     pscInspections?: PscInspectionUncheckedCreateNestedManyWithoutVesselInput
@@ -66492,7 +64197,6 @@ export namespace Prisma {
     roles?: UserRoleCreateNestedManyWithoutUserInput
     ownedDocs?: SmsDocumentCreateNestedManyWithoutOwnerInput
     reportedIncidents?: IncidentCreateNestedManyWithoutReportedByInput
-    reportedHazards?: HazardObservationCreateNestedManyWithoutReportedByInput
     raisedNcrs?: NonConformityCreateNestedManyWithoutRaisedByInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
   }
@@ -66516,7 +64220,6 @@ export namespace Prisma {
     roles?: UserRoleUncheckedCreateNestedManyWithoutUserInput
     ownedDocs?: SmsDocumentUncheckedCreateNestedManyWithoutOwnerInput
     reportedIncidents?: IncidentUncheckedCreateNestedManyWithoutReportedByInput
-    reportedHazards?: HazardObservationUncheckedCreateNestedManyWithoutReportedByInput
     raisedNcrs?: NonConformityUncheckedCreateNestedManyWithoutRaisedByInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
   }
@@ -66549,7 +64252,6 @@ export namespace Prisma {
     smsDocuments?: SmsDocumentUpdateManyWithoutCompanyNestedInput
     workflows?: WorkflowDefinitionUpdateManyWithoutCompanyNestedInput
     incidents?: IncidentUpdateManyWithoutCompanyNestedInput
-    hazards?: HazardObservationUpdateManyWithoutCompanyNestedInput
     nonConformities?: NonConformityUpdateManyWithoutCompanyNestedInput
     sireInspections?: SireInspectionUpdateManyWithoutCompanyNestedInput
     pscInspections?: PscInspectionUpdateManyWithoutCompanyNestedInput
@@ -66570,7 +64272,6 @@ export namespace Prisma {
     smsDocuments?: SmsDocumentUncheckedUpdateManyWithoutCompanyNestedInput
     workflows?: WorkflowDefinitionUncheckedUpdateManyWithoutCompanyNestedInput
     incidents?: IncidentUncheckedUpdateManyWithoutCompanyNestedInput
-    hazards?: HazardObservationUncheckedUpdateManyWithoutCompanyNestedInput
     nonConformities?: NonConformityUncheckedUpdateManyWithoutCompanyNestedInput
     sireInspections?: SireInspectionUncheckedUpdateManyWithoutCompanyNestedInput
     pscInspections?: PscInspectionUncheckedUpdateManyWithoutCompanyNestedInput
@@ -66615,7 +64316,6 @@ export namespace Prisma {
     company?: CompanyUpdateOneRequiredWithoutVesselsNestedInput
     smsDocuments?: SmsDocumentUpdateManyWithoutVesselNestedInput
     incidents?: IncidentUpdateManyWithoutVesselNestedInput
-    hazards?: HazardObservationUpdateManyWithoutVesselNestedInput
     nonConformities?: NonConformityUpdateManyWithoutVesselNestedInput
     sireInspections?: SireInspectionUpdateManyWithoutVesselNestedInput
     pscInspections?: PscInspectionUpdateManyWithoutVesselNestedInput
@@ -66649,7 +64349,6 @@ export namespace Prisma {
     deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     smsDocuments?: SmsDocumentUncheckedUpdateManyWithoutVesselNestedInput
     incidents?: IncidentUncheckedUpdateManyWithoutVesselNestedInput
-    hazards?: HazardObservationUncheckedUpdateManyWithoutVesselNestedInput
     nonConformities?: NonConformityUncheckedUpdateManyWithoutVesselNestedInput
     sireInspections?: SireInspectionUncheckedUpdateManyWithoutVesselNestedInput
     pscInspections?: PscInspectionUncheckedUpdateManyWithoutVesselNestedInput
@@ -66688,7 +64387,6 @@ export namespace Prisma {
     roles?: UserRoleUpdateManyWithoutUserNestedInput
     ownedDocs?: SmsDocumentUpdateManyWithoutOwnerNestedInput
     reportedIncidents?: IncidentUpdateManyWithoutReportedByNestedInput
-    reportedHazards?: HazardObservationUpdateManyWithoutReportedByNestedInput
     raisedNcrs?: NonConformityUpdateManyWithoutRaisedByNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
   }
@@ -66712,371 +64410,6 @@ export namespace Prisma {
     roles?: UserRoleUncheckedUpdateManyWithoutUserNestedInput
     ownedDocs?: SmsDocumentUncheckedUpdateManyWithoutOwnerNestedInput
     reportedIncidents?: IncidentUncheckedUpdateManyWithoutReportedByNestedInput
-    reportedHazards?: HazardObservationUncheckedUpdateManyWithoutReportedByNestedInput
-    raisedNcrs?: NonConformityUncheckedUpdateManyWithoutRaisedByNestedInput
-    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
-  }
-
-  export type CompanyCreateWithoutHazardsInput = {
-    id?: string
-    name: string
-    code: string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    users?: UserCreateNestedManyWithoutCompanyInput
-    roles?: RoleCreateNestedManyWithoutCompanyInput
-    vessels?: VesselCreateNestedManyWithoutCompanyInput
-    smsDocuments?: SmsDocumentCreateNestedManyWithoutCompanyInput
-    workflows?: WorkflowDefinitionCreateNestedManyWithoutCompanyInput
-    incidents?: IncidentCreateNestedManyWithoutCompanyInput
-    nearMisses?: NearMissCreateNestedManyWithoutCompanyInput
-    nonConformities?: NonConformityCreateNestedManyWithoutCompanyInput
-    sireInspections?: SireInspectionCreateNestedManyWithoutCompanyInput
-    pscInspections?: PscInspectionCreateNestedManyWithoutCompanyInput
-    cdiInspections?: CdiInspectionCreateNestedManyWithoutCompanyInput
-    internalAudits?: InternalAuditCreateNestedManyWithoutCompanyInput
-    externalAudits?: ExternalAuditCreateNestedManyWithoutCompanyInput
-  }
-
-  export type CompanyUncheckedCreateWithoutHazardsInput = {
-    id?: string
-    name: string
-    code: string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    users?: UserUncheckedCreateNestedManyWithoutCompanyInput
-    roles?: RoleUncheckedCreateNestedManyWithoutCompanyInput
-    vessels?: VesselUncheckedCreateNestedManyWithoutCompanyInput
-    smsDocuments?: SmsDocumentUncheckedCreateNestedManyWithoutCompanyInput
-    workflows?: WorkflowDefinitionUncheckedCreateNestedManyWithoutCompanyInput
-    incidents?: IncidentUncheckedCreateNestedManyWithoutCompanyInput
-    nearMisses?: NearMissUncheckedCreateNestedManyWithoutCompanyInput
-    nonConformities?: NonConformityUncheckedCreateNestedManyWithoutCompanyInput
-    sireInspections?: SireInspectionUncheckedCreateNestedManyWithoutCompanyInput
-    pscInspections?: PscInspectionUncheckedCreateNestedManyWithoutCompanyInput
-    cdiInspections?: CdiInspectionUncheckedCreateNestedManyWithoutCompanyInput
-    internalAudits?: InternalAuditUncheckedCreateNestedManyWithoutCompanyInput
-    externalAudits?: ExternalAuditUncheckedCreateNestedManyWithoutCompanyInput
-  }
-
-  export type CompanyCreateOrConnectWithoutHazardsInput = {
-    where: CompanyWhereUniqueInput
-    create: XOR<CompanyCreateWithoutHazardsInput, CompanyUncheckedCreateWithoutHazardsInput>
-  }
-
-  export type VesselCreateWithoutHazardsInput = {
-    id?: string
-    name: string
-    imo: string
-    officialNumber?: string | null
-    callSign?: string | null
-    mmsi?: string | null
-    flag?: string | null
-    type?: string
-    classificationSociety?: string | null
-    yearBuilt?: number | null
-    grossTonnage?: number | null
-    loa?: number | null
-    breadth?: number | null
-    depth?: number | null
-    status?: $Enums.VesselStatus
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    createdBy?: string | null
-    updatedBy?: string | null
-    deletedAt?: Date | string | null
-    deletedBy?: string | null
-    company: CompanyCreateNestedOneWithoutVesselsInput
-    smsDocuments?: SmsDocumentCreateNestedManyWithoutVesselInput
-    incidents?: IncidentCreateNestedManyWithoutVesselInput
-    nearMisses?: NearMissCreateNestedManyWithoutVesselInput
-    nonConformities?: NonConformityCreateNestedManyWithoutVesselInput
-    sireInspections?: SireInspectionCreateNestedManyWithoutVesselInput
-    pscInspections?: PscInspectionCreateNestedManyWithoutVesselInput
-    cdiInspections?: CdiInspectionCreateNestedManyWithoutVesselInput
-    internalAudits?: InternalAuditCreateNestedManyWithoutVesselInput
-    externalAudits?: ExternalAuditCreateNestedManyWithoutVesselInput
-  }
-
-  export type VesselUncheckedCreateWithoutHazardsInput = {
-    id?: string
-    companyId: string
-    name: string
-    imo: string
-    officialNumber?: string | null
-    callSign?: string | null
-    mmsi?: string | null
-    flag?: string | null
-    type?: string
-    classificationSociety?: string | null
-    yearBuilt?: number | null
-    grossTonnage?: number | null
-    loa?: number | null
-    breadth?: number | null
-    depth?: number | null
-    status?: $Enums.VesselStatus
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    createdBy?: string | null
-    updatedBy?: string | null
-    deletedAt?: Date | string | null
-    deletedBy?: string | null
-    smsDocuments?: SmsDocumentUncheckedCreateNestedManyWithoutVesselInput
-    incidents?: IncidentUncheckedCreateNestedManyWithoutVesselInput
-    nearMisses?: NearMissUncheckedCreateNestedManyWithoutVesselInput
-    nonConformities?: NonConformityUncheckedCreateNestedManyWithoutVesselInput
-    sireInspections?: SireInspectionUncheckedCreateNestedManyWithoutVesselInput
-    pscInspections?: PscInspectionUncheckedCreateNestedManyWithoutVesselInput
-    cdiInspections?: CdiInspectionUncheckedCreateNestedManyWithoutVesselInput
-    internalAudits?: InternalAuditUncheckedCreateNestedManyWithoutVesselInput
-    externalAudits?: ExternalAuditUncheckedCreateNestedManyWithoutVesselInput
-  }
-
-  export type VesselCreateOrConnectWithoutHazardsInput = {
-    where: VesselWhereUniqueInput
-    create: XOR<VesselCreateWithoutHazardsInput, VesselUncheckedCreateWithoutHazardsInput>
-  }
-
-  export type UserCreateWithoutReportedHazardsInput = {
-    id?: string
-    fullName: string
-    email: string
-    passwordHash: string
-    department: $Enums.DepartmentType
-    rank?: string | null
-    active?: boolean
-    lastLoginAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    createdBy?: string | null
-    updatedBy?: string | null
-    deletedAt?: Date | string | null
-    deletedBy?: string | null
-    company: CompanyCreateNestedOneWithoutUsersInput
-    roles?: UserRoleCreateNestedManyWithoutUserInput
-    ownedDocs?: SmsDocumentCreateNestedManyWithoutOwnerInput
-    reportedIncidents?: IncidentCreateNestedManyWithoutReportedByInput
-    reportedNearMisses?: NearMissCreateNestedManyWithoutReportedByInput
-    raisedNcrs?: NonConformityCreateNestedManyWithoutRaisedByInput
-    notifications?: NotificationCreateNestedManyWithoutUserInput
-  }
-
-  export type UserUncheckedCreateWithoutReportedHazardsInput = {
-    id?: string
-    companyId: string
-    fullName: string
-    email: string
-    passwordHash: string
-    department: $Enums.DepartmentType
-    rank?: string | null
-    active?: boolean
-    lastLoginAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    createdBy?: string | null
-    updatedBy?: string | null
-    deletedAt?: Date | string | null
-    deletedBy?: string | null
-    roles?: UserRoleUncheckedCreateNestedManyWithoutUserInput
-    ownedDocs?: SmsDocumentUncheckedCreateNestedManyWithoutOwnerInput
-    reportedIncidents?: IncidentUncheckedCreateNestedManyWithoutReportedByInput
-    reportedNearMisses?: NearMissUncheckedCreateNestedManyWithoutReportedByInput
-    raisedNcrs?: NonConformityUncheckedCreateNestedManyWithoutRaisedByInput
-    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
-  }
-
-  export type UserCreateOrConnectWithoutReportedHazardsInput = {
-    where: UserWhereUniqueInput
-    create: XOR<UserCreateWithoutReportedHazardsInput, UserUncheckedCreateWithoutReportedHazardsInput>
-  }
-
-  export type CompanyUpsertWithoutHazardsInput = {
-    update: XOR<CompanyUpdateWithoutHazardsInput, CompanyUncheckedUpdateWithoutHazardsInput>
-    create: XOR<CompanyCreateWithoutHazardsInput, CompanyUncheckedCreateWithoutHazardsInput>
-    where?: CompanyWhereInput
-  }
-
-  export type CompanyUpdateToOneWithWhereWithoutHazardsInput = {
-    where?: CompanyWhereInput
-    data: XOR<CompanyUpdateWithoutHazardsInput, CompanyUncheckedUpdateWithoutHazardsInput>
-  }
-
-  export type CompanyUpdateWithoutHazardsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    code?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    users?: UserUpdateManyWithoutCompanyNestedInput
-    roles?: RoleUpdateManyWithoutCompanyNestedInput
-    vessels?: VesselUpdateManyWithoutCompanyNestedInput
-    smsDocuments?: SmsDocumentUpdateManyWithoutCompanyNestedInput
-    workflows?: WorkflowDefinitionUpdateManyWithoutCompanyNestedInput
-    incidents?: IncidentUpdateManyWithoutCompanyNestedInput
-    nearMisses?: NearMissUpdateManyWithoutCompanyNestedInput
-    nonConformities?: NonConformityUpdateManyWithoutCompanyNestedInput
-    sireInspections?: SireInspectionUpdateManyWithoutCompanyNestedInput
-    pscInspections?: PscInspectionUpdateManyWithoutCompanyNestedInput
-    cdiInspections?: CdiInspectionUpdateManyWithoutCompanyNestedInput
-    internalAudits?: InternalAuditUpdateManyWithoutCompanyNestedInput
-    externalAudits?: ExternalAuditUpdateManyWithoutCompanyNestedInput
-  }
-
-  export type CompanyUncheckedUpdateWithoutHazardsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    code?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    users?: UserUncheckedUpdateManyWithoutCompanyNestedInput
-    roles?: RoleUncheckedUpdateManyWithoutCompanyNestedInput
-    vessels?: VesselUncheckedUpdateManyWithoutCompanyNestedInput
-    smsDocuments?: SmsDocumentUncheckedUpdateManyWithoutCompanyNestedInput
-    workflows?: WorkflowDefinitionUncheckedUpdateManyWithoutCompanyNestedInput
-    incidents?: IncidentUncheckedUpdateManyWithoutCompanyNestedInput
-    nearMisses?: NearMissUncheckedUpdateManyWithoutCompanyNestedInput
-    nonConformities?: NonConformityUncheckedUpdateManyWithoutCompanyNestedInput
-    sireInspections?: SireInspectionUncheckedUpdateManyWithoutCompanyNestedInput
-    pscInspections?: PscInspectionUncheckedUpdateManyWithoutCompanyNestedInput
-    cdiInspections?: CdiInspectionUncheckedUpdateManyWithoutCompanyNestedInput
-    internalAudits?: InternalAuditUncheckedUpdateManyWithoutCompanyNestedInput
-    externalAudits?: ExternalAuditUncheckedUpdateManyWithoutCompanyNestedInput
-  }
-
-  export type VesselUpsertWithoutHazardsInput = {
-    update: XOR<VesselUpdateWithoutHazardsInput, VesselUncheckedUpdateWithoutHazardsInput>
-    create: XOR<VesselCreateWithoutHazardsInput, VesselUncheckedCreateWithoutHazardsInput>
-    where?: VesselWhereInput
-  }
-
-  export type VesselUpdateToOneWithWhereWithoutHazardsInput = {
-    where?: VesselWhereInput
-    data: XOR<VesselUpdateWithoutHazardsInput, VesselUncheckedUpdateWithoutHazardsInput>
-  }
-
-  export type VesselUpdateWithoutHazardsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    imo?: StringFieldUpdateOperationsInput | string
-    officialNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    callSign?: NullableStringFieldUpdateOperationsInput | string | null
-    mmsi?: NullableStringFieldUpdateOperationsInput | string | null
-    flag?: NullableStringFieldUpdateOperationsInput | string | null
-    type?: StringFieldUpdateOperationsInput | string
-    classificationSociety?: NullableStringFieldUpdateOperationsInput | string | null
-    yearBuilt?: NullableIntFieldUpdateOperationsInput | number | null
-    grossTonnage?: NullableFloatFieldUpdateOperationsInput | number | null
-    loa?: NullableFloatFieldUpdateOperationsInput | number | null
-    breadth?: NullableFloatFieldUpdateOperationsInput | number | null
-    depth?: NullableFloatFieldUpdateOperationsInput | number | null
-    status?: EnumVesselStatusFieldUpdateOperationsInput | $Enums.VesselStatus
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
-    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
-    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
-    company?: CompanyUpdateOneRequiredWithoutVesselsNestedInput
-    smsDocuments?: SmsDocumentUpdateManyWithoutVesselNestedInput
-    incidents?: IncidentUpdateManyWithoutVesselNestedInput
-    nearMisses?: NearMissUpdateManyWithoutVesselNestedInput
-    nonConformities?: NonConformityUpdateManyWithoutVesselNestedInput
-    sireInspections?: SireInspectionUpdateManyWithoutVesselNestedInput
-    pscInspections?: PscInspectionUpdateManyWithoutVesselNestedInput
-    cdiInspections?: CdiInspectionUpdateManyWithoutVesselNestedInput
-    internalAudits?: InternalAuditUpdateManyWithoutVesselNestedInput
-    externalAudits?: ExternalAuditUpdateManyWithoutVesselNestedInput
-  }
-
-  export type VesselUncheckedUpdateWithoutHazardsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    companyId?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    imo?: StringFieldUpdateOperationsInput | string
-    officialNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    callSign?: NullableStringFieldUpdateOperationsInput | string | null
-    mmsi?: NullableStringFieldUpdateOperationsInput | string | null
-    flag?: NullableStringFieldUpdateOperationsInput | string | null
-    type?: StringFieldUpdateOperationsInput | string
-    classificationSociety?: NullableStringFieldUpdateOperationsInput | string | null
-    yearBuilt?: NullableIntFieldUpdateOperationsInput | number | null
-    grossTonnage?: NullableFloatFieldUpdateOperationsInput | number | null
-    loa?: NullableFloatFieldUpdateOperationsInput | number | null
-    breadth?: NullableFloatFieldUpdateOperationsInput | number | null
-    depth?: NullableFloatFieldUpdateOperationsInput | number | null
-    status?: EnumVesselStatusFieldUpdateOperationsInput | $Enums.VesselStatus
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
-    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
-    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
-    smsDocuments?: SmsDocumentUncheckedUpdateManyWithoutVesselNestedInput
-    incidents?: IncidentUncheckedUpdateManyWithoutVesselNestedInput
-    nearMisses?: NearMissUncheckedUpdateManyWithoutVesselNestedInput
-    nonConformities?: NonConformityUncheckedUpdateManyWithoutVesselNestedInput
-    sireInspections?: SireInspectionUncheckedUpdateManyWithoutVesselNestedInput
-    pscInspections?: PscInspectionUncheckedUpdateManyWithoutVesselNestedInput
-    cdiInspections?: CdiInspectionUncheckedUpdateManyWithoutVesselNestedInput
-    internalAudits?: InternalAuditUncheckedUpdateManyWithoutVesselNestedInput
-    externalAudits?: ExternalAuditUncheckedUpdateManyWithoutVesselNestedInput
-  }
-
-  export type UserUpsertWithoutReportedHazardsInput = {
-    update: XOR<UserUpdateWithoutReportedHazardsInput, UserUncheckedUpdateWithoutReportedHazardsInput>
-    create: XOR<UserCreateWithoutReportedHazardsInput, UserUncheckedCreateWithoutReportedHazardsInput>
-    where?: UserWhereInput
-  }
-
-  export type UserUpdateToOneWithWhereWithoutReportedHazardsInput = {
-    where?: UserWhereInput
-    data: XOR<UserUpdateWithoutReportedHazardsInput, UserUncheckedUpdateWithoutReportedHazardsInput>
-  }
-
-  export type UserUpdateWithoutReportedHazardsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    fullName?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    passwordHash?: StringFieldUpdateOperationsInput | string
-    department?: EnumDepartmentTypeFieldUpdateOperationsInput | $Enums.DepartmentType
-    rank?: NullableStringFieldUpdateOperationsInput | string | null
-    active?: BoolFieldUpdateOperationsInput | boolean
-    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
-    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
-    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
-    company?: CompanyUpdateOneRequiredWithoutUsersNestedInput
-    roles?: UserRoleUpdateManyWithoutUserNestedInput
-    ownedDocs?: SmsDocumentUpdateManyWithoutOwnerNestedInput
-    reportedIncidents?: IncidentUpdateManyWithoutReportedByNestedInput
-    reportedNearMisses?: NearMissUpdateManyWithoutReportedByNestedInput
-    raisedNcrs?: NonConformityUpdateManyWithoutRaisedByNestedInput
-    notifications?: NotificationUpdateManyWithoutUserNestedInput
-  }
-
-  export type UserUncheckedUpdateWithoutReportedHazardsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    companyId?: StringFieldUpdateOperationsInput | string
-    fullName?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    passwordHash?: StringFieldUpdateOperationsInput | string
-    department?: EnumDepartmentTypeFieldUpdateOperationsInput | $Enums.DepartmentType
-    rank?: NullableStringFieldUpdateOperationsInput | string | null
-    active?: BoolFieldUpdateOperationsInput | boolean
-    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
-    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
-    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
-    roles?: UserRoleUncheckedUpdateManyWithoutUserNestedInput
-    ownedDocs?: SmsDocumentUncheckedUpdateManyWithoutOwnerNestedInput
-    reportedIncidents?: IncidentUncheckedUpdateManyWithoutReportedByNestedInput
-    reportedNearMisses?: NearMissUncheckedUpdateManyWithoutReportedByNestedInput
     raisedNcrs?: NonConformityUncheckedUpdateManyWithoutRaisedByNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -67094,7 +64427,6 @@ export namespace Prisma {
     workflows?: WorkflowDefinitionCreateNestedManyWithoutCompanyInput
     incidents?: IncidentCreateNestedManyWithoutCompanyInput
     nearMisses?: NearMissCreateNestedManyWithoutCompanyInput
-    hazards?: HazardObservationCreateNestedManyWithoutCompanyInput
     sireInspections?: SireInspectionCreateNestedManyWithoutCompanyInput
     pscInspections?: PscInspectionCreateNestedManyWithoutCompanyInput
     cdiInspections?: CdiInspectionCreateNestedManyWithoutCompanyInput
@@ -67115,7 +64447,6 @@ export namespace Prisma {
     workflows?: WorkflowDefinitionUncheckedCreateNestedManyWithoutCompanyInput
     incidents?: IncidentUncheckedCreateNestedManyWithoutCompanyInput
     nearMisses?: NearMissUncheckedCreateNestedManyWithoutCompanyInput
-    hazards?: HazardObservationUncheckedCreateNestedManyWithoutCompanyInput
     sireInspections?: SireInspectionUncheckedCreateNestedManyWithoutCompanyInput
     pscInspections?: PscInspectionUncheckedCreateNestedManyWithoutCompanyInput
     cdiInspections?: CdiInspectionUncheckedCreateNestedManyWithoutCompanyInput
@@ -67154,7 +64485,6 @@ export namespace Prisma {
     smsDocuments?: SmsDocumentCreateNestedManyWithoutVesselInput
     incidents?: IncidentCreateNestedManyWithoutVesselInput
     nearMisses?: NearMissCreateNestedManyWithoutVesselInput
-    hazards?: HazardObservationCreateNestedManyWithoutVesselInput
     sireInspections?: SireInspectionCreateNestedManyWithoutVesselInput
     pscInspections?: PscInspectionCreateNestedManyWithoutVesselInput
     cdiInspections?: CdiInspectionCreateNestedManyWithoutVesselInput
@@ -67188,7 +64518,6 @@ export namespace Prisma {
     smsDocuments?: SmsDocumentUncheckedCreateNestedManyWithoutVesselInput
     incidents?: IncidentUncheckedCreateNestedManyWithoutVesselInput
     nearMisses?: NearMissUncheckedCreateNestedManyWithoutVesselInput
-    hazards?: HazardObservationUncheckedCreateNestedManyWithoutVesselInput
     sireInspections?: SireInspectionUncheckedCreateNestedManyWithoutVesselInput
     pscInspections?: PscInspectionUncheckedCreateNestedManyWithoutVesselInput
     cdiInspections?: CdiInspectionUncheckedCreateNestedManyWithoutVesselInput
@@ -67221,7 +64550,6 @@ export namespace Prisma {
     ownedDocs?: SmsDocumentCreateNestedManyWithoutOwnerInput
     reportedIncidents?: IncidentCreateNestedManyWithoutReportedByInput
     reportedNearMisses?: NearMissCreateNestedManyWithoutReportedByInput
-    reportedHazards?: HazardObservationCreateNestedManyWithoutReportedByInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
   }
 
@@ -67245,7 +64573,6 @@ export namespace Prisma {
     ownedDocs?: SmsDocumentUncheckedCreateNestedManyWithoutOwnerInput
     reportedIncidents?: IncidentUncheckedCreateNestedManyWithoutReportedByInput
     reportedNearMisses?: NearMissUncheckedCreateNestedManyWithoutReportedByInput
-    reportedHazards?: HazardObservationUncheckedCreateNestedManyWithoutReportedByInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -67278,7 +64605,6 @@ export namespace Prisma {
     workflows?: WorkflowDefinitionUpdateManyWithoutCompanyNestedInput
     incidents?: IncidentUpdateManyWithoutCompanyNestedInput
     nearMisses?: NearMissUpdateManyWithoutCompanyNestedInput
-    hazards?: HazardObservationUpdateManyWithoutCompanyNestedInput
     sireInspections?: SireInspectionUpdateManyWithoutCompanyNestedInput
     pscInspections?: PscInspectionUpdateManyWithoutCompanyNestedInput
     cdiInspections?: CdiInspectionUpdateManyWithoutCompanyNestedInput
@@ -67299,7 +64625,6 @@ export namespace Prisma {
     workflows?: WorkflowDefinitionUncheckedUpdateManyWithoutCompanyNestedInput
     incidents?: IncidentUncheckedUpdateManyWithoutCompanyNestedInput
     nearMisses?: NearMissUncheckedUpdateManyWithoutCompanyNestedInput
-    hazards?: HazardObservationUncheckedUpdateManyWithoutCompanyNestedInput
     sireInspections?: SireInspectionUncheckedUpdateManyWithoutCompanyNestedInput
     pscInspections?: PscInspectionUncheckedUpdateManyWithoutCompanyNestedInput
     cdiInspections?: CdiInspectionUncheckedUpdateManyWithoutCompanyNestedInput
@@ -67344,7 +64669,6 @@ export namespace Prisma {
     smsDocuments?: SmsDocumentUpdateManyWithoutVesselNestedInput
     incidents?: IncidentUpdateManyWithoutVesselNestedInput
     nearMisses?: NearMissUpdateManyWithoutVesselNestedInput
-    hazards?: HazardObservationUpdateManyWithoutVesselNestedInput
     sireInspections?: SireInspectionUpdateManyWithoutVesselNestedInput
     pscInspections?: PscInspectionUpdateManyWithoutVesselNestedInput
     cdiInspections?: CdiInspectionUpdateManyWithoutVesselNestedInput
@@ -67378,7 +64702,6 @@ export namespace Prisma {
     smsDocuments?: SmsDocumentUncheckedUpdateManyWithoutVesselNestedInput
     incidents?: IncidentUncheckedUpdateManyWithoutVesselNestedInput
     nearMisses?: NearMissUncheckedUpdateManyWithoutVesselNestedInput
-    hazards?: HazardObservationUncheckedUpdateManyWithoutVesselNestedInput
     sireInspections?: SireInspectionUncheckedUpdateManyWithoutVesselNestedInput
     pscInspections?: PscInspectionUncheckedUpdateManyWithoutVesselNestedInput
     cdiInspections?: CdiInspectionUncheckedUpdateManyWithoutVesselNestedInput
@@ -67417,7 +64740,6 @@ export namespace Prisma {
     ownedDocs?: SmsDocumentUpdateManyWithoutOwnerNestedInput
     reportedIncidents?: IncidentUpdateManyWithoutReportedByNestedInput
     reportedNearMisses?: NearMissUpdateManyWithoutReportedByNestedInput
-    reportedHazards?: HazardObservationUpdateManyWithoutReportedByNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
   }
 
@@ -67441,7 +64763,6 @@ export namespace Prisma {
     ownedDocs?: SmsDocumentUncheckedUpdateManyWithoutOwnerNestedInput
     reportedIncidents?: IncidentUncheckedUpdateManyWithoutReportedByNestedInput
     reportedNearMisses?: NearMissUncheckedUpdateManyWithoutReportedByNestedInput
-    reportedHazards?: HazardObservationUncheckedUpdateManyWithoutReportedByNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -67458,7 +64779,6 @@ export namespace Prisma {
     workflows?: WorkflowDefinitionCreateNestedManyWithoutCompanyInput
     incidents?: IncidentCreateNestedManyWithoutCompanyInput
     nearMisses?: NearMissCreateNestedManyWithoutCompanyInput
-    hazards?: HazardObservationCreateNestedManyWithoutCompanyInput
     nonConformities?: NonConformityCreateNestedManyWithoutCompanyInput
     pscInspections?: PscInspectionCreateNestedManyWithoutCompanyInput
     cdiInspections?: CdiInspectionCreateNestedManyWithoutCompanyInput
@@ -67479,7 +64799,6 @@ export namespace Prisma {
     workflows?: WorkflowDefinitionUncheckedCreateNestedManyWithoutCompanyInput
     incidents?: IncidentUncheckedCreateNestedManyWithoutCompanyInput
     nearMisses?: NearMissUncheckedCreateNestedManyWithoutCompanyInput
-    hazards?: HazardObservationUncheckedCreateNestedManyWithoutCompanyInput
     nonConformities?: NonConformityUncheckedCreateNestedManyWithoutCompanyInput
     pscInspections?: PscInspectionUncheckedCreateNestedManyWithoutCompanyInput
     cdiInspections?: CdiInspectionUncheckedCreateNestedManyWithoutCompanyInput
@@ -67518,7 +64837,6 @@ export namespace Prisma {
     smsDocuments?: SmsDocumentCreateNestedManyWithoutVesselInput
     incidents?: IncidentCreateNestedManyWithoutVesselInput
     nearMisses?: NearMissCreateNestedManyWithoutVesselInput
-    hazards?: HazardObservationCreateNestedManyWithoutVesselInput
     nonConformities?: NonConformityCreateNestedManyWithoutVesselInput
     pscInspections?: PscInspectionCreateNestedManyWithoutVesselInput
     cdiInspections?: CdiInspectionCreateNestedManyWithoutVesselInput
@@ -67552,7 +64870,6 @@ export namespace Prisma {
     smsDocuments?: SmsDocumentUncheckedCreateNestedManyWithoutVesselInput
     incidents?: IncidentUncheckedCreateNestedManyWithoutVesselInput
     nearMisses?: NearMissUncheckedCreateNestedManyWithoutVesselInput
-    hazards?: HazardObservationUncheckedCreateNestedManyWithoutVesselInput
     nonConformities?: NonConformityUncheckedCreateNestedManyWithoutVesselInput
     pscInspections?: PscInspectionUncheckedCreateNestedManyWithoutVesselInput
     cdiInspections?: CdiInspectionUncheckedCreateNestedManyWithoutVesselInput
@@ -67625,7 +64942,6 @@ export namespace Prisma {
     workflows?: WorkflowDefinitionUpdateManyWithoutCompanyNestedInput
     incidents?: IncidentUpdateManyWithoutCompanyNestedInput
     nearMisses?: NearMissUpdateManyWithoutCompanyNestedInput
-    hazards?: HazardObservationUpdateManyWithoutCompanyNestedInput
     nonConformities?: NonConformityUpdateManyWithoutCompanyNestedInput
     pscInspections?: PscInspectionUpdateManyWithoutCompanyNestedInput
     cdiInspections?: CdiInspectionUpdateManyWithoutCompanyNestedInput
@@ -67646,7 +64962,6 @@ export namespace Prisma {
     workflows?: WorkflowDefinitionUncheckedUpdateManyWithoutCompanyNestedInput
     incidents?: IncidentUncheckedUpdateManyWithoutCompanyNestedInput
     nearMisses?: NearMissUncheckedUpdateManyWithoutCompanyNestedInput
-    hazards?: HazardObservationUncheckedUpdateManyWithoutCompanyNestedInput
     nonConformities?: NonConformityUncheckedUpdateManyWithoutCompanyNestedInput
     pscInspections?: PscInspectionUncheckedUpdateManyWithoutCompanyNestedInput
     cdiInspections?: CdiInspectionUncheckedUpdateManyWithoutCompanyNestedInput
@@ -67691,7 +65006,6 @@ export namespace Prisma {
     smsDocuments?: SmsDocumentUpdateManyWithoutVesselNestedInput
     incidents?: IncidentUpdateManyWithoutVesselNestedInput
     nearMisses?: NearMissUpdateManyWithoutVesselNestedInput
-    hazards?: HazardObservationUpdateManyWithoutVesselNestedInput
     nonConformities?: NonConformityUpdateManyWithoutVesselNestedInput
     pscInspections?: PscInspectionUpdateManyWithoutVesselNestedInput
     cdiInspections?: CdiInspectionUpdateManyWithoutVesselNestedInput
@@ -67725,7 +65039,6 @@ export namespace Prisma {
     smsDocuments?: SmsDocumentUncheckedUpdateManyWithoutVesselNestedInput
     incidents?: IncidentUncheckedUpdateManyWithoutVesselNestedInput
     nearMisses?: NearMissUncheckedUpdateManyWithoutVesselNestedInput
-    hazards?: HazardObservationUncheckedUpdateManyWithoutVesselNestedInput
     nonConformities?: NonConformityUncheckedUpdateManyWithoutVesselNestedInput
     pscInspections?: PscInspectionUncheckedUpdateManyWithoutVesselNestedInput
     cdiInspections?: CdiInspectionUncheckedUpdateManyWithoutVesselNestedInput
@@ -67879,7 +65192,6 @@ export namespace Prisma {
     workflows?: WorkflowDefinitionCreateNestedManyWithoutCompanyInput
     incidents?: IncidentCreateNestedManyWithoutCompanyInput
     nearMisses?: NearMissCreateNestedManyWithoutCompanyInput
-    hazards?: HazardObservationCreateNestedManyWithoutCompanyInput
     nonConformities?: NonConformityCreateNestedManyWithoutCompanyInput
     sireInspections?: SireInspectionCreateNestedManyWithoutCompanyInput
     cdiInspections?: CdiInspectionCreateNestedManyWithoutCompanyInput
@@ -67900,7 +65212,6 @@ export namespace Prisma {
     workflows?: WorkflowDefinitionUncheckedCreateNestedManyWithoutCompanyInput
     incidents?: IncidentUncheckedCreateNestedManyWithoutCompanyInput
     nearMisses?: NearMissUncheckedCreateNestedManyWithoutCompanyInput
-    hazards?: HazardObservationUncheckedCreateNestedManyWithoutCompanyInput
     nonConformities?: NonConformityUncheckedCreateNestedManyWithoutCompanyInput
     sireInspections?: SireInspectionUncheckedCreateNestedManyWithoutCompanyInput
     cdiInspections?: CdiInspectionUncheckedCreateNestedManyWithoutCompanyInput
@@ -67939,7 +65250,6 @@ export namespace Prisma {
     smsDocuments?: SmsDocumentCreateNestedManyWithoutVesselInput
     incidents?: IncidentCreateNestedManyWithoutVesselInput
     nearMisses?: NearMissCreateNestedManyWithoutVesselInput
-    hazards?: HazardObservationCreateNestedManyWithoutVesselInput
     nonConformities?: NonConformityCreateNestedManyWithoutVesselInput
     sireInspections?: SireInspectionCreateNestedManyWithoutVesselInput
     cdiInspections?: CdiInspectionCreateNestedManyWithoutVesselInput
@@ -67973,7 +65283,6 @@ export namespace Prisma {
     smsDocuments?: SmsDocumentUncheckedCreateNestedManyWithoutVesselInput
     incidents?: IncidentUncheckedCreateNestedManyWithoutVesselInput
     nearMisses?: NearMissUncheckedCreateNestedManyWithoutVesselInput
-    hazards?: HazardObservationUncheckedCreateNestedManyWithoutVesselInput
     nonConformities?: NonConformityUncheckedCreateNestedManyWithoutVesselInput
     sireInspections?: SireInspectionUncheckedCreateNestedManyWithoutVesselInput
     cdiInspections?: CdiInspectionUncheckedCreateNestedManyWithoutVesselInput
@@ -68048,7 +65357,6 @@ export namespace Prisma {
     workflows?: WorkflowDefinitionUpdateManyWithoutCompanyNestedInput
     incidents?: IncidentUpdateManyWithoutCompanyNestedInput
     nearMisses?: NearMissUpdateManyWithoutCompanyNestedInput
-    hazards?: HazardObservationUpdateManyWithoutCompanyNestedInput
     nonConformities?: NonConformityUpdateManyWithoutCompanyNestedInput
     sireInspections?: SireInspectionUpdateManyWithoutCompanyNestedInput
     cdiInspections?: CdiInspectionUpdateManyWithoutCompanyNestedInput
@@ -68069,7 +65377,6 @@ export namespace Prisma {
     workflows?: WorkflowDefinitionUncheckedUpdateManyWithoutCompanyNestedInput
     incidents?: IncidentUncheckedUpdateManyWithoutCompanyNestedInput
     nearMisses?: NearMissUncheckedUpdateManyWithoutCompanyNestedInput
-    hazards?: HazardObservationUncheckedUpdateManyWithoutCompanyNestedInput
     nonConformities?: NonConformityUncheckedUpdateManyWithoutCompanyNestedInput
     sireInspections?: SireInspectionUncheckedUpdateManyWithoutCompanyNestedInput
     cdiInspections?: CdiInspectionUncheckedUpdateManyWithoutCompanyNestedInput
@@ -68114,7 +65421,6 @@ export namespace Prisma {
     smsDocuments?: SmsDocumentUpdateManyWithoutVesselNestedInput
     incidents?: IncidentUpdateManyWithoutVesselNestedInput
     nearMisses?: NearMissUpdateManyWithoutVesselNestedInput
-    hazards?: HazardObservationUpdateManyWithoutVesselNestedInput
     nonConformities?: NonConformityUpdateManyWithoutVesselNestedInput
     sireInspections?: SireInspectionUpdateManyWithoutVesselNestedInput
     cdiInspections?: CdiInspectionUpdateManyWithoutVesselNestedInput
@@ -68148,7 +65454,6 @@ export namespace Prisma {
     smsDocuments?: SmsDocumentUncheckedUpdateManyWithoutVesselNestedInput
     incidents?: IncidentUncheckedUpdateManyWithoutVesselNestedInput
     nearMisses?: NearMissUncheckedUpdateManyWithoutVesselNestedInput
-    hazards?: HazardObservationUncheckedUpdateManyWithoutVesselNestedInput
     nonConformities?: NonConformityUncheckedUpdateManyWithoutVesselNestedInput
     sireInspections?: SireInspectionUncheckedUpdateManyWithoutVesselNestedInput
     cdiInspections?: CdiInspectionUncheckedUpdateManyWithoutVesselNestedInput
@@ -68303,7 +65608,6 @@ export namespace Prisma {
     workflows?: WorkflowDefinitionCreateNestedManyWithoutCompanyInput
     incidents?: IncidentCreateNestedManyWithoutCompanyInput
     nearMisses?: NearMissCreateNestedManyWithoutCompanyInput
-    hazards?: HazardObservationCreateNestedManyWithoutCompanyInput
     nonConformities?: NonConformityCreateNestedManyWithoutCompanyInput
     sireInspections?: SireInspectionCreateNestedManyWithoutCompanyInput
     pscInspections?: PscInspectionCreateNestedManyWithoutCompanyInput
@@ -68324,7 +65628,6 @@ export namespace Prisma {
     workflows?: WorkflowDefinitionUncheckedCreateNestedManyWithoutCompanyInput
     incidents?: IncidentUncheckedCreateNestedManyWithoutCompanyInput
     nearMisses?: NearMissUncheckedCreateNestedManyWithoutCompanyInput
-    hazards?: HazardObservationUncheckedCreateNestedManyWithoutCompanyInput
     nonConformities?: NonConformityUncheckedCreateNestedManyWithoutCompanyInput
     sireInspections?: SireInspectionUncheckedCreateNestedManyWithoutCompanyInput
     pscInspections?: PscInspectionUncheckedCreateNestedManyWithoutCompanyInput
@@ -68363,7 +65666,6 @@ export namespace Prisma {
     smsDocuments?: SmsDocumentCreateNestedManyWithoutVesselInput
     incidents?: IncidentCreateNestedManyWithoutVesselInput
     nearMisses?: NearMissCreateNestedManyWithoutVesselInput
-    hazards?: HazardObservationCreateNestedManyWithoutVesselInput
     nonConformities?: NonConformityCreateNestedManyWithoutVesselInput
     sireInspections?: SireInspectionCreateNestedManyWithoutVesselInput
     pscInspections?: PscInspectionCreateNestedManyWithoutVesselInput
@@ -68397,7 +65699,6 @@ export namespace Prisma {
     smsDocuments?: SmsDocumentUncheckedCreateNestedManyWithoutVesselInput
     incidents?: IncidentUncheckedCreateNestedManyWithoutVesselInput
     nearMisses?: NearMissUncheckedCreateNestedManyWithoutVesselInput
-    hazards?: HazardObservationUncheckedCreateNestedManyWithoutVesselInput
     nonConformities?: NonConformityUncheckedCreateNestedManyWithoutVesselInput
     sireInspections?: SireInspectionUncheckedCreateNestedManyWithoutVesselInput
     pscInspections?: PscInspectionUncheckedCreateNestedManyWithoutVesselInput
@@ -68468,7 +65769,6 @@ export namespace Prisma {
     workflows?: WorkflowDefinitionUpdateManyWithoutCompanyNestedInput
     incidents?: IncidentUpdateManyWithoutCompanyNestedInput
     nearMisses?: NearMissUpdateManyWithoutCompanyNestedInput
-    hazards?: HazardObservationUpdateManyWithoutCompanyNestedInput
     nonConformities?: NonConformityUpdateManyWithoutCompanyNestedInput
     sireInspections?: SireInspectionUpdateManyWithoutCompanyNestedInput
     pscInspections?: PscInspectionUpdateManyWithoutCompanyNestedInput
@@ -68489,7 +65789,6 @@ export namespace Prisma {
     workflows?: WorkflowDefinitionUncheckedUpdateManyWithoutCompanyNestedInput
     incidents?: IncidentUncheckedUpdateManyWithoutCompanyNestedInput
     nearMisses?: NearMissUncheckedUpdateManyWithoutCompanyNestedInput
-    hazards?: HazardObservationUncheckedUpdateManyWithoutCompanyNestedInput
     nonConformities?: NonConformityUncheckedUpdateManyWithoutCompanyNestedInput
     sireInspections?: SireInspectionUncheckedUpdateManyWithoutCompanyNestedInput
     pscInspections?: PscInspectionUncheckedUpdateManyWithoutCompanyNestedInput
@@ -68534,7 +65833,6 @@ export namespace Prisma {
     smsDocuments?: SmsDocumentUpdateManyWithoutVesselNestedInput
     incidents?: IncidentUpdateManyWithoutVesselNestedInput
     nearMisses?: NearMissUpdateManyWithoutVesselNestedInput
-    hazards?: HazardObservationUpdateManyWithoutVesselNestedInput
     nonConformities?: NonConformityUpdateManyWithoutVesselNestedInput
     sireInspections?: SireInspectionUpdateManyWithoutVesselNestedInput
     pscInspections?: PscInspectionUpdateManyWithoutVesselNestedInput
@@ -68568,7 +65866,6 @@ export namespace Prisma {
     smsDocuments?: SmsDocumentUncheckedUpdateManyWithoutVesselNestedInput
     incidents?: IncidentUncheckedUpdateManyWithoutVesselNestedInput
     nearMisses?: NearMissUncheckedUpdateManyWithoutVesselNestedInput
-    hazards?: HazardObservationUncheckedUpdateManyWithoutVesselNestedInput
     nonConformities?: NonConformityUncheckedUpdateManyWithoutVesselNestedInput
     sireInspections?: SireInspectionUncheckedUpdateManyWithoutVesselNestedInput
     pscInspections?: PscInspectionUncheckedUpdateManyWithoutVesselNestedInput
@@ -68717,7 +66014,6 @@ export namespace Prisma {
     workflows?: WorkflowDefinitionCreateNestedManyWithoutCompanyInput
     incidents?: IncidentCreateNestedManyWithoutCompanyInput
     nearMisses?: NearMissCreateNestedManyWithoutCompanyInput
-    hazards?: HazardObservationCreateNestedManyWithoutCompanyInput
     nonConformities?: NonConformityCreateNestedManyWithoutCompanyInput
     sireInspections?: SireInspectionCreateNestedManyWithoutCompanyInput
     pscInspections?: PscInspectionCreateNestedManyWithoutCompanyInput
@@ -68738,7 +66034,6 @@ export namespace Prisma {
     workflows?: WorkflowDefinitionUncheckedCreateNestedManyWithoutCompanyInput
     incidents?: IncidentUncheckedCreateNestedManyWithoutCompanyInput
     nearMisses?: NearMissUncheckedCreateNestedManyWithoutCompanyInput
-    hazards?: HazardObservationUncheckedCreateNestedManyWithoutCompanyInput
     nonConformities?: NonConformityUncheckedCreateNestedManyWithoutCompanyInput
     sireInspections?: SireInspectionUncheckedCreateNestedManyWithoutCompanyInput
     pscInspections?: PscInspectionUncheckedCreateNestedManyWithoutCompanyInput
@@ -68777,7 +66072,6 @@ export namespace Prisma {
     smsDocuments?: SmsDocumentCreateNestedManyWithoutVesselInput
     incidents?: IncidentCreateNestedManyWithoutVesselInput
     nearMisses?: NearMissCreateNestedManyWithoutVesselInput
-    hazards?: HazardObservationCreateNestedManyWithoutVesselInput
     nonConformities?: NonConformityCreateNestedManyWithoutVesselInput
     sireInspections?: SireInspectionCreateNestedManyWithoutVesselInput
     pscInspections?: PscInspectionCreateNestedManyWithoutVesselInput
@@ -68811,7 +66105,6 @@ export namespace Prisma {
     smsDocuments?: SmsDocumentUncheckedCreateNestedManyWithoutVesselInput
     incidents?: IncidentUncheckedCreateNestedManyWithoutVesselInput
     nearMisses?: NearMissUncheckedCreateNestedManyWithoutVesselInput
-    hazards?: HazardObservationUncheckedCreateNestedManyWithoutVesselInput
     nonConformities?: NonConformityUncheckedCreateNestedManyWithoutVesselInput
     sireInspections?: SireInspectionUncheckedCreateNestedManyWithoutVesselInput
     pscInspections?: PscInspectionUncheckedCreateNestedManyWithoutVesselInput
@@ -68884,7 +66177,6 @@ export namespace Prisma {
     workflows?: WorkflowDefinitionUpdateManyWithoutCompanyNestedInput
     incidents?: IncidentUpdateManyWithoutCompanyNestedInput
     nearMisses?: NearMissUpdateManyWithoutCompanyNestedInput
-    hazards?: HazardObservationUpdateManyWithoutCompanyNestedInput
     nonConformities?: NonConformityUpdateManyWithoutCompanyNestedInput
     sireInspections?: SireInspectionUpdateManyWithoutCompanyNestedInput
     pscInspections?: PscInspectionUpdateManyWithoutCompanyNestedInput
@@ -68905,7 +66197,6 @@ export namespace Prisma {
     workflows?: WorkflowDefinitionUncheckedUpdateManyWithoutCompanyNestedInput
     incidents?: IncidentUncheckedUpdateManyWithoutCompanyNestedInput
     nearMisses?: NearMissUncheckedUpdateManyWithoutCompanyNestedInput
-    hazards?: HazardObservationUncheckedUpdateManyWithoutCompanyNestedInput
     nonConformities?: NonConformityUncheckedUpdateManyWithoutCompanyNestedInput
     sireInspections?: SireInspectionUncheckedUpdateManyWithoutCompanyNestedInput
     pscInspections?: PscInspectionUncheckedUpdateManyWithoutCompanyNestedInput
@@ -68950,7 +66241,6 @@ export namespace Prisma {
     smsDocuments?: SmsDocumentUpdateManyWithoutVesselNestedInput
     incidents?: IncidentUpdateManyWithoutVesselNestedInput
     nearMisses?: NearMissUpdateManyWithoutVesselNestedInput
-    hazards?: HazardObservationUpdateManyWithoutVesselNestedInput
     nonConformities?: NonConformityUpdateManyWithoutVesselNestedInput
     sireInspections?: SireInspectionUpdateManyWithoutVesselNestedInput
     pscInspections?: PscInspectionUpdateManyWithoutVesselNestedInput
@@ -68984,7 +66274,6 @@ export namespace Prisma {
     smsDocuments?: SmsDocumentUncheckedUpdateManyWithoutVesselNestedInput
     incidents?: IncidentUncheckedUpdateManyWithoutVesselNestedInput
     nearMisses?: NearMissUncheckedUpdateManyWithoutVesselNestedInput
-    hazards?: HazardObservationUncheckedUpdateManyWithoutVesselNestedInput
     nonConformities?: NonConformityUncheckedUpdateManyWithoutVesselNestedInput
     sireInspections?: SireInspectionUncheckedUpdateManyWithoutVesselNestedInput
     pscInspections?: PscInspectionUncheckedUpdateManyWithoutVesselNestedInput
@@ -69138,7 +66427,6 @@ export namespace Prisma {
     workflows?: WorkflowDefinitionCreateNestedManyWithoutCompanyInput
     incidents?: IncidentCreateNestedManyWithoutCompanyInput
     nearMisses?: NearMissCreateNestedManyWithoutCompanyInput
-    hazards?: HazardObservationCreateNestedManyWithoutCompanyInput
     nonConformities?: NonConformityCreateNestedManyWithoutCompanyInput
     sireInspections?: SireInspectionCreateNestedManyWithoutCompanyInput
     pscInspections?: PscInspectionCreateNestedManyWithoutCompanyInput
@@ -69159,7 +66447,6 @@ export namespace Prisma {
     workflows?: WorkflowDefinitionUncheckedCreateNestedManyWithoutCompanyInput
     incidents?: IncidentUncheckedCreateNestedManyWithoutCompanyInput
     nearMisses?: NearMissUncheckedCreateNestedManyWithoutCompanyInput
-    hazards?: HazardObservationUncheckedCreateNestedManyWithoutCompanyInput
     nonConformities?: NonConformityUncheckedCreateNestedManyWithoutCompanyInput
     sireInspections?: SireInspectionUncheckedCreateNestedManyWithoutCompanyInput
     pscInspections?: PscInspectionUncheckedCreateNestedManyWithoutCompanyInput
@@ -69198,7 +66485,6 @@ export namespace Prisma {
     smsDocuments?: SmsDocumentCreateNestedManyWithoutVesselInput
     incidents?: IncidentCreateNestedManyWithoutVesselInput
     nearMisses?: NearMissCreateNestedManyWithoutVesselInput
-    hazards?: HazardObservationCreateNestedManyWithoutVesselInput
     nonConformities?: NonConformityCreateNestedManyWithoutVesselInput
     sireInspections?: SireInspectionCreateNestedManyWithoutVesselInput
     pscInspections?: PscInspectionCreateNestedManyWithoutVesselInput
@@ -69232,7 +66518,6 @@ export namespace Prisma {
     smsDocuments?: SmsDocumentUncheckedCreateNestedManyWithoutVesselInput
     incidents?: IncidentUncheckedCreateNestedManyWithoutVesselInput
     nearMisses?: NearMissUncheckedCreateNestedManyWithoutVesselInput
-    hazards?: HazardObservationUncheckedCreateNestedManyWithoutVesselInput
     nonConformities?: NonConformityUncheckedCreateNestedManyWithoutVesselInput
     sireInspections?: SireInspectionUncheckedCreateNestedManyWithoutVesselInput
     pscInspections?: PscInspectionUncheckedCreateNestedManyWithoutVesselInput
@@ -69305,7 +66590,6 @@ export namespace Prisma {
     workflows?: WorkflowDefinitionUpdateManyWithoutCompanyNestedInput
     incidents?: IncidentUpdateManyWithoutCompanyNestedInput
     nearMisses?: NearMissUpdateManyWithoutCompanyNestedInput
-    hazards?: HazardObservationUpdateManyWithoutCompanyNestedInput
     nonConformities?: NonConformityUpdateManyWithoutCompanyNestedInput
     sireInspections?: SireInspectionUpdateManyWithoutCompanyNestedInput
     pscInspections?: PscInspectionUpdateManyWithoutCompanyNestedInput
@@ -69326,7 +66610,6 @@ export namespace Prisma {
     workflows?: WorkflowDefinitionUncheckedUpdateManyWithoutCompanyNestedInput
     incidents?: IncidentUncheckedUpdateManyWithoutCompanyNestedInput
     nearMisses?: NearMissUncheckedUpdateManyWithoutCompanyNestedInput
-    hazards?: HazardObservationUncheckedUpdateManyWithoutCompanyNestedInput
     nonConformities?: NonConformityUncheckedUpdateManyWithoutCompanyNestedInput
     sireInspections?: SireInspectionUncheckedUpdateManyWithoutCompanyNestedInput
     pscInspections?: PscInspectionUncheckedUpdateManyWithoutCompanyNestedInput
@@ -69371,7 +66654,6 @@ export namespace Prisma {
     smsDocuments?: SmsDocumentUpdateManyWithoutVesselNestedInput
     incidents?: IncidentUpdateManyWithoutVesselNestedInput
     nearMisses?: NearMissUpdateManyWithoutVesselNestedInput
-    hazards?: HazardObservationUpdateManyWithoutVesselNestedInput
     nonConformities?: NonConformityUpdateManyWithoutVesselNestedInput
     sireInspections?: SireInspectionUpdateManyWithoutVesselNestedInput
     pscInspections?: PscInspectionUpdateManyWithoutVesselNestedInput
@@ -69405,7 +66687,6 @@ export namespace Prisma {
     smsDocuments?: SmsDocumentUncheckedUpdateManyWithoutVesselNestedInput
     incidents?: IncidentUncheckedUpdateManyWithoutVesselNestedInput
     nearMisses?: NearMissUncheckedUpdateManyWithoutVesselNestedInput
-    hazards?: HazardObservationUncheckedUpdateManyWithoutVesselNestedInput
     nonConformities?: NonConformityUncheckedUpdateManyWithoutVesselNestedInput
     sireInspections?: SireInspectionUncheckedUpdateManyWithoutVesselNestedInput
     pscInspections?: PscInspectionUncheckedUpdateManyWithoutVesselNestedInput
@@ -69638,8 +66919,7 @@ export namespace Prisma {
     description: string
     investigationDetails?: string | null
     rootCauseCategory?: $Enums.RootCauseCategory | null
-    humanFactorPrimary?: $Enums.HumanFactor | null
-    humanFactorContributing?: IncidentCreatehumanFactorContributingInput | $Enums.HumanFactor[]
+    rootCauseSubCategory?: string | null
     immediateAction?: string | null
     rootCause?: string | null
     closedAt?: Date | string | null
@@ -69647,6 +66927,8 @@ export namespace Prisma {
     verifiedByName?: string | null
     verifiedAt?: Date | string | null
     reportedById?: string | null
+    reporterName?: string | null
+    reporterPosition?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -69659,6 +66941,9 @@ export namespace Prisma {
     id?: string
     refNo: string
     title: string
+    kind?: $Enums.NearMissKind
+    horCategory?: $Enums.HazardType | null
+    stopAuthorityExercised?: boolean
     vesselId?: string | null
     occurredAt: Date | string
     location?: string | null
@@ -69667,37 +66952,14 @@ export namespace Prisma {
     potentialSeverity: $Enums.Severity
     immediateAction?: string | null
     rootCauseCategory: $Enums.RootCauseCategory
-    humanFactorPrimary?: $Enums.HumanFactor | null
-    humanFactorContributing?: NearMissCreatehumanFactorContributingInput | $Enums.HumanFactor[]
+    rootCauseSubCategory?: string | null
     status?: $Enums.NearMissStatus
     closedAt?: Date | string | null
     companyComments?: string | null
     reviewedAt?: Date | string | null
     reportedById?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    createdBy?: string | null
-    updatedBy?: string | null
-    deletedAt?: Date | string | null
-    deletedBy?: string | null
-  }
-
-  export type HazardObservationCreateManyCompanyInput = {
-    id?: string
-    refNo: string
-    title: string
-    vesselId?: string | null
-    observedAt: Date | string
-    location?: string | null
-    category: string
-    hazardType: $Enums.HazardType
-    riskLevel: $Enums.Severity
-    observation: string
-    immediateAction?: string | null
-    correctiveAction?: string | null
-    status?: $Enums.HazardStatus
-    closedAt?: Date | string | null
-    reportedById?: string | null
+    reporterName?: string | null
+    reporterPosition?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -69712,6 +66974,7 @@ export namespace Prisma {
     title: string
     vesselId?: string | null
     source: $Enums.NcrSource
+    sourceEntityId?: string | null
     requirement: string
     description: string
     severity: $Enums.Severity
@@ -69720,6 +66983,7 @@ export namespace Prisma {
     rootCause?: string | null
     correctiveAction?: string | null
     verification?: string | null
+    personInCharge?: string | null
     status?: $Enums.NcrStatus
     closedAt?: Date | string | null
     raisedById?: string | null
@@ -69849,7 +67113,6 @@ export namespace Prisma {
     ownedDocs?: SmsDocumentUpdateManyWithoutOwnerNestedInput
     reportedIncidents?: IncidentUpdateManyWithoutReportedByNestedInput
     reportedNearMisses?: NearMissUpdateManyWithoutReportedByNestedInput
-    reportedHazards?: HazardObservationUpdateManyWithoutReportedByNestedInput
     raisedNcrs?: NonConformityUpdateManyWithoutRaisedByNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
   }
@@ -69873,7 +67136,6 @@ export namespace Prisma {
     ownedDocs?: SmsDocumentUncheckedUpdateManyWithoutOwnerNestedInput
     reportedIncidents?: IncidentUncheckedUpdateManyWithoutReportedByNestedInput
     reportedNearMisses?: NearMissUncheckedUpdateManyWithoutReportedByNestedInput
-    reportedHazards?: HazardObservationUncheckedUpdateManyWithoutReportedByNestedInput
     raisedNcrs?: NonConformityUncheckedUpdateManyWithoutRaisedByNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -69951,7 +67213,6 @@ export namespace Prisma {
     smsDocuments?: SmsDocumentUpdateManyWithoutVesselNestedInput
     incidents?: IncidentUpdateManyWithoutVesselNestedInput
     nearMisses?: NearMissUpdateManyWithoutVesselNestedInput
-    hazards?: HazardObservationUpdateManyWithoutVesselNestedInput
     nonConformities?: NonConformityUpdateManyWithoutVesselNestedInput
     sireInspections?: SireInspectionUpdateManyWithoutVesselNestedInput
     pscInspections?: PscInspectionUpdateManyWithoutVesselNestedInput
@@ -69985,7 +67246,6 @@ export namespace Prisma {
     smsDocuments?: SmsDocumentUncheckedUpdateManyWithoutVesselNestedInput
     incidents?: IncidentUncheckedUpdateManyWithoutVesselNestedInput
     nearMisses?: NearMissUncheckedUpdateManyWithoutVesselNestedInput
-    hazards?: HazardObservationUncheckedUpdateManyWithoutVesselNestedInput
     nonConformities?: NonConformityUncheckedUpdateManyWithoutVesselNestedInput
     sireInspections?: SireInspectionUncheckedUpdateManyWithoutVesselNestedInput
     pscInspections?: PscInspectionUncheckedUpdateManyWithoutVesselNestedInput
@@ -70125,14 +67385,15 @@ export namespace Prisma {
     description?: StringFieldUpdateOperationsInput | string
     investigationDetails?: NullableStringFieldUpdateOperationsInput | string | null
     rootCauseCategory?: NullableEnumRootCauseCategoryFieldUpdateOperationsInput | $Enums.RootCauseCategory | null
-    humanFactorPrimary?: NullableEnumHumanFactorFieldUpdateOperationsInput | $Enums.HumanFactor | null
-    humanFactorContributing?: IncidentUpdatehumanFactorContributingInput | $Enums.HumanFactor[]
+    rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
     immediateAction?: NullableStringFieldUpdateOperationsInput | string | null
     rootCause?: NullableStringFieldUpdateOperationsInput | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     verifiedById?: NullableStringFieldUpdateOperationsInput | string | null
     verifiedByName?: NullableStringFieldUpdateOperationsInput | string | null
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reporterName?: NullableStringFieldUpdateOperationsInput | string | null
+    reporterPosition?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -70157,8 +67418,7 @@ export namespace Prisma {
     description?: StringFieldUpdateOperationsInput | string
     investigationDetails?: NullableStringFieldUpdateOperationsInput | string | null
     rootCauseCategory?: NullableEnumRootCauseCategoryFieldUpdateOperationsInput | $Enums.RootCauseCategory | null
-    humanFactorPrimary?: NullableEnumHumanFactorFieldUpdateOperationsInput | $Enums.HumanFactor | null
-    humanFactorContributing?: IncidentUpdatehumanFactorContributingInput | $Enums.HumanFactor[]
+    rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
     immediateAction?: NullableStringFieldUpdateOperationsInput | string | null
     rootCause?: NullableStringFieldUpdateOperationsInput | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -70166,6 +67426,8 @@ export namespace Prisma {
     verifiedByName?: NullableStringFieldUpdateOperationsInput | string | null
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     reportedById?: NullableStringFieldUpdateOperationsInput | string | null
+    reporterName?: NullableStringFieldUpdateOperationsInput | string | null
+    reporterPosition?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -70188,8 +67450,7 @@ export namespace Prisma {
     description?: StringFieldUpdateOperationsInput | string
     investigationDetails?: NullableStringFieldUpdateOperationsInput | string | null
     rootCauseCategory?: NullableEnumRootCauseCategoryFieldUpdateOperationsInput | $Enums.RootCauseCategory | null
-    humanFactorPrimary?: NullableEnumHumanFactorFieldUpdateOperationsInput | $Enums.HumanFactor | null
-    humanFactorContributing?: IncidentUpdatehumanFactorContributingInput | $Enums.HumanFactor[]
+    rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
     immediateAction?: NullableStringFieldUpdateOperationsInput | string | null
     rootCause?: NullableStringFieldUpdateOperationsInput | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -70197,6 +67458,8 @@ export namespace Prisma {
     verifiedByName?: NullableStringFieldUpdateOperationsInput | string | null
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     reportedById?: NullableStringFieldUpdateOperationsInput | string | null
+    reporterName?: NullableStringFieldUpdateOperationsInput | string | null
+    reporterPosition?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -70209,6 +67472,9 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     refNo?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
+    kind?: EnumNearMissKindFieldUpdateOperationsInput | $Enums.NearMissKind
+    horCategory?: NullableEnumHazardTypeFieldUpdateOperationsInput | $Enums.HazardType | null
+    stopAuthorityExercised?: BoolFieldUpdateOperationsInput | boolean
     occurredAt?: DateTimeFieldUpdateOperationsInput | Date | string
     location?: NullableStringFieldUpdateOperationsInput | string | null
     description?: StringFieldUpdateOperationsInput | string
@@ -70216,12 +67482,13 @@ export namespace Prisma {
     potentialSeverity?: EnumSeverityFieldUpdateOperationsInput | $Enums.Severity
     immediateAction?: NullableStringFieldUpdateOperationsInput | string | null
     rootCauseCategory?: EnumRootCauseCategoryFieldUpdateOperationsInput | $Enums.RootCauseCategory
-    humanFactorPrimary?: NullableEnumHumanFactorFieldUpdateOperationsInput | $Enums.HumanFactor | null
-    humanFactorContributing?: NearMissUpdatehumanFactorContributingInput | $Enums.HumanFactor[]
+    rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumNearMissStatusFieldUpdateOperationsInput | $Enums.NearMissStatus
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     companyComments?: NullableStringFieldUpdateOperationsInput | string | null
     reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reporterName?: NullableStringFieldUpdateOperationsInput | string | null
+    reporterPosition?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -70236,6 +67503,9 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     refNo?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
+    kind?: EnumNearMissKindFieldUpdateOperationsInput | $Enums.NearMissKind
+    horCategory?: NullableEnumHazardTypeFieldUpdateOperationsInput | $Enums.HazardType | null
+    stopAuthorityExercised?: BoolFieldUpdateOperationsInput | boolean
     vesselId?: NullableStringFieldUpdateOperationsInput | string | null
     occurredAt?: DateTimeFieldUpdateOperationsInput | Date | string
     location?: NullableStringFieldUpdateOperationsInput | string | null
@@ -70244,13 +67514,14 @@ export namespace Prisma {
     potentialSeverity?: EnumSeverityFieldUpdateOperationsInput | $Enums.Severity
     immediateAction?: NullableStringFieldUpdateOperationsInput | string | null
     rootCauseCategory?: EnumRootCauseCategoryFieldUpdateOperationsInput | $Enums.RootCauseCategory
-    humanFactorPrimary?: NullableEnumHumanFactorFieldUpdateOperationsInput | $Enums.HumanFactor | null
-    humanFactorContributing?: NearMissUpdatehumanFactorContributingInput | $Enums.HumanFactor[]
+    rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumNearMissStatusFieldUpdateOperationsInput | $Enums.NearMissStatus
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     companyComments?: NullableStringFieldUpdateOperationsInput | string | null
     reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     reportedById?: NullableStringFieldUpdateOperationsInput | string | null
+    reporterName?: NullableStringFieldUpdateOperationsInput | string | null
+    reporterPosition?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -70263,6 +67534,9 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     refNo?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
+    kind?: EnumNearMissKindFieldUpdateOperationsInput | $Enums.NearMissKind
+    horCategory?: NullableEnumHazardTypeFieldUpdateOperationsInput | $Enums.HazardType | null
+    stopAuthorityExercised?: BoolFieldUpdateOperationsInput | boolean
     vesselId?: NullableStringFieldUpdateOperationsInput | string | null
     occurredAt?: DateTimeFieldUpdateOperationsInput | Date | string
     location?: NullableStringFieldUpdateOperationsInput | string | null
@@ -70271,85 +67545,14 @@ export namespace Prisma {
     potentialSeverity?: EnumSeverityFieldUpdateOperationsInput | $Enums.Severity
     immediateAction?: NullableStringFieldUpdateOperationsInput | string | null
     rootCauseCategory?: EnumRootCauseCategoryFieldUpdateOperationsInput | $Enums.RootCauseCategory
-    humanFactorPrimary?: NullableEnumHumanFactorFieldUpdateOperationsInput | $Enums.HumanFactor | null
-    humanFactorContributing?: NearMissUpdatehumanFactorContributingInput | $Enums.HumanFactor[]
+    rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumNearMissStatusFieldUpdateOperationsInput | $Enums.NearMissStatus
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     companyComments?: NullableStringFieldUpdateOperationsInput | string | null
     reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     reportedById?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
-    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
-    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
-  }
-
-  export type HazardObservationUpdateWithoutCompanyInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    refNo?: StringFieldUpdateOperationsInput | string
-    title?: StringFieldUpdateOperationsInput | string
-    observedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    location?: NullableStringFieldUpdateOperationsInput | string | null
-    category?: StringFieldUpdateOperationsInput | string
-    hazardType?: EnumHazardTypeFieldUpdateOperationsInput | $Enums.HazardType
-    riskLevel?: EnumSeverityFieldUpdateOperationsInput | $Enums.Severity
-    observation?: StringFieldUpdateOperationsInput | string
-    immediateAction?: NullableStringFieldUpdateOperationsInput | string | null
-    correctiveAction?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: EnumHazardStatusFieldUpdateOperationsInput | $Enums.HazardStatus
-    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
-    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
-    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
-    vessel?: VesselUpdateOneWithoutHazardsNestedInput
-    reportedBy?: UserUpdateOneWithoutReportedHazardsNestedInput
-  }
-
-  export type HazardObservationUncheckedUpdateWithoutCompanyInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    refNo?: StringFieldUpdateOperationsInput | string
-    title?: StringFieldUpdateOperationsInput | string
-    vesselId?: NullableStringFieldUpdateOperationsInput | string | null
-    observedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    location?: NullableStringFieldUpdateOperationsInput | string | null
-    category?: StringFieldUpdateOperationsInput | string
-    hazardType?: EnumHazardTypeFieldUpdateOperationsInput | $Enums.HazardType
-    riskLevel?: EnumSeverityFieldUpdateOperationsInput | $Enums.Severity
-    observation?: StringFieldUpdateOperationsInput | string
-    immediateAction?: NullableStringFieldUpdateOperationsInput | string | null
-    correctiveAction?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: EnumHazardStatusFieldUpdateOperationsInput | $Enums.HazardStatus
-    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    reportedById?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
-    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
-    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
-  }
-
-  export type HazardObservationUncheckedUpdateManyWithoutCompanyInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    refNo?: StringFieldUpdateOperationsInput | string
-    title?: StringFieldUpdateOperationsInput | string
-    vesselId?: NullableStringFieldUpdateOperationsInput | string | null
-    observedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    location?: NullableStringFieldUpdateOperationsInput | string | null
-    category?: StringFieldUpdateOperationsInput | string
-    hazardType?: EnumHazardTypeFieldUpdateOperationsInput | $Enums.HazardType
-    riskLevel?: EnumSeverityFieldUpdateOperationsInput | $Enums.Severity
-    observation?: StringFieldUpdateOperationsInput | string
-    immediateAction?: NullableStringFieldUpdateOperationsInput | string | null
-    correctiveAction?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: EnumHazardStatusFieldUpdateOperationsInput | $Enums.HazardStatus
-    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    reportedById?: NullableStringFieldUpdateOperationsInput | string | null
+    reporterName?: NullableStringFieldUpdateOperationsInput | string | null
+    reporterPosition?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -70363,6 +67566,7 @@ export namespace Prisma {
     refNo?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     source?: EnumNcrSourceFieldUpdateOperationsInput | $Enums.NcrSource
+    sourceEntityId?: NullableStringFieldUpdateOperationsInput | string | null
     requirement?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     severity?: EnumSeverityFieldUpdateOperationsInput | $Enums.Severity
@@ -70371,6 +67575,7 @@ export namespace Prisma {
     rootCause?: NullableStringFieldUpdateOperationsInput | string | null
     correctiveAction?: NullableStringFieldUpdateOperationsInput | string | null
     verification?: NullableStringFieldUpdateOperationsInput | string | null
+    personInCharge?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumNcrStatusFieldUpdateOperationsInput | $Enums.NcrStatus
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -70389,6 +67594,7 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     vesselId?: NullableStringFieldUpdateOperationsInput | string | null
     source?: EnumNcrSourceFieldUpdateOperationsInput | $Enums.NcrSource
+    sourceEntityId?: NullableStringFieldUpdateOperationsInput | string | null
     requirement?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     severity?: EnumSeverityFieldUpdateOperationsInput | $Enums.Severity
@@ -70397,6 +67603,7 @@ export namespace Prisma {
     rootCause?: NullableStringFieldUpdateOperationsInput | string | null
     correctiveAction?: NullableStringFieldUpdateOperationsInput | string | null
     verification?: NullableStringFieldUpdateOperationsInput | string | null
+    personInCharge?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumNcrStatusFieldUpdateOperationsInput | $Enums.NcrStatus
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     raisedById?: NullableStringFieldUpdateOperationsInput | string | null
@@ -70414,6 +67621,7 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     vesselId?: NullableStringFieldUpdateOperationsInput | string | null
     source?: EnumNcrSourceFieldUpdateOperationsInput | $Enums.NcrSource
+    sourceEntityId?: NullableStringFieldUpdateOperationsInput | string | null
     requirement?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     severity?: EnumSeverityFieldUpdateOperationsInput | $Enums.Severity
@@ -70422,6 +67630,7 @@ export namespace Prisma {
     rootCause?: NullableStringFieldUpdateOperationsInput | string | null
     correctiveAction?: NullableStringFieldUpdateOperationsInput | string | null
     verification?: NullableStringFieldUpdateOperationsInput | string | null
+    personInCharge?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumNcrStatusFieldUpdateOperationsInput | $Enums.NcrStatus
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     raisedById?: NullableStringFieldUpdateOperationsInput | string | null
@@ -70776,14 +67985,15 @@ export namespace Prisma {
     description: string
     investigationDetails?: string | null
     rootCauseCategory?: $Enums.RootCauseCategory | null
-    humanFactorPrimary?: $Enums.HumanFactor | null
-    humanFactorContributing?: IncidentCreatehumanFactorContributingInput | $Enums.HumanFactor[]
+    rootCauseSubCategory?: string | null
     immediateAction?: string | null
     rootCause?: string | null
     closedAt?: Date | string | null
     verifiedById?: string | null
     verifiedByName?: string | null
     verifiedAt?: Date | string | null
+    reporterName?: string | null
+    reporterPosition?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -70797,6 +68007,9 @@ export namespace Prisma {
     companyId: string
     refNo: string
     title: string
+    kind?: $Enums.NearMissKind
+    horCategory?: $Enums.HazardType | null
+    stopAuthorityExercised?: boolean
     vesselId?: string | null
     occurredAt: Date | string
     location?: string | null
@@ -70805,36 +68018,13 @@ export namespace Prisma {
     potentialSeverity: $Enums.Severity
     immediateAction?: string | null
     rootCauseCategory: $Enums.RootCauseCategory
-    humanFactorPrimary?: $Enums.HumanFactor | null
-    humanFactorContributing?: NearMissCreatehumanFactorContributingInput | $Enums.HumanFactor[]
+    rootCauseSubCategory?: string | null
     status?: $Enums.NearMissStatus
     closedAt?: Date | string | null
     companyComments?: string | null
     reviewedAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    createdBy?: string | null
-    updatedBy?: string | null
-    deletedAt?: Date | string | null
-    deletedBy?: string | null
-  }
-
-  export type HazardObservationCreateManyReportedByInput = {
-    id?: string
-    companyId: string
-    refNo: string
-    title: string
-    vesselId?: string | null
-    observedAt: Date | string
-    location?: string | null
-    category: string
-    hazardType: $Enums.HazardType
-    riskLevel: $Enums.Severity
-    observation: string
-    immediateAction?: string | null
-    correctiveAction?: string | null
-    status?: $Enums.HazardStatus
-    closedAt?: Date | string | null
+    reporterName?: string | null
+    reporterPosition?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -70850,6 +68040,7 @@ export namespace Prisma {
     title: string
     vesselId?: string | null
     source: $Enums.NcrSource
+    sourceEntityId?: string | null
     requirement: string
     description: string
     severity: $Enums.Severity
@@ -70858,6 +68049,7 @@ export namespace Prisma {
     rootCause?: string | null
     correctiveAction?: string | null
     verification?: string | null
+    personInCharge?: string | null
     status?: $Enums.NcrStatus
     closedAt?: Date | string | null
     createdAt?: Date | string
@@ -70961,14 +68153,15 @@ export namespace Prisma {
     description?: StringFieldUpdateOperationsInput | string
     investigationDetails?: NullableStringFieldUpdateOperationsInput | string | null
     rootCauseCategory?: NullableEnumRootCauseCategoryFieldUpdateOperationsInput | $Enums.RootCauseCategory | null
-    humanFactorPrimary?: NullableEnumHumanFactorFieldUpdateOperationsInput | $Enums.HumanFactor | null
-    humanFactorContributing?: IncidentUpdatehumanFactorContributingInput | $Enums.HumanFactor[]
+    rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
     immediateAction?: NullableStringFieldUpdateOperationsInput | string | null
     rootCause?: NullableStringFieldUpdateOperationsInput | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     verifiedById?: NullableStringFieldUpdateOperationsInput | string | null
     verifiedByName?: NullableStringFieldUpdateOperationsInput | string | null
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reporterName?: NullableStringFieldUpdateOperationsInput | string | null
+    reporterPosition?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -70994,14 +68187,15 @@ export namespace Prisma {
     description?: StringFieldUpdateOperationsInput | string
     investigationDetails?: NullableStringFieldUpdateOperationsInput | string | null
     rootCauseCategory?: NullableEnumRootCauseCategoryFieldUpdateOperationsInput | $Enums.RootCauseCategory | null
-    humanFactorPrimary?: NullableEnumHumanFactorFieldUpdateOperationsInput | $Enums.HumanFactor | null
-    humanFactorContributing?: IncidentUpdatehumanFactorContributingInput | $Enums.HumanFactor[]
+    rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
     immediateAction?: NullableStringFieldUpdateOperationsInput | string | null
     rootCause?: NullableStringFieldUpdateOperationsInput | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     verifiedById?: NullableStringFieldUpdateOperationsInput | string | null
     verifiedByName?: NullableStringFieldUpdateOperationsInput | string | null
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reporterName?: NullableStringFieldUpdateOperationsInput | string | null
+    reporterPosition?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -71025,14 +68219,15 @@ export namespace Prisma {
     description?: StringFieldUpdateOperationsInput | string
     investigationDetails?: NullableStringFieldUpdateOperationsInput | string | null
     rootCauseCategory?: NullableEnumRootCauseCategoryFieldUpdateOperationsInput | $Enums.RootCauseCategory | null
-    humanFactorPrimary?: NullableEnumHumanFactorFieldUpdateOperationsInput | $Enums.HumanFactor | null
-    humanFactorContributing?: IncidentUpdatehumanFactorContributingInput | $Enums.HumanFactor[]
+    rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
     immediateAction?: NullableStringFieldUpdateOperationsInput | string | null
     rootCause?: NullableStringFieldUpdateOperationsInput | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     verifiedById?: NullableStringFieldUpdateOperationsInput | string | null
     verifiedByName?: NullableStringFieldUpdateOperationsInput | string | null
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reporterName?: NullableStringFieldUpdateOperationsInput | string | null
+    reporterPosition?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -71045,6 +68240,9 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     refNo?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
+    kind?: EnumNearMissKindFieldUpdateOperationsInput | $Enums.NearMissKind
+    horCategory?: NullableEnumHazardTypeFieldUpdateOperationsInput | $Enums.HazardType | null
+    stopAuthorityExercised?: BoolFieldUpdateOperationsInput | boolean
     occurredAt?: DateTimeFieldUpdateOperationsInput | Date | string
     location?: NullableStringFieldUpdateOperationsInput | string | null
     description?: StringFieldUpdateOperationsInput | string
@@ -71052,12 +68250,13 @@ export namespace Prisma {
     potentialSeverity?: EnumSeverityFieldUpdateOperationsInput | $Enums.Severity
     immediateAction?: NullableStringFieldUpdateOperationsInput | string | null
     rootCauseCategory?: EnumRootCauseCategoryFieldUpdateOperationsInput | $Enums.RootCauseCategory
-    humanFactorPrimary?: NullableEnumHumanFactorFieldUpdateOperationsInput | $Enums.HumanFactor | null
-    humanFactorContributing?: NearMissUpdatehumanFactorContributingInput | $Enums.HumanFactor[]
+    rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumNearMissStatusFieldUpdateOperationsInput | $Enums.NearMissStatus
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     companyComments?: NullableStringFieldUpdateOperationsInput | string | null
     reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reporterName?: NullableStringFieldUpdateOperationsInput | string | null
+    reporterPosition?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -71073,6 +68272,9 @@ export namespace Prisma {
     companyId?: StringFieldUpdateOperationsInput | string
     refNo?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
+    kind?: EnumNearMissKindFieldUpdateOperationsInput | $Enums.NearMissKind
+    horCategory?: NullableEnumHazardTypeFieldUpdateOperationsInput | $Enums.HazardType | null
+    stopAuthorityExercised?: BoolFieldUpdateOperationsInput | boolean
     vesselId?: NullableStringFieldUpdateOperationsInput | string | null
     occurredAt?: DateTimeFieldUpdateOperationsInput | Date | string
     location?: NullableStringFieldUpdateOperationsInput | string | null
@@ -71081,12 +68283,13 @@ export namespace Prisma {
     potentialSeverity?: EnumSeverityFieldUpdateOperationsInput | $Enums.Severity
     immediateAction?: NullableStringFieldUpdateOperationsInput | string | null
     rootCauseCategory?: EnumRootCauseCategoryFieldUpdateOperationsInput | $Enums.RootCauseCategory
-    humanFactorPrimary?: NullableEnumHumanFactorFieldUpdateOperationsInput | $Enums.HumanFactor | null
-    humanFactorContributing?: NearMissUpdatehumanFactorContributingInput | $Enums.HumanFactor[]
+    rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumNearMissStatusFieldUpdateOperationsInput | $Enums.NearMissStatus
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     companyComments?: NullableStringFieldUpdateOperationsInput | string | null
     reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reporterName?: NullableStringFieldUpdateOperationsInput | string | null
+    reporterPosition?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -71100,6 +68303,9 @@ export namespace Prisma {
     companyId?: StringFieldUpdateOperationsInput | string
     refNo?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
+    kind?: EnumNearMissKindFieldUpdateOperationsInput | $Enums.NearMissKind
+    horCategory?: NullableEnumHazardTypeFieldUpdateOperationsInput | $Enums.HazardType | null
+    stopAuthorityExercised?: BoolFieldUpdateOperationsInput | boolean
     vesselId?: NullableStringFieldUpdateOperationsInput | string | null
     occurredAt?: DateTimeFieldUpdateOperationsInput | Date | string
     location?: NullableStringFieldUpdateOperationsInput | string | null
@@ -71108,84 +68314,13 @@ export namespace Prisma {
     potentialSeverity?: EnumSeverityFieldUpdateOperationsInput | $Enums.Severity
     immediateAction?: NullableStringFieldUpdateOperationsInput | string | null
     rootCauseCategory?: EnumRootCauseCategoryFieldUpdateOperationsInput | $Enums.RootCauseCategory
-    humanFactorPrimary?: NullableEnumHumanFactorFieldUpdateOperationsInput | $Enums.HumanFactor | null
-    humanFactorContributing?: NearMissUpdatehumanFactorContributingInput | $Enums.HumanFactor[]
+    rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumNearMissStatusFieldUpdateOperationsInput | $Enums.NearMissStatus
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     companyComments?: NullableStringFieldUpdateOperationsInput | string | null
     reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
-    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
-    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
-  }
-
-  export type HazardObservationUpdateWithoutReportedByInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    refNo?: StringFieldUpdateOperationsInput | string
-    title?: StringFieldUpdateOperationsInput | string
-    observedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    location?: NullableStringFieldUpdateOperationsInput | string | null
-    category?: StringFieldUpdateOperationsInput | string
-    hazardType?: EnumHazardTypeFieldUpdateOperationsInput | $Enums.HazardType
-    riskLevel?: EnumSeverityFieldUpdateOperationsInput | $Enums.Severity
-    observation?: StringFieldUpdateOperationsInput | string
-    immediateAction?: NullableStringFieldUpdateOperationsInput | string | null
-    correctiveAction?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: EnumHazardStatusFieldUpdateOperationsInput | $Enums.HazardStatus
-    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
-    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
-    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
-    company?: CompanyUpdateOneRequiredWithoutHazardsNestedInput
-    vessel?: VesselUpdateOneWithoutHazardsNestedInput
-  }
-
-  export type HazardObservationUncheckedUpdateWithoutReportedByInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    companyId?: StringFieldUpdateOperationsInput | string
-    refNo?: StringFieldUpdateOperationsInput | string
-    title?: StringFieldUpdateOperationsInput | string
-    vesselId?: NullableStringFieldUpdateOperationsInput | string | null
-    observedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    location?: NullableStringFieldUpdateOperationsInput | string | null
-    category?: StringFieldUpdateOperationsInput | string
-    hazardType?: EnumHazardTypeFieldUpdateOperationsInput | $Enums.HazardType
-    riskLevel?: EnumSeverityFieldUpdateOperationsInput | $Enums.Severity
-    observation?: StringFieldUpdateOperationsInput | string
-    immediateAction?: NullableStringFieldUpdateOperationsInput | string | null
-    correctiveAction?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: EnumHazardStatusFieldUpdateOperationsInput | $Enums.HazardStatus
-    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
-    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
-    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
-  }
-
-  export type HazardObservationUncheckedUpdateManyWithoutReportedByInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    companyId?: StringFieldUpdateOperationsInput | string
-    refNo?: StringFieldUpdateOperationsInput | string
-    title?: StringFieldUpdateOperationsInput | string
-    vesselId?: NullableStringFieldUpdateOperationsInput | string | null
-    observedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    location?: NullableStringFieldUpdateOperationsInput | string | null
-    category?: StringFieldUpdateOperationsInput | string
-    hazardType?: EnumHazardTypeFieldUpdateOperationsInput | $Enums.HazardType
-    riskLevel?: EnumSeverityFieldUpdateOperationsInput | $Enums.Severity
-    observation?: StringFieldUpdateOperationsInput | string
-    immediateAction?: NullableStringFieldUpdateOperationsInput | string | null
-    correctiveAction?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: EnumHazardStatusFieldUpdateOperationsInput | $Enums.HazardStatus
-    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reporterName?: NullableStringFieldUpdateOperationsInput | string | null
+    reporterPosition?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -71199,6 +68334,7 @@ export namespace Prisma {
     refNo?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     source?: EnumNcrSourceFieldUpdateOperationsInput | $Enums.NcrSource
+    sourceEntityId?: NullableStringFieldUpdateOperationsInput | string | null
     requirement?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     severity?: EnumSeverityFieldUpdateOperationsInput | $Enums.Severity
@@ -71207,6 +68343,7 @@ export namespace Prisma {
     rootCause?: NullableStringFieldUpdateOperationsInput | string | null
     correctiveAction?: NullableStringFieldUpdateOperationsInput | string | null
     verification?: NullableStringFieldUpdateOperationsInput | string | null
+    personInCharge?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumNcrStatusFieldUpdateOperationsInput | $Enums.NcrStatus
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -71226,6 +68363,7 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     vesselId?: NullableStringFieldUpdateOperationsInput | string | null
     source?: EnumNcrSourceFieldUpdateOperationsInput | $Enums.NcrSource
+    sourceEntityId?: NullableStringFieldUpdateOperationsInput | string | null
     requirement?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     severity?: EnumSeverityFieldUpdateOperationsInput | $Enums.Severity
@@ -71234,6 +68372,7 @@ export namespace Prisma {
     rootCause?: NullableStringFieldUpdateOperationsInput | string | null
     correctiveAction?: NullableStringFieldUpdateOperationsInput | string | null
     verification?: NullableStringFieldUpdateOperationsInput | string | null
+    personInCharge?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumNcrStatusFieldUpdateOperationsInput | $Enums.NcrStatus
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -71251,6 +68390,7 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     vesselId?: NullableStringFieldUpdateOperationsInput | string | null
     source?: EnumNcrSourceFieldUpdateOperationsInput | $Enums.NcrSource
+    sourceEntityId?: NullableStringFieldUpdateOperationsInput | string | null
     requirement?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     severity?: EnumSeverityFieldUpdateOperationsInput | $Enums.Severity
@@ -71259,6 +68399,7 @@ export namespace Prisma {
     rootCause?: NullableStringFieldUpdateOperationsInput | string | null
     correctiveAction?: NullableStringFieldUpdateOperationsInput | string | null
     verification?: NullableStringFieldUpdateOperationsInput | string | null
+    personInCharge?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumNcrStatusFieldUpdateOperationsInput | $Enums.NcrStatus
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -71381,8 +68522,7 @@ export namespace Prisma {
     description: string
     investigationDetails?: string | null
     rootCauseCategory?: $Enums.RootCauseCategory | null
-    humanFactorPrimary?: $Enums.HumanFactor | null
-    humanFactorContributing?: IncidentCreatehumanFactorContributingInput | $Enums.HumanFactor[]
+    rootCauseSubCategory?: string | null
     immediateAction?: string | null
     rootCause?: string | null
     closedAt?: Date | string | null
@@ -71390,6 +68530,8 @@ export namespace Prisma {
     verifiedByName?: string | null
     verifiedAt?: Date | string | null
     reportedById?: string | null
+    reporterName?: string | null
+    reporterPosition?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -71403,6 +68545,9 @@ export namespace Prisma {
     companyId: string
     refNo: string
     title: string
+    kind?: $Enums.NearMissKind
+    horCategory?: $Enums.HazardType | null
+    stopAuthorityExercised?: boolean
     occurredAt: Date | string
     location?: string | null
     description: string
@@ -71410,37 +68555,14 @@ export namespace Prisma {
     potentialSeverity: $Enums.Severity
     immediateAction?: string | null
     rootCauseCategory: $Enums.RootCauseCategory
-    humanFactorPrimary?: $Enums.HumanFactor | null
-    humanFactorContributing?: NearMissCreatehumanFactorContributingInput | $Enums.HumanFactor[]
+    rootCauseSubCategory?: string | null
     status?: $Enums.NearMissStatus
     closedAt?: Date | string | null
     companyComments?: string | null
     reviewedAt?: Date | string | null
     reportedById?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    createdBy?: string | null
-    updatedBy?: string | null
-    deletedAt?: Date | string | null
-    deletedBy?: string | null
-  }
-
-  export type HazardObservationCreateManyVesselInput = {
-    id?: string
-    companyId: string
-    refNo: string
-    title: string
-    observedAt: Date | string
-    location?: string | null
-    category: string
-    hazardType: $Enums.HazardType
-    riskLevel: $Enums.Severity
-    observation: string
-    immediateAction?: string | null
-    correctiveAction?: string | null
-    status?: $Enums.HazardStatus
-    closedAt?: Date | string | null
-    reportedById?: string | null
+    reporterName?: string | null
+    reporterPosition?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -71455,6 +68577,7 @@ export namespace Prisma {
     refNo: string
     title: string
     source: $Enums.NcrSource
+    sourceEntityId?: string | null
     requirement: string
     description: string
     severity: $Enums.Severity
@@ -71463,6 +68586,7 @@ export namespace Prisma {
     rootCause?: string | null
     correctiveAction?: string | null
     verification?: string | null
+    personInCharge?: string | null
     status?: $Enums.NcrStatus
     closedAt?: Date | string | null
     raisedById?: string | null
@@ -71643,14 +68767,15 @@ export namespace Prisma {
     description?: StringFieldUpdateOperationsInput | string
     investigationDetails?: NullableStringFieldUpdateOperationsInput | string | null
     rootCauseCategory?: NullableEnumRootCauseCategoryFieldUpdateOperationsInput | $Enums.RootCauseCategory | null
-    humanFactorPrimary?: NullableEnumHumanFactorFieldUpdateOperationsInput | $Enums.HumanFactor | null
-    humanFactorContributing?: IncidentUpdatehumanFactorContributingInput | $Enums.HumanFactor[]
+    rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
     immediateAction?: NullableStringFieldUpdateOperationsInput | string | null
     rootCause?: NullableStringFieldUpdateOperationsInput | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     verifiedById?: NullableStringFieldUpdateOperationsInput | string | null
     verifiedByName?: NullableStringFieldUpdateOperationsInput | string | null
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reporterName?: NullableStringFieldUpdateOperationsInput | string | null
+    reporterPosition?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -71675,8 +68800,7 @@ export namespace Prisma {
     description?: StringFieldUpdateOperationsInput | string
     investigationDetails?: NullableStringFieldUpdateOperationsInput | string | null
     rootCauseCategory?: NullableEnumRootCauseCategoryFieldUpdateOperationsInput | $Enums.RootCauseCategory | null
-    humanFactorPrimary?: NullableEnumHumanFactorFieldUpdateOperationsInput | $Enums.HumanFactor | null
-    humanFactorContributing?: IncidentUpdatehumanFactorContributingInput | $Enums.HumanFactor[]
+    rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
     immediateAction?: NullableStringFieldUpdateOperationsInput | string | null
     rootCause?: NullableStringFieldUpdateOperationsInput | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -71684,6 +68808,8 @@ export namespace Prisma {
     verifiedByName?: NullableStringFieldUpdateOperationsInput | string | null
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     reportedById?: NullableStringFieldUpdateOperationsInput | string | null
+    reporterName?: NullableStringFieldUpdateOperationsInput | string | null
+    reporterPosition?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -71706,8 +68832,7 @@ export namespace Prisma {
     description?: StringFieldUpdateOperationsInput | string
     investigationDetails?: NullableStringFieldUpdateOperationsInput | string | null
     rootCauseCategory?: NullableEnumRootCauseCategoryFieldUpdateOperationsInput | $Enums.RootCauseCategory | null
-    humanFactorPrimary?: NullableEnumHumanFactorFieldUpdateOperationsInput | $Enums.HumanFactor | null
-    humanFactorContributing?: IncidentUpdatehumanFactorContributingInput | $Enums.HumanFactor[]
+    rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
     immediateAction?: NullableStringFieldUpdateOperationsInput | string | null
     rootCause?: NullableStringFieldUpdateOperationsInput | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -71715,6 +68840,8 @@ export namespace Prisma {
     verifiedByName?: NullableStringFieldUpdateOperationsInput | string | null
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     reportedById?: NullableStringFieldUpdateOperationsInput | string | null
+    reporterName?: NullableStringFieldUpdateOperationsInput | string | null
+    reporterPosition?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -71727,6 +68854,9 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     refNo?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
+    kind?: EnumNearMissKindFieldUpdateOperationsInput | $Enums.NearMissKind
+    horCategory?: NullableEnumHazardTypeFieldUpdateOperationsInput | $Enums.HazardType | null
+    stopAuthorityExercised?: BoolFieldUpdateOperationsInput | boolean
     occurredAt?: DateTimeFieldUpdateOperationsInput | Date | string
     location?: NullableStringFieldUpdateOperationsInput | string | null
     description?: StringFieldUpdateOperationsInput | string
@@ -71734,12 +68864,13 @@ export namespace Prisma {
     potentialSeverity?: EnumSeverityFieldUpdateOperationsInput | $Enums.Severity
     immediateAction?: NullableStringFieldUpdateOperationsInput | string | null
     rootCauseCategory?: EnumRootCauseCategoryFieldUpdateOperationsInput | $Enums.RootCauseCategory
-    humanFactorPrimary?: NullableEnumHumanFactorFieldUpdateOperationsInput | $Enums.HumanFactor | null
-    humanFactorContributing?: NearMissUpdatehumanFactorContributingInput | $Enums.HumanFactor[]
+    rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumNearMissStatusFieldUpdateOperationsInput | $Enums.NearMissStatus
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     companyComments?: NullableStringFieldUpdateOperationsInput | string | null
     reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reporterName?: NullableStringFieldUpdateOperationsInput | string | null
+    reporterPosition?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -71755,6 +68886,9 @@ export namespace Prisma {
     companyId?: StringFieldUpdateOperationsInput | string
     refNo?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
+    kind?: EnumNearMissKindFieldUpdateOperationsInput | $Enums.NearMissKind
+    horCategory?: NullableEnumHazardTypeFieldUpdateOperationsInput | $Enums.HazardType | null
+    stopAuthorityExercised?: BoolFieldUpdateOperationsInput | boolean
     occurredAt?: DateTimeFieldUpdateOperationsInput | Date | string
     location?: NullableStringFieldUpdateOperationsInput | string | null
     description?: StringFieldUpdateOperationsInput | string
@@ -71762,13 +68896,14 @@ export namespace Prisma {
     potentialSeverity?: EnumSeverityFieldUpdateOperationsInput | $Enums.Severity
     immediateAction?: NullableStringFieldUpdateOperationsInput | string | null
     rootCauseCategory?: EnumRootCauseCategoryFieldUpdateOperationsInput | $Enums.RootCauseCategory
-    humanFactorPrimary?: NullableEnumHumanFactorFieldUpdateOperationsInput | $Enums.HumanFactor | null
-    humanFactorContributing?: NearMissUpdatehumanFactorContributingInput | $Enums.HumanFactor[]
+    rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumNearMissStatusFieldUpdateOperationsInput | $Enums.NearMissStatus
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     companyComments?: NullableStringFieldUpdateOperationsInput | string | null
     reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     reportedById?: NullableStringFieldUpdateOperationsInput | string | null
+    reporterName?: NullableStringFieldUpdateOperationsInput | string | null
+    reporterPosition?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -71782,6 +68917,9 @@ export namespace Prisma {
     companyId?: StringFieldUpdateOperationsInput | string
     refNo?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
+    kind?: EnumNearMissKindFieldUpdateOperationsInput | $Enums.NearMissKind
+    horCategory?: NullableEnumHazardTypeFieldUpdateOperationsInput | $Enums.HazardType | null
+    stopAuthorityExercised?: BoolFieldUpdateOperationsInput | boolean
     occurredAt?: DateTimeFieldUpdateOperationsInput | Date | string
     location?: NullableStringFieldUpdateOperationsInput | string | null
     description?: StringFieldUpdateOperationsInput | string
@@ -71789,85 +68927,14 @@ export namespace Prisma {
     potentialSeverity?: EnumSeverityFieldUpdateOperationsInput | $Enums.Severity
     immediateAction?: NullableStringFieldUpdateOperationsInput | string | null
     rootCauseCategory?: EnumRootCauseCategoryFieldUpdateOperationsInput | $Enums.RootCauseCategory
-    humanFactorPrimary?: NullableEnumHumanFactorFieldUpdateOperationsInput | $Enums.HumanFactor | null
-    humanFactorContributing?: NearMissUpdatehumanFactorContributingInput | $Enums.HumanFactor[]
+    rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumNearMissStatusFieldUpdateOperationsInput | $Enums.NearMissStatus
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     companyComments?: NullableStringFieldUpdateOperationsInput | string | null
     reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     reportedById?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
-    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
-    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
-  }
-
-  export type HazardObservationUpdateWithoutVesselInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    refNo?: StringFieldUpdateOperationsInput | string
-    title?: StringFieldUpdateOperationsInput | string
-    observedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    location?: NullableStringFieldUpdateOperationsInput | string | null
-    category?: StringFieldUpdateOperationsInput | string
-    hazardType?: EnumHazardTypeFieldUpdateOperationsInput | $Enums.HazardType
-    riskLevel?: EnumSeverityFieldUpdateOperationsInput | $Enums.Severity
-    observation?: StringFieldUpdateOperationsInput | string
-    immediateAction?: NullableStringFieldUpdateOperationsInput | string | null
-    correctiveAction?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: EnumHazardStatusFieldUpdateOperationsInput | $Enums.HazardStatus
-    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
-    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
-    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
-    company?: CompanyUpdateOneRequiredWithoutHazardsNestedInput
-    reportedBy?: UserUpdateOneWithoutReportedHazardsNestedInput
-  }
-
-  export type HazardObservationUncheckedUpdateWithoutVesselInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    companyId?: StringFieldUpdateOperationsInput | string
-    refNo?: StringFieldUpdateOperationsInput | string
-    title?: StringFieldUpdateOperationsInput | string
-    observedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    location?: NullableStringFieldUpdateOperationsInput | string | null
-    category?: StringFieldUpdateOperationsInput | string
-    hazardType?: EnumHazardTypeFieldUpdateOperationsInput | $Enums.HazardType
-    riskLevel?: EnumSeverityFieldUpdateOperationsInput | $Enums.Severity
-    observation?: StringFieldUpdateOperationsInput | string
-    immediateAction?: NullableStringFieldUpdateOperationsInput | string | null
-    correctiveAction?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: EnumHazardStatusFieldUpdateOperationsInput | $Enums.HazardStatus
-    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    reportedById?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
-    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
-    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
-  }
-
-  export type HazardObservationUncheckedUpdateManyWithoutVesselInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    companyId?: StringFieldUpdateOperationsInput | string
-    refNo?: StringFieldUpdateOperationsInput | string
-    title?: StringFieldUpdateOperationsInput | string
-    observedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    location?: NullableStringFieldUpdateOperationsInput | string | null
-    category?: StringFieldUpdateOperationsInput | string
-    hazardType?: EnumHazardTypeFieldUpdateOperationsInput | $Enums.HazardType
-    riskLevel?: EnumSeverityFieldUpdateOperationsInput | $Enums.Severity
-    observation?: StringFieldUpdateOperationsInput | string
-    immediateAction?: NullableStringFieldUpdateOperationsInput | string | null
-    correctiveAction?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: EnumHazardStatusFieldUpdateOperationsInput | $Enums.HazardStatus
-    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    reportedById?: NullableStringFieldUpdateOperationsInput | string | null
+    reporterName?: NullableStringFieldUpdateOperationsInput | string | null
+    reporterPosition?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -71881,6 +68948,7 @@ export namespace Prisma {
     refNo?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     source?: EnumNcrSourceFieldUpdateOperationsInput | $Enums.NcrSource
+    sourceEntityId?: NullableStringFieldUpdateOperationsInput | string | null
     requirement?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     severity?: EnumSeverityFieldUpdateOperationsInput | $Enums.Severity
@@ -71889,6 +68957,7 @@ export namespace Prisma {
     rootCause?: NullableStringFieldUpdateOperationsInput | string | null
     correctiveAction?: NullableStringFieldUpdateOperationsInput | string | null
     verification?: NullableStringFieldUpdateOperationsInput | string | null
+    personInCharge?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumNcrStatusFieldUpdateOperationsInput | $Enums.NcrStatus
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -71907,6 +68976,7 @@ export namespace Prisma {
     refNo?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     source?: EnumNcrSourceFieldUpdateOperationsInput | $Enums.NcrSource
+    sourceEntityId?: NullableStringFieldUpdateOperationsInput | string | null
     requirement?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     severity?: EnumSeverityFieldUpdateOperationsInput | $Enums.Severity
@@ -71915,6 +68985,7 @@ export namespace Prisma {
     rootCause?: NullableStringFieldUpdateOperationsInput | string | null
     correctiveAction?: NullableStringFieldUpdateOperationsInput | string | null
     verification?: NullableStringFieldUpdateOperationsInput | string | null
+    personInCharge?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumNcrStatusFieldUpdateOperationsInput | $Enums.NcrStatus
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     raisedById?: NullableStringFieldUpdateOperationsInput | string | null
@@ -71932,6 +69003,7 @@ export namespace Prisma {
     refNo?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     source?: EnumNcrSourceFieldUpdateOperationsInput | $Enums.NcrSource
+    sourceEntityId?: NullableStringFieldUpdateOperationsInput | string | null
     requirement?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     severity?: EnumSeverityFieldUpdateOperationsInput | $Enums.Severity
@@ -71940,6 +69012,7 @@ export namespace Prisma {
     rootCause?: NullableStringFieldUpdateOperationsInput | string | null
     correctiveAction?: NullableStringFieldUpdateOperationsInput | string | null
     verification?: NullableStringFieldUpdateOperationsInput | string | null
+    personInCharge?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumNcrStatusFieldUpdateOperationsInput | $Enums.NcrStatus
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     raisedById?: NullableStringFieldUpdateOperationsInput | string | null

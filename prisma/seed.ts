@@ -23,8 +23,8 @@ const ROLE_GRANTS: Record<string, { desc: string; perms: string[] }> = {
       "sms:read", "sms:create", "sms:update", "sms:submit", "sms:approve", "sms:delete",
       "incident:read", "incident:create", "incident:update", "incident:close", "incident:delete",
       "nm:read", "nm:create", "nm:update", "nm:close", "nm:delete",
-      "hazard:read", "hazard:create", "hazard:update", "hazard:close", "hazard:delete",
-      "ncr:read", "ncr:create", "ncr:update", "ncr:close", "ncr:delete",
+      // ncr:close is DPA / General Manager only — NCR verification authority.
+      "ncr:read", "ncr:create", "ncr:update", "ncr:delete",
       "sire:read", "sire:create", "sire:update", "sire:close", "sire:delete",
       "psc:read", "psc:create", "psc:update", "psc:close", "psc:delete",
       "cdi:read", "cdi:create", "cdi:update", "cdi:close", "cdi:delete",
@@ -39,7 +39,6 @@ const ROLE_GRANTS: Record<string, { desc: string; perms: string[] }> = {
       "sms:read", "sms:create", "sms:update", "sms:submit",
       "incident:read", "incident:create", "incident:update",
       "nm:read", "nm:create", "nm:update",
-      "hazard:read", "hazard:create", "hazard:update",
       "ncr:read", "ncr:create", "ncr:update",
       "sire:read", "sire:create", "sire:update",
       "psc:read", "psc:create", "psc:update",
@@ -55,12 +54,21 @@ const ROLE_GRANTS: Record<string, { desc: string; perms: string[] }> = {
       "sms:read",
       "incident:read", "incident:create",
       "nm:read", "nm:create",
-      "hazard:read", "hazard:create",
-      "ncr:read",
+      // ncr:create is further gated to senior ranks (Master/C.Off/C.Engr) at
+      // the action level — see createNcrAction.
+      "ncr:read", "ncr:create",
       "sire:read", "psc:read", "cdi:read",
       "iaudit:read", "eaudit:read",
       "vessel:read",
     ],
+  },
+  DPA: {
+    desc: "Designated Person Ashore — verifies and closes out non-conformities",
+    perms: ["ncr:read", "ncr:update", "ncr:close", "vessel:read"],
+  },
+  "General Manager": {
+    desc: "Top management — verifies and closes out non-conformities",
+    perms: ["ncr:read", "ncr:update", "ncr:close", "vessel:read"],
   },
 };
 
@@ -76,6 +84,8 @@ const USERS: {
   { email: "qhse@swanshipping.com", name: "Maria Santos", role: "QHSE Manager", department: "QHSE" },
   { email: "marine@swanshipping.com", name: "Juan Dela Cruz", role: "Marine Superintendent", department: "MARINE" },
   { email: "master@swanshipping.com", name: "Capt. Ramon Reyes", role: "Ship Officer", department: "SHIPBOARD", rank: "Master" },
+  { email: "dpa@swanshipping.com", name: "Capt. Eduardo Villanueva", role: "DPA", department: "MARINE" },
+  { email: "gm@swanshipping.com", name: "Roberto Lim", role: "General Manager", department: "EXECUTIVE" },
 ];
 
 const VESSELS = [
@@ -343,8 +353,7 @@ async function main() {
         investigationDetails:
           "Per ECFA follow-up: AB was handling the mooring line during final heaving on the winch when the rope bight came under sudden tension as the vessel surged alongside. AB's hand was inside the bight at the moment of load-up, resulting in a laceration. First aid was administered promptly by the OOW; no further medical evacuation was required.",
         rootCauseCategory: "HUMAN_FACTORS",
-        humanFactorPrimary: "SITUATIONAL_AWARENESS",
-        humanFactorContributing: ["WORKLOAD_MULTITASKING"],
+        rootCauseSubCategory: "LACK_OF_ATTENTION",
         rootCause: "Improper hand placement near the rope bight under tension.",
         reportedById: adminId || null,
         createdBy: adminId || null,
@@ -439,7 +448,7 @@ async function main() {
         potentialSeverity: "HIGH",
         immediateAction: "Work stopped; toolbox talk conducted before resuming.",
         rootCauseCategory: "HUMAN_FACTORS",
-        humanFactorPrimary: "SITUATIONAL_AWARENESS",
+        rootCauseSubCategory: "LACK_OF_ATTENTION",
         status: "UNDER_REVIEW",
         reportedById: adminId || null,
         createdBy: adminId || null,
@@ -447,23 +456,26 @@ async function main() {
     });
   }
 
-  // Sample Hazard Observation
-  if (!(await prisma.hazardObservation.findFirst({ where: { companyId: company.id, refNo: "HOR-2026-0001" } }))) {
-    await prisma.hazardObservation.create({
+  // Sample Hazard Observation (HOR) — merged into the Near Miss/HOR module.
+  if (!(await prisma.nearMiss.findFirst({ where: { companyId: company.id, refNo: "HOR-2026-0001" } }))) {
+    await prisma.nearMiss.create({
       data: {
         companyId: company.id,
         refNo: "HOR-2026-0001",
         title: "Missing gratings guard near engine room walkway",
+        kind: "HOR",
+        horCategory: "UNSAFE_CONDITION",
         vesselId: firstVessel?.id ?? null,
-        observedAt: new Date(),
-        location: "Engine room, 2nd platform",
-        category: "Slips / Trips / Falls",
-        hazardType: "UNSAFE_CONDITION",
-        riskLevel: "MEDIUM",
-        observation:
+        occurredAt: new Date(),
+        location: "Engine room",
+        description:
           "A section of floor grating guard is missing near the walkway, presenting a trip/fall hazard.",
+        potentialConsequence: "INJURY_ILL_HEALTH",
+        potentialSeverity: "MEDIUM",
         immediateAction: "Area barriered off and warning sign posted.",
-        status: "OPEN",
+        rootCauseCategory: "EQUIPMENT_SOFTWARE",
+        rootCauseSubCategory: "EQUIPMENT_FAILURE",
+        status: "REPORTED",
         reportedById: adminId || null,
         createdBy: adminId || null,
       },

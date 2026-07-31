@@ -3,7 +3,11 @@ import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { requirePermission } from "@/lib/rbac";
 import { getNearMiss } from "@/features/near-miss/queries";
-import { NEARMISS_CONSEQUENCE_LABELS } from "@/features/near-miss/schema";
+import {
+  NEARMISS_CONSEQUENCE_LABELS,
+  NEARMISS_KIND_LABELS,
+  HOR_CATEGORY_LABELS,
+} from "@/features/near-miss/schema";
 import { listCapaActions, listAllCapaActions } from "@/features/capa/queries";
 import {
   CapaTracker,
@@ -11,7 +15,7 @@ import {
   type CapaRowView,
   type CapaSummaryRowView,
 } from "@/components/capa/capa-tracker";
-import { ROOT_CAUSE_LABELS, HUMAN_FACTOR_LABELS } from "@/lib/root-cause";
+import { ROOT_CAUSE_LABELS, ROOT_CAUSE_SUBCATEGORY_LABELS } from "@/lib/root-cause";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { formatDate, humanize, severityTone } from "@/lib/utils";
@@ -69,7 +73,12 @@ export default async function NearMissReportPage({
     { label: "Occurred", value: formatDate(nm.occurredAt) },
     { label: "Location", value: nm.location ?? "—" },
     { label: "Root cause", value: ROOT_CAUSE_LABELS[nm.rootCauseCategory] },
-    { label: "Reported by", value: nm.reportedBy?.fullName ?? "—" },
+    {
+      label: "Reported by",
+      value: nm.reporterName
+        ? `${nm.reporterName} — ${nm.reporterPosition}`
+        : (nm.reportedBy?.fullName ?? "—"),
+    },
     { label: "Closed", value: nm.closedAt ? formatDate(nm.closedAt) : "—" },
   ];
 
@@ -88,6 +97,7 @@ export default async function NearMissReportPage({
       <div className="mb-6 flex items-center justify-between gap-3">
         <h1 className="text-xl font-semibold">{nm.refNo} — {nm.title}</h1>
         <div className="flex shrink-0 items-center gap-2">
+          <Badge tone={nm.kind === "HOR" ? "warning" : "accent"}>{NEARMISS_KIND_LABELS[nm.kind]}</Badge>
           <Badge tone={severityTone(nm.potentialSeverity)}>Potential: {humanize(nm.potentialSeverity)}</Badge>
           <Badge tone={statusTone(nm.status)}>{humanize(nm.status)}</Badge>
         </div>
@@ -105,27 +115,23 @@ export default async function NearMissReportPage({
       <Card className="mb-6">
         <CardHeader><CardTitle>What happened</CardTitle></CardHeader>
         <CardContent className="space-y-4">
-          <Field label="Details of the Near Miss" value={nm.description} />
+          <Field
+            label={nm.kind === "HOR" ? "Details of the Observation" : "Details of the Near Miss"}
+            value={nm.description}
+          />
+          {nm.kind === "HOR" && nm.horCategory && (
+            <Field label="Category" value={HOR_CATEGORY_LABELS[nm.horCategory]} />
+          )}
+          {nm.kind === "HOR" && (
+            <Field label="Stop Work Authority Exercised" value={nm.stopAuthorityExercised ? "Yes" : "No"} />
+          )}
           <Field label="Potential consequence" value={NEARMISS_CONSEQUENCE_LABELS[nm.potentialConsequence]} />
           {nm.immediateAction && <Field label="Immediate action" value={nm.immediateAction} />}
-          {nm.rootCauseCategory === "HUMAN_FACTORS" && (
-            <div>
-              <div className="text-xs uppercase tracking-wide text-muted-foreground">
-                Human factors
-              </div>
-              <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
-                {nm.humanFactorPrimary && (
-                  <Badge tone="warning">
-                    Primary: {HUMAN_FACTOR_LABELS[nm.humanFactorPrimary]}
-                  </Badge>
-                )}
-                {nm.humanFactorContributing.map((f) => (
-                  <Badge key={f} tone="neutral">
-                    {HUMAN_FACTOR_LABELS[f]}
-                  </Badge>
-                ))}
-              </div>
-            </div>
+          {nm.rootCauseSubCategory && (
+            <Field
+              label="Root cause sub-category"
+              value={ROOT_CAUSE_SUBCATEGORY_LABELS[nm.rootCauseCategory][nm.rootCauseSubCategory] ?? nm.rootCauseSubCategory}
+            />
           )}
         </CardContent>
       </Card>

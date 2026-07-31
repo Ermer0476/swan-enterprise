@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { requirePermission, can } from "@/lib/rbac";
 import { getExternalAudit } from "@/features/external-audits/queries";
+import { listNcrsBySourceEntityIds } from "@/features/non-conformities/queries";
 import {
   addFindingAction,
   updateFindingAction,
@@ -35,6 +36,11 @@ export default async function ExternalAuditDetailPage({
   const editable = can(user, "eaudit:update") && audit.status !== "CLOSED";
   const canClose = can(user, "eaudit:close");
   const canDelete = can(user, "eaudit:delete");
+  const canCreateNcr = can(user, "ncr:create");
+  const ncrBySourceId = await listNcrsBySourceEntityIds(
+    user.companyId,
+    audit.findings.map((f) => f.id),
+  );
 
   const meta = [
     { label: "Standard", value: audit.standard },
@@ -103,6 +109,14 @@ export default async function ExternalAuditDetailPage({
               correctiveAction: f.correctiveAction,
               status: f.status,
             }))}
+            canCreateNcr={canCreateNcr}
+            ncrBySourceId={ncrBySourceId}
+            ncrContext={{
+              vesselId: audit.vesselId,
+              reportRefNo: audit.refNo,
+              raisedAt: audit.auditDate.toISOString().slice(0, 10),
+              source: "EXTERNAL_AUDIT",
+            }}
           />
         </CardContent>
       </Card>

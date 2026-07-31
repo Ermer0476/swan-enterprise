@@ -2,19 +2,21 @@ import { z } from "zod";
 import {
   ROOT_CAUSE_CATEGORIES,
   ROOT_CAUSE_LABELS,
-  HUMAN_FACTORS,
-  HUMAN_FACTOR_LABELS,
-  MAX_CONTRIBUTING_FACTORS,
+  ROOT_CAUSE_SUBCATEGORIES,
+  ROOT_CAUSE_SUBCATEGORY_LABELS,
+  type RootCauseCategoryValue,
 } from "@/lib/root-cause";
+import { REPORTER_POSITIONS, SHIP_POSITIONS, OFFICE_POSITIONS, positionsFor } from "@/lib/crew-ranks";
+
+export { REPORTER_POSITIONS, SHIP_POSITIONS, OFFICE_POSITIONS, positionsFor };
 
 // Re-exported for backward compatibility — other modules should prefer
 // importing these directly from "@/lib/root-cause".
 export {
   ROOT_CAUSE_CATEGORIES,
   ROOT_CAUSE_LABELS,
-  HUMAN_FACTORS,
-  HUMAN_FACTOR_LABELS,
-  MAX_CONTRIBUTING_FACTORS,
+  ROOT_CAUSE_SUBCATEGORIES,
+  ROOT_CAUSE_SUBCATEGORY_LABELS,
 };
 
 export const INCIDENT_TYPES = [
@@ -259,6 +261,8 @@ export function humanize(value: string): string {
 
 export const createIncidentSchema = z.object({
   title: z.string().trim().min(3, "Title is required").max(200),
+  reporterName: z.string().trim().min(2, "Enter the reporter's name").max(120),
+  reporterPosition: z.enum(REPORTER_POSITIONS),
   types: z
     .array(z.enum(INCIDENT_TYPES))
     .min(1, "Select at least one type of incident"),
@@ -291,18 +295,16 @@ export const investigationSchema = z
     investigationDetails: z.string().trim().min(10, "Describe what happened, based on the investigation"),
     severity: z.enum(INCIDENT_SEVERITIES),
     rootCauseCategory: z.enum(ROOT_CAUSE_CATEGORIES),
+    rootCauseSubCategory: z.string().trim().min(1, "Select the root cause sub-category"),
     rootCause: z.string().trim().max(10000).optional().or(z.literal("")),
-    humanFactorPrimary: z.enum(HUMAN_FACTORS).optional(),
-    humanFactorContributing: z
-      .array(z.enum(HUMAN_FACTORS))
-      .max(MAX_CONTRIBUTING_FACTORS, "Choose at most two contributing factors"),
   })
   .superRefine((v, ctx) => {
-    if (v.rootCauseCategory === "HUMAN_FACTORS" && !v.humanFactorPrimary) {
+    const allowed = ROOT_CAUSE_SUBCATEGORIES[v.rootCauseCategory as RootCauseCategoryValue];
+    if (!allowed.includes(v.rootCauseSubCategory)) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        message: "Select the primary human factor",
-        path: ["humanFactorPrimary"],
+        message: "Select a valid sub-category for the chosen root cause",
+        path: ["rootCauseSubCategory"],
       });
     }
   });
