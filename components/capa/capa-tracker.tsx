@@ -21,6 +21,21 @@ import { AutoGrowInput, Input, Select } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
+/**
+ * Display-only re-labelling for a combined tracker that merges CAPA items
+ * from several findings/deficiencies into one table. Each finding's own CAPA
+ * sequence starts back at 1 (CA-01, CA-02…), so shown side by side those codes
+ * collide across findings — this rewrites "CA-01" to "CA-{findingOrdinal}.01"
+ * so the finding a row belongs to is visible at a glance. Doesn't touch the
+ * stored `code`, only what's rendered in the combined view.
+ */
+export function renumberCapaCodeForGroup(code: string, groupOrdinal: number): string {
+  const dashIdx = code.lastIndexOf("-");
+  const prefix = code.slice(0, dashIdx);
+  const seq = code.slice(dashIdx + 1);
+  return `${prefix}-${String(groupOrdinal).padStart(2, "0")}.${seq}`;
+}
+
 export type CapaRowView = {
   id: string;
   code: string;
@@ -251,15 +266,24 @@ export function CapaTracker({
 
 export type CapaSummaryRowView = CapaRowView & {
   kind: "CORRECTIVE" | "PREVENTIVE";
+  // Overrides the table-level `editable` for this one row — used by combined,
+  // multi-entity trackers (e.g. one table for a whole audit's findings) where
+  // some rows are NCR-synced (gated by ncr:update) and others aren't.
+  editable?: boolean;
 };
 
 function CapaSummaryRow({
   row,
-  editable,
+  editable: tableEditable,
 }: {
   row: CapaSummaryRowView;
   editable: boolean;
 }) {
+  // A combined, multi-entity table may show the edit column overall (because
+  // at least one row is editable) while this particular row is read-only
+  // (e.g. it's NCR-synced and the viewer lacks ncr:update) — the cell must
+  // still render, just without the Save control, to keep columns aligned.
+  const editable = row.editable ?? tableEditable;
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
   const [status, setStatus] = useState(row.status);
@@ -351,17 +375,19 @@ function CapaSummaryRow({
           </span>
         )}
       </td>
-      {editable && (
+      {tableEditable && (
         <td className={`${cellClass} whitespace-nowrap print:hidden`}>
-          <button
-            type="button"
-            onClick={save}
-            disabled={pending}
-            aria-label="Save row"
-            className="rounded p-1.5 text-muted-foreground hover:bg-muted hover:text-accent disabled:opacity-30"
-          >
-            <Save className="h-4 w-4" />
-          </button>
+          {editable && (
+            <button
+              type="button"
+              onClick={save}
+              disabled={pending}
+              aria-label="Save row"
+              className="rounded p-1.5 text-muted-foreground hover:bg-muted hover:text-accent disabled:opacity-30"
+            >
+              <Save className="h-4 w-4" />
+            </button>
+          )}
           {error && <p className="mt-1 text-xs text-danger">{error}</p>}
         </td>
       )}

@@ -13,6 +13,7 @@ export type ActionResult = { ok: boolean; error: string | null };
 export type VesselFormValues = {
   id?: string;
   name: string;
+  code: string;
   imo: string;
   officialNumber: string;
   callSign: string;
@@ -30,6 +31,7 @@ export type VesselFormValues = {
 
 const EMPTY: VesselFormValues = {
   name: "",
+  code: "",
   imo: "",
   officialNumber: "",
   callSign: "",
@@ -81,6 +83,11 @@ export function VesselForm({
         <div className="space-y-1.5">
           <Label htmlFor="name">Vessel Name</Label>
           <AutoGrowInput id="name" name="name" defaultValue={v.name} required />
+        </div>
+        <div className="space-y-1.5">
+          <Label htmlFor="code">Vessel Code</Label>
+          <Input id="code" name="code" defaultValue={v.code} placeholder="e.g. SWA" maxLength={6} required />
+          <p className="text-xs text-muted-foreground">Prefixed onto this vessel's NCR numbers (e.g. SWA-NCR-2026-0001).</p>
         </div>
         <div className="space-y-1.5">
           <Label htmlFor="imo">IMO Number</Label>

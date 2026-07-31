@@ -16,10 +16,9 @@ import {
   INCIDENT_STATUSES,
   INCIDENT_TYPE_LABELS,
   INCIDENT_SUBCATEGORY_LABELS,
-  ROOT_CAUSE_LABELS,
-  ROOT_CAUSE_SUBCATEGORY_LABELS,
   humanize,
 } from "@/features/incidents/schema";
+import { formatRootCause } from "@/lib/root-cause";
 import { severityTone, incidentStatusTone } from "@/features/incidents/ui";
 import { PageHeader } from "@/components/ui/page-header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -90,7 +89,7 @@ export default async function IncidentDetailPage({
     {
       label: "Root cause",
       value: inc.rootCauseCategory
-        ? ROOT_CAUSE_LABELS[inc.rootCauseCategory]
+        ? formatRootCause(inc.rootCauseCategory, inc.rootCauseSubCategory)
         : "Pending investigation",
     },
     {
@@ -207,14 +206,14 @@ export default async function IncidentDetailPage({
             </div>
           </div>
 
-          {inc.rootCauseCategory && inc.rootCauseSubCategory && (
+          {inc.rootCauseCategory && (
             <div>
               <div className="text-xs uppercase tracking-wide text-muted-foreground">
-                Root cause sub-category
+                Root cause
               </div>
               <div className="mt-1.5">
                 <Badge tone="warning">
-                  {ROOT_CAUSE_SUBCATEGORY_LABELS[inc.rootCauseCategory][inc.rootCauseSubCategory]}
+                  {formatRootCause(inc.rootCauseCategory, inc.rootCauseSubCategory)}
                 </Badge>
               </div>
             </div>
@@ -311,17 +310,15 @@ export default async function IncidentDetailPage({
               </div>
               <div>
                 <div className="text-xs uppercase tracking-wide text-muted-foreground">
-                  Root cause sub-category
+                  Root cause
                 </div>
                 <p className="mt-1 text-sm">
-                  {inc.rootCauseCategory && inc.rootCauseSubCategory
-                    ? ROOT_CAUSE_SUBCATEGORY_LABELS[inc.rootCauseCategory][inc.rootCauseSubCategory]
-                    : "—"}
+                  {formatRootCause(inc.rootCauseCategory, inc.rootCauseSubCategory)}
                 </p>
               </div>
               <div>
                 <div className="text-xs uppercase tracking-wide text-muted-foreground">
-                  Root cause
+                  Root cause description
                 </div>
                 <p className="mt-1 whitespace-pre-wrap text-sm">
                   {inc.rootCause || "—"}

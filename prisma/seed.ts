@@ -30,6 +30,12 @@ const ROLE_GRANTS: Record<string, { desc: string; perms: string[] }> = {
       "cdi:read", "cdi:create", "cdi:update", "cdi:close", "cdi:delete",
       "iaudit:read", "iaudit:create", "iaudit:update", "iaudit:close", "iaudit:delete",
       "eaudit:read", "eaudit:create", "eaudit:update", "eaudit:close", "eaudit:delete",
+      "meeting:read", "meeting:create", "meeting:update", "meeting:close", "meeting:delete",
+      "drill:read", "drill:create", "drill:update", "drill:close", "drill:delete",
+      "doc:read", "doc:create", "doc:update", "doc:delete",
+      "circular:read", "circular:create", "circular:update", "circular:delete",
+      "risk:read", "risk:create", "risk:update", "risk:close", "risk:delete",
+      "defect:read", "defect:create", "defect:update", "defect:delete",
       "vessel:read",
     ],
   },
@@ -45,6 +51,12 @@ const ROLE_GRANTS: Record<string, { desc: string; perms: string[] }> = {
       "cdi:read", "cdi:create", "cdi:update",
       "iaudit:read", "iaudit:create", "iaudit:update",
       "eaudit:read", "eaudit:create", "eaudit:update",
+      "meeting:read", "meeting:create", "meeting:update", "meeting:close",
+      "drill:read", "drill:create", "drill:update", "drill:close",
+      "doc:read", "doc:create", "doc:update",
+      "circular:read", "circular:create", "circular:update",
+      "risk:read", "risk:create", "risk:update", "risk:close",
+      "defect:read", "defect:create", "defect:update",
       "vessel:read", "vessel:create", "vessel:update", "vessel:delete",
     ],
   },
@@ -59,6 +71,13 @@ const ROLE_GRANTS: Record<string, { desc: string; perms: string[] }> = {
       "ncr:read", "ncr:create",
       "sire:read", "psc:read", "cdi:read",
       "iaudit:read", "eaudit:read",
+      // Meetings/Drills/Defects/Risk are logged onboard by any officer;
+      // Documents/Circulars are office-issued, so ship side is read-only.
+      "meeting:read", "meeting:create", "meeting:update",
+      "drill:read", "drill:create", "drill:update",
+      "doc:read", "circular:read",
+      "risk:read", "risk:create", "risk:update",
+      "defect:read", "defect:create", "defect:update",
       "vessel:read",
     ],
   },
@@ -91,6 +110,7 @@ const USERS: {
 const VESSELS = [
   {
     name: "Swan Aquarius",
+    code: "SWA",
     imo: "9700001",
     officialNumber: "PH-2019-04471",
     callSign: "DUA7001",
@@ -105,6 +125,7 @@ const VESSELS = [
   },
   {
     name: "Swan Orion",
+    code: "ORI",
     imo: "9700002",
     officialNumber: "PH-2020-05512",
     callSign: "DUA7002",
@@ -119,6 +140,7 @@ const VESSELS = [
   },
   {
     name: "Swan Lyra",
+    code: "LYR",
     imo: "9700003",
     officialNumber: "PH-2021-06033",
     callSign: "DUA7003",
@@ -252,6 +274,7 @@ async function main() {
   for (const v of VESSELS) {
     const particulars = {
       name: v.name,
+      code: v.code,
       officialNumber: v.officialNumber,
       callSign: v.callSign,
       mmsi: v.mmsi,
@@ -576,7 +599,8 @@ async function main() {
               reference: "MLC 3.1",
               actionCode: "17",
               description: "Galley exhaust not adequately cleaned.",
-              rectification: "Cleaned and logged; PMS job created.",
+              rootCauseCategory: "MANAGEMENT_GOVERNANCE",
+              rootCauseSubCategory: "POOR_PLANNING",
               status: "CLOSED",
               createdBy: adminId || null,
             },
@@ -645,7 +669,8 @@ async function main() {
               category: "OBSERVATION",
               reference: "ISM 7",
               description: "Consider adding a checklist for enclosed-space entry drills.",
-              correctiveAction: "Checklist drafted; pending approval.",
+              rootCauseCategory: "MANAGEMENT_GOVERNANCE",
+              rootCauseSubCategory: "POOR_PLANNING",
               status: "CLOSED",
               createdBy: adminId || null,
             },
@@ -682,6 +707,118 @@ async function main() {
             },
           ],
         },
+      },
+    });
+  }
+
+  // Sample Safety Meeting
+  if (!(await prisma.safetyMeeting.findFirst({ where: { companyId: company.id, refNo: "SM-2026-0001" } }))) {
+    await prisma.safetyMeeting.create({
+      data: {
+        companyId: company.id,
+        refNo: "SM-2026-0001",
+        vesselId: firstVessel?.id ?? null,
+        meetingType: "SAFETY_COMMITTEE",
+        meetingDate: new Date(),
+        chairedBy: "Capt. Ramon Reyes",
+        attendees: "Master, C/Off, C/Engr, Bosun",
+        agenda: "Monthly safety review; PPE compliance; near-miss follow-up.",
+        minutes: "No outstanding safety concerns raised. PPE stock replenished.",
+        status: "OPEN",
+        createdBy: adminId || null,
+      },
+    });
+  }
+
+  // Sample Emergency Drill
+  if (!(await prisma.emergencyDrill.findFirst({ where: { companyId: company.id, refNo: "DR-2026-0001" } }))) {
+    await prisma.emergencyDrill.create({
+      data: {
+        companyId: company.id,
+        refNo: "DR-2026-0001",
+        vesselId: firstVessel!.id,
+        drillType: "FIRE",
+        drillDate: new Date(),
+        scenario: "Engine room fire, CO2 release drill (simulated).",
+        participants: "All crew on board",
+        conductedBy: "Capt. Ramon Reyes",
+        observations: "Response time within target; one extinguisher due for service.",
+        status: "OPEN",
+        createdBy: adminId || null,
+      },
+    });
+  }
+
+  // Sample Controlled Document
+  if (!(await prisma.controlledDocument.findFirst({ where: { companyId: company.id, docNumber: "DOC-2026-0001" } }))) {
+    await prisma.controlledDocument.create({
+      data: {
+        companyId: company.id,
+        docNumber: "DOC-2026-0001",
+        title: "Permit to Work — Enclosed Space Entry",
+        category: "FORM",
+        version: "Rev 2",
+        issueDate: new Date(),
+        owner: "QHSE Department",
+        description: "Standard permit form for enclosed space entry operations fleet-wide.",
+        status: "APPROVED",
+        createdBy: adminId || null,
+      },
+    });
+  }
+
+  // Sample Circular
+  if (!(await prisma.circular.findFirst({ where: { companyId: company.id, refNo: "CIR-2026-0001" } }))) {
+    await prisma.circular.create({
+      data: {
+        companyId: company.id,
+        refNo: "CIR-2026-0001",
+        title: "Updated enclosed space entry procedure",
+        category: "SAFETY",
+        issueDate: new Date(),
+        body: "Please note the enclosed space entry permit (DOC-2026-0001) has been revised to Rev 2, adding a mandatory gas-free re-check after any break exceeding 30 minutes.",
+        createdBy: adminId || null,
+      },
+    });
+  }
+
+  // Sample Risk Assessment
+  if (!(await prisma.riskAssessment.findFirst({ where: { companyId: company.id, refNo: "RA-2026-0001" } }))) {
+    await prisma.riskAssessment.create({
+      data: {
+        companyId: company.id,
+        refNo: "RA-2026-0001",
+        vesselId: firstVessel?.id ?? null,
+        activity: "Enclosed space entry for cargo tank cleaning",
+        hazards: "Oxygen deficiency, toxic gas, engulfment.",
+        existingControls: "Gas-free certificate, permit to work, standby man, rescue equipment.",
+        likelihood: "LOW",
+        severity: "HIGH",
+        additionalControls: "Continuous gas monitoring, comms check every 15 minutes.",
+        assessedBy: "Maria Santos",
+        assessmentDate: new Date(),
+        status: "ACTIVE",
+        createdBy: adminId || null,
+      },
+    });
+  }
+
+  // Sample Defect
+  if (!(await prisma.defect.findFirst({ where: { companyId: company.id, refNo: "DEF-2026-0001" } }))) {
+    await prisma.defect.create({
+      data: {
+        companyId: company.id,
+        refNo: "DEF-2026-0001",
+        vesselId: firstVessel!.id,
+        equipment: "No.2 Fire Pump",
+        description: "Fire pump fails to reach required discharge pressure on test.",
+        severity: "MAJOR",
+        dateRaised: new Date(),
+        targetRectificationDate: new Date(Date.now() + 1000 * 60 * 60 * 24 * 14),
+        raisedBy: "C/Engr",
+        status: "MONITORING",
+        actionTaken: "Impeller inspection scheduled at next port; spare gasket kit ordered.",
+        createdBy: adminId || null,
       },
     });
   }

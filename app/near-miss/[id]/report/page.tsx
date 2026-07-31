@@ -15,7 +15,7 @@ import {
   type CapaRowView,
   type CapaSummaryRowView,
 } from "@/components/capa/capa-tracker";
-import { ROOT_CAUSE_LABELS, ROOT_CAUSE_SUBCATEGORY_LABELS } from "@/lib/root-cause";
+import { formatRootCause } from "@/lib/root-cause";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { formatDate, humanize, severityTone } from "@/lib/utils";
@@ -72,7 +72,7 @@ export default async function NearMissReportPage({
     { label: "Vessel", value: nm.vessel?.name ?? "Shore / N/A" },
     { label: "Occurred", value: formatDate(nm.occurredAt) },
     { label: "Location", value: nm.location ?? "—" },
-    { label: "Root cause", value: ROOT_CAUSE_LABELS[nm.rootCauseCategory] },
+    { label: "Root cause", value: formatRootCause(nm.rootCauseCategory, nm.rootCauseSubCategory) },
     {
       label: "Reported by",
       value: nm.reporterName
@@ -127,12 +127,6 @@ export default async function NearMissReportPage({
           )}
           <Field label="Potential consequence" value={NEARMISS_CONSEQUENCE_LABELS[nm.potentialConsequence]} />
           {nm.immediateAction && <Field label="Immediate action" value={nm.immediateAction} />}
-          {nm.rootCauseSubCategory && (
-            <Field
-              label="Root cause sub-category"
-              value={ROOT_CAUSE_SUBCATEGORY_LABELS[nm.rootCauseCategory][nm.rootCauseSubCategory] ?? nm.rootCauseSubCategory}
-            />
-          )}
         </CardContent>
       </Card>
 

@@ -46,6 +46,7 @@ export default async function VesselsPage() {
               <thead className="border-b border-border bg-muted/40 text-left text-xs uppercase tracking-wide text-muted-foreground">
                 <tr>
                   <th className="px-4 py-2.5 font-medium">Name</th>
+                  <th className="px-4 py-2.5 font-medium">Code</th>
                   <th className="px-4 py-2.5 font-medium">IMO</th>
                   <th className="px-4 py-2.5 font-medium">Call Sign</th>
                   <th className="px-4 py-2.5 font-medium">Flag</th>
@@ -59,6 +60,7 @@ export default async function VesselsPage() {
                     <td className="px-4 py-2.5">
                       <Link href={`/vessels/${v.id}`} className="font-medium hover:underline">{v.name}</Link>
                     </td>
+                    <td className="px-4 py-2.5 font-mono text-xs text-muted-foreground">{v.code ?? "—"}</td>
                     <td className="px-4 py-2.5 font-mono text-xs text-muted-foreground">{v.imo}</td>
                     <td className="px-4 py-2.5 text-muted-foreground">{v.callSign ?? "—"}</td>
                     <td className="px-4 py-2.5 text-muted-foreground">{v.flag ?? "—"}</td>

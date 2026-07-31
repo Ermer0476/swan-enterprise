@@ -4,13 +4,45 @@ import { ArrowLeft } from "lucide-react";
 import { requirePermission, can } from "@/lib/rbac";
 import { getNcr } from "@/features/non-conformities/queries";
 import { NCR_STATUSES } from "@/features/non-conformities/schema";
+import { listCapaActions, listAllCapaActions } from "@/features/capa/queries";
+import {
+  CapaTracker,
+  CapaSummaryTable,
+  type CapaRowView,
+  type CapaSummaryRowView,
+} from "@/components/capa/capa-tracker";
+import { formatRootCause } from "@/lib/root-cause";
 import { PageHeader } from "@/components/ui/page-header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { formatDate, humanize, severityTone } from "@/lib/utils";
-import { CapaForm } from "./capa-form";
+import { RootCauseForm } from "./root-cause-form";
 import { NcrActions } from "./ncr-actions";
+import { Button } from "@/components/ui/button";
+import { FileText } from "lucide-react";
 import type { NcrStatus } from "@/lib/generated/prisma";
+
+function toRowView(r: {
+  id: string;
+  code: string;
+  action: string;
+  responsible: string | null;
+  targetDate: Date | null;
+  status: "OPEN" | "IN_PROGRESS" | "CLOSED";
+  closedDate: Date | null;
+}): CapaRowView {
+  return {
+    ...r,
+    targetDate: r.targetDate ? r.targetDate.toISOString() : null,
+    closedDate: r.closedDate ? r.closedDate.toISOString() : null,
+  };
+}
+
+function toSummaryRowView(
+  r: Parameters<typeof toRowView>[0] & { kind: "CORRECTIVE" | "PREVENTIVE" },
+): CapaSummaryRowView {
+  return { ...toRowView(r), kind: r.kind };
+}
 
 function nextOf(status: NcrStatus): NcrStatus | null {
   const i = NCR_STATUSES.indexOf(status);
@@ -40,6 +72,11 @@ export default async function NcrDetailPage({
     canUpdate && !!next && (next === "CLOSED" ? canClose : true);
   const editable = canUpdate && ncr.status !== "CLOSED";
 
+  const [correctiveRows, allCapaRows] = await Promise.all([
+    listCapaActions(user.companyId, "NonConformity", ncr.id, "CORRECTIVE"),
+    listAllCapaActions(user.companyId, "NonConformity", ncr.id),
+  ]);
+
   const meta = [
     { label: "Source", value: humanize(ncr.source) },
     { label: "Vessel", value: ncr.vessel?.name ?? "Shore / N/A" },
@@ -61,6 +98,11 @@ export default async function NcrDetailPage({
           <div className="flex items-center gap-2">
             <Badge tone={severityTone(ncr.severity)}>{humanize(ncr.severity)}</Badge>
             <Badge tone={statusTone(ncr.status)}>{humanize(ncr.status)}</Badge>
+            <Link href={`/non-conformities/${ncr.id}/report`} target="_blank" rel="noopener noreferrer">
+              <Button type="button" variant="outline" size="sm">
+                <FileText className="h-4 w-4" /> Show Report
+              </Button>
+            </Link>
           </div>
         }
       />
@@ -89,23 +131,45 @@ export default async function NcrDetailPage({
         </CardContent>
       </Card>
 
-      <Card>
-        <CardHeader><CardTitle>Root cause &amp; corrective action (CAPA)</CardTitle></CardHeader>
+      <Card className="mb-6">
+        <CardHeader><CardTitle>Root cause</CardTitle></CardHeader>
         <CardContent>
           {editable ? (
-            <CapaForm
+            <RootCauseForm
               ncrId={ncr.id}
-              rootCause={ncr.rootCause ?? ""}
-              correctiveAction={ncr.correctiveAction ?? ""}
-              verification={ncr.verification ?? ""}
+              rootCauseCategory={ncr.rootCauseCategory ?? ""}
+              rootCauseSubCategory={ncr.rootCauseSubCategory ?? ""}
+            />
+          ) : ncr.rootCauseCategory ? (
+            <Field
+              label="Root cause"
+              value={formatRootCause(ncr.rootCauseCategory, ncr.rootCauseSubCategory)}
             />
           ) : (
-            <div className="space-y-4">
-              <Field label="Root cause" value={ncr.rootCause || "—"} />
-              <Field label="Corrective action" value={ncr.correctiveAction || "—"} />
-              <Field label="Verification" value={ncr.verification || "—"} />
-            </div>
+            <p className="text-sm text-muted-foreground">No root cause recorded yet.</p>
           )}
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader><CardTitle>Corrective Action</CardTitle></CardHeader>
+        <CardContent className="space-y-6">
+          <CapaTracker
+            entityType="NonConformity"
+            entityId={ncr.id}
+            kind="CORRECTIVE"
+            title="Corrective Actions"
+            editable={editable}
+            rows={correctiveRows.map(toRowView)}
+          />
+
+          <div className="space-y-3">
+            <h4 className="text-sm font-semibold">All CAPA Tracker</h4>
+            <CapaSummaryTable
+              rows={allCapaRows.map(toSummaryRowView)}
+              editable={editable}
+            />
+          </div>
         </CardContent>
       </Card>
     </div>

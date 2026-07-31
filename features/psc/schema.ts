@@ -1,4 +1,9 @@
 import { z } from "zod";
+import {
+  ROOT_CAUSE_CATEGORIES,
+  ROOT_CAUSE_SUBCATEGORIES,
+  type RootCauseCategoryValue,
+} from "@/lib/root-cause";
 
 export const INSPECTION_STATUSES = ["OPEN", "IN_PROGRESS", "CLOSED"] as const;
 export const FINDING_STATUSES = ["OPEN", "CLOSED"] as const;
@@ -39,6 +44,25 @@ export const addDeficiencySchema = z.object({
 
 export const updateDeficiencySchema = z.object({
   deficiencyId: z.string().uuid(),
-  rectification: z.string().trim().max(10000).optional().or(z.literal("")),
   status: z.enum(FINDING_STATUSES),
 });
+
+// Root cause classification — same shared taxonomy Incident/Near Miss/NCR
+// use (lib/root-cause.ts). Corrective actions themselves are recorded in the
+// shared CapaAction tracker (entityType "PscDeficiency"), not here.
+export const deficiencyRootCauseSchema = z
+  .object({
+    deficiencyId: z.string().uuid(),
+    rootCauseCategory: z.enum(ROOT_CAUSE_CATEGORIES),
+    rootCauseSubCategory: z.string().trim().min(1, "Select the root cause sub-category"),
+  })
+  .superRefine((v, ctx) => {
+    const allowed = ROOT_CAUSE_SUBCATEGORIES[v.rootCauseCategory as RootCauseCategoryValue];
+    if (!allowed.includes(v.rootCauseSubCategory)) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Select a valid sub-category for the chosen category",
+        path: ["rootCauseSubCategory"],
+      });
+    }
+  });

@@ -81,6 +81,45 @@ export const PERMISSIONS = {
   "vessel:create": "Add vessels to the fleet",
   "vessel:update": "Edit vessel particulars",
   "vessel:delete": "Remove vessels from the fleet",
+
+  // Safety Meetings module
+  "meeting:read": "View safety meetings",
+  "meeting:create": "Record safety meetings",
+  "meeting:update": "Edit meeting minutes and attendees",
+  "meeting:close": "Close safety meetings",
+  "meeting:delete": "Delete safety meetings",
+
+  // Emergency Drills module
+  "drill:read": "View emergency drills",
+  "drill:create": "Record emergency drills",
+  "drill:update": "Edit drill records and observations",
+  "drill:close": "Close emergency drills",
+  "drill:delete": "Delete emergency drills",
+
+  // Controlled Documents module
+  "doc:read": "View controlled documents",
+  "doc:create": "Add controlled documents",
+  "doc:update": "Edit or approve controlled documents",
+  "doc:delete": "Delete controlled documents",
+
+  // Circulars module
+  "circular:read": "View circulars",
+  "circular:create": "Issue circulars",
+  "circular:update": "Edit circulars",
+  "circular:delete": "Delete circulars",
+
+  // Risk Assessments module
+  "risk:read": "View risk assessments",
+  "risk:create": "Create risk assessments",
+  "risk:update": "Edit risk assessments",
+  "risk:close": "Close/supersede risk assessments",
+  "risk:delete": "Delete risk assessments",
+
+  // Defect List module
+  "defect:read": "View equipment defects",
+  "defect:create": "Report equipment defects",
+  "defect:update": "Update defect status and rectification",
+  "defect:delete": "Delete defect records",
 } as const;
 
 export type PermissionKey = keyof typeof PERMISSIONS;

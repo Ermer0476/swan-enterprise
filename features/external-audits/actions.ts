@@ -9,6 +9,7 @@ import {
   createExternalAuditSchema,
   addFindingSchema,
   updateFindingSchema,
+  findingRootCauseSchema,
 } from "./schema";
 
 export type ActionResult = { ok: boolean; error: string | null };
@@ -130,7 +131,6 @@ export async function updateFindingAction(
   const user = await requirePermission("eaudit:update");
   const parsed = updateFindingSchema.safeParse({
     findingId: formData.get("findingId"),
-    correctiveAction: formData.get("correctiveAction"),
     status: formData.get("status"),
   });
   if (!parsed.success) return fail("Invalid input");
@@ -143,7 +143,39 @@ export async function updateFindingAction(
 
   await prisma.externalAuditFinding.update({
     where: { id: finding.id },
-    data: { correctiveAction: d.correctiveAction || null, status: d.status },
+    data: { status: d.status },
+  });
+
+  revalidatePath(`/external-audits/${finding.auditId}`);
+  return OK;
+}
+
+export async function saveFindingRootCauseAction(
+  _prev: ActionResult,
+  formData: FormData,
+): Promise<ActionResult> {
+  const user = await requirePermission("eaudit:update");
+  const parsed = findingRootCauseSchema.safeParse({
+    findingId: formData.get("findingId"),
+    rootCauseCategory: formData.get("rootCauseCategory"),
+    rootCauseSubCategory: formData.get("rootCauseSubCategory"),
+  });
+  if (!parsed.success) {
+    return fail(parsed.error.issues[0]?.message ?? "Invalid input");
+  }
+  const d = parsed.data;
+
+  const finding = await prisma.externalAuditFinding.findFirst({
+    where: { id: d.findingId, companyId: user.companyId, deletedAt: null },
+  });
+  if (!finding) return fail("Finding not found");
+
+  await prisma.externalAuditFinding.update({
+    where: { id: finding.id },
+    data: {
+      rootCauseCategory: d.rootCauseCategory,
+      rootCauseSubCategory: d.rootCauseSubCategory,
+    },
   });
 
   revalidatePath(`/external-audits/${finding.auditId}`);

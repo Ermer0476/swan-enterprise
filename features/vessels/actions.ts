@@ -14,6 +14,7 @@ const fail = (error: string): ActionResult => ({ ok: false, error });
 function parseVesselForm(formData: FormData) {
   return vesselSchema.safeParse({
     name: formData.get("name"),
+    code: formData.get("code"),
     imo: formData.get("imo"),
     officialNumber: formData.get("officialNumber"),
     callSign: formData.get("callSign"),
@@ -44,10 +45,16 @@ export async function createVesselAction(
   const existing = await prisma.vessel.findUnique({ where: { imo: d.imo } });
   if (existing) return fail("A vessel with this IMO number already exists");
 
+  const codeClash = await prisma.vessel.findFirst({
+    where: { companyId: user.companyId, code: d.code },
+  });
+  if (codeClash) return fail(`Vessel code "${d.code}" is already in use`);
+
   const vessel = await prisma.vessel.create({
     data: {
       companyId: user.companyId,
       name: d.name,
+      code: d.code,
       imo: d.imo,
       officialNumber: d.officialNumber || null,
       callSign: d.callSign || null,
@@ -100,10 +107,16 @@ export async function updateVesselAction(
   });
   if (imoClash) return fail("A vessel with this IMO number already exists");
 
+  const codeClash = await prisma.vessel.findFirst({
+    where: { companyId: user.companyId, code: d.code, id: { not: id } },
+  });
+  if (codeClash) return fail(`Vessel code "${d.code}" is already in use`);
+
   await prisma.vessel.update({
     where: { id: vessel.id },
     data: {
       name: d.name,
+      code: d.code,
       imo: d.imo,
       officialNumber: d.officialNumber || null,
       callSign: d.callSign || null,

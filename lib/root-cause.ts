@@ -124,3 +124,17 @@ export const ROOT_CAUSE_SUBCATEGORY_LABELS: Record<RootCauseCategoryValue, Recor
     MOC_NOT_CONDUCTED: "MOC not conducted",
   },
 };
+
+/** Single-line "Category - Sub-category" display, used everywhere root
+ * cause is shown read-only (detail pages, reports) so category and
+ * sub-category always read together instead of as separate fields. */
+export function formatRootCause(
+  category: RootCauseCategoryValue | null | undefined,
+  subCategory: string | null | undefined,
+): string {
+  if (!category) return "—";
+  const categoryLabel = ROOT_CAUSE_LABELS[category];
+  if (!subCategory) return categoryLabel;
+  const subLabel = ROOT_CAUSE_SUBCATEGORY_LABELS[category][subCategory] ?? subCategory;
+  return `${categoryLabel} - ${subLabel}`;
+}

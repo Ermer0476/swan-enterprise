@@ -26,3 +26,20 @@ export async function listAllCapaActions(
     orderBy: [{ kind: "asc" }, { code: "asc" }],
   });
 }
+
+/**
+ * All CAPA rows for many entities of one type at once (e.g. every deficiency
+ * on a PSC inspection) — one query instead of one per entity. Callers group
+ * the result by `entityId` themselves.
+ */
+export async function listAllCapaActionsForEntities(
+  companyId: string,
+  entityType: string,
+  entityIds: string[],
+) {
+  if (entityIds.length === 0) return [];
+  return prisma.capaAction.findMany({
+    where: { companyId, entityType, entityId: { in: entityIds }, deletedAt: null },
+    orderBy: [{ entityId: "asc" }, { kind: "asc" }, { code: "asc" }],
+  });
+}

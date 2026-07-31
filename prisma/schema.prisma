@@ -254,6 +254,12 @@ model Company {
   cdiInspections  CdiInspection[]
   internalAudits  InternalAudit[]
   externalAudits  ExternalAudit[]
+  safetyMeetings      SafetyMeeting[]
+  emergencyDrills     EmergencyDrill[]
+  controlledDocuments ControlledDocument[]
+  circulars           Circular[]
+  riskAssessments     RiskAssessment[]
+  defects             Defect[]
 }
 
 model User {
@@ -339,6 +345,10 @@ model Vessel {
   companyId String
   company   Company      @relation(fields: [companyId], references: [id])
   name      String
+  // Short internal fleet code (e.g. "SWA") — prefixed onto vessel-raised NCR
+  // numbers (SWA-NCR-2026-0001) so each ship keeps its own NC sequence while
+  // staying unambiguous once everything lands in the office's central register.
+  code      String?
   imo       String       @unique
   officialNumber String?
   callSign  String?
@@ -369,7 +379,14 @@ model Vessel {
   cdiInspections  CdiInspection[]
   internalAudits  InternalAudit[]
   externalAudits  ExternalAudit[]
+  safetyMeetings      SafetyMeeting[]
+  emergencyDrills     EmergencyDrill[]
+  controlledDocuments ControlledDocument[]
+  circulars           Circular[]
+  riskAssessments     RiskAssessment[]
+  defects             Defect[]
 
+  @@unique([companyId, code])
   @@index([companyId])
 }
 
@@ -808,9 +825,13 @@ model NonConformity {
   raisedAt    DateTime
   targetDate  DateTime?
 
-  rootCause        String?
-  correctiveAction String?
-  verification     String?
+  // Root cause classification — shared taxonomy with Incident/Near Miss (see
+  // lib/root-cause.ts). Filled in by office during CAPA review, not at raise
+  // time. Corrective actions themselves live in CapaAction (entityType
+  // "NonConformity"), not on this row — same shared tracker Incident/Near
+  // Miss use, so "add another corrective action" is already supported.
+  rootCauseCategory    RootCauseCategory?
+  rootCauseSubCategory String? // one flat sub-cause per category — see lib/root-cause.ts
   // Single owner of the corrective action — a person (by title/rank) or a
   // whole department; office NCRs are often owned by a department, not one
   // named individual.
@@ -928,7 +949,12 @@ model PscDeficiency {
   reference    String? // convention reference (e.g. SOLAS III/19)
   description  String
   actionCode   String? // PSC action code, e.g. 17 (rectify), 30 (detainable)
-  rectification String? // corrective action taken
+  // Root cause classification — same shared taxonomy as Incident/Near
+  // Miss/NCR (lib/root-cause.ts). Corrective actions themselves live in
+  // CapaAction (entityType "PscDeficiency"), replacing the old free-text
+  // rectification field with the same tracker used company-wide.
+  rootCauseCategory    RootCauseCategory?
+  rootCauseSubCategory String? // one flat sub-cause per category — see lib/root-cause.ts
   status       FindingStatus @default(OPEN)
 
   createdAt DateTime  @default(now())
@@ -1033,7 +1059,12 @@ model InternalAuditFinding {
   category         AuditFindingCategory
   reference        String? // clause / requirement
   description      String
-  correctiveAction String?
+  // Root cause classification — same shared taxonomy as Incident/Near
+  // Miss/NCR/PSC (lib/root-cause.ts). Corrective actions live in CapaAction
+  // (entityType "InternalAuditFinding"), replacing the old free-text
+  // correctiveAction field with the same tracker used company-wide.
+  rootCauseCategory    RootCauseCategory?
+  rootCauseSubCategory String? // one flat sub-cause per category — see lib/root-cause.ts
   status           FindingStatus        @default(OPEN)
 
   createdAt DateTime  @default(now())
@@ -1083,7 +1114,12 @@ model ExternalAuditFinding {
   category         AuditFindingCategory
   reference        String?
   description      String
-  correctiveAction String?
+  // Root cause classification — same shared taxonomy as Incident/Near
+  // Miss/NCR/PSC (lib/root-cause.ts). Corrective actions live in CapaAction
+  // (entityType "ExternalAuditFinding"), replacing the old free-text
+  // correctiveAction field with the same tracker used company-wide.
+  rootCauseCategory    RootCauseCategory?
+  rootCauseSubCategory String? // one flat sub-cause per category — see lib/root-cause.ts
   status           FindingStatus        @default(OPEN)
 
   createdAt DateTime  @default(now())
@@ -1091,4 +1127,262 @@ model ExternalAuditFinding {
   deletedAt DateTime?
 
   @@index([auditId])
+}
+
+// ─── Phase 1 module: Safety Meetings ──────────────────────────────────────────
+
+enum MeetingType {
+  SAFETY_COMMITTEE
+  OFFICE_SAFETY
+  MANAGEMENT_REVIEW
+}
+
+model SafetyMeeting {
+  id        String  @id @default(uuid())
+  companyId String
+  company   Company @relation(fields: [companyId], references: [id])
+  refNo     String
+
+  vesselId String? // null = office / shore meeting
+  vessel   Vessel? @relation(fields: [vesselId], references: [id])
+
+  meetingType MeetingType
+  meetingDate DateTime
+  chairedBy   String?
+  attendees   String?
+  agenda      String?
+  minutes     String?
+
+  status   FindingStatus @default(OPEN)
+  closedAt DateTime?
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  createdBy String?
+  updatedBy String?
+  deletedAt DateTime?
+  deletedBy String?
+
+  @@unique([companyId, refNo])
+  @@index([companyId, status])
+}
+
+// ─── Phase 1 module: Emergency Drills ─────────────────────────────────────────
+
+enum DrillType {
+  FIRE
+  ABANDON_SHIP
+  MAN_OVERBOARD
+  ENCLOSED_SPACE
+  OIL_SPILL
+  SECURITY
+  STEERING_FAILURE
+  DAMAGE_CONTROL
+  OTHER
+}
+
+model EmergencyDrill {
+  id        String  @id @default(uuid())
+  companyId String
+  company   Company @relation(fields: [companyId], references: [id])
+  refNo     String
+
+  vesselId String
+  vessel   Vessel @relation(fields: [vesselId], references: [id])
+
+  drillType    DrillType
+  drillDate    DateTime
+  scenario     String?
+  participants String?
+  conductedBy  String?
+  observations String? // deficiencies / follow-up noted during the drill
+
+  status   FindingStatus @default(OPEN)
+  closedAt DateTime?
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  createdBy String?
+  updatedBy String?
+  deletedAt DateTime?
+  deletedBy String?
+
+  @@unique([companyId, refNo])
+  @@index([companyId, status])
+}
+
+// ─── Phase 1 module: Controlled Documents ─────────────────────────────────────
+
+enum DocumentCategory {
+  FORM
+  CHECKLIST
+  CERTIFICATE
+  MANUAL
+  PROCEDURE
+  OTHER
+}
+
+enum ControlledDocStatus {
+  DRAFT
+  APPROVED
+  SUPERSEDED
+}
+
+model ControlledDocument {
+  id        String  @id @default(uuid())
+  companyId String
+  company   Company @relation(fields: [companyId], references: [id])
+  docNumber String
+
+  vesselId String? // null = fleet-wide document
+  vessel   Vessel? @relation(fields: [vesselId], references: [id])
+
+  title      String
+  category   DocumentCategory
+  version    String?
+  issueDate  DateTime
+  reviewDate DateTime?
+  owner      String? // issuing department / role
+  description String?
+
+  status ControlledDocStatus @default(DRAFT)
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  createdBy String?
+  updatedBy String?
+  deletedAt DateTime?
+  deletedBy String?
+
+  @@unique([companyId, docNumber])
+  @@index([companyId, status])
+}
+
+// ─── Phase 1 module: Circulars ────────────────────────────────────────────────
+
+enum CircularCategory {
+  SAFETY
+  TECHNICAL
+  OPERATIONAL
+  HR
+  REGULATORY
+  OTHER
+}
+
+model Circular {
+  id        String  @id @default(uuid())
+  companyId String
+  company   Company @relation(fields: [companyId], references: [id])
+  refNo     String
+
+  vesselId String? // null = fleet-wide circular
+  vessel   Vessel? @relation(fields: [vesselId], references: [id])
+
+  title     String
+  category  CircularCategory
+  issueDate DateTime
+  body      String
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  createdBy String?
+  updatedBy String?
+  deletedAt DateTime?
+  deletedBy String?
+
+  @@unique([companyId, refNo])
+  @@index([companyId, category])
+}
+
+// ─── Phase 1 module: Risk Assessments ─────────────────────────────────────────
+
+enum RiskRating {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+enum RiskAssessmentStatus {
+  ACTIVE
+  SUPERSEDED
+  CLOSED
+}
+
+model RiskAssessment {
+  id        String  @id @default(uuid())
+  companyId String
+  company   Company @relation(fields: [companyId], references: [id])
+  refNo     String
+
+  vesselId String? // null = shore / fleet-wide activity
+  vessel   Vessel? @relation(fields: [vesselId], references: [id])
+
+  activity          String // task / operation being assessed
+  hazards           String
+  existingControls  String?
+  likelihood        RiskRating
+  severity          RiskRating
+  additionalControls String?
+  assessedBy        String?
+  assessmentDate    DateTime
+  reviewDate        DateTime?
+
+  status   RiskAssessmentStatus @default(ACTIVE)
+  closedAt DateTime?
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  createdBy String?
+  updatedBy String?
+  deletedAt DateTime?
+  deletedBy String?
+
+  @@unique([companyId, refNo])
+  @@index([companyId, status])
+}
+
+// ─── Phase 1 module: Defect List ──────────────────────────────────────────────
+
+enum DefectSeverity {
+  MINOR
+  MAJOR
+  CRITICAL
+}
+
+enum DefectStatus {
+  OPEN
+  MONITORING
+  RECTIFIED
+  DEFERRED
+}
+
+model Defect {
+  id        String  @id @default(uuid())
+  companyId String
+  company   Company @relation(fields: [companyId], references: [id])
+  refNo     String
+
+  vesselId String
+  vessel   Vessel @relation(fields: [vesselId], references: [id])
+
+  equipment   String // equipment / system affected
+  description String
+  severity    DefectSeverity
+  dateRaised  DateTime
+  targetRectificationDate DateTime?
+  actionTaken String?
+  raisedBy    String?
+
+  status     DefectStatus @default(OPEN)
+  rectifiedAt DateTime?
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  createdBy String?
+  updatedBy String?
+  deletedAt DateTime?
+  deletedBy String?
+
+  @@unique([companyId, refNo])
+  @@index([companyId, status])
 }

@@ -1,4 +1,9 @@
 import { z } from "zod";
+import {
+  ROOT_CAUSE_CATEGORIES,
+  ROOT_CAUSE_SUBCATEGORIES,
+  type RootCauseCategoryValue,
+} from "@/lib/root-cause";
 
 export const SEVERITIES = ["LOW", "MEDIUM", "HIGH", "CRITICAL"] as const;
 
@@ -32,9 +37,9 @@ export const PERSON_IN_CHARGE_OPTIONS = [
 ] as const;
 
 export const createNcrSchema = z.object({
-  // System suggests the next number (see suggestNextRefNo); user may edit it
-  // before saving. Uniqueness is re-checked server-side in createNcrAction.
-  refNo: z.string().trim().min(3, "NCR number is required").max(50),
+  // refNo is NOT taken from the client — letting it be typed/edited was
+  // producing duplicates and out-of-sequence numbers. createNcrAction always
+  // assigns the next number itself, taken from the last NCR on record.
   title: z.string().trim().min(3, "Title is required").max(200),
   vesselId: z.string().uuid().optional().or(z.literal("")),
   source: z.enum(NCR_SOURCES),
@@ -61,9 +66,22 @@ export const createNcrSchema = z.object({
   personInCharge: z.enum(PERSON_IN_CHARGE_OPTIONS),
 });
 
-export const capaNcrSchema = z.object({
-  ncrId: z.string().uuid(),
-  rootCause: z.string().trim().max(10000).optional().or(z.literal("")),
-  correctiveAction: z.string().trim().max(10000).optional().or(z.literal("")),
-  verification: z.string().trim().max(10000).optional().or(z.literal("")),
-});
+// Root cause classification — same shared taxonomy Incident/Near Miss use
+// (lib/root-cause.ts). Corrective actions themselves are recorded in the
+// shared CapaAction tracker (entityType "NonConformity"), not here.
+export const rootCauseSchema = z
+  .object({
+    ncrId: z.string().uuid(),
+    rootCauseCategory: z.enum(ROOT_CAUSE_CATEGORIES),
+    rootCauseSubCategory: z.string().trim().min(1, "Select the root cause sub-category"),
+  })
+  .superRefine((v, ctx) => {
+    const allowed = ROOT_CAUSE_SUBCATEGORIES[v.rootCauseCategory as RootCauseCategoryValue];
+    if (!allowed.includes(v.rootCauseSubCategory)) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Select a valid sub-category for the chosen category",
+        path: ["rootCauseSubCategory"],
+      });
+    }
+  });

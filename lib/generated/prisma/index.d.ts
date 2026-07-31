@@ -181,6 +181,36 @@ export type ExternalAudit = $Result.DefaultSelection<Prisma.$ExternalAuditPayloa
  * 
  */
 export type ExternalAuditFinding = $Result.DefaultSelection<Prisma.$ExternalAuditFindingPayload>
+/**
+ * Model SafetyMeeting
+ * 
+ */
+export type SafetyMeeting = $Result.DefaultSelection<Prisma.$SafetyMeetingPayload>
+/**
+ * Model EmergencyDrill
+ * 
+ */
+export type EmergencyDrill = $Result.DefaultSelection<Prisma.$EmergencyDrillPayload>
+/**
+ * Model ControlledDocument
+ * 
+ */
+export type ControlledDocument = $Result.DefaultSelection<Prisma.$ControlledDocumentPayload>
+/**
+ * Model Circular
+ * 
+ */
+export type Circular = $Result.DefaultSelection<Prisma.$CircularPayload>
+/**
+ * Model RiskAssessment
+ * 
+ */
+export type RiskAssessment = $Result.DefaultSelection<Prisma.$RiskAssessmentPayload>
+/**
+ * Model Defect
+ * 
+ */
+export type Defect = $Result.DefaultSelection<Prisma.$DefectPayload>
 
 /**
  * Enums
@@ -440,6 +470,100 @@ export const AuditFindingCategory: {
 
 export type AuditFindingCategory = (typeof AuditFindingCategory)[keyof typeof AuditFindingCategory]
 
+
+export const MeetingType: {
+  SAFETY_COMMITTEE: 'SAFETY_COMMITTEE',
+  OFFICE_SAFETY: 'OFFICE_SAFETY',
+  MANAGEMENT_REVIEW: 'MANAGEMENT_REVIEW'
+};
+
+export type MeetingType = (typeof MeetingType)[keyof typeof MeetingType]
+
+
+export const DrillType: {
+  FIRE: 'FIRE',
+  ABANDON_SHIP: 'ABANDON_SHIP',
+  MAN_OVERBOARD: 'MAN_OVERBOARD',
+  ENCLOSED_SPACE: 'ENCLOSED_SPACE',
+  OIL_SPILL: 'OIL_SPILL',
+  SECURITY: 'SECURITY',
+  STEERING_FAILURE: 'STEERING_FAILURE',
+  DAMAGE_CONTROL: 'DAMAGE_CONTROL',
+  OTHER: 'OTHER'
+};
+
+export type DrillType = (typeof DrillType)[keyof typeof DrillType]
+
+
+export const DocumentCategory: {
+  FORM: 'FORM',
+  CHECKLIST: 'CHECKLIST',
+  CERTIFICATE: 'CERTIFICATE',
+  MANUAL: 'MANUAL',
+  PROCEDURE: 'PROCEDURE',
+  OTHER: 'OTHER'
+};
+
+export type DocumentCategory = (typeof DocumentCategory)[keyof typeof DocumentCategory]
+
+
+export const ControlledDocStatus: {
+  DRAFT: 'DRAFT',
+  APPROVED: 'APPROVED',
+  SUPERSEDED: 'SUPERSEDED'
+};
+
+export type ControlledDocStatus = (typeof ControlledDocStatus)[keyof typeof ControlledDocStatus]
+
+
+export const CircularCategory: {
+  SAFETY: 'SAFETY',
+  TECHNICAL: 'TECHNICAL',
+  OPERATIONAL: 'OPERATIONAL',
+  HR: 'HR',
+  REGULATORY: 'REGULATORY',
+  OTHER: 'OTHER'
+};
+
+export type CircularCategory = (typeof CircularCategory)[keyof typeof CircularCategory]
+
+
+export const RiskRating: {
+  LOW: 'LOW',
+  MEDIUM: 'MEDIUM',
+  HIGH: 'HIGH'
+};
+
+export type RiskRating = (typeof RiskRating)[keyof typeof RiskRating]
+
+
+export const RiskAssessmentStatus: {
+  ACTIVE: 'ACTIVE',
+  SUPERSEDED: 'SUPERSEDED',
+  CLOSED: 'CLOSED'
+};
+
+export type RiskAssessmentStatus = (typeof RiskAssessmentStatus)[keyof typeof RiskAssessmentStatus]
+
+
+export const DefectSeverity: {
+  MINOR: 'MINOR',
+  MAJOR: 'MAJOR',
+  CRITICAL: 'CRITICAL'
+};
+
+export type DefectSeverity = (typeof DefectSeverity)[keyof typeof DefectSeverity]
+
+
+export const DefectStatus: {
+  OPEN: 'OPEN',
+  MONITORING: 'MONITORING',
+  RECTIFIED: 'RECTIFIED',
+  DEFERRED: 'DEFERRED'
+};
+
+export type DefectStatus = (typeof DefectStatus)[keyof typeof DefectStatus]
+
 }
 
 export type DepartmentType = $Enums.DepartmentType
@@ -533,6 +657,42 @@ export const FindingStatus: typeof $Enums.FindingStatus
 export type AuditFindingCategory = $Enums.AuditFindingCategory
 
 export const AuditFindingCategory: typeof $Enums.AuditFindingCategory
+
+export type MeetingType = $Enums.MeetingType
+
+export const MeetingType: typeof $Enums.MeetingType
+
+export type DrillType = $Enums.DrillType
+
+export const DrillType: typeof $Enums.DrillType
+
+export type DocumentCategory = $Enums.DocumentCategory
+
+export const DocumentCategory: typeof $Enums.DocumentCategory
+
+export type ControlledDocStatus = $Enums.ControlledDocStatus
+
+export const ControlledDocStatus: typeof $Enums.ControlledDocStatus
+
+export type CircularCategory = $Enums.CircularCategory
+
+export const CircularCategory: typeof $Enums.CircularCategory
+
+export type RiskRating = $Enums.RiskRating
+
+export const RiskRating: typeof $Enums.RiskRating
+
+export type RiskAssessmentStatus = $Enums.RiskAssessmentStatus
+
+export const RiskAssessmentStatus: typeof $Enums.RiskAssessmentStatus
+
+export type DefectSeverity = $Enums.DefectSeverity
+
+export const DefectSeverity: typeof $Enums.DefectSeverity
+
+export type DefectStatus = $Enums.DefectStatus
+
+export const DefectStatus: typeof $Enums.DefectStatus
 
 /**
  * ##  Prisma Client ʲˢ
@@ -981,6 +1141,66 @@ export class PrismaClient<
     * ```
     */
   get externalAuditFinding(): Prisma.ExternalAuditFindingDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.safetyMeeting`: Exposes CRUD operations for the **SafetyMeeting** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more SafetyMeetings
+    * const safetyMeetings = await prisma.safetyMeeting.findMany()
+    * ```
+    */
+  get safetyMeeting(): Prisma.SafetyMeetingDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.emergencyDrill`: Exposes CRUD operations for the **EmergencyDrill** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more EmergencyDrills
+    * const emergencyDrills = await prisma.emergencyDrill.findMany()
+    * ```
+    */
+  get emergencyDrill(): Prisma.EmergencyDrillDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.controlledDocument`: Exposes CRUD operations for the **ControlledDocument** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ControlledDocuments
+    * const controlledDocuments = await prisma.controlledDocument.findMany()
+    * ```
+    */
+  get controlledDocument(): Prisma.ControlledDocumentDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.circular`: Exposes CRUD operations for the **Circular** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Circulars
+    * const circulars = await prisma.circular.findMany()
+    * ```
+    */
+  get circular(): Prisma.CircularDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.riskAssessment`: Exposes CRUD operations for the **RiskAssessment** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more RiskAssessments
+    * const riskAssessments = await prisma.riskAssessment.findMany()
+    * ```
+    */
+  get riskAssessment(): Prisma.RiskAssessmentDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.defect`: Exposes CRUD operations for the **Defect** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Defects
+    * const defects = await prisma.defect.findMany()
+    * ```
+    */
+  get defect(): Prisma.DefectDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -1454,7 +1674,13 @@ export namespace Prisma {
     InternalAudit: 'InternalAudit',
     InternalAuditFinding: 'InternalAuditFinding',
     ExternalAudit: 'ExternalAudit',
-    ExternalAuditFinding: 'ExternalAuditFinding'
+    ExternalAuditFinding: 'ExternalAuditFinding',
+    SafetyMeeting: 'SafetyMeeting',
+    EmergencyDrill: 'EmergencyDrill',
+    ControlledDocument: 'ControlledDocument',
+    Circular: 'Circular',
+    RiskAssessment: 'RiskAssessment',
+    Defect: 'Defect'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1473,7 +1699,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "company" | "user" | "role" | "permission" | "rolePermission" | "userRole" | "vessel" | "auditLog" | "attachment" | "comment" | "capaAction" | "notification" | "workflowDefinition" | "workflowStep" | "workflowInstance" | "workflowAction" | "smsDocument" | "smsRevision" | "incident" | "incidentSofEntry" | "incidentTypeEntry" | "nearMiss" | "nonConformity" | "sireInspection" | "sireObservation" | "pscInspection" | "pscDeficiency" | "cdiInspection" | "cdiObservation" | "internalAudit" | "internalAuditFinding" | "externalAudit" | "externalAuditFinding"
+      modelProps: "company" | "user" | "role" | "permission" | "rolePermission" | "userRole" | "vessel" | "auditLog" | "attachment" | "comment" | "capaAction" | "notification" | "workflowDefinition" | "workflowStep" | "workflowInstance" | "workflowAction" | "smsDocument" | "smsRevision" | "incident" | "incidentSofEntry" | "incidentTypeEntry" | "nearMiss" | "nonConformity" | "sireInspection" | "sireObservation" | "pscInspection" | "pscDeficiency" | "cdiInspection" | "cdiObservation" | "internalAudit" | "internalAuditFinding" | "externalAudit" | "externalAuditFinding" | "safetyMeeting" | "emergencyDrill" | "controlledDocument" | "circular" | "riskAssessment" | "defect"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -3919,6 +4145,450 @@ export namespace Prisma {
           }
         }
       }
+      SafetyMeeting: {
+        payload: Prisma.$SafetyMeetingPayload<ExtArgs>
+        fields: Prisma.SafetyMeetingFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.SafetyMeetingFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SafetyMeetingPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.SafetyMeetingFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SafetyMeetingPayload>
+          }
+          findFirst: {
+            args: Prisma.SafetyMeetingFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SafetyMeetingPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.SafetyMeetingFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SafetyMeetingPayload>
+          }
+          findMany: {
+            args: Prisma.SafetyMeetingFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SafetyMeetingPayload>[]
+          }
+          create: {
+            args: Prisma.SafetyMeetingCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SafetyMeetingPayload>
+          }
+          createMany: {
+            args: Prisma.SafetyMeetingCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.SafetyMeetingCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SafetyMeetingPayload>[]
+          }
+          delete: {
+            args: Prisma.SafetyMeetingDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SafetyMeetingPayload>
+          }
+          update: {
+            args: Prisma.SafetyMeetingUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SafetyMeetingPayload>
+          }
+          deleteMany: {
+            args: Prisma.SafetyMeetingDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.SafetyMeetingUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.SafetyMeetingUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SafetyMeetingPayload>[]
+          }
+          upsert: {
+            args: Prisma.SafetyMeetingUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SafetyMeetingPayload>
+          }
+          aggregate: {
+            args: Prisma.SafetyMeetingAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateSafetyMeeting>
+          }
+          groupBy: {
+            args: Prisma.SafetyMeetingGroupByArgs<ExtArgs>
+            result: $Utils.Optional<SafetyMeetingGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.SafetyMeetingCountArgs<ExtArgs>
+            result: $Utils.Optional<SafetyMeetingCountAggregateOutputType> | number
+          }
+        }
+      }
+      EmergencyDrill: {
+        payload: Prisma.$EmergencyDrillPayload<ExtArgs>
+        fields: Prisma.EmergencyDrillFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.EmergencyDrillFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EmergencyDrillPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.EmergencyDrillFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EmergencyDrillPayload>
+          }
+          findFirst: {
+            args: Prisma.EmergencyDrillFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EmergencyDrillPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.EmergencyDrillFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EmergencyDrillPayload>
+          }
+          findMany: {
+            args: Prisma.EmergencyDrillFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EmergencyDrillPayload>[]
+          }
+          create: {
+            args: Prisma.EmergencyDrillCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EmergencyDrillPayload>
+          }
+          createMany: {
+            args: Prisma.EmergencyDrillCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.EmergencyDrillCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EmergencyDrillPayload>[]
+          }
+          delete: {
+            args: Prisma.EmergencyDrillDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EmergencyDrillPayload>
+          }
+          update: {
+            args: Prisma.EmergencyDrillUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EmergencyDrillPayload>
+          }
+          deleteMany: {
+            args: Prisma.EmergencyDrillDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.EmergencyDrillUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.EmergencyDrillUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EmergencyDrillPayload>[]
+          }
+          upsert: {
+            args: Prisma.EmergencyDrillUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EmergencyDrillPayload>
+          }
+          aggregate: {
+            args: Prisma.EmergencyDrillAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateEmergencyDrill>
+          }
+          groupBy: {
+            args: Prisma.EmergencyDrillGroupByArgs<ExtArgs>
+            result: $Utils.Optional<EmergencyDrillGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.EmergencyDrillCountArgs<ExtArgs>
+            result: $Utils.Optional<EmergencyDrillCountAggregateOutputType> | number
+          }
+        }
+      }
+      ControlledDocument: {
+        payload: Prisma.$ControlledDocumentPayload<ExtArgs>
+        fields: Prisma.ControlledDocumentFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ControlledDocumentFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ControlledDocumentPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ControlledDocumentFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ControlledDocumentPayload>
+          }
+          findFirst: {
+            args: Prisma.ControlledDocumentFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ControlledDocumentPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ControlledDocumentFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ControlledDocumentPayload>
+          }
+          findMany: {
+            args: Prisma.ControlledDocumentFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ControlledDocumentPayload>[]
+          }
+          create: {
+            args: Prisma.ControlledDocumentCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ControlledDocumentPayload>
+          }
+          createMany: {
+            args: Prisma.ControlledDocumentCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ControlledDocumentCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ControlledDocumentPayload>[]
+          }
+          delete: {
+            args: Prisma.ControlledDocumentDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ControlledDocumentPayload>
+          }
+          update: {
+            args: Prisma.ControlledDocumentUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ControlledDocumentPayload>
+          }
+          deleteMany: {
+            args: Prisma.ControlledDocumentDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ControlledDocumentUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ControlledDocumentUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ControlledDocumentPayload>[]
+          }
+          upsert: {
+            args: Prisma.ControlledDocumentUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ControlledDocumentPayload>
+          }
+          aggregate: {
+            args: Prisma.ControlledDocumentAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateControlledDocument>
+          }
+          groupBy: {
+            args: Prisma.ControlledDocumentGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ControlledDocumentGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ControlledDocumentCountArgs<ExtArgs>
+            result: $Utils.Optional<ControlledDocumentCountAggregateOutputType> | number
+          }
+        }
+      }
+      Circular: {
+        payload: Prisma.$CircularPayload<ExtArgs>
+        fields: Prisma.CircularFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.CircularFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CircularPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.CircularFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CircularPayload>
+          }
+          findFirst: {
+            args: Prisma.CircularFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CircularPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.CircularFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CircularPayload>
+          }
+          findMany: {
+            args: Prisma.CircularFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CircularPayload>[]
+          }
+          create: {
+            args: Prisma.CircularCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CircularPayload>
+          }
+          createMany: {
+            args: Prisma.CircularCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.CircularCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CircularPayload>[]
+          }
+          delete: {
+            args: Prisma.CircularDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CircularPayload>
+          }
+          update: {
+            args: Prisma.CircularUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CircularPayload>
+          }
+          deleteMany: {
+            args: Prisma.CircularDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.CircularUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.CircularUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CircularPayload>[]
+          }
+          upsert: {
+            args: Prisma.CircularUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CircularPayload>
+          }
+          aggregate: {
+            args: Prisma.CircularAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateCircular>
+          }
+          groupBy: {
+            args: Prisma.CircularGroupByArgs<ExtArgs>
+            result: $Utils.Optional<CircularGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.CircularCountArgs<ExtArgs>
+            result: $Utils.Optional<CircularCountAggregateOutputType> | number
+          }
+        }
+      }
+      RiskAssessment: {
+        payload: Prisma.$RiskAssessmentPayload<ExtArgs>
+        fields: Prisma.RiskAssessmentFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.RiskAssessmentFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RiskAssessmentPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.RiskAssessmentFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RiskAssessmentPayload>
+          }
+          findFirst: {
+            args: Prisma.RiskAssessmentFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RiskAssessmentPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.RiskAssessmentFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RiskAssessmentPayload>
+          }
+          findMany: {
+            args: Prisma.RiskAssessmentFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RiskAssessmentPayload>[]
+          }
+          create: {
+            args: Prisma.RiskAssessmentCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RiskAssessmentPayload>
+          }
+          createMany: {
+            args: Prisma.RiskAssessmentCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.RiskAssessmentCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RiskAssessmentPayload>[]
+          }
+          delete: {
+            args: Prisma.RiskAssessmentDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RiskAssessmentPayload>
+          }
+          update: {
+            args: Prisma.RiskAssessmentUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RiskAssessmentPayload>
+          }
+          deleteMany: {
+            args: Prisma.RiskAssessmentDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.RiskAssessmentUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.RiskAssessmentUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RiskAssessmentPayload>[]
+          }
+          upsert: {
+            args: Prisma.RiskAssessmentUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RiskAssessmentPayload>
+          }
+          aggregate: {
+            args: Prisma.RiskAssessmentAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateRiskAssessment>
+          }
+          groupBy: {
+            args: Prisma.RiskAssessmentGroupByArgs<ExtArgs>
+            result: $Utils.Optional<RiskAssessmentGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.RiskAssessmentCountArgs<ExtArgs>
+            result: $Utils.Optional<RiskAssessmentCountAggregateOutputType> | number
+          }
+        }
+      }
+      Defect: {
+        payload: Prisma.$DefectPayload<ExtArgs>
+        fields: Prisma.DefectFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.DefectFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DefectPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.DefectFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DefectPayload>
+          }
+          findFirst: {
+            args: Prisma.DefectFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DefectPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.DefectFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DefectPayload>
+          }
+          findMany: {
+            args: Prisma.DefectFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DefectPayload>[]
+          }
+          create: {
+            args: Prisma.DefectCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DefectPayload>
+          }
+          createMany: {
+            args: Prisma.DefectCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.DefectCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DefectPayload>[]
+          }
+          delete: {
+            args: Prisma.DefectDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DefectPayload>
+          }
+          update: {
+            args: Prisma.DefectUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DefectPayload>
+          }
+          deleteMany: {
+            args: Prisma.DefectDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.DefectUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.DefectUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DefectPayload>[]
+          }
+          upsert: {
+            args: Prisma.DefectUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DefectPayload>
+          }
+          aggregate: {
+            args: Prisma.DefectAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateDefect>
+          }
+          groupBy: {
+            args: Prisma.DefectGroupByArgs<ExtArgs>
+            result: $Utils.Optional<DefectGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.DefectCountArgs<ExtArgs>
+            result: $Utils.Optional<DefectCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -4048,6 +4718,12 @@ export namespace Prisma {
     internalAuditFinding?: InternalAuditFindingOmit
     externalAudit?: ExternalAuditOmit
     externalAuditFinding?: ExternalAuditFindingOmit
+    safetyMeeting?: SafetyMeetingOmit
+    emergencyDrill?: EmergencyDrillOmit
+    controlledDocument?: ControlledDocumentOmit
+    circular?: CircularOmit
+    riskAssessment?: RiskAssessmentOmit
+    defect?: DefectOmit
   }
 
   /* Types for Logging */
@@ -4141,6 +4817,12 @@ export namespace Prisma {
     cdiInspections: number
     internalAudits: number
     externalAudits: number
+    safetyMeetings: number
+    emergencyDrills: number
+    controlledDocuments: number
+    circulars: number
+    riskAssessments: number
+    defects: number
   }
 
   export type CompanyCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4157,6 +4839,12 @@ export namespace Prisma {
     cdiInspections?: boolean | CompanyCountOutputTypeCountCdiInspectionsArgs
     internalAudits?: boolean | CompanyCountOutputTypeCountInternalAuditsArgs
     externalAudits?: boolean | CompanyCountOutputTypeCountExternalAuditsArgs
+    safetyMeetings?: boolean | CompanyCountOutputTypeCountSafetyMeetingsArgs
+    emergencyDrills?: boolean | CompanyCountOutputTypeCountEmergencyDrillsArgs
+    controlledDocuments?: boolean | CompanyCountOutputTypeCountControlledDocumentsArgs
+    circulars?: boolean | CompanyCountOutputTypeCountCircularsArgs
+    riskAssessments?: boolean | CompanyCountOutputTypeCountRiskAssessmentsArgs
+    defects?: boolean | CompanyCountOutputTypeCountDefectsArgs
   }
 
   // Custom InputTypes
@@ -4259,6 +4947,48 @@ export namespace Prisma {
    */
   export type CompanyCountOutputTypeCountExternalAuditsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ExternalAuditWhereInput
+  }
+
+  /**
+   * CompanyCountOutputType without action
+   */
+  export type CompanyCountOutputTypeCountSafetyMeetingsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SafetyMeetingWhereInput
+  }
+
+  /**
+   * CompanyCountOutputType without action
+   */
+  export type CompanyCountOutputTypeCountEmergencyDrillsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: EmergencyDrillWhereInput
+  }
+
+  /**
+   * CompanyCountOutputType without action
+   */
+  export type CompanyCountOutputTypeCountControlledDocumentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ControlledDocumentWhereInput
+  }
+
+  /**
+   * CompanyCountOutputType without action
+   */
+  export type CompanyCountOutputTypeCountCircularsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CircularWhereInput
+  }
+
+  /**
+   * CompanyCountOutputType without action
+   */
+  export type CompanyCountOutputTypeCountRiskAssessmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: RiskAssessmentWhereInput
+  }
+
+  /**
+   * CompanyCountOutputType without action
+   */
+  export type CompanyCountOutputTypeCountDefectsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DefectWhereInput
   }
 
 
@@ -4423,6 +5153,12 @@ export namespace Prisma {
     cdiInspections: number
     internalAudits: number
     externalAudits: number
+    safetyMeetings: number
+    emergencyDrills: number
+    controlledDocuments: number
+    circulars: number
+    riskAssessments: number
+    defects: number
   }
 
   export type VesselCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4435,6 +5171,12 @@ export namespace Prisma {
     cdiInspections?: boolean | VesselCountOutputTypeCountCdiInspectionsArgs
     internalAudits?: boolean | VesselCountOutputTypeCountInternalAuditsArgs
     externalAudits?: boolean | VesselCountOutputTypeCountExternalAuditsArgs
+    safetyMeetings?: boolean | VesselCountOutputTypeCountSafetyMeetingsArgs
+    emergencyDrills?: boolean | VesselCountOutputTypeCountEmergencyDrillsArgs
+    controlledDocuments?: boolean | VesselCountOutputTypeCountControlledDocumentsArgs
+    circulars?: boolean | VesselCountOutputTypeCountCircularsArgs
+    riskAssessments?: boolean | VesselCountOutputTypeCountRiskAssessmentsArgs
+    defects?: boolean | VesselCountOutputTypeCountDefectsArgs
   }
 
   // Custom InputTypes
@@ -4509,6 +5251,48 @@ export namespace Prisma {
    */
   export type VesselCountOutputTypeCountExternalAuditsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ExternalAuditWhereInput
+  }
+
+  /**
+   * VesselCountOutputType without action
+   */
+  export type VesselCountOutputTypeCountSafetyMeetingsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SafetyMeetingWhereInput
+  }
+
+  /**
+   * VesselCountOutputType without action
+   */
+  export type VesselCountOutputTypeCountEmergencyDrillsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: EmergencyDrillWhereInput
+  }
+
+  /**
+   * VesselCountOutputType without action
+   */
+  export type VesselCountOutputTypeCountControlledDocumentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ControlledDocumentWhereInput
+  }
+
+  /**
+   * VesselCountOutputType without action
+   */
+  export type VesselCountOutputTypeCountCircularsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CircularWhereInput
+  }
+
+  /**
+   * VesselCountOutputType without action
+   */
+  export type VesselCountOutputTypeCountRiskAssessmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: RiskAssessmentWhereInput
+  }
+
+  /**
+   * VesselCountOutputType without action
+   */
+  export type VesselCountOutputTypeCountDefectsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DefectWhereInput
   }
 
 
@@ -5021,6 +5805,12 @@ export namespace Prisma {
     cdiInspections?: boolean | Company$cdiInspectionsArgs<ExtArgs>
     internalAudits?: boolean | Company$internalAuditsArgs<ExtArgs>
     externalAudits?: boolean | Company$externalAuditsArgs<ExtArgs>
+    safetyMeetings?: boolean | Company$safetyMeetingsArgs<ExtArgs>
+    emergencyDrills?: boolean | Company$emergencyDrillsArgs<ExtArgs>
+    controlledDocuments?: boolean | Company$controlledDocumentsArgs<ExtArgs>
+    circulars?: boolean | Company$circularsArgs<ExtArgs>
+    riskAssessments?: boolean | Company$riskAssessmentsArgs<ExtArgs>
+    defects?: boolean | Company$defectsArgs<ExtArgs>
     _count?: boolean | CompanyCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["company"]>
 
@@ -5063,6 +5853,12 @@ export namespace Prisma {
     cdiInspections?: boolean | Company$cdiInspectionsArgs<ExtArgs>
     internalAudits?: boolean | Company$internalAuditsArgs<ExtArgs>
     externalAudits?: boolean | Company$externalAuditsArgs<ExtArgs>
+    safetyMeetings?: boolean | Company$safetyMeetingsArgs<ExtArgs>
+    emergencyDrills?: boolean | Company$emergencyDrillsArgs<ExtArgs>
+    controlledDocuments?: boolean | Company$controlledDocumentsArgs<ExtArgs>
+    circulars?: boolean | Company$circularsArgs<ExtArgs>
+    riskAssessments?: boolean | Company$riskAssessmentsArgs<ExtArgs>
+    defects?: boolean | Company$defectsArgs<ExtArgs>
     _count?: boolean | CompanyCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type CompanyIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -5084,6 +5880,12 @@ export namespace Prisma {
       cdiInspections: Prisma.$CdiInspectionPayload<ExtArgs>[]
       internalAudits: Prisma.$InternalAuditPayload<ExtArgs>[]
       externalAudits: Prisma.$ExternalAuditPayload<ExtArgs>[]
+      safetyMeetings: Prisma.$SafetyMeetingPayload<ExtArgs>[]
+      emergencyDrills: Prisma.$EmergencyDrillPayload<ExtArgs>[]
+      controlledDocuments: Prisma.$ControlledDocumentPayload<ExtArgs>[]
+      circulars: Prisma.$CircularPayload<ExtArgs>[]
+      riskAssessments: Prisma.$RiskAssessmentPayload<ExtArgs>[]
+      defects: Prisma.$DefectPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -5498,6 +6300,12 @@ export namespace Prisma {
     cdiInspections<T extends Company$cdiInspectionsArgs<ExtArgs> = {}>(args?: Subset<T, Company$cdiInspectionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CdiInspectionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     internalAudits<T extends Company$internalAuditsArgs<ExtArgs> = {}>(args?: Subset<T, Company$internalAuditsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InternalAuditPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     externalAudits<T extends Company$externalAuditsArgs<ExtArgs> = {}>(args?: Subset<T, Company$externalAuditsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExternalAuditPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    safetyMeetings<T extends Company$safetyMeetingsArgs<ExtArgs> = {}>(args?: Subset<T, Company$safetyMeetingsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SafetyMeetingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    emergencyDrills<T extends Company$emergencyDrillsArgs<ExtArgs> = {}>(args?: Subset<T, Company$emergencyDrillsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$EmergencyDrillPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    controlledDocuments<T extends Company$controlledDocumentsArgs<ExtArgs> = {}>(args?: Subset<T, Company$controlledDocumentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ControlledDocumentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    circulars<T extends Company$circularsArgs<ExtArgs> = {}>(args?: Subset<T, Company$circularsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CircularPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    riskAssessments<T extends Company$riskAssessmentsArgs<ExtArgs> = {}>(args?: Subset<T, Company$riskAssessmentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RiskAssessmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    defects<T extends Company$defectsArgs<ExtArgs> = {}>(args?: Subset<T, Company$defectsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DefectPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -6229,6 +7037,150 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: ExternalAuditScalarFieldEnum | ExternalAuditScalarFieldEnum[]
+  }
+
+  /**
+   * Company.safetyMeetings
+   */
+  export type Company$safetyMeetingsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SafetyMeeting
+     */
+    select?: SafetyMeetingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SafetyMeeting
+     */
+    omit?: SafetyMeetingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SafetyMeetingInclude<ExtArgs> | null
+    where?: SafetyMeetingWhereInput
+    orderBy?: SafetyMeetingOrderByWithRelationInput | SafetyMeetingOrderByWithRelationInput[]
+    cursor?: SafetyMeetingWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: SafetyMeetingScalarFieldEnum | SafetyMeetingScalarFieldEnum[]
+  }
+
+  /**
+   * Company.emergencyDrills
+   */
+  export type Company$emergencyDrillsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EmergencyDrill
+     */
+    select?: EmergencyDrillSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EmergencyDrill
+     */
+    omit?: EmergencyDrillOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EmergencyDrillInclude<ExtArgs> | null
+    where?: EmergencyDrillWhereInput
+    orderBy?: EmergencyDrillOrderByWithRelationInput | EmergencyDrillOrderByWithRelationInput[]
+    cursor?: EmergencyDrillWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: EmergencyDrillScalarFieldEnum | EmergencyDrillScalarFieldEnum[]
+  }
+
+  /**
+   * Company.controlledDocuments
+   */
+  export type Company$controlledDocumentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ControlledDocument
+     */
+    select?: ControlledDocumentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ControlledDocument
+     */
+    omit?: ControlledDocumentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ControlledDocumentInclude<ExtArgs> | null
+    where?: ControlledDocumentWhereInput
+    orderBy?: ControlledDocumentOrderByWithRelationInput | ControlledDocumentOrderByWithRelationInput[]
+    cursor?: ControlledDocumentWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ControlledDocumentScalarFieldEnum | ControlledDocumentScalarFieldEnum[]
+  }
+
+  /**
+   * Company.circulars
+   */
+  export type Company$circularsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Circular
+     */
+    select?: CircularSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Circular
+     */
+    omit?: CircularOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CircularInclude<ExtArgs> | null
+    where?: CircularWhereInput
+    orderBy?: CircularOrderByWithRelationInput | CircularOrderByWithRelationInput[]
+    cursor?: CircularWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: CircularScalarFieldEnum | CircularScalarFieldEnum[]
+  }
+
+  /**
+   * Company.riskAssessments
+   */
+  export type Company$riskAssessmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RiskAssessment
+     */
+    select?: RiskAssessmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RiskAssessment
+     */
+    omit?: RiskAssessmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RiskAssessmentInclude<ExtArgs> | null
+    where?: RiskAssessmentWhereInput
+    orderBy?: RiskAssessmentOrderByWithRelationInput | RiskAssessmentOrderByWithRelationInput[]
+    cursor?: RiskAssessmentWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: RiskAssessmentScalarFieldEnum | RiskAssessmentScalarFieldEnum[]
+  }
+
+  /**
+   * Company.defects
+   */
+  export type Company$defectsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Defect
+     */
+    select?: DefectSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Defect
+     */
+    omit?: DefectOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DefectInclude<ExtArgs> | null
+    where?: DefectWhereInput
+    orderBy?: DefectOrderByWithRelationInput | DefectOrderByWithRelationInput[]
+    cursor?: DefectWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: DefectScalarFieldEnum | DefectScalarFieldEnum[]
   }
 
   /**
@@ -11893,6 +12845,7 @@ export namespace Prisma {
     id: string | null
     companyId: string | null
     name: string | null
+    code: string | null
     imo: string | null
     officialNumber: string | null
     callSign: string | null
@@ -11918,6 +12871,7 @@ export namespace Prisma {
     id: string | null
     companyId: string | null
     name: string | null
+    code: string | null
     imo: string | null
     officialNumber: string | null
     callSign: string | null
@@ -11943,6 +12897,7 @@ export namespace Prisma {
     id: number
     companyId: number
     name: number
+    code: number
     imo: number
     officialNumber: number
     callSign: number
@@ -11986,6 +12941,7 @@ export namespace Prisma {
     id?: true
     companyId?: true
     name?: true
+    code?: true
     imo?: true
     officialNumber?: true
     callSign?: true
@@ -12011,6 +12967,7 @@ export namespace Prisma {
     id?: true
     companyId?: true
     name?: true
+    code?: true
     imo?: true
     officialNumber?: true
     callSign?: true
@@ -12036,6 +12993,7 @@ export namespace Prisma {
     id?: true
     companyId?: true
     name?: true
+    code?: true
     imo?: true
     officialNumber?: true
     callSign?: true
@@ -12148,6 +13106,7 @@ export namespace Prisma {
     id: string
     companyId: string
     name: string
+    code: string | null
     imo: string
     officialNumber: string | null
     callSign: string | null
@@ -12192,6 +13151,7 @@ export namespace Prisma {
     id?: boolean
     companyId?: boolean
     name?: boolean
+    code?: boolean
     imo?: boolean
     officialNumber?: boolean
     callSign?: boolean
@@ -12221,6 +13181,12 @@ export namespace Prisma {
     cdiInspections?: boolean | Vessel$cdiInspectionsArgs<ExtArgs>
     internalAudits?: boolean | Vessel$internalAuditsArgs<ExtArgs>
     externalAudits?: boolean | Vessel$externalAuditsArgs<ExtArgs>
+    safetyMeetings?: boolean | Vessel$safetyMeetingsArgs<ExtArgs>
+    emergencyDrills?: boolean | Vessel$emergencyDrillsArgs<ExtArgs>
+    controlledDocuments?: boolean | Vessel$controlledDocumentsArgs<ExtArgs>
+    circulars?: boolean | Vessel$circularsArgs<ExtArgs>
+    riskAssessments?: boolean | Vessel$riskAssessmentsArgs<ExtArgs>
+    defects?: boolean | Vessel$defectsArgs<ExtArgs>
     _count?: boolean | VesselCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["vessel"]>
 
@@ -12228,6 +13194,7 @@ export namespace Prisma {
     id?: boolean
     companyId?: boolean
     name?: boolean
+    code?: boolean
     imo?: boolean
     officialNumber?: boolean
     callSign?: boolean
@@ -12254,6 +13221,7 @@ export namespace Prisma {
     id?: boolean
     companyId?: boolean
     name?: boolean
+    code?: boolean
     imo?: boolean
     officialNumber?: boolean
     callSign?: boolean
@@ -12280,6 +13248,7 @@ export namespace Prisma {
     id?: boolean
     companyId?: boolean
     name?: boolean
+    code?: boolean
     imo?: boolean
     officialNumber?: boolean
     callSign?: boolean
@@ -12301,7 +13270,7 @@ export namespace Prisma {
     deletedBy?: boolean
   }
 
-  export type VesselOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "companyId" | "name" | "imo" | "officialNumber" | "callSign" | "mmsi" | "flag" | "type" | "classificationSociety" | "yearBuilt" | "grossTonnage" | "loa" | "breadth" | "depth" | "status" | "createdAt" | "updatedAt" | "createdBy" | "updatedBy" | "deletedAt" | "deletedBy", ExtArgs["result"]["vessel"]>
+  export type VesselOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "companyId" | "name" | "code" | "imo" | "officialNumber" | "callSign" | "mmsi" | "flag" | "type" | "classificationSociety" | "yearBuilt" | "grossTonnage" | "loa" | "breadth" | "depth" | "status" | "createdAt" | "updatedAt" | "createdBy" | "updatedBy" | "deletedAt" | "deletedBy", ExtArgs["result"]["vessel"]>
   export type VesselInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     company?: boolean | CompanyDefaultArgs<ExtArgs>
     smsDocuments?: boolean | Vessel$smsDocumentsArgs<ExtArgs>
@@ -12313,6 +13282,12 @@ export namespace Prisma {
     cdiInspections?: boolean | Vessel$cdiInspectionsArgs<ExtArgs>
     internalAudits?: boolean | Vessel$internalAuditsArgs<ExtArgs>
     externalAudits?: boolean | Vessel$externalAuditsArgs<ExtArgs>
+    safetyMeetings?: boolean | Vessel$safetyMeetingsArgs<ExtArgs>
+    emergencyDrills?: boolean | Vessel$emergencyDrillsArgs<ExtArgs>
+    controlledDocuments?: boolean | Vessel$controlledDocumentsArgs<ExtArgs>
+    circulars?: boolean | Vessel$circularsArgs<ExtArgs>
+    riskAssessments?: boolean | Vessel$riskAssessmentsArgs<ExtArgs>
+    defects?: boolean | Vessel$defectsArgs<ExtArgs>
     _count?: boolean | VesselCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type VesselIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -12335,11 +13310,18 @@ export namespace Prisma {
       cdiInspections: Prisma.$CdiInspectionPayload<ExtArgs>[]
       internalAudits: Prisma.$InternalAuditPayload<ExtArgs>[]
       externalAudits: Prisma.$ExternalAuditPayload<ExtArgs>[]
+      safetyMeetings: Prisma.$SafetyMeetingPayload<ExtArgs>[]
+      emergencyDrills: Prisma.$EmergencyDrillPayload<ExtArgs>[]
+      controlledDocuments: Prisma.$ControlledDocumentPayload<ExtArgs>[]
+      circulars: Prisma.$CircularPayload<ExtArgs>[]
+      riskAssessments: Prisma.$RiskAssessmentPayload<ExtArgs>[]
+      defects: Prisma.$DefectPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       companyId: string
       name: string
+      code: string | null
       imo: string
       officialNumber: string | null
       callSign: string | null
@@ -12763,6 +13745,12 @@ export namespace Prisma {
     cdiInspections<T extends Vessel$cdiInspectionsArgs<ExtArgs> = {}>(args?: Subset<T, Vessel$cdiInspectionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CdiInspectionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     internalAudits<T extends Vessel$internalAuditsArgs<ExtArgs> = {}>(args?: Subset<T, Vessel$internalAuditsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InternalAuditPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     externalAudits<T extends Vessel$externalAuditsArgs<ExtArgs> = {}>(args?: Subset<T, Vessel$externalAuditsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExternalAuditPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    safetyMeetings<T extends Vessel$safetyMeetingsArgs<ExtArgs> = {}>(args?: Subset<T, Vessel$safetyMeetingsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SafetyMeetingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    emergencyDrills<T extends Vessel$emergencyDrillsArgs<ExtArgs> = {}>(args?: Subset<T, Vessel$emergencyDrillsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$EmergencyDrillPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    controlledDocuments<T extends Vessel$controlledDocumentsArgs<ExtArgs> = {}>(args?: Subset<T, Vessel$controlledDocumentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ControlledDocumentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    circulars<T extends Vessel$circularsArgs<ExtArgs> = {}>(args?: Subset<T, Vessel$circularsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CircularPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    riskAssessments<T extends Vessel$riskAssessmentsArgs<ExtArgs> = {}>(args?: Subset<T, Vessel$riskAssessmentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RiskAssessmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    defects<T extends Vessel$defectsArgs<ExtArgs> = {}>(args?: Subset<T, Vessel$defectsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DefectPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -12795,6 +13783,7 @@ export namespace Prisma {
     readonly id: FieldRef<"Vessel", 'String'>
     readonly companyId: FieldRef<"Vessel", 'String'>
     readonly name: FieldRef<"Vessel", 'String'>
+    readonly code: FieldRef<"Vessel", 'String'>
     readonly imo: FieldRef<"Vessel", 'String'>
     readonly officialNumber: FieldRef<"Vessel", 'String'>
     readonly callSign: FieldRef<"Vessel", 'String'>
@@ -13423,6 +14412,150 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: ExternalAuditScalarFieldEnum | ExternalAuditScalarFieldEnum[]
+  }
+
+  /**
+   * Vessel.safetyMeetings
+   */
+  export type Vessel$safetyMeetingsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SafetyMeeting
+     */
+    select?: SafetyMeetingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SafetyMeeting
+     */
+    omit?: SafetyMeetingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SafetyMeetingInclude<ExtArgs> | null
+    where?: SafetyMeetingWhereInput
+    orderBy?: SafetyMeetingOrderByWithRelationInput | SafetyMeetingOrderByWithRelationInput[]
+    cursor?: SafetyMeetingWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: SafetyMeetingScalarFieldEnum | SafetyMeetingScalarFieldEnum[]
+  }
+
+  /**
+   * Vessel.emergencyDrills
+   */
+  export type Vessel$emergencyDrillsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EmergencyDrill
+     */
+    select?: EmergencyDrillSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EmergencyDrill
+     */
+    omit?: EmergencyDrillOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EmergencyDrillInclude<ExtArgs> | null
+    where?: EmergencyDrillWhereInput
+    orderBy?: EmergencyDrillOrderByWithRelationInput | EmergencyDrillOrderByWithRelationInput[]
+    cursor?: EmergencyDrillWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: EmergencyDrillScalarFieldEnum | EmergencyDrillScalarFieldEnum[]
+  }
+
+  /**
+   * Vessel.controlledDocuments
+   */
+  export type Vessel$controlledDocumentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ControlledDocument
+     */
+    select?: ControlledDocumentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ControlledDocument
+     */
+    omit?: ControlledDocumentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ControlledDocumentInclude<ExtArgs> | null
+    where?: ControlledDocumentWhereInput
+    orderBy?: ControlledDocumentOrderByWithRelationInput | ControlledDocumentOrderByWithRelationInput[]
+    cursor?: ControlledDocumentWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ControlledDocumentScalarFieldEnum | ControlledDocumentScalarFieldEnum[]
+  }
+
+  /**
+   * Vessel.circulars
+   */
+  export type Vessel$circularsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Circular
+     */
+    select?: CircularSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Circular
+     */
+    omit?: CircularOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CircularInclude<ExtArgs> | null
+    where?: CircularWhereInput
+    orderBy?: CircularOrderByWithRelationInput | CircularOrderByWithRelationInput[]
+    cursor?: CircularWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: CircularScalarFieldEnum | CircularScalarFieldEnum[]
+  }
+
+  /**
+   * Vessel.riskAssessments
+   */
+  export type Vessel$riskAssessmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RiskAssessment
+     */
+    select?: RiskAssessmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RiskAssessment
+     */
+    omit?: RiskAssessmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RiskAssessmentInclude<ExtArgs> | null
+    where?: RiskAssessmentWhereInput
+    orderBy?: RiskAssessmentOrderByWithRelationInput | RiskAssessmentOrderByWithRelationInput[]
+    cursor?: RiskAssessmentWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: RiskAssessmentScalarFieldEnum | RiskAssessmentScalarFieldEnum[]
+  }
+
+  /**
+   * Vessel.defects
+   */
+  export type Vessel$defectsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Defect
+     */
+    select?: DefectSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Defect
+     */
+    omit?: DefectOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DefectInclude<ExtArgs> | null
+    where?: DefectWhereInput
+    orderBy?: DefectOrderByWithRelationInput | DefectOrderByWithRelationInput[]
+    cursor?: DefectWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: DefectScalarFieldEnum | DefectScalarFieldEnum[]
   }
 
   /**
@@ -31262,9 +32395,8 @@ export namespace Prisma {
     severity: $Enums.Severity | null
     raisedAt: Date | null
     targetDate: Date | null
-    rootCause: string | null
-    correctiveAction: string | null
-    verification: string | null
+    rootCauseCategory: $Enums.RootCauseCategory | null
+    rootCauseSubCategory: string | null
     personInCharge: string | null
     status: $Enums.NcrStatus | null
     closedAt: Date | null
@@ -31290,9 +32422,8 @@ export namespace Prisma {
     severity: $Enums.Severity | null
     raisedAt: Date | null
     targetDate: Date | null
-    rootCause: string | null
-    correctiveAction: string | null
-    verification: string | null
+    rootCauseCategory: $Enums.RootCauseCategory | null
+    rootCauseSubCategory: string | null
     personInCharge: string | null
     status: $Enums.NcrStatus | null
     closedAt: Date | null
@@ -31318,9 +32449,8 @@ export namespace Prisma {
     severity: number
     raisedAt: number
     targetDate: number
-    rootCause: number
-    correctiveAction: number
-    verification: number
+    rootCauseCategory: number
+    rootCauseSubCategory: number
     personInCharge: number
     status: number
     closedAt: number
@@ -31348,9 +32478,8 @@ export namespace Prisma {
     severity?: true
     raisedAt?: true
     targetDate?: true
-    rootCause?: true
-    correctiveAction?: true
-    verification?: true
+    rootCauseCategory?: true
+    rootCauseSubCategory?: true
     personInCharge?: true
     status?: true
     closedAt?: true
@@ -31376,9 +32505,8 @@ export namespace Prisma {
     severity?: true
     raisedAt?: true
     targetDate?: true
-    rootCause?: true
-    correctiveAction?: true
-    verification?: true
+    rootCauseCategory?: true
+    rootCauseSubCategory?: true
     personInCharge?: true
     status?: true
     closedAt?: true
@@ -31404,9 +32532,8 @@ export namespace Prisma {
     severity?: true
     raisedAt?: true
     targetDate?: true
-    rootCause?: true
-    correctiveAction?: true
-    verification?: true
+    rootCauseCategory?: true
+    rootCauseSubCategory?: true
     personInCharge?: true
     status?: true
     closedAt?: true
@@ -31505,9 +32632,8 @@ export namespace Prisma {
     severity: $Enums.Severity
     raisedAt: Date
     targetDate: Date | null
-    rootCause: string | null
-    correctiveAction: string | null
-    verification: string | null
+    rootCauseCategory: $Enums.RootCauseCategory | null
+    rootCauseSubCategory: string | null
     personInCharge: string | null
     status: $Enums.NcrStatus
     closedAt: Date | null
@@ -31550,9 +32676,8 @@ export namespace Prisma {
     severity?: boolean
     raisedAt?: boolean
     targetDate?: boolean
-    rootCause?: boolean
-    correctiveAction?: boolean
-    verification?: boolean
+    rootCauseCategory?: boolean
+    rootCauseSubCategory?: boolean
     personInCharge?: boolean
     status?: boolean
     closedAt?: boolean
@@ -31581,9 +32706,8 @@ export namespace Prisma {
     severity?: boolean
     raisedAt?: boolean
     targetDate?: boolean
-    rootCause?: boolean
-    correctiveAction?: boolean
-    verification?: boolean
+    rootCauseCategory?: boolean
+    rootCauseSubCategory?: boolean
     personInCharge?: boolean
     status?: boolean
     closedAt?: boolean
@@ -31612,9 +32736,8 @@ export namespace Prisma {
     severity?: boolean
     raisedAt?: boolean
     targetDate?: boolean
-    rootCause?: boolean
-    correctiveAction?: boolean
-    verification?: boolean
+    rootCauseCategory?: boolean
+    rootCauseSubCategory?: boolean
     personInCharge?: boolean
     status?: boolean
     closedAt?: boolean
@@ -31643,9 +32766,8 @@ export namespace Prisma {
     severity?: boolean
     raisedAt?: boolean
     targetDate?: boolean
-    rootCause?: boolean
-    correctiveAction?: boolean
-    verification?: boolean
+    rootCauseCategory?: boolean
+    rootCauseSubCategory?: boolean
     personInCharge?: boolean
     status?: boolean
     closedAt?: boolean
@@ -31658,7 +32780,7 @@ export namespace Prisma {
     deletedBy?: boolean
   }
 
-  export type NonConformityOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "companyId" | "refNo" | "title" | "vesselId" | "source" | "sourceEntityId" | "requirement" | "description" | "severity" | "raisedAt" | "targetDate" | "rootCause" | "correctiveAction" | "verification" | "personInCharge" | "status" | "closedAt" | "raisedById" | "createdAt" | "updatedAt" | "createdBy" | "updatedBy" | "deletedAt" | "deletedBy", ExtArgs["result"]["nonConformity"]>
+  export type NonConformityOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "companyId" | "refNo" | "title" | "vesselId" | "source" | "sourceEntityId" | "requirement" | "description" | "severity" | "raisedAt" | "targetDate" | "rootCauseCategory" | "rootCauseSubCategory" | "personInCharge" | "status" | "closedAt" | "raisedById" | "createdAt" | "updatedAt" | "createdBy" | "updatedBy" | "deletedAt" | "deletedBy", ExtArgs["result"]["nonConformity"]>
   export type NonConformityInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     company?: boolean | CompanyDefaultArgs<ExtArgs>
     vessel?: boolean | NonConformity$vesselArgs<ExtArgs>
@@ -31695,9 +32817,8 @@ export namespace Prisma {
       severity: $Enums.Severity
       raisedAt: Date
       targetDate: Date | null
-      rootCause: string | null
-      correctiveAction: string | null
-      verification: string | null
+      rootCauseCategory: $Enums.RootCauseCategory | null
+      rootCauseSubCategory: string | null
       personInCharge: string | null
       status: $Enums.NcrStatus
       closedAt: Date | null
@@ -32146,9 +33267,8 @@ export namespace Prisma {
     readonly severity: FieldRef<"NonConformity", 'Severity'>
     readonly raisedAt: FieldRef<"NonConformity", 'DateTime'>
     readonly targetDate: FieldRef<"NonConformity", 'DateTime'>
-    readonly rootCause: FieldRef<"NonConformity", 'String'>
-    readonly correctiveAction: FieldRef<"NonConformity", 'String'>
-    readonly verification: FieldRef<"NonConformity", 'String'>
+    readonly rootCauseCategory: FieldRef<"NonConformity", 'RootCauseCategory'>
+    readonly rootCauseSubCategory: FieldRef<"NonConformity", 'String'>
     readonly personInCharge: FieldRef<"NonConformity", 'String'>
     readonly status: FieldRef<"NonConformity", 'NcrStatus'>
     readonly closedAt: FieldRef<"NonConformity", 'DateTime'>
@@ -36333,7 +37453,8 @@ export namespace Prisma {
     reference: string | null
     description: string | null
     actionCode: string | null
-    rectification: string | null
+    rootCauseCategory: $Enums.RootCauseCategory | null
+    rootCauseSubCategory: string | null
     status: $Enums.FindingStatus | null
     createdAt: Date | null
     createdBy: string | null
@@ -36348,7 +37469,8 @@ export namespace Prisma {
     reference: string | null
     description: string | null
     actionCode: string | null
-    rectification: string | null
+    rootCauseCategory: $Enums.RootCauseCategory | null
+    rootCauseSubCategory: string | null
     status: $Enums.FindingStatus | null
     createdAt: Date | null
     createdBy: string | null
@@ -36363,7 +37485,8 @@ export namespace Prisma {
     reference: number
     description: number
     actionCode: number
-    rectification: number
+    rootCauseCategory: number
+    rootCauseSubCategory: number
     status: number
     createdAt: number
     createdBy: number
@@ -36380,7 +37503,8 @@ export namespace Prisma {
     reference?: true
     description?: true
     actionCode?: true
-    rectification?: true
+    rootCauseCategory?: true
+    rootCauseSubCategory?: true
     status?: true
     createdAt?: true
     createdBy?: true
@@ -36395,7 +37519,8 @@ export namespace Prisma {
     reference?: true
     description?: true
     actionCode?: true
-    rectification?: true
+    rootCauseCategory?: true
+    rootCauseSubCategory?: true
     status?: true
     createdAt?: true
     createdBy?: true
@@ -36410,7 +37535,8 @@ export namespace Prisma {
     reference?: true
     description?: true
     actionCode?: true
-    rectification?: true
+    rootCauseCategory?: true
+    rootCauseSubCategory?: true
     status?: true
     createdAt?: true
     createdBy?: true
@@ -36498,7 +37624,8 @@ export namespace Prisma {
     reference: string | null
     description: string
     actionCode: string | null
-    rectification: string | null
+    rootCauseCategory: $Enums.RootCauseCategory | null
+    rootCauseSubCategory: string | null
     status: $Enums.FindingStatus
     createdAt: Date
     createdBy: string | null
@@ -36530,7 +37657,8 @@ export namespace Prisma {
     reference?: boolean
     description?: boolean
     actionCode?: boolean
-    rectification?: boolean
+    rootCauseCategory?: boolean
+    rootCauseSubCategory?: boolean
     status?: boolean
     createdAt?: boolean
     createdBy?: boolean
@@ -36546,7 +37674,8 @@ export namespace Prisma {
     reference?: boolean
     description?: boolean
     actionCode?: boolean
-    rectification?: boolean
+    rootCauseCategory?: boolean
+    rootCauseSubCategory?: boolean
     status?: boolean
     createdAt?: boolean
     createdBy?: boolean
@@ -36562,7 +37691,8 @@ export namespace Prisma {
     reference?: boolean
     description?: boolean
     actionCode?: boolean
-    rectification?: boolean
+    rootCauseCategory?: boolean
+    rootCauseSubCategory?: boolean
     status?: boolean
     createdAt?: boolean
     createdBy?: boolean
@@ -36578,14 +37708,15 @@ export namespace Prisma {
     reference?: boolean
     description?: boolean
     actionCode?: boolean
-    rectification?: boolean
+    rootCauseCategory?: boolean
+    rootCauseSubCategory?: boolean
     status?: boolean
     createdAt?: boolean
     createdBy?: boolean
     deletedAt?: boolean
   }
 
-  export type PscDeficiencyOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "companyId" | "inspectionId" | "natureCode" | "reference" | "description" | "actionCode" | "rectification" | "status" | "createdAt" | "createdBy" | "deletedAt", ExtArgs["result"]["pscDeficiency"]>
+  export type PscDeficiencyOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "companyId" | "inspectionId" | "natureCode" | "reference" | "description" | "actionCode" | "rootCauseCategory" | "rootCauseSubCategory" | "status" | "createdAt" | "createdBy" | "deletedAt", ExtArgs["result"]["pscDeficiency"]>
   export type PscDeficiencyInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     inspection?: boolean | PscInspectionDefaultArgs<ExtArgs>
   }
@@ -36609,7 +37740,8 @@ export namespace Prisma {
       reference: string | null
       description: string
       actionCode: string | null
-      rectification: string | null
+      rootCauseCategory: $Enums.RootCauseCategory | null
+      rootCauseSubCategory: string | null
       status: $Enums.FindingStatus
       createdAt: Date
       createdBy: string | null
@@ -37045,7 +38177,8 @@ export namespace Prisma {
     readonly reference: FieldRef<"PscDeficiency", 'String'>
     readonly description: FieldRef<"PscDeficiency", 'String'>
     readonly actionCode: FieldRef<"PscDeficiency", 'String'>
-    readonly rectification: FieldRef<"PscDeficiency", 'String'>
+    readonly rootCauseCategory: FieldRef<"PscDeficiency", 'RootCauseCategory'>
+    readonly rootCauseSubCategory: FieldRef<"PscDeficiency", 'String'>
     readonly status: FieldRef<"PscDeficiency", 'FindingStatus'>
     readonly createdAt: FieldRef<"PscDeficiency", 'DateTime'>
     readonly createdBy: FieldRef<"PscDeficiency", 'String'>
@@ -41159,7 +42292,8 @@ export namespace Prisma {
     category: $Enums.AuditFindingCategory | null
     reference: string | null
     description: string | null
-    correctiveAction: string | null
+    rootCauseCategory: $Enums.RootCauseCategory | null
+    rootCauseSubCategory: string | null
     status: $Enums.FindingStatus | null
     createdAt: Date | null
     createdBy: string | null
@@ -41173,7 +42307,8 @@ export namespace Prisma {
     category: $Enums.AuditFindingCategory | null
     reference: string | null
     description: string | null
-    correctiveAction: string | null
+    rootCauseCategory: $Enums.RootCauseCategory | null
+    rootCauseSubCategory: string | null
     status: $Enums.FindingStatus | null
     createdAt: Date | null
     createdBy: string | null
@@ -41187,7 +42322,8 @@ export namespace Prisma {
     category: number
     reference: number
     description: number
-    correctiveAction: number
+    rootCauseCategory: number
+    rootCauseSubCategory: number
     status: number
     createdAt: number
     createdBy: number
@@ -41203,7 +42339,8 @@ export namespace Prisma {
     category?: true
     reference?: true
     description?: true
-    correctiveAction?: true
+    rootCauseCategory?: true
+    rootCauseSubCategory?: true
     status?: true
     createdAt?: true
     createdBy?: true
@@ -41217,7 +42354,8 @@ export namespace Prisma {
     category?: true
     reference?: true
     description?: true
-    correctiveAction?: true
+    rootCauseCategory?: true
+    rootCauseSubCategory?: true
     status?: true
     createdAt?: true
     createdBy?: true
@@ -41231,7 +42369,8 @@ export namespace Prisma {
     category?: true
     reference?: true
     description?: true
-    correctiveAction?: true
+    rootCauseCategory?: true
+    rootCauseSubCategory?: true
     status?: true
     createdAt?: true
     createdBy?: true
@@ -41318,7 +42457,8 @@ export namespace Prisma {
     category: $Enums.AuditFindingCategory
     reference: string | null
     description: string
-    correctiveAction: string | null
+    rootCauseCategory: $Enums.RootCauseCategory | null
+    rootCauseSubCategory: string | null
     status: $Enums.FindingStatus
     createdAt: Date
     createdBy: string | null
@@ -41349,7 +42489,8 @@ export namespace Prisma {
     category?: boolean
     reference?: boolean
     description?: boolean
-    correctiveAction?: boolean
+    rootCauseCategory?: boolean
+    rootCauseSubCategory?: boolean
     status?: boolean
     createdAt?: boolean
     createdBy?: boolean
@@ -41364,7 +42505,8 @@ export namespace Prisma {
     category?: boolean
     reference?: boolean
     description?: boolean
-    correctiveAction?: boolean
+    rootCauseCategory?: boolean
+    rootCauseSubCategory?: boolean
     status?: boolean
     createdAt?: boolean
     createdBy?: boolean
@@ -41379,7 +42521,8 @@ export namespace Prisma {
     category?: boolean
     reference?: boolean
     description?: boolean
-    correctiveAction?: boolean
+    rootCauseCategory?: boolean
+    rootCauseSubCategory?: boolean
     status?: boolean
     createdAt?: boolean
     createdBy?: boolean
@@ -41394,14 +42537,15 @@ export namespace Prisma {
     category?: boolean
     reference?: boolean
     description?: boolean
-    correctiveAction?: boolean
+    rootCauseCategory?: boolean
+    rootCauseSubCategory?: boolean
     status?: boolean
     createdAt?: boolean
     createdBy?: boolean
     deletedAt?: boolean
   }
 
-  export type InternalAuditFindingOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "companyId" | "auditId" | "category" | "reference" | "description" | "correctiveAction" | "status" | "createdAt" | "createdBy" | "deletedAt", ExtArgs["result"]["internalAuditFinding"]>
+  export type InternalAuditFindingOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "companyId" | "auditId" | "category" | "reference" | "description" | "rootCauseCategory" | "rootCauseSubCategory" | "status" | "createdAt" | "createdBy" | "deletedAt", ExtArgs["result"]["internalAuditFinding"]>
   export type InternalAuditFindingInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     audit?: boolean | InternalAuditDefaultArgs<ExtArgs>
   }
@@ -41424,7 +42568,8 @@ export namespace Prisma {
       category: $Enums.AuditFindingCategory
       reference: string | null
       description: string
-      correctiveAction: string | null
+      rootCauseCategory: $Enums.RootCauseCategory | null
+      rootCauseSubCategory: string | null
       status: $Enums.FindingStatus
       createdAt: Date
       createdBy: string | null
@@ -41859,7 +43004,8 @@ export namespace Prisma {
     readonly category: FieldRef<"InternalAuditFinding", 'AuditFindingCategory'>
     readonly reference: FieldRef<"InternalAuditFinding", 'String'>
     readonly description: FieldRef<"InternalAuditFinding", 'String'>
-    readonly correctiveAction: FieldRef<"InternalAuditFinding", 'String'>
+    readonly rootCauseCategory: FieldRef<"InternalAuditFinding", 'RootCauseCategory'>
+    readonly rootCauseSubCategory: FieldRef<"InternalAuditFinding", 'String'>
     readonly status: FieldRef<"InternalAuditFinding", 'FindingStatus'>
     readonly createdAt: FieldRef<"InternalAuditFinding", 'DateTime'>
     readonly createdBy: FieldRef<"InternalAuditFinding", 'String'>
@@ -43579,7 +44725,8 @@ export namespace Prisma {
     category: $Enums.AuditFindingCategory | null
     reference: string | null
     description: string | null
-    correctiveAction: string | null
+    rootCauseCategory: $Enums.RootCauseCategory | null
+    rootCauseSubCategory: string | null
     status: $Enums.FindingStatus | null
     createdAt: Date | null
     createdBy: string | null
@@ -43593,7 +44740,8 @@ export namespace Prisma {
     category: $Enums.AuditFindingCategory | null
     reference: string | null
     description: string | null
-    correctiveAction: string | null
+    rootCauseCategory: $Enums.RootCauseCategory | null
+    rootCauseSubCategory: string | null
     status: $Enums.FindingStatus | null
     createdAt: Date | null
     createdBy: string | null
@@ -43607,7 +44755,8 @@ export namespace Prisma {
     category: number
     reference: number
     description: number
-    correctiveAction: number
+    rootCauseCategory: number
+    rootCauseSubCategory: number
     status: number
     createdAt: number
     createdBy: number
@@ -43623,7 +44772,8 @@ export namespace Prisma {
     category?: true
     reference?: true
     description?: true
-    correctiveAction?: true
+    rootCauseCategory?: true
+    rootCauseSubCategory?: true
     status?: true
     createdAt?: true
     createdBy?: true
@@ -43637,7 +44787,8 @@ export namespace Prisma {
     category?: true
     reference?: true
     description?: true
-    correctiveAction?: true
+    rootCauseCategory?: true
+    rootCauseSubCategory?: true
     status?: true
     createdAt?: true
     createdBy?: true
@@ -43651,7 +44802,8 @@ export namespace Prisma {
     category?: true
     reference?: true
     description?: true
-    correctiveAction?: true
+    rootCauseCategory?: true
+    rootCauseSubCategory?: true
     status?: true
     createdAt?: true
     createdBy?: true
@@ -43738,7 +44890,8 @@ export namespace Prisma {
     category: $Enums.AuditFindingCategory
     reference: string | null
     description: string
-    correctiveAction: string | null
+    rootCauseCategory: $Enums.RootCauseCategory | null
+    rootCauseSubCategory: string | null
     status: $Enums.FindingStatus
     createdAt: Date
     createdBy: string | null
@@ -43769,7 +44922,8 @@ export namespace Prisma {
     category?: boolean
     reference?: boolean
     description?: boolean
-    correctiveAction?: boolean
+    rootCauseCategory?: boolean
+    rootCauseSubCategory?: boolean
     status?: boolean
     createdAt?: boolean
     createdBy?: boolean
@@ -43784,7 +44938,8 @@ export namespace Prisma {
     category?: boolean
     reference?: boolean
     description?: boolean
-    correctiveAction?: boolean
+    rootCauseCategory?: boolean
+    rootCauseSubCategory?: boolean
     status?: boolean
     createdAt?: boolean
     createdBy?: boolean
@@ -43799,7 +44954,8 @@ export namespace Prisma {
     category?: boolean
     reference?: boolean
     description?: boolean
-    correctiveAction?: boolean
+    rootCauseCategory?: boolean
+    rootCauseSubCategory?: boolean
     status?: boolean
     createdAt?: boolean
     createdBy?: boolean
@@ -43814,14 +44970,15 @@ export namespace Prisma {
     category?: boolean
     reference?: boolean
     description?: boolean
-    correctiveAction?: boolean
+    rootCauseCategory?: boolean
+    rootCauseSubCategory?: boolean
     status?: boolean
     createdAt?: boolean
     createdBy?: boolean
     deletedAt?: boolean
   }
 
-  export type ExternalAuditFindingOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "companyId" | "auditId" | "category" | "reference" | "description" | "correctiveAction" | "status" | "createdAt" | "createdBy" | "deletedAt", ExtArgs["result"]["externalAuditFinding"]>
+  export type ExternalAuditFindingOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "companyId" | "auditId" | "category" | "reference" | "description" | "rootCauseCategory" | "rootCauseSubCategory" | "status" | "createdAt" | "createdBy" | "deletedAt", ExtArgs["result"]["externalAuditFinding"]>
   export type ExternalAuditFindingInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     audit?: boolean | ExternalAuditDefaultArgs<ExtArgs>
   }
@@ -43844,7 +45001,8 @@ export namespace Prisma {
       category: $Enums.AuditFindingCategory
       reference: string | null
       description: string
-      correctiveAction: string | null
+      rootCauseCategory: $Enums.RootCauseCategory | null
+      rootCauseSubCategory: string | null
       status: $Enums.FindingStatus
       createdAt: Date
       createdBy: string | null
@@ -44279,7 +45437,8 @@ export namespace Prisma {
     readonly category: FieldRef<"ExternalAuditFinding", 'AuditFindingCategory'>
     readonly reference: FieldRef<"ExternalAuditFinding", 'String'>
     readonly description: FieldRef<"ExternalAuditFinding", 'String'>
-    readonly correctiveAction: FieldRef<"ExternalAuditFinding", 'String'>
+    readonly rootCauseCategory: FieldRef<"ExternalAuditFinding", 'RootCauseCategory'>
+    readonly rootCauseSubCategory: FieldRef<"ExternalAuditFinding", 'String'>
     readonly status: FieldRef<"ExternalAuditFinding", 'FindingStatus'>
     readonly createdAt: FieldRef<"ExternalAuditFinding", 'DateTime'>
     readonly createdBy: FieldRef<"ExternalAuditFinding", 'String'>
@@ -44699,6 +45858,7492 @@ export namespace Prisma {
 
 
   /**
+   * Model SafetyMeeting
+   */
+
+  export type AggregateSafetyMeeting = {
+    _count: SafetyMeetingCountAggregateOutputType | null
+    _min: SafetyMeetingMinAggregateOutputType | null
+    _max: SafetyMeetingMaxAggregateOutputType | null
+  }
+
+  export type SafetyMeetingMinAggregateOutputType = {
+    id: string | null
+    companyId: string | null
+    refNo: string | null
+    vesselId: string | null
+    meetingType: $Enums.MeetingType | null
+    meetingDate: Date | null
+    chairedBy: string | null
+    attendees: string | null
+    agenda: string | null
+    minutes: string | null
+    status: $Enums.FindingStatus | null
+    closedAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    createdBy: string | null
+    updatedBy: string | null
+    deletedAt: Date | null
+    deletedBy: string | null
+  }
+
+  export type SafetyMeetingMaxAggregateOutputType = {
+    id: string | null
+    companyId: string | null
+    refNo: string | null
+    vesselId: string | null
+    meetingType: $Enums.MeetingType | null
+    meetingDate: Date | null
+    chairedBy: string | null
+    attendees: string | null
+    agenda: string | null
+    minutes: string | null
+    status: $Enums.FindingStatus | null
+    closedAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    createdBy: string | null
+    updatedBy: string | null
+    deletedAt: Date | null
+    deletedBy: string | null
+  }
+
+  export type SafetyMeetingCountAggregateOutputType = {
+    id: number
+    companyId: number
+    refNo: number
+    vesselId: number
+    meetingType: number
+    meetingDate: number
+    chairedBy: number
+    attendees: number
+    agenda: number
+    minutes: number
+    status: number
+    closedAt: number
+    createdAt: number
+    updatedAt: number
+    createdBy: number
+    updatedBy: number
+    deletedAt: number
+    deletedBy: number
+    _all: number
+  }
+
+
+  export type SafetyMeetingMinAggregateInputType = {
+    id?: true
+    companyId?: true
+    refNo?: true
+    vesselId?: true
+    meetingType?: true
+    meetingDate?: true
+    chairedBy?: true
+    attendees?: true
+    agenda?: true
+    minutes?: true
+    status?: true
+    closedAt?: true
+    createdAt?: true
+    updatedAt?: true
+    createdBy?: true
+    updatedBy?: true
+    deletedAt?: true
+    deletedBy?: true
+  }
+
+  export type SafetyMeetingMaxAggregateInputType = {
+    id?: true
+    companyId?: true
+    refNo?: true
+    vesselId?: true
+    meetingType?: true
+    meetingDate?: true
+    chairedBy?: true
+    attendees?: true
+    agenda?: true
+    minutes?: true
+    status?: true
+    closedAt?: true
+    createdAt?: true
+    updatedAt?: true
+    createdBy?: true
+    updatedBy?: true
+    deletedAt?: true
+    deletedBy?: true
+  }
+
+  export type SafetyMeetingCountAggregateInputType = {
+    id?: true
+    companyId?: true
+    refNo?: true
+    vesselId?: true
+    meetingType?: true
+    meetingDate?: true
+    chairedBy?: true
+    attendees?: true
+    agenda?: true
+    minutes?: true
+    status?: true
+    closedAt?: true
+    createdAt?: true
+    updatedAt?: true
+    createdBy?: true
+    updatedBy?: true
+    deletedAt?: true
+    deletedBy?: true
+    _all?: true
+  }
+
+  export type SafetyMeetingAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SafetyMeeting to aggregate.
+     */
+    where?: SafetyMeetingWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SafetyMeetings to fetch.
+     */
+    orderBy?: SafetyMeetingOrderByWithRelationInput | SafetyMeetingOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: SafetyMeetingWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SafetyMeetings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SafetyMeetings.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned SafetyMeetings
+    **/
+    _count?: true | SafetyMeetingCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: SafetyMeetingMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: SafetyMeetingMaxAggregateInputType
+  }
+
+  export type GetSafetyMeetingAggregateType<T extends SafetyMeetingAggregateArgs> = {
+        [P in keyof T & keyof AggregateSafetyMeeting]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateSafetyMeeting[P]>
+      : GetScalarType<T[P], AggregateSafetyMeeting[P]>
+  }
+
+
+
+
+  export type SafetyMeetingGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SafetyMeetingWhereInput
+    orderBy?: SafetyMeetingOrderByWithAggregationInput | SafetyMeetingOrderByWithAggregationInput[]
+    by: SafetyMeetingScalarFieldEnum[] | SafetyMeetingScalarFieldEnum
+    having?: SafetyMeetingScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: SafetyMeetingCountAggregateInputType | true
+    _min?: SafetyMeetingMinAggregateInputType
+    _max?: SafetyMeetingMaxAggregateInputType
+  }
+
+  export type SafetyMeetingGroupByOutputType = {
+    id: string
+    companyId: string
+    refNo: string
+    vesselId: string | null
+    meetingType: $Enums.MeetingType
+    meetingDate: Date
+    chairedBy: string | null
+    attendees: string | null
+    agenda: string | null
+    minutes: string | null
+    status: $Enums.FindingStatus
+    closedAt: Date | null
+    createdAt: Date
+    updatedAt: Date
+    createdBy: string | null
+    updatedBy: string | null
+    deletedAt: Date | null
+    deletedBy: string | null
+    _count: SafetyMeetingCountAggregateOutputType | null
+    _min: SafetyMeetingMinAggregateOutputType | null
+    _max: SafetyMeetingMaxAggregateOutputType | null
+  }
+
+  type GetSafetyMeetingGroupByPayload<T extends SafetyMeetingGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<SafetyMeetingGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof SafetyMeetingGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], SafetyMeetingGroupByOutputType[P]>
+            : GetScalarType<T[P], SafetyMeetingGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type SafetyMeetingSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    companyId?: boolean
+    refNo?: boolean
+    vesselId?: boolean
+    meetingType?: boolean
+    meetingDate?: boolean
+    chairedBy?: boolean
+    attendees?: boolean
+    agenda?: boolean
+    minutes?: boolean
+    status?: boolean
+    closedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    createdBy?: boolean
+    updatedBy?: boolean
+    deletedAt?: boolean
+    deletedBy?: boolean
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+    vessel?: boolean | SafetyMeeting$vesselArgs<ExtArgs>
+  }, ExtArgs["result"]["safetyMeeting"]>
+
+  export type SafetyMeetingSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    companyId?: boolean
+    refNo?: boolean
+    vesselId?: boolean
+    meetingType?: boolean
+    meetingDate?: boolean
+    chairedBy?: boolean
+    attendees?: boolean
+    agenda?: boolean
+    minutes?: boolean
+    status?: boolean
+    closedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    createdBy?: boolean
+    updatedBy?: boolean
+    deletedAt?: boolean
+    deletedBy?: boolean
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+    vessel?: boolean | SafetyMeeting$vesselArgs<ExtArgs>
+  }, ExtArgs["result"]["safetyMeeting"]>
+
+  export type SafetyMeetingSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    companyId?: boolean
+    refNo?: boolean
+    vesselId?: boolean
+    meetingType?: boolean
+    meetingDate?: boolean
+    chairedBy?: boolean
+    attendees?: boolean
+    agenda?: boolean
+    minutes?: boolean
+    status?: boolean
+    closedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    createdBy?: boolean
+    updatedBy?: boolean
+    deletedAt?: boolean
+    deletedBy?: boolean
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+    vessel?: boolean | SafetyMeeting$vesselArgs<ExtArgs>
+  }, ExtArgs["result"]["safetyMeeting"]>
+
+  export type SafetyMeetingSelectScalar = {
+    id?: boolean
+    companyId?: boolean
+    refNo?: boolean
+    vesselId?: boolean
+    meetingType?: boolean
+    meetingDate?: boolean
+    chairedBy?: boolean
+    attendees?: boolean
+    agenda?: boolean
+    minutes?: boolean
+    status?: boolean
+    closedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    createdBy?: boolean
+    updatedBy?: boolean
+    deletedAt?: boolean
+    deletedBy?: boolean
+  }
+
+  export type SafetyMeetingOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "companyId" | "refNo" | "vesselId" | "meetingType" | "meetingDate" | "chairedBy" | "attendees" | "agenda" | "minutes" | "status" | "closedAt" | "createdAt" | "updatedAt" | "createdBy" | "updatedBy" | "deletedAt" | "deletedBy", ExtArgs["result"]["safetyMeeting"]>
+  export type SafetyMeetingInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+    vessel?: boolean | SafetyMeeting$vesselArgs<ExtArgs>
+  }
+  export type SafetyMeetingIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+    vessel?: boolean | SafetyMeeting$vesselArgs<ExtArgs>
+  }
+  export type SafetyMeetingIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+    vessel?: boolean | SafetyMeeting$vesselArgs<ExtArgs>
+  }
+
+  export type $SafetyMeetingPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "SafetyMeeting"
+    objects: {
+      company: Prisma.$CompanyPayload<ExtArgs>
+      vessel: Prisma.$VesselPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      companyId: string
+      refNo: string
+      vesselId: string | null
+      meetingType: $Enums.MeetingType
+      meetingDate: Date
+      chairedBy: string | null
+      attendees: string | null
+      agenda: string | null
+      minutes: string | null
+      status: $Enums.FindingStatus
+      closedAt: Date | null
+      createdAt: Date
+      updatedAt: Date
+      createdBy: string | null
+      updatedBy: string | null
+      deletedAt: Date | null
+      deletedBy: string | null
+    }, ExtArgs["result"]["safetyMeeting"]>
+    composites: {}
+  }
+
+  type SafetyMeetingGetPayload<S extends boolean | null | undefined | SafetyMeetingDefaultArgs> = $Result.GetResult<Prisma.$SafetyMeetingPayload, S>
+
+  type SafetyMeetingCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<SafetyMeetingFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: SafetyMeetingCountAggregateInputType | true
+    }
+
+  export interface SafetyMeetingDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['SafetyMeeting'], meta: { name: 'SafetyMeeting' } }
+    /**
+     * Find zero or one SafetyMeeting that matches the filter.
+     * @param {SafetyMeetingFindUniqueArgs} args - Arguments to find a SafetyMeeting
+     * @example
+     * // Get one SafetyMeeting
+     * const safetyMeeting = await prisma.safetyMeeting.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends SafetyMeetingFindUniqueArgs>(args: SelectSubset<T, SafetyMeetingFindUniqueArgs<ExtArgs>>): Prisma__SafetyMeetingClient<$Result.GetResult<Prisma.$SafetyMeetingPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one SafetyMeeting that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {SafetyMeetingFindUniqueOrThrowArgs} args - Arguments to find a SafetyMeeting
+     * @example
+     * // Get one SafetyMeeting
+     * const safetyMeeting = await prisma.safetyMeeting.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends SafetyMeetingFindUniqueOrThrowArgs>(args: SelectSubset<T, SafetyMeetingFindUniqueOrThrowArgs<ExtArgs>>): Prisma__SafetyMeetingClient<$Result.GetResult<Prisma.$SafetyMeetingPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first SafetyMeeting that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SafetyMeetingFindFirstArgs} args - Arguments to find a SafetyMeeting
+     * @example
+     * // Get one SafetyMeeting
+     * const safetyMeeting = await prisma.safetyMeeting.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends SafetyMeetingFindFirstArgs>(args?: SelectSubset<T, SafetyMeetingFindFirstArgs<ExtArgs>>): Prisma__SafetyMeetingClient<$Result.GetResult<Prisma.$SafetyMeetingPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first SafetyMeeting that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SafetyMeetingFindFirstOrThrowArgs} args - Arguments to find a SafetyMeeting
+     * @example
+     * // Get one SafetyMeeting
+     * const safetyMeeting = await prisma.safetyMeeting.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends SafetyMeetingFindFirstOrThrowArgs>(args?: SelectSubset<T, SafetyMeetingFindFirstOrThrowArgs<ExtArgs>>): Prisma__SafetyMeetingClient<$Result.GetResult<Prisma.$SafetyMeetingPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more SafetyMeetings that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SafetyMeetingFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all SafetyMeetings
+     * const safetyMeetings = await prisma.safetyMeeting.findMany()
+     * 
+     * // Get first 10 SafetyMeetings
+     * const safetyMeetings = await prisma.safetyMeeting.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const safetyMeetingWithIdOnly = await prisma.safetyMeeting.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends SafetyMeetingFindManyArgs>(args?: SelectSubset<T, SafetyMeetingFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SafetyMeetingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a SafetyMeeting.
+     * @param {SafetyMeetingCreateArgs} args - Arguments to create a SafetyMeeting.
+     * @example
+     * // Create one SafetyMeeting
+     * const SafetyMeeting = await prisma.safetyMeeting.create({
+     *   data: {
+     *     // ... data to create a SafetyMeeting
+     *   }
+     * })
+     * 
+     */
+    create<T extends SafetyMeetingCreateArgs>(args: SelectSubset<T, SafetyMeetingCreateArgs<ExtArgs>>): Prisma__SafetyMeetingClient<$Result.GetResult<Prisma.$SafetyMeetingPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many SafetyMeetings.
+     * @param {SafetyMeetingCreateManyArgs} args - Arguments to create many SafetyMeetings.
+     * @example
+     * // Create many SafetyMeetings
+     * const safetyMeeting = await prisma.safetyMeeting.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends SafetyMeetingCreateManyArgs>(args?: SelectSubset<T, SafetyMeetingCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many SafetyMeetings and returns the data saved in the database.
+     * @param {SafetyMeetingCreateManyAndReturnArgs} args - Arguments to create many SafetyMeetings.
+     * @example
+     * // Create many SafetyMeetings
+     * const safetyMeeting = await prisma.safetyMeeting.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many SafetyMeetings and only return the `id`
+     * const safetyMeetingWithIdOnly = await prisma.safetyMeeting.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends SafetyMeetingCreateManyAndReturnArgs>(args?: SelectSubset<T, SafetyMeetingCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SafetyMeetingPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a SafetyMeeting.
+     * @param {SafetyMeetingDeleteArgs} args - Arguments to delete one SafetyMeeting.
+     * @example
+     * // Delete one SafetyMeeting
+     * const SafetyMeeting = await prisma.safetyMeeting.delete({
+     *   where: {
+     *     // ... filter to delete one SafetyMeeting
+     *   }
+     * })
+     * 
+     */
+    delete<T extends SafetyMeetingDeleteArgs>(args: SelectSubset<T, SafetyMeetingDeleteArgs<ExtArgs>>): Prisma__SafetyMeetingClient<$Result.GetResult<Prisma.$SafetyMeetingPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one SafetyMeeting.
+     * @param {SafetyMeetingUpdateArgs} args - Arguments to update one SafetyMeeting.
+     * @example
+     * // Update one SafetyMeeting
+     * const safetyMeeting = await prisma.safetyMeeting.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends SafetyMeetingUpdateArgs>(args: SelectSubset<T, SafetyMeetingUpdateArgs<ExtArgs>>): Prisma__SafetyMeetingClient<$Result.GetResult<Prisma.$SafetyMeetingPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more SafetyMeetings.
+     * @param {SafetyMeetingDeleteManyArgs} args - Arguments to filter SafetyMeetings to delete.
+     * @example
+     * // Delete a few SafetyMeetings
+     * const { count } = await prisma.safetyMeeting.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends SafetyMeetingDeleteManyArgs>(args?: SelectSubset<T, SafetyMeetingDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more SafetyMeetings.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SafetyMeetingUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many SafetyMeetings
+     * const safetyMeeting = await prisma.safetyMeeting.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends SafetyMeetingUpdateManyArgs>(args: SelectSubset<T, SafetyMeetingUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more SafetyMeetings and returns the data updated in the database.
+     * @param {SafetyMeetingUpdateManyAndReturnArgs} args - Arguments to update many SafetyMeetings.
+     * @example
+     * // Update many SafetyMeetings
+     * const safetyMeeting = await prisma.safetyMeeting.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more SafetyMeetings and only return the `id`
+     * const safetyMeetingWithIdOnly = await prisma.safetyMeeting.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends SafetyMeetingUpdateManyAndReturnArgs>(args: SelectSubset<T, SafetyMeetingUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SafetyMeetingPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one SafetyMeeting.
+     * @param {SafetyMeetingUpsertArgs} args - Arguments to update or create a SafetyMeeting.
+     * @example
+     * // Update or create a SafetyMeeting
+     * const safetyMeeting = await prisma.safetyMeeting.upsert({
+     *   create: {
+     *     // ... data to create a SafetyMeeting
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the SafetyMeeting we want to update
+     *   }
+     * })
+     */
+    upsert<T extends SafetyMeetingUpsertArgs>(args: SelectSubset<T, SafetyMeetingUpsertArgs<ExtArgs>>): Prisma__SafetyMeetingClient<$Result.GetResult<Prisma.$SafetyMeetingPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of SafetyMeetings.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SafetyMeetingCountArgs} args - Arguments to filter SafetyMeetings to count.
+     * @example
+     * // Count the number of SafetyMeetings
+     * const count = await prisma.safetyMeeting.count({
+     *   where: {
+     *     // ... the filter for the SafetyMeetings we want to count
+     *   }
+     * })
+    **/
+    count<T extends SafetyMeetingCountArgs>(
+      args?: Subset<T, SafetyMeetingCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], SafetyMeetingCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a SafetyMeeting.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SafetyMeetingAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends SafetyMeetingAggregateArgs>(args: Subset<T, SafetyMeetingAggregateArgs>): Prisma.PrismaPromise<GetSafetyMeetingAggregateType<T>>
+
+    /**
+     * Group by SafetyMeeting.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SafetyMeetingGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends SafetyMeetingGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: SafetyMeetingGroupByArgs['orderBy'] }
+        : { orderBy?: SafetyMeetingGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, SafetyMeetingGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetSafetyMeetingGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the SafetyMeeting model
+   */
+  readonly fields: SafetyMeetingFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for SafetyMeeting.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__SafetyMeetingClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    company<T extends CompanyDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CompanyDefaultArgs<ExtArgs>>): Prisma__CompanyClient<$Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    vessel<T extends SafetyMeeting$vesselArgs<ExtArgs> = {}>(args?: Subset<T, SafetyMeeting$vesselArgs<ExtArgs>>): Prisma__VesselClient<$Result.GetResult<Prisma.$VesselPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the SafetyMeeting model
+   */
+  interface SafetyMeetingFieldRefs {
+    readonly id: FieldRef<"SafetyMeeting", 'String'>
+    readonly companyId: FieldRef<"SafetyMeeting", 'String'>
+    readonly refNo: FieldRef<"SafetyMeeting", 'String'>
+    readonly vesselId: FieldRef<"SafetyMeeting", 'String'>
+    readonly meetingType: FieldRef<"SafetyMeeting", 'MeetingType'>
+    readonly meetingDate: FieldRef<"SafetyMeeting", 'DateTime'>
+    readonly chairedBy: FieldRef<"SafetyMeeting", 'String'>
+    readonly attendees: FieldRef<"SafetyMeeting", 'String'>
+    readonly agenda: FieldRef<"SafetyMeeting", 'String'>
+    readonly minutes: FieldRef<"SafetyMeeting", 'String'>
+    readonly status: FieldRef<"SafetyMeeting", 'FindingStatus'>
+    readonly closedAt: FieldRef<"SafetyMeeting", 'DateTime'>
+    readonly createdAt: FieldRef<"SafetyMeeting", 'DateTime'>
+    readonly updatedAt: FieldRef<"SafetyMeeting", 'DateTime'>
+    readonly createdBy: FieldRef<"SafetyMeeting", 'String'>
+    readonly updatedBy: FieldRef<"SafetyMeeting", 'String'>
+    readonly deletedAt: FieldRef<"SafetyMeeting", 'DateTime'>
+    readonly deletedBy: FieldRef<"SafetyMeeting", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * SafetyMeeting findUnique
+   */
+  export type SafetyMeetingFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SafetyMeeting
+     */
+    select?: SafetyMeetingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SafetyMeeting
+     */
+    omit?: SafetyMeetingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SafetyMeetingInclude<ExtArgs> | null
+    /**
+     * Filter, which SafetyMeeting to fetch.
+     */
+    where: SafetyMeetingWhereUniqueInput
+  }
+
+  /**
+   * SafetyMeeting findUniqueOrThrow
+   */
+  export type SafetyMeetingFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SafetyMeeting
+     */
+    select?: SafetyMeetingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SafetyMeeting
+     */
+    omit?: SafetyMeetingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SafetyMeetingInclude<ExtArgs> | null
+    /**
+     * Filter, which SafetyMeeting to fetch.
+     */
+    where: SafetyMeetingWhereUniqueInput
+  }
+
+  /**
+   * SafetyMeeting findFirst
+   */
+  export type SafetyMeetingFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SafetyMeeting
+     */
+    select?: SafetyMeetingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SafetyMeeting
+     */
+    omit?: SafetyMeetingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SafetyMeetingInclude<ExtArgs> | null
+    /**
+     * Filter, which SafetyMeeting to fetch.
+     */
+    where?: SafetyMeetingWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SafetyMeetings to fetch.
+     */
+    orderBy?: SafetyMeetingOrderByWithRelationInput | SafetyMeetingOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SafetyMeetings.
+     */
+    cursor?: SafetyMeetingWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SafetyMeetings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SafetyMeetings.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SafetyMeetings.
+     */
+    distinct?: SafetyMeetingScalarFieldEnum | SafetyMeetingScalarFieldEnum[]
+  }
+
+  /**
+   * SafetyMeeting findFirstOrThrow
+   */
+  export type SafetyMeetingFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SafetyMeeting
+     */
+    select?: SafetyMeetingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SafetyMeeting
+     */
+    omit?: SafetyMeetingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SafetyMeetingInclude<ExtArgs> | null
+    /**
+     * Filter, which SafetyMeeting to fetch.
+     */
+    where?: SafetyMeetingWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SafetyMeetings to fetch.
+     */
+    orderBy?: SafetyMeetingOrderByWithRelationInput | SafetyMeetingOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SafetyMeetings.
+     */
+    cursor?: SafetyMeetingWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SafetyMeetings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SafetyMeetings.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SafetyMeetings.
+     */
+    distinct?: SafetyMeetingScalarFieldEnum | SafetyMeetingScalarFieldEnum[]
+  }
+
+  /**
+   * SafetyMeeting findMany
+   */
+  export type SafetyMeetingFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SafetyMeeting
+     */
+    select?: SafetyMeetingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SafetyMeeting
+     */
+    omit?: SafetyMeetingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SafetyMeetingInclude<ExtArgs> | null
+    /**
+     * Filter, which SafetyMeetings to fetch.
+     */
+    where?: SafetyMeetingWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SafetyMeetings to fetch.
+     */
+    orderBy?: SafetyMeetingOrderByWithRelationInput | SafetyMeetingOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing SafetyMeetings.
+     */
+    cursor?: SafetyMeetingWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SafetyMeetings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SafetyMeetings.
+     */
+    skip?: number
+    distinct?: SafetyMeetingScalarFieldEnum | SafetyMeetingScalarFieldEnum[]
+  }
+
+  /**
+   * SafetyMeeting create
+   */
+  export type SafetyMeetingCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SafetyMeeting
+     */
+    select?: SafetyMeetingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SafetyMeeting
+     */
+    omit?: SafetyMeetingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SafetyMeetingInclude<ExtArgs> | null
+    /**
+     * The data needed to create a SafetyMeeting.
+     */
+    data: XOR<SafetyMeetingCreateInput, SafetyMeetingUncheckedCreateInput>
+  }
+
+  /**
+   * SafetyMeeting createMany
+   */
+  export type SafetyMeetingCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many SafetyMeetings.
+     */
+    data: SafetyMeetingCreateManyInput | SafetyMeetingCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * SafetyMeeting createManyAndReturn
+   */
+  export type SafetyMeetingCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SafetyMeeting
+     */
+    select?: SafetyMeetingSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the SafetyMeeting
+     */
+    omit?: SafetyMeetingOmit<ExtArgs> | null
+    /**
+     * The data used to create many SafetyMeetings.
+     */
+    data: SafetyMeetingCreateManyInput | SafetyMeetingCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SafetyMeetingIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * SafetyMeeting update
+   */
+  export type SafetyMeetingUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SafetyMeeting
+     */
+    select?: SafetyMeetingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SafetyMeeting
+     */
+    omit?: SafetyMeetingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SafetyMeetingInclude<ExtArgs> | null
+    /**
+     * The data needed to update a SafetyMeeting.
+     */
+    data: XOR<SafetyMeetingUpdateInput, SafetyMeetingUncheckedUpdateInput>
+    /**
+     * Choose, which SafetyMeeting to update.
+     */
+    where: SafetyMeetingWhereUniqueInput
+  }
+
+  /**
+   * SafetyMeeting updateMany
+   */
+  export type SafetyMeetingUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update SafetyMeetings.
+     */
+    data: XOR<SafetyMeetingUpdateManyMutationInput, SafetyMeetingUncheckedUpdateManyInput>
+    /**
+     * Filter which SafetyMeetings to update
+     */
+    where?: SafetyMeetingWhereInput
+    /**
+     * Limit how many SafetyMeetings to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * SafetyMeeting updateManyAndReturn
+   */
+  export type SafetyMeetingUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SafetyMeeting
+     */
+    select?: SafetyMeetingSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the SafetyMeeting
+     */
+    omit?: SafetyMeetingOmit<ExtArgs> | null
+    /**
+     * The data used to update SafetyMeetings.
+     */
+    data: XOR<SafetyMeetingUpdateManyMutationInput, SafetyMeetingUncheckedUpdateManyInput>
+    /**
+     * Filter which SafetyMeetings to update
+     */
+    where?: SafetyMeetingWhereInput
+    /**
+     * Limit how many SafetyMeetings to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SafetyMeetingIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * SafetyMeeting upsert
+   */
+  export type SafetyMeetingUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SafetyMeeting
+     */
+    select?: SafetyMeetingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SafetyMeeting
+     */
+    omit?: SafetyMeetingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SafetyMeetingInclude<ExtArgs> | null
+    /**
+     * The filter to search for the SafetyMeeting to update in case it exists.
+     */
+    where: SafetyMeetingWhereUniqueInput
+    /**
+     * In case the SafetyMeeting found by the `where` argument doesn't exist, create a new SafetyMeeting with this data.
+     */
+    create: XOR<SafetyMeetingCreateInput, SafetyMeetingUncheckedCreateInput>
+    /**
+     * In case the SafetyMeeting was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<SafetyMeetingUpdateInput, SafetyMeetingUncheckedUpdateInput>
+  }
+
+  /**
+   * SafetyMeeting delete
+   */
+  export type SafetyMeetingDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SafetyMeeting
+     */
+    select?: SafetyMeetingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SafetyMeeting
+     */
+    omit?: SafetyMeetingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SafetyMeetingInclude<ExtArgs> | null
+    /**
+     * Filter which SafetyMeeting to delete.
+     */
+    where: SafetyMeetingWhereUniqueInput
+  }
+
+  /**
+   * SafetyMeeting deleteMany
+   */
+  export type SafetyMeetingDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SafetyMeetings to delete
+     */
+    where?: SafetyMeetingWhereInput
+    /**
+     * Limit how many SafetyMeetings to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * SafetyMeeting.vessel
+   */
+  export type SafetyMeeting$vesselArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Vessel
+     */
+    select?: VesselSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Vessel
+     */
+    omit?: VesselOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VesselInclude<ExtArgs> | null
+    where?: VesselWhereInput
+  }
+
+  /**
+   * SafetyMeeting without action
+   */
+  export type SafetyMeetingDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SafetyMeeting
+     */
+    select?: SafetyMeetingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SafetyMeeting
+     */
+    omit?: SafetyMeetingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SafetyMeetingInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model EmergencyDrill
+   */
+
+  export type AggregateEmergencyDrill = {
+    _count: EmergencyDrillCountAggregateOutputType | null
+    _min: EmergencyDrillMinAggregateOutputType | null
+    _max: EmergencyDrillMaxAggregateOutputType | null
+  }
+
+  export type EmergencyDrillMinAggregateOutputType = {
+    id: string | null
+    companyId: string | null
+    refNo: string | null
+    vesselId: string | null
+    drillType: $Enums.DrillType | null
+    drillDate: Date | null
+    scenario: string | null
+    participants: string | null
+    conductedBy: string | null
+    observations: string | null
+    status: $Enums.FindingStatus | null
+    closedAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    createdBy: string | null
+    updatedBy: string | null
+    deletedAt: Date | null
+    deletedBy: string | null
+  }
+
+  export type EmergencyDrillMaxAggregateOutputType = {
+    id: string | null
+    companyId: string | null
+    refNo: string | null
+    vesselId: string | null
+    drillType: $Enums.DrillType | null
+    drillDate: Date | null
+    scenario: string | null
+    participants: string | null
+    conductedBy: string | null
+    observations: string | null
+    status: $Enums.FindingStatus | null
+    closedAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    createdBy: string | null
+    updatedBy: string | null
+    deletedAt: Date | null
+    deletedBy: string | null
+  }
+
+  export type EmergencyDrillCountAggregateOutputType = {
+    id: number
+    companyId: number
+    refNo: number
+    vesselId: number
+    drillType: number
+    drillDate: number
+    scenario: number
+    participants: number
+    conductedBy: number
+    observations: number
+    status: number
+    closedAt: number
+    createdAt: number
+    updatedAt: number
+    createdBy: number
+    updatedBy: number
+    deletedAt: number
+    deletedBy: number
+    _all: number
+  }
+
+
+  export type EmergencyDrillMinAggregateInputType = {
+    id?: true
+    companyId?: true
+    refNo?: true
+    vesselId?: true
+    drillType?: true
+    drillDate?: true
+    scenario?: true
+    participants?: true
+    conductedBy?: true
+    observations?: true
+    status?: true
+    closedAt?: true
+    createdAt?: true
+    updatedAt?: true
+    createdBy?: true
+    updatedBy?: true
+    deletedAt?: true
+    deletedBy?: true
+  }
+
+  export type EmergencyDrillMaxAggregateInputType = {
+    id?: true
+    companyId?: true
+    refNo?: true
+    vesselId?: true
+    drillType?: true
+    drillDate?: true
+    scenario?: true
+    participants?: true
+    conductedBy?: true
+    observations?: true
+    status?: true
+    closedAt?: true
+    createdAt?: true
+    updatedAt?: true
+    createdBy?: true
+    updatedBy?: true
+    deletedAt?: true
+    deletedBy?: true
+  }
+
+  export type EmergencyDrillCountAggregateInputType = {
+    id?: true
+    companyId?: true
+    refNo?: true
+    vesselId?: true
+    drillType?: true
+    drillDate?: true
+    scenario?: true
+    participants?: true
+    conductedBy?: true
+    observations?: true
+    status?: true
+    closedAt?: true
+    createdAt?: true
+    updatedAt?: true
+    createdBy?: true
+    updatedBy?: true
+    deletedAt?: true
+    deletedBy?: true
+    _all?: true
+  }
+
+  export type EmergencyDrillAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which EmergencyDrill to aggregate.
+     */
+    where?: EmergencyDrillWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of EmergencyDrills to fetch.
+     */
+    orderBy?: EmergencyDrillOrderByWithRelationInput | EmergencyDrillOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: EmergencyDrillWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` EmergencyDrills from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` EmergencyDrills.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned EmergencyDrills
+    **/
+    _count?: true | EmergencyDrillCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: EmergencyDrillMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: EmergencyDrillMaxAggregateInputType
+  }
+
+  export type GetEmergencyDrillAggregateType<T extends EmergencyDrillAggregateArgs> = {
+        [P in keyof T & keyof AggregateEmergencyDrill]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateEmergencyDrill[P]>
+      : GetScalarType<T[P], AggregateEmergencyDrill[P]>
+  }
+
+
+
+
+  export type EmergencyDrillGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: EmergencyDrillWhereInput
+    orderBy?: EmergencyDrillOrderByWithAggregationInput | EmergencyDrillOrderByWithAggregationInput[]
+    by: EmergencyDrillScalarFieldEnum[] | EmergencyDrillScalarFieldEnum
+    having?: EmergencyDrillScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: EmergencyDrillCountAggregateInputType | true
+    _min?: EmergencyDrillMinAggregateInputType
+    _max?: EmergencyDrillMaxAggregateInputType
+  }
+
+  export type EmergencyDrillGroupByOutputType = {
+    id: string
+    companyId: string
+    refNo: string
+    vesselId: string
+    drillType: $Enums.DrillType
+    drillDate: Date
+    scenario: string | null
+    participants: string | null
+    conductedBy: string | null
+    observations: string | null
+    status: $Enums.FindingStatus
+    closedAt: Date | null
+    createdAt: Date
+    updatedAt: Date
+    createdBy: string | null
+    updatedBy: string | null
+    deletedAt: Date | null
+    deletedBy: string | null
+    _count: EmergencyDrillCountAggregateOutputType | null
+    _min: EmergencyDrillMinAggregateOutputType | null
+    _max: EmergencyDrillMaxAggregateOutputType | null
+  }
+
+  type GetEmergencyDrillGroupByPayload<T extends EmergencyDrillGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<EmergencyDrillGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof EmergencyDrillGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], EmergencyDrillGroupByOutputType[P]>
+            : GetScalarType<T[P], EmergencyDrillGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type EmergencyDrillSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    companyId?: boolean
+    refNo?: boolean
+    vesselId?: boolean
+    drillType?: boolean
+    drillDate?: boolean
+    scenario?: boolean
+    participants?: boolean
+    conductedBy?: boolean
+    observations?: boolean
+    status?: boolean
+    closedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    createdBy?: boolean
+    updatedBy?: boolean
+    deletedAt?: boolean
+    deletedBy?: boolean
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+    vessel?: boolean | VesselDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["emergencyDrill"]>
+
+  export type EmergencyDrillSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    companyId?: boolean
+    refNo?: boolean
+    vesselId?: boolean
+    drillType?: boolean
+    drillDate?: boolean
+    scenario?: boolean
+    participants?: boolean
+    conductedBy?: boolean
+    observations?: boolean
+    status?: boolean
+    closedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    createdBy?: boolean
+    updatedBy?: boolean
+    deletedAt?: boolean
+    deletedBy?: boolean
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+    vessel?: boolean | VesselDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["emergencyDrill"]>
+
+  export type EmergencyDrillSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    companyId?: boolean
+    refNo?: boolean
+    vesselId?: boolean
+    drillType?: boolean
+    drillDate?: boolean
+    scenario?: boolean
+    participants?: boolean
+    conductedBy?: boolean
+    observations?: boolean
+    status?: boolean
+    closedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    createdBy?: boolean
+    updatedBy?: boolean
+    deletedAt?: boolean
+    deletedBy?: boolean
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+    vessel?: boolean | VesselDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["emergencyDrill"]>
+
+  export type EmergencyDrillSelectScalar = {
+    id?: boolean
+    companyId?: boolean
+    refNo?: boolean
+    vesselId?: boolean
+    drillType?: boolean
+    drillDate?: boolean
+    scenario?: boolean
+    participants?: boolean
+    conductedBy?: boolean
+    observations?: boolean
+    status?: boolean
+    closedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    createdBy?: boolean
+    updatedBy?: boolean
+    deletedAt?: boolean
+    deletedBy?: boolean
+  }
+
+  export type EmergencyDrillOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "companyId" | "refNo" | "vesselId" | "drillType" | "drillDate" | "scenario" | "participants" | "conductedBy" | "observations" | "status" | "closedAt" | "createdAt" | "updatedAt" | "createdBy" | "updatedBy" | "deletedAt" | "deletedBy", ExtArgs["result"]["emergencyDrill"]>
+  export type EmergencyDrillInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+    vessel?: boolean | VesselDefaultArgs<ExtArgs>
+  }
+  export type EmergencyDrillIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+    vessel?: boolean | VesselDefaultArgs<ExtArgs>
+  }
+  export type EmergencyDrillIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+    vessel?: boolean | VesselDefaultArgs<ExtArgs>
+  }
+
+  export type $EmergencyDrillPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "EmergencyDrill"
+    objects: {
+      company: Prisma.$CompanyPayload<ExtArgs>
+      vessel: Prisma.$VesselPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      companyId: string
+      refNo: string
+      vesselId: string
+      drillType: $Enums.DrillType
+      drillDate: Date
+      scenario: string | null
+      participants: string | null
+      conductedBy: string | null
+      observations: string | null
+      status: $Enums.FindingStatus
+      closedAt: Date | null
+      createdAt: Date
+      updatedAt: Date
+      createdBy: string | null
+      updatedBy: string | null
+      deletedAt: Date | null
+      deletedBy: string | null
+    }, ExtArgs["result"]["emergencyDrill"]>
+    composites: {}
+  }
+
+  type EmergencyDrillGetPayload<S extends boolean | null | undefined | EmergencyDrillDefaultArgs> = $Result.GetResult<Prisma.$EmergencyDrillPayload, S>
+
+  type EmergencyDrillCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<EmergencyDrillFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: EmergencyDrillCountAggregateInputType | true
+    }
+
+  export interface EmergencyDrillDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['EmergencyDrill'], meta: { name: 'EmergencyDrill' } }
+    /**
+     * Find zero or one EmergencyDrill that matches the filter.
+     * @param {EmergencyDrillFindUniqueArgs} args - Arguments to find a EmergencyDrill
+     * @example
+     * // Get one EmergencyDrill
+     * const emergencyDrill = await prisma.emergencyDrill.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends EmergencyDrillFindUniqueArgs>(args: SelectSubset<T, EmergencyDrillFindUniqueArgs<ExtArgs>>): Prisma__EmergencyDrillClient<$Result.GetResult<Prisma.$EmergencyDrillPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one EmergencyDrill that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {EmergencyDrillFindUniqueOrThrowArgs} args - Arguments to find a EmergencyDrill
+     * @example
+     * // Get one EmergencyDrill
+     * const emergencyDrill = await prisma.emergencyDrill.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends EmergencyDrillFindUniqueOrThrowArgs>(args: SelectSubset<T, EmergencyDrillFindUniqueOrThrowArgs<ExtArgs>>): Prisma__EmergencyDrillClient<$Result.GetResult<Prisma.$EmergencyDrillPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first EmergencyDrill that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EmergencyDrillFindFirstArgs} args - Arguments to find a EmergencyDrill
+     * @example
+     * // Get one EmergencyDrill
+     * const emergencyDrill = await prisma.emergencyDrill.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends EmergencyDrillFindFirstArgs>(args?: SelectSubset<T, EmergencyDrillFindFirstArgs<ExtArgs>>): Prisma__EmergencyDrillClient<$Result.GetResult<Prisma.$EmergencyDrillPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first EmergencyDrill that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EmergencyDrillFindFirstOrThrowArgs} args - Arguments to find a EmergencyDrill
+     * @example
+     * // Get one EmergencyDrill
+     * const emergencyDrill = await prisma.emergencyDrill.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends EmergencyDrillFindFirstOrThrowArgs>(args?: SelectSubset<T, EmergencyDrillFindFirstOrThrowArgs<ExtArgs>>): Prisma__EmergencyDrillClient<$Result.GetResult<Prisma.$EmergencyDrillPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more EmergencyDrills that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EmergencyDrillFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all EmergencyDrills
+     * const emergencyDrills = await prisma.emergencyDrill.findMany()
+     * 
+     * // Get first 10 EmergencyDrills
+     * const emergencyDrills = await prisma.emergencyDrill.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const emergencyDrillWithIdOnly = await prisma.emergencyDrill.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends EmergencyDrillFindManyArgs>(args?: SelectSubset<T, EmergencyDrillFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$EmergencyDrillPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a EmergencyDrill.
+     * @param {EmergencyDrillCreateArgs} args - Arguments to create a EmergencyDrill.
+     * @example
+     * // Create one EmergencyDrill
+     * const EmergencyDrill = await prisma.emergencyDrill.create({
+     *   data: {
+     *     // ... data to create a EmergencyDrill
+     *   }
+     * })
+     * 
+     */
+    create<T extends EmergencyDrillCreateArgs>(args: SelectSubset<T, EmergencyDrillCreateArgs<ExtArgs>>): Prisma__EmergencyDrillClient<$Result.GetResult<Prisma.$EmergencyDrillPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many EmergencyDrills.
+     * @param {EmergencyDrillCreateManyArgs} args - Arguments to create many EmergencyDrills.
+     * @example
+     * // Create many EmergencyDrills
+     * const emergencyDrill = await prisma.emergencyDrill.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends EmergencyDrillCreateManyArgs>(args?: SelectSubset<T, EmergencyDrillCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many EmergencyDrills and returns the data saved in the database.
+     * @param {EmergencyDrillCreateManyAndReturnArgs} args - Arguments to create many EmergencyDrills.
+     * @example
+     * // Create many EmergencyDrills
+     * const emergencyDrill = await prisma.emergencyDrill.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many EmergencyDrills and only return the `id`
+     * const emergencyDrillWithIdOnly = await prisma.emergencyDrill.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends EmergencyDrillCreateManyAndReturnArgs>(args?: SelectSubset<T, EmergencyDrillCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$EmergencyDrillPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a EmergencyDrill.
+     * @param {EmergencyDrillDeleteArgs} args - Arguments to delete one EmergencyDrill.
+     * @example
+     * // Delete one EmergencyDrill
+     * const EmergencyDrill = await prisma.emergencyDrill.delete({
+     *   where: {
+     *     // ... filter to delete one EmergencyDrill
+     *   }
+     * })
+     * 
+     */
+    delete<T extends EmergencyDrillDeleteArgs>(args: SelectSubset<T, EmergencyDrillDeleteArgs<ExtArgs>>): Prisma__EmergencyDrillClient<$Result.GetResult<Prisma.$EmergencyDrillPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one EmergencyDrill.
+     * @param {EmergencyDrillUpdateArgs} args - Arguments to update one EmergencyDrill.
+     * @example
+     * // Update one EmergencyDrill
+     * const emergencyDrill = await prisma.emergencyDrill.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends EmergencyDrillUpdateArgs>(args: SelectSubset<T, EmergencyDrillUpdateArgs<ExtArgs>>): Prisma__EmergencyDrillClient<$Result.GetResult<Prisma.$EmergencyDrillPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more EmergencyDrills.
+     * @param {EmergencyDrillDeleteManyArgs} args - Arguments to filter EmergencyDrills to delete.
+     * @example
+     * // Delete a few EmergencyDrills
+     * const { count } = await prisma.emergencyDrill.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends EmergencyDrillDeleteManyArgs>(args?: SelectSubset<T, EmergencyDrillDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more EmergencyDrills.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EmergencyDrillUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many EmergencyDrills
+     * const emergencyDrill = await prisma.emergencyDrill.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends EmergencyDrillUpdateManyArgs>(args: SelectSubset<T, EmergencyDrillUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more EmergencyDrills and returns the data updated in the database.
+     * @param {EmergencyDrillUpdateManyAndReturnArgs} args - Arguments to update many EmergencyDrills.
+     * @example
+     * // Update many EmergencyDrills
+     * const emergencyDrill = await prisma.emergencyDrill.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more EmergencyDrills and only return the `id`
+     * const emergencyDrillWithIdOnly = await prisma.emergencyDrill.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends EmergencyDrillUpdateManyAndReturnArgs>(args: SelectSubset<T, EmergencyDrillUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$EmergencyDrillPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one EmergencyDrill.
+     * @param {EmergencyDrillUpsertArgs} args - Arguments to update or create a EmergencyDrill.
+     * @example
+     * // Update or create a EmergencyDrill
+     * const emergencyDrill = await prisma.emergencyDrill.upsert({
+     *   create: {
+     *     // ... data to create a EmergencyDrill
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the EmergencyDrill we want to update
+     *   }
+     * })
+     */
+    upsert<T extends EmergencyDrillUpsertArgs>(args: SelectSubset<T, EmergencyDrillUpsertArgs<ExtArgs>>): Prisma__EmergencyDrillClient<$Result.GetResult<Prisma.$EmergencyDrillPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of EmergencyDrills.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EmergencyDrillCountArgs} args - Arguments to filter EmergencyDrills to count.
+     * @example
+     * // Count the number of EmergencyDrills
+     * const count = await prisma.emergencyDrill.count({
+     *   where: {
+     *     // ... the filter for the EmergencyDrills we want to count
+     *   }
+     * })
+    **/
+    count<T extends EmergencyDrillCountArgs>(
+      args?: Subset<T, EmergencyDrillCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], EmergencyDrillCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a EmergencyDrill.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EmergencyDrillAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends EmergencyDrillAggregateArgs>(args: Subset<T, EmergencyDrillAggregateArgs>): Prisma.PrismaPromise<GetEmergencyDrillAggregateType<T>>
+
+    /**
+     * Group by EmergencyDrill.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EmergencyDrillGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends EmergencyDrillGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: EmergencyDrillGroupByArgs['orderBy'] }
+        : { orderBy?: EmergencyDrillGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, EmergencyDrillGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetEmergencyDrillGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the EmergencyDrill model
+   */
+  readonly fields: EmergencyDrillFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for EmergencyDrill.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__EmergencyDrillClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    company<T extends CompanyDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CompanyDefaultArgs<ExtArgs>>): Prisma__CompanyClient<$Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    vessel<T extends VesselDefaultArgs<ExtArgs> = {}>(args?: Subset<T, VesselDefaultArgs<ExtArgs>>): Prisma__VesselClient<$Result.GetResult<Prisma.$VesselPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the EmergencyDrill model
+   */
+  interface EmergencyDrillFieldRefs {
+    readonly id: FieldRef<"EmergencyDrill", 'String'>
+    readonly companyId: FieldRef<"EmergencyDrill", 'String'>
+    readonly refNo: FieldRef<"EmergencyDrill", 'String'>
+    readonly vesselId: FieldRef<"EmergencyDrill", 'String'>
+    readonly drillType: FieldRef<"EmergencyDrill", 'DrillType'>
+    readonly drillDate: FieldRef<"EmergencyDrill", 'DateTime'>
+    readonly scenario: FieldRef<"EmergencyDrill", 'String'>
+    readonly participants: FieldRef<"EmergencyDrill", 'String'>
+    readonly conductedBy: FieldRef<"EmergencyDrill", 'String'>
+    readonly observations: FieldRef<"EmergencyDrill", 'String'>
+    readonly status: FieldRef<"EmergencyDrill", 'FindingStatus'>
+    readonly closedAt: FieldRef<"EmergencyDrill", 'DateTime'>
+    readonly createdAt: FieldRef<"EmergencyDrill", 'DateTime'>
+    readonly updatedAt: FieldRef<"EmergencyDrill", 'DateTime'>
+    readonly createdBy: FieldRef<"EmergencyDrill", 'String'>
+    readonly updatedBy: FieldRef<"EmergencyDrill", 'String'>
+    readonly deletedAt: FieldRef<"EmergencyDrill", 'DateTime'>
+    readonly deletedBy: FieldRef<"EmergencyDrill", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * EmergencyDrill findUnique
+   */
+  export type EmergencyDrillFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EmergencyDrill
+     */
+    select?: EmergencyDrillSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EmergencyDrill
+     */
+    omit?: EmergencyDrillOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EmergencyDrillInclude<ExtArgs> | null
+    /**
+     * Filter, which EmergencyDrill to fetch.
+     */
+    where: EmergencyDrillWhereUniqueInput
+  }
+
+  /**
+   * EmergencyDrill findUniqueOrThrow
+   */
+  export type EmergencyDrillFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EmergencyDrill
+     */
+    select?: EmergencyDrillSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EmergencyDrill
+     */
+    omit?: EmergencyDrillOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EmergencyDrillInclude<ExtArgs> | null
+    /**
+     * Filter, which EmergencyDrill to fetch.
+     */
+    where: EmergencyDrillWhereUniqueInput
+  }
+
+  /**
+   * EmergencyDrill findFirst
+   */
+  export type EmergencyDrillFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EmergencyDrill
+     */
+    select?: EmergencyDrillSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EmergencyDrill
+     */
+    omit?: EmergencyDrillOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EmergencyDrillInclude<ExtArgs> | null
+    /**
+     * Filter, which EmergencyDrill to fetch.
+     */
+    where?: EmergencyDrillWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of EmergencyDrills to fetch.
+     */
+    orderBy?: EmergencyDrillOrderByWithRelationInput | EmergencyDrillOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for EmergencyDrills.
+     */
+    cursor?: EmergencyDrillWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` EmergencyDrills from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` EmergencyDrills.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of EmergencyDrills.
+     */
+    distinct?: EmergencyDrillScalarFieldEnum | EmergencyDrillScalarFieldEnum[]
+  }
+
+  /**
+   * EmergencyDrill findFirstOrThrow
+   */
+  export type EmergencyDrillFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EmergencyDrill
+     */
+    select?: EmergencyDrillSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EmergencyDrill
+     */
+    omit?: EmergencyDrillOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EmergencyDrillInclude<ExtArgs> | null
+    /**
+     * Filter, which EmergencyDrill to fetch.
+     */
+    where?: EmergencyDrillWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of EmergencyDrills to fetch.
+     */
+    orderBy?: EmergencyDrillOrderByWithRelationInput | EmergencyDrillOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for EmergencyDrills.
+     */
+    cursor?: EmergencyDrillWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` EmergencyDrills from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` EmergencyDrills.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of EmergencyDrills.
+     */
+    distinct?: EmergencyDrillScalarFieldEnum | EmergencyDrillScalarFieldEnum[]
+  }
+
+  /**
+   * EmergencyDrill findMany
+   */
+  export type EmergencyDrillFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EmergencyDrill
+     */
+    select?: EmergencyDrillSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EmergencyDrill
+     */
+    omit?: EmergencyDrillOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EmergencyDrillInclude<ExtArgs> | null
+    /**
+     * Filter, which EmergencyDrills to fetch.
+     */
+    where?: EmergencyDrillWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of EmergencyDrills to fetch.
+     */
+    orderBy?: EmergencyDrillOrderByWithRelationInput | EmergencyDrillOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing EmergencyDrills.
+     */
+    cursor?: EmergencyDrillWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` EmergencyDrills from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` EmergencyDrills.
+     */
+    skip?: number
+    distinct?: EmergencyDrillScalarFieldEnum | EmergencyDrillScalarFieldEnum[]
+  }
+
+  /**
+   * EmergencyDrill create
+   */
+  export type EmergencyDrillCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EmergencyDrill
+     */
+    select?: EmergencyDrillSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EmergencyDrill
+     */
+    omit?: EmergencyDrillOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EmergencyDrillInclude<ExtArgs> | null
+    /**
+     * The data needed to create a EmergencyDrill.
+     */
+    data: XOR<EmergencyDrillCreateInput, EmergencyDrillUncheckedCreateInput>
+  }
+
+  /**
+   * EmergencyDrill createMany
+   */
+  export type EmergencyDrillCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many EmergencyDrills.
+     */
+    data: EmergencyDrillCreateManyInput | EmergencyDrillCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * EmergencyDrill createManyAndReturn
+   */
+  export type EmergencyDrillCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EmergencyDrill
+     */
+    select?: EmergencyDrillSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the EmergencyDrill
+     */
+    omit?: EmergencyDrillOmit<ExtArgs> | null
+    /**
+     * The data used to create many EmergencyDrills.
+     */
+    data: EmergencyDrillCreateManyInput | EmergencyDrillCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EmergencyDrillIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * EmergencyDrill update
+   */
+  export type EmergencyDrillUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EmergencyDrill
+     */
+    select?: EmergencyDrillSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EmergencyDrill
+     */
+    omit?: EmergencyDrillOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EmergencyDrillInclude<ExtArgs> | null
+    /**
+     * The data needed to update a EmergencyDrill.
+     */
+    data: XOR<EmergencyDrillUpdateInput, EmergencyDrillUncheckedUpdateInput>
+    /**
+     * Choose, which EmergencyDrill to update.
+     */
+    where: EmergencyDrillWhereUniqueInput
+  }
+
+  /**
+   * EmergencyDrill updateMany
+   */
+  export type EmergencyDrillUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update EmergencyDrills.
+     */
+    data: XOR<EmergencyDrillUpdateManyMutationInput, EmergencyDrillUncheckedUpdateManyInput>
+    /**
+     * Filter which EmergencyDrills to update
+     */
+    where?: EmergencyDrillWhereInput
+    /**
+     * Limit how many EmergencyDrills to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * EmergencyDrill updateManyAndReturn
+   */
+  export type EmergencyDrillUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EmergencyDrill
+     */
+    select?: EmergencyDrillSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the EmergencyDrill
+     */
+    omit?: EmergencyDrillOmit<ExtArgs> | null
+    /**
+     * The data used to update EmergencyDrills.
+     */
+    data: XOR<EmergencyDrillUpdateManyMutationInput, EmergencyDrillUncheckedUpdateManyInput>
+    /**
+     * Filter which EmergencyDrills to update
+     */
+    where?: EmergencyDrillWhereInput
+    /**
+     * Limit how many EmergencyDrills to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EmergencyDrillIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * EmergencyDrill upsert
+   */
+  export type EmergencyDrillUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EmergencyDrill
+     */
+    select?: EmergencyDrillSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EmergencyDrill
+     */
+    omit?: EmergencyDrillOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EmergencyDrillInclude<ExtArgs> | null
+    /**
+     * The filter to search for the EmergencyDrill to update in case it exists.
+     */
+    where: EmergencyDrillWhereUniqueInput
+    /**
+     * In case the EmergencyDrill found by the `where` argument doesn't exist, create a new EmergencyDrill with this data.
+     */
+    create: XOR<EmergencyDrillCreateInput, EmergencyDrillUncheckedCreateInput>
+    /**
+     * In case the EmergencyDrill was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<EmergencyDrillUpdateInput, EmergencyDrillUncheckedUpdateInput>
+  }
+
+  /**
+   * EmergencyDrill delete
+   */
+  export type EmergencyDrillDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EmergencyDrill
+     */
+    select?: EmergencyDrillSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EmergencyDrill
+     */
+    omit?: EmergencyDrillOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EmergencyDrillInclude<ExtArgs> | null
+    /**
+     * Filter which EmergencyDrill to delete.
+     */
+    where: EmergencyDrillWhereUniqueInput
+  }
+
+  /**
+   * EmergencyDrill deleteMany
+   */
+  export type EmergencyDrillDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which EmergencyDrills to delete
+     */
+    where?: EmergencyDrillWhereInput
+    /**
+     * Limit how many EmergencyDrills to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * EmergencyDrill without action
+   */
+  export type EmergencyDrillDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EmergencyDrill
+     */
+    select?: EmergencyDrillSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EmergencyDrill
+     */
+    omit?: EmergencyDrillOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EmergencyDrillInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model ControlledDocument
+   */
+
+  export type AggregateControlledDocument = {
+    _count: ControlledDocumentCountAggregateOutputType | null
+    _min: ControlledDocumentMinAggregateOutputType | null
+    _max: ControlledDocumentMaxAggregateOutputType | null
+  }
+
+  export type ControlledDocumentMinAggregateOutputType = {
+    id: string | null
+    companyId: string | null
+    docNumber: string | null
+    vesselId: string | null
+    title: string | null
+    category: $Enums.DocumentCategory | null
+    version: string | null
+    issueDate: Date | null
+    reviewDate: Date | null
+    owner: string | null
+    description: string | null
+    status: $Enums.ControlledDocStatus | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    createdBy: string | null
+    updatedBy: string | null
+    deletedAt: Date | null
+    deletedBy: string | null
+  }
+
+  export type ControlledDocumentMaxAggregateOutputType = {
+    id: string | null
+    companyId: string | null
+    docNumber: string | null
+    vesselId: string | null
+    title: string | null
+    category: $Enums.DocumentCategory | null
+    version: string | null
+    issueDate: Date | null
+    reviewDate: Date | null
+    owner: string | null
+    description: string | null
+    status: $Enums.ControlledDocStatus | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    createdBy: string | null
+    updatedBy: string | null
+    deletedAt: Date | null
+    deletedBy: string | null
+  }
+
+  export type ControlledDocumentCountAggregateOutputType = {
+    id: number
+    companyId: number
+    docNumber: number
+    vesselId: number
+    title: number
+    category: number
+    version: number
+    issueDate: number
+    reviewDate: number
+    owner: number
+    description: number
+    status: number
+    createdAt: number
+    updatedAt: number
+    createdBy: number
+    updatedBy: number
+    deletedAt: number
+    deletedBy: number
+    _all: number
+  }
+
+
+  export type ControlledDocumentMinAggregateInputType = {
+    id?: true
+    companyId?: true
+    docNumber?: true
+    vesselId?: true
+    title?: true
+    category?: true
+    version?: true
+    issueDate?: true
+    reviewDate?: true
+    owner?: true
+    description?: true
+    status?: true
+    createdAt?: true
+    updatedAt?: true
+    createdBy?: true
+    updatedBy?: true
+    deletedAt?: true
+    deletedBy?: true
+  }
+
+  export type ControlledDocumentMaxAggregateInputType = {
+    id?: true
+    companyId?: true
+    docNumber?: true
+    vesselId?: true
+    title?: true
+    category?: true
+    version?: true
+    issueDate?: true
+    reviewDate?: true
+    owner?: true
+    description?: true
+    status?: true
+    createdAt?: true
+    updatedAt?: true
+    createdBy?: true
+    updatedBy?: true
+    deletedAt?: true
+    deletedBy?: true
+  }
+
+  export type ControlledDocumentCountAggregateInputType = {
+    id?: true
+    companyId?: true
+    docNumber?: true
+    vesselId?: true
+    title?: true
+    category?: true
+    version?: true
+    issueDate?: true
+    reviewDate?: true
+    owner?: true
+    description?: true
+    status?: true
+    createdAt?: true
+    updatedAt?: true
+    createdBy?: true
+    updatedBy?: true
+    deletedAt?: true
+    deletedBy?: true
+    _all?: true
+  }
+
+  export type ControlledDocumentAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ControlledDocument to aggregate.
+     */
+    where?: ControlledDocumentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ControlledDocuments to fetch.
+     */
+    orderBy?: ControlledDocumentOrderByWithRelationInput | ControlledDocumentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ControlledDocumentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ControlledDocuments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ControlledDocuments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ControlledDocuments
+    **/
+    _count?: true | ControlledDocumentCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ControlledDocumentMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ControlledDocumentMaxAggregateInputType
+  }
+
+  export type GetControlledDocumentAggregateType<T extends ControlledDocumentAggregateArgs> = {
+        [P in keyof T & keyof AggregateControlledDocument]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateControlledDocument[P]>
+      : GetScalarType<T[P], AggregateControlledDocument[P]>
+  }
+
+
+
+
+  export type ControlledDocumentGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ControlledDocumentWhereInput
+    orderBy?: ControlledDocumentOrderByWithAggregationInput | ControlledDocumentOrderByWithAggregationInput[]
+    by: ControlledDocumentScalarFieldEnum[] | ControlledDocumentScalarFieldEnum
+    having?: ControlledDocumentScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ControlledDocumentCountAggregateInputType | true
+    _min?: ControlledDocumentMinAggregateInputType
+    _max?: ControlledDocumentMaxAggregateInputType
+  }
+
+  export type ControlledDocumentGroupByOutputType = {
+    id: string
+    companyId: string
+    docNumber: string
+    vesselId: string | null
+    title: string
+    category: $Enums.DocumentCategory
+    version: string | null
+    issueDate: Date
+    reviewDate: Date | null
+    owner: string | null
+    description: string | null
+    status: $Enums.ControlledDocStatus
+    createdAt: Date
+    updatedAt: Date
+    createdBy: string | null
+    updatedBy: string | null
+    deletedAt: Date | null
+    deletedBy: string | null
+    _count: ControlledDocumentCountAggregateOutputType | null
+    _min: ControlledDocumentMinAggregateOutputType | null
+    _max: ControlledDocumentMaxAggregateOutputType | null
+  }
+
+  type GetControlledDocumentGroupByPayload<T extends ControlledDocumentGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ControlledDocumentGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ControlledDocumentGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ControlledDocumentGroupByOutputType[P]>
+            : GetScalarType<T[P], ControlledDocumentGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ControlledDocumentSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    companyId?: boolean
+    docNumber?: boolean
+    vesselId?: boolean
+    title?: boolean
+    category?: boolean
+    version?: boolean
+    issueDate?: boolean
+    reviewDate?: boolean
+    owner?: boolean
+    description?: boolean
+    status?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    createdBy?: boolean
+    updatedBy?: boolean
+    deletedAt?: boolean
+    deletedBy?: boolean
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+    vessel?: boolean | ControlledDocument$vesselArgs<ExtArgs>
+  }, ExtArgs["result"]["controlledDocument"]>
+
+  export type ControlledDocumentSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    companyId?: boolean
+    docNumber?: boolean
+    vesselId?: boolean
+    title?: boolean
+    category?: boolean
+    version?: boolean
+    issueDate?: boolean
+    reviewDate?: boolean
+    owner?: boolean
+    description?: boolean
+    status?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    createdBy?: boolean
+    updatedBy?: boolean
+    deletedAt?: boolean
+    deletedBy?: boolean
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+    vessel?: boolean | ControlledDocument$vesselArgs<ExtArgs>
+  }, ExtArgs["result"]["controlledDocument"]>
+
+  export type ControlledDocumentSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    companyId?: boolean
+    docNumber?: boolean
+    vesselId?: boolean
+    title?: boolean
+    category?: boolean
+    version?: boolean
+    issueDate?: boolean
+    reviewDate?: boolean
+    owner?: boolean
+    description?: boolean
+    status?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    createdBy?: boolean
+    updatedBy?: boolean
+    deletedAt?: boolean
+    deletedBy?: boolean
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+    vessel?: boolean | ControlledDocument$vesselArgs<ExtArgs>
+  }, ExtArgs["result"]["controlledDocument"]>
+
+  export type ControlledDocumentSelectScalar = {
+    id?: boolean
+    companyId?: boolean
+    docNumber?: boolean
+    vesselId?: boolean
+    title?: boolean
+    category?: boolean
+    version?: boolean
+    issueDate?: boolean
+    reviewDate?: boolean
+    owner?: boolean
+    description?: boolean
+    status?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    createdBy?: boolean
+    updatedBy?: boolean
+    deletedAt?: boolean
+    deletedBy?: boolean
+  }
+
+  export type ControlledDocumentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "companyId" | "docNumber" | "vesselId" | "title" | "category" | "version" | "issueDate" | "reviewDate" | "owner" | "description" | "status" | "createdAt" | "updatedAt" | "createdBy" | "updatedBy" | "deletedAt" | "deletedBy", ExtArgs["result"]["controlledDocument"]>
+  export type ControlledDocumentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+    vessel?: boolean | ControlledDocument$vesselArgs<ExtArgs>
+  }
+  export type ControlledDocumentIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+    vessel?: boolean | ControlledDocument$vesselArgs<ExtArgs>
+  }
+  export type ControlledDocumentIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+    vessel?: boolean | ControlledDocument$vesselArgs<ExtArgs>
+  }
+
+  export type $ControlledDocumentPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ControlledDocument"
+    objects: {
+      company: Prisma.$CompanyPayload<ExtArgs>
+      vessel: Prisma.$VesselPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      companyId: string
+      docNumber: string
+      vesselId: string | null
+      title: string
+      category: $Enums.DocumentCategory
+      version: string | null
+      issueDate: Date
+      reviewDate: Date | null
+      owner: string | null
+      description: string | null
+      status: $Enums.ControlledDocStatus
+      createdAt: Date
+      updatedAt: Date
+      createdBy: string | null
+      updatedBy: string | null
+      deletedAt: Date | null
+      deletedBy: string | null
+    }, ExtArgs["result"]["controlledDocument"]>
+    composites: {}
+  }
+
+  type ControlledDocumentGetPayload<S extends boolean | null | undefined | ControlledDocumentDefaultArgs> = $Result.GetResult<Prisma.$ControlledDocumentPayload, S>
+
+  type ControlledDocumentCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ControlledDocumentFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ControlledDocumentCountAggregateInputType | true
+    }
+
+  export interface ControlledDocumentDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ControlledDocument'], meta: { name: 'ControlledDocument' } }
+    /**
+     * Find zero or one ControlledDocument that matches the filter.
+     * @param {ControlledDocumentFindUniqueArgs} args - Arguments to find a ControlledDocument
+     * @example
+     * // Get one ControlledDocument
+     * const controlledDocument = await prisma.controlledDocument.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ControlledDocumentFindUniqueArgs>(args: SelectSubset<T, ControlledDocumentFindUniqueArgs<ExtArgs>>): Prisma__ControlledDocumentClient<$Result.GetResult<Prisma.$ControlledDocumentPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ControlledDocument that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ControlledDocumentFindUniqueOrThrowArgs} args - Arguments to find a ControlledDocument
+     * @example
+     * // Get one ControlledDocument
+     * const controlledDocument = await prisma.controlledDocument.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ControlledDocumentFindUniqueOrThrowArgs>(args: SelectSubset<T, ControlledDocumentFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ControlledDocumentClient<$Result.GetResult<Prisma.$ControlledDocumentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ControlledDocument that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ControlledDocumentFindFirstArgs} args - Arguments to find a ControlledDocument
+     * @example
+     * // Get one ControlledDocument
+     * const controlledDocument = await prisma.controlledDocument.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ControlledDocumentFindFirstArgs>(args?: SelectSubset<T, ControlledDocumentFindFirstArgs<ExtArgs>>): Prisma__ControlledDocumentClient<$Result.GetResult<Prisma.$ControlledDocumentPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ControlledDocument that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ControlledDocumentFindFirstOrThrowArgs} args - Arguments to find a ControlledDocument
+     * @example
+     * // Get one ControlledDocument
+     * const controlledDocument = await prisma.controlledDocument.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ControlledDocumentFindFirstOrThrowArgs>(args?: SelectSubset<T, ControlledDocumentFindFirstOrThrowArgs<ExtArgs>>): Prisma__ControlledDocumentClient<$Result.GetResult<Prisma.$ControlledDocumentPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ControlledDocuments that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ControlledDocumentFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ControlledDocuments
+     * const controlledDocuments = await prisma.controlledDocument.findMany()
+     * 
+     * // Get first 10 ControlledDocuments
+     * const controlledDocuments = await prisma.controlledDocument.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const controlledDocumentWithIdOnly = await prisma.controlledDocument.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ControlledDocumentFindManyArgs>(args?: SelectSubset<T, ControlledDocumentFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ControlledDocumentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ControlledDocument.
+     * @param {ControlledDocumentCreateArgs} args - Arguments to create a ControlledDocument.
+     * @example
+     * // Create one ControlledDocument
+     * const ControlledDocument = await prisma.controlledDocument.create({
+     *   data: {
+     *     // ... data to create a ControlledDocument
+     *   }
+     * })
+     * 
+     */
+    create<T extends ControlledDocumentCreateArgs>(args: SelectSubset<T, ControlledDocumentCreateArgs<ExtArgs>>): Prisma__ControlledDocumentClient<$Result.GetResult<Prisma.$ControlledDocumentPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ControlledDocuments.
+     * @param {ControlledDocumentCreateManyArgs} args - Arguments to create many ControlledDocuments.
+     * @example
+     * // Create many ControlledDocuments
+     * const controlledDocument = await prisma.controlledDocument.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ControlledDocumentCreateManyArgs>(args?: SelectSubset<T, ControlledDocumentCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ControlledDocuments and returns the data saved in the database.
+     * @param {ControlledDocumentCreateManyAndReturnArgs} args - Arguments to create many ControlledDocuments.
+     * @example
+     * // Create many ControlledDocuments
+     * const controlledDocument = await prisma.controlledDocument.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ControlledDocuments and only return the `id`
+     * const controlledDocumentWithIdOnly = await prisma.controlledDocument.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ControlledDocumentCreateManyAndReturnArgs>(args?: SelectSubset<T, ControlledDocumentCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ControlledDocumentPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a ControlledDocument.
+     * @param {ControlledDocumentDeleteArgs} args - Arguments to delete one ControlledDocument.
+     * @example
+     * // Delete one ControlledDocument
+     * const ControlledDocument = await prisma.controlledDocument.delete({
+     *   where: {
+     *     // ... filter to delete one ControlledDocument
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ControlledDocumentDeleteArgs>(args: SelectSubset<T, ControlledDocumentDeleteArgs<ExtArgs>>): Prisma__ControlledDocumentClient<$Result.GetResult<Prisma.$ControlledDocumentPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ControlledDocument.
+     * @param {ControlledDocumentUpdateArgs} args - Arguments to update one ControlledDocument.
+     * @example
+     * // Update one ControlledDocument
+     * const controlledDocument = await prisma.controlledDocument.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ControlledDocumentUpdateArgs>(args: SelectSubset<T, ControlledDocumentUpdateArgs<ExtArgs>>): Prisma__ControlledDocumentClient<$Result.GetResult<Prisma.$ControlledDocumentPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ControlledDocuments.
+     * @param {ControlledDocumentDeleteManyArgs} args - Arguments to filter ControlledDocuments to delete.
+     * @example
+     * // Delete a few ControlledDocuments
+     * const { count } = await prisma.controlledDocument.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ControlledDocumentDeleteManyArgs>(args?: SelectSubset<T, ControlledDocumentDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ControlledDocuments.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ControlledDocumentUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ControlledDocuments
+     * const controlledDocument = await prisma.controlledDocument.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ControlledDocumentUpdateManyArgs>(args: SelectSubset<T, ControlledDocumentUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ControlledDocuments and returns the data updated in the database.
+     * @param {ControlledDocumentUpdateManyAndReturnArgs} args - Arguments to update many ControlledDocuments.
+     * @example
+     * // Update many ControlledDocuments
+     * const controlledDocument = await prisma.controlledDocument.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more ControlledDocuments and only return the `id`
+     * const controlledDocumentWithIdOnly = await prisma.controlledDocument.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ControlledDocumentUpdateManyAndReturnArgs>(args: SelectSubset<T, ControlledDocumentUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ControlledDocumentPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one ControlledDocument.
+     * @param {ControlledDocumentUpsertArgs} args - Arguments to update or create a ControlledDocument.
+     * @example
+     * // Update or create a ControlledDocument
+     * const controlledDocument = await prisma.controlledDocument.upsert({
+     *   create: {
+     *     // ... data to create a ControlledDocument
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ControlledDocument we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ControlledDocumentUpsertArgs>(args: SelectSubset<T, ControlledDocumentUpsertArgs<ExtArgs>>): Prisma__ControlledDocumentClient<$Result.GetResult<Prisma.$ControlledDocumentPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ControlledDocuments.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ControlledDocumentCountArgs} args - Arguments to filter ControlledDocuments to count.
+     * @example
+     * // Count the number of ControlledDocuments
+     * const count = await prisma.controlledDocument.count({
+     *   where: {
+     *     // ... the filter for the ControlledDocuments we want to count
+     *   }
+     * })
+    **/
+    count<T extends ControlledDocumentCountArgs>(
+      args?: Subset<T, ControlledDocumentCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ControlledDocumentCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ControlledDocument.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ControlledDocumentAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ControlledDocumentAggregateArgs>(args: Subset<T, ControlledDocumentAggregateArgs>): Prisma.PrismaPromise<GetControlledDocumentAggregateType<T>>
+
+    /**
+     * Group by ControlledDocument.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ControlledDocumentGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ControlledDocumentGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ControlledDocumentGroupByArgs['orderBy'] }
+        : { orderBy?: ControlledDocumentGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ControlledDocumentGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetControlledDocumentGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ControlledDocument model
+   */
+  readonly fields: ControlledDocumentFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ControlledDocument.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ControlledDocumentClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    company<T extends CompanyDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CompanyDefaultArgs<ExtArgs>>): Prisma__CompanyClient<$Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    vessel<T extends ControlledDocument$vesselArgs<ExtArgs> = {}>(args?: Subset<T, ControlledDocument$vesselArgs<ExtArgs>>): Prisma__VesselClient<$Result.GetResult<Prisma.$VesselPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ControlledDocument model
+   */
+  interface ControlledDocumentFieldRefs {
+    readonly id: FieldRef<"ControlledDocument", 'String'>
+    readonly companyId: FieldRef<"ControlledDocument", 'String'>
+    readonly docNumber: FieldRef<"ControlledDocument", 'String'>
+    readonly vesselId: FieldRef<"ControlledDocument", 'String'>
+    readonly title: FieldRef<"ControlledDocument", 'String'>
+    readonly category: FieldRef<"ControlledDocument", 'DocumentCategory'>
+    readonly version: FieldRef<"ControlledDocument", 'String'>
+    readonly issueDate: FieldRef<"ControlledDocument", 'DateTime'>
+    readonly reviewDate: FieldRef<"ControlledDocument", 'DateTime'>
+    readonly owner: FieldRef<"ControlledDocument", 'String'>
+    readonly description: FieldRef<"ControlledDocument", 'String'>
+    readonly status: FieldRef<"ControlledDocument", 'ControlledDocStatus'>
+    readonly createdAt: FieldRef<"ControlledDocument", 'DateTime'>
+    readonly updatedAt: FieldRef<"ControlledDocument", 'DateTime'>
+    readonly createdBy: FieldRef<"ControlledDocument", 'String'>
+    readonly updatedBy: FieldRef<"ControlledDocument", 'String'>
+    readonly deletedAt: FieldRef<"ControlledDocument", 'DateTime'>
+    readonly deletedBy: FieldRef<"ControlledDocument", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ControlledDocument findUnique
+   */
+  export type ControlledDocumentFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ControlledDocument
+     */
+    select?: ControlledDocumentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ControlledDocument
+     */
+    omit?: ControlledDocumentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ControlledDocumentInclude<ExtArgs> | null
+    /**
+     * Filter, which ControlledDocument to fetch.
+     */
+    where: ControlledDocumentWhereUniqueInput
+  }
+
+  /**
+   * ControlledDocument findUniqueOrThrow
+   */
+  export type ControlledDocumentFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ControlledDocument
+     */
+    select?: ControlledDocumentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ControlledDocument
+     */
+    omit?: ControlledDocumentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ControlledDocumentInclude<ExtArgs> | null
+    /**
+     * Filter, which ControlledDocument to fetch.
+     */
+    where: ControlledDocumentWhereUniqueInput
+  }
+
+  /**
+   * ControlledDocument findFirst
+   */
+  export type ControlledDocumentFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ControlledDocument
+     */
+    select?: ControlledDocumentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ControlledDocument
+     */
+    omit?: ControlledDocumentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ControlledDocumentInclude<ExtArgs> | null
+    /**
+     * Filter, which ControlledDocument to fetch.
+     */
+    where?: ControlledDocumentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ControlledDocuments to fetch.
+     */
+    orderBy?: ControlledDocumentOrderByWithRelationInput | ControlledDocumentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ControlledDocuments.
+     */
+    cursor?: ControlledDocumentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ControlledDocuments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ControlledDocuments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ControlledDocuments.
+     */
+    distinct?: ControlledDocumentScalarFieldEnum | ControlledDocumentScalarFieldEnum[]
+  }
+
+  /**
+   * ControlledDocument findFirstOrThrow
+   */
+  export type ControlledDocumentFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ControlledDocument
+     */
+    select?: ControlledDocumentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ControlledDocument
+     */
+    omit?: ControlledDocumentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ControlledDocumentInclude<ExtArgs> | null
+    /**
+     * Filter, which ControlledDocument to fetch.
+     */
+    where?: ControlledDocumentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ControlledDocuments to fetch.
+     */
+    orderBy?: ControlledDocumentOrderByWithRelationInput | ControlledDocumentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ControlledDocuments.
+     */
+    cursor?: ControlledDocumentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ControlledDocuments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ControlledDocuments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ControlledDocuments.
+     */
+    distinct?: ControlledDocumentScalarFieldEnum | ControlledDocumentScalarFieldEnum[]
+  }
+
+  /**
+   * ControlledDocument findMany
+   */
+  export type ControlledDocumentFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ControlledDocument
+     */
+    select?: ControlledDocumentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ControlledDocument
+     */
+    omit?: ControlledDocumentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ControlledDocumentInclude<ExtArgs> | null
+    /**
+     * Filter, which ControlledDocuments to fetch.
+     */
+    where?: ControlledDocumentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ControlledDocuments to fetch.
+     */
+    orderBy?: ControlledDocumentOrderByWithRelationInput | ControlledDocumentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ControlledDocuments.
+     */
+    cursor?: ControlledDocumentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ControlledDocuments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ControlledDocuments.
+     */
+    skip?: number
+    distinct?: ControlledDocumentScalarFieldEnum | ControlledDocumentScalarFieldEnum[]
+  }
+
+  /**
+   * ControlledDocument create
+   */
+  export type ControlledDocumentCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ControlledDocument
+     */
+    select?: ControlledDocumentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ControlledDocument
+     */
+    omit?: ControlledDocumentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ControlledDocumentInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ControlledDocument.
+     */
+    data: XOR<ControlledDocumentCreateInput, ControlledDocumentUncheckedCreateInput>
+  }
+
+  /**
+   * ControlledDocument createMany
+   */
+  export type ControlledDocumentCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ControlledDocuments.
+     */
+    data: ControlledDocumentCreateManyInput | ControlledDocumentCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ControlledDocument createManyAndReturn
+   */
+  export type ControlledDocumentCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ControlledDocument
+     */
+    select?: ControlledDocumentSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ControlledDocument
+     */
+    omit?: ControlledDocumentOmit<ExtArgs> | null
+    /**
+     * The data used to create many ControlledDocuments.
+     */
+    data: ControlledDocumentCreateManyInput | ControlledDocumentCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ControlledDocumentIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ControlledDocument update
+   */
+  export type ControlledDocumentUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ControlledDocument
+     */
+    select?: ControlledDocumentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ControlledDocument
+     */
+    omit?: ControlledDocumentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ControlledDocumentInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ControlledDocument.
+     */
+    data: XOR<ControlledDocumentUpdateInput, ControlledDocumentUncheckedUpdateInput>
+    /**
+     * Choose, which ControlledDocument to update.
+     */
+    where: ControlledDocumentWhereUniqueInput
+  }
+
+  /**
+   * ControlledDocument updateMany
+   */
+  export type ControlledDocumentUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ControlledDocuments.
+     */
+    data: XOR<ControlledDocumentUpdateManyMutationInput, ControlledDocumentUncheckedUpdateManyInput>
+    /**
+     * Filter which ControlledDocuments to update
+     */
+    where?: ControlledDocumentWhereInput
+    /**
+     * Limit how many ControlledDocuments to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ControlledDocument updateManyAndReturn
+   */
+  export type ControlledDocumentUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ControlledDocument
+     */
+    select?: ControlledDocumentSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ControlledDocument
+     */
+    omit?: ControlledDocumentOmit<ExtArgs> | null
+    /**
+     * The data used to update ControlledDocuments.
+     */
+    data: XOR<ControlledDocumentUpdateManyMutationInput, ControlledDocumentUncheckedUpdateManyInput>
+    /**
+     * Filter which ControlledDocuments to update
+     */
+    where?: ControlledDocumentWhereInput
+    /**
+     * Limit how many ControlledDocuments to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ControlledDocumentIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ControlledDocument upsert
+   */
+  export type ControlledDocumentUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ControlledDocument
+     */
+    select?: ControlledDocumentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ControlledDocument
+     */
+    omit?: ControlledDocumentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ControlledDocumentInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ControlledDocument to update in case it exists.
+     */
+    where: ControlledDocumentWhereUniqueInput
+    /**
+     * In case the ControlledDocument found by the `where` argument doesn't exist, create a new ControlledDocument with this data.
+     */
+    create: XOR<ControlledDocumentCreateInput, ControlledDocumentUncheckedCreateInput>
+    /**
+     * In case the ControlledDocument was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ControlledDocumentUpdateInput, ControlledDocumentUncheckedUpdateInput>
+  }
+
+  /**
+   * ControlledDocument delete
+   */
+  export type ControlledDocumentDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ControlledDocument
+     */
+    select?: ControlledDocumentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ControlledDocument
+     */
+    omit?: ControlledDocumentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ControlledDocumentInclude<ExtArgs> | null
+    /**
+     * Filter which ControlledDocument to delete.
+     */
+    where: ControlledDocumentWhereUniqueInput
+  }
+
+  /**
+   * ControlledDocument deleteMany
+   */
+  export type ControlledDocumentDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ControlledDocuments to delete
+     */
+    where?: ControlledDocumentWhereInput
+    /**
+     * Limit how many ControlledDocuments to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ControlledDocument.vessel
+   */
+  export type ControlledDocument$vesselArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Vessel
+     */
+    select?: VesselSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Vessel
+     */
+    omit?: VesselOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VesselInclude<ExtArgs> | null
+    where?: VesselWhereInput
+  }
+
+  /**
+   * ControlledDocument without action
+   */
+  export type ControlledDocumentDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ControlledDocument
+     */
+    select?: ControlledDocumentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ControlledDocument
+     */
+    omit?: ControlledDocumentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ControlledDocumentInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model Circular
+   */
+
+  export type AggregateCircular = {
+    _count: CircularCountAggregateOutputType | null
+    _min: CircularMinAggregateOutputType | null
+    _max: CircularMaxAggregateOutputType | null
+  }
+
+  export type CircularMinAggregateOutputType = {
+    id: string | null
+    companyId: string | null
+    refNo: string | null
+    vesselId: string | null
+    title: string | null
+    category: $Enums.CircularCategory | null
+    issueDate: Date | null
+    body: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    createdBy: string | null
+    updatedBy: string | null
+    deletedAt: Date | null
+    deletedBy: string | null
+  }
+
+  export type CircularMaxAggregateOutputType = {
+    id: string | null
+    companyId: string | null
+    refNo: string | null
+    vesselId: string | null
+    title: string | null
+    category: $Enums.CircularCategory | null
+    issueDate: Date | null
+    body: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    createdBy: string | null
+    updatedBy: string | null
+    deletedAt: Date | null
+    deletedBy: string | null
+  }
+
+  export type CircularCountAggregateOutputType = {
+    id: number
+    companyId: number
+    refNo: number
+    vesselId: number
+    title: number
+    category: number
+    issueDate: number
+    body: number
+    createdAt: number
+    updatedAt: number
+    createdBy: number
+    updatedBy: number
+    deletedAt: number
+    deletedBy: number
+    _all: number
+  }
+
+
+  export type CircularMinAggregateInputType = {
+    id?: true
+    companyId?: true
+    refNo?: true
+    vesselId?: true
+    title?: true
+    category?: true
+    issueDate?: true
+    body?: true
+    createdAt?: true
+    updatedAt?: true
+    createdBy?: true
+    updatedBy?: true
+    deletedAt?: true
+    deletedBy?: true
+  }
+
+  export type CircularMaxAggregateInputType = {
+    id?: true
+    companyId?: true
+    refNo?: true
+    vesselId?: true
+    title?: true
+    category?: true
+    issueDate?: true
+    body?: true
+    createdAt?: true
+    updatedAt?: true
+    createdBy?: true
+    updatedBy?: true
+    deletedAt?: true
+    deletedBy?: true
+  }
+
+  export type CircularCountAggregateInputType = {
+    id?: true
+    companyId?: true
+    refNo?: true
+    vesselId?: true
+    title?: true
+    category?: true
+    issueDate?: true
+    body?: true
+    createdAt?: true
+    updatedAt?: true
+    createdBy?: true
+    updatedBy?: true
+    deletedAt?: true
+    deletedBy?: true
+    _all?: true
+  }
+
+  export type CircularAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Circular to aggregate.
+     */
+    where?: CircularWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Circulars to fetch.
+     */
+    orderBy?: CircularOrderByWithRelationInput | CircularOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: CircularWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Circulars from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Circulars.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Circulars
+    **/
+    _count?: true | CircularCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: CircularMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: CircularMaxAggregateInputType
+  }
+
+  export type GetCircularAggregateType<T extends CircularAggregateArgs> = {
+        [P in keyof T & keyof AggregateCircular]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateCircular[P]>
+      : GetScalarType<T[P], AggregateCircular[P]>
+  }
+
+
+
+
+  export type CircularGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CircularWhereInput
+    orderBy?: CircularOrderByWithAggregationInput | CircularOrderByWithAggregationInput[]
+    by: CircularScalarFieldEnum[] | CircularScalarFieldEnum
+    having?: CircularScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: CircularCountAggregateInputType | true
+    _min?: CircularMinAggregateInputType
+    _max?: CircularMaxAggregateInputType
+  }
+
+  export type CircularGroupByOutputType = {
+    id: string
+    companyId: string
+    refNo: string
+    vesselId: string | null
+    title: string
+    category: $Enums.CircularCategory
+    issueDate: Date
+    body: string
+    createdAt: Date
+    updatedAt: Date
+    createdBy: string | null
+    updatedBy: string | null
+    deletedAt: Date | null
+    deletedBy: string | null
+    _count: CircularCountAggregateOutputType | null
+    _min: CircularMinAggregateOutputType | null
+    _max: CircularMaxAggregateOutputType | null
+  }
+
+  type GetCircularGroupByPayload<T extends CircularGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<CircularGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof CircularGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], CircularGroupByOutputType[P]>
+            : GetScalarType<T[P], CircularGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type CircularSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    companyId?: boolean
+    refNo?: boolean
+    vesselId?: boolean
+    title?: boolean
+    category?: boolean
+    issueDate?: boolean
+    body?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    createdBy?: boolean
+    updatedBy?: boolean
+    deletedAt?: boolean
+    deletedBy?: boolean
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+    vessel?: boolean | Circular$vesselArgs<ExtArgs>
+  }, ExtArgs["result"]["circular"]>
+
+  export type CircularSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    companyId?: boolean
+    refNo?: boolean
+    vesselId?: boolean
+    title?: boolean
+    category?: boolean
+    issueDate?: boolean
+    body?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    createdBy?: boolean
+    updatedBy?: boolean
+    deletedAt?: boolean
+    deletedBy?: boolean
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+    vessel?: boolean | Circular$vesselArgs<ExtArgs>
+  }, ExtArgs["result"]["circular"]>
+
+  export type CircularSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    companyId?: boolean
+    refNo?: boolean
+    vesselId?: boolean
+    title?: boolean
+    category?: boolean
+    issueDate?: boolean
+    body?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    createdBy?: boolean
+    updatedBy?: boolean
+    deletedAt?: boolean
+    deletedBy?: boolean
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+    vessel?: boolean | Circular$vesselArgs<ExtArgs>
+  }, ExtArgs["result"]["circular"]>
+
+  export type CircularSelectScalar = {
+    id?: boolean
+    companyId?: boolean
+    refNo?: boolean
+    vesselId?: boolean
+    title?: boolean
+    category?: boolean
+    issueDate?: boolean
+    body?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    createdBy?: boolean
+    updatedBy?: boolean
+    deletedAt?: boolean
+    deletedBy?: boolean
+  }
+
+  export type CircularOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "companyId" | "refNo" | "vesselId" | "title" | "category" | "issueDate" | "body" | "createdAt" | "updatedAt" | "createdBy" | "updatedBy" | "deletedAt" | "deletedBy", ExtArgs["result"]["circular"]>
+  export type CircularInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+    vessel?: boolean | Circular$vesselArgs<ExtArgs>
+  }
+  export type CircularIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+    vessel?: boolean | Circular$vesselArgs<ExtArgs>
+  }
+  export type CircularIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+    vessel?: boolean | Circular$vesselArgs<ExtArgs>
+  }
+
+  export type $CircularPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Circular"
+    objects: {
+      company: Prisma.$CompanyPayload<ExtArgs>
+      vessel: Prisma.$VesselPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      companyId: string
+      refNo: string
+      vesselId: string | null
+      title: string
+      category: $Enums.CircularCategory
+      issueDate: Date
+      body: string
+      createdAt: Date
+      updatedAt: Date
+      createdBy: string | null
+      updatedBy: string | null
+      deletedAt: Date | null
+      deletedBy: string | null
+    }, ExtArgs["result"]["circular"]>
+    composites: {}
+  }
+
+  type CircularGetPayload<S extends boolean | null | undefined | CircularDefaultArgs> = $Result.GetResult<Prisma.$CircularPayload, S>
+
+  type CircularCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<CircularFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: CircularCountAggregateInputType | true
+    }
+
+  export interface CircularDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Circular'], meta: { name: 'Circular' } }
+    /**
+     * Find zero or one Circular that matches the filter.
+     * @param {CircularFindUniqueArgs} args - Arguments to find a Circular
+     * @example
+     * // Get one Circular
+     * const circular = await prisma.circular.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends CircularFindUniqueArgs>(args: SelectSubset<T, CircularFindUniqueArgs<ExtArgs>>): Prisma__CircularClient<$Result.GetResult<Prisma.$CircularPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Circular that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {CircularFindUniqueOrThrowArgs} args - Arguments to find a Circular
+     * @example
+     * // Get one Circular
+     * const circular = await prisma.circular.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends CircularFindUniqueOrThrowArgs>(args: SelectSubset<T, CircularFindUniqueOrThrowArgs<ExtArgs>>): Prisma__CircularClient<$Result.GetResult<Prisma.$CircularPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Circular that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CircularFindFirstArgs} args - Arguments to find a Circular
+     * @example
+     * // Get one Circular
+     * const circular = await prisma.circular.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends CircularFindFirstArgs>(args?: SelectSubset<T, CircularFindFirstArgs<ExtArgs>>): Prisma__CircularClient<$Result.GetResult<Prisma.$CircularPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Circular that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CircularFindFirstOrThrowArgs} args - Arguments to find a Circular
+     * @example
+     * // Get one Circular
+     * const circular = await prisma.circular.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends CircularFindFirstOrThrowArgs>(args?: SelectSubset<T, CircularFindFirstOrThrowArgs<ExtArgs>>): Prisma__CircularClient<$Result.GetResult<Prisma.$CircularPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Circulars that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CircularFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Circulars
+     * const circulars = await prisma.circular.findMany()
+     * 
+     * // Get first 10 Circulars
+     * const circulars = await prisma.circular.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const circularWithIdOnly = await prisma.circular.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends CircularFindManyArgs>(args?: SelectSubset<T, CircularFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CircularPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Circular.
+     * @param {CircularCreateArgs} args - Arguments to create a Circular.
+     * @example
+     * // Create one Circular
+     * const Circular = await prisma.circular.create({
+     *   data: {
+     *     // ... data to create a Circular
+     *   }
+     * })
+     * 
+     */
+    create<T extends CircularCreateArgs>(args: SelectSubset<T, CircularCreateArgs<ExtArgs>>): Prisma__CircularClient<$Result.GetResult<Prisma.$CircularPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Circulars.
+     * @param {CircularCreateManyArgs} args - Arguments to create many Circulars.
+     * @example
+     * // Create many Circulars
+     * const circular = await prisma.circular.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends CircularCreateManyArgs>(args?: SelectSubset<T, CircularCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Circulars and returns the data saved in the database.
+     * @param {CircularCreateManyAndReturnArgs} args - Arguments to create many Circulars.
+     * @example
+     * // Create many Circulars
+     * const circular = await prisma.circular.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Circulars and only return the `id`
+     * const circularWithIdOnly = await prisma.circular.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends CircularCreateManyAndReturnArgs>(args?: SelectSubset<T, CircularCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CircularPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Circular.
+     * @param {CircularDeleteArgs} args - Arguments to delete one Circular.
+     * @example
+     * // Delete one Circular
+     * const Circular = await prisma.circular.delete({
+     *   where: {
+     *     // ... filter to delete one Circular
+     *   }
+     * })
+     * 
+     */
+    delete<T extends CircularDeleteArgs>(args: SelectSubset<T, CircularDeleteArgs<ExtArgs>>): Prisma__CircularClient<$Result.GetResult<Prisma.$CircularPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Circular.
+     * @param {CircularUpdateArgs} args - Arguments to update one Circular.
+     * @example
+     * // Update one Circular
+     * const circular = await prisma.circular.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends CircularUpdateArgs>(args: SelectSubset<T, CircularUpdateArgs<ExtArgs>>): Prisma__CircularClient<$Result.GetResult<Prisma.$CircularPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Circulars.
+     * @param {CircularDeleteManyArgs} args - Arguments to filter Circulars to delete.
+     * @example
+     * // Delete a few Circulars
+     * const { count } = await prisma.circular.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends CircularDeleteManyArgs>(args?: SelectSubset<T, CircularDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Circulars.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CircularUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Circulars
+     * const circular = await prisma.circular.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends CircularUpdateManyArgs>(args: SelectSubset<T, CircularUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Circulars and returns the data updated in the database.
+     * @param {CircularUpdateManyAndReturnArgs} args - Arguments to update many Circulars.
+     * @example
+     * // Update many Circulars
+     * const circular = await prisma.circular.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Circulars and only return the `id`
+     * const circularWithIdOnly = await prisma.circular.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends CircularUpdateManyAndReturnArgs>(args: SelectSubset<T, CircularUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CircularPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Circular.
+     * @param {CircularUpsertArgs} args - Arguments to update or create a Circular.
+     * @example
+     * // Update or create a Circular
+     * const circular = await prisma.circular.upsert({
+     *   create: {
+     *     // ... data to create a Circular
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Circular we want to update
+     *   }
+     * })
+     */
+    upsert<T extends CircularUpsertArgs>(args: SelectSubset<T, CircularUpsertArgs<ExtArgs>>): Prisma__CircularClient<$Result.GetResult<Prisma.$CircularPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Circulars.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CircularCountArgs} args - Arguments to filter Circulars to count.
+     * @example
+     * // Count the number of Circulars
+     * const count = await prisma.circular.count({
+     *   where: {
+     *     // ... the filter for the Circulars we want to count
+     *   }
+     * })
+    **/
+    count<T extends CircularCountArgs>(
+      args?: Subset<T, CircularCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], CircularCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Circular.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CircularAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends CircularAggregateArgs>(args: Subset<T, CircularAggregateArgs>): Prisma.PrismaPromise<GetCircularAggregateType<T>>
+
+    /**
+     * Group by Circular.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CircularGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends CircularGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: CircularGroupByArgs['orderBy'] }
+        : { orderBy?: CircularGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, CircularGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCircularGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Circular model
+   */
+  readonly fields: CircularFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Circular.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__CircularClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    company<T extends CompanyDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CompanyDefaultArgs<ExtArgs>>): Prisma__CompanyClient<$Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    vessel<T extends Circular$vesselArgs<ExtArgs> = {}>(args?: Subset<T, Circular$vesselArgs<ExtArgs>>): Prisma__VesselClient<$Result.GetResult<Prisma.$VesselPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Circular model
+   */
+  interface CircularFieldRefs {
+    readonly id: FieldRef<"Circular", 'String'>
+    readonly companyId: FieldRef<"Circular", 'String'>
+    readonly refNo: FieldRef<"Circular", 'String'>
+    readonly vesselId: FieldRef<"Circular", 'String'>
+    readonly title: FieldRef<"Circular", 'String'>
+    readonly category: FieldRef<"Circular", 'CircularCategory'>
+    readonly issueDate: FieldRef<"Circular", 'DateTime'>
+    readonly body: FieldRef<"Circular", 'String'>
+    readonly createdAt: FieldRef<"Circular", 'DateTime'>
+    readonly updatedAt: FieldRef<"Circular", 'DateTime'>
+    readonly createdBy: FieldRef<"Circular", 'String'>
+    readonly updatedBy: FieldRef<"Circular", 'String'>
+    readonly deletedAt: FieldRef<"Circular", 'DateTime'>
+    readonly deletedBy: FieldRef<"Circular", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Circular findUnique
+   */
+  export type CircularFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Circular
+     */
+    select?: CircularSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Circular
+     */
+    omit?: CircularOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CircularInclude<ExtArgs> | null
+    /**
+     * Filter, which Circular to fetch.
+     */
+    where: CircularWhereUniqueInput
+  }
+
+  /**
+   * Circular findUniqueOrThrow
+   */
+  export type CircularFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Circular
+     */
+    select?: CircularSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Circular
+     */
+    omit?: CircularOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CircularInclude<ExtArgs> | null
+    /**
+     * Filter, which Circular to fetch.
+     */
+    where: CircularWhereUniqueInput
+  }
+
+  /**
+   * Circular findFirst
+   */
+  export type CircularFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Circular
+     */
+    select?: CircularSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Circular
+     */
+    omit?: CircularOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CircularInclude<ExtArgs> | null
+    /**
+     * Filter, which Circular to fetch.
+     */
+    where?: CircularWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Circulars to fetch.
+     */
+    orderBy?: CircularOrderByWithRelationInput | CircularOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Circulars.
+     */
+    cursor?: CircularWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Circulars from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Circulars.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Circulars.
+     */
+    distinct?: CircularScalarFieldEnum | CircularScalarFieldEnum[]
+  }
+
+  /**
+   * Circular findFirstOrThrow
+   */
+  export type CircularFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Circular
+     */
+    select?: CircularSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Circular
+     */
+    omit?: CircularOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CircularInclude<ExtArgs> | null
+    /**
+     * Filter, which Circular to fetch.
+     */
+    where?: CircularWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Circulars to fetch.
+     */
+    orderBy?: CircularOrderByWithRelationInput | CircularOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Circulars.
+     */
+    cursor?: CircularWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Circulars from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Circulars.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Circulars.
+     */
+    distinct?: CircularScalarFieldEnum | CircularScalarFieldEnum[]
+  }
+
+  /**
+   * Circular findMany
+   */
+  export type CircularFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Circular
+     */
+    select?: CircularSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Circular
+     */
+    omit?: CircularOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CircularInclude<ExtArgs> | null
+    /**
+     * Filter, which Circulars to fetch.
+     */
+    where?: CircularWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Circulars to fetch.
+     */
+    orderBy?: CircularOrderByWithRelationInput | CircularOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Circulars.
+     */
+    cursor?: CircularWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Circulars from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Circulars.
+     */
+    skip?: number
+    distinct?: CircularScalarFieldEnum | CircularScalarFieldEnum[]
+  }
+
+  /**
+   * Circular create
+   */
+  export type CircularCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Circular
+     */
+    select?: CircularSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Circular
+     */
+    omit?: CircularOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CircularInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Circular.
+     */
+    data: XOR<CircularCreateInput, CircularUncheckedCreateInput>
+  }
+
+  /**
+   * Circular createMany
+   */
+  export type CircularCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Circulars.
+     */
+    data: CircularCreateManyInput | CircularCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Circular createManyAndReturn
+   */
+  export type CircularCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Circular
+     */
+    select?: CircularSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Circular
+     */
+    omit?: CircularOmit<ExtArgs> | null
+    /**
+     * The data used to create many Circulars.
+     */
+    data: CircularCreateManyInput | CircularCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CircularIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Circular update
+   */
+  export type CircularUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Circular
+     */
+    select?: CircularSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Circular
+     */
+    omit?: CircularOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CircularInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Circular.
+     */
+    data: XOR<CircularUpdateInput, CircularUncheckedUpdateInput>
+    /**
+     * Choose, which Circular to update.
+     */
+    where: CircularWhereUniqueInput
+  }
+
+  /**
+   * Circular updateMany
+   */
+  export type CircularUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Circulars.
+     */
+    data: XOR<CircularUpdateManyMutationInput, CircularUncheckedUpdateManyInput>
+    /**
+     * Filter which Circulars to update
+     */
+    where?: CircularWhereInput
+    /**
+     * Limit how many Circulars to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Circular updateManyAndReturn
+   */
+  export type CircularUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Circular
+     */
+    select?: CircularSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Circular
+     */
+    omit?: CircularOmit<ExtArgs> | null
+    /**
+     * The data used to update Circulars.
+     */
+    data: XOR<CircularUpdateManyMutationInput, CircularUncheckedUpdateManyInput>
+    /**
+     * Filter which Circulars to update
+     */
+    where?: CircularWhereInput
+    /**
+     * Limit how many Circulars to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CircularIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Circular upsert
+   */
+  export type CircularUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Circular
+     */
+    select?: CircularSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Circular
+     */
+    omit?: CircularOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CircularInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Circular to update in case it exists.
+     */
+    where: CircularWhereUniqueInput
+    /**
+     * In case the Circular found by the `where` argument doesn't exist, create a new Circular with this data.
+     */
+    create: XOR<CircularCreateInput, CircularUncheckedCreateInput>
+    /**
+     * In case the Circular was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<CircularUpdateInput, CircularUncheckedUpdateInput>
+  }
+
+  /**
+   * Circular delete
+   */
+  export type CircularDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Circular
+     */
+    select?: CircularSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Circular
+     */
+    omit?: CircularOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CircularInclude<ExtArgs> | null
+    /**
+     * Filter which Circular to delete.
+     */
+    where: CircularWhereUniqueInput
+  }
+
+  /**
+   * Circular deleteMany
+   */
+  export type CircularDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Circulars to delete
+     */
+    where?: CircularWhereInput
+    /**
+     * Limit how many Circulars to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Circular.vessel
+   */
+  export type Circular$vesselArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Vessel
+     */
+    select?: VesselSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Vessel
+     */
+    omit?: VesselOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VesselInclude<ExtArgs> | null
+    where?: VesselWhereInput
+  }
+
+  /**
+   * Circular without action
+   */
+  export type CircularDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Circular
+     */
+    select?: CircularSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Circular
+     */
+    omit?: CircularOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CircularInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model RiskAssessment
+   */
+
+  export type AggregateRiskAssessment = {
+    _count: RiskAssessmentCountAggregateOutputType | null
+    _min: RiskAssessmentMinAggregateOutputType | null
+    _max: RiskAssessmentMaxAggregateOutputType | null
+  }
+
+  export type RiskAssessmentMinAggregateOutputType = {
+    id: string | null
+    companyId: string | null
+    refNo: string | null
+    vesselId: string | null
+    activity: string | null
+    hazards: string | null
+    existingControls: string | null
+    likelihood: $Enums.RiskRating | null
+    severity: $Enums.RiskRating | null
+    additionalControls: string | null
+    assessedBy: string | null
+    assessmentDate: Date | null
+    reviewDate: Date | null
+    status: $Enums.RiskAssessmentStatus | null
+    closedAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    createdBy: string | null
+    updatedBy: string | null
+    deletedAt: Date | null
+    deletedBy: string | null
+  }
+
+  export type RiskAssessmentMaxAggregateOutputType = {
+    id: string | null
+    companyId: string | null
+    refNo: string | null
+    vesselId: string | null
+    activity: string | null
+    hazards: string | null
+    existingControls: string | null
+    likelihood: $Enums.RiskRating | null
+    severity: $Enums.RiskRating | null
+    additionalControls: string | null
+    assessedBy: string | null
+    assessmentDate: Date | null
+    reviewDate: Date | null
+    status: $Enums.RiskAssessmentStatus | null
+    closedAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    createdBy: string | null
+    updatedBy: string | null
+    deletedAt: Date | null
+    deletedBy: string | null
+  }
+
+  export type RiskAssessmentCountAggregateOutputType = {
+    id: number
+    companyId: number
+    refNo: number
+    vesselId: number
+    activity: number
+    hazards: number
+    existingControls: number
+    likelihood: number
+    severity: number
+    additionalControls: number
+    assessedBy: number
+    assessmentDate: number
+    reviewDate: number
+    status: number
+    closedAt: number
+    createdAt: number
+    updatedAt: number
+    createdBy: number
+    updatedBy: number
+    deletedAt: number
+    deletedBy: number
+    _all: number
+  }
+
+
+  export type RiskAssessmentMinAggregateInputType = {
+    id?: true
+    companyId?: true
+    refNo?: true
+    vesselId?: true
+    activity?: true
+    hazards?: true
+    existingControls?: true
+    likelihood?: true
+    severity?: true
+    additionalControls?: true
+    assessedBy?: true
+    assessmentDate?: true
+    reviewDate?: true
+    status?: true
+    closedAt?: true
+    createdAt?: true
+    updatedAt?: true
+    createdBy?: true
+    updatedBy?: true
+    deletedAt?: true
+    deletedBy?: true
+  }
+
+  export type RiskAssessmentMaxAggregateInputType = {
+    id?: true
+    companyId?: true
+    refNo?: true
+    vesselId?: true
+    activity?: true
+    hazards?: true
+    existingControls?: true
+    likelihood?: true
+    severity?: true
+    additionalControls?: true
+    assessedBy?: true
+    assessmentDate?: true
+    reviewDate?: true
+    status?: true
+    closedAt?: true
+    createdAt?: true
+    updatedAt?: true
+    createdBy?: true
+    updatedBy?: true
+    deletedAt?: true
+    deletedBy?: true
+  }
+
+  export type RiskAssessmentCountAggregateInputType = {
+    id?: true
+    companyId?: true
+    refNo?: true
+    vesselId?: true
+    activity?: true
+    hazards?: true
+    existingControls?: true
+    likelihood?: true
+    severity?: true
+    additionalControls?: true
+    assessedBy?: true
+    assessmentDate?: true
+    reviewDate?: true
+    status?: true
+    closedAt?: true
+    createdAt?: true
+    updatedAt?: true
+    createdBy?: true
+    updatedBy?: true
+    deletedAt?: true
+    deletedBy?: true
+    _all?: true
+  }
+
+  export type RiskAssessmentAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which RiskAssessment to aggregate.
+     */
+    where?: RiskAssessmentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of RiskAssessments to fetch.
+     */
+    orderBy?: RiskAssessmentOrderByWithRelationInput | RiskAssessmentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: RiskAssessmentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` RiskAssessments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` RiskAssessments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned RiskAssessments
+    **/
+    _count?: true | RiskAssessmentCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: RiskAssessmentMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: RiskAssessmentMaxAggregateInputType
+  }
+
+  export type GetRiskAssessmentAggregateType<T extends RiskAssessmentAggregateArgs> = {
+        [P in keyof T & keyof AggregateRiskAssessment]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateRiskAssessment[P]>
+      : GetScalarType<T[P], AggregateRiskAssessment[P]>
+  }
+
+
+
+
+  export type RiskAssessmentGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: RiskAssessmentWhereInput
+    orderBy?: RiskAssessmentOrderByWithAggregationInput | RiskAssessmentOrderByWithAggregationInput[]
+    by: RiskAssessmentScalarFieldEnum[] | RiskAssessmentScalarFieldEnum
+    having?: RiskAssessmentScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: RiskAssessmentCountAggregateInputType | true
+    _min?: RiskAssessmentMinAggregateInputType
+    _max?: RiskAssessmentMaxAggregateInputType
+  }
+
+  export type RiskAssessmentGroupByOutputType = {
+    id: string
+    companyId: string
+    refNo: string
+    vesselId: string | null
+    activity: string
+    hazards: string
+    existingControls: string | null
+    likelihood: $Enums.RiskRating
+    severity: $Enums.RiskRating
+    additionalControls: string | null
+    assessedBy: string | null
+    assessmentDate: Date
+    reviewDate: Date | null
+    status: $Enums.RiskAssessmentStatus
+    closedAt: Date | null
+    createdAt: Date
+    updatedAt: Date
+    createdBy: string | null
+    updatedBy: string | null
+    deletedAt: Date | null
+    deletedBy: string | null
+    _count: RiskAssessmentCountAggregateOutputType | null
+    _min: RiskAssessmentMinAggregateOutputType | null
+    _max: RiskAssessmentMaxAggregateOutputType | null
+  }
+
+  type GetRiskAssessmentGroupByPayload<T extends RiskAssessmentGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<RiskAssessmentGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof RiskAssessmentGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], RiskAssessmentGroupByOutputType[P]>
+            : GetScalarType<T[P], RiskAssessmentGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type RiskAssessmentSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    companyId?: boolean
+    refNo?: boolean
+    vesselId?: boolean
+    activity?: boolean
+    hazards?: boolean
+    existingControls?: boolean
+    likelihood?: boolean
+    severity?: boolean
+    additionalControls?: boolean
+    assessedBy?: boolean
+    assessmentDate?: boolean
+    reviewDate?: boolean
+    status?: boolean
+    closedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    createdBy?: boolean
+    updatedBy?: boolean
+    deletedAt?: boolean
+    deletedBy?: boolean
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+    vessel?: boolean | RiskAssessment$vesselArgs<ExtArgs>
+  }, ExtArgs["result"]["riskAssessment"]>
+
+  export type RiskAssessmentSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    companyId?: boolean
+    refNo?: boolean
+    vesselId?: boolean
+    activity?: boolean
+    hazards?: boolean
+    existingControls?: boolean
+    likelihood?: boolean
+    severity?: boolean
+    additionalControls?: boolean
+    assessedBy?: boolean
+    assessmentDate?: boolean
+    reviewDate?: boolean
+    status?: boolean
+    closedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    createdBy?: boolean
+    updatedBy?: boolean
+    deletedAt?: boolean
+    deletedBy?: boolean
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+    vessel?: boolean | RiskAssessment$vesselArgs<ExtArgs>
+  }, ExtArgs["result"]["riskAssessment"]>
+
+  export type RiskAssessmentSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    companyId?: boolean
+    refNo?: boolean
+    vesselId?: boolean
+    activity?: boolean
+    hazards?: boolean
+    existingControls?: boolean
+    likelihood?: boolean
+    severity?: boolean
+    additionalControls?: boolean
+    assessedBy?: boolean
+    assessmentDate?: boolean
+    reviewDate?: boolean
+    status?: boolean
+    closedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    createdBy?: boolean
+    updatedBy?: boolean
+    deletedAt?: boolean
+    deletedBy?: boolean
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+    vessel?: boolean | RiskAssessment$vesselArgs<ExtArgs>
+  }, ExtArgs["result"]["riskAssessment"]>
+
+  export type RiskAssessmentSelectScalar = {
+    id?: boolean
+    companyId?: boolean
+    refNo?: boolean
+    vesselId?: boolean
+    activity?: boolean
+    hazards?: boolean
+    existingControls?: boolean
+    likelihood?: boolean
+    severity?: boolean
+    additionalControls?: boolean
+    assessedBy?: boolean
+    assessmentDate?: boolean
+    reviewDate?: boolean
+    status?: boolean
+    closedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    createdBy?: boolean
+    updatedBy?: boolean
+    deletedAt?: boolean
+    deletedBy?: boolean
+  }
+
+  export type RiskAssessmentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "companyId" | "refNo" | "vesselId" | "activity" | "hazards" | "existingControls" | "likelihood" | "severity" | "additionalControls" | "assessedBy" | "assessmentDate" | "reviewDate" | "status" | "closedAt" | "createdAt" | "updatedAt" | "createdBy" | "updatedBy" | "deletedAt" | "deletedBy", ExtArgs["result"]["riskAssessment"]>
+  export type RiskAssessmentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+    vessel?: boolean | RiskAssessment$vesselArgs<ExtArgs>
+  }
+  export type RiskAssessmentIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+    vessel?: boolean | RiskAssessment$vesselArgs<ExtArgs>
+  }
+  export type RiskAssessmentIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+    vessel?: boolean | RiskAssessment$vesselArgs<ExtArgs>
+  }
+
+  export type $RiskAssessmentPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "RiskAssessment"
+    objects: {
+      company: Prisma.$CompanyPayload<ExtArgs>
+      vessel: Prisma.$VesselPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      companyId: string
+      refNo: string
+      vesselId: string | null
+      activity: string
+      hazards: string
+      existingControls: string | null
+      likelihood: $Enums.RiskRating
+      severity: $Enums.RiskRating
+      additionalControls: string | null
+      assessedBy: string | null
+      assessmentDate: Date
+      reviewDate: Date | null
+      status: $Enums.RiskAssessmentStatus
+      closedAt: Date | null
+      createdAt: Date
+      updatedAt: Date
+      createdBy: string | null
+      updatedBy: string | null
+      deletedAt: Date | null
+      deletedBy: string | null
+    }, ExtArgs["result"]["riskAssessment"]>
+    composites: {}
+  }
+
+  type RiskAssessmentGetPayload<S extends boolean | null | undefined | RiskAssessmentDefaultArgs> = $Result.GetResult<Prisma.$RiskAssessmentPayload, S>
+
+  type RiskAssessmentCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<RiskAssessmentFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: RiskAssessmentCountAggregateInputType | true
+    }
+
+  export interface RiskAssessmentDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['RiskAssessment'], meta: { name: 'RiskAssessment' } }
+    /**
+     * Find zero or one RiskAssessment that matches the filter.
+     * @param {RiskAssessmentFindUniqueArgs} args - Arguments to find a RiskAssessment
+     * @example
+     * // Get one RiskAssessment
+     * const riskAssessment = await prisma.riskAssessment.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends RiskAssessmentFindUniqueArgs>(args: SelectSubset<T, RiskAssessmentFindUniqueArgs<ExtArgs>>): Prisma__RiskAssessmentClient<$Result.GetResult<Prisma.$RiskAssessmentPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one RiskAssessment that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {RiskAssessmentFindUniqueOrThrowArgs} args - Arguments to find a RiskAssessment
+     * @example
+     * // Get one RiskAssessment
+     * const riskAssessment = await prisma.riskAssessment.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends RiskAssessmentFindUniqueOrThrowArgs>(args: SelectSubset<T, RiskAssessmentFindUniqueOrThrowArgs<ExtArgs>>): Prisma__RiskAssessmentClient<$Result.GetResult<Prisma.$RiskAssessmentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first RiskAssessment that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RiskAssessmentFindFirstArgs} args - Arguments to find a RiskAssessment
+     * @example
+     * // Get one RiskAssessment
+     * const riskAssessment = await prisma.riskAssessment.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends RiskAssessmentFindFirstArgs>(args?: SelectSubset<T, RiskAssessmentFindFirstArgs<ExtArgs>>): Prisma__RiskAssessmentClient<$Result.GetResult<Prisma.$RiskAssessmentPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first RiskAssessment that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RiskAssessmentFindFirstOrThrowArgs} args - Arguments to find a RiskAssessment
+     * @example
+     * // Get one RiskAssessment
+     * const riskAssessment = await prisma.riskAssessment.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends RiskAssessmentFindFirstOrThrowArgs>(args?: SelectSubset<T, RiskAssessmentFindFirstOrThrowArgs<ExtArgs>>): Prisma__RiskAssessmentClient<$Result.GetResult<Prisma.$RiskAssessmentPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more RiskAssessments that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RiskAssessmentFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all RiskAssessments
+     * const riskAssessments = await prisma.riskAssessment.findMany()
+     * 
+     * // Get first 10 RiskAssessments
+     * const riskAssessments = await prisma.riskAssessment.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const riskAssessmentWithIdOnly = await prisma.riskAssessment.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends RiskAssessmentFindManyArgs>(args?: SelectSubset<T, RiskAssessmentFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RiskAssessmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a RiskAssessment.
+     * @param {RiskAssessmentCreateArgs} args - Arguments to create a RiskAssessment.
+     * @example
+     * // Create one RiskAssessment
+     * const RiskAssessment = await prisma.riskAssessment.create({
+     *   data: {
+     *     // ... data to create a RiskAssessment
+     *   }
+     * })
+     * 
+     */
+    create<T extends RiskAssessmentCreateArgs>(args: SelectSubset<T, RiskAssessmentCreateArgs<ExtArgs>>): Prisma__RiskAssessmentClient<$Result.GetResult<Prisma.$RiskAssessmentPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many RiskAssessments.
+     * @param {RiskAssessmentCreateManyArgs} args - Arguments to create many RiskAssessments.
+     * @example
+     * // Create many RiskAssessments
+     * const riskAssessment = await prisma.riskAssessment.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends RiskAssessmentCreateManyArgs>(args?: SelectSubset<T, RiskAssessmentCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many RiskAssessments and returns the data saved in the database.
+     * @param {RiskAssessmentCreateManyAndReturnArgs} args - Arguments to create many RiskAssessments.
+     * @example
+     * // Create many RiskAssessments
+     * const riskAssessment = await prisma.riskAssessment.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many RiskAssessments and only return the `id`
+     * const riskAssessmentWithIdOnly = await prisma.riskAssessment.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends RiskAssessmentCreateManyAndReturnArgs>(args?: SelectSubset<T, RiskAssessmentCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RiskAssessmentPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a RiskAssessment.
+     * @param {RiskAssessmentDeleteArgs} args - Arguments to delete one RiskAssessment.
+     * @example
+     * // Delete one RiskAssessment
+     * const RiskAssessment = await prisma.riskAssessment.delete({
+     *   where: {
+     *     // ... filter to delete one RiskAssessment
+     *   }
+     * })
+     * 
+     */
+    delete<T extends RiskAssessmentDeleteArgs>(args: SelectSubset<T, RiskAssessmentDeleteArgs<ExtArgs>>): Prisma__RiskAssessmentClient<$Result.GetResult<Prisma.$RiskAssessmentPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one RiskAssessment.
+     * @param {RiskAssessmentUpdateArgs} args - Arguments to update one RiskAssessment.
+     * @example
+     * // Update one RiskAssessment
+     * const riskAssessment = await prisma.riskAssessment.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends RiskAssessmentUpdateArgs>(args: SelectSubset<T, RiskAssessmentUpdateArgs<ExtArgs>>): Prisma__RiskAssessmentClient<$Result.GetResult<Prisma.$RiskAssessmentPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more RiskAssessments.
+     * @param {RiskAssessmentDeleteManyArgs} args - Arguments to filter RiskAssessments to delete.
+     * @example
+     * // Delete a few RiskAssessments
+     * const { count } = await prisma.riskAssessment.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends RiskAssessmentDeleteManyArgs>(args?: SelectSubset<T, RiskAssessmentDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more RiskAssessments.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RiskAssessmentUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many RiskAssessments
+     * const riskAssessment = await prisma.riskAssessment.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends RiskAssessmentUpdateManyArgs>(args: SelectSubset<T, RiskAssessmentUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more RiskAssessments and returns the data updated in the database.
+     * @param {RiskAssessmentUpdateManyAndReturnArgs} args - Arguments to update many RiskAssessments.
+     * @example
+     * // Update many RiskAssessments
+     * const riskAssessment = await prisma.riskAssessment.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more RiskAssessments and only return the `id`
+     * const riskAssessmentWithIdOnly = await prisma.riskAssessment.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends RiskAssessmentUpdateManyAndReturnArgs>(args: SelectSubset<T, RiskAssessmentUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RiskAssessmentPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one RiskAssessment.
+     * @param {RiskAssessmentUpsertArgs} args - Arguments to update or create a RiskAssessment.
+     * @example
+     * // Update or create a RiskAssessment
+     * const riskAssessment = await prisma.riskAssessment.upsert({
+     *   create: {
+     *     // ... data to create a RiskAssessment
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the RiskAssessment we want to update
+     *   }
+     * })
+     */
+    upsert<T extends RiskAssessmentUpsertArgs>(args: SelectSubset<T, RiskAssessmentUpsertArgs<ExtArgs>>): Prisma__RiskAssessmentClient<$Result.GetResult<Prisma.$RiskAssessmentPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of RiskAssessments.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RiskAssessmentCountArgs} args - Arguments to filter RiskAssessments to count.
+     * @example
+     * // Count the number of RiskAssessments
+     * const count = await prisma.riskAssessment.count({
+     *   where: {
+     *     // ... the filter for the RiskAssessments we want to count
+     *   }
+     * })
+    **/
+    count<T extends RiskAssessmentCountArgs>(
+      args?: Subset<T, RiskAssessmentCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], RiskAssessmentCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a RiskAssessment.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RiskAssessmentAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends RiskAssessmentAggregateArgs>(args: Subset<T, RiskAssessmentAggregateArgs>): Prisma.PrismaPromise<GetRiskAssessmentAggregateType<T>>
+
+    /**
+     * Group by RiskAssessment.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RiskAssessmentGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends RiskAssessmentGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: RiskAssessmentGroupByArgs['orderBy'] }
+        : { orderBy?: RiskAssessmentGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, RiskAssessmentGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetRiskAssessmentGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the RiskAssessment model
+   */
+  readonly fields: RiskAssessmentFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for RiskAssessment.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__RiskAssessmentClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    company<T extends CompanyDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CompanyDefaultArgs<ExtArgs>>): Prisma__CompanyClient<$Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    vessel<T extends RiskAssessment$vesselArgs<ExtArgs> = {}>(args?: Subset<T, RiskAssessment$vesselArgs<ExtArgs>>): Prisma__VesselClient<$Result.GetResult<Prisma.$VesselPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the RiskAssessment model
+   */
+  interface RiskAssessmentFieldRefs {
+    readonly id: FieldRef<"RiskAssessment", 'String'>
+    readonly companyId: FieldRef<"RiskAssessment", 'String'>
+    readonly refNo: FieldRef<"RiskAssessment", 'String'>
+    readonly vesselId: FieldRef<"RiskAssessment", 'String'>
+    readonly activity: FieldRef<"RiskAssessment", 'String'>
+    readonly hazards: FieldRef<"RiskAssessment", 'String'>
+    readonly existingControls: FieldRef<"RiskAssessment", 'String'>
+    readonly likelihood: FieldRef<"RiskAssessment", 'RiskRating'>
+    readonly severity: FieldRef<"RiskAssessment", 'RiskRating'>
+    readonly additionalControls: FieldRef<"RiskAssessment", 'String'>
+    readonly assessedBy: FieldRef<"RiskAssessment", 'String'>
+    readonly assessmentDate: FieldRef<"RiskAssessment", 'DateTime'>
+    readonly reviewDate: FieldRef<"RiskAssessment", 'DateTime'>
+    readonly status: FieldRef<"RiskAssessment", 'RiskAssessmentStatus'>
+    readonly closedAt: FieldRef<"RiskAssessment", 'DateTime'>
+    readonly createdAt: FieldRef<"RiskAssessment", 'DateTime'>
+    readonly updatedAt: FieldRef<"RiskAssessment", 'DateTime'>
+    readonly createdBy: FieldRef<"RiskAssessment", 'String'>
+    readonly updatedBy: FieldRef<"RiskAssessment", 'String'>
+    readonly deletedAt: FieldRef<"RiskAssessment", 'DateTime'>
+    readonly deletedBy: FieldRef<"RiskAssessment", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * RiskAssessment findUnique
+   */
+  export type RiskAssessmentFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RiskAssessment
+     */
+    select?: RiskAssessmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RiskAssessment
+     */
+    omit?: RiskAssessmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RiskAssessmentInclude<ExtArgs> | null
+    /**
+     * Filter, which RiskAssessment to fetch.
+     */
+    where: RiskAssessmentWhereUniqueInput
+  }
+
+  /**
+   * RiskAssessment findUniqueOrThrow
+   */
+  export type RiskAssessmentFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RiskAssessment
+     */
+    select?: RiskAssessmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RiskAssessment
+     */
+    omit?: RiskAssessmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RiskAssessmentInclude<ExtArgs> | null
+    /**
+     * Filter, which RiskAssessment to fetch.
+     */
+    where: RiskAssessmentWhereUniqueInput
+  }
+
+  /**
+   * RiskAssessment findFirst
+   */
+  export type RiskAssessmentFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RiskAssessment
+     */
+    select?: RiskAssessmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RiskAssessment
+     */
+    omit?: RiskAssessmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RiskAssessmentInclude<ExtArgs> | null
+    /**
+     * Filter, which RiskAssessment to fetch.
+     */
+    where?: RiskAssessmentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of RiskAssessments to fetch.
+     */
+    orderBy?: RiskAssessmentOrderByWithRelationInput | RiskAssessmentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for RiskAssessments.
+     */
+    cursor?: RiskAssessmentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` RiskAssessments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` RiskAssessments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of RiskAssessments.
+     */
+    distinct?: RiskAssessmentScalarFieldEnum | RiskAssessmentScalarFieldEnum[]
+  }
+
+  /**
+   * RiskAssessment findFirstOrThrow
+   */
+  export type RiskAssessmentFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RiskAssessment
+     */
+    select?: RiskAssessmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RiskAssessment
+     */
+    omit?: RiskAssessmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RiskAssessmentInclude<ExtArgs> | null
+    /**
+     * Filter, which RiskAssessment to fetch.
+     */
+    where?: RiskAssessmentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of RiskAssessments to fetch.
+     */
+    orderBy?: RiskAssessmentOrderByWithRelationInput | RiskAssessmentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for RiskAssessments.
+     */
+    cursor?: RiskAssessmentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` RiskAssessments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` RiskAssessments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of RiskAssessments.
+     */
+    distinct?: RiskAssessmentScalarFieldEnum | RiskAssessmentScalarFieldEnum[]
+  }
+
+  /**
+   * RiskAssessment findMany
+   */
+  export type RiskAssessmentFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RiskAssessment
+     */
+    select?: RiskAssessmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RiskAssessment
+     */
+    omit?: RiskAssessmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RiskAssessmentInclude<ExtArgs> | null
+    /**
+     * Filter, which RiskAssessments to fetch.
+     */
+    where?: RiskAssessmentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of RiskAssessments to fetch.
+     */
+    orderBy?: RiskAssessmentOrderByWithRelationInput | RiskAssessmentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing RiskAssessments.
+     */
+    cursor?: RiskAssessmentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` RiskAssessments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` RiskAssessments.
+     */
+    skip?: number
+    distinct?: RiskAssessmentScalarFieldEnum | RiskAssessmentScalarFieldEnum[]
+  }
+
+  /**
+   * RiskAssessment create
+   */
+  export type RiskAssessmentCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RiskAssessment
+     */
+    select?: RiskAssessmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RiskAssessment
+     */
+    omit?: RiskAssessmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RiskAssessmentInclude<ExtArgs> | null
+    /**
+     * The data needed to create a RiskAssessment.
+     */
+    data: XOR<RiskAssessmentCreateInput, RiskAssessmentUncheckedCreateInput>
+  }
+
+  /**
+   * RiskAssessment createMany
+   */
+  export type RiskAssessmentCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many RiskAssessments.
+     */
+    data: RiskAssessmentCreateManyInput | RiskAssessmentCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * RiskAssessment createManyAndReturn
+   */
+  export type RiskAssessmentCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RiskAssessment
+     */
+    select?: RiskAssessmentSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the RiskAssessment
+     */
+    omit?: RiskAssessmentOmit<ExtArgs> | null
+    /**
+     * The data used to create many RiskAssessments.
+     */
+    data: RiskAssessmentCreateManyInput | RiskAssessmentCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RiskAssessmentIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * RiskAssessment update
+   */
+  export type RiskAssessmentUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RiskAssessment
+     */
+    select?: RiskAssessmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RiskAssessment
+     */
+    omit?: RiskAssessmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RiskAssessmentInclude<ExtArgs> | null
+    /**
+     * The data needed to update a RiskAssessment.
+     */
+    data: XOR<RiskAssessmentUpdateInput, RiskAssessmentUncheckedUpdateInput>
+    /**
+     * Choose, which RiskAssessment to update.
+     */
+    where: RiskAssessmentWhereUniqueInput
+  }
+
+  /**
+   * RiskAssessment updateMany
+   */
+  export type RiskAssessmentUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update RiskAssessments.
+     */
+    data: XOR<RiskAssessmentUpdateManyMutationInput, RiskAssessmentUncheckedUpdateManyInput>
+    /**
+     * Filter which RiskAssessments to update
+     */
+    where?: RiskAssessmentWhereInput
+    /**
+     * Limit how many RiskAssessments to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * RiskAssessment updateManyAndReturn
+   */
+  export type RiskAssessmentUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RiskAssessment
+     */
+    select?: RiskAssessmentSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the RiskAssessment
+     */
+    omit?: RiskAssessmentOmit<ExtArgs> | null
+    /**
+     * The data used to update RiskAssessments.
+     */
+    data: XOR<RiskAssessmentUpdateManyMutationInput, RiskAssessmentUncheckedUpdateManyInput>
+    /**
+     * Filter which RiskAssessments to update
+     */
+    where?: RiskAssessmentWhereInput
+    /**
+     * Limit how many RiskAssessments to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RiskAssessmentIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * RiskAssessment upsert
+   */
+  export type RiskAssessmentUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RiskAssessment
+     */
+    select?: RiskAssessmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RiskAssessment
+     */
+    omit?: RiskAssessmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RiskAssessmentInclude<ExtArgs> | null
+    /**
+     * The filter to search for the RiskAssessment to update in case it exists.
+     */
+    where: RiskAssessmentWhereUniqueInput
+    /**
+     * In case the RiskAssessment found by the `where` argument doesn't exist, create a new RiskAssessment with this data.
+     */
+    create: XOR<RiskAssessmentCreateInput, RiskAssessmentUncheckedCreateInput>
+    /**
+     * In case the RiskAssessment was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<RiskAssessmentUpdateInput, RiskAssessmentUncheckedUpdateInput>
+  }
+
+  /**
+   * RiskAssessment delete
+   */
+  export type RiskAssessmentDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RiskAssessment
+     */
+    select?: RiskAssessmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RiskAssessment
+     */
+    omit?: RiskAssessmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RiskAssessmentInclude<ExtArgs> | null
+    /**
+     * Filter which RiskAssessment to delete.
+     */
+    where: RiskAssessmentWhereUniqueInput
+  }
+
+  /**
+   * RiskAssessment deleteMany
+   */
+  export type RiskAssessmentDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which RiskAssessments to delete
+     */
+    where?: RiskAssessmentWhereInput
+    /**
+     * Limit how many RiskAssessments to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * RiskAssessment.vessel
+   */
+  export type RiskAssessment$vesselArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Vessel
+     */
+    select?: VesselSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Vessel
+     */
+    omit?: VesselOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VesselInclude<ExtArgs> | null
+    where?: VesselWhereInput
+  }
+
+  /**
+   * RiskAssessment without action
+   */
+  export type RiskAssessmentDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RiskAssessment
+     */
+    select?: RiskAssessmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RiskAssessment
+     */
+    omit?: RiskAssessmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RiskAssessmentInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model Defect
+   */
+
+  export type AggregateDefect = {
+    _count: DefectCountAggregateOutputType | null
+    _min: DefectMinAggregateOutputType | null
+    _max: DefectMaxAggregateOutputType | null
+  }
+
+  export type DefectMinAggregateOutputType = {
+    id: string | null
+    companyId: string | null
+    refNo: string | null
+    vesselId: string | null
+    equipment: string | null
+    description: string | null
+    severity: $Enums.DefectSeverity | null
+    dateRaised: Date | null
+    targetRectificationDate: Date | null
+    actionTaken: string | null
+    raisedBy: string | null
+    status: $Enums.DefectStatus | null
+    rectifiedAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    createdBy: string | null
+    updatedBy: string | null
+    deletedAt: Date | null
+    deletedBy: string | null
+  }
+
+  export type DefectMaxAggregateOutputType = {
+    id: string | null
+    companyId: string | null
+    refNo: string | null
+    vesselId: string | null
+    equipment: string | null
+    description: string | null
+    severity: $Enums.DefectSeverity | null
+    dateRaised: Date | null
+    targetRectificationDate: Date | null
+    actionTaken: string | null
+    raisedBy: string | null
+    status: $Enums.DefectStatus | null
+    rectifiedAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    createdBy: string | null
+    updatedBy: string | null
+    deletedAt: Date | null
+    deletedBy: string | null
+  }
+
+  export type DefectCountAggregateOutputType = {
+    id: number
+    companyId: number
+    refNo: number
+    vesselId: number
+    equipment: number
+    description: number
+    severity: number
+    dateRaised: number
+    targetRectificationDate: number
+    actionTaken: number
+    raisedBy: number
+    status: number
+    rectifiedAt: number
+    createdAt: number
+    updatedAt: number
+    createdBy: number
+    updatedBy: number
+    deletedAt: number
+    deletedBy: number
+    _all: number
+  }
+
+
+  export type DefectMinAggregateInputType = {
+    id?: true
+    companyId?: true
+    refNo?: true
+    vesselId?: true
+    equipment?: true
+    description?: true
+    severity?: true
+    dateRaised?: true
+    targetRectificationDate?: true
+    actionTaken?: true
+    raisedBy?: true
+    status?: true
+    rectifiedAt?: true
+    createdAt?: true
+    updatedAt?: true
+    createdBy?: true
+    updatedBy?: true
+    deletedAt?: true
+    deletedBy?: true
+  }
+
+  export type DefectMaxAggregateInputType = {
+    id?: true
+    companyId?: true
+    refNo?: true
+    vesselId?: true
+    equipment?: true
+    description?: true
+    severity?: true
+    dateRaised?: true
+    targetRectificationDate?: true
+    actionTaken?: true
+    raisedBy?: true
+    status?: true
+    rectifiedAt?: true
+    createdAt?: true
+    updatedAt?: true
+    createdBy?: true
+    updatedBy?: true
+    deletedAt?: true
+    deletedBy?: true
+  }
+
+  export type DefectCountAggregateInputType = {
+    id?: true
+    companyId?: true
+    refNo?: true
+    vesselId?: true
+    equipment?: true
+    description?: true
+    severity?: true
+    dateRaised?: true
+    targetRectificationDate?: true
+    actionTaken?: true
+    raisedBy?: true
+    status?: true
+    rectifiedAt?: true
+    createdAt?: true
+    updatedAt?: true
+    createdBy?: true
+    updatedBy?: true
+    deletedAt?: true
+    deletedBy?: true
+    _all?: true
+  }
+
+  export type DefectAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Defect to aggregate.
+     */
+    where?: DefectWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Defects to fetch.
+     */
+    orderBy?: DefectOrderByWithRelationInput | DefectOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: DefectWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Defects from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Defects.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Defects
+    **/
+    _count?: true | DefectCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: DefectMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: DefectMaxAggregateInputType
+  }
+
+  export type GetDefectAggregateType<T extends DefectAggregateArgs> = {
+        [P in keyof T & keyof AggregateDefect]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateDefect[P]>
+      : GetScalarType<T[P], AggregateDefect[P]>
+  }
+
+
+
+
+  export type DefectGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DefectWhereInput
+    orderBy?: DefectOrderByWithAggregationInput | DefectOrderByWithAggregationInput[]
+    by: DefectScalarFieldEnum[] | DefectScalarFieldEnum
+    having?: DefectScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: DefectCountAggregateInputType | true
+    _min?: DefectMinAggregateInputType
+    _max?: DefectMaxAggregateInputType
+  }
+
+  export type DefectGroupByOutputType = {
+    id: string
+    companyId: string
+    refNo: string
+    vesselId: string
+    equipment: string
+    description: string
+    severity: $Enums.DefectSeverity
+    dateRaised: Date
+    targetRectificationDate: Date | null
+    actionTaken: string | null
+    raisedBy: string | null
+    status: $Enums.DefectStatus
+    rectifiedAt: Date | null
+    createdAt: Date
+    updatedAt: Date
+    createdBy: string | null
+    updatedBy: string | null
+    deletedAt: Date | null
+    deletedBy: string | null
+    _count: DefectCountAggregateOutputType | null
+    _min: DefectMinAggregateOutputType | null
+    _max: DefectMaxAggregateOutputType | null
+  }
+
+  type GetDefectGroupByPayload<T extends DefectGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<DefectGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof DefectGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], DefectGroupByOutputType[P]>
+            : GetScalarType<T[P], DefectGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type DefectSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    companyId?: boolean
+    refNo?: boolean
+    vesselId?: boolean
+    equipment?: boolean
+    description?: boolean
+    severity?: boolean
+    dateRaised?: boolean
+    targetRectificationDate?: boolean
+    actionTaken?: boolean
+    raisedBy?: boolean
+    status?: boolean
+    rectifiedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    createdBy?: boolean
+    updatedBy?: boolean
+    deletedAt?: boolean
+    deletedBy?: boolean
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+    vessel?: boolean | VesselDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["defect"]>
+
+  export type DefectSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    companyId?: boolean
+    refNo?: boolean
+    vesselId?: boolean
+    equipment?: boolean
+    description?: boolean
+    severity?: boolean
+    dateRaised?: boolean
+    targetRectificationDate?: boolean
+    actionTaken?: boolean
+    raisedBy?: boolean
+    status?: boolean
+    rectifiedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    createdBy?: boolean
+    updatedBy?: boolean
+    deletedAt?: boolean
+    deletedBy?: boolean
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+    vessel?: boolean | VesselDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["defect"]>
+
+  export type DefectSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    companyId?: boolean
+    refNo?: boolean
+    vesselId?: boolean
+    equipment?: boolean
+    description?: boolean
+    severity?: boolean
+    dateRaised?: boolean
+    targetRectificationDate?: boolean
+    actionTaken?: boolean
+    raisedBy?: boolean
+    status?: boolean
+    rectifiedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    createdBy?: boolean
+    updatedBy?: boolean
+    deletedAt?: boolean
+    deletedBy?: boolean
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+    vessel?: boolean | VesselDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["defect"]>
+
+  export type DefectSelectScalar = {
+    id?: boolean
+    companyId?: boolean
+    refNo?: boolean
+    vesselId?: boolean
+    equipment?: boolean
+    description?: boolean
+    severity?: boolean
+    dateRaised?: boolean
+    targetRectificationDate?: boolean
+    actionTaken?: boolean
+    raisedBy?: boolean
+    status?: boolean
+    rectifiedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    createdBy?: boolean
+    updatedBy?: boolean
+    deletedAt?: boolean
+    deletedBy?: boolean
+  }
+
+  export type DefectOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "companyId" | "refNo" | "vesselId" | "equipment" | "description" | "severity" | "dateRaised" | "targetRectificationDate" | "actionTaken" | "raisedBy" | "status" | "rectifiedAt" | "createdAt" | "updatedAt" | "createdBy" | "updatedBy" | "deletedAt" | "deletedBy", ExtArgs["result"]["defect"]>
+  export type DefectInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+    vessel?: boolean | VesselDefaultArgs<ExtArgs>
+  }
+  export type DefectIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+    vessel?: boolean | VesselDefaultArgs<ExtArgs>
+  }
+  export type DefectIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+    vessel?: boolean | VesselDefaultArgs<ExtArgs>
+  }
+
+  export type $DefectPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Defect"
+    objects: {
+      company: Prisma.$CompanyPayload<ExtArgs>
+      vessel: Prisma.$VesselPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      companyId: string
+      refNo: string
+      vesselId: string
+      equipment: string
+      description: string
+      severity: $Enums.DefectSeverity
+      dateRaised: Date
+      targetRectificationDate: Date | null
+      actionTaken: string | null
+      raisedBy: string | null
+      status: $Enums.DefectStatus
+      rectifiedAt: Date | null
+      createdAt: Date
+      updatedAt: Date
+      createdBy: string | null
+      updatedBy: string | null
+      deletedAt: Date | null
+      deletedBy: string | null
+    }, ExtArgs["result"]["defect"]>
+    composites: {}
+  }
+
+  type DefectGetPayload<S extends boolean | null | undefined | DefectDefaultArgs> = $Result.GetResult<Prisma.$DefectPayload, S>
+
+  type DefectCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<DefectFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: DefectCountAggregateInputType | true
+    }
+
+  export interface DefectDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Defect'], meta: { name: 'Defect' } }
+    /**
+     * Find zero or one Defect that matches the filter.
+     * @param {DefectFindUniqueArgs} args - Arguments to find a Defect
+     * @example
+     * // Get one Defect
+     * const defect = await prisma.defect.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends DefectFindUniqueArgs>(args: SelectSubset<T, DefectFindUniqueArgs<ExtArgs>>): Prisma__DefectClient<$Result.GetResult<Prisma.$DefectPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Defect that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {DefectFindUniqueOrThrowArgs} args - Arguments to find a Defect
+     * @example
+     * // Get one Defect
+     * const defect = await prisma.defect.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends DefectFindUniqueOrThrowArgs>(args: SelectSubset<T, DefectFindUniqueOrThrowArgs<ExtArgs>>): Prisma__DefectClient<$Result.GetResult<Prisma.$DefectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Defect that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DefectFindFirstArgs} args - Arguments to find a Defect
+     * @example
+     * // Get one Defect
+     * const defect = await prisma.defect.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends DefectFindFirstArgs>(args?: SelectSubset<T, DefectFindFirstArgs<ExtArgs>>): Prisma__DefectClient<$Result.GetResult<Prisma.$DefectPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Defect that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DefectFindFirstOrThrowArgs} args - Arguments to find a Defect
+     * @example
+     * // Get one Defect
+     * const defect = await prisma.defect.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends DefectFindFirstOrThrowArgs>(args?: SelectSubset<T, DefectFindFirstOrThrowArgs<ExtArgs>>): Prisma__DefectClient<$Result.GetResult<Prisma.$DefectPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Defects that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DefectFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Defects
+     * const defects = await prisma.defect.findMany()
+     * 
+     * // Get first 10 Defects
+     * const defects = await prisma.defect.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const defectWithIdOnly = await prisma.defect.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends DefectFindManyArgs>(args?: SelectSubset<T, DefectFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DefectPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Defect.
+     * @param {DefectCreateArgs} args - Arguments to create a Defect.
+     * @example
+     * // Create one Defect
+     * const Defect = await prisma.defect.create({
+     *   data: {
+     *     // ... data to create a Defect
+     *   }
+     * })
+     * 
+     */
+    create<T extends DefectCreateArgs>(args: SelectSubset<T, DefectCreateArgs<ExtArgs>>): Prisma__DefectClient<$Result.GetResult<Prisma.$DefectPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Defects.
+     * @param {DefectCreateManyArgs} args - Arguments to create many Defects.
+     * @example
+     * // Create many Defects
+     * const defect = await prisma.defect.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends DefectCreateManyArgs>(args?: SelectSubset<T, DefectCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Defects and returns the data saved in the database.
+     * @param {DefectCreateManyAndReturnArgs} args - Arguments to create many Defects.
+     * @example
+     * // Create many Defects
+     * const defect = await prisma.defect.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Defects and only return the `id`
+     * const defectWithIdOnly = await prisma.defect.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends DefectCreateManyAndReturnArgs>(args?: SelectSubset<T, DefectCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DefectPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Defect.
+     * @param {DefectDeleteArgs} args - Arguments to delete one Defect.
+     * @example
+     * // Delete one Defect
+     * const Defect = await prisma.defect.delete({
+     *   where: {
+     *     // ... filter to delete one Defect
+     *   }
+     * })
+     * 
+     */
+    delete<T extends DefectDeleteArgs>(args: SelectSubset<T, DefectDeleteArgs<ExtArgs>>): Prisma__DefectClient<$Result.GetResult<Prisma.$DefectPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Defect.
+     * @param {DefectUpdateArgs} args - Arguments to update one Defect.
+     * @example
+     * // Update one Defect
+     * const defect = await prisma.defect.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends DefectUpdateArgs>(args: SelectSubset<T, DefectUpdateArgs<ExtArgs>>): Prisma__DefectClient<$Result.GetResult<Prisma.$DefectPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Defects.
+     * @param {DefectDeleteManyArgs} args - Arguments to filter Defects to delete.
+     * @example
+     * // Delete a few Defects
+     * const { count } = await prisma.defect.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends DefectDeleteManyArgs>(args?: SelectSubset<T, DefectDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Defects.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DefectUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Defects
+     * const defect = await prisma.defect.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends DefectUpdateManyArgs>(args: SelectSubset<T, DefectUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Defects and returns the data updated in the database.
+     * @param {DefectUpdateManyAndReturnArgs} args - Arguments to update many Defects.
+     * @example
+     * // Update many Defects
+     * const defect = await prisma.defect.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Defects and only return the `id`
+     * const defectWithIdOnly = await prisma.defect.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends DefectUpdateManyAndReturnArgs>(args: SelectSubset<T, DefectUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DefectPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Defect.
+     * @param {DefectUpsertArgs} args - Arguments to update or create a Defect.
+     * @example
+     * // Update or create a Defect
+     * const defect = await prisma.defect.upsert({
+     *   create: {
+     *     // ... data to create a Defect
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Defect we want to update
+     *   }
+     * })
+     */
+    upsert<T extends DefectUpsertArgs>(args: SelectSubset<T, DefectUpsertArgs<ExtArgs>>): Prisma__DefectClient<$Result.GetResult<Prisma.$DefectPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Defects.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DefectCountArgs} args - Arguments to filter Defects to count.
+     * @example
+     * // Count the number of Defects
+     * const count = await prisma.defect.count({
+     *   where: {
+     *     // ... the filter for the Defects we want to count
+     *   }
+     * })
+    **/
+    count<T extends DefectCountArgs>(
+      args?: Subset<T, DefectCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], DefectCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Defect.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DefectAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends DefectAggregateArgs>(args: Subset<T, DefectAggregateArgs>): Prisma.PrismaPromise<GetDefectAggregateType<T>>
+
+    /**
+     * Group by Defect.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DefectGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends DefectGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: DefectGroupByArgs['orderBy'] }
+        : { orderBy?: DefectGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, DefectGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetDefectGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Defect model
+   */
+  readonly fields: DefectFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Defect.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__DefectClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    company<T extends CompanyDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CompanyDefaultArgs<ExtArgs>>): Prisma__CompanyClient<$Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    vessel<T extends VesselDefaultArgs<ExtArgs> = {}>(args?: Subset<T, VesselDefaultArgs<ExtArgs>>): Prisma__VesselClient<$Result.GetResult<Prisma.$VesselPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Defect model
+   */
+  interface DefectFieldRefs {
+    readonly id: FieldRef<"Defect", 'String'>
+    readonly companyId: FieldRef<"Defect", 'String'>
+    readonly refNo: FieldRef<"Defect", 'String'>
+    readonly vesselId: FieldRef<"Defect", 'String'>
+    readonly equipment: FieldRef<"Defect", 'String'>
+    readonly description: FieldRef<"Defect", 'String'>
+    readonly severity: FieldRef<"Defect", 'DefectSeverity'>
+    readonly dateRaised: FieldRef<"Defect", 'DateTime'>
+    readonly targetRectificationDate: FieldRef<"Defect", 'DateTime'>
+    readonly actionTaken: FieldRef<"Defect", 'String'>
+    readonly raisedBy: FieldRef<"Defect", 'String'>
+    readonly status: FieldRef<"Defect", 'DefectStatus'>
+    readonly rectifiedAt: FieldRef<"Defect", 'DateTime'>
+    readonly createdAt: FieldRef<"Defect", 'DateTime'>
+    readonly updatedAt: FieldRef<"Defect", 'DateTime'>
+    readonly createdBy: FieldRef<"Defect", 'String'>
+    readonly updatedBy: FieldRef<"Defect", 'String'>
+    readonly deletedAt: FieldRef<"Defect", 'DateTime'>
+    readonly deletedBy: FieldRef<"Defect", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Defect findUnique
+   */
+  export type DefectFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Defect
+     */
+    select?: DefectSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Defect
+     */
+    omit?: DefectOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DefectInclude<ExtArgs> | null
+    /**
+     * Filter, which Defect to fetch.
+     */
+    where: DefectWhereUniqueInput
+  }
+
+  /**
+   * Defect findUniqueOrThrow
+   */
+  export type DefectFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Defect
+     */
+    select?: DefectSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Defect
+     */
+    omit?: DefectOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DefectInclude<ExtArgs> | null
+    /**
+     * Filter, which Defect to fetch.
+     */
+    where: DefectWhereUniqueInput
+  }
+
+  /**
+   * Defect findFirst
+   */
+  export type DefectFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Defect
+     */
+    select?: DefectSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Defect
+     */
+    omit?: DefectOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DefectInclude<ExtArgs> | null
+    /**
+     * Filter, which Defect to fetch.
+     */
+    where?: DefectWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Defects to fetch.
+     */
+    orderBy?: DefectOrderByWithRelationInput | DefectOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Defects.
+     */
+    cursor?: DefectWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Defects from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Defects.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Defects.
+     */
+    distinct?: DefectScalarFieldEnum | DefectScalarFieldEnum[]
+  }
+
+  /**
+   * Defect findFirstOrThrow
+   */
+  export type DefectFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Defect
+     */
+    select?: DefectSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Defect
+     */
+    omit?: DefectOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DefectInclude<ExtArgs> | null
+    /**
+     * Filter, which Defect to fetch.
+     */
+    where?: DefectWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Defects to fetch.
+     */
+    orderBy?: DefectOrderByWithRelationInput | DefectOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Defects.
+     */
+    cursor?: DefectWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Defects from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Defects.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Defects.
+     */
+    distinct?: DefectScalarFieldEnum | DefectScalarFieldEnum[]
+  }
+
+  /**
+   * Defect findMany
+   */
+  export type DefectFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Defect
+     */
+    select?: DefectSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Defect
+     */
+    omit?: DefectOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DefectInclude<ExtArgs> | null
+    /**
+     * Filter, which Defects to fetch.
+     */
+    where?: DefectWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Defects to fetch.
+     */
+    orderBy?: DefectOrderByWithRelationInput | DefectOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Defects.
+     */
+    cursor?: DefectWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Defects from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Defects.
+     */
+    skip?: number
+    distinct?: DefectScalarFieldEnum | DefectScalarFieldEnum[]
+  }
+
+  /**
+   * Defect create
+   */
+  export type DefectCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Defect
+     */
+    select?: DefectSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Defect
+     */
+    omit?: DefectOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DefectInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Defect.
+     */
+    data: XOR<DefectCreateInput, DefectUncheckedCreateInput>
+  }
+
+  /**
+   * Defect createMany
+   */
+  export type DefectCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Defects.
+     */
+    data: DefectCreateManyInput | DefectCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Defect createManyAndReturn
+   */
+  export type DefectCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Defect
+     */
+    select?: DefectSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Defect
+     */
+    omit?: DefectOmit<ExtArgs> | null
+    /**
+     * The data used to create many Defects.
+     */
+    data: DefectCreateManyInput | DefectCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DefectIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Defect update
+   */
+  export type DefectUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Defect
+     */
+    select?: DefectSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Defect
+     */
+    omit?: DefectOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DefectInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Defect.
+     */
+    data: XOR<DefectUpdateInput, DefectUncheckedUpdateInput>
+    /**
+     * Choose, which Defect to update.
+     */
+    where: DefectWhereUniqueInput
+  }
+
+  /**
+   * Defect updateMany
+   */
+  export type DefectUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Defects.
+     */
+    data: XOR<DefectUpdateManyMutationInput, DefectUncheckedUpdateManyInput>
+    /**
+     * Filter which Defects to update
+     */
+    where?: DefectWhereInput
+    /**
+     * Limit how many Defects to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Defect updateManyAndReturn
+   */
+  export type DefectUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Defect
+     */
+    select?: DefectSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Defect
+     */
+    omit?: DefectOmit<ExtArgs> | null
+    /**
+     * The data used to update Defects.
+     */
+    data: XOR<DefectUpdateManyMutationInput, DefectUncheckedUpdateManyInput>
+    /**
+     * Filter which Defects to update
+     */
+    where?: DefectWhereInput
+    /**
+     * Limit how many Defects to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DefectIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Defect upsert
+   */
+  export type DefectUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Defect
+     */
+    select?: DefectSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Defect
+     */
+    omit?: DefectOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DefectInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Defect to update in case it exists.
+     */
+    where: DefectWhereUniqueInput
+    /**
+     * In case the Defect found by the `where` argument doesn't exist, create a new Defect with this data.
+     */
+    create: XOR<DefectCreateInput, DefectUncheckedCreateInput>
+    /**
+     * In case the Defect was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<DefectUpdateInput, DefectUncheckedUpdateInput>
+  }
+
+  /**
+   * Defect delete
+   */
+  export type DefectDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Defect
+     */
+    select?: DefectSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Defect
+     */
+    omit?: DefectOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DefectInclude<ExtArgs> | null
+    /**
+     * Filter which Defect to delete.
+     */
+    where: DefectWhereUniqueInput
+  }
+
+  /**
+   * Defect deleteMany
+   */
+  export type DefectDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Defects to delete
+     */
+    where?: DefectWhereInput
+    /**
+     * Limit how many Defects to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Defect without action
+   */
+  export type DefectDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Defect
+     */
+    select?: DefectSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Defect
+     */
+    omit?: DefectOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DefectInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -44787,6 +53432,7 @@ export namespace Prisma {
     id: 'id',
     companyId: 'companyId',
     name: 'name',
+    code: 'code',
     imo: 'imo',
     officialNumber: 'officialNumber',
     callSign: 'callSign',
@@ -45108,9 +53754,8 @@ export namespace Prisma {
     severity: 'severity',
     raisedAt: 'raisedAt',
     targetDate: 'targetDate',
-    rootCause: 'rootCause',
-    correctiveAction: 'correctiveAction',
-    verification: 'verification',
+    rootCauseCategory: 'rootCauseCategory',
+    rootCauseSubCategory: 'rootCauseSubCategory',
     personInCharge: 'personInCharge',
     status: 'status',
     closedAt: 'closedAt',
@@ -45199,7 +53844,8 @@ export namespace Prisma {
     reference: 'reference',
     description: 'description',
     actionCode: 'actionCode',
-    rectification: 'rectification',
+    rootCauseCategory: 'rootCauseCategory',
+    rootCauseSubCategory: 'rootCauseSubCategory',
     status: 'status',
     createdAt: 'createdAt',
     createdBy: 'createdBy',
@@ -45279,7 +53925,8 @@ export namespace Prisma {
     category: 'category',
     reference: 'reference',
     description: 'description',
-    correctiveAction: 'correctiveAction',
+    rootCauseCategory: 'rootCauseCategory',
+    rootCauseSubCategory: 'rootCauseSubCategory',
     status: 'status',
     createdAt: 'createdAt',
     createdBy: 'createdBy',
@@ -45320,7 +53967,8 @@ export namespace Prisma {
     category: 'category',
     reference: 'reference',
     description: 'description',
-    correctiveAction: 'correctiveAction',
+    rootCauseCategory: 'rootCauseCategory',
+    rootCauseSubCategory: 'rootCauseSubCategory',
     status: 'status',
     createdAt: 'createdAt',
     createdBy: 'createdBy',
@@ -45328,6 +53976,150 @@ export namespace Prisma {
   };
 
   export type ExternalAuditFindingScalarFieldEnum = (typeof ExternalAuditFindingScalarFieldEnum)[keyof typeof ExternalAuditFindingScalarFieldEnum]
+
+
+  export const SafetyMeetingScalarFieldEnum: {
+    id: 'id',
+    companyId: 'companyId',
+    refNo: 'refNo',
+    vesselId: 'vesselId',
+    meetingType: 'meetingType',
+    meetingDate: 'meetingDate',
+    chairedBy: 'chairedBy',
+    attendees: 'attendees',
+    agenda: 'agenda',
+    minutes: 'minutes',
+    status: 'status',
+    closedAt: 'closedAt',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+    createdBy: 'createdBy',
+    updatedBy: 'updatedBy',
+    deletedAt: 'deletedAt',
+    deletedBy: 'deletedBy'
+  };
+
+  export type SafetyMeetingScalarFieldEnum = (typeof SafetyMeetingScalarFieldEnum)[keyof typeof SafetyMeetingScalarFieldEnum]
+
+
+  export const EmergencyDrillScalarFieldEnum: {
+    id: 'id',
+    companyId: 'companyId',
+    refNo: 'refNo',
+    vesselId: 'vesselId',
+    drillType: 'drillType',
+    drillDate: 'drillDate',
+    scenario: 'scenario',
+    participants: 'participants',
+    conductedBy: 'conductedBy',
+    observations: 'observations',
+    status: 'status',
+    closedAt: 'closedAt',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+    createdBy: 'createdBy',
+    updatedBy: 'updatedBy',
+    deletedAt: 'deletedAt',
+    deletedBy: 'deletedBy'
+  };
+
+  export type EmergencyDrillScalarFieldEnum = (typeof EmergencyDrillScalarFieldEnum)[keyof typeof EmergencyDrillScalarFieldEnum]
+
+
+  export const ControlledDocumentScalarFieldEnum: {
+    id: 'id',
+    companyId: 'companyId',
+    docNumber: 'docNumber',
+    vesselId: 'vesselId',
+    title: 'title',
+    category: 'category',
+    version: 'version',
+    issueDate: 'issueDate',
+    reviewDate: 'reviewDate',
+    owner: 'owner',
+    description: 'description',
+    status: 'status',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+    createdBy: 'createdBy',
+    updatedBy: 'updatedBy',
+    deletedAt: 'deletedAt',
+    deletedBy: 'deletedBy'
+  };
+
+  export type ControlledDocumentScalarFieldEnum = (typeof ControlledDocumentScalarFieldEnum)[keyof typeof ControlledDocumentScalarFieldEnum]
+
+
+  export const CircularScalarFieldEnum: {
+    id: 'id',
+    companyId: 'companyId',
+    refNo: 'refNo',
+    vesselId: 'vesselId',
+    title: 'title',
+    category: 'category',
+    issueDate: 'issueDate',
+    body: 'body',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+    createdBy: 'createdBy',
+    updatedBy: 'updatedBy',
+    deletedAt: 'deletedAt',
+    deletedBy: 'deletedBy'
+  };
+
+  export type CircularScalarFieldEnum = (typeof CircularScalarFieldEnum)[keyof typeof CircularScalarFieldEnum]
+
+
+  export const RiskAssessmentScalarFieldEnum: {
+    id: 'id',
+    companyId: 'companyId',
+    refNo: 'refNo',
+    vesselId: 'vesselId',
+    activity: 'activity',
+    hazards: 'hazards',
+    existingControls: 'existingControls',
+    likelihood: 'likelihood',
+    severity: 'severity',
+    additionalControls: 'additionalControls',
+    assessedBy: 'assessedBy',
+    assessmentDate: 'assessmentDate',
+    reviewDate: 'reviewDate',
+    status: 'status',
+    closedAt: 'closedAt',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+    createdBy: 'createdBy',
+    updatedBy: 'updatedBy',
+    deletedAt: 'deletedAt',
+    deletedBy: 'deletedBy'
+  };
+
+  export type RiskAssessmentScalarFieldEnum = (typeof RiskAssessmentScalarFieldEnum)[keyof typeof RiskAssessmentScalarFieldEnum]
+
+
+  export const DefectScalarFieldEnum: {
+    id: 'id',
+    companyId: 'companyId',
+    refNo: 'refNo',
+    vesselId: 'vesselId',
+    equipment: 'equipment',
+    description: 'description',
+    severity: 'severity',
+    dateRaised: 'dateRaised',
+    targetRectificationDate: 'targetRectificationDate',
+    actionTaken: 'actionTaken',
+    raisedBy: 'raisedBy',
+    status: 'status',
+    rectifiedAt: 'rectifiedAt',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+    createdBy: 'createdBy',
+    updatedBy: 'updatedBy',
+    deletedAt: 'deletedAt',
+    deletedBy: 'deletedBy'
+  };
+
+  export type DefectScalarFieldEnum = (typeof DefectScalarFieldEnum)[keyof typeof DefectScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -45773,6 +54565,132 @@ export namespace Prisma {
    */
   export type ListEnumAuditFindingCategoryFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AuditFindingCategory[]'>
     
+
+
+  /**
+   * Reference to a field of type 'MeetingType'
+   */
+  export type EnumMeetingTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MeetingType'>
+    
+
+
+  /**
+   * Reference to a field of type 'MeetingType[]'
+   */
+  export type ListEnumMeetingTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MeetingType[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'DrillType'
+   */
+  export type EnumDrillTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DrillType'>
+    
+
+
+  /**
+   * Reference to a field of type 'DrillType[]'
+   */
+  export type ListEnumDrillTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DrillType[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'DocumentCategory'
+   */
+  export type EnumDocumentCategoryFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DocumentCategory'>
+    
+
+
+  /**
+   * Reference to a field of type 'DocumentCategory[]'
+   */
+  export type ListEnumDocumentCategoryFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DocumentCategory[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'ControlledDocStatus'
+   */
+  export type EnumControlledDocStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ControlledDocStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'ControlledDocStatus[]'
+   */
+  export type ListEnumControlledDocStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ControlledDocStatus[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'CircularCategory'
+   */
+  export type EnumCircularCategoryFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CircularCategory'>
+    
+
+
+  /**
+   * Reference to a field of type 'CircularCategory[]'
+   */
+  export type ListEnumCircularCategoryFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CircularCategory[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'RiskRating'
+   */
+  export type EnumRiskRatingFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RiskRating'>
+    
+
+
+  /**
+   * Reference to a field of type 'RiskRating[]'
+   */
+  export type ListEnumRiskRatingFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RiskRating[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'RiskAssessmentStatus'
+   */
+  export type EnumRiskAssessmentStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RiskAssessmentStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'RiskAssessmentStatus[]'
+   */
+  export type ListEnumRiskAssessmentStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RiskAssessmentStatus[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'DefectSeverity'
+   */
+  export type EnumDefectSeverityFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DefectSeverity'>
+    
+
+
+  /**
+   * Reference to a field of type 'DefectSeverity[]'
+   */
+  export type ListEnumDefectSeverityFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DefectSeverity[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'DefectStatus'
+   */
+  export type EnumDefectStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DefectStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'DefectStatus[]'
+   */
+  export type ListEnumDefectStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DefectStatus[]'>
+    
   /**
    * Deep Input Types
    */
@@ -45800,6 +54718,12 @@ export namespace Prisma {
     cdiInspections?: CdiInspectionListRelationFilter
     internalAudits?: InternalAuditListRelationFilter
     externalAudits?: ExternalAuditListRelationFilter
+    safetyMeetings?: SafetyMeetingListRelationFilter
+    emergencyDrills?: EmergencyDrillListRelationFilter
+    controlledDocuments?: ControlledDocumentListRelationFilter
+    circulars?: CircularListRelationFilter
+    riskAssessments?: RiskAssessmentListRelationFilter
+    defects?: DefectListRelationFilter
   }
 
   export type CompanyOrderByWithRelationInput = {
@@ -45821,6 +54745,12 @@ export namespace Prisma {
     cdiInspections?: CdiInspectionOrderByRelationAggregateInput
     internalAudits?: InternalAuditOrderByRelationAggregateInput
     externalAudits?: ExternalAuditOrderByRelationAggregateInput
+    safetyMeetings?: SafetyMeetingOrderByRelationAggregateInput
+    emergencyDrills?: EmergencyDrillOrderByRelationAggregateInput
+    controlledDocuments?: ControlledDocumentOrderByRelationAggregateInput
+    circulars?: CircularOrderByRelationAggregateInput
+    riskAssessments?: RiskAssessmentOrderByRelationAggregateInput
+    defects?: DefectOrderByRelationAggregateInput
   }
 
   export type CompanyWhereUniqueInput = Prisma.AtLeast<{
@@ -45845,6 +54775,12 @@ export namespace Prisma {
     cdiInspections?: CdiInspectionListRelationFilter
     internalAudits?: InternalAuditListRelationFilter
     externalAudits?: ExternalAuditListRelationFilter
+    safetyMeetings?: SafetyMeetingListRelationFilter
+    emergencyDrills?: EmergencyDrillListRelationFilter
+    controlledDocuments?: ControlledDocumentListRelationFilter
+    circulars?: CircularListRelationFilter
+    riskAssessments?: RiskAssessmentListRelationFilter
+    defects?: DefectListRelationFilter
   }, "id" | "code">
 
   export type CompanyOrderByWithAggregationInput = {
@@ -46209,6 +55145,7 @@ export namespace Prisma {
     id?: StringFilter<"Vessel"> | string
     companyId?: StringFilter<"Vessel"> | string
     name?: StringFilter<"Vessel"> | string
+    code?: StringNullableFilter<"Vessel"> | string | null
     imo?: StringFilter<"Vessel"> | string
     officialNumber?: StringNullableFilter<"Vessel"> | string | null
     callSign?: StringNullableFilter<"Vessel"> | string | null
@@ -46238,12 +55175,19 @@ export namespace Prisma {
     cdiInspections?: CdiInspectionListRelationFilter
     internalAudits?: InternalAuditListRelationFilter
     externalAudits?: ExternalAuditListRelationFilter
+    safetyMeetings?: SafetyMeetingListRelationFilter
+    emergencyDrills?: EmergencyDrillListRelationFilter
+    controlledDocuments?: ControlledDocumentListRelationFilter
+    circulars?: CircularListRelationFilter
+    riskAssessments?: RiskAssessmentListRelationFilter
+    defects?: DefectListRelationFilter
   }
 
   export type VesselOrderByWithRelationInput = {
     id?: SortOrder
     companyId?: SortOrder
     name?: SortOrder
+    code?: SortOrderInput | SortOrder
     imo?: SortOrder
     officialNumber?: SortOrderInput | SortOrder
     callSign?: SortOrderInput | SortOrder
@@ -46273,16 +55217,24 @@ export namespace Prisma {
     cdiInspections?: CdiInspectionOrderByRelationAggregateInput
     internalAudits?: InternalAuditOrderByRelationAggregateInput
     externalAudits?: ExternalAuditOrderByRelationAggregateInput
+    safetyMeetings?: SafetyMeetingOrderByRelationAggregateInput
+    emergencyDrills?: EmergencyDrillOrderByRelationAggregateInput
+    controlledDocuments?: ControlledDocumentOrderByRelationAggregateInput
+    circulars?: CircularOrderByRelationAggregateInput
+    riskAssessments?: RiskAssessmentOrderByRelationAggregateInput
+    defects?: DefectOrderByRelationAggregateInput
   }
 
   export type VesselWhereUniqueInput = Prisma.AtLeast<{
     id?: string
     imo?: string
+    companyId_code?: VesselCompanyIdCodeCompoundUniqueInput
     AND?: VesselWhereInput | VesselWhereInput[]
     OR?: VesselWhereInput[]
     NOT?: VesselWhereInput | VesselWhereInput[]
     companyId?: StringFilter<"Vessel"> | string
     name?: StringFilter<"Vessel"> | string
+    code?: StringNullableFilter<"Vessel"> | string | null
     officialNumber?: StringNullableFilter<"Vessel"> | string | null
     callSign?: StringNullableFilter<"Vessel"> | string | null
     mmsi?: StringNullableFilter<"Vessel"> | string | null
@@ -46311,12 +55263,19 @@ export namespace Prisma {
     cdiInspections?: CdiInspectionListRelationFilter
     internalAudits?: InternalAuditListRelationFilter
     externalAudits?: ExternalAuditListRelationFilter
-  }, "id" | "imo">
+    safetyMeetings?: SafetyMeetingListRelationFilter
+    emergencyDrills?: EmergencyDrillListRelationFilter
+    controlledDocuments?: ControlledDocumentListRelationFilter
+    circulars?: CircularListRelationFilter
+    riskAssessments?: RiskAssessmentListRelationFilter
+    defects?: DefectListRelationFilter
+  }, "id" | "imo" | "companyId_code">
 
   export type VesselOrderByWithAggregationInput = {
     id?: SortOrder
     companyId?: SortOrder
     name?: SortOrder
+    code?: SortOrderInput | SortOrder
     imo?: SortOrder
     officialNumber?: SortOrderInput | SortOrder
     callSign?: SortOrderInput | SortOrder
@@ -46350,6 +55309,7 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"Vessel"> | string
     companyId?: StringWithAggregatesFilter<"Vessel"> | string
     name?: StringWithAggregatesFilter<"Vessel"> | string
+    code?: StringNullableWithAggregatesFilter<"Vessel"> | string | null
     imo?: StringWithAggregatesFilter<"Vessel"> | string
     officialNumber?: StringNullableWithAggregatesFilter<"Vessel"> | string | null
     callSign?: StringNullableWithAggregatesFilter<"Vessel"> | string | null
@@ -47861,9 +56821,8 @@ export namespace Prisma {
     severity?: EnumSeverityFilter<"NonConformity"> | $Enums.Severity
     raisedAt?: DateTimeFilter<"NonConformity"> | Date | string
     targetDate?: DateTimeNullableFilter<"NonConformity"> | Date | string | null
-    rootCause?: StringNullableFilter<"NonConformity"> | string | null
-    correctiveAction?: StringNullableFilter<"NonConformity"> | string | null
-    verification?: StringNullableFilter<"NonConformity"> | string | null
+    rootCauseCategory?: EnumRootCauseCategoryNullableFilter<"NonConformity"> | $Enums.RootCauseCategory | null
+    rootCauseSubCategory?: StringNullableFilter<"NonConformity"> | string | null
     personInCharge?: StringNullableFilter<"NonConformity"> | string | null
     status?: EnumNcrStatusFilter<"NonConformity"> | $Enums.NcrStatus
     closedAt?: DateTimeNullableFilter<"NonConformity"> | Date | string | null
@@ -47892,9 +56851,8 @@ export namespace Prisma {
     severity?: SortOrder
     raisedAt?: SortOrder
     targetDate?: SortOrderInput | SortOrder
-    rootCause?: SortOrderInput | SortOrder
-    correctiveAction?: SortOrderInput | SortOrder
-    verification?: SortOrderInput | SortOrder
+    rootCauseCategory?: SortOrderInput | SortOrder
+    rootCauseSubCategory?: SortOrderInput | SortOrder
     personInCharge?: SortOrderInput | SortOrder
     status?: SortOrder
     closedAt?: SortOrderInput | SortOrder
@@ -47927,9 +56885,8 @@ export namespace Prisma {
     severity?: EnumSeverityFilter<"NonConformity"> | $Enums.Severity
     raisedAt?: DateTimeFilter<"NonConformity"> | Date | string
     targetDate?: DateTimeNullableFilter<"NonConformity"> | Date | string | null
-    rootCause?: StringNullableFilter<"NonConformity"> | string | null
-    correctiveAction?: StringNullableFilter<"NonConformity"> | string | null
-    verification?: StringNullableFilter<"NonConformity"> | string | null
+    rootCauseCategory?: EnumRootCauseCategoryNullableFilter<"NonConformity"> | $Enums.RootCauseCategory | null
+    rootCauseSubCategory?: StringNullableFilter<"NonConformity"> | string | null
     personInCharge?: StringNullableFilter<"NonConformity"> | string | null
     status?: EnumNcrStatusFilter<"NonConformity"> | $Enums.NcrStatus
     closedAt?: DateTimeNullableFilter<"NonConformity"> | Date | string | null
@@ -47958,9 +56915,8 @@ export namespace Prisma {
     severity?: SortOrder
     raisedAt?: SortOrder
     targetDate?: SortOrderInput | SortOrder
-    rootCause?: SortOrderInput | SortOrder
-    correctiveAction?: SortOrderInput | SortOrder
-    verification?: SortOrderInput | SortOrder
+    rootCauseCategory?: SortOrderInput | SortOrder
+    rootCauseSubCategory?: SortOrderInput | SortOrder
     personInCharge?: SortOrderInput | SortOrder
     status?: SortOrder
     closedAt?: SortOrderInput | SortOrder
@@ -47992,9 +56948,8 @@ export namespace Prisma {
     severity?: EnumSeverityWithAggregatesFilter<"NonConformity"> | $Enums.Severity
     raisedAt?: DateTimeWithAggregatesFilter<"NonConformity"> | Date | string
     targetDate?: DateTimeNullableWithAggregatesFilter<"NonConformity"> | Date | string | null
-    rootCause?: StringNullableWithAggregatesFilter<"NonConformity"> | string | null
-    correctiveAction?: StringNullableWithAggregatesFilter<"NonConformity"> | string | null
-    verification?: StringNullableWithAggregatesFilter<"NonConformity"> | string | null
+    rootCauseCategory?: EnumRootCauseCategoryNullableWithAggregatesFilter<"NonConformity"> | $Enums.RootCauseCategory | null
+    rootCauseSubCategory?: StringNullableWithAggregatesFilter<"NonConformity"> | string | null
     personInCharge?: StringNullableWithAggregatesFilter<"NonConformity"> | string | null
     status?: EnumNcrStatusWithAggregatesFilter<"NonConformity"> | $Enums.NcrStatus
     closedAt?: DateTimeNullableWithAggregatesFilter<"NonConformity"> | Date | string | null
@@ -48357,7 +57312,8 @@ export namespace Prisma {
     reference?: StringNullableFilter<"PscDeficiency"> | string | null
     description?: StringFilter<"PscDeficiency"> | string
     actionCode?: StringNullableFilter<"PscDeficiency"> | string | null
-    rectification?: StringNullableFilter<"PscDeficiency"> | string | null
+    rootCauseCategory?: EnumRootCauseCategoryNullableFilter<"PscDeficiency"> | $Enums.RootCauseCategory | null
+    rootCauseSubCategory?: StringNullableFilter<"PscDeficiency"> | string | null
     status?: EnumFindingStatusFilter<"PscDeficiency"> | $Enums.FindingStatus
     createdAt?: DateTimeFilter<"PscDeficiency"> | Date | string
     createdBy?: StringNullableFilter<"PscDeficiency"> | string | null
@@ -48373,7 +57329,8 @@ export namespace Prisma {
     reference?: SortOrderInput | SortOrder
     description?: SortOrder
     actionCode?: SortOrderInput | SortOrder
-    rectification?: SortOrderInput | SortOrder
+    rootCauseCategory?: SortOrderInput | SortOrder
+    rootCauseSubCategory?: SortOrderInput | SortOrder
     status?: SortOrder
     createdAt?: SortOrder
     createdBy?: SortOrderInput | SortOrder
@@ -48392,7 +57349,8 @@ export namespace Prisma {
     reference?: StringNullableFilter<"PscDeficiency"> | string | null
     description?: StringFilter<"PscDeficiency"> | string
     actionCode?: StringNullableFilter<"PscDeficiency"> | string | null
-    rectification?: StringNullableFilter<"PscDeficiency"> | string | null
+    rootCauseCategory?: EnumRootCauseCategoryNullableFilter<"PscDeficiency"> | $Enums.RootCauseCategory | null
+    rootCauseSubCategory?: StringNullableFilter<"PscDeficiency"> | string | null
     status?: EnumFindingStatusFilter<"PscDeficiency"> | $Enums.FindingStatus
     createdAt?: DateTimeFilter<"PscDeficiency"> | Date | string
     createdBy?: StringNullableFilter<"PscDeficiency"> | string | null
@@ -48408,7 +57366,8 @@ export namespace Prisma {
     reference?: SortOrderInput | SortOrder
     description?: SortOrder
     actionCode?: SortOrderInput | SortOrder
-    rectification?: SortOrderInput | SortOrder
+    rootCauseCategory?: SortOrderInput | SortOrder
+    rootCauseSubCategory?: SortOrderInput | SortOrder
     status?: SortOrder
     createdAt?: SortOrder
     createdBy?: SortOrderInput | SortOrder
@@ -48429,7 +57388,8 @@ export namespace Prisma {
     reference?: StringNullableWithAggregatesFilter<"PscDeficiency"> | string | null
     description?: StringWithAggregatesFilter<"PscDeficiency"> | string
     actionCode?: StringNullableWithAggregatesFilter<"PscDeficiency"> | string | null
-    rectification?: StringNullableWithAggregatesFilter<"PscDeficiency"> | string | null
+    rootCauseCategory?: EnumRootCauseCategoryNullableWithAggregatesFilter<"PscDeficiency"> | $Enums.RootCauseCategory | null
+    rootCauseSubCategory?: StringNullableWithAggregatesFilter<"PscDeficiency"> | string | null
     status?: EnumFindingStatusWithAggregatesFilter<"PscDeficiency"> | $Enums.FindingStatus
     createdAt?: DateTimeWithAggregatesFilter<"PscDeficiency"> | Date | string
     createdBy?: StringNullableWithAggregatesFilter<"PscDeficiency"> | string | null
@@ -48775,7 +57735,8 @@ export namespace Prisma {
     category?: EnumAuditFindingCategoryFilter<"InternalAuditFinding"> | $Enums.AuditFindingCategory
     reference?: StringNullableFilter<"InternalAuditFinding"> | string | null
     description?: StringFilter<"InternalAuditFinding"> | string
-    correctiveAction?: StringNullableFilter<"InternalAuditFinding"> | string | null
+    rootCauseCategory?: EnumRootCauseCategoryNullableFilter<"InternalAuditFinding"> | $Enums.RootCauseCategory | null
+    rootCauseSubCategory?: StringNullableFilter<"InternalAuditFinding"> | string | null
     status?: EnumFindingStatusFilter<"InternalAuditFinding"> | $Enums.FindingStatus
     createdAt?: DateTimeFilter<"InternalAuditFinding"> | Date | string
     createdBy?: StringNullableFilter<"InternalAuditFinding"> | string | null
@@ -48790,7 +57751,8 @@ export namespace Prisma {
     category?: SortOrder
     reference?: SortOrderInput | SortOrder
     description?: SortOrder
-    correctiveAction?: SortOrderInput | SortOrder
+    rootCauseCategory?: SortOrderInput | SortOrder
+    rootCauseSubCategory?: SortOrderInput | SortOrder
     status?: SortOrder
     createdAt?: SortOrder
     createdBy?: SortOrderInput | SortOrder
@@ -48808,7 +57770,8 @@ export namespace Prisma {
     category?: EnumAuditFindingCategoryFilter<"InternalAuditFinding"> | $Enums.AuditFindingCategory
     reference?: StringNullableFilter<"InternalAuditFinding"> | string | null
     description?: StringFilter<"InternalAuditFinding"> | string
-    correctiveAction?: StringNullableFilter<"InternalAuditFinding"> | string | null
+    rootCauseCategory?: EnumRootCauseCategoryNullableFilter<"InternalAuditFinding"> | $Enums.RootCauseCategory | null
+    rootCauseSubCategory?: StringNullableFilter<"InternalAuditFinding"> | string | null
     status?: EnumFindingStatusFilter<"InternalAuditFinding"> | $Enums.FindingStatus
     createdAt?: DateTimeFilter<"InternalAuditFinding"> | Date | string
     createdBy?: StringNullableFilter<"InternalAuditFinding"> | string | null
@@ -48823,7 +57786,8 @@ export namespace Prisma {
     category?: SortOrder
     reference?: SortOrderInput | SortOrder
     description?: SortOrder
-    correctiveAction?: SortOrderInput | SortOrder
+    rootCauseCategory?: SortOrderInput | SortOrder
+    rootCauseSubCategory?: SortOrderInput | SortOrder
     status?: SortOrder
     createdAt?: SortOrder
     createdBy?: SortOrderInput | SortOrder
@@ -48843,7 +57807,8 @@ export namespace Prisma {
     category?: EnumAuditFindingCategoryWithAggregatesFilter<"InternalAuditFinding"> | $Enums.AuditFindingCategory
     reference?: StringNullableWithAggregatesFilter<"InternalAuditFinding"> | string | null
     description?: StringWithAggregatesFilter<"InternalAuditFinding"> | string
-    correctiveAction?: StringNullableWithAggregatesFilter<"InternalAuditFinding"> | string | null
+    rootCauseCategory?: EnumRootCauseCategoryNullableWithAggregatesFilter<"InternalAuditFinding"> | $Enums.RootCauseCategory | null
+    rootCauseSubCategory?: StringNullableWithAggregatesFilter<"InternalAuditFinding"> | string | null
     status?: EnumFindingStatusWithAggregatesFilter<"InternalAuditFinding"> | $Enums.FindingStatus
     createdAt?: DateTimeWithAggregatesFilter<"InternalAuditFinding"> | Date | string
     createdBy?: StringNullableWithAggregatesFilter<"InternalAuditFinding"> | string | null
@@ -48987,7 +57952,8 @@ export namespace Prisma {
     category?: EnumAuditFindingCategoryFilter<"ExternalAuditFinding"> | $Enums.AuditFindingCategory
     reference?: StringNullableFilter<"ExternalAuditFinding"> | string | null
     description?: StringFilter<"ExternalAuditFinding"> | string
-    correctiveAction?: StringNullableFilter<"ExternalAuditFinding"> | string | null
+    rootCauseCategory?: EnumRootCauseCategoryNullableFilter<"ExternalAuditFinding"> | $Enums.RootCauseCategory | null
+    rootCauseSubCategory?: StringNullableFilter<"ExternalAuditFinding"> | string | null
     status?: EnumFindingStatusFilter<"ExternalAuditFinding"> | $Enums.FindingStatus
     createdAt?: DateTimeFilter<"ExternalAuditFinding"> | Date | string
     createdBy?: StringNullableFilter<"ExternalAuditFinding"> | string | null
@@ -49002,7 +57968,8 @@ export namespace Prisma {
     category?: SortOrder
     reference?: SortOrderInput | SortOrder
     description?: SortOrder
-    correctiveAction?: SortOrderInput | SortOrder
+    rootCauseCategory?: SortOrderInput | SortOrder
+    rootCauseSubCategory?: SortOrderInput | SortOrder
     status?: SortOrder
     createdAt?: SortOrder
     createdBy?: SortOrderInput | SortOrder
@@ -49020,7 +57987,8 @@ export namespace Prisma {
     category?: EnumAuditFindingCategoryFilter<"ExternalAuditFinding"> | $Enums.AuditFindingCategory
     reference?: StringNullableFilter<"ExternalAuditFinding"> | string | null
     description?: StringFilter<"ExternalAuditFinding"> | string
-    correctiveAction?: StringNullableFilter<"ExternalAuditFinding"> | string | null
+    rootCauseCategory?: EnumRootCauseCategoryNullableFilter<"ExternalAuditFinding"> | $Enums.RootCauseCategory | null
+    rootCauseSubCategory?: StringNullableFilter<"ExternalAuditFinding"> | string | null
     status?: EnumFindingStatusFilter<"ExternalAuditFinding"> | $Enums.FindingStatus
     createdAt?: DateTimeFilter<"ExternalAuditFinding"> | Date | string
     createdBy?: StringNullableFilter<"ExternalAuditFinding"> | string | null
@@ -49035,7 +58003,8 @@ export namespace Prisma {
     category?: SortOrder
     reference?: SortOrderInput | SortOrder
     description?: SortOrder
-    correctiveAction?: SortOrderInput | SortOrder
+    rootCauseCategory?: SortOrderInput | SortOrder
+    rootCauseSubCategory?: SortOrderInput | SortOrder
     status?: SortOrder
     createdAt?: SortOrder
     createdBy?: SortOrderInput | SortOrder
@@ -49055,11 +58024,756 @@ export namespace Prisma {
     category?: EnumAuditFindingCategoryWithAggregatesFilter<"ExternalAuditFinding"> | $Enums.AuditFindingCategory
     reference?: StringNullableWithAggregatesFilter<"ExternalAuditFinding"> | string | null
     description?: StringWithAggregatesFilter<"ExternalAuditFinding"> | string
-    correctiveAction?: StringNullableWithAggregatesFilter<"ExternalAuditFinding"> | string | null
+    rootCauseCategory?: EnumRootCauseCategoryNullableWithAggregatesFilter<"ExternalAuditFinding"> | $Enums.RootCauseCategory | null
+    rootCauseSubCategory?: StringNullableWithAggregatesFilter<"ExternalAuditFinding"> | string | null
     status?: EnumFindingStatusWithAggregatesFilter<"ExternalAuditFinding"> | $Enums.FindingStatus
     createdAt?: DateTimeWithAggregatesFilter<"ExternalAuditFinding"> | Date | string
     createdBy?: StringNullableWithAggregatesFilter<"ExternalAuditFinding"> | string | null
     deletedAt?: DateTimeNullableWithAggregatesFilter<"ExternalAuditFinding"> | Date | string | null
+  }
+
+  export type SafetyMeetingWhereInput = {
+    AND?: SafetyMeetingWhereInput | SafetyMeetingWhereInput[]
+    OR?: SafetyMeetingWhereInput[]
+    NOT?: SafetyMeetingWhereInput | SafetyMeetingWhereInput[]
+    id?: StringFilter<"SafetyMeeting"> | string
+    companyId?: StringFilter<"SafetyMeeting"> | string
+    refNo?: StringFilter<"SafetyMeeting"> | string
+    vesselId?: StringNullableFilter<"SafetyMeeting"> | string | null
+    meetingType?: EnumMeetingTypeFilter<"SafetyMeeting"> | $Enums.MeetingType
+    meetingDate?: DateTimeFilter<"SafetyMeeting"> | Date | string
+    chairedBy?: StringNullableFilter<"SafetyMeeting"> | string | null
+    attendees?: StringNullableFilter<"SafetyMeeting"> | string | null
+    agenda?: StringNullableFilter<"SafetyMeeting"> | string | null
+    minutes?: StringNullableFilter<"SafetyMeeting"> | string | null
+    status?: EnumFindingStatusFilter<"SafetyMeeting"> | $Enums.FindingStatus
+    closedAt?: DateTimeNullableFilter<"SafetyMeeting"> | Date | string | null
+    createdAt?: DateTimeFilter<"SafetyMeeting"> | Date | string
+    updatedAt?: DateTimeFilter<"SafetyMeeting"> | Date | string
+    createdBy?: StringNullableFilter<"SafetyMeeting"> | string | null
+    updatedBy?: StringNullableFilter<"SafetyMeeting"> | string | null
+    deletedAt?: DateTimeNullableFilter<"SafetyMeeting"> | Date | string | null
+    deletedBy?: StringNullableFilter<"SafetyMeeting"> | string | null
+    company?: XOR<CompanyScalarRelationFilter, CompanyWhereInput>
+    vessel?: XOR<VesselNullableScalarRelationFilter, VesselWhereInput> | null
+  }
+
+  export type SafetyMeetingOrderByWithRelationInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    refNo?: SortOrder
+    vesselId?: SortOrderInput | SortOrder
+    meetingType?: SortOrder
+    meetingDate?: SortOrder
+    chairedBy?: SortOrderInput | SortOrder
+    attendees?: SortOrderInput | SortOrder
+    agenda?: SortOrderInput | SortOrder
+    minutes?: SortOrderInput | SortOrder
+    status?: SortOrder
+    closedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    createdBy?: SortOrderInput | SortOrder
+    updatedBy?: SortOrderInput | SortOrder
+    deletedAt?: SortOrderInput | SortOrder
+    deletedBy?: SortOrderInput | SortOrder
+    company?: CompanyOrderByWithRelationInput
+    vessel?: VesselOrderByWithRelationInput
+  }
+
+  export type SafetyMeetingWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    companyId_refNo?: SafetyMeetingCompanyIdRefNoCompoundUniqueInput
+    AND?: SafetyMeetingWhereInput | SafetyMeetingWhereInput[]
+    OR?: SafetyMeetingWhereInput[]
+    NOT?: SafetyMeetingWhereInput | SafetyMeetingWhereInput[]
+    companyId?: StringFilter<"SafetyMeeting"> | string
+    refNo?: StringFilter<"SafetyMeeting"> | string
+    vesselId?: StringNullableFilter<"SafetyMeeting"> | string | null
+    meetingType?: EnumMeetingTypeFilter<"SafetyMeeting"> | $Enums.MeetingType
+    meetingDate?: DateTimeFilter<"SafetyMeeting"> | Date | string
+    chairedBy?: StringNullableFilter<"SafetyMeeting"> | string | null
+    attendees?: StringNullableFilter<"SafetyMeeting"> | string | null
+    agenda?: StringNullableFilter<"SafetyMeeting"> | string | null
+    minutes?: StringNullableFilter<"SafetyMeeting"> | string | null
+    status?: EnumFindingStatusFilter<"SafetyMeeting"> | $Enums.FindingStatus
+    closedAt?: DateTimeNullableFilter<"SafetyMeeting"> | Date | string | null
+    createdAt?: DateTimeFilter<"SafetyMeeting"> | Date | string
+    updatedAt?: DateTimeFilter<"SafetyMeeting"> | Date | string
+    createdBy?: StringNullableFilter<"SafetyMeeting"> | string | null
+    updatedBy?: StringNullableFilter<"SafetyMeeting"> | string | null
+    deletedAt?: DateTimeNullableFilter<"SafetyMeeting"> | Date | string | null
+    deletedBy?: StringNullableFilter<"SafetyMeeting"> | string | null
+    company?: XOR<CompanyScalarRelationFilter, CompanyWhereInput>
+    vessel?: XOR<VesselNullableScalarRelationFilter, VesselWhereInput> | null
+  }, "id" | "companyId_refNo">
+
+  export type SafetyMeetingOrderByWithAggregationInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    refNo?: SortOrder
+    vesselId?: SortOrderInput | SortOrder
+    meetingType?: SortOrder
+    meetingDate?: SortOrder
+    chairedBy?: SortOrderInput | SortOrder
+    attendees?: SortOrderInput | SortOrder
+    agenda?: SortOrderInput | SortOrder
+    minutes?: SortOrderInput | SortOrder
+    status?: SortOrder
+    closedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    createdBy?: SortOrderInput | SortOrder
+    updatedBy?: SortOrderInput | SortOrder
+    deletedAt?: SortOrderInput | SortOrder
+    deletedBy?: SortOrderInput | SortOrder
+    _count?: SafetyMeetingCountOrderByAggregateInput
+    _max?: SafetyMeetingMaxOrderByAggregateInput
+    _min?: SafetyMeetingMinOrderByAggregateInput
+  }
+
+  export type SafetyMeetingScalarWhereWithAggregatesInput = {
+    AND?: SafetyMeetingScalarWhereWithAggregatesInput | SafetyMeetingScalarWhereWithAggregatesInput[]
+    OR?: SafetyMeetingScalarWhereWithAggregatesInput[]
+    NOT?: SafetyMeetingScalarWhereWithAggregatesInput | SafetyMeetingScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"SafetyMeeting"> | string
+    companyId?: StringWithAggregatesFilter<"SafetyMeeting"> | string
+    refNo?: StringWithAggregatesFilter<"SafetyMeeting"> | string
+    vesselId?: StringNullableWithAggregatesFilter<"SafetyMeeting"> | string | null
+    meetingType?: EnumMeetingTypeWithAggregatesFilter<"SafetyMeeting"> | $Enums.MeetingType
+    meetingDate?: DateTimeWithAggregatesFilter<"SafetyMeeting"> | Date | string
+    chairedBy?: StringNullableWithAggregatesFilter<"SafetyMeeting"> | string | null
+    attendees?: StringNullableWithAggregatesFilter<"SafetyMeeting"> | string | null
+    agenda?: StringNullableWithAggregatesFilter<"SafetyMeeting"> | string | null
+    minutes?: StringNullableWithAggregatesFilter<"SafetyMeeting"> | string | null
+    status?: EnumFindingStatusWithAggregatesFilter<"SafetyMeeting"> | $Enums.FindingStatus
+    closedAt?: DateTimeNullableWithAggregatesFilter<"SafetyMeeting"> | Date | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"SafetyMeeting"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"SafetyMeeting"> | Date | string
+    createdBy?: StringNullableWithAggregatesFilter<"SafetyMeeting"> | string | null
+    updatedBy?: StringNullableWithAggregatesFilter<"SafetyMeeting"> | string | null
+    deletedAt?: DateTimeNullableWithAggregatesFilter<"SafetyMeeting"> | Date | string | null
+    deletedBy?: StringNullableWithAggregatesFilter<"SafetyMeeting"> | string | null
+  }
+
+  export type EmergencyDrillWhereInput = {
+    AND?: EmergencyDrillWhereInput | EmergencyDrillWhereInput[]
+    OR?: EmergencyDrillWhereInput[]
+    NOT?: EmergencyDrillWhereInput | EmergencyDrillWhereInput[]
+    id?: StringFilter<"EmergencyDrill"> | string
+    companyId?: StringFilter<"EmergencyDrill"> | string
+    refNo?: StringFilter<"EmergencyDrill"> | string
+    vesselId?: StringFilter<"EmergencyDrill"> | string
+    drillType?: EnumDrillTypeFilter<"EmergencyDrill"> | $Enums.DrillType
+    drillDate?: DateTimeFilter<"EmergencyDrill"> | Date | string
+    scenario?: StringNullableFilter<"EmergencyDrill"> | string | null
+    participants?: StringNullableFilter<"EmergencyDrill"> | string | null
+    conductedBy?: StringNullableFilter<"EmergencyDrill"> | string | null
+    observations?: StringNullableFilter<"EmergencyDrill"> | string | null
+    status?: EnumFindingStatusFilter<"EmergencyDrill"> | $Enums.FindingStatus
+    closedAt?: DateTimeNullableFilter<"EmergencyDrill"> | Date | string | null
+    createdAt?: DateTimeFilter<"EmergencyDrill"> | Date | string
+    updatedAt?: DateTimeFilter<"EmergencyDrill"> | Date | string
+    createdBy?: StringNullableFilter<"EmergencyDrill"> | string | null
+    updatedBy?: StringNullableFilter<"EmergencyDrill"> | string | null
+    deletedAt?: DateTimeNullableFilter<"EmergencyDrill"> | Date | string | null
+    deletedBy?: StringNullableFilter<"EmergencyDrill"> | string | null
+    company?: XOR<CompanyScalarRelationFilter, CompanyWhereInput>
+    vessel?: XOR<VesselScalarRelationFilter, VesselWhereInput>
+  }
+
+  export type EmergencyDrillOrderByWithRelationInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    refNo?: SortOrder
+    vesselId?: SortOrder
+    drillType?: SortOrder
+    drillDate?: SortOrder
+    scenario?: SortOrderInput | SortOrder
+    participants?: SortOrderInput | SortOrder
+    conductedBy?: SortOrderInput | SortOrder
+    observations?: SortOrderInput | SortOrder
+    status?: SortOrder
+    closedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    createdBy?: SortOrderInput | SortOrder
+    updatedBy?: SortOrderInput | SortOrder
+    deletedAt?: SortOrderInput | SortOrder
+    deletedBy?: SortOrderInput | SortOrder
+    company?: CompanyOrderByWithRelationInput
+    vessel?: VesselOrderByWithRelationInput
+  }
+
+  export type EmergencyDrillWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    companyId_refNo?: EmergencyDrillCompanyIdRefNoCompoundUniqueInput
+    AND?: EmergencyDrillWhereInput | EmergencyDrillWhereInput[]
+    OR?: EmergencyDrillWhereInput[]
+    NOT?: EmergencyDrillWhereInput | EmergencyDrillWhereInput[]
+    companyId?: StringFilter<"EmergencyDrill"> | string
+    refNo?: StringFilter<"EmergencyDrill"> | string
+    vesselId?: StringFilter<"EmergencyDrill"> | string
+    drillType?: EnumDrillTypeFilter<"EmergencyDrill"> | $Enums.DrillType
+    drillDate?: DateTimeFilter<"EmergencyDrill"> | Date | string
+    scenario?: StringNullableFilter<"EmergencyDrill"> | string | null
+    participants?: StringNullableFilter<"EmergencyDrill"> | string | null
+    conductedBy?: StringNullableFilter<"EmergencyDrill"> | string | null
+    observations?: StringNullableFilter<"EmergencyDrill"> | string | null
+    status?: EnumFindingStatusFilter<"EmergencyDrill"> | $Enums.FindingStatus
+    closedAt?: DateTimeNullableFilter<"EmergencyDrill"> | Date | string | null
+    createdAt?: DateTimeFilter<"EmergencyDrill"> | Date | string
+    updatedAt?: DateTimeFilter<"EmergencyDrill"> | Date | string
+    createdBy?: StringNullableFilter<"EmergencyDrill"> | string | null
+    updatedBy?: StringNullableFilter<"EmergencyDrill"> | string | null
+    deletedAt?: DateTimeNullableFilter<"EmergencyDrill"> | Date | string | null
+    deletedBy?: StringNullableFilter<"EmergencyDrill"> | string | null
+    company?: XOR<CompanyScalarRelationFilter, CompanyWhereInput>
+    vessel?: XOR<VesselScalarRelationFilter, VesselWhereInput>
+  }, "id" | "companyId_refNo">
+
+  export type EmergencyDrillOrderByWithAggregationInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    refNo?: SortOrder
+    vesselId?: SortOrder
+    drillType?: SortOrder
+    drillDate?: SortOrder
+    scenario?: SortOrderInput | SortOrder
+    participants?: SortOrderInput | SortOrder
+    conductedBy?: SortOrderInput | SortOrder
+    observations?: SortOrderInput | SortOrder
+    status?: SortOrder
+    closedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    createdBy?: SortOrderInput | SortOrder
+    updatedBy?: SortOrderInput | SortOrder
+    deletedAt?: SortOrderInput | SortOrder
+    deletedBy?: SortOrderInput | SortOrder
+    _count?: EmergencyDrillCountOrderByAggregateInput
+    _max?: EmergencyDrillMaxOrderByAggregateInput
+    _min?: EmergencyDrillMinOrderByAggregateInput
+  }
+
+  export type EmergencyDrillScalarWhereWithAggregatesInput = {
+    AND?: EmergencyDrillScalarWhereWithAggregatesInput | EmergencyDrillScalarWhereWithAggregatesInput[]
+    OR?: EmergencyDrillScalarWhereWithAggregatesInput[]
+    NOT?: EmergencyDrillScalarWhereWithAggregatesInput | EmergencyDrillScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"EmergencyDrill"> | string
+    companyId?: StringWithAggregatesFilter<"EmergencyDrill"> | string
+    refNo?: StringWithAggregatesFilter<"EmergencyDrill"> | string
+    vesselId?: StringWithAggregatesFilter<"EmergencyDrill"> | string
+    drillType?: EnumDrillTypeWithAggregatesFilter<"EmergencyDrill"> | $Enums.DrillType
+    drillDate?: DateTimeWithAggregatesFilter<"EmergencyDrill"> | Date | string
+    scenario?: StringNullableWithAggregatesFilter<"EmergencyDrill"> | string | null
+    participants?: StringNullableWithAggregatesFilter<"EmergencyDrill"> | string | null
+    conductedBy?: StringNullableWithAggregatesFilter<"EmergencyDrill"> | string | null
+    observations?: StringNullableWithAggregatesFilter<"EmergencyDrill"> | string | null
+    status?: EnumFindingStatusWithAggregatesFilter<"EmergencyDrill"> | $Enums.FindingStatus
+    closedAt?: DateTimeNullableWithAggregatesFilter<"EmergencyDrill"> | Date | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"EmergencyDrill"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"EmergencyDrill"> | Date | string
+    createdBy?: StringNullableWithAggregatesFilter<"EmergencyDrill"> | string | null
+    updatedBy?: StringNullableWithAggregatesFilter<"EmergencyDrill"> | string | null
+    deletedAt?: DateTimeNullableWithAggregatesFilter<"EmergencyDrill"> | Date | string | null
+    deletedBy?: StringNullableWithAggregatesFilter<"EmergencyDrill"> | string | null
+  }
+
+  export type ControlledDocumentWhereInput = {
+    AND?: ControlledDocumentWhereInput | ControlledDocumentWhereInput[]
+    OR?: ControlledDocumentWhereInput[]
+    NOT?: ControlledDocumentWhereInput | ControlledDocumentWhereInput[]
+    id?: StringFilter<"ControlledDocument"> | string
+    companyId?: StringFilter<"ControlledDocument"> | string
+    docNumber?: StringFilter<"ControlledDocument"> | string
+    vesselId?: StringNullableFilter<"ControlledDocument"> | string | null
+    title?: StringFilter<"ControlledDocument"> | string
+    category?: EnumDocumentCategoryFilter<"ControlledDocument"> | $Enums.DocumentCategory
+    version?: StringNullableFilter<"ControlledDocument"> | string | null
+    issueDate?: DateTimeFilter<"ControlledDocument"> | Date | string
+    reviewDate?: DateTimeNullableFilter<"ControlledDocument"> | Date | string | null
+    owner?: StringNullableFilter<"ControlledDocument"> | string | null
+    description?: StringNullableFilter<"ControlledDocument"> | string | null
+    status?: EnumControlledDocStatusFilter<"ControlledDocument"> | $Enums.ControlledDocStatus
+    createdAt?: DateTimeFilter<"ControlledDocument"> | Date | string
+    updatedAt?: DateTimeFilter<"ControlledDocument"> | Date | string
+    createdBy?: StringNullableFilter<"ControlledDocument"> | string | null
+    updatedBy?: StringNullableFilter<"ControlledDocument"> | string | null
+    deletedAt?: DateTimeNullableFilter<"ControlledDocument"> | Date | string | null
+    deletedBy?: StringNullableFilter<"ControlledDocument"> | string | null
+    company?: XOR<CompanyScalarRelationFilter, CompanyWhereInput>
+    vessel?: XOR<VesselNullableScalarRelationFilter, VesselWhereInput> | null
+  }
+
+  export type ControlledDocumentOrderByWithRelationInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    docNumber?: SortOrder
+    vesselId?: SortOrderInput | SortOrder
+    title?: SortOrder
+    category?: SortOrder
+    version?: SortOrderInput | SortOrder
+    issueDate?: SortOrder
+    reviewDate?: SortOrderInput | SortOrder
+    owner?: SortOrderInput | SortOrder
+    description?: SortOrderInput | SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    createdBy?: SortOrderInput | SortOrder
+    updatedBy?: SortOrderInput | SortOrder
+    deletedAt?: SortOrderInput | SortOrder
+    deletedBy?: SortOrderInput | SortOrder
+    company?: CompanyOrderByWithRelationInput
+    vessel?: VesselOrderByWithRelationInput
+  }
+
+  export type ControlledDocumentWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    companyId_docNumber?: ControlledDocumentCompanyIdDocNumberCompoundUniqueInput
+    AND?: ControlledDocumentWhereInput | ControlledDocumentWhereInput[]
+    OR?: ControlledDocumentWhereInput[]
+    NOT?: ControlledDocumentWhereInput | ControlledDocumentWhereInput[]
+    companyId?: StringFilter<"ControlledDocument"> | string
+    docNumber?: StringFilter<"ControlledDocument"> | string
+    vesselId?: StringNullableFilter<"ControlledDocument"> | string | null
+    title?: StringFilter<"ControlledDocument"> | string
+    category?: EnumDocumentCategoryFilter<"ControlledDocument"> | $Enums.DocumentCategory
+    version?: StringNullableFilter<"ControlledDocument"> | string | null
+    issueDate?: DateTimeFilter<"ControlledDocument"> | Date | string
+    reviewDate?: DateTimeNullableFilter<"ControlledDocument"> | Date | string | null
+    owner?: StringNullableFilter<"ControlledDocument"> | string | null
+    description?: StringNullableFilter<"ControlledDocument"> | string | null
+    status?: EnumControlledDocStatusFilter<"ControlledDocument"> | $Enums.ControlledDocStatus
+    createdAt?: DateTimeFilter<"ControlledDocument"> | Date | string
+    updatedAt?: DateTimeFilter<"ControlledDocument"> | Date | string
+    createdBy?: StringNullableFilter<"ControlledDocument"> | string | null
+    updatedBy?: StringNullableFilter<"ControlledDocument"> | string | null
+    deletedAt?: DateTimeNullableFilter<"ControlledDocument"> | Date | string | null
+    deletedBy?: StringNullableFilter<"ControlledDocument"> | string | null
+    company?: XOR<CompanyScalarRelationFilter, CompanyWhereInput>
+    vessel?: XOR<VesselNullableScalarRelationFilter, VesselWhereInput> | null
+  }, "id" | "companyId_docNumber">
+
+  export type ControlledDocumentOrderByWithAggregationInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    docNumber?: SortOrder
+    vesselId?: SortOrderInput | SortOrder
+    title?: SortOrder
+    category?: SortOrder
+    version?: SortOrderInput | SortOrder
+    issueDate?: SortOrder
+    reviewDate?: SortOrderInput | SortOrder
+    owner?: SortOrderInput | SortOrder
+    description?: SortOrderInput | SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    createdBy?: SortOrderInput | SortOrder
+    updatedBy?: SortOrderInput | SortOrder
+    deletedAt?: SortOrderInput | SortOrder
+    deletedBy?: SortOrderInput | SortOrder
+    _count?: ControlledDocumentCountOrderByAggregateInput
+    _max?: ControlledDocumentMaxOrderByAggregateInput
+    _min?: ControlledDocumentMinOrderByAggregateInput
+  }
+
+  export type ControlledDocumentScalarWhereWithAggregatesInput = {
+    AND?: ControlledDocumentScalarWhereWithAggregatesInput | ControlledDocumentScalarWhereWithAggregatesInput[]
+    OR?: ControlledDocumentScalarWhereWithAggregatesInput[]
+    NOT?: ControlledDocumentScalarWhereWithAggregatesInput | ControlledDocumentScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"ControlledDocument"> | string
+    companyId?: StringWithAggregatesFilter<"ControlledDocument"> | string
+    docNumber?: StringWithAggregatesFilter<"ControlledDocument"> | string
+    vesselId?: StringNullableWithAggregatesFilter<"ControlledDocument"> | string | null
+    title?: StringWithAggregatesFilter<"ControlledDocument"> | string
+    category?: EnumDocumentCategoryWithAggregatesFilter<"ControlledDocument"> | $Enums.DocumentCategory
+    version?: StringNullableWithAggregatesFilter<"ControlledDocument"> | string | null
+    issueDate?: DateTimeWithAggregatesFilter<"ControlledDocument"> | Date | string
+    reviewDate?: DateTimeNullableWithAggregatesFilter<"ControlledDocument"> | Date | string | null
+    owner?: StringNullableWithAggregatesFilter<"ControlledDocument"> | string | null
+    description?: StringNullableWithAggregatesFilter<"ControlledDocument"> | string | null
+    status?: EnumControlledDocStatusWithAggregatesFilter<"ControlledDocument"> | $Enums.ControlledDocStatus
+    createdAt?: DateTimeWithAggregatesFilter<"ControlledDocument"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"ControlledDocument"> | Date | string
+    createdBy?: StringNullableWithAggregatesFilter<"ControlledDocument"> | string | null
+    updatedBy?: StringNullableWithAggregatesFilter<"ControlledDocument"> | string | null
+    deletedAt?: DateTimeNullableWithAggregatesFilter<"ControlledDocument"> | Date | string | null
+    deletedBy?: StringNullableWithAggregatesFilter<"ControlledDocument"> | string | null
+  }
+
+  export type CircularWhereInput = {
+    AND?: CircularWhereInput | CircularWhereInput[]
+    OR?: CircularWhereInput[]
+    NOT?: CircularWhereInput | CircularWhereInput[]
+    id?: StringFilter<"Circular"> | string
+    companyId?: StringFilter<"Circular"> | string
+    refNo?: StringFilter<"Circular"> | string
+    vesselId?: StringNullableFilter<"Circular"> | string | null
+    title?: StringFilter<"Circular"> | string
+    category?: EnumCircularCategoryFilter<"Circular"> | $Enums.CircularCategory
+    issueDate?: DateTimeFilter<"Circular"> | Date | string
+    body?: StringFilter<"Circular"> | string
+    createdAt?: DateTimeFilter<"Circular"> | Date | string
+    updatedAt?: DateTimeFilter<"Circular"> | Date | string
+    createdBy?: StringNullableFilter<"Circular"> | string | null
+    updatedBy?: StringNullableFilter<"Circular"> | string | null
+    deletedAt?: DateTimeNullableFilter<"Circular"> | Date | string | null
+    deletedBy?: StringNullableFilter<"Circular"> | string | null
+    company?: XOR<CompanyScalarRelationFilter, CompanyWhereInput>
+    vessel?: XOR<VesselNullableScalarRelationFilter, VesselWhereInput> | null
+  }
+
+  export type CircularOrderByWithRelationInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    refNo?: SortOrder
+    vesselId?: SortOrderInput | SortOrder
+    title?: SortOrder
+    category?: SortOrder
+    issueDate?: SortOrder
+    body?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    createdBy?: SortOrderInput | SortOrder
+    updatedBy?: SortOrderInput | SortOrder
+    deletedAt?: SortOrderInput | SortOrder
+    deletedBy?: SortOrderInput | SortOrder
+    company?: CompanyOrderByWithRelationInput
+    vessel?: VesselOrderByWithRelationInput
+  }
+
+  export type CircularWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    companyId_refNo?: CircularCompanyIdRefNoCompoundUniqueInput
+    AND?: CircularWhereInput | CircularWhereInput[]
+    OR?: CircularWhereInput[]
+    NOT?: CircularWhereInput | CircularWhereInput[]
+    companyId?: StringFilter<"Circular"> | string
+    refNo?: StringFilter<"Circular"> | string
+    vesselId?: StringNullableFilter<"Circular"> | string | null
+    title?: StringFilter<"Circular"> | string
+    category?: EnumCircularCategoryFilter<"Circular"> | $Enums.CircularCategory
+    issueDate?: DateTimeFilter<"Circular"> | Date | string
+    body?: StringFilter<"Circular"> | string
+    createdAt?: DateTimeFilter<"Circular"> | Date | string
+    updatedAt?: DateTimeFilter<"Circular"> | Date | string
+    createdBy?: StringNullableFilter<"Circular"> | string | null
+    updatedBy?: StringNullableFilter<"Circular"> | string | null
+    deletedAt?: DateTimeNullableFilter<"Circular"> | Date | string | null
+    deletedBy?: StringNullableFilter<"Circular"> | string | null
+    company?: XOR<CompanyScalarRelationFilter, CompanyWhereInput>
+    vessel?: XOR<VesselNullableScalarRelationFilter, VesselWhereInput> | null
+  }, "id" | "companyId_refNo">
+
+  export type CircularOrderByWithAggregationInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    refNo?: SortOrder
+    vesselId?: SortOrderInput | SortOrder
+    title?: SortOrder
+    category?: SortOrder
+    issueDate?: SortOrder
+    body?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    createdBy?: SortOrderInput | SortOrder
+    updatedBy?: SortOrderInput | SortOrder
+    deletedAt?: SortOrderInput | SortOrder
+    deletedBy?: SortOrderInput | SortOrder
+    _count?: CircularCountOrderByAggregateInput
+    _max?: CircularMaxOrderByAggregateInput
+    _min?: CircularMinOrderByAggregateInput
+  }
+
+  export type CircularScalarWhereWithAggregatesInput = {
+    AND?: CircularScalarWhereWithAggregatesInput | CircularScalarWhereWithAggregatesInput[]
+    OR?: CircularScalarWhereWithAggregatesInput[]
+    NOT?: CircularScalarWhereWithAggregatesInput | CircularScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Circular"> | string
+    companyId?: StringWithAggregatesFilter<"Circular"> | string
+    refNo?: StringWithAggregatesFilter<"Circular"> | string
+    vesselId?: StringNullableWithAggregatesFilter<"Circular"> | string | null
+    title?: StringWithAggregatesFilter<"Circular"> | string
+    category?: EnumCircularCategoryWithAggregatesFilter<"Circular"> | $Enums.CircularCategory
+    issueDate?: DateTimeWithAggregatesFilter<"Circular"> | Date | string
+    body?: StringWithAggregatesFilter<"Circular"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"Circular"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Circular"> | Date | string
+    createdBy?: StringNullableWithAggregatesFilter<"Circular"> | string | null
+    updatedBy?: StringNullableWithAggregatesFilter<"Circular"> | string | null
+    deletedAt?: DateTimeNullableWithAggregatesFilter<"Circular"> | Date | string | null
+    deletedBy?: StringNullableWithAggregatesFilter<"Circular"> | string | null
+  }
+
+  export type RiskAssessmentWhereInput = {
+    AND?: RiskAssessmentWhereInput | RiskAssessmentWhereInput[]
+    OR?: RiskAssessmentWhereInput[]
+    NOT?: RiskAssessmentWhereInput | RiskAssessmentWhereInput[]
+    id?: StringFilter<"RiskAssessment"> | string
+    companyId?: StringFilter<"RiskAssessment"> | string
+    refNo?: StringFilter<"RiskAssessment"> | string
+    vesselId?: StringNullableFilter<"RiskAssessment"> | string | null
+    activity?: StringFilter<"RiskAssessment"> | string
+    hazards?: StringFilter<"RiskAssessment"> | string
+    existingControls?: StringNullableFilter<"RiskAssessment"> | string | null
+    likelihood?: EnumRiskRatingFilter<"RiskAssessment"> | $Enums.RiskRating
+    severity?: EnumRiskRatingFilter<"RiskAssessment"> | $Enums.RiskRating
+    additionalControls?: StringNullableFilter<"RiskAssessment"> | string | null
+    assessedBy?: StringNullableFilter<"RiskAssessment"> | string | null
+    assessmentDate?: DateTimeFilter<"RiskAssessment"> | Date | string
+    reviewDate?: DateTimeNullableFilter<"RiskAssessment"> | Date | string | null
+    status?: EnumRiskAssessmentStatusFilter<"RiskAssessment"> | $Enums.RiskAssessmentStatus
+    closedAt?: DateTimeNullableFilter<"RiskAssessment"> | Date | string | null
+    createdAt?: DateTimeFilter<"RiskAssessment"> | Date | string
+    updatedAt?: DateTimeFilter<"RiskAssessment"> | Date | string
+    createdBy?: StringNullableFilter<"RiskAssessment"> | string | null
+    updatedBy?: StringNullableFilter<"RiskAssessment"> | string | null
+    deletedAt?: DateTimeNullableFilter<"RiskAssessment"> | Date | string | null
+    deletedBy?: StringNullableFilter<"RiskAssessment"> | string | null
+    company?: XOR<CompanyScalarRelationFilter, CompanyWhereInput>
+    vessel?: XOR<VesselNullableScalarRelationFilter, VesselWhereInput> | null
+  }
+
+  export type RiskAssessmentOrderByWithRelationInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    refNo?: SortOrder
+    vesselId?: SortOrderInput | SortOrder
+    activity?: SortOrder
+    hazards?: SortOrder
+    existingControls?: SortOrderInput | SortOrder
+    likelihood?: SortOrder
+    severity?: SortOrder
+    additionalControls?: SortOrderInput | SortOrder
+    assessedBy?: SortOrderInput | SortOrder
+    assessmentDate?: SortOrder
+    reviewDate?: SortOrderInput | SortOrder
+    status?: SortOrder
+    closedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    createdBy?: SortOrderInput | SortOrder
+    updatedBy?: SortOrderInput | SortOrder
+    deletedAt?: SortOrderInput | SortOrder
+    deletedBy?: SortOrderInput | SortOrder
+    company?: CompanyOrderByWithRelationInput
+    vessel?: VesselOrderByWithRelationInput
+  }
+
+  export type RiskAssessmentWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    companyId_refNo?: RiskAssessmentCompanyIdRefNoCompoundUniqueInput
+    AND?: RiskAssessmentWhereInput | RiskAssessmentWhereInput[]
+    OR?: RiskAssessmentWhereInput[]
+    NOT?: RiskAssessmentWhereInput | RiskAssessmentWhereInput[]
+    companyId?: StringFilter<"RiskAssessment"> | string
+    refNo?: StringFilter<"RiskAssessment"> | string
+    vesselId?: StringNullableFilter<"RiskAssessment"> | string | null
+    activity?: StringFilter<"RiskAssessment"> | string
+    hazards?: StringFilter<"RiskAssessment"> | string
+    existingControls?: StringNullableFilter<"RiskAssessment"> | string | null
+    likelihood?: EnumRiskRatingFilter<"RiskAssessment"> | $Enums.RiskRating
+    severity?: EnumRiskRatingFilter<"RiskAssessment"> | $Enums.RiskRating
+    additionalControls?: StringNullableFilter<"RiskAssessment"> | string | null
+    assessedBy?: StringNullableFilter<"RiskAssessment"> | string | null
+    assessmentDate?: DateTimeFilter<"RiskAssessment"> | Date | string
+    reviewDate?: DateTimeNullableFilter<"RiskAssessment"> | Date | string | null
+    status?: EnumRiskAssessmentStatusFilter<"RiskAssessment"> | $Enums.RiskAssessmentStatus
+    closedAt?: DateTimeNullableFilter<"RiskAssessment"> | Date | string | null
+    createdAt?: DateTimeFilter<"RiskAssessment"> | Date | string
+    updatedAt?: DateTimeFilter<"RiskAssessment"> | Date | string
+    createdBy?: StringNullableFilter<"RiskAssessment"> | string | null
+    updatedBy?: StringNullableFilter<"RiskAssessment"> | string | null
+    deletedAt?: DateTimeNullableFilter<"RiskAssessment"> | Date | string | null
+    deletedBy?: StringNullableFilter<"RiskAssessment"> | string | null
+    company?: XOR<CompanyScalarRelationFilter, CompanyWhereInput>
+    vessel?: XOR<VesselNullableScalarRelationFilter, VesselWhereInput> | null
+  }, "id" | "companyId_refNo">
+
+  export type RiskAssessmentOrderByWithAggregationInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    refNo?: SortOrder
+    vesselId?: SortOrderInput | SortOrder
+    activity?: SortOrder
+    hazards?: SortOrder
+    existingControls?: SortOrderInput | SortOrder
+    likelihood?: SortOrder
+    severity?: SortOrder
+    additionalControls?: SortOrderInput | SortOrder
+    assessedBy?: SortOrderInput | SortOrder
+    assessmentDate?: SortOrder
+    reviewDate?: SortOrderInput | SortOrder
+    status?: SortOrder
+    closedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    createdBy?: SortOrderInput | SortOrder
+    updatedBy?: SortOrderInput | SortOrder
+    deletedAt?: SortOrderInput | SortOrder
+    deletedBy?: SortOrderInput | SortOrder
+    _count?: RiskAssessmentCountOrderByAggregateInput
+    _max?: RiskAssessmentMaxOrderByAggregateInput
+    _min?: RiskAssessmentMinOrderByAggregateInput
+  }
+
+  export type RiskAssessmentScalarWhereWithAggregatesInput = {
+    AND?: RiskAssessmentScalarWhereWithAggregatesInput | RiskAssessmentScalarWhereWithAggregatesInput[]
+    OR?: RiskAssessmentScalarWhereWithAggregatesInput[]
+    NOT?: RiskAssessmentScalarWhereWithAggregatesInput | RiskAssessmentScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"RiskAssessment"> | string
+    companyId?: StringWithAggregatesFilter<"RiskAssessment"> | string
+    refNo?: StringWithAggregatesFilter<"RiskAssessment"> | string
+    vesselId?: StringNullableWithAggregatesFilter<"RiskAssessment"> | string | null
+    activity?: StringWithAggregatesFilter<"RiskAssessment"> | string
+    hazards?: StringWithAggregatesFilter<"RiskAssessment"> | string
+    existingControls?: StringNullableWithAggregatesFilter<"RiskAssessment"> | string | null
+    likelihood?: EnumRiskRatingWithAggregatesFilter<"RiskAssessment"> | $Enums.RiskRating
+    severity?: EnumRiskRatingWithAggregatesFilter<"RiskAssessment"> | $Enums.RiskRating
+    additionalControls?: StringNullableWithAggregatesFilter<"RiskAssessment"> | string | null
+    assessedBy?: StringNullableWithAggregatesFilter<"RiskAssessment"> | string | null
+    assessmentDate?: DateTimeWithAggregatesFilter<"RiskAssessment"> | Date | string
+    reviewDate?: DateTimeNullableWithAggregatesFilter<"RiskAssessment"> | Date | string | null
+    status?: EnumRiskAssessmentStatusWithAggregatesFilter<"RiskAssessment"> | $Enums.RiskAssessmentStatus
+    closedAt?: DateTimeNullableWithAggregatesFilter<"RiskAssessment"> | Date | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"RiskAssessment"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"RiskAssessment"> | Date | string
+    createdBy?: StringNullableWithAggregatesFilter<"RiskAssessment"> | string | null
+    updatedBy?: StringNullableWithAggregatesFilter<"RiskAssessment"> | string | null
+    deletedAt?: DateTimeNullableWithAggregatesFilter<"RiskAssessment"> | Date | string | null
+    deletedBy?: StringNullableWithAggregatesFilter<"RiskAssessment"> | string | null
+  }
+
+  export type DefectWhereInput = {
+    AND?: DefectWhereInput | DefectWhereInput[]
+    OR?: DefectWhereInput[]
+    NOT?: DefectWhereInput | DefectWhereInput[]
+    id?: StringFilter<"Defect"> | string
+    companyId?: StringFilter<"Defect"> | string
+    refNo?: StringFilter<"Defect"> | string
+    vesselId?: StringFilter<"Defect"> | string
+    equipment?: StringFilter<"Defect"> | string
+    description?: StringFilter<"Defect"> | string
+    severity?: EnumDefectSeverityFilter<"Defect"> | $Enums.DefectSeverity
+    dateRaised?: DateTimeFilter<"Defect"> | Date | string
+    targetRectificationDate?: DateTimeNullableFilter<"Defect"> | Date | string | null
+    actionTaken?: StringNullableFilter<"Defect"> | string | null
+    raisedBy?: StringNullableFilter<"Defect"> | string | null
+    status?: EnumDefectStatusFilter<"Defect"> | $Enums.DefectStatus
+    rectifiedAt?: DateTimeNullableFilter<"Defect"> | Date | string | null
+    createdAt?: DateTimeFilter<"Defect"> | Date | string
+    updatedAt?: DateTimeFilter<"Defect"> | Date | string
+    createdBy?: StringNullableFilter<"Defect"> | string | null
+    updatedBy?: StringNullableFilter<"Defect"> | string | null
+    deletedAt?: DateTimeNullableFilter<"Defect"> | Date | string | null
+    deletedBy?: StringNullableFilter<"Defect"> | string | null
+    company?: XOR<CompanyScalarRelationFilter, CompanyWhereInput>
+    vessel?: XOR<VesselScalarRelationFilter, VesselWhereInput>
+  }
+
+  export type DefectOrderByWithRelationInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    refNo?: SortOrder
+    vesselId?: SortOrder
+    equipment?: SortOrder
+    description?: SortOrder
+    severity?: SortOrder
+    dateRaised?: SortOrder
+    targetRectificationDate?: SortOrderInput | SortOrder
+    actionTaken?: SortOrderInput | SortOrder
+    raisedBy?: SortOrderInput | SortOrder
+    status?: SortOrder
+    rectifiedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    createdBy?: SortOrderInput | SortOrder
+    updatedBy?: SortOrderInput | SortOrder
+    deletedAt?: SortOrderInput | SortOrder
+    deletedBy?: SortOrderInput | SortOrder
+    company?: CompanyOrderByWithRelationInput
+    vessel?: VesselOrderByWithRelationInput
+  }
+
+  export type DefectWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    companyId_refNo?: DefectCompanyIdRefNoCompoundUniqueInput
+    AND?: DefectWhereInput | DefectWhereInput[]
+    OR?: DefectWhereInput[]
+    NOT?: DefectWhereInput | DefectWhereInput[]
+    companyId?: StringFilter<"Defect"> | string
+    refNo?: StringFilter<"Defect"> | string
+    vesselId?: StringFilter<"Defect"> | string
+    equipment?: StringFilter<"Defect"> | string
+    description?: StringFilter<"Defect"> | string
+    severity?: EnumDefectSeverityFilter<"Defect"> | $Enums.DefectSeverity
+    dateRaised?: DateTimeFilter<"Defect"> | Date | string
+    targetRectificationDate?: DateTimeNullableFilter<"Defect"> | Date | string | null
+    actionTaken?: StringNullableFilter<"Defect"> | string | null
+    raisedBy?: StringNullableFilter<"Defect"> | string | null
+    status?: EnumDefectStatusFilter<"Defect"> | $Enums.DefectStatus
+    rectifiedAt?: DateTimeNullableFilter<"Defect"> | Date | string | null
+    createdAt?: DateTimeFilter<"Defect"> | Date | string
+    updatedAt?: DateTimeFilter<"Defect"> | Date | string
+    createdBy?: StringNullableFilter<"Defect"> | string | null
+    updatedBy?: StringNullableFilter<"Defect"> | string | null
+    deletedAt?: DateTimeNullableFilter<"Defect"> | Date | string | null
+    deletedBy?: StringNullableFilter<"Defect"> | string | null
+    company?: XOR<CompanyScalarRelationFilter, CompanyWhereInput>
+    vessel?: XOR<VesselScalarRelationFilter, VesselWhereInput>
+  }, "id" | "companyId_refNo">
+
+  export type DefectOrderByWithAggregationInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    refNo?: SortOrder
+    vesselId?: SortOrder
+    equipment?: SortOrder
+    description?: SortOrder
+    severity?: SortOrder
+    dateRaised?: SortOrder
+    targetRectificationDate?: SortOrderInput | SortOrder
+    actionTaken?: SortOrderInput | SortOrder
+    raisedBy?: SortOrderInput | SortOrder
+    status?: SortOrder
+    rectifiedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    createdBy?: SortOrderInput | SortOrder
+    updatedBy?: SortOrderInput | SortOrder
+    deletedAt?: SortOrderInput | SortOrder
+    deletedBy?: SortOrderInput | SortOrder
+    _count?: DefectCountOrderByAggregateInput
+    _max?: DefectMaxOrderByAggregateInput
+    _min?: DefectMinOrderByAggregateInput
+  }
+
+  export type DefectScalarWhereWithAggregatesInput = {
+    AND?: DefectScalarWhereWithAggregatesInput | DefectScalarWhereWithAggregatesInput[]
+    OR?: DefectScalarWhereWithAggregatesInput[]
+    NOT?: DefectScalarWhereWithAggregatesInput | DefectScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Defect"> | string
+    companyId?: StringWithAggregatesFilter<"Defect"> | string
+    refNo?: StringWithAggregatesFilter<"Defect"> | string
+    vesselId?: StringWithAggregatesFilter<"Defect"> | string
+    equipment?: StringWithAggregatesFilter<"Defect"> | string
+    description?: StringWithAggregatesFilter<"Defect"> | string
+    severity?: EnumDefectSeverityWithAggregatesFilter<"Defect"> | $Enums.DefectSeverity
+    dateRaised?: DateTimeWithAggregatesFilter<"Defect"> | Date | string
+    targetRectificationDate?: DateTimeNullableWithAggregatesFilter<"Defect"> | Date | string | null
+    actionTaken?: StringNullableWithAggregatesFilter<"Defect"> | string | null
+    raisedBy?: StringNullableWithAggregatesFilter<"Defect"> | string | null
+    status?: EnumDefectStatusWithAggregatesFilter<"Defect"> | $Enums.DefectStatus
+    rectifiedAt?: DateTimeNullableWithAggregatesFilter<"Defect"> | Date | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"Defect"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Defect"> | Date | string
+    createdBy?: StringNullableWithAggregatesFilter<"Defect"> | string | null
+    updatedBy?: StringNullableWithAggregatesFilter<"Defect"> | string | null
+    deletedAt?: DateTimeNullableWithAggregatesFilter<"Defect"> | Date | string | null
+    deletedBy?: StringNullableWithAggregatesFilter<"Defect"> | string | null
   }
 
   export type CompanyCreateInput = {
@@ -49081,6 +58795,12 @@ export namespace Prisma {
     cdiInspections?: CdiInspectionCreateNestedManyWithoutCompanyInput
     internalAudits?: InternalAuditCreateNestedManyWithoutCompanyInput
     externalAudits?: ExternalAuditCreateNestedManyWithoutCompanyInput
+    safetyMeetings?: SafetyMeetingCreateNestedManyWithoutCompanyInput
+    emergencyDrills?: EmergencyDrillCreateNestedManyWithoutCompanyInput
+    controlledDocuments?: ControlledDocumentCreateNestedManyWithoutCompanyInput
+    circulars?: CircularCreateNestedManyWithoutCompanyInput
+    riskAssessments?: RiskAssessmentCreateNestedManyWithoutCompanyInput
+    defects?: DefectCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateInput = {
@@ -49102,6 +58822,12 @@ export namespace Prisma {
     cdiInspections?: CdiInspectionUncheckedCreateNestedManyWithoutCompanyInput
     internalAudits?: InternalAuditUncheckedCreateNestedManyWithoutCompanyInput
     externalAudits?: ExternalAuditUncheckedCreateNestedManyWithoutCompanyInput
+    safetyMeetings?: SafetyMeetingUncheckedCreateNestedManyWithoutCompanyInput
+    emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutCompanyInput
+    controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutCompanyInput
+    circulars?: CircularUncheckedCreateNestedManyWithoutCompanyInput
+    riskAssessments?: RiskAssessmentUncheckedCreateNestedManyWithoutCompanyInput
+    defects?: DefectUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUpdateInput = {
@@ -49123,6 +58849,12 @@ export namespace Prisma {
     cdiInspections?: CdiInspectionUpdateManyWithoutCompanyNestedInput
     internalAudits?: InternalAuditUpdateManyWithoutCompanyNestedInput
     externalAudits?: ExternalAuditUpdateManyWithoutCompanyNestedInput
+    safetyMeetings?: SafetyMeetingUpdateManyWithoutCompanyNestedInput
+    emergencyDrills?: EmergencyDrillUpdateManyWithoutCompanyNestedInput
+    controlledDocuments?: ControlledDocumentUpdateManyWithoutCompanyNestedInput
+    circulars?: CircularUpdateManyWithoutCompanyNestedInput
+    riskAssessments?: RiskAssessmentUpdateManyWithoutCompanyNestedInput
+    defects?: DefectUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateInput = {
@@ -49144,6 +58876,12 @@ export namespace Prisma {
     cdiInspections?: CdiInspectionUncheckedUpdateManyWithoutCompanyNestedInput
     internalAudits?: InternalAuditUncheckedUpdateManyWithoutCompanyNestedInput
     externalAudits?: ExternalAuditUncheckedUpdateManyWithoutCompanyNestedInput
+    safetyMeetings?: SafetyMeetingUncheckedUpdateManyWithoutCompanyNestedInput
+    emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutCompanyNestedInput
+    controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutCompanyNestedInput
+    circulars?: CircularUncheckedUpdateManyWithoutCompanyNestedInput
+    riskAssessments?: RiskAssessmentUncheckedUpdateManyWithoutCompanyNestedInput
+    defects?: DefectUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyCreateManyInput = {
@@ -49520,6 +59258,7 @@ export namespace Prisma {
   export type VesselCreateInput = {
     id?: string
     name: string
+    code?: string | null
     imo: string
     officialNumber?: string | null
     callSign?: string | null
@@ -49549,12 +59288,19 @@ export namespace Prisma {
     cdiInspections?: CdiInspectionCreateNestedManyWithoutVesselInput
     internalAudits?: InternalAuditCreateNestedManyWithoutVesselInput
     externalAudits?: ExternalAuditCreateNestedManyWithoutVesselInput
+    safetyMeetings?: SafetyMeetingCreateNestedManyWithoutVesselInput
+    emergencyDrills?: EmergencyDrillCreateNestedManyWithoutVesselInput
+    controlledDocuments?: ControlledDocumentCreateNestedManyWithoutVesselInput
+    circulars?: CircularCreateNestedManyWithoutVesselInput
+    riskAssessments?: RiskAssessmentCreateNestedManyWithoutVesselInput
+    defects?: DefectCreateNestedManyWithoutVesselInput
   }
 
   export type VesselUncheckedCreateInput = {
     id?: string
     companyId: string
     name: string
+    code?: string | null
     imo: string
     officialNumber?: string | null
     callSign?: string | null
@@ -49583,11 +59329,18 @@ export namespace Prisma {
     cdiInspections?: CdiInspectionUncheckedCreateNestedManyWithoutVesselInput
     internalAudits?: InternalAuditUncheckedCreateNestedManyWithoutVesselInput
     externalAudits?: ExternalAuditUncheckedCreateNestedManyWithoutVesselInput
+    safetyMeetings?: SafetyMeetingUncheckedCreateNestedManyWithoutVesselInput
+    emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutVesselInput
+    controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutVesselInput
+    circulars?: CircularUncheckedCreateNestedManyWithoutVesselInput
+    riskAssessments?: RiskAssessmentUncheckedCreateNestedManyWithoutVesselInput
+    defects?: DefectUncheckedCreateNestedManyWithoutVesselInput
   }
 
   export type VesselUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    code?: NullableStringFieldUpdateOperationsInput | string | null
     imo?: StringFieldUpdateOperationsInput | string
     officialNumber?: NullableStringFieldUpdateOperationsInput | string | null
     callSign?: NullableStringFieldUpdateOperationsInput | string | null
@@ -49617,12 +59370,19 @@ export namespace Prisma {
     cdiInspections?: CdiInspectionUpdateManyWithoutVesselNestedInput
     internalAudits?: InternalAuditUpdateManyWithoutVesselNestedInput
     externalAudits?: ExternalAuditUpdateManyWithoutVesselNestedInput
+    safetyMeetings?: SafetyMeetingUpdateManyWithoutVesselNestedInput
+    emergencyDrills?: EmergencyDrillUpdateManyWithoutVesselNestedInput
+    controlledDocuments?: ControlledDocumentUpdateManyWithoutVesselNestedInput
+    circulars?: CircularUpdateManyWithoutVesselNestedInput
+    riskAssessments?: RiskAssessmentUpdateManyWithoutVesselNestedInput
+    defects?: DefectUpdateManyWithoutVesselNestedInput
   }
 
   export type VesselUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     companyId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    code?: NullableStringFieldUpdateOperationsInput | string | null
     imo?: StringFieldUpdateOperationsInput | string
     officialNumber?: NullableStringFieldUpdateOperationsInput | string | null
     callSign?: NullableStringFieldUpdateOperationsInput | string | null
@@ -49651,12 +59411,19 @@ export namespace Prisma {
     cdiInspections?: CdiInspectionUncheckedUpdateManyWithoutVesselNestedInput
     internalAudits?: InternalAuditUncheckedUpdateManyWithoutVesselNestedInput
     externalAudits?: ExternalAuditUncheckedUpdateManyWithoutVesselNestedInput
+    safetyMeetings?: SafetyMeetingUncheckedUpdateManyWithoutVesselNestedInput
+    emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutVesselNestedInput
+    controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutVesselNestedInput
+    circulars?: CircularUncheckedUpdateManyWithoutVesselNestedInput
+    riskAssessments?: RiskAssessmentUncheckedUpdateManyWithoutVesselNestedInput
+    defects?: DefectUncheckedUpdateManyWithoutVesselNestedInput
   }
 
   export type VesselCreateManyInput = {
     id?: string
     companyId: string
     name: string
+    code?: string | null
     imo: string
     officialNumber?: string | null
     callSign?: string | null
@@ -49681,6 +59448,7 @@ export namespace Prisma {
   export type VesselUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    code?: NullableStringFieldUpdateOperationsInput | string | null
     imo?: StringFieldUpdateOperationsInput | string
     officialNumber?: NullableStringFieldUpdateOperationsInput | string | null
     callSign?: NullableStringFieldUpdateOperationsInput | string | null
@@ -49706,6 +59474,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     companyId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    code?: NullableStringFieldUpdateOperationsInput | string | null
     imo?: StringFieldUpdateOperationsInput | string
     officialNumber?: NullableStringFieldUpdateOperationsInput | string | null
     callSign?: NullableStringFieldUpdateOperationsInput | string | null
@@ -51424,9 +61193,8 @@ export namespace Prisma {
     severity: $Enums.Severity
     raisedAt: Date | string
     targetDate?: Date | string | null
-    rootCause?: string | null
-    correctiveAction?: string | null
-    verification?: string | null
+    rootCauseCategory?: $Enums.RootCauseCategory | null
+    rootCauseSubCategory?: string | null
     personInCharge?: string | null
     status?: $Enums.NcrStatus
     closedAt?: Date | string | null
@@ -51454,9 +61222,8 @@ export namespace Prisma {
     severity: $Enums.Severity
     raisedAt: Date | string
     targetDate?: Date | string | null
-    rootCause?: string | null
-    correctiveAction?: string | null
-    verification?: string | null
+    rootCauseCategory?: $Enums.RootCauseCategory | null
+    rootCauseSubCategory?: string | null
     personInCharge?: string | null
     status?: $Enums.NcrStatus
     closedAt?: Date | string | null
@@ -51480,9 +61247,8 @@ export namespace Prisma {
     severity?: EnumSeverityFieldUpdateOperationsInput | $Enums.Severity
     raisedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     targetDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    rootCause?: NullableStringFieldUpdateOperationsInput | string | null
-    correctiveAction?: NullableStringFieldUpdateOperationsInput | string | null
-    verification?: NullableStringFieldUpdateOperationsInput | string | null
+    rootCauseCategory?: NullableEnumRootCauseCategoryFieldUpdateOperationsInput | $Enums.RootCauseCategory | null
+    rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
     personInCharge?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumNcrStatusFieldUpdateOperationsInput | $Enums.NcrStatus
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -51510,9 +61276,8 @@ export namespace Prisma {
     severity?: EnumSeverityFieldUpdateOperationsInput | $Enums.Severity
     raisedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     targetDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    rootCause?: NullableStringFieldUpdateOperationsInput | string | null
-    correctiveAction?: NullableStringFieldUpdateOperationsInput | string | null
-    verification?: NullableStringFieldUpdateOperationsInput | string | null
+    rootCauseCategory?: NullableEnumRootCauseCategoryFieldUpdateOperationsInput | $Enums.RootCauseCategory | null
+    rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
     personInCharge?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumNcrStatusFieldUpdateOperationsInput | $Enums.NcrStatus
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -51538,9 +61303,8 @@ export namespace Prisma {
     severity: $Enums.Severity
     raisedAt: Date | string
     targetDate?: Date | string | null
-    rootCause?: string | null
-    correctiveAction?: string | null
-    verification?: string | null
+    rootCauseCategory?: $Enums.RootCauseCategory | null
+    rootCauseSubCategory?: string | null
     personInCharge?: string | null
     status?: $Enums.NcrStatus
     closedAt?: Date | string | null
@@ -51564,9 +61328,8 @@ export namespace Prisma {
     severity?: EnumSeverityFieldUpdateOperationsInput | $Enums.Severity
     raisedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     targetDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    rootCause?: NullableStringFieldUpdateOperationsInput | string | null
-    correctiveAction?: NullableStringFieldUpdateOperationsInput | string | null
-    verification?: NullableStringFieldUpdateOperationsInput | string | null
+    rootCauseCategory?: NullableEnumRootCauseCategoryFieldUpdateOperationsInput | $Enums.RootCauseCategory | null
+    rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
     personInCharge?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumNcrStatusFieldUpdateOperationsInput | $Enums.NcrStatus
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -51591,9 +61354,8 @@ export namespace Prisma {
     severity?: EnumSeverityFieldUpdateOperationsInput | $Enums.Severity
     raisedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     targetDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    rootCause?: NullableStringFieldUpdateOperationsInput | string | null
-    correctiveAction?: NullableStringFieldUpdateOperationsInput | string | null
-    verification?: NullableStringFieldUpdateOperationsInput | string | null
+    rootCauseCategory?: NullableEnumRootCauseCategoryFieldUpdateOperationsInput | $Enums.RootCauseCategory | null
+    rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
     personInCharge?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumNcrStatusFieldUpdateOperationsInput | $Enums.NcrStatus
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -52008,7 +61770,8 @@ export namespace Prisma {
     reference?: string | null
     description: string
     actionCode?: string | null
-    rectification?: string | null
+    rootCauseCategory?: $Enums.RootCauseCategory | null
+    rootCauseSubCategory?: string | null
     status?: $Enums.FindingStatus
     createdAt?: Date | string
     createdBy?: string | null
@@ -52024,7 +61787,8 @@ export namespace Prisma {
     reference?: string | null
     description: string
     actionCode?: string | null
-    rectification?: string | null
+    rootCauseCategory?: $Enums.RootCauseCategory | null
+    rootCauseSubCategory?: string | null
     status?: $Enums.FindingStatus
     createdAt?: Date | string
     createdBy?: string | null
@@ -52038,7 +61802,8 @@ export namespace Prisma {
     reference?: NullableStringFieldUpdateOperationsInput | string | null
     description?: StringFieldUpdateOperationsInput | string
     actionCode?: NullableStringFieldUpdateOperationsInput | string | null
-    rectification?: NullableStringFieldUpdateOperationsInput | string | null
+    rootCauseCategory?: NullableEnumRootCauseCategoryFieldUpdateOperationsInput | $Enums.RootCauseCategory | null
+    rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumFindingStatusFieldUpdateOperationsInput | $Enums.FindingStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -52054,7 +61819,8 @@ export namespace Prisma {
     reference?: NullableStringFieldUpdateOperationsInput | string | null
     description?: StringFieldUpdateOperationsInput | string
     actionCode?: NullableStringFieldUpdateOperationsInput | string | null
-    rectification?: NullableStringFieldUpdateOperationsInput | string | null
+    rootCauseCategory?: NullableEnumRootCauseCategoryFieldUpdateOperationsInput | $Enums.RootCauseCategory | null
+    rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumFindingStatusFieldUpdateOperationsInput | $Enums.FindingStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -52069,7 +61835,8 @@ export namespace Prisma {
     reference?: string | null
     description: string
     actionCode?: string | null
-    rectification?: string | null
+    rootCauseCategory?: $Enums.RootCauseCategory | null
+    rootCauseSubCategory?: string | null
     status?: $Enums.FindingStatus
     createdAt?: Date | string
     createdBy?: string | null
@@ -52083,7 +61850,8 @@ export namespace Prisma {
     reference?: NullableStringFieldUpdateOperationsInput | string | null
     description?: StringFieldUpdateOperationsInput | string
     actionCode?: NullableStringFieldUpdateOperationsInput | string | null
-    rectification?: NullableStringFieldUpdateOperationsInput | string | null
+    rootCauseCategory?: NullableEnumRootCauseCategoryFieldUpdateOperationsInput | $Enums.RootCauseCategory | null
+    rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumFindingStatusFieldUpdateOperationsInput | $Enums.FindingStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -52098,7 +61866,8 @@ export namespace Prisma {
     reference?: NullableStringFieldUpdateOperationsInput | string | null
     description?: StringFieldUpdateOperationsInput | string
     actionCode?: NullableStringFieldUpdateOperationsInput | string | null
-    rectification?: NullableStringFieldUpdateOperationsInput | string | null
+    rootCauseCategory?: NullableEnumRootCauseCategoryFieldUpdateOperationsInput | $Enums.RootCauseCategory | null
+    rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumFindingStatusFieldUpdateOperationsInput | $Enums.FindingStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -52492,7 +62261,8 @@ export namespace Prisma {
     category: $Enums.AuditFindingCategory
     reference?: string | null
     description: string
-    correctiveAction?: string | null
+    rootCauseCategory?: $Enums.RootCauseCategory | null
+    rootCauseSubCategory?: string | null
     status?: $Enums.FindingStatus
     createdAt?: Date | string
     createdBy?: string | null
@@ -52507,7 +62277,8 @@ export namespace Prisma {
     category: $Enums.AuditFindingCategory
     reference?: string | null
     description: string
-    correctiveAction?: string | null
+    rootCauseCategory?: $Enums.RootCauseCategory | null
+    rootCauseSubCategory?: string | null
     status?: $Enums.FindingStatus
     createdAt?: Date | string
     createdBy?: string | null
@@ -52520,7 +62291,8 @@ export namespace Prisma {
     category?: EnumAuditFindingCategoryFieldUpdateOperationsInput | $Enums.AuditFindingCategory
     reference?: NullableStringFieldUpdateOperationsInput | string | null
     description?: StringFieldUpdateOperationsInput | string
-    correctiveAction?: NullableStringFieldUpdateOperationsInput | string | null
+    rootCauseCategory?: NullableEnumRootCauseCategoryFieldUpdateOperationsInput | $Enums.RootCauseCategory | null
+    rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumFindingStatusFieldUpdateOperationsInput | $Enums.FindingStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -52535,7 +62307,8 @@ export namespace Prisma {
     category?: EnumAuditFindingCategoryFieldUpdateOperationsInput | $Enums.AuditFindingCategory
     reference?: NullableStringFieldUpdateOperationsInput | string | null
     description?: StringFieldUpdateOperationsInput | string
-    correctiveAction?: NullableStringFieldUpdateOperationsInput | string | null
+    rootCauseCategory?: NullableEnumRootCauseCategoryFieldUpdateOperationsInput | $Enums.RootCauseCategory | null
+    rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumFindingStatusFieldUpdateOperationsInput | $Enums.FindingStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -52549,7 +62322,8 @@ export namespace Prisma {
     category: $Enums.AuditFindingCategory
     reference?: string | null
     description: string
-    correctiveAction?: string | null
+    rootCauseCategory?: $Enums.RootCauseCategory | null
+    rootCauseSubCategory?: string | null
     status?: $Enums.FindingStatus
     createdAt?: Date | string
     createdBy?: string | null
@@ -52562,7 +62336,8 @@ export namespace Prisma {
     category?: EnumAuditFindingCategoryFieldUpdateOperationsInput | $Enums.AuditFindingCategory
     reference?: NullableStringFieldUpdateOperationsInput | string | null
     description?: StringFieldUpdateOperationsInput | string
-    correctiveAction?: NullableStringFieldUpdateOperationsInput | string | null
+    rootCauseCategory?: NullableEnumRootCauseCategoryFieldUpdateOperationsInput | $Enums.RootCauseCategory | null
+    rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumFindingStatusFieldUpdateOperationsInput | $Enums.FindingStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -52576,7 +62351,8 @@ export namespace Prisma {
     category?: EnumAuditFindingCategoryFieldUpdateOperationsInput | $Enums.AuditFindingCategory
     reference?: NullableStringFieldUpdateOperationsInput | string | null
     description?: StringFieldUpdateOperationsInput | string
-    correctiveAction?: NullableStringFieldUpdateOperationsInput | string | null
+    rootCauseCategory?: NullableEnumRootCauseCategoryFieldUpdateOperationsInput | $Enums.RootCauseCategory | null
+    rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumFindingStatusFieldUpdateOperationsInput | $Enums.FindingStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -52738,7 +62514,8 @@ export namespace Prisma {
     category: $Enums.AuditFindingCategory
     reference?: string | null
     description: string
-    correctiveAction?: string | null
+    rootCauseCategory?: $Enums.RootCauseCategory | null
+    rootCauseSubCategory?: string | null
     status?: $Enums.FindingStatus
     createdAt?: Date | string
     createdBy?: string | null
@@ -52753,7 +62530,8 @@ export namespace Prisma {
     category: $Enums.AuditFindingCategory
     reference?: string | null
     description: string
-    correctiveAction?: string | null
+    rootCauseCategory?: $Enums.RootCauseCategory | null
+    rootCauseSubCategory?: string | null
     status?: $Enums.FindingStatus
     createdAt?: Date | string
     createdBy?: string | null
@@ -52766,7 +62544,8 @@ export namespace Prisma {
     category?: EnumAuditFindingCategoryFieldUpdateOperationsInput | $Enums.AuditFindingCategory
     reference?: NullableStringFieldUpdateOperationsInput | string | null
     description?: StringFieldUpdateOperationsInput | string
-    correctiveAction?: NullableStringFieldUpdateOperationsInput | string | null
+    rootCauseCategory?: NullableEnumRootCauseCategoryFieldUpdateOperationsInput | $Enums.RootCauseCategory | null
+    rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumFindingStatusFieldUpdateOperationsInput | $Enums.FindingStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -52781,7 +62560,8 @@ export namespace Prisma {
     category?: EnumAuditFindingCategoryFieldUpdateOperationsInput | $Enums.AuditFindingCategory
     reference?: NullableStringFieldUpdateOperationsInput | string | null
     description?: StringFieldUpdateOperationsInput | string
-    correctiveAction?: NullableStringFieldUpdateOperationsInput | string | null
+    rootCauseCategory?: NullableEnumRootCauseCategoryFieldUpdateOperationsInput | $Enums.RootCauseCategory | null
+    rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumFindingStatusFieldUpdateOperationsInput | $Enums.FindingStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -52795,7 +62575,8 @@ export namespace Prisma {
     category: $Enums.AuditFindingCategory
     reference?: string | null
     description: string
-    correctiveAction?: string | null
+    rootCauseCategory?: $Enums.RootCauseCategory | null
+    rootCauseSubCategory?: string | null
     status?: $Enums.FindingStatus
     createdAt?: Date | string
     createdBy?: string | null
@@ -52808,7 +62589,8 @@ export namespace Prisma {
     category?: EnumAuditFindingCategoryFieldUpdateOperationsInput | $Enums.AuditFindingCategory
     reference?: NullableStringFieldUpdateOperationsInput | string | null
     description?: StringFieldUpdateOperationsInput | string
-    correctiveAction?: NullableStringFieldUpdateOperationsInput | string | null
+    rootCauseCategory?: NullableEnumRootCauseCategoryFieldUpdateOperationsInput | $Enums.RootCauseCategory | null
+    rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumFindingStatusFieldUpdateOperationsInput | $Enums.FindingStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -52822,11 +62604,882 @@ export namespace Prisma {
     category?: EnumAuditFindingCategoryFieldUpdateOperationsInput | $Enums.AuditFindingCategory
     reference?: NullableStringFieldUpdateOperationsInput | string | null
     description?: StringFieldUpdateOperationsInput | string
-    correctiveAction?: NullableStringFieldUpdateOperationsInput | string | null
+    rootCauseCategory?: NullableEnumRootCauseCategoryFieldUpdateOperationsInput | $Enums.RootCauseCategory | null
+    rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumFindingStatusFieldUpdateOperationsInput | $Enums.FindingStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type SafetyMeetingCreateInput = {
+    id?: string
+    refNo: string
+    meetingType: $Enums.MeetingType
+    meetingDate: Date | string
+    chairedBy?: string | null
+    attendees?: string | null
+    agenda?: string | null
+    minutes?: string | null
+    status?: $Enums.FindingStatus
+    closedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    company: CompanyCreateNestedOneWithoutSafetyMeetingsInput
+    vessel?: VesselCreateNestedOneWithoutSafetyMeetingsInput
+  }
+
+  export type SafetyMeetingUncheckedCreateInput = {
+    id?: string
+    companyId: string
+    refNo: string
+    vesselId?: string | null
+    meetingType: $Enums.MeetingType
+    meetingDate: Date | string
+    chairedBy?: string | null
+    attendees?: string | null
+    agenda?: string | null
+    minutes?: string | null
+    status?: $Enums.FindingStatus
+    closedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+  }
+
+  export type SafetyMeetingUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    refNo?: StringFieldUpdateOperationsInput | string
+    meetingType?: EnumMeetingTypeFieldUpdateOperationsInput | $Enums.MeetingType
+    meetingDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    chairedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    attendees?: NullableStringFieldUpdateOperationsInput | string | null
+    agenda?: NullableStringFieldUpdateOperationsInput | string | null
+    minutes?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumFindingStatusFieldUpdateOperationsInput | $Enums.FindingStatus
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    company?: CompanyUpdateOneRequiredWithoutSafetyMeetingsNestedInput
+    vessel?: VesselUpdateOneWithoutSafetyMeetingsNestedInput
+  }
+
+  export type SafetyMeetingUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    refNo?: StringFieldUpdateOperationsInput | string
+    vesselId?: NullableStringFieldUpdateOperationsInput | string | null
+    meetingType?: EnumMeetingTypeFieldUpdateOperationsInput | $Enums.MeetingType
+    meetingDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    chairedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    attendees?: NullableStringFieldUpdateOperationsInput | string | null
+    agenda?: NullableStringFieldUpdateOperationsInput | string | null
+    minutes?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumFindingStatusFieldUpdateOperationsInput | $Enums.FindingStatus
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type SafetyMeetingCreateManyInput = {
+    id?: string
+    companyId: string
+    refNo: string
+    vesselId?: string | null
+    meetingType: $Enums.MeetingType
+    meetingDate: Date | string
+    chairedBy?: string | null
+    attendees?: string | null
+    agenda?: string | null
+    minutes?: string | null
+    status?: $Enums.FindingStatus
+    closedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+  }
+
+  export type SafetyMeetingUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    refNo?: StringFieldUpdateOperationsInput | string
+    meetingType?: EnumMeetingTypeFieldUpdateOperationsInput | $Enums.MeetingType
+    meetingDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    chairedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    attendees?: NullableStringFieldUpdateOperationsInput | string | null
+    agenda?: NullableStringFieldUpdateOperationsInput | string | null
+    minutes?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumFindingStatusFieldUpdateOperationsInput | $Enums.FindingStatus
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type SafetyMeetingUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    refNo?: StringFieldUpdateOperationsInput | string
+    vesselId?: NullableStringFieldUpdateOperationsInput | string | null
+    meetingType?: EnumMeetingTypeFieldUpdateOperationsInput | $Enums.MeetingType
+    meetingDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    chairedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    attendees?: NullableStringFieldUpdateOperationsInput | string | null
+    agenda?: NullableStringFieldUpdateOperationsInput | string | null
+    minutes?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumFindingStatusFieldUpdateOperationsInput | $Enums.FindingStatus
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type EmergencyDrillCreateInput = {
+    id?: string
+    refNo: string
+    drillType: $Enums.DrillType
+    drillDate: Date | string
+    scenario?: string | null
+    participants?: string | null
+    conductedBy?: string | null
+    observations?: string | null
+    status?: $Enums.FindingStatus
+    closedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    company: CompanyCreateNestedOneWithoutEmergencyDrillsInput
+    vessel: VesselCreateNestedOneWithoutEmergencyDrillsInput
+  }
+
+  export type EmergencyDrillUncheckedCreateInput = {
+    id?: string
+    companyId: string
+    refNo: string
+    vesselId: string
+    drillType: $Enums.DrillType
+    drillDate: Date | string
+    scenario?: string | null
+    participants?: string | null
+    conductedBy?: string | null
+    observations?: string | null
+    status?: $Enums.FindingStatus
+    closedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+  }
+
+  export type EmergencyDrillUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    refNo?: StringFieldUpdateOperationsInput | string
+    drillType?: EnumDrillTypeFieldUpdateOperationsInput | $Enums.DrillType
+    drillDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    scenario?: NullableStringFieldUpdateOperationsInput | string | null
+    participants?: NullableStringFieldUpdateOperationsInput | string | null
+    conductedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    observations?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumFindingStatusFieldUpdateOperationsInput | $Enums.FindingStatus
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    company?: CompanyUpdateOneRequiredWithoutEmergencyDrillsNestedInput
+    vessel?: VesselUpdateOneRequiredWithoutEmergencyDrillsNestedInput
+  }
+
+  export type EmergencyDrillUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    refNo?: StringFieldUpdateOperationsInput | string
+    vesselId?: StringFieldUpdateOperationsInput | string
+    drillType?: EnumDrillTypeFieldUpdateOperationsInput | $Enums.DrillType
+    drillDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    scenario?: NullableStringFieldUpdateOperationsInput | string | null
+    participants?: NullableStringFieldUpdateOperationsInput | string | null
+    conductedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    observations?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumFindingStatusFieldUpdateOperationsInput | $Enums.FindingStatus
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type EmergencyDrillCreateManyInput = {
+    id?: string
+    companyId: string
+    refNo: string
+    vesselId: string
+    drillType: $Enums.DrillType
+    drillDate: Date | string
+    scenario?: string | null
+    participants?: string | null
+    conductedBy?: string | null
+    observations?: string | null
+    status?: $Enums.FindingStatus
+    closedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+  }
+
+  export type EmergencyDrillUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    refNo?: StringFieldUpdateOperationsInput | string
+    drillType?: EnumDrillTypeFieldUpdateOperationsInput | $Enums.DrillType
+    drillDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    scenario?: NullableStringFieldUpdateOperationsInput | string | null
+    participants?: NullableStringFieldUpdateOperationsInput | string | null
+    conductedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    observations?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumFindingStatusFieldUpdateOperationsInput | $Enums.FindingStatus
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type EmergencyDrillUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    refNo?: StringFieldUpdateOperationsInput | string
+    vesselId?: StringFieldUpdateOperationsInput | string
+    drillType?: EnumDrillTypeFieldUpdateOperationsInput | $Enums.DrillType
+    drillDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    scenario?: NullableStringFieldUpdateOperationsInput | string | null
+    participants?: NullableStringFieldUpdateOperationsInput | string | null
+    conductedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    observations?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumFindingStatusFieldUpdateOperationsInput | $Enums.FindingStatus
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type ControlledDocumentCreateInput = {
+    id?: string
+    docNumber: string
+    title: string
+    category: $Enums.DocumentCategory
+    version?: string | null
+    issueDate: Date | string
+    reviewDate?: Date | string | null
+    owner?: string | null
+    description?: string | null
+    status?: $Enums.ControlledDocStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    company: CompanyCreateNestedOneWithoutControlledDocumentsInput
+    vessel?: VesselCreateNestedOneWithoutControlledDocumentsInput
+  }
+
+  export type ControlledDocumentUncheckedCreateInput = {
+    id?: string
+    companyId: string
+    docNumber: string
+    vesselId?: string | null
+    title: string
+    category: $Enums.DocumentCategory
+    version?: string | null
+    issueDate: Date | string
+    reviewDate?: Date | string | null
+    owner?: string | null
+    description?: string | null
+    status?: $Enums.ControlledDocStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+  }
+
+  export type ControlledDocumentUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    docNumber?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    category?: EnumDocumentCategoryFieldUpdateOperationsInput | $Enums.DocumentCategory
+    version?: NullableStringFieldUpdateOperationsInput | string | null
+    issueDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    reviewDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    owner?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumControlledDocStatusFieldUpdateOperationsInput | $Enums.ControlledDocStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    company?: CompanyUpdateOneRequiredWithoutControlledDocumentsNestedInput
+    vessel?: VesselUpdateOneWithoutControlledDocumentsNestedInput
+  }
+
+  export type ControlledDocumentUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    docNumber?: StringFieldUpdateOperationsInput | string
+    vesselId?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
+    category?: EnumDocumentCategoryFieldUpdateOperationsInput | $Enums.DocumentCategory
+    version?: NullableStringFieldUpdateOperationsInput | string | null
+    issueDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    reviewDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    owner?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumControlledDocStatusFieldUpdateOperationsInput | $Enums.ControlledDocStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type ControlledDocumentCreateManyInput = {
+    id?: string
+    companyId: string
+    docNumber: string
+    vesselId?: string | null
+    title: string
+    category: $Enums.DocumentCategory
+    version?: string | null
+    issueDate: Date | string
+    reviewDate?: Date | string | null
+    owner?: string | null
+    description?: string | null
+    status?: $Enums.ControlledDocStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+  }
+
+  export type ControlledDocumentUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    docNumber?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    category?: EnumDocumentCategoryFieldUpdateOperationsInput | $Enums.DocumentCategory
+    version?: NullableStringFieldUpdateOperationsInput | string | null
+    issueDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    reviewDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    owner?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumControlledDocStatusFieldUpdateOperationsInput | $Enums.ControlledDocStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type ControlledDocumentUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    docNumber?: StringFieldUpdateOperationsInput | string
+    vesselId?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
+    category?: EnumDocumentCategoryFieldUpdateOperationsInput | $Enums.DocumentCategory
+    version?: NullableStringFieldUpdateOperationsInput | string | null
+    issueDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    reviewDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    owner?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumControlledDocStatusFieldUpdateOperationsInput | $Enums.ControlledDocStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type CircularCreateInput = {
+    id?: string
+    refNo: string
+    title: string
+    category: $Enums.CircularCategory
+    issueDate: Date | string
+    body: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    company: CompanyCreateNestedOneWithoutCircularsInput
+    vessel?: VesselCreateNestedOneWithoutCircularsInput
+  }
+
+  export type CircularUncheckedCreateInput = {
+    id?: string
+    companyId: string
+    refNo: string
+    vesselId?: string | null
+    title: string
+    category: $Enums.CircularCategory
+    issueDate: Date | string
+    body: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+  }
+
+  export type CircularUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    refNo?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    category?: EnumCircularCategoryFieldUpdateOperationsInput | $Enums.CircularCategory
+    issueDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    body?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    company?: CompanyUpdateOneRequiredWithoutCircularsNestedInput
+    vessel?: VesselUpdateOneWithoutCircularsNestedInput
+  }
+
+  export type CircularUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    refNo?: StringFieldUpdateOperationsInput | string
+    vesselId?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
+    category?: EnumCircularCategoryFieldUpdateOperationsInput | $Enums.CircularCategory
+    issueDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    body?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type CircularCreateManyInput = {
+    id?: string
+    companyId: string
+    refNo: string
+    vesselId?: string | null
+    title: string
+    category: $Enums.CircularCategory
+    issueDate: Date | string
+    body: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+  }
+
+  export type CircularUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    refNo?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    category?: EnumCircularCategoryFieldUpdateOperationsInput | $Enums.CircularCategory
+    issueDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    body?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type CircularUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    refNo?: StringFieldUpdateOperationsInput | string
+    vesselId?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
+    category?: EnumCircularCategoryFieldUpdateOperationsInput | $Enums.CircularCategory
+    issueDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    body?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type RiskAssessmentCreateInput = {
+    id?: string
+    refNo: string
+    activity: string
+    hazards: string
+    existingControls?: string | null
+    likelihood: $Enums.RiskRating
+    severity: $Enums.RiskRating
+    additionalControls?: string | null
+    assessedBy?: string | null
+    assessmentDate: Date | string
+    reviewDate?: Date | string | null
+    status?: $Enums.RiskAssessmentStatus
+    closedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    company: CompanyCreateNestedOneWithoutRiskAssessmentsInput
+    vessel?: VesselCreateNestedOneWithoutRiskAssessmentsInput
+  }
+
+  export type RiskAssessmentUncheckedCreateInput = {
+    id?: string
+    companyId: string
+    refNo: string
+    vesselId?: string | null
+    activity: string
+    hazards: string
+    existingControls?: string | null
+    likelihood: $Enums.RiskRating
+    severity: $Enums.RiskRating
+    additionalControls?: string | null
+    assessedBy?: string | null
+    assessmentDate: Date | string
+    reviewDate?: Date | string | null
+    status?: $Enums.RiskAssessmentStatus
+    closedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+  }
+
+  export type RiskAssessmentUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    refNo?: StringFieldUpdateOperationsInput | string
+    activity?: StringFieldUpdateOperationsInput | string
+    hazards?: StringFieldUpdateOperationsInput | string
+    existingControls?: NullableStringFieldUpdateOperationsInput | string | null
+    likelihood?: EnumRiskRatingFieldUpdateOperationsInput | $Enums.RiskRating
+    severity?: EnumRiskRatingFieldUpdateOperationsInput | $Enums.RiskRating
+    additionalControls?: NullableStringFieldUpdateOperationsInput | string | null
+    assessedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    assessmentDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    reviewDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: EnumRiskAssessmentStatusFieldUpdateOperationsInput | $Enums.RiskAssessmentStatus
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    company?: CompanyUpdateOneRequiredWithoutRiskAssessmentsNestedInput
+    vessel?: VesselUpdateOneWithoutRiskAssessmentsNestedInput
+  }
+
+  export type RiskAssessmentUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    refNo?: StringFieldUpdateOperationsInput | string
+    vesselId?: NullableStringFieldUpdateOperationsInput | string | null
+    activity?: StringFieldUpdateOperationsInput | string
+    hazards?: StringFieldUpdateOperationsInput | string
+    existingControls?: NullableStringFieldUpdateOperationsInput | string | null
+    likelihood?: EnumRiskRatingFieldUpdateOperationsInput | $Enums.RiskRating
+    severity?: EnumRiskRatingFieldUpdateOperationsInput | $Enums.RiskRating
+    additionalControls?: NullableStringFieldUpdateOperationsInput | string | null
+    assessedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    assessmentDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    reviewDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: EnumRiskAssessmentStatusFieldUpdateOperationsInput | $Enums.RiskAssessmentStatus
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type RiskAssessmentCreateManyInput = {
+    id?: string
+    companyId: string
+    refNo: string
+    vesselId?: string | null
+    activity: string
+    hazards: string
+    existingControls?: string | null
+    likelihood: $Enums.RiskRating
+    severity: $Enums.RiskRating
+    additionalControls?: string | null
+    assessedBy?: string | null
+    assessmentDate: Date | string
+    reviewDate?: Date | string | null
+    status?: $Enums.RiskAssessmentStatus
+    closedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+  }
+
+  export type RiskAssessmentUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    refNo?: StringFieldUpdateOperationsInput | string
+    activity?: StringFieldUpdateOperationsInput | string
+    hazards?: StringFieldUpdateOperationsInput | string
+    existingControls?: NullableStringFieldUpdateOperationsInput | string | null
+    likelihood?: EnumRiskRatingFieldUpdateOperationsInput | $Enums.RiskRating
+    severity?: EnumRiskRatingFieldUpdateOperationsInput | $Enums.RiskRating
+    additionalControls?: NullableStringFieldUpdateOperationsInput | string | null
+    assessedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    assessmentDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    reviewDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: EnumRiskAssessmentStatusFieldUpdateOperationsInput | $Enums.RiskAssessmentStatus
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type RiskAssessmentUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    refNo?: StringFieldUpdateOperationsInput | string
+    vesselId?: NullableStringFieldUpdateOperationsInput | string | null
+    activity?: StringFieldUpdateOperationsInput | string
+    hazards?: StringFieldUpdateOperationsInput | string
+    existingControls?: NullableStringFieldUpdateOperationsInput | string | null
+    likelihood?: EnumRiskRatingFieldUpdateOperationsInput | $Enums.RiskRating
+    severity?: EnumRiskRatingFieldUpdateOperationsInput | $Enums.RiskRating
+    additionalControls?: NullableStringFieldUpdateOperationsInput | string | null
+    assessedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    assessmentDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    reviewDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: EnumRiskAssessmentStatusFieldUpdateOperationsInput | $Enums.RiskAssessmentStatus
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type DefectCreateInput = {
+    id?: string
+    refNo: string
+    equipment: string
+    description: string
+    severity: $Enums.DefectSeverity
+    dateRaised: Date | string
+    targetRectificationDate?: Date | string | null
+    actionTaken?: string | null
+    raisedBy?: string | null
+    status?: $Enums.DefectStatus
+    rectifiedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    company: CompanyCreateNestedOneWithoutDefectsInput
+    vessel: VesselCreateNestedOneWithoutDefectsInput
+  }
+
+  export type DefectUncheckedCreateInput = {
+    id?: string
+    companyId: string
+    refNo: string
+    vesselId: string
+    equipment: string
+    description: string
+    severity: $Enums.DefectSeverity
+    dateRaised: Date | string
+    targetRectificationDate?: Date | string | null
+    actionTaken?: string | null
+    raisedBy?: string | null
+    status?: $Enums.DefectStatus
+    rectifiedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+  }
+
+  export type DefectUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    refNo?: StringFieldUpdateOperationsInput | string
+    equipment?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    severity?: EnumDefectSeverityFieldUpdateOperationsInput | $Enums.DefectSeverity
+    dateRaised?: DateTimeFieldUpdateOperationsInput | Date | string
+    targetRectificationDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    actionTaken?: NullableStringFieldUpdateOperationsInput | string | null
+    raisedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumDefectStatusFieldUpdateOperationsInput | $Enums.DefectStatus
+    rectifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    company?: CompanyUpdateOneRequiredWithoutDefectsNestedInput
+    vessel?: VesselUpdateOneRequiredWithoutDefectsNestedInput
+  }
+
+  export type DefectUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    refNo?: StringFieldUpdateOperationsInput | string
+    vesselId?: StringFieldUpdateOperationsInput | string
+    equipment?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    severity?: EnumDefectSeverityFieldUpdateOperationsInput | $Enums.DefectSeverity
+    dateRaised?: DateTimeFieldUpdateOperationsInput | Date | string
+    targetRectificationDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    actionTaken?: NullableStringFieldUpdateOperationsInput | string | null
+    raisedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumDefectStatusFieldUpdateOperationsInput | $Enums.DefectStatus
+    rectifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type DefectCreateManyInput = {
+    id?: string
+    companyId: string
+    refNo: string
+    vesselId: string
+    equipment: string
+    description: string
+    severity: $Enums.DefectSeverity
+    dateRaised: Date | string
+    targetRectificationDate?: Date | string | null
+    actionTaken?: string | null
+    raisedBy?: string | null
+    status?: $Enums.DefectStatus
+    rectifiedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+  }
+
+  export type DefectUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    refNo?: StringFieldUpdateOperationsInput | string
+    equipment?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    severity?: EnumDefectSeverityFieldUpdateOperationsInput | $Enums.DefectSeverity
+    dateRaised?: DateTimeFieldUpdateOperationsInput | Date | string
+    targetRectificationDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    actionTaken?: NullableStringFieldUpdateOperationsInput | string | null
+    raisedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumDefectStatusFieldUpdateOperationsInput | $Enums.DefectStatus
+    rectifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type DefectUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    refNo?: StringFieldUpdateOperationsInput | string
+    vesselId?: StringFieldUpdateOperationsInput | string
+    equipment?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    severity?: EnumDefectSeverityFieldUpdateOperationsInput | $Enums.DefectSeverity
+    dateRaised?: DateTimeFieldUpdateOperationsInput | Date | string
+    targetRectificationDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    actionTaken?: NullableStringFieldUpdateOperationsInput | string | null
+    raisedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumDefectStatusFieldUpdateOperationsInput | $Enums.DefectStatus
+    rectifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type StringFilter<$PrismaModel = never> = {
@@ -52933,6 +63586,42 @@ export namespace Prisma {
     none?: ExternalAuditWhereInput
   }
 
+  export type SafetyMeetingListRelationFilter = {
+    every?: SafetyMeetingWhereInput
+    some?: SafetyMeetingWhereInput
+    none?: SafetyMeetingWhereInput
+  }
+
+  export type EmergencyDrillListRelationFilter = {
+    every?: EmergencyDrillWhereInput
+    some?: EmergencyDrillWhereInput
+    none?: EmergencyDrillWhereInput
+  }
+
+  export type ControlledDocumentListRelationFilter = {
+    every?: ControlledDocumentWhereInput
+    some?: ControlledDocumentWhereInput
+    none?: ControlledDocumentWhereInput
+  }
+
+  export type CircularListRelationFilter = {
+    every?: CircularWhereInput
+    some?: CircularWhereInput
+    none?: CircularWhereInput
+  }
+
+  export type RiskAssessmentListRelationFilter = {
+    every?: RiskAssessmentWhereInput
+    some?: RiskAssessmentWhereInput
+    none?: RiskAssessmentWhereInput
+  }
+
+  export type DefectListRelationFilter = {
+    every?: DefectWhereInput
+    some?: DefectWhereInput
+    none?: DefectWhereInput
+  }
+
   export type UserOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
@@ -52982,6 +63671,30 @@ export namespace Prisma {
   }
 
   export type ExternalAuditOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type SafetyMeetingOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type EmergencyDrillOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ControlledDocumentOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type CircularOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type RiskAssessmentOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type DefectOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -53363,10 +64076,16 @@ export namespace Prisma {
     not?: NestedEnumVesselStatusFilter<$PrismaModel> | $Enums.VesselStatus
   }
 
+  export type VesselCompanyIdCodeCompoundUniqueInput = {
+    companyId: string
+    code: string
+  }
+
   export type VesselCountOrderByAggregateInput = {
     id?: SortOrder
     companyId?: SortOrder
     name?: SortOrder
+    code?: SortOrder
     imo?: SortOrder
     officialNumber?: SortOrder
     callSign?: SortOrder
@@ -53400,6 +64119,7 @@ export namespace Prisma {
     id?: SortOrder
     companyId?: SortOrder
     name?: SortOrder
+    code?: SortOrder
     imo?: SortOrder
     officialNumber?: SortOrder
     callSign?: SortOrder
@@ -53425,6 +64145,7 @@ export namespace Prisma {
     id?: SortOrder
     companyId?: SortOrder
     name?: SortOrder
+    code?: SortOrder
     imo?: SortOrder
     officialNumber?: SortOrder
     callSign?: SortOrder
@@ -54827,9 +65548,8 @@ export namespace Prisma {
     severity?: SortOrder
     raisedAt?: SortOrder
     targetDate?: SortOrder
-    rootCause?: SortOrder
-    correctiveAction?: SortOrder
-    verification?: SortOrder
+    rootCauseCategory?: SortOrder
+    rootCauseSubCategory?: SortOrder
     personInCharge?: SortOrder
     status?: SortOrder
     closedAt?: SortOrder
@@ -54855,9 +65575,8 @@ export namespace Prisma {
     severity?: SortOrder
     raisedAt?: SortOrder
     targetDate?: SortOrder
-    rootCause?: SortOrder
-    correctiveAction?: SortOrder
-    verification?: SortOrder
+    rootCauseCategory?: SortOrder
+    rootCauseSubCategory?: SortOrder
     personInCharge?: SortOrder
     status?: SortOrder
     closedAt?: SortOrder
@@ -54883,9 +65602,8 @@ export namespace Prisma {
     severity?: SortOrder
     raisedAt?: SortOrder
     targetDate?: SortOrder
-    rootCause?: SortOrder
-    correctiveAction?: SortOrder
-    verification?: SortOrder
+    rootCauseCategory?: SortOrder
+    rootCauseSubCategory?: SortOrder
     personInCharge?: SortOrder
     status?: SortOrder
     closedAt?: SortOrder
@@ -55168,7 +65886,8 @@ export namespace Prisma {
     reference?: SortOrder
     description?: SortOrder
     actionCode?: SortOrder
-    rectification?: SortOrder
+    rootCauseCategory?: SortOrder
+    rootCauseSubCategory?: SortOrder
     status?: SortOrder
     createdAt?: SortOrder
     createdBy?: SortOrder
@@ -55183,7 +65902,8 @@ export namespace Prisma {
     reference?: SortOrder
     description?: SortOrder
     actionCode?: SortOrder
-    rectification?: SortOrder
+    rootCauseCategory?: SortOrder
+    rootCauseSubCategory?: SortOrder
     status?: SortOrder
     createdAt?: SortOrder
     createdBy?: SortOrder
@@ -55198,7 +65918,8 @@ export namespace Prisma {
     reference?: SortOrder
     description?: SortOrder
     actionCode?: SortOrder
-    rectification?: SortOrder
+    rootCauseCategory?: SortOrder
+    rootCauseSubCategory?: SortOrder
     status?: SortOrder
     createdAt?: SortOrder
     createdBy?: SortOrder
@@ -55421,7 +66142,8 @@ export namespace Prisma {
     category?: SortOrder
     reference?: SortOrder
     description?: SortOrder
-    correctiveAction?: SortOrder
+    rootCauseCategory?: SortOrder
+    rootCauseSubCategory?: SortOrder
     status?: SortOrder
     createdAt?: SortOrder
     createdBy?: SortOrder
@@ -55435,7 +66157,8 @@ export namespace Prisma {
     category?: SortOrder
     reference?: SortOrder
     description?: SortOrder
-    correctiveAction?: SortOrder
+    rootCauseCategory?: SortOrder
+    rootCauseSubCategory?: SortOrder
     status?: SortOrder
     createdAt?: SortOrder
     createdBy?: SortOrder
@@ -55449,7 +66172,8 @@ export namespace Prisma {
     category?: SortOrder
     reference?: SortOrder
     description?: SortOrder
-    correctiveAction?: SortOrder
+    rootCauseCategory?: SortOrder
+    rootCauseSubCategory?: SortOrder
     status?: SortOrder
     createdAt?: SortOrder
     createdBy?: SortOrder
@@ -55556,7 +66280,8 @@ export namespace Prisma {
     category?: SortOrder
     reference?: SortOrder
     description?: SortOrder
-    correctiveAction?: SortOrder
+    rootCauseCategory?: SortOrder
+    rootCauseSubCategory?: SortOrder
     status?: SortOrder
     createdAt?: SortOrder
     createdBy?: SortOrder
@@ -55570,7 +66295,8 @@ export namespace Prisma {
     category?: SortOrder
     reference?: SortOrder
     description?: SortOrder
-    correctiveAction?: SortOrder
+    rootCauseCategory?: SortOrder
+    rootCauseSubCategory?: SortOrder
     status?: SortOrder
     createdAt?: SortOrder
     createdBy?: SortOrder
@@ -55584,11 +66310,578 @@ export namespace Prisma {
     category?: SortOrder
     reference?: SortOrder
     description?: SortOrder
-    correctiveAction?: SortOrder
+    rootCauseCategory?: SortOrder
+    rootCauseSubCategory?: SortOrder
     status?: SortOrder
     createdAt?: SortOrder
     createdBy?: SortOrder
     deletedAt?: SortOrder
+  }
+
+  export type EnumMeetingTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.MeetingType | EnumMeetingTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.MeetingType[] | ListEnumMeetingTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.MeetingType[] | ListEnumMeetingTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumMeetingTypeFilter<$PrismaModel> | $Enums.MeetingType
+  }
+
+  export type SafetyMeetingCompanyIdRefNoCompoundUniqueInput = {
+    companyId: string
+    refNo: string
+  }
+
+  export type SafetyMeetingCountOrderByAggregateInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    refNo?: SortOrder
+    vesselId?: SortOrder
+    meetingType?: SortOrder
+    meetingDate?: SortOrder
+    chairedBy?: SortOrder
+    attendees?: SortOrder
+    agenda?: SortOrder
+    minutes?: SortOrder
+    status?: SortOrder
+    closedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    createdBy?: SortOrder
+    updatedBy?: SortOrder
+    deletedAt?: SortOrder
+    deletedBy?: SortOrder
+  }
+
+  export type SafetyMeetingMaxOrderByAggregateInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    refNo?: SortOrder
+    vesselId?: SortOrder
+    meetingType?: SortOrder
+    meetingDate?: SortOrder
+    chairedBy?: SortOrder
+    attendees?: SortOrder
+    agenda?: SortOrder
+    minutes?: SortOrder
+    status?: SortOrder
+    closedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    createdBy?: SortOrder
+    updatedBy?: SortOrder
+    deletedAt?: SortOrder
+    deletedBy?: SortOrder
+  }
+
+  export type SafetyMeetingMinOrderByAggregateInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    refNo?: SortOrder
+    vesselId?: SortOrder
+    meetingType?: SortOrder
+    meetingDate?: SortOrder
+    chairedBy?: SortOrder
+    attendees?: SortOrder
+    agenda?: SortOrder
+    minutes?: SortOrder
+    status?: SortOrder
+    closedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    createdBy?: SortOrder
+    updatedBy?: SortOrder
+    deletedAt?: SortOrder
+    deletedBy?: SortOrder
+  }
+
+  export type EnumMeetingTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.MeetingType | EnumMeetingTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.MeetingType[] | ListEnumMeetingTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.MeetingType[] | ListEnumMeetingTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumMeetingTypeWithAggregatesFilter<$PrismaModel> | $Enums.MeetingType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumMeetingTypeFilter<$PrismaModel>
+    _max?: NestedEnumMeetingTypeFilter<$PrismaModel>
+  }
+
+  export type EnumDrillTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.DrillType | EnumDrillTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.DrillType[] | ListEnumDrillTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.DrillType[] | ListEnumDrillTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumDrillTypeFilter<$PrismaModel> | $Enums.DrillType
+  }
+
+  export type VesselScalarRelationFilter = {
+    is?: VesselWhereInput
+    isNot?: VesselWhereInput
+  }
+
+  export type EmergencyDrillCompanyIdRefNoCompoundUniqueInput = {
+    companyId: string
+    refNo: string
+  }
+
+  export type EmergencyDrillCountOrderByAggregateInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    refNo?: SortOrder
+    vesselId?: SortOrder
+    drillType?: SortOrder
+    drillDate?: SortOrder
+    scenario?: SortOrder
+    participants?: SortOrder
+    conductedBy?: SortOrder
+    observations?: SortOrder
+    status?: SortOrder
+    closedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    createdBy?: SortOrder
+    updatedBy?: SortOrder
+    deletedAt?: SortOrder
+    deletedBy?: SortOrder
+  }
+
+  export type EmergencyDrillMaxOrderByAggregateInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    refNo?: SortOrder
+    vesselId?: SortOrder
+    drillType?: SortOrder
+    drillDate?: SortOrder
+    scenario?: SortOrder
+    participants?: SortOrder
+    conductedBy?: SortOrder
+    observations?: SortOrder
+    status?: SortOrder
+    closedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    createdBy?: SortOrder
+    updatedBy?: SortOrder
+    deletedAt?: SortOrder
+    deletedBy?: SortOrder
+  }
+
+  export type EmergencyDrillMinOrderByAggregateInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    refNo?: SortOrder
+    vesselId?: SortOrder
+    drillType?: SortOrder
+    drillDate?: SortOrder
+    scenario?: SortOrder
+    participants?: SortOrder
+    conductedBy?: SortOrder
+    observations?: SortOrder
+    status?: SortOrder
+    closedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    createdBy?: SortOrder
+    updatedBy?: SortOrder
+    deletedAt?: SortOrder
+    deletedBy?: SortOrder
+  }
+
+  export type EnumDrillTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.DrillType | EnumDrillTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.DrillType[] | ListEnumDrillTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.DrillType[] | ListEnumDrillTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumDrillTypeWithAggregatesFilter<$PrismaModel> | $Enums.DrillType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumDrillTypeFilter<$PrismaModel>
+    _max?: NestedEnumDrillTypeFilter<$PrismaModel>
+  }
+
+  export type EnumDocumentCategoryFilter<$PrismaModel = never> = {
+    equals?: $Enums.DocumentCategory | EnumDocumentCategoryFieldRefInput<$PrismaModel>
+    in?: $Enums.DocumentCategory[] | ListEnumDocumentCategoryFieldRefInput<$PrismaModel>
+    notIn?: $Enums.DocumentCategory[] | ListEnumDocumentCategoryFieldRefInput<$PrismaModel>
+    not?: NestedEnumDocumentCategoryFilter<$PrismaModel> | $Enums.DocumentCategory
+  }
+
+  export type EnumControlledDocStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.ControlledDocStatus | EnumControlledDocStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.ControlledDocStatus[] | ListEnumControlledDocStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ControlledDocStatus[] | ListEnumControlledDocStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumControlledDocStatusFilter<$PrismaModel> | $Enums.ControlledDocStatus
+  }
+
+  export type ControlledDocumentCompanyIdDocNumberCompoundUniqueInput = {
+    companyId: string
+    docNumber: string
+  }
+
+  export type ControlledDocumentCountOrderByAggregateInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    docNumber?: SortOrder
+    vesselId?: SortOrder
+    title?: SortOrder
+    category?: SortOrder
+    version?: SortOrder
+    issueDate?: SortOrder
+    reviewDate?: SortOrder
+    owner?: SortOrder
+    description?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    createdBy?: SortOrder
+    updatedBy?: SortOrder
+    deletedAt?: SortOrder
+    deletedBy?: SortOrder
+  }
+
+  export type ControlledDocumentMaxOrderByAggregateInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    docNumber?: SortOrder
+    vesselId?: SortOrder
+    title?: SortOrder
+    category?: SortOrder
+    version?: SortOrder
+    issueDate?: SortOrder
+    reviewDate?: SortOrder
+    owner?: SortOrder
+    description?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    createdBy?: SortOrder
+    updatedBy?: SortOrder
+    deletedAt?: SortOrder
+    deletedBy?: SortOrder
+  }
+
+  export type ControlledDocumentMinOrderByAggregateInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    docNumber?: SortOrder
+    vesselId?: SortOrder
+    title?: SortOrder
+    category?: SortOrder
+    version?: SortOrder
+    issueDate?: SortOrder
+    reviewDate?: SortOrder
+    owner?: SortOrder
+    description?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    createdBy?: SortOrder
+    updatedBy?: SortOrder
+    deletedAt?: SortOrder
+    deletedBy?: SortOrder
+  }
+
+  export type EnumDocumentCategoryWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.DocumentCategory | EnumDocumentCategoryFieldRefInput<$PrismaModel>
+    in?: $Enums.DocumentCategory[] | ListEnumDocumentCategoryFieldRefInput<$PrismaModel>
+    notIn?: $Enums.DocumentCategory[] | ListEnumDocumentCategoryFieldRefInput<$PrismaModel>
+    not?: NestedEnumDocumentCategoryWithAggregatesFilter<$PrismaModel> | $Enums.DocumentCategory
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumDocumentCategoryFilter<$PrismaModel>
+    _max?: NestedEnumDocumentCategoryFilter<$PrismaModel>
+  }
+
+  export type EnumControlledDocStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ControlledDocStatus | EnumControlledDocStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.ControlledDocStatus[] | ListEnumControlledDocStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ControlledDocStatus[] | ListEnumControlledDocStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumControlledDocStatusWithAggregatesFilter<$PrismaModel> | $Enums.ControlledDocStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumControlledDocStatusFilter<$PrismaModel>
+    _max?: NestedEnumControlledDocStatusFilter<$PrismaModel>
+  }
+
+  export type EnumCircularCategoryFilter<$PrismaModel = never> = {
+    equals?: $Enums.CircularCategory | EnumCircularCategoryFieldRefInput<$PrismaModel>
+    in?: $Enums.CircularCategory[] | ListEnumCircularCategoryFieldRefInput<$PrismaModel>
+    notIn?: $Enums.CircularCategory[] | ListEnumCircularCategoryFieldRefInput<$PrismaModel>
+    not?: NestedEnumCircularCategoryFilter<$PrismaModel> | $Enums.CircularCategory
+  }
+
+  export type CircularCompanyIdRefNoCompoundUniqueInput = {
+    companyId: string
+    refNo: string
+  }
+
+  export type CircularCountOrderByAggregateInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    refNo?: SortOrder
+    vesselId?: SortOrder
+    title?: SortOrder
+    category?: SortOrder
+    issueDate?: SortOrder
+    body?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    createdBy?: SortOrder
+    updatedBy?: SortOrder
+    deletedAt?: SortOrder
+    deletedBy?: SortOrder
+  }
+
+  export type CircularMaxOrderByAggregateInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    refNo?: SortOrder
+    vesselId?: SortOrder
+    title?: SortOrder
+    category?: SortOrder
+    issueDate?: SortOrder
+    body?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    createdBy?: SortOrder
+    updatedBy?: SortOrder
+    deletedAt?: SortOrder
+    deletedBy?: SortOrder
+  }
+
+  export type CircularMinOrderByAggregateInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    refNo?: SortOrder
+    vesselId?: SortOrder
+    title?: SortOrder
+    category?: SortOrder
+    issueDate?: SortOrder
+    body?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    createdBy?: SortOrder
+    updatedBy?: SortOrder
+    deletedAt?: SortOrder
+    deletedBy?: SortOrder
+  }
+
+  export type EnumCircularCategoryWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.CircularCategory | EnumCircularCategoryFieldRefInput<$PrismaModel>
+    in?: $Enums.CircularCategory[] | ListEnumCircularCategoryFieldRefInput<$PrismaModel>
+    notIn?: $Enums.CircularCategory[] | ListEnumCircularCategoryFieldRefInput<$PrismaModel>
+    not?: NestedEnumCircularCategoryWithAggregatesFilter<$PrismaModel> | $Enums.CircularCategory
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumCircularCategoryFilter<$PrismaModel>
+    _max?: NestedEnumCircularCategoryFilter<$PrismaModel>
+  }
+
+  export type EnumRiskRatingFilter<$PrismaModel = never> = {
+    equals?: $Enums.RiskRating | EnumRiskRatingFieldRefInput<$PrismaModel>
+    in?: $Enums.RiskRating[] | ListEnumRiskRatingFieldRefInput<$PrismaModel>
+    notIn?: $Enums.RiskRating[] | ListEnumRiskRatingFieldRefInput<$PrismaModel>
+    not?: NestedEnumRiskRatingFilter<$PrismaModel> | $Enums.RiskRating
+  }
+
+  export type EnumRiskAssessmentStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.RiskAssessmentStatus | EnumRiskAssessmentStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.RiskAssessmentStatus[] | ListEnumRiskAssessmentStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.RiskAssessmentStatus[] | ListEnumRiskAssessmentStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumRiskAssessmentStatusFilter<$PrismaModel> | $Enums.RiskAssessmentStatus
+  }
+
+  export type RiskAssessmentCompanyIdRefNoCompoundUniqueInput = {
+    companyId: string
+    refNo: string
+  }
+
+  export type RiskAssessmentCountOrderByAggregateInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    refNo?: SortOrder
+    vesselId?: SortOrder
+    activity?: SortOrder
+    hazards?: SortOrder
+    existingControls?: SortOrder
+    likelihood?: SortOrder
+    severity?: SortOrder
+    additionalControls?: SortOrder
+    assessedBy?: SortOrder
+    assessmentDate?: SortOrder
+    reviewDate?: SortOrder
+    status?: SortOrder
+    closedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    createdBy?: SortOrder
+    updatedBy?: SortOrder
+    deletedAt?: SortOrder
+    deletedBy?: SortOrder
+  }
+
+  export type RiskAssessmentMaxOrderByAggregateInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    refNo?: SortOrder
+    vesselId?: SortOrder
+    activity?: SortOrder
+    hazards?: SortOrder
+    existingControls?: SortOrder
+    likelihood?: SortOrder
+    severity?: SortOrder
+    additionalControls?: SortOrder
+    assessedBy?: SortOrder
+    assessmentDate?: SortOrder
+    reviewDate?: SortOrder
+    status?: SortOrder
+    closedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    createdBy?: SortOrder
+    updatedBy?: SortOrder
+    deletedAt?: SortOrder
+    deletedBy?: SortOrder
+  }
+
+  export type RiskAssessmentMinOrderByAggregateInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    refNo?: SortOrder
+    vesselId?: SortOrder
+    activity?: SortOrder
+    hazards?: SortOrder
+    existingControls?: SortOrder
+    likelihood?: SortOrder
+    severity?: SortOrder
+    additionalControls?: SortOrder
+    assessedBy?: SortOrder
+    assessmentDate?: SortOrder
+    reviewDate?: SortOrder
+    status?: SortOrder
+    closedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    createdBy?: SortOrder
+    updatedBy?: SortOrder
+    deletedAt?: SortOrder
+    deletedBy?: SortOrder
+  }
+
+  export type EnumRiskRatingWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.RiskRating | EnumRiskRatingFieldRefInput<$PrismaModel>
+    in?: $Enums.RiskRating[] | ListEnumRiskRatingFieldRefInput<$PrismaModel>
+    notIn?: $Enums.RiskRating[] | ListEnumRiskRatingFieldRefInput<$PrismaModel>
+    not?: NestedEnumRiskRatingWithAggregatesFilter<$PrismaModel> | $Enums.RiskRating
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumRiskRatingFilter<$PrismaModel>
+    _max?: NestedEnumRiskRatingFilter<$PrismaModel>
+  }
+
+  export type EnumRiskAssessmentStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.RiskAssessmentStatus | EnumRiskAssessmentStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.RiskAssessmentStatus[] | ListEnumRiskAssessmentStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.RiskAssessmentStatus[] | ListEnumRiskAssessmentStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumRiskAssessmentStatusWithAggregatesFilter<$PrismaModel> | $Enums.RiskAssessmentStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumRiskAssessmentStatusFilter<$PrismaModel>
+    _max?: NestedEnumRiskAssessmentStatusFilter<$PrismaModel>
+  }
+
+  export type EnumDefectSeverityFilter<$PrismaModel = never> = {
+    equals?: $Enums.DefectSeverity | EnumDefectSeverityFieldRefInput<$PrismaModel>
+    in?: $Enums.DefectSeverity[] | ListEnumDefectSeverityFieldRefInput<$PrismaModel>
+    notIn?: $Enums.DefectSeverity[] | ListEnumDefectSeverityFieldRefInput<$PrismaModel>
+    not?: NestedEnumDefectSeverityFilter<$PrismaModel> | $Enums.DefectSeverity
+  }
+
+  export type EnumDefectStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.DefectStatus | EnumDefectStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.DefectStatus[] | ListEnumDefectStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.DefectStatus[] | ListEnumDefectStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumDefectStatusFilter<$PrismaModel> | $Enums.DefectStatus
+  }
+
+  export type DefectCompanyIdRefNoCompoundUniqueInput = {
+    companyId: string
+    refNo: string
+  }
+
+  export type DefectCountOrderByAggregateInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    refNo?: SortOrder
+    vesselId?: SortOrder
+    equipment?: SortOrder
+    description?: SortOrder
+    severity?: SortOrder
+    dateRaised?: SortOrder
+    targetRectificationDate?: SortOrder
+    actionTaken?: SortOrder
+    raisedBy?: SortOrder
+    status?: SortOrder
+    rectifiedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    createdBy?: SortOrder
+    updatedBy?: SortOrder
+    deletedAt?: SortOrder
+    deletedBy?: SortOrder
+  }
+
+  export type DefectMaxOrderByAggregateInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    refNo?: SortOrder
+    vesselId?: SortOrder
+    equipment?: SortOrder
+    description?: SortOrder
+    severity?: SortOrder
+    dateRaised?: SortOrder
+    targetRectificationDate?: SortOrder
+    actionTaken?: SortOrder
+    raisedBy?: SortOrder
+    status?: SortOrder
+    rectifiedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    createdBy?: SortOrder
+    updatedBy?: SortOrder
+    deletedAt?: SortOrder
+    deletedBy?: SortOrder
+  }
+
+  export type DefectMinOrderByAggregateInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    refNo?: SortOrder
+    vesselId?: SortOrder
+    equipment?: SortOrder
+    description?: SortOrder
+    severity?: SortOrder
+    dateRaised?: SortOrder
+    targetRectificationDate?: SortOrder
+    actionTaken?: SortOrder
+    raisedBy?: SortOrder
+    status?: SortOrder
+    rectifiedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    createdBy?: SortOrder
+    updatedBy?: SortOrder
+    deletedAt?: SortOrder
+    deletedBy?: SortOrder
+  }
+
+  export type EnumDefectSeverityWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.DefectSeverity | EnumDefectSeverityFieldRefInput<$PrismaModel>
+    in?: $Enums.DefectSeverity[] | ListEnumDefectSeverityFieldRefInput<$PrismaModel>
+    notIn?: $Enums.DefectSeverity[] | ListEnumDefectSeverityFieldRefInput<$PrismaModel>
+    not?: NestedEnumDefectSeverityWithAggregatesFilter<$PrismaModel> | $Enums.DefectSeverity
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumDefectSeverityFilter<$PrismaModel>
+    _max?: NestedEnumDefectSeverityFilter<$PrismaModel>
+  }
+
+  export type EnumDefectStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.DefectStatus | EnumDefectStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.DefectStatus[] | ListEnumDefectStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.DefectStatus[] | ListEnumDefectStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumDefectStatusWithAggregatesFilter<$PrismaModel> | $Enums.DefectStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumDefectStatusFilter<$PrismaModel>
+    _max?: NestedEnumDefectStatusFilter<$PrismaModel>
   }
 
   export type UserCreateNestedManyWithoutCompanyInput = {
@@ -55682,6 +66975,48 @@ export namespace Prisma {
     connect?: ExternalAuditWhereUniqueInput | ExternalAuditWhereUniqueInput[]
   }
 
+  export type SafetyMeetingCreateNestedManyWithoutCompanyInput = {
+    create?: XOR<SafetyMeetingCreateWithoutCompanyInput, SafetyMeetingUncheckedCreateWithoutCompanyInput> | SafetyMeetingCreateWithoutCompanyInput[] | SafetyMeetingUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: SafetyMeetingCreateOrConnectWithoutCompanyInput | SafetyMeetingCreateOrConnectWithoutCompanyInput[]
+    createMany?: SafetyMeetingCreateManyCompanyInputEnvelope
+    connect?: SafetyMeetingWhereUniqueInput | SafetyMeetingWhereUniqueInput[]
+  }
+
+  export type EmergencyDrillCreateNestedManyWithoutCompanyInput = {
+    create?: XOR<EmergencyDrillCreateWithoutCompanyInput, EmergencyDrillUncheckedCreateWithoutCompanyInput> | EmergencyDrillCreateWithoutCompanyInput[] | EmergencyDrillUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: EmergencyDrillCreateOrConnectWithoutCompanyInput | EmergencyDrillCreateOrConnectWithoutCompanyInput[]
+    createMany?: EmergencyDrillCreateManyCompanyInputEnvelope
+    connect?: EmergencyDrillWhereUniqueInput | EmergencyDrillWhereUniqueInput[]
+  }
+
+  export type ControlledDocumentCreateNestedManyWithoutCompanyInput = {
+    create?: XOR<ControlledDocumentCreateWithoutCompanyInput, ControlledDocumentUncheckedCreateWithoutCompanyInput> | ControlledDocumentCreateWithoutCompanyInput[] | ControlledDocumentUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: ControlledDocumentCreateOrConnectWithoutCompanyInput | ControlledDocumentCreateOrConnectWithoutCompanyInput[]
+    createMany?: ControlledDocumentCreateManyCompanyInputEnvelope
+    connect?: ControlledDocumentWhereUniqueInput | ControlledDocumentWhereUniqueInput[]
+  }
+
+  export type CircularCreateNestedManyWithoutCompanyInput = {
+    create?: XOR<CircularCreateWithoutCompanyInput, CircularUncheckedCreateWithoutCompanyInput> | CircularCreateWithoutCompanyInput[] | CircularUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: CircularCreateOrConnectWithoutCompanyInput | CircularCreateOrConnectWithoutCompanyInput[]
+    createMany?: CircularCreateManyCompanyInputEnvelope
+    connect?: CircularWhereUniqueInput | CircularWhereUniqueInput[]
+  }
+
+  export type RiskAssessmentCreateNestedManyWithoutCompanyInput = {
+    create?: XOR<RiskAssessmentCreateWithoutCompanyInput, RiskAssessmentUncheckedCreateWithoutCompanyInput> | RiskAssessmentCreateWithoutCompanyInput[] | RiskAssessmentUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: RiskAssessmentCreateOrConnectWithoutCompanyInput | RiskAssessmentCreateOrConnectWithoutCompanyInput[]
+    createMany?: RiskAssessmentCreateManyCompanyInputEnvelope
+    connect?: RiskAssessmentWhereUniqueInput | RiskAssessmentWhereUniqueInput[]
+  }
+
+  export type DefectCreateNestedManyWithoutCompanyInput = {
+    create?: XOR<DefectCreateWithoutCompanyInput, DefectUncheckedCreateWithoutCompanyInput> | DefectCreateWithoutCompanyInput[] | DefectUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: DefectCreateOrConnectWithoutCompanyInput | DefectCreateOrConnectWithoutCompanyInput[]
+    createMany?: DefectCreateManyCompanyInputEnvelope
+    connect?: DefectWhereUniqueInput | DefectWhereUniqueInput[]
+  }
+
   export type UserUncheckedCreateNestedManyWithoutCompanyInput = {
     create?: XOR<UserCreateWithoutCompanyInput, UserUncheckedCreateWithoutCompanyInput> | UserCreateWithoutCompanyInput[] | UserUncheckedCreateWithoutCompanyInput[]
     connectOrCreate?: UserCreateOrConnectWithoutCompanyInput | UserCreateOrConnectWithoutCompanyInput[]
@@ -55771,6 +67106,48 @@ export namespace Prisma {
     connectOrCreate?: ExternalAuditCreateOrConnectWithoutCompanyInput | ExternalAuditCreateOrConnectWithoutCompanyInput[]
     createMany?: ExternalAuditCreateManyCompanyInputEnvelope
     connect?: ExternalAuditWhereUniqueInput | ExternalAuditWhereUniqueInput[]
+  }
+
+  export type SafetyMeetingUncheckedCreateNestedManyWithoutCompanyInput = {
+    create?: XOR<SafetyMeetingCreateWithoutCompanyInput, SafetyMeetingUncheckedCreateWithoutCompanyInput> | SafetyMeetingCreateWithoutCompanyInput[] | SafetyMeetingUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: SafetyMeetingCreateOrConnectWithoutCompanyInput | SafetyMeetingCreateOrConnectWithoutCompanyInput[]
+    createMany?: SafetyMeetingCreateManyCompanyInputEnvelope
+    connect?: SafetyMeetingWhereUniqueInput | SafetyMeetingWhereUniqueInput[]
+  }
+
+  export type EmergencyDrillUncheckedCreateNestedManyWithoutCompanyInput = {
+    create?: XOR<EmergencyDrillCreateWithoutCompanyInput, EmergencyDrillUncheckedCreateWithoutCompanyInput> | EmergencyDrillCreateWithoutCompanyInput[] | EmergencyDrillUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: EmergencyDrillCreateOrConnectWithoutCompanyInput | EmergencyDrillCreateOrConnectWithoutCompanyInput[]
+    createMany?: EmergencyDrillCreateManyCompanyInputEnvelope
+    connect?: EmergencyDrillWhereUniqueInput | EmergencyDrillWhereUniqueInput[]
+  }
+
+  export type ControlledDocumentUncheckedCreateNestedManyWithoutCompanyInput = {
+    create?: XOR<ControlledDocumentCreateWithoutCompanyInput, ControlledDocumentUncheckedCreateWithoutCompanyInput> | ControlledDocumentCreateWithoutCompanyInput[] | ControlledDocumentUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: ControlledDocumentCreateOrConnectWithoutCompanyInput | ControlledDocumentCreateOrConnectWithoutCompanyInput[]
+    createMany?: ControlledDocumentCreateManyCompanyInputEnvelope
+    connect?: ControlledDocumentWhereUniqueInput | ControlledDocumentWhereUniqueInput[]
+  }
+
+  export type CircularUncheckedCreateNestedManyWithoutCompanyInput = {
+    create?: XOR<CircularCreateWithoutCompanyInput, CircularUncheckedCreateWithoutCompanyInput> | CircularCreateWithoutCompanyInput[] | CircularUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: CircularCreateOrConnectWithoutCompanyInput | CircularCreateOrConnectWithoutCompanyInput[]
+    createMany?: CircularCreateManyCompanyInputEnvelope
+    connect?: CircularWhereUniqueInput | CircularWhereUniqueInput[]
+  }
+
+  export type RiskAssessmentUncheckedCreateNestedManyWithoutCompanyInput = {
+    create?: XOR<RiskAssessmentCreateWithoutCompanyInput, RiskAssessmentUncheckedCreateWithoutCompanyInput> | RiskAssessmentCreateWithoutCompanyInput[] | RiskAssessmentUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: RiskAssessmentCreateOrConnectWithoutCompanyInput | RiskAssessmentCreateOrConnectWithoutCompanyInput[]
+    createMany?: RiskAssessmentCreateManyCompanyInputEnvelope
+    connect?: RiskAssessmentWhereUniqueInput | RiskAssessmentWhereUniqueInput[]
+  }
+
+  export type DefectUncheckedCreateNestedManyWithoutCompanyInput = {
+    create?: XOR<DefectCreateWithoutCompanyInput, DefectUncheckedCreateWithoutCompanyInput> | DefectCreateWithoutCompanyInput[] | DefectUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: DefectCreateOrConnectWithoutCompanyInput | DefectCreateOrConnectWithoutCompanyInput[]
+    createMany?: DefectCreateManyCompanyInputEnvelope
+    connect?: DefectWhereUniqueInput | DefectWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -55963,6 +67340,90 @@ export namespace Prisma {
     deleteMany?: ExternalAuditScalarWhereInput | ExternalAuditScalarWhereInput[]
   }
 
+  export type SafetyMeetingUpdateManyWithoutCompanyNestedInput = {
+    create?: XOR<SafetyMeetingCreateWithoutCompanyInput, SafetyMeetingUncheckedCreateWithoutCompanyInput> | SafetyMeetingCreateWithoutCompanyInput[] | SafetyMeetingUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: SafetyMeetingCreateOrConnectWithoutCompanyInput | SafetyMeetingCreateOrConnectWithoutCompanyInput[]
+    upsert?: SafetyMeetingUpsertWithWhereUniqueWithoutCompanyInput | SafetyMeetingUpsertWithWhereUniqueWithoutCompanyInput[]
+    createMany?: SafetyMeetingCreateManyCompanyInputEnvelope
+    set?: SafetyMeetingWhereUniqueInput | SafetyMeetingWhereUniqueInput[]
+    disconnect?: SafetyMeetingWhereUniqueInput | SafetyMeetingWhereUniqueInput[]
+    delete?: SafetyMeetingWhereUniqueInput | SafetyMeetingWhereUniqueInput[]
+    connect?: SafetyMeetingWhereUniqueInput | SafetyMeetingWhereUniqueInput[]
+    update?: SafetyMeetingUpdateWithWhereUniqueWithoutCompanyInput | SafetyMeetingUpdateWithWhereUniqueWithoutCompanyInput[]
+    updateMany?: SafetyMeetingUpdateManyWithWhereWithoutCompanyInput | SafetyMeetingUpdateManyWithWhereWithoutCompanyInput[]
+    deleteMany?: SafetyMeetingScalarWhereInput | SafetyMeetingScalarWhereInput[]
+  }
+
+  export type EmergencyDrillUpdateManyWithoutCompanyNestedInput = {
+    create?: XOR<EmergencyDrillCreateWithoutCompanyInput, EmergencyDrillUncheckedCreateWithoutCompanyInput> | EmergencyDrillCreateWithoutCompanyInput[] | EmergencyDrillUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: EmergencyDrillCreateOrConnectWithoutCompanyInput | EmergencyDrillCreateOrConnectWithoutCompanyInput[]
+    upsert?: EmergencyDrillUpsertWithWhereUniqueWithoutCompanyInput | EmergencyDrillUpsertWithWhereUniqueWithoutCompanyInput[]
+    createMany?: EmergencyDrillCreateManyCompanyInputEnvelope
+    set?: EmergencyDrillWhereUniqueInput | EmergencyDrillWhereUniqueInput[]
+    disconnect?: EmergencyDrillWhereUniqueInput | EmergencyDrillWhereUniqueInput[]
+    delete?: EmergencyDrillWhereUniqueInput | EmergencyDrillWhereUniqueInput[]
+    connect?: EmergencyDrillWhereUniqueInput | EmergencyDrillWhereUniqueInput[]
+    update?: EmergencyDrillUpdateWithWhereUniqueWithoutCompanyInput | EmergencyDrillUpdateWithWhereUniqueWithoutCompanyInput[]
+    updateMany?: EmergencyDrillUpdateManyWithWhereWithoutCompanyInput | EmergencyDrillUpdateManyWithWhereWithoutCompanyInput[]
+    deleteMany?: EmergencyDrillScalarWhereInput | EmergencyDrillScalarWhereInput[]
+  }
+
+  export type ControlledDocumentUpdateManyWithoutCompanyNestedInput = {
+    create?: XOR<ControlledDocumentCreateWithoutCompanyInput, ControlledDocumentUncheckedCreateWithoutCompanyInput> | ControlledDocumentCreateWithoutCompanyInput[] | ControlledDocumentUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: ControlledDocumentCreateOrConnectWithoutCompanyInput | ControlledDocumentCreateOrConnectWithoutCompanyInput[]
+    upsert?: ControlledDocumentUpsertWithWhereUniqueWithoutCompanyInput | ControlledDocumentUpsertWithWhereUniqueWithoutCompanyInput[]
+    createMany?: ControlledDocumentCreateManyCompanyInputEnvelope
+    set?: ControlledDocumentWhereUniqueInput | ControlledDocumentWhereUniqueInput[]
+    disconnect?: ControlledDocumentWhereUniqueInput | ControlledDocumentWhereUniqueInput[]
+    delete?: ControlledDocumentWhereUniqueInput | ControlledDocumentWhereUniqueInput[]
+    connect?: ControlledDocumentWhereUniqueInput | ControlledDocumentWhereUniqueInput[]
+    update?: ControlledDocumentUpdateWithWhereUniqueWithoutCompanyInput | ControlledDocumentUpdateWithWhereUniqueWithoutCompanyInput[]
+    updateMany?: ControlledDocumentUpdateManyWithWhereWithoutCompanyInput | ControlledDocumentUpdateManyWithWhereWithoutCompanyInput[]
+    deleteMany?: ControlledDocumentScalarWhereInput | ControlledDocumentScalarWhereInput[]
+  }
+
+  export type CircularUpdateManyWithoutCompanyNestedInput = {
+    create?: XOR<CircularCreateWithoutCompanyInput, CircularUncheckedCreateWithoutCompanyInput> | CircularCreateWithoutCompanyInput[] | CircularUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: CircularCreateOrConnectWithoutCompanyInput | CircularCreateOrConnectWithoutCompanyInput[]
+    upsert?: CircularUpsertWithWhereUniqueWithoutCompanyInput | CircularUpsertWithWhereUniqueWithoutCompanyInput[]
+    createMany?: CircularCreateManyCompanyInputEnvelope
+    set?: CircularWhereUniqueInput | CircularWhereUniqueInput[]
+    disconnect?: CircularWhereUniqueInput | CircularWhereUniqueInput[]
+    delete?: CircularWhereUniqueInput | CircularWhereUniqueInput[]
+    connect?: CircularWhereUniqueInput | CircularWhereUniqueInput[]
+    update?: CircularUpdateWithWhereUniqueWithoutCompanyInput | CircularUpdateWithWhereUniqueWithoutCompanyInput[]
+    updateMany?: CircularUpdateManyWithWhereWithoutCompanyInput | CircularUpdateManyWithWhereWithoutCompanyInput[]
+    deleteMany?: CircularScalarWhereInput | CircularScalarWhereInput[]
+  }
+
+  export type RiskAssessmentUpdateManyWithoutCompanyNestedInput = {
+    create?: XOR<RiskAssessmentCreateWithoutCompanyInput, RiskAssessmentUncheckedCreateWithoutCompanyInput> | RiskAssessmentCreateWithoutCompanyInput[] | RiskAssessmentUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: RiskAssessmentCreateOrConnectWithoutCompanyInput | RiskAssessmentCreateOrConnectWithoutCompanyInput[]
+    upsert?: RiskAssessmentUpsertWithWhereUniqueWithoutCompanyInput | RiskAssessmentUpsertWithWhereUniqueWithoutCompanyInput[]
+    createMany?: RiskAssessmentCreateManyCompanyInputEnvelope
+    set?: RiskAssessmentWhereUniqueInput | RiskAssessmentWhereUniqueInput[]
+    disconnect?: RiskAssessmentWhereUniqueInput | RiskAssessmentWhereUniqueInput[]
+    delete?: RiskAssessmentWhereUniqueInput | RiskAssessmentWhereUniqueInput[]
+    connect?: RiskAssessmentWhereUniqueInput | RiskAssessmentWhereUniqueInput[]
+    update?: RiskAssessmentUpdateWithWhereUniqueWithoutCompanyInput | RiskAssessmentUpdateWithWhereUniqueWithoutCompanyInput[]
+    updateMany?: RiskAssessmentUpdateManyWithWhereWithoutCompanyInput | RiskAssessmentUpdateManyWithWhereWithoutCompanyInput[]
+    deleteMany?: RiskAssessmentScalarWhereInput | RiskAssessmentScalarWhereInput[]
+  }
+
+  export type DefectUpdateManyWithoutCompanyNestedInput = {
+    create?: XOR<DefectCreateWithoutCompanyInput, DefectUncheckedCreateWithoutCompanyInput> | DefectCreateWithoutCompanyInput[] | DefectUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: DefectCreateOrConnectWithoutCompanyInput | DefectCreateOrConnectWithoutCompanyInput[]
+    upsert?: DefectUpsertWithWhereUniqueWithoutCompanyInput | DefectUpsertWithWhereUniqueWithoutCompanyInput[]
+    createMany?: DefectCreateManyCompanyInputEnvelope
+    set?: DefectWhereUniqueInput | DefectWhereUniqueInput[]
+    disconnect?: DefectWhereUniqueInput | DefectWhereUniqueInput[]
+    delete?: DefectWhereUniqueInput | DefectWhereUniqueInput[]
+    connect?: DefectWhereUniqueInput | DefectWhereUniqueInput[]
+    update?: DefectUpdateWithWhereUniqueWithoutCompanyInput | DefectUpdateWithWhereUniqueWithoutCompanyInput[]
+    updateMany?: DefectUpdateManyWithWhereWithoutCompanyInput | DefectUpdateManyWithWhereWithoutCompanyInput[]
+    deleteMany?: DefectScalarWhereInput | DefectScalarWhereInput[]
+  }
+
   export type UserUncheckedUpdateManyWithoutCompanyNestedInput = {
     create?: XOR<UserCreateWithoutCompanyInput, UserUncheckedCreateWithoutCompanyInput> | UserCreateWithoutCompanyInput[] | UserUncheckedCreateWithoutCompanyInput[]
     connectOrCreate?: UserCreateOrConnectWithoutCompanyInput | UserCreateOrConnectWithoutCompanyInput[]
@@ -56143,6 +67604,90 @@ export namespace Prisma {
     update?: ExternalAuditUpdateWithWhereUniqueWithoutCompanyInput | ExternalAuditUpdateWithWhereUniqueWithoutCompanyInput[]
     updateMany?: ExternalAuditUpdateManyWithWhereWithoutCompanyInput | ExternalAuditUpdateManyWithWhereWithoutCompanyInput[]
     deleteMany?: ExternalAuditScalarWhereInput | ExternalAuditScalarWhereInput[]
+  }
+
+  export type SafetyMeetingUncheckedUpdateManyWithoutCompanyNestedInput = {
+    create?: XOR<SafetyMeetingCreateWithoutCompanyInput, SafetyMeetingUncheckedCreateWithoutCompanyInput> | SafetyMeetingCreateWithoutCompanyInput[] | SafetyMeetingUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: SafetyMeetingCreateOrConnectWithoutCompanyInput | SafetyMeetingCreateOrConnectWithoutCompanyInput[]
+    upsert?: SafetyMeetingUpsertWithWhereUniqueWithoutCompanyInput | SafetyMeetingUpsertWithWhereUniqueWithoutCompanyInput[]
+    createMany?: SafetyMeetingCreateManyCompanyInputEnvelope
+    set?: SafetyMeetingWhereUniqueInput | SafetyMeetingWhereUniqueInput[]
+    disconnect?: SafetyMeetingWhereUniqueInput | SafetyMeetingWhereUniqueInput[]
+    delete?: SafetyMeetingWhereUniqueInput | SafetyMeetingWhereUniqueInput[]
+    connect?: SafetyMeetingWhereUniqueInput | SafetyMeetingWhereUniqueInput[]
+    update?: SafetyMeetingUpdateWithWhereUniqueWithoutCompanyInput | SafetyMeetingUpdateWithWhereUniqueWithoutCompanyInput[]
+    updateMany?: SafetyMeetingUpdateManyWithWhereWithoutCompanyInput | SafetyMeetingUpdateManyWithWhereWithoutCompanyInput[]
+    deleteMany?: SafetyMeetingScalarWhereInput | SafetyMeetingScalarWhereInput[]
+  }
+
+  export type EmergencyDrillUncheckedUpdateManyWithoutCompanyNestedInput = {
+    create?: XOR<EmergencyDrillCreateWithoutCompanyInput, EmergencyDrillUncheckedCreateWithoutCompanyInput> | EmergencyDrillCreateWithoutCompanyInput[] | EmergencyDrillUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: EmergencyDrillCreateOrConnectWithoutCompanyInput | EmergencyDrillCreateOrConnectWithoutCompanyInput[]
+    upsert?: EmergencyDrillUpsertWithWhereUniqueWithoutCompanyInput | EmergencyDrillUpsertWithWhereUniqueWithoutCompanyInput[]
+    createMany?: EmergencyDrillCreateManyCompanyInputEnvelope
+    set?: EmergencyDrillWhereUniqueInput | EmergencyDrillWhereUniqueInput[]
+    disconnect?: EmergencyDrillWhereUniqueInput | EmergencyDrillWhereUniqueInput[]
+    delete?: EmergencyDrillWhereUniqueInput | EmergencyDrillWhereUniqueInput[]
+    connect?: EmergencyDrillWhereUniqueInput | EmergencyDrillWhereUniqueInput[]
+    update?: EmergencyDrillUpdateWithWhereUniqueWithoutCompanyInput | EmergencyDrillUpdateWithWhereUniqueWithoutCompanyInput[]
+    updateMany?: EmergencyDrillUpdateManyWithWhereWithoutCompanyInput | EmergencyDrillUpdateManyWithWhereWithoutCompanyInput[]
+    deleteMany?: EmergencyDrillScalarWhereInput | EmergencyDrillScalarWhereInput[]
+  }
+
+  export type ControlledDocumentUncheckedUpdateManyWithoutCompanyNestedInput = {
+    create?: XOR<ControlledDocumentCreateWithoutCompanyInput, ControlledDocumentUncheckedCreateWithoutCompanyInput> | ControlledDocumentCreateWithoutCompanyInput[] | ControlledDocumentUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: ControlledDocumentCreateOrConnectWithoutCompanyInput | ControlledDocumentCreateOrConnectWithoutCompanyInput[]
+    upsert?: ControlledDocumentUpsertWithWhereUniqueWithoutCompanyInput | ControlledDocumentUpsertWithWhereUniqueWithoutCompanyInput[]
+    createMany?: ControlledDocumentCreateManyCompanyInputEnvelope
+    set?: ControlledDocumentWhereUniqueInput | ControlledDocumentWhereUniqueInput[]
+    disconnect?: ControlledDocumentWhereUniqueInput | ControlledDocumentWhereUniqueInput[]
+    delete?: ControlledDocumentWhereUniqueInput | ControlledDocumentWhereUniqueInput[]
+    connect?: ControlledDocumentWhereUniqueInput | ControlledDocumentWhereUniqueInput[]
+    update?: ControlledDocumentUpdateWithWhereUniqueWithoutCompanyInput | ControlledDocumentUpdateWithWhereUniqueWithoutCompanyInput[]
+    updateMany?: ControlledDocumentUpdateManyWithWhereWithoutCompanyInput | ControlledDocumentUpdateManyWithWhereWithoutCompanyInput[]
+    deleteMany?: ControlledDocumentScalarWhereInput | ControlledDocumentScalarWhereInput[]
+  }
+
+  export type CircularUncheckedUpdateManyWithoutCompanyNestedInput = {
+    create?: XOR<CircularCreateWithoutCompanyInput, CircularUncheckedCreateWithoutCompanyInput> | CircularCreateWithoutCompanyInput[] | CircularUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: CircularCreateOrConnectWithoutCompanyInput | CircularCreateOrConnectWithoutCompanyInput[]
+    upsert?: CircularUpsertWithWhereUniqueWithoutCompanyInput | CircularUpsertWithWhereUniqueWithoutCompanyInput[]
+    createMany?: CircularCreateManyCompanyInputEnvelope
+    set?: CircularWhereUniqueInput | CircularWhereUniqueInput[]
+    disconnect?: CircularWhereUniqueInput | CircularWhereUniqueInput[]
+    delete?: CircularWhereUniqueInput | CircularWhereUniqueInput[]
+    connect?: CircularWhereUniqueInput | CircularWhereUniqueInput[]
+    update?: CircularUpdateWithWhereUniqueWithoutCompanyInput | CircularUpdateWithWhereUniqueWithoutCompanyInput[]
+    updateMany?: CircularUpdateManyWithWhereWithoutCompanyInput | CircularUpdateManyWithWhereWithoutCompanyInput[]
+    deleteMany?: CircularScalarWhereInput | CircularScalarWhereInput[]
+  }
+
+  export type RiskAssessmentUncheckedUpdateManyWithoutCompanyNestedInput = {
+    create?: XOR<RiskAssessmentCreateWithoutCompanyInput, RiskAssessmentUncheckedCreateWithoutCompanyInput> | RiskAssessmentCreateWithoutCompanyInput[] | RiskAssessmentUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: RiskAssessmentCreateOrConnectWithoutCompanyInput | RiskAssessmentCreateOrConnectWithoutCompanyInput[]
+    upsert?: RiskAssessmentUpsertWithWhereUniqueWithoutCompanyInput | RiskAssessmentUpsertWithWhereUniqueWithoutCompanyInput[]
+    createMany?: RiskAssessmentCreateManyCompanyInputEnvelope
+    set?: RiskAssessmentWhereUniqueInput | RiskAssessmentWhereUniqueInput[]
+    disconnect?: RiskAssessmentWhereUniqueInput | RiskAssessmentWhereUniqueInput[]
+    delete?: RiskAssessmentWhereUniqueInput | RiskAssessmentWhereUniqueInput[]
+    connect?: RiskAssessmentWhereUniqueInput | RiskAssessmentWhereUniqueInput[]
+    update?: RiskAssessmentUpdateWithWhereUniqueWithoutCompanyInput | RiskAssessmentUpdateWithWhereUniqueWithoutCompanyInput[]
+    updateMany?: RiskAssessmentUpdateManyWithWhereWithoutCompanyInput | RiskAssessmentUpdateManyWithWhereWithoutCompanyInput[]
+    deleteMany?: RiskAssessmentScalarWhereInput | RiskAssessmentScalarWhereInput[]
+  }
+
+  export type DefectUncheckedUpdateManyWithoutCompanyNestedInput = {
+    create?: XOR<DefectCreateWithoutCompanyInput, DefectUncheckedCreateWithoutCompanyInput> | DefectCreateWithoutCompanyInput[] | DefectUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: DefectCreateOrConnectWithoutCompanyInput | DefectCreateOrConnectWithoutCompanyInput[]
+    upsert?: DefectUpsertWithWhereUniqueWithoutCompanyInput | DefectUpsertWithWhereUniqueWithoutCompanyInput[]
+    createMany?: DefectCreateManyCompanyInputEnvelope
+    set?: DefectWhereUniqueInput | DefectWhereUniqueInput[]
+    disconnect?: DefectWhereUniqueInput | DefectWhereUniqueInput[]
+    delete?: DefectWhereUniqueInput | DefectWhereUniqueInput[]
+    connect?: DefectWhereUniqueInput | DefectWhereUniqueInput[]
+    update?: DefectUpdateWithWhereUniqueWithoutCompanyInput | DefectUpdateWithWhereUniqueWithoutCompanyInput[]
+    updateMany?: DefectUpdateManyWithWhereWithoutCompanyInput | DefectUpdateManyWithWhereWithoutCompanyInput[]
+    deleteMany?: DefectScalarWhereInput | DefectScalarWhereInput[]
   }
 
   export type CompanyCreateNestedOneWithoutUsersInput = {
@@ -56692,6 +68237,48 @@ export namespace Prisma {
     connect?: ExternalAuditWhereUniqueInput | ExternalAuditWhereUniqueInput[]
   }
 
+  export type SafetyMeetingCreateNestedManyWithoutVesselInput = {
+    create?: XOR<SafetyMeetingCreateWithoutVesselInput, SafetyMeetingUncheckedCreateWithoutVesselInput> | SafetyMeetingCreateWithoutVesselInput[] | SafetyMeetingUncheckedCreateWithoutVesselInput[]
+    connectOrCreate?: SafetyMeetingCreateOrConnectWithoutVesselInput | SafetyMeetingCreateOrConnectWithoutVesselInput[]
+    createMany?: SafetyMeetingCreateManyVesselInputEnvelope
+    connect?: SafetyMeetingWhereUniqueInput | SafetyMeetingWhereUniqueInput[]
+  }
+
+  export type EmergencyDrillCreateNestedManyWithoutVesselInput = {
+    create?: XOR<EmergencyDrillCreateWithoutVesselInput, EmergencyDrillUncheckedCreateWithoutVesselInput> | EmergencyDrillCreateWithoutVesselInput[] | EmergencyDrillUncheckedCreateWithoutVesselInput[]
+    connectOrCreate?: EmergencyDrillCreateOrConnectWithoutVesselInput | EmergencyDrillCreateOrConnectWithoutVesselInput[]
+    createMany?: EmergencyDrillCreateManyVesselInputEnvelope
+    connect?: EmergencyDrillWhereUniqueInput | EmergencyDrillWhereUniqueInput[]
+  }
+
+  export type ControlledDocumentCreateNestedManyWithoutVesselInput = {
+    create?: XOR<ControlledDocumentCreateWithoutVesselInput, ControlledDocumentUncheckedCreateWithoutVesselInput> | ControlledDocumentCreateWithoutVesselInput[] | ControlledDocumentUncheckedCreateWithoutVesselInput[]
+    connectOrCreate?: ControlledDocumentCreateOrConnectWithoutVesselInput | ControlledDocumentCreateOrConnectWithoutVesselInput[]
+    createMany?: ControlledDocumentCreateManyVesselInputEnvelope
+    connect?: ControlledDocumentWhereUniqueInput | ControlledDocumentWhereUniqueInput[]
+  }
+
+  export type CircularCreateNestedManyWithoutVesselInput = {
+    create?: XOR<CircularCreateWithoutVesselInput, CircularUncheckedCreateWithoutVesselInput> | CircularCreateWithoutVesselInput[] | CircularUncheckedCreateWithoutVesselInput[]
+    connectOrCreate?: CircularCreateOrConnectWithoutVesselInput | CircularCreateOrConnectWithoutVesselInput[]
+    createMany?: CircularCreateManyVesselInputEnvelope
+    connect?: CircularWhereUniqueInput | CircularWhereUniqueInput[]
+  }
+
+  export type RiskAssessmentCreateNestedManyWithoutVesselInput = {
+    create?: XOR<RiskAssessmentCreateWithoutVesselInput, RiskAssessmentUncheckedCreateWithoutVesselInput> | RiskAssessmentCreateWithoutVesselInput[] | RiskAssessmentUncheckedCreateWithoutVesselInput[]
+    connectOrCreate?: RiskAssessmentCreateOrConnectWithoutVesselInput | RiskAssessmentCreateOrConnectWithoutVesselInput[]
+    createMany?: RiskAssessmentCreateManyVesselInputEnvelope
+    connect?: RiskAssessmentWhereUniqueInput | RiskAssessmentWhereUniqueInput[]
+  }
+
+  export type DefectCreateNestedManyWithoutVesselInput = {
+    create?: XOR<DefectCreateWithoutVesselInput, DefectUncheckedCreateWithoutVesselInput> | DefectCreateWithoutVesselInput[] | DefectUncheckedCreateWithoutVesselInput[]
+    connectOrCreate?: DefectCreateOrConnectWithoutVesselInput | DefectCreateOrConnectWithoutVesselInput[]
+    createMany?: DefectCreateManyVesselInputEnvelope
+    connect?: DefectWhereUniqueInput | DefectWhereUniqueInput[]
+  }
+
   export type SmsDocumentUncheckedCreateNestedManyWithoutVesselInput = {
     create?: XOR<SmsDocumentCreateWithoutVesselInput, SmsDocumentUncheckedCreateWithoutVesselInput> | SmsDocumentCreateWithoutVesselInput[] | SmsDocumentUncheckedCreateWithoutVesselInput[]
     connectOrCreate?: SmsDocumentCreateOrConnectWithoutVesselInput | SmsDocumentCreateOrConnectWithoutVesselInput[]
@@ -56753,6 +68340,48 @@ export namespace Prisma {
     connectOrCreate?: ExternalAuditCreateOrConnectWithoutVesselInput | ExternalAuditCreateOrConnectWithoutVesselInput[]
     createMany?: ExternalAuditCreateManyVesselInputEnvelope
     connect?: ExternalAuditWhereUniqueInput | ExternalAuditWhereUniqueInput[]
+  }
+
+  export type SafetyMeetingUncheckedCreateNestedManyWithoutVesselInput = {
+    create?: XOR<SafetyMeetingCreateWithoutVesselInput, SafetyMeetingUncheckedCreateWithoutVesselInput> | SafetyMeetingCreateWithoutVesselInput[] | SafetyMeetingUncheckedCreateWithoutVesselInput[]
+    connectOrCreate?: SafetyMeetingCreateOrConnectWithoutVesselInput | SafetyMeetingCreateOrConnectWithoutVesselInput[]
+    createMany?: SafetyMeetingCreateManyVesselInputEnvelope
+    connect?: SafetyMeetingWhereUniqueInput | SafetyMeetingWhereUniqueInput[]
+  }
+
+  export type EmergencyDrillUncheckedCreateNestedManyWithoutVesselInput = {
+    create?: XOR<EmergencyDrillCreateWithoutVesselInput, EmergencyDrillUncheckedCreateWithoutVesselInput> | EmergencyDrillCreateWithoutVesselInput[] | EmergencyDrillUncheckedCreateWithoutVesselInput[]
+    connectOrCreate?: EmergencyDrillCreateOrConnectWithoutVesselInput | EmergencyDrillCreateOrConnectWithoutVesselInput[]
+    createMany?: EmergencyDrillCreateManyVesselInputEnvelope
+    connect?: EmergencyDrillWhereUniqueInput | EmergencyDrillWhereUniqueInput[]
+  }
+
+  export type ControlledDocumentUncheckedCreateNestedManyWithoutVesselInput = {
+    create?: XOR<ControlledDocumentCreateWithoutVesselInput, ControlledDocumentUncheckedCreateWithoutVesselInput> | ControlledDocumentCreateWithoutVesselInput[] | ControlledDocumentUncheckedCreateWithoutVesselInput[]
+    connectOrCreate?: ControlledDocumentCreateOrConnectWithoutVesselInput | ControlledDocumentCreateOrConnectWithoutVesselInput[]
+    createMany?: ControlledDocumentCreateManyVesselInputEnvelope
+    connect?: ControlledDocumentWhereUniqueInput | ControlledDocumentWhereUniqueInput[]
+  }
+
+  export type CircularUncheckedCreateNestedManyWithoutVesselInput = {
+    create?: XOR<CircularCreateWithoutVesselInput, CircularUncheckedCreateWithoutVesselInput> | CircularCreateWithoutVesselInput[] | CircularUncheckedCreateWithoutVesselInput[]
+    connectOrCreate?: CircularCreateOrConnectWithoutVesselInput | CircularCreateOrConnectWithoutVesselInput[]
+    createMany?: CircularCreateManyVesselInputEnvelope
+    connect?: CircularWhereUniqueInput | CircularWhereUniqueInput[]
+  }
+
+  export type RiskAssessmentUncheckedCreateNestedManyWithoutVesselInput = {
+    create?: XOR<RiskAssessmentCreateWithoutVesselInput, RiskAssessmentUncheckedCreateWithoutVesselInput> | RiskAssessmentCreateWithoutVesselInput[] | RiskAssessmentUncheckedCreateWithoutVesselInput[]
+    connectOrCreate?: RiskAssessmentCreateOrConnectWithoutVesselInput | RiskAssessmentCreateOrConnectWithoutVesselInput[]
+    createMany?: RiskAssessmentCreateManyVesselInputEnvelope
+    connect?: RiskAssessmentWhereUniqueInput | RiskAssessmentWhereUniqueInput[]
+  }
+
+  export type DefectUncheckedCreateNestedManyWithoutVesselInput = {
+    create?: XOR<DefectCreateWithoutVesselInput, DefectUncheckedCreateWithoutVesselInput> | DefectCreateWithoutVesselInput[] | DefectUncheckedCreateWithoutVesselInput[]
+    connectOrCreate?: DefectCreateOrConnectWithoutVesselInput | DefectCreateOrConnectWithoutVesselInput[]
+    createMany?: DefectCreateManyVesselInputEnvelope
+    connect?: DefectWhereUniqueInput | DefectWhereUniqueInput[]
   }
 
   export type NullableIntFieldUpdateOperationsInput = {
@@ -56909,6 +68538,90 @@ export namespace Prisma {
     deleteMany?: ExternalAuditScalarWhereInput | ExternalAuditScalarWhereInput[]
   }
 
+  export type SafetyMeetingUpdateManyWithoutVesselNestedInput = {
+    create?: XOR<SafetyMeetingCreateWithoutVesselInput, SafetyMeetingUncheckedCreateWithoutVesselInput> | SafetyMeetingCreateWithoutVesselInput[] | SafetyMeetingUncheckedCreateWithoutVesselInput[]
+    connectOrCreate?: SafetyMeetingCreateOrConnectWithoutVesselInput | SafetyMeetingCreateOrConnectWithoutVesselInput[]
+    upsert?: SafetyMeetingUpsertWithWhereUniqueWithoutVesselInput | SafetyMeetingUpsertWithWhereUniqueWithoutVesselInput[]
+    createMany?: SafetyMeetingCreateManyVesselInputEnvelope
+    set?: SafetyMeetingWhereUniqueInput | SafetyMeetingWhereUniqueInput[]
+    disconnect?: SafetyMeetingWhereUniqueInput | SafetyMeetingWhereUniqueInput[]
+    delete?: SafetyMeetingWhereUniqueInput | SafetyMeetingWhereUniqueInput[]
+    connect?: SafetyMeetingWhereUniqueInput | SafetyMeetingWhereUniqueInput[]
+    update?: SafetyMeetingUpdateWithWhereUniqueWithoutVesselInput | SafetyMeetingUpdateWithWhereUniqueWithoutVesselInput[]
+    updateMany?: SafetyMeetingUpdateManyWithWhereWithoutVesselInput | SafetyMeetingUpdateManyWithWhereWithoutVesselInput[]
+    deleteMany?: SafetyMeetingScalarWhereInput | SafetyMeetingScalarWhereInput[]
+  }
+
+  export type EmergencyDrillUpdateManyWithoutVesselNestedInput = {
+    create?: XOR<EmergencyDrillCreateWithoutVesselInput, EmergencyDrillUncheckedCreateWithoutVesselInput> | EmergencyDrillCreateWithoutVesselInput[] | EmergencyDrillUncheckedCreateWithoutVesselInput[]
+    connectOrCreate?: EmergencyDrillCreateOrConnectWithoutVesselInput | EmergencyDrillCreateOrConnectWithoutVesselInput[]
+    upsert?: EmergencyDrillUpsertWithWhereUniqueWithoutVesselInput | EmergencyDrillUpsertWithWhereUniqueWithoutVesselInput[]
+    createMany?: EmergencyDrillCreateManyVesselInputEnvelope
+    set?: EmergencyDrillWhereUniqueInput | EmergencyDrillWhereUniqueInput[]
+    disconnect?: EmergencyDrillWhereUniqueInput | EmergencyDrillWhereUniqueInput[]
+    delete?: EmergencyDrillWhereUniqueInput | EmergencyDrillWhereUniqueInput[]
+    connect?: EmergencyDrillWhereUniqueInput | EmergencyDrillWhereUniqueInput[]
+    update?: EmergencyDrillUpdateWithWhereUniqueWithoutVesselInput | EmergencyDrillUpdateWithWhereUniqueWithoutVesselInput[]
+    updateMany?: EmergencyDrillUpdateManyWithWhereWithoutVesselInput | EmergencyDrillUpdateManyWithWhereWithoutVesselInput[]
+    deleteMany?: EmergencyDrillScalarWhereInput | EmergencyDrillScalarWhereInput[]
+  }
+
+  export type ControlledDocumentUpdateManyWithoutVesselNestedInput = {
+    create?: XOR<ControlledDocumentCreateWithoutVesselInput, ControlledDocumentUncheckedCreateWithoutVesselInput> | ControlledDocumentCreateWithoutVesselInput[] | ControlledDocumentUncheckedCreateWithoutVesselInput[]
+    connectOrCreate?: ControlledDocumentCreateOrConnectWithoutVesselInput | ControlledDocumentCreateOrConnectWithoutVesselInput[]
+    upsert?: ControlledDocumentUpsertWithWhereUniqueWithoutVesselInput | ControlledDocumentUpsertWithWhereUniqueWithoutVesselInput[]
+    createMany?: ControlledDocumentCreateManyVesselInputEnvelope
+    set?: ControlledDocumentWhereUniqueInput | ControlledDocumentWhereUniqueInput[]
+    disconnect?: ControlledDocumentWhereUniqueInput | ControlledDocumentWhereUniqueInput[]
+    delete?: ControlledDocumentWhereUniqueInput | ControlledDocumentWhereUniqueInput[]
+    connect?: ControlledDocumentWhereUniqueInput | ControlledDocumentWhereUniqueInput[]
+    update?: ControlledDocumentUpdateWithWhereUniqueWithoutVesselInput | ControlledDocumentUpdateWithWhereUniqueWithoutVesselInput[]
+    updateMany?: ControlledDocumentUpdateManyWithWhereWithoutVesselInput | ControlledDocumentUpdateManyWithWhereWithoutVesselInput[]
+    deleteMany?: ControlledDocumentScalarWhereInput | ControlledDocumentScalarWhereInput[]
+  }
+
+  export type CircularUpdateManyWithoutVesselNestedInput = {
+    create?: XOR<CircularCreateWithoutVesselInput, CircularUncheckedCreateWithoutVesselInput> | CircularCreateWithoutVesselInput[] | CircularUncheckedCreateWithoutVesselInput[]
+    connectOrCreate?: CircularCreateOrConnectWithoutVesselInput | CircularCreateOrConnectWithoutVesselInput[]
+    upsert?: CircularUpsertWithWhereUniqueWithoutVesselInput | CircularUpsertWithWhereUniqueWithoutVesselInput[]
+    createMany?: CircularCreateManyVesselInputEnvelope
+    set?: CircularWhereUniqueInput | CircularWhereUniqueInput[]
+    disconnect?: CircularWhereUniqueInput | CircularWhereUniqueInput[]
+    delete?: CircularWhereUniqueInput | CircularWhereUniqueInput[]
+    connect?: CircularWhereUniqueInput | CircularWhereUniqueInput[]
+    update?: CircularUpdateWithWhereUniqueWithoutVesselInput | CircularUpdateWithWhereUniqueWithoutVesselInput[]
+    updateMany?: CircularUpdateManyWithWhereWithoutVesselInput | CircularUpdateManyWithWhereWithoutVesselInput[]
+    deleteMany?: CircularScalarWhereInput | CircularScalarWhereInput[]
+  }
+
+  export type RiskAssessmentUpdateManyWithoutVesselNestedInput = {
+    create?: XOR<RiskAssessmentCreateWithoutVesselInput, RiskAssessmentUncheckedCreateWithoutVesselInput> | RiskAssessmentCreateWithoutVesselInput[] | RiskAssessmentUncheckedCreateWithoutVesselInput[]
+    connectOrCreate?: RiskAssessmentCreateOrConnectWithoutVesselInput | RiskAssessmentCreateOrConnectWithoutVesselInput[]
+    upsert?: RiskAssessmentUpsertWithWhereUniqueWithoutVesselInput | RiskAssessmentUpsertWithWhereUniqueWithoutVesselInput[]
+    createMany?: RiskAssessmentCreateManyVesselInputEnvelope
+    set?: RiskAssessmentWhereUniqueInput | RiskAssessmentWhereUniqueInput[]
+    disconnect?: RiskAssessmentWhereUniqueInput | RiskAssessmentWhereUniqueInput[]
+    delete?: RiskAssessmentWhereUniqueInput | RiskAssessmentWhereUniqueInput[]
+    connect?: RiskAssessmentWhereUniqueInput | RiskAssessmentWhereUniqueInput[]
+    update?: RiskAssessmentUpdateWithWhereUniqueWithoutVesselInput | RiskAssessmentUpdateWithWhereUniqueWithoutVesselInput[]
+    updateMany?: RiskAssessmentUpdateManyWithWhereWithoutVesselInput | RiskAssessmentUpdateManyWithWhereWithoutVesselInput[]
+    deleteMany?: RiskAssessmentScalarWhereInput | RiskAssessmentScalarWhereInput[]
+  }
+
+  export type DefectUpdateManyWithoutVesselNestedInput = {
+    create?: XOR<DefectCreateWithoutVesselInput, DefectUncheckedCreateWithoutVesselInput> | DefectCreateWithoutVesselInput[] | DefectUncheckedCreateWithoutVesselInput[]
+    connectOrCreate?: DefectCreateOrConnectWithoutVesselInput | DefectCreateOrConnectWithoutVesselInput[]
+    upsert?: DefectUpsertWithWhereUniqueWithoutVesselInput | DefectUpsertWithWhereUniqueWithoutVesselInput[]
+    createMany?: DefectCreateManyVesselInputEnvelope
+    set?: DefectWhereUniqueInput | DefectWhereUniqueInput[]
+    disconnect?: DefectWhereUniqueInput | DefectWhereUniqueInput[]
+    delete?: DefectWhereUniqueInput | DefectWhereUniqueInput[]
+    connect?: DefectWhereUniqueInput | DefectWhereUniqueInput[]
+    update?: DefectUpdateWithWhereUniqueWithoutVesselInput | DefectUpdateWithWhereUniqueWithoutVesselInput[]
+    updateMany?: DefectUpdateManyWithWhereWithoutVesselInput | DefectUpdateManyWithWhereWithoutVesselInput[]
+    deleteMany?: DefectScalarWhereInput | DefectScalarWhereInput[]
+  }
+
   export type SmsDocumentUncheckedUpdateManyWithoutVesselNestedInput = {
     create?: XOR<SmsDocumentCreateWithoutVesselInput, SmsDocumentUncheckedCreateWithoutVesselInput> | SmsDocumentCreateWithoutVesselInput[] | SmsDocumentUncheckedCreateWithoutVesselInput[]
     connectOrCreate?: SmsDocumentCreateOrConnectWithoutVesselInput | SmsDocumentCreateOrConnectWithoutVesselInput[]
@@ -57033,6 +68746,90 @@ export namespace Prisma {
     update?: ExternalAuditUpdateWithWhereUniqueWithoutVesselInput | ExternalAuditUpdateWithWhereUniqueWithoutVesselInput[]
     updateMany?: ExternalAuditUpdateManyWithWhereWithoutVesselInput | ExternalAuditUpdateManyWithWhereWithoutVesselInput[]
     deleteMany?: ExternalAuditScalarWhereInput | ExternalAuditScalarWhereInput[]
+  }
+
+  export type SafetyMeetingUncheckedUpdateManyWithoutVesselNestedInput = {
+    create?: XOR<SafetyMeetingCreateWithoutVesselInput, SafetyMeetingUncheckedCreateWithoutVesselInput> | SafetyMeetingCreateWithoutVesselInput[] | SafetyMeetingUncheckedCreateWithoutVesselInput[]
+    connectOrCreate?: SafetyMeetingCreateOrConnectWithoutVesselInput | SafetyMeetingCreateOrConnectWithoutVesselInput[]
+    upsert?: SafetyMeetingUpsertWithWhereUniqueWithoutVesselInput | SafetyMeetingUpsertWithWhereUniqueWithoutVesselInput[]
+    createMany?: SafetyMeetingCreateManyVesselInputEnvelope
+    set?: SafetyMeetingWhereUniqueInput | SafetyMeetingWhereUniqueInput[]
+    disconnect?: SafetyMeetingWhereUniqueInput | SafetyMeetingWhereUniqueInput[]
+    delete?: SafetyMeetingWhereUniqueInput | SafetyMeetingWhereUniqueInput[]
+    connect?: SafetyMeetingWhereUniqueInput | SafetyMeetingWhereUniqueInput[]
+    update?: SafetyMeetingUpdateWithWhereUniqueWithoutVesselInput | SafetyMeetingUpdateWithWhereUniqueWithoutVesselInput[]
+    updateMany?: SafetyMeetingUpdateManyWithWhereWithoutVesselInput | SafetyMeetingUpdateManyWithWhereWithoutVesselInput[]
+    deleteMany?: SafetyMeetingScalarWhereInput | SafetyMeetingScalarWhereInput[]
+  }
+
+  export type EmergencyDrillUncheckedUpdateManyWithoutVesselNestedInput = {
+    create?: XOR<EmergencyDrillCreateWithoutVesselInput, EmergencyDrillUncheckedCreateWithoutVesselInput> | EmergencyDrillCreateWithoutVesselInput[] | EmergencyDrillUncheckedCreateWithoutVesselInput[]
+    connectOrCreate?: EmergencyDrillCreateOrConnectWithoutVesselInput | EmergencyDrillCreateOrConnectWithoutVesselInput[]
+    upsert?: EmergencyDrillUpsertWithWhereUniqueWithoutVesselInput | EmergencyDrillUpsertWithWhereUniqueWithoutVesselInput[]
+    createMany?: EmergencyDrillCreateManyVesselInputEnvelope
+    set?: EmergencyDrillWhereUniqueInput | EmergencyDrillWhereUniqueInput[]
+    disconnect?: EmergencyDrillWhereUniqueInput | EmergencyDrillWhereUniqueInput[]
+    delete?: EmergencyDrillWhereUniqueInput | EmergencyDrillWhereUniqueInput[]
+    connect?: EmergencyDrillWhereUniqueInput | EmergencyDrillWhereUniqueInput[]
+    update?: EmergencyDrillUpdateWithWhereUniqueWithoutVesselInput | EmergencyDrillUpdateWithWhereUniqueWithoutVesselInput[]
+    updateMany?: EmergencyDrillUpdateManyWithWhereWithoutVesselInput | EmergencyDrillUpdateManyWithWhereWithoutVesselInput[]
+    deleteMany?: EmergencyDrillScalarWhereInput | EmergencyDrillScalarWhereInput[]
+  }
+
+  export type ControlledDocumentUncheckedUpdateManyWithoutVesselNestedInput = {
+    create?: XOR<ControlledDocumentCreateWithoutVesselInput, ControlledDocumentUncheckedCreateWithoutVesselInput> | ControlledDocumentCreateWithoutVesselInput[] | ControlledDocumentUncheckedCreateWithoutVesselInput[]
+    connectOrCreate?: ControlledDocumentCreateOrConnectWithoutVesselInput | ControlledDocumentCreateOrConnectWithoutVesselInput[]
+    upsert?: ControlledDocumentUpsertWithWhereUniqueWithoutVesselInput | ControlledDocumentUpsertWithWhereUniqueWithoutVesselInput[]
+    createMany?: ControlledDocumentCreateManyVesselInputEnvelope
+    set?: ControlledDocumentWhereUniqueInput | ControlledDocumentWhereUniqueInput[]
+    disconnect?: ControlledDocumentWhereUniqueInput | ControlledDocumentWhereUniqueInput[]
+    delete?: ControlledDocumentWhereUniqueInput | ControlledDocumentWhereUniqueInput[]
+    connect?: ControlledDocumentWhereUniqueInput | ControlledDocumentWhereUniqueInput[]
+    update?: ControlledDocumentUpdateWithWhereUniqueWithoutVesselInput | ControlledDocumentUpdateWithWhereUniqueWithoutVesselInput[]
+    updateMany?: ControlledDocumentUpdateManyWithWhereWithoutVesselInput | ControlledDocumentUpdateManyWithWhereWithoutVesselInput[]
+    deleteMany?: ControlledDocumentScalarWhereInput | ControlledDocumentScalarWhereInput[]
+  }
+
+  export type CircularUncheckedUpdateManyWithoutVesselNestedInput = {
+    create?: XOR<CircularCreateWithoutVesselInput, CircularUncheckedCreateWithoutVesselInput> | CircularCreateWithoutVesselInput[] | CircularUncheckedCreateWithoutVesselInput[]
+    connectOrCreate?: CircularCreateOrConnectWithoutVesselInput | CircularCreateOrConnectWithoutVesselInput[]
+    upsert?: CircularUpsertWithWhereUniqueWithoutVesselInput | CircularUpsertWithWhereUniqueWithoutVesselInput[]
+    createMany?: CircularCreateManyVesselInputEnvelope
+    set?: CircularWhereUniqueInput | CircularWhereUniqueInput[]
+    disconnect?: CircularWhereUniqueInput | CircularWhereUniqueInput[]
+    delete?: CircularWhereUniqueInput | CircularWhereUniqueInput[]
+    connect?: CircularWhereUniqueInput | CircularWhereUniqueInput[]
+    update?: CircularUpdateWithWhereUniqueWithoutVesselInput | CircularUpdateWithWhereUniqueWithoutVesselInput[]
+    updateMany?: CircularUpdateManyWithWhereWithoutVesselInput | CircularUpdateManyWithWhereWithoutVesselInput[]
+    deleteMany?: CircularScalarWhereInput | CircularScalarWhereInput[]
+  }
+
+  export type RiskAssessmentUncheckedUpdateManyWithoutVesselNestedInput = {
+    create?: XOR<RiskAssessmentCreateWithoutVesselInput, RiskAssessmentUncheckedCreateWithoutVesselInput> | RiskAssessmentCreateWithoutVesselInput[] | RiskAssessmentUncheckedCreateWithoutVesselInput[]
+    connectOrCreate?: RiskAssessmentCreateOrConnectWithoutVesselInput | RiskAssessmentCreateOrConnectWithoutVesselInput[]
+    upsert?: RiskAssessmentUpsertWithWhereUniqueWithoutVesselInput | RiskAssessmentUpsertWithWhereUniqueWithoutVesselInput[]
+    createMany?: RiskAssessmentCreateManyVesselInputEnvelope
+    set?: RiskAssessmentWhereUniqueInput | RiskAssessmentWhereUniqueInput[]
+    disconnect?: RiskAssessmentWhereUniqueInput | RiskAssessmentWhereUniqueInput[]
+    delete?: RiskAssessmentWhereUniqueInput | RiskAssessmentWhereUniqueInput[]
+    connect?: RiskAssessmentWhereUniqueInput | RiskAssessmentWhereUniqueInput[]
+    update?: RiskAssessmentUpdateWithWhereUniqueWithoutVesselInput | RiskAssessmentUpdateWithWhereUniqueWithoutVesselInput[]
+    updateMany?: RiskAssessmentUpdateManyWithWhereWithoutVesselInput | RiskAssessmentUpdateManyWithWhereWithoutVesselInput[]
+    deleteMany?: RiskAssessmentScalarWhereInput | RiskAssessmentScalarWhereInput[]
+  }
+
+  export type DefectUncheckedUpdateManyWithoutVesselNestedInput = {
+    create?: XOR<DefectCreateWithoutVesselInput, DefectUncheckedCreateWithoutVesselInput> | DefectCreateWithoutVesselInput[] | DefectUncheckedCreateWithoutVesselInput[]
+    connectOrCreate?: DefectCreateOrConnectWithoutVesselInput | DefectCreateOrConnectWithoutVesselInput[]
+    upsert?: DefectUpsertWithWhereUniqueWithoutVesselInput | DefectUpsertWithWhereUniqueWithoutVesselInput[]
+    createMany?: DefectCreateManyVesselInputEnvelope
+    set?: DefectWhereUniqueInput | DefectWhereUniqueInput[]
+    disconnect?: DefectWhereUniqueInput | DefectWhereUniqueInput[]
+    delete?: DefectWhereUniqueInput | DefectWhereUniqueInput[]
+    connect?: DefectWhereUniqueInput | DefectWhereUniqueInput[]
+    update?: DefectUpdateWithWhereUniqueWithoutVesselInput | DefectUpdateWithWhereUniqueWithoutVesselInput[]
+    updateMany?: DefectUpdateManyWithWhereWithoutVesselInput | DefectUpdateManyWithWhereWithoutVesselInput[]
+    deleteMany?: DefectScalarWhereInput | DefectScalarWhereInput[]
   }
 
   export type EnumAuditActionFieldUpdateOperationsInput = {
@@ -58221,6 +70018,218 @@ export namespace Prisma {
     update?: XOR<XOR<ExternalAuditUpdateToOneWithWhereWithoutFindingsInput, ExternalAuditUpdateWithoutFindingsInput>, ExternalAuditUncheckedUpdateWithoutFindingsInput>
   }
 
+  export type CompanyCreateNestedOneWithoutSafetyMeetingsInput = {
+    create?: XOR<CompanyCreateWithoutSafetyMeetingsInput, CompanyUncheckedCreateWithoutSafetyMeetingsInput>
+    connectOrCreate?: CompanyCreateOrConnectWithoutSafetyMeetingsInput
+    connect?: CompanyWhereUniqueInput
+  }
+
+  export type VesselCreateNestedOneWithoutSafetyMeetingsInput = {
+    create?: XOR<VesselCreateWithoutSafetyMeetingsInput, VesselUncheckedCreateWithoutSafetyMeetingsInput>
+    connectOrCreate?: VesselCreateOrConnectWithoutSafetyMeetingsInput
+    connect?: VesselWhereUniqueInput
+  }
+
+  export type EnumMeetingTypeFieldUpdateOperationsInput = {
+    set?: $Enums.MeetingType
+  }
+
+  export type CompanyUpdateOneRequiredWithoutSafetyMeetingsNestedInput = {
+    create?: XOR<CompanyCreateWithoutSafetyMeetingsInput, CompanyUncheckedCreateWithoutSafetyMeetingsInput>
+    connectOrCreate?: CompanyCreateOrConnectWithoutSafetyMeetingsInput
+    upsert?: CompanyUpsertWithoutSafetyMeetingsInput
+    connect?: CompanyWhereUniqueInput
+    update?: XOR<XOR<CompanyUpdateToOneWithWhereWithoutSafetyMeetingsInput, CompanyUpdateWithoutSafetyMeetingsInput>, CompanyUncheckedUpdateWithoutSafetyMeetingsInput>
+  }
+
+  export type VesselUpdateOneWithoutSafetyMeetingsNestedInput = {
+    create?: XOR<VesselCreateWithoutSafetyMeetingsInput, VesselUncheckedCreateWithoutSafetyMeetingsInput>
+    connectOrCreate?: VesselCreateOrConnectWithoutSafetyMeetingsInput
+    upsert?: VesselUpsertWithoutSafetyMeetingsInput
+    disconnect?: VesselWhereInput | boolean
+    delete?: VesselWhereInput | boolean
+    connect?: VesselWhereUniqueInput
+    update?: XOR<XOR<VesselUpdateToOneWithWhereWithoutSafetyMeetingsInput, VesselUpdateWithoutSafetyMeetingsInput>, VesselUncheckedUpdateWithoutSafetyMeetingsInput>
+  }
+
+  export type CompanyCreateNestedOneWithoutEmergencyDrillsInput = {
+    create?: XOR<CompanyCreateWithoutEmergencyDrillsInput, CompanyUncheckedCreateWithoutEmergencyDrillsInput>
+    connectOrCreate?: CompanyCreateOrConnectWithoutEmergencyDrillsInput
+    connect?: CompanyWhereUniqueInput
+  }
+
+  export type VesselCreateNestedOneWithoutEmergencyDrillsInput = {
+    create?: XOR<VesselCreateWithoutEmergencyDrillsInput, VesselUncheckedCreateWithoutEmergencyDrillsInput>
+    connectOrCreate?: VesselCreateOrConnectWithoutEmergencyDrillsInput
+    connect?: VesselWhereUniqueInput
+  }
+
+  export type EnumDrillTypeFieldUpdateOperationsInput = {
+    set?: $Enums.DrillType
+  }
+
+  export type CompanyUpdateOneRequiredWithoutEmergencyDrillsNestedInput = {
+    create?: XOR<CompanyCreateWithoutEmergencyDrillsInput, CompanyUncheckedCreateWithoutEmergencyDrillsInput>
+    connectOrCreate?: CompanyCreateOrConnectWithoutEmergencyDrillsInput
+    upsert?: CompanyUpsertWithoutEmergencyDrillsInput
+    connect?: CompanyWhereUniqueInput
+    update?: XOR<XOR<CompanyUpdateToOneWithWhereWithoutEmergencyDrillsInput, CompanyUpdateWithoutEmergencyDrillsInput>, CompanyUncheckedUpdateWithoutEmergencyDrillsInput>
+  }
+
+  export type VesselUpdateOneRequiredWithoutEmergencyDrillsNestedInput = {
+    create?: XOR<VesselCreateWithoutEmergencyDrillsInput, VesselUncheckedCreateWithoutEmergencyDrillsInput>
+    connectOrCreate?: VesselCreateOrConnectWithoutEmergencyDrillsInput
+    upsert?: VesselUpsertWithoutEmergencyDrillsInput
+    connect?: VesselWhereUniqueInput
+    update?: XOR<XOR<VesselUpdateToOneWithWhereWithoutEmergencyDrillsInput, VesselUpdateWithoutEmergencyDrillsInput>, VesselUncheckedUpdateWithoutEmergencyDrillsInput>
+  }
+
+  export type CompanyCreateNestedOneWithoutControlledDocumentsInput = {
+    create?: XOR<CompanyCreateWithoutControlledDocumentsInput, CompanyUncheckedCreateWithoutControlledDocumentsInput>
+    connectOrCreate?: CompanyCreateOrConnectWithoutControlledDocumentsInput
+    connect?: CompanyWhereUniqueInput
+  }
+
+  export type VesselCreateNestedOneWithoutControlledDocumentsInput = {
+    create?: XOR<VesselCreateWithoutControlledDocumentsInput, VesselUncheckedCreateWithoutControlledDocumentsInput>
+    connectOrCreate?: VesselCreateOrConnectWithoutControlledDocumentsInput
+    connect?: VesselWhereUniqueInput
+  }
+
+  export type EnumDocumentCategoryFieldUpdateOperationsInput = {
+    set?: $Enums.DocumentCategory
+  }
+
+  export type EnumControlledDocStatusFieldUpdateOperationsInput = {
+    set?: $Enums.ControlledDocStatus
+  }
+
+  export type CompanyUpdateOneRequiredWithoutControlledDocumentsNestedInput = {
+    create?: XOR<CompanyCreateWithoutControlledDocumentsInput, CompanyUncheckedCreateWithoutControlledDocumentsInput>
+    connectOrCreate?: CompanyCreateOrConnectWithoutControlledDocumentsInput
+    upsert?: CompanyUpsertWithoutControlledDocumentsInput
+    connect?: CompanyWhereUniqueInput
+    update?: XOR<XOR<CompanyUpdateToOneWithWhereWithoutControlledDocumentsInput, CompanyUpdateWithoutControlledDocumentsInput>, CompanyUncheckedUpdateWithoutControlledDocumentsInput>
+  }
+
+  export type VesselUpdateOneWithoutControlledDocumentsNestedInput = {
+    create?: XOR<VesselCreateWithoutControlledDocumentsInput, VesselUncheckedCreateWithoutControlledDocumentsInput>
+    connectOrCreate?: VesselCreateOrConnectWithoutControlledDocumentsInput
+    upsert?: VesselUpsertWithoutControlledDocumentsInput
+    disconnect?: VesselWhereInput | boolean
+    delete?: VesselWhereInput | boolean
+    connect?: VesselWhereUniqueInput
+    update?: XOR<XOR<VesselUpdateToOneWithWhereWithoutControlledDocumentsInput, VesselUpdateWithoutControlledDocumentsInput>, VesselUncheckedUpdateWithoutControlledDocumentsInput>
+  }
+
+  export type CompanyCreateNestedOneWithoutCircularsInput = {
+    create?: XOR<CompanyCreateWithoutCircularsInput, CompanyUncheckedCreateWithoutCircularsInput>
+    connectOrCreate?: CompanyCreateOrConnectWithoutCircularsInput
+    connect?: CompanyWhereUniqueInput
+  }
+
+  export type VesselCreateNestedOneWithoutCircularsInput = {
+    create?: XOR<VesselCreateWithoutCircularsInput, VesselUncheckedCreateWithoutCircularsInput>
+    connectOrCreate?: VesselCreateOrConnectWithoutCircularsInput
+    connect?: VesselWhereUniqueInput
+  }
+
+  export type EnumCircularCategoryFieldUpdateOperationsInput = {
+    set?: $Enums.CircularCategory
+  }
+
+  export type CompanyUpdateOneRequiredWithoutCircularsNestedInput = {
+    create?: XOR<CompanyCreateWithoutCircularsInput, CompanyUncheckedCreateWithoutCircularsInput>
+    connectOrCreate?: CompanyCreateOrConnectWithoutCircularsInput
+    upsert?: CompanyUpsertWithoutCircularsInput
+    connect?: CompanyWhereUniqueInput
+    update?: XOR<XOR<CompanyUpdateToOneWithWhereWithoutCircularsInput, CompanyUpdateWithoutCircularsInput>, CompanyUncheckedUpdateWithoutCircularsInput>
+  }
+
+  export type VesselUpdateOneWithoutCircularsNestedInput = {
+    create?: XOR<VesselCreateWithoutCircularsInput, VesselUncheckedCreateWithoutCircularsInput>
+    connectOrCreate?: VesselCreateOrConnectWithoutCircularsInput
+    upsert?: VesselUpsertWithoutCircularsInput
+    disconnect?: VesselWhereInput | boolean
+    delete?: VesselWhereInput | boolean
+    connect?: VesselWhereUniqueInput
+    update?: XOR<XOR<VesselUpdateToOneWithWhereWithoutCircularsInput, VesselUpdateWithoutCircularsInput>, VesselUncheckedUpdateWithoutCircularsInput>
+  }
+
+  export type CompanyCreateNestedOneWithoutRiskAssessmentsInput = {
+    create?: XOR<CompanyCreateWithoutRiskAssessmentsInput, CompanyUncheckedCreateWithoutRiskAssessmentsInput>
+    connectOrCreate?: CompanyCreateOrConnectWithoutRiskAssessmentsInput
+    connect?: CompanyWhereUniqueInput
+  }
+
+  export type VesselCreateNestedOneWithoutRiskAssessmentsInput = {
+    create?: XOR<VesselCreateWithoutRiskAssessmentsInput, VesselUncheckedCreateWithoutRiskAssessmentsInput>
+    connectOrCreate?: VesselCreateOrConnectWithoutRiskAssessmentsInput
+    connect?: VesselWhereUniqueInput
+  }
+
+  export type EnumRiskRatingFieldUpdateOperationsInput = {
+    set?: $Enums.RiskRating
+  }
+
+  export type EnumRiskAssessmentStatusFieldUpdateOperationsInput = {
+    set?: $Enums.RiskAssessmentStatus
+  }
+
+  export type CompanyUpdateOneRequiredWithoutRiskAssessmentsNestedInput = {
+    create?: XOR<CompanyCreateWithoutRiskAssessmentsInput, CompanyUncheckedCreateWithoutRiskAssessmentsInput>
+    connectOrCreate?: CompanyCreateOrConnectWithoutRiskAssessmentsInput
+    upsert?: CompanyUpsertWithoutRiskAssessmentsInput
+    connect?: CompanyWhereUniqueInput
+    update?: XOR<XOR<CompanyUpdateToOneWithWhereWithoutRiskAssessmentsInput, CompanyUpdateWithoutRiskAssessmentsInput>, CompanyUncheckedUpdateWithoutRiskAssessmentsInput>
+  }
+
+  export type VesselUpdateOneWithoutRiskAssessmentsNestedInput = {
+    create?: XOR<VesselCreateWithoutRiskAssessmentsInput, VesselUncheckedCreateWithoutRiskAssessmentsInput>
+    connectOrCreate?: VesselCreateOrConnectWithoutRiskAssessmentsInput
+    upsert?: VesselUpsertWithoutRiskAssessmentsInput
+    disconnect?: VesselWhereInput | boolean
+    delete?: VesselWhereInput | boolean
+    connect?: VesselWhereUniqueInput
+    update?: XOR<XOR<VesselUpdateToOneWithWhereWithoutRiskAssessmentsInput, VesselUpdateWithoutRiskAssessmentsInput>, VesselUncheckedUpdateWithoutRiskAssessmentsInput>
+  }
+
+  export type CompanyCreateNestedOneWithoutDefectsInput = {
+    create?: XOR<CompanyCreateWithoutDefectsInput, CompanyUncheckedCreateWithoutDefectsInput>
+    connectOrCreate?: CompanyCreateOrConnectWithoutDefectsInput
+    connect?: CompanyWhereUniqueInput
+  }
+
+  export type VesselCreateNestedOneWithoutDefectsInput = {
+    create?: XOR<VesselCreateWithoutDefectsInput, VesselUncheckedCreateWithoutDefectsInput>
+    connectOrCreate?: VesselCreateOrConnectWithoutDefectsInput
+    connect?: VesselWhereUniqueInput
+  }
+
+  export type EnumDefectSeverityFieldUpdateOperationsInput = {
+    set?: $Enums.DefectSeverity
+  }
+
+  export type EnumDefectStatusFieldUpdateOperationsInput = {
+    set?: $Enums.DefectStatus
+  }
+
+  export type CompanyUpdateOneRequiredWithoutDefectsNestedInput = {
+    create?: XOR<CompanyCreateWithoutDefectsInput, CompanyUncheckedCreateWithoutDefectsInput>
+    connectOrCreate?: CompanyCreateOrConnectWithoutDefectsInput
+    upsert?: CompanyUpsertWithoutDefectsInput
+    connect?: CompanyWhereUniqueInput
+    update?: XOR<XOR<CompanyUpdateToOneWithWhereWithoutDefectsInput, CompanyUpdateWithoutDefectsInput>, CompanyUncheckedUpdateWithoutDefectsInput>
+  }
+
+  export type VesselUpdateOneRequiredWithoutDefectsNestedInput = {
+    create?: XOR<VesselCreateWithoutDefectsInput, VesselUncheckedCreateWithoutDefectsInput>
+    connectOrCreate?: VesselCreateOrConnectWithoutDefectsInput
+    upsert?: VesselUpsertWithoutDefectsInput
+    connect?: VesselWhereUniqueInput
+    update?: XOR<XOR<VesselUpdateToOneWithWhereWithoutDefectsInput, VesselUpdateWithoutDefectsInput>, VesselUncheckedUpdateWithoutDefectsInput>
+  }
+
   export type NestedStringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -58903,6 +70912,159 @@ export namespace Prisma {
     _max?: NestedEnumAuditFindingCategoryFilter<$PrismaModel>
   }
 
+  export type NestedEnumMeetingTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.MeetingType | EnumMeetingTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.MeetingType[] | ListEnumMeetingTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.MeetingType[] | ListEnumMeetingTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumMeetingTypeFilter<$PrismaModel> | $Enums.MeetingType
+  }
+
+  export type NestedEnumMeetingTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.MeetingType | EnumMeetingTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.MeetingType[] | ListEnumMeetingTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.MeetingType[] | ListEnumMeetingTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumMeetingTypeWithAggregatesFilter<$PrismaModel> | $Enums.MeetingType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumMeetingTypeFilter<$PrismaModel>
+    _max?: NestedEnumMeetingTypeFilter<$PrismaModel>
+  }
+
+  export type NestedEnumDrillTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.DrillType | EnumDrillTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.DrillType[] | ListEnumDrillTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.DrillType[] | ListEnumDrillTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumDrillTypeFilter<$PrismaModel> | $Enums.DrillType
+  }
+
+  export type NestedEnumDrillTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.DrillType | EnumDrillTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.DrillType[] | ListEnumDrillTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.DrillType[] | ListEnumDrillTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumDrillTypeWithAggregatesFilter<$PrismaModel> | $Enums.DrillType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumDrillTypeFilter<$PrismaModel>
+    _max?: NestedEnumDrillTypeFilter<$PrismaModel>
+  }
+
+  export type NestedEnumDocumentCategoryFilter<$PrismaModel = never> = {
+    equals?: $Enums.DocumentCategory | EnumDocumentCategoryFieldRefInput<$PrismaModel>
+    in?: $Enums.DocumentCategory[] | ListEnumDocumentCategoryFieldRefInput<$PrismaModel>
+    notIn?: $Enums.DocumentCategory[] | ListEnumDocumentCategoryFieldRefInput<$PrismaModel>
+    not?: NestedEnumDocumentCategoryFilter<$PrismaModel> | $Enums.DocumentCategory
+  }
+
+  export type NestedEnumControlledDocStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.ControlledDocStatus | EnumControlledDocStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.ControlledDocStatus[] | ListEnumControlledDocStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ControlledDocStatus[] | ListEnumControlledDocStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumControlledDocStatusFilter<$PrismaModel> | $Enums.ControlledDocStatus
+  }
+
+  export type NestedEnumDocumentCategoryWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.DocumentCategory | EnumDocumentCategoryFieldRefInput<$PrismaModel>
+    in?: $Enums.DocumentCategory[] | ListEnumDocumentCategoryFieldRefInput<$PrismaModel>
+    notIn?: $Enums.DocumentCategory[] | ListEnumDocumentCategoryFieldRefInput<$PrismaModel>
+    not?: NestedEnumDocumentCategoryWithAggregatesFilter<$PrismaModel> | $Enums.DocumentCategory
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumDocumentCategoryFilter<$PrismaModel>
+    _max?: NestedEnumDocumentCategoryFilter<$PrismaModel>
+  }
+
+  export type NestedEnumControlledDocStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ControlledDocStatus | EnumControlledDocStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.ControlledDocStatus[] | ListEnumControlledDocStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ControlledDocStatus[] | ListEnumControlledDocStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumControlledDocStatusWithAggregatesFilter<$PrismaModel> | $Enums.ControlledDocStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumControlledDocStatusFilter<$PrismaModel>
+    _max?: NestedEnumControlledDocStatusFilter<$PrismaModel>
+  }
+
+  export type NestedEnumCircularCategoryFilter<$PrismaModel = never> = {
+    equals?: $Enums.CircularCategory | EnumCircularCategoryFieldRefInput<$PrismaModel>
+    in?: $Enums.CircularCategory[] | ListEnumCircularCategoryFieldRefInput<$PrismaModel>
+    notIn?: $Enums.CircularCategory[] | ListEnumCircularCategoryFieldRefInput<$PrismaModel>
+    not?: NestedEnumCircularCategoryFilter<$PrismaModel> | $Enums.CircularCategory
+  }
+
+  export type NestedEnumCircularCategoryWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.CircularCategory | EnumCircularCategoryFieldRefInput<$PrismaModel>
+    in?: $Enums.CircularCategory[] | ListEnumCircularCategoryFieldRefInput<$PrismaModel>
+    notIn?: $Enums.CircularCategory[] | ListEnumCircularCategoryFieldRefInput<$PrismaModel>
+    not?: NestedEnumCircularCategoryWithAggregatesFilter<$PrismaModel> | $Enums.CircularCategory
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumCircularCategoryFilter<$PrismaModel>
+    _max?: NestedEnumCircularCategoryFilter<$PrismaModel>
+  }
+
+  export type NestedEnumRiskRatingFilter<$PrismaModel = never> = {
+    equals?: $Enums.RiskRating | EnumRiskRatingFieldRefInput<$PrismaModel>
+    in?: $Enums.RiskRating[] | ListEnumRiskRatingFieldRefInput<$PrismaModel>
+    notIn?: $Enums.RiskRating[] | ListEnumRiskRatingFieldRefInput<$PrismaModel>
+    not?: NestedEnumRiskRatingFilter<$PrismaModel> | $Enums.RiskRating
+  }
+
+  export type NestedEnumRiskAssessmentStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.RiskAssessmentStatus | EnumRiskAssessmentStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.RiskAssessmentStatus[] | ListEnumRiskAssessmentStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.RiskAssessmentStatus[] | ListEnumRiskAssessmentStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumRiskAssessmentStatusFilter<$PrismaModel> | $Enums.RiskAssessmentStatus
+  }
+
+  export type NestedEnumRiskRatingWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.RiskRating | EnumRiskRatingFieldRefInput<$PrismaModel>
+    in?: $Enums.RiskRating[] | ListEnumRiskRatingFieldRefInput<$PrismaModel>
+    notIn?: $Enums.RiskRating[] | ListEnumRiskRatingFieldRefInput<$PrismaModel>
+    not?: NestedEnumRiskRatingWithAggregatesFilter<$PrismaModel> | $Enums.RiskRating
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumRiskRatingFilter<$PrismaModel>
+    _max?: NestedEnumRiskRatingFilter<$PrismaModel>
+  }
+
+  export type NestedEnumRiskAssessmentStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.RiskAssessmentStatus | EnumRiskAssessmentStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.RiskAssessmentStatus[] | ListEnumRiskAssessmentStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.RiskAssessmentStatus[] | ListEnumRiskAssessmentStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumRiskAssessmentStatusWithAggregatesFilter<$PrismaModel> | $Enums.RiskAssessmentStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumRiskAssessmentStatusFilter<$PrismaModel>
+    _max?: NestedEnumRiskAssessmentStatusFilter<$PrismaModel>
+  }
+
+  export type NestedEnumDefectSeverityFilter<$PrismaModel = never> = {
+    equals?: $Enums.DefectSeverity | EnumDefectSeverityFieldRefInput<$PrismaModel>
+    in?: $Enums.DefectSeverity[] | ListEnumDefectSeverityFieldRefInput<$PrismaModel>
+    notIn?: $Enums.DefectSeverity[] | ListEnumDefectSeverityFieldRefInput<$PrismaModel>
+    not?: NestedEnumDefectSeverityFilter<$PrismaModel> | $Enums.DefectSeverity
+  }
+
+  export type NestedEnumDefectStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.DefectStatus | EnumDefectStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.DefectStatus[] | ListEnumDefectStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.DefectStatus[] | ListEnumDefectStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumDefectStatusFilter<$PrismaModel> | $Enums.DefectStatus
+  }
+
+  export type NestedEnumDefectSeverityWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.DefectSeverity | EnumDefectSeverityFieldRefInput<$PrismaModel>
+    in?: $Enums.DefectSeverity[] | ListEnumDefectSeverityFieldRefInput<$PrismaModel>
+    notIn?: $Enums.DefectSeverity[] | ListEnumDefectSeverityFieldRefInput<$PrismaModel>
+    not?: NestedEnumDefectSeverityWithAggregatesFilter<$PrismaModel> | $Enums.DefectSeverity
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumDefectSeverityFilter<$PrismaModel>
+    _max?: NestedEnumDefectSeverityFilter<$PrismaModel>
+  }
+
+  export type NestedEnumDefectStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.DefectStatus | EnumDefectStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.DefectStatus[] | ListEnumDefectStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.DefectStatus[] | ListEnumDefectStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumDefectStatusWithAggregatesFilter<$PrismaModel> | $Enums.DefectStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumDefectStatusFilter<$PrismaModel>
+    _max?: NestedEnumDefectStatusFilter<$PrismaModel>
+  }
+
   export type UserCreateWithoutCompanyInput = {
     id?: string
     fullName: string
@@ -58994,6 +71156,7 @@ export namespace Prisma {
   export type VesselCreateWithoutCompanyInput = {
     id?: string
     name: string
+    code?: string | null
     imo: string
     officialNumber?: string | null
     callSign?: string | null
@@ -59022,11 +71185,18 @@ export namespace Prisma {
     cdiInspections?: CdiInspectionCreateNestedManyWithoutVesselInput
     internalAudits?: InternalAuditCreateNestedManyWithoutVesselInput
     externalAudits?: ExternalAuditCreateNestedManyWithoutVesselInput
+    safetyMeetings?: SafetyMeetingCreateNestedManyWithoutVesselInput
+    emergencyDrills?: EmergencyDrillCreateNestedManyWithoutVesselInput
+    controlledDocuments?: ControlledDocumentCreateNestedManyWithoutVesselInput
+    circulars?: CircularCreateNestedManyWithoutVesselInput
+    riskAssessments?: RiskAssessmentCreateNestedManyWithoutVesselInput
+    defects?: DefectCreateNestedManyWithoutVesselInput
   }
 
   export type VesselUncheckedCreateWithoutCompanyInput = {
     id?: string
     name: string
+    code?: string | null
     imo: string
     officialNumber?: string | null
     callSign?: string | null
@@ -59055,6 +71225,12 @@ export namespace Prisma {
     cdiInspections?: CdiInspectionUncheckedCreateNestedManyWithoutVesselInput
     internalAudits?: InternalAuditUncheckedCreateNestedManyWithoutVesselInput
     externalAudits?: ExternalAuditUncheckedCreateNestedManyWithoutVesselInput
+    safetyMeetings?: SafetyMeetingUncheckedCreateNestedManyWithoutVesselInput
+    emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutVesselInput
+    controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutVesselInput
+    circulars?: CircularUncheckedCreateNestedManyWithoutVesselInput
+    riskAssessments?: RiskAssessmentUncheckedCreateNestedManyWithoutVesselInput
+    defects?: DefectUncheckedCreateNestedManyWithoutVesselInput
   }
 
   export type VesselCreateOrConnectWithoutCompanyInput = {
@@ -59310,9 +71486,8 @@ export namespace Prisma {
     severity: $Enums.Severity
     raisedAt: Date | string
     targetDate?: Date | string | null
-    rootCause?: string | null
-    correctiveAction?: string | null
-    verification?: string | null
+    rootCauseCategory?: $Enums.RootCauseCategory | null
+    rootCauseSubCategory?: string | null
     personInCharge?: string | null
     status?: $Enums.NcrStatus
     closedAt?: Date | string | null
@@ -59338,9 +71513,8 @@ export namespace Prisma {
     severity: $Enums.Severity
     raisedAt: Date | string
     targetDate?: Date | string | null
-    rootCause?: string | null
-    correctiveAction?: string | null
-    verification?: string | null
+    rootCauseCategory?: $Enums.RootCauseCategory | null
+    rootCauseSubCategory?: string | null
     personInCharge?: string | null
     status?: $Enums.NcrStatus
     closedAt?: Date | string | null
@@ -59621,6 +71795,306 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type SafetyMeetingCreateWithoutCompanyInput = {
+    id?: string
+    refNo: string
+    meetingType: $Enums.MeetingType
+    meetingDate: Date | string
+    chairedBy?: string | null
+    attendees?: string | null
+    agenda?: string | null
+    minutes?: string | null
+    status?: $Enums.FindingStatus
+    closedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    vessel?: VesselCreateNestedOneWithoutSafetyMeetingsInput
+  }
+
+  export type SafetyMeetingUncheckedCreateWithoutCompanyInput = {
+    id?: string
+    refNo: string
+    vesselId?: string | null
+    meetingType: $Enums.MeetingType
+    meetingDate: Date | string
+    chairedBy?: string | null
+    attendees?: string | null
+    agenda?: string | null
+    minutes?: string | null
+    status?: $Enums.FindingStatus
+    closedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+  }
+
+  export type SafetyMeetingCreateOrConnectWithoutCompanyInput = {
+    where: SafetyMeetingWhereUniqueInput
+    create: XOR<SafetyMeetingCreateWithoutCompanyInput, SafetyMeetingUncheckedCreateWithoutCompanyInput>
+  }
+
+  export type SafetyMeetingCreateManyCompanyInputEnvelope = {
+    data: SafetyMeetingCreateManyCompanyInput | SafetyMeetingCreateManyCompanyInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type EmergencyDrillCreateWithoutCompanyInput = {
+    id?: string
+    refNo: string
+    drillType: $Enums.DrillType
+    drillDate: Date | string
+    scenario?: string | null
+    participants?: string | null
+    conductedBy?: string | null
+    observations?: string | null
+    status?: $Enums.FindingStatus
+    closedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    vessel: VesselCreateNestedOneWithoutEmergencyDrillsInput
+  }
+
+  export type EmergencyDrillUncheckedCreateWithoutCompanyInput = {
+    id?: string
+    refNo: string
+    vesselId: string
+    drillType: $Enums.DrillType
+    drillDate: Date | string
+    scenario?: string | null
+    participants?: string | null
+    conductedBy?: string | null
+    observations?: string | null
+    status?: $Enums.FindingStatus
+    closedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+  }
+
+  export type EmergencyDrillCreateOrConnectWithoutCompanyInput = {
+    where: EmergencyDrillWhereUniqueInput
+    create: XOR<EmergencyDrillCreateWithoutCompanyInput, EmergencyDrillUncheckedCreateWithoutCompanyInput>
+  }
+
+  export type EmergencyDrillCreateManyCompanyInputEnvelope = {
+    data: EmergencyDrillCreateManyCompanyInput | EmergencyDrillCreateManyCompanyInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ControlledDocumentCreateWithoutCompanyInput = {
+    id?: string
+    docNumber: string
+    title: string
+    category: $Enums.DocumentCategory
+    version?: string | null
+    issueDate: Date | string
+    reviewDate?: Date | string | null
+    owner?: string | null
+    description?: string | null
+    status?: $Enums.ControlledDocStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    vessel?: VesselCreateNestedOneWithoutControlledDocumentsInput
+  }
+
+  export type ControlledDocumentUncheckedCreateWithoutCompanyInput = {
+    id?: string
+    docNumber: string
+    vesselId?: string | null
+    title: string
+    category: $Enums.DocumentCategory
+    version?: string | null
+    issueDate: Date | string
+    reviewDate?: Date | string | null
+    owner?: string | null
+    description?: string | null
+    status?: $Enums.ControlledDocStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+  }
+
+  export type ControlledDocumentCreateOrConnectWithoutCompanyInput = {
+    where: ControlledDocumentWhereUniqueInput
+    create: XOR<ControlledDocumentCreateWithoutCompanyInput, ControlledDocumentUncheckedCreateWithoutCompanyInput>
+  }
+
+  export type ControlledDocumentCreateManyCompanyInputEnvelope = {
+    data: ControlledDocumentCreateManyCompanyInput | ControlledDocumentCreateManyCompanyInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type CircularCreateWithoutCompanyInput = {
+    id?: string
+    refNo: string
+    title: string
+    category: $Enums.CircularCategory
+    issueDate: Date | string
+    body: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    vessel?: VesselCreateNestedOneWithoutCircularsInput
+  }
+
+  export type CircularUncheckedCreateWithoutCompanyInput = {
+    id?: string
+    refNo: string
+    vesselId?: string | null
+    title: string
+    category: $Enums.CircularCategory
+    issueDate: Date | string
+    body: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+  }
+
+  export type CircularCreateOrConnectWithoutCompanyInput = {
+    where: CircularWhereUniqueInput
+    create: XOR<CircularCreateWithoutCompanyInput, CircularUncheckedCreateWithoutCompanyInput>
+  }
+
+  export type CircularCreateManyCompanyInputEnvelope = {
+    data: CircularCreateManyCompanyInput | CircularCreateManyCompanyInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type RiskAssessmentCreateWithoutCompanyInput = {
+    id?: string
+    refNo: string
+    activity: string
+    hazards: string
+    existingControls?: string | null
+    likelihood: $Enums.RiskRating
+    severity: $Enums.RiskRating
+    additionalControls?: string | null
+    assessedBy?: string | null
+    assessmentDate: Date | string
+    reviewDate?: Date | string | null
+    status?: $Enums.RiskAssessmentStatus
+    closedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    vessel?: VesselCreateNestedOneWithoutRiskAssessmentsInput
+  }
+
+  export type RiskAssessmentUncheckedCreateWithoutCompanyInput = {
+    id?: string
+    refNo: string
+    vesselId?: string | null
+    activity: string
+    hazards: string
+    existingControls?: string | null
+    likelihood: $Enums.RiskRating
+    severity: $Enums.RiskRating
+    additionalControls?: string | null
+    assessedBy?: string | null
+    assessmentDate: Date | string
+    reviewDate?: Date | string | null
+    status?: $Enums.RiskAssessmentStatus
+    closedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+  }
+
+  export type RiskAssessmentCreateOrConnectWithoutCompanyInput = {
+    where: RiskAssessmentWhereUniqueInput
+    create: XOR<RiskAssessmentCreateWithoutCompanyInput, RiskAssessmentUncheckedCreateWithoutCompanyInput>
+  }
+
+  export type RiskAssessmentCreateManyCompanyInputEnvelope = {
+    data: RiskAssessmentCreateManyCompanyInput | RiskAssessmentCreateManyCompanyInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type DefectCreateWithoutCompanyInput = {
+    id?: string
+    refNo: string
+    equipment: string
+    description: string
+    severity: $Enums.DefectSeverity
+    dateRaised: Date | string
+    targetRectificationDate?: Date | string | null
+    actionTaken?: string | null
+    raisedBy?: string | null
+    status?: $Enums.DefectStatus
+    rectifiedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    vessel: VesselCreateNestedOneWithoutDefectsInput
+  }
+
+  export type DefectUncheckedCreateWithoutCompanyInput = {
+    id?: string
+    refNo: string
+    vesselId: string
+    equipment: string
+    description: string
+    severity: $Enums.DefectSeverity
+    dateRaised: Date | string
+    targetRectificationDate?: Date | string | null
+    actionTaken?: string | null
+    raisedBy?: string | null
+    status?: $Enums.DefectStatus
+    rectifiedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+  }
+
+  export type DefectCreateOrConnectWithoutCompanyInput = {
+    where: DefectWhereUniqueInput
+    create: XOR<DefectCreateWithoutCompanyInput, DefectUncheckedCreateWithoutCompanyInput>
+  }
+
+  export type DefectCreateManyCompanyInputEnvelope = {
+    data: DefectCreateManyCompanyInput | DefectCreateManyCompanyInput[]
+    skipDuplicates?: boolean
+  }
+
   export type UserUpsertWithWhereUniqueWithoutCompanyInput = {
     where: UserWhereUniqueInput
     update: XOR<UserUpdateWithoutCompanyInput, UserUncheckedUpdateWithoutCompanyInput>
@@ -59710,6 +72184,7 @@ export namespace Prisma {
     id?: StringFilter<"Vessel"> | string
     companyId?: StringFilter<"Vessel"> | string
     name?: StringFilter<"Vessel"> | string
+    code?: StringNullableFilter<"Vessel"> | string | null
     imo?: StringFilter<"Vessel"> | string
     officialNumber?: StringNullableFilter<"Vessel"> | string | null
     callSign?: StringNullableFilter<"Vessel"> | string | null
@@ -59934,9 +72409,8 @@ export namespace Prisma {
     severity?: EnumSeverityFilter<"NonConformity"> | $Enums.Severity
     raisedAt?: DateTimeFilter<"NonConformity"> | Date | string
     targetDate?: DateTimeNullableFilter<"NonConformity"> | Date | string | null
-    rootCause?: StringNullableFilter<"NonConformity"> | string | null
-    correctiveAction?: StringNullableFilter<"NonConformity"> | string | null
-    verification?: StringNullableFilter<"NonConformity"> | string | null
+    rootCauseCategory?: EnumRootCauseCategoryNullableFilter<"NonConformity"> | $Enums.RootCauseCategory | null
+    rootCauseSubCategory?: StringNullableFilter<"NonConformity"> | string | null
     personInCharge?: StringNullableFilter<"NonConformity"> | string | null
     status?: EnumNcrStatusFilter<"NonConformity"> | $Enums.NcrStatus
     closedAt?: DateTimeNullableFilter<"NonConformity"> | Date | string | null
@@ -60148,6 +72622,246 @@ export namespace Prisma {
     deletedBy?: StringNullableFilter<"ExternalAudit"> | string | null
   }
 
+  export type SafetyMeetingUpsertWithWhereUniqueWithoutCompanyInput = {
+    where: SafetyMeetingWhereUniqueInput
+    update: XOR<SafetyMeetingUpdateWithoutCompanyInput, SafetyMeetingUncheckedUpdateWithoutCompanyInput>
+    create: XOR<SafetyMeetingCreateWithoutCompanyInput, SafetyMeetingUncheckedCreateWithoutCompanyInput>
+  }
+
+  export type SafetyMeetingUpdateWithWhereUniqueWithoutCompanyInput = {
+    where: SafetyMeetingWhereUniqueInput
+    data: XOR<SafetyMeetingUpdateWithoutCompanyInput, SafetyMeetingUncheckedUpdateWithoutCompanyInput>
+  }
+
+  export type SafetyMeetingUpdateManyWithWhereWithoutCompanyInput = {
+    where: SafetyMeetingScalarWhereInput
+    data: XOR<SafetyMeetingUpdateManyMutationInput, SafetyMeetingUncheckedUpdateManyWithoutCompanyInput>
+  }
+
+  export type SafetyMeetingScalarWhereInput = {
+    AND?: SafetyMeetingScalarWhereInput | SafetyMeetingScalarWhereInput[]
+    OR?: SafetyMeetingScalarWhereInput[]
+    NOT?: SafetyMeetingScalarWhereInput | SafetyMeetingScalarWhereInput[]
+    id?: StringFilter<"SafetyMeeting"> | string
+    companyId?: StringFilter<"SafetyMeeting"> | string
+    refNo?: StringFilter<"SafetyMeeting"> | string
+    vesselId?: StringNullableFilter<"SafetyMeeting"> | string | null
+    meetingType?: EnumMeetingTypeFilter<"SafetyMeeting"> | $Enums.MeetingType
+    meetingDate?: DateTimeFilter<"SafetyMeeting"> | Date | string
+    chairedBy?: StringNullableFilter<"SafetyMeeting"> | string | null
+    attendees?: StringNullableFilter<"SafetyMeeting"> | string | null
+    agenda?: StringNullableFilter<"SafetyMeeting"> | string | null
+    minutes?: StringNullableFilter<"SafetyMeeting"> | string | null
+    status?: EnumFindingStatusFilter<"SafetyMeeting"> | $Enums.FindingStatus
+    closedAt?: DateTimeNullableFilter<"SafetyMeeting"> | Date | string | null
+    createdAt?: DateTimeFilter<"SafetyMeeting"> | Date | string
+    updatedAt?: DateTimeFilter<"SafetyMeeting"> | Date | string
+    createdBy?: StringNullableFilter<"SafetyMeeting"> | string | null
+    updatedBy?: StringNullableFilter<"SafetyMeeting"> | string | null
+    deletedAt?: DateTimeNullableFilter<"SafetyMeeting"> | Date | string | null
+    deletedBy?: StringNullableFilter<"SafetyMeeting"> | string | null
+  }
+
+  export type EmergencyDrillUpsertWithWhereUniqueWithoutCompanyInput = {
+    where: EmergencyDrillWhereUniqueInput
+    update: XOR<EmergencyDrillUpdateWithoutCompanyInput, EmergencyDrillUncheckedUpdateWithoutCompanyInput>
+    create: XOR<EmergencyDrillCreateWithoutCompanyInput, EmergencyDrillUncheckedCreateWithoutCompanyInput>
+  }
+
+  export type EmergencyDrillUpdateWithWhereUniqueWithoutCompanyInput = {
+    where: EmergencyDrillWhereUniqueInput
+    data: XOR<EmergencyDrillUpdateWithoutCompanyInput, EmergencyDrillUncheckedUpdateWithoutCompanyInput>
+  }
+
+  export type EmergencyDrillUpdateManyWithWhereWithoutCompanyInput = {
+    where: EmergencyDrillScalarWhereInput
+    data: XOR<EmergencyDrillUpdateManyMutationInput, EmergencyDrillUncheckedUpdateManyWithoutCompanyInput>
+  }
+
+  export type EmergencyDrillScalarWhereInput = {
+    AND?: EmergencyDrillScalarWhereInput | EmergencyDrillScalarWhereInput[]
+    OR?: EmergencyDrillScalarWhereInput[]
+    NOT?: EmergencyDrillScalarWhereInput | EmergencyDrillScalarWhereInput[]
+    id?: StringFilter<"EmergencyDrill"> | string
+    companyId?: StringFilter<"EmergencyDrill"> | string
+    refNo?: StringFilter<"EmergencyDrill"> | string
+    vesselId?: StringFilter<"EmergencyDrill"> | string
+    drillType?: EnumDrillTypeFilter<"EmergencyDrill"> | $Enums.DrillType
+    drillDate?: DateTimeFilter<"EmergencyDrill"> | Date | string
+    scenario?: StringNullableFilter<"EmergencyDrill"> | string | null
+    participants?: StringNullableFilter<"EmergencyDrill"> | string | null
+    conductedBy?: StringNullableFilter<"EmergencyDrill"> | string | null
+    observations?: StringNullableFilter<"EmergencyDrill"> | string | null
+    status?: EnumFindingStatusFilter<"EmergencyDrill"> | $Enums.FindingStatus
+    closedAt?: DateTimeNullableFilter<"EmergencyDrill"> | Date | string | null
+    createdAt?: DateTimeFilter<"EmergencyDrill"> | Date | string
+    updatedAt?: DateTimeFilter<"EmergencyDrill"> | Date | string
+    createdBy?: StringNullableFilter<"EmergencyDrill"> | string | null
+    updatedBy?: StringNullableFilter<"EmergencyDrill"> | string | null
+    deletedAt?: DateTimeNullableFilter<"EmergencyDrill"> | Date | string | null
+    deletedBy?: StringNullableFilter<"EmergencyDrill"> | string | null
+  }
+
+  export type ControlledDocumentUpsertWithWhereUniqueWithoutCompanyInput = {
+    where: ControlledDocumentWhereUniqueInput
+    update: XOR<ControlledDocumentUpdateWithoutCompanyInput, ControlledDocumentUncheckedUpdateWithoutCompanyInput>
+    create: XOR<ControlledDocumentCreateWithoutCompanyInput, ControlledDocumentUncheckedCreateWithoutCompanyInput>
+  }
+
+  export type ControlledDocumentUpdateWithWhereUniqueWithoutCompanyInput = {
+    where: ControlledDocumentWhereUniqueInput
+    data: XOR<ControlledDocumentUpdateWithoutCompanyInput, ControlledDocumentUncheckedUpdateWithoutCompanyInput>
+  }
+
+  export type ControlledDocumentUpdateManyWithWhereWithoutCompanyInput = {
+    where: ControlledDocumentScalarWhereInput
+    data: XOR<ControlledDocumentUpdateManyMutationInput, ControlledDocumentUncheckedUpdateManyWithoutCompanyInput>
+  }
+
+  export type ControlledDocumentScalarWhereInput = {
+    AND?: ControlledDocumentScalarWhereInput | ControlledDocumentScalarWhereInput[]
+    OR?: ControlledDocumentScalarWhereInput[]
+    NOT?: ControlledDocumentScalarWhereInput | ControlledDocumentScalarWhereInput[]
+    id?: StringFilter<"ControlledDocument"> | string
+    companyId?: StringFilter<"ControlledDocument"> | string
+    docNumber?: StringFilter<"ControlledDocument"> | string
+    vesselId?: StringNullableFilter<"ControlledDocument"> | string | null
+    title?: StringFilter<"ControlledDocument"> | string
+    category?: EnumDocumentCategoryFilter<"ControlledDocument"> | $Enums.DocumentCategory
+    version?: StringNullableFilter<"ControlledDocument"> | string | null
+    issueDate?: DateTimeFilter<"ControlledDocument"> | Date | string
+    reviewDate?: DateTimeNullableFilter<"ControlledDocument"> | Date | string | null
+    owner?: StringNullableFilter<"ControlledDocument"> | string | null
+    description?: StringNullableFilter<"ControlledDocument"> | string | null
+    status?: EnumControlledDocStatusFilter<"ControlledDocument"> | $Enums.ControlledDocStatus
+    createdAt?: DateTimeFilter<"ControlledDocument"> | Date | string
+    updatedAt?: DateTimeFilter<"ControlledDocument"> | Date | string
+    createdBy?: StringNullableFilter<"ControlledDocument"> | string | null
+    updatedBy?: StringNullableFilter<"ControlledDocument"> | string | null
+    deletedAt?: DateTimeNullableFilter<"ControlledDocument"> | Date | string | null
+    deletedBy?: StringNullableFilter<"ControlledDocument"> | string | null
+  }
+
+  export type CircularUpsertWithWhereUniqueWithoutCompanyInput = {
+    where: CircularWhereUniqueInput
+    update: XOR<CircularUpdateWithoutCompanyInput, CircularUncheckedUpdateWithoutCompanyInput>
+    create: XOR<CircularCreateWithoutCompanyInput, CircularUncheckedCreateWithoutCompanyInput>
+  }
+
+  export type CircularUpdateWithWhereUniqueWithoutCompanyInput = {
+    where: CircularWhereUniqueInput
+    data: XOR<CircularUpdateWithoutCompanyInput, CircularUncheckedUpdateWithoutCompanyInput>
+  }
+
+  export type CircularUpdateManyWithWhereWithoutCompanyInput = {
+    where: CircularScalarWhereInput
+    data: XOR<CircularUpdateManyMutationInput, CircularUncheckedUpdateManyWithoutCompanyInput>
+  }
+
+  export type CircularScalarWhereInput = {
+    AND?: CircularScalarWhereInput | CircularScalarWhereInput[]
+    OR?: CircularScalarWhereInput[]
+    NOT?: CircularScalarWhereInput | CircularScalarWhereInput[]
+    id?: StringFilter<"Circular"> | string
+    companyId?: StringFilter<"Circular"> | string
+    refNo?: StringFilter<"Circular"> | string
+    vesselId?: StringNullableFilter<"Circular"> | string | null
+    title?: StringFilter<"Circular"> | string
+    category?: EnumCircularCategoryFilter<"Circular"> | $Enums.CircularCategory
+    issueDate?: DateTimeFilter<"Circular"> | Date | string
+    body?: StringFilter<"Circular"> | string
+    createdAt?: DateTimeFilter<"Circular"> | Date | string
+    updatedAt?: DateTimeFilter<"Circular"> | Date | string
+    createdBy?: StringNullableFilter<"Circular"> | string | null
+    updatedBy?: StringNullableFilter<"Circular"> | string | null
+    deletedAt?: DateTimeNullableFilter<"Circular"> | Date | string | null
+    deletedBy?: StringNullableFilter<"Circular"> | string | null
+  }
+
+  export type RiskAssessmentUpsertWithWhereUniqueWithoutCompanyInput = {
+    where: RiskAssessmentWhereUniqueInput
+    update: XOR<RiskAssessmentUpdateWithoutCompanyInput, RiskAssessmentUncheckedUpdateWithoutCompanyInput>
+    create: XOR<RiskAssessmentCreateWithoutCompanyInput, RiskAssessmentUncheckedCreateWithoutCompanyInput>
+  }
+
+  export type RiskAssessmentUpdateWithWhereUniqueWithoutCompanyInput = {
+    where: RiskAssessmentWhereUniqueInput
+    data: XOR<RiskAssessmentUpdateWithoutCompanyInput, RiskAssessmentUncheckedUpdateWithoutCompanyInput>
+  }
+
+  export type RiskAssessmentUpdateManyWithWhereWithoutCompanyInput = {
+    where: RiskAssessmentScalarWhereInput
+    data: XOR<RiskAssessmentUpdateManyMutationInput, RiskAssessmentUncheckedUpdateManyWithoutCompanyInput>
+  }
+
+  export type RiskAssessmentScalarWhereInput = {
+    AND?: RiskAssessmentScalarWhereInput | RiskAssessmentScalarWhereInput[]
+    OR?: RiskAssessmentScalarWhereInput[]
+    NOT?: RiskAssessmentScalarWhereInput | RiskAssessmentScalarWhereInput[]
+    id?: StringFilter<"RiskAssessment"> | string
+    companyId?: StringFilter<"RiskAssessment"> | string
+    refNo?: StringFilter<"RiskAssessment"> | string
+    vesselId?: StringNullableFilter<"RiskAssessment"> | string | null
+    activity?: StringFilter<"RiskAssessment"> | string
+    hazards?: StringFilter<"RiskAssessment"> | string
+    existingControls?: StringNullableFilter<"RiskAssessment"> | string | null
+    likelihood?: EnumRiskRatingFilter<"RiskAssessment"> | $Enums.RiskRating
+    severity?: EnumRiskRatingFilter<"RiskAssessment"> | $Enums.RiskRating
+    additionalControls?: StringNullableFilter<"RiskAssessment"> | string | null
+    assessedBy?: StringNullableFilter<"RiskAssessment"> | string | null
+    assessmentDate?: DateTimeFilter<"RiskAssessment"> | Date | string
+    reviewDate?: DateTimeNullableFilter<"RiskAssessment"> | Date | string | null
+    status?: EnumRiskAssessmentStatusFilter<"RiskAssessment"> | $Enums.RiskAssessmentStatus
+    closedAt?: DateTimeNullableFilter<"RiskAssessment"> | Date | string | null
+    createdAt?: DateTimeFilter<"RiskAssessment"> | Date | string
+    updatedAt?: DateTimeFilter<"RiskAssessment"> | Date | string
+    createdBy?: StringNullableFilter<"RiskAssessment"> | string | null
+    updatedBy?: StringNullableFilter<"RiskAssessment"> | string | null
+    deletedAt?: DateTimeNullableFilter<"RiskAssessment"> | Date | string | null
+    deletedBy?: StringNullableFilter<"RiskAssessment"> | string | null
+  }
+
+  export type DefectUpsertWithWhereUniqueWithoutCompanyInput = {
+    where: DefectWhereUniqueInput
+    update: XOR<DefectUpdateWithoutCompanyInput, DefectUncheckedUpdateWithoutCompanyInput>
+    create: XOR<DefectCreateWithoutCompanyInput, DefectUncheckedCreateWithoutCompanyInput>
+  }
+
+  export type DefectUpdateWithWhereUniqueWithoutCompanyInput = {
+    where: DefectWhereUniqueInput
+    data: XOR<DefectUpdateWithoutCompanyInput, DefectUncheckedUpdateWithoutCompanyInput>
+  }
+
+  export type DefectUpdateManyWithWhereWithoutCompanyInput = {
+    where: DefectScalarWhereInput
+    data: XOR<DefectUpdateManyMutationInput, DefectUncheckedUpdateManyWithoutCompanyInput>
+  }
+
+  export type DefectScalarWhereInput = {
+    AND?: DefectScalarWhereInput | DefectScalarWhereInput[]
+    OR?: DefectScalarWhereInput[]
+    NOT?: DefectScalarWhereInput | DefectScalarWhereInput[]
+    id?: StringFilter<"Defect"> | string
+    companyId?: StringFilter<"Defect"> | string
+    refNo?: StringFilter<"Defect"> | string
+    vesselId?: StringFilter<"Defect"> | string
+    equipment?: StringFilter<"Defect"> | string
+    description?: StringFilter<"Defect"> | string
+    severity?: EnumDefectSeverityFilter<"Defect"> | $Enums.DefectSeverity
+    dateRaised?: DateTimeFilter<"Defect"> | Date | string
+    targetRectificationDate?: DateTimeNullableFilter<"Defect"> | Date | string | null
+    actionTaken?: StringNullableFilter<"Defect"> | string | null
+    raisedBy?: StringNullableFilter<"Defect"> | string | null
+    status?: EnumDefectStatusFilter<"Defect"> | $Enums.DefectStatus
+    rectifiedAt?: DateTimeNullableFilter<"Defect"> | Date | string | null
+    createdAt?: DateTimeFilter<"Defect"> | Date | string
+    updatedAt?: DateTimeFilter<"Defect"> | Date | string
+    createdBy?: StringNullableFilter<"Defect"> | string | null
+    updatedBy?: StringNullableFilter<"Defect"> | string | null
+    deletedAt?: DateTimeNullableFilter<"Defect"> | Date | string | null
+    deletedBy?: StringNullableFilter<"Defect"> | string | null
+  }
+
   export type CompanyCreateWithoutUsersInput = {
     id?: string
     name: string
@@ -60166,6 +72880,12 @@ export namespace Prisma {
     cdiInspections?: CdiInspectionCreateNestedManyWithoutCompanyInput
     internalAudits?: InternalAuditCreateNestedManyWithoutCompanyInput
     externalAudits?: ExternalAuditCreateNestedManyWithoutCompanyInput
+    safetyMeetings?: SafetyMeetingCreateNestedManyWithoutCompanyInput
+    emergencyDrills?: EmergencyDrillCreateNestedManyWithoutCompanyInput
+    controlledDocuments?: ControlledDocumentCreateNestedManyWithoutCompanyInput
+    circulars?: CircularCreateNestedManyWithoutCompanyInput
+    riskAssessments?: RiskAssessmentCreateNestedManyWithoutCompanyInput
+    defects?: DefectCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutUsersInput = {
@@ -60186,6 +72906,12 @@ export namespace Prisma {
     cdiInspections?: CdiInspectionUncheckedCreateNestedManyWithoutCompanyInput
     internalAudits?: InternalAuditUncheckedCreateNestedManyWithoutCompanyInput
     externalAudits?: ExternalAuditUncheckedCreateNestedManyWithoutCompanyInput
+    safetyMeetings?: SafetyMeetingUncheckedCreateNestedManyWithoutCompanyInput
+    emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutCompanyInput
+    controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutCompanyInput
+    circulars?: CircularUncheckedCreateNestedManyWithoutCompanyInput
+    riskAssessments?: RiskAssessmentUncheckedCreateNestedManyWithoutCompanyInput
+    defects?: DefectUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutUsersInput = {
@@ -60418,9 +73144,8 @@ export namespace Prisma {
     severity: $Enums.Severity
     raisedAt: Date | string
     targetDate?: Date | string | null
-    rootCause?: string | null
-    correctiveAction?: string | null
-    verification?: string | null
+    rootCauseCategory?: $Enums.RootCauseCategory | null
+    rootCauseSubCategory?: string | null
     personInCharge?: string | null
     status?: $Enums.NcrStatus
     closedAt?: Date | string | null
@@ -60447,9 +73172,8 @@ export namespace Prisma {
     severity: $Enums.Severity
     raisedAt: Date | string
     targetDate?: Date | string | null
-    rootCause?: string | null
-    correctiveAction?: string | null
-    verification?: string | null
+    rootCauseCategory?: $Enums.RootCauseCategory | null
+    rootCauseSubCategory?: string | null
     personInCharge?: string | null
     status?: $Enums.NcrStatus
     closedAt?: Date | string | null
@@ -60532,6 +73256,12 @@ export namespace Prisma {
     cdiInspections?: CdiInspectionUpdateManyWithoutCompanyNestedInput
     internalAudits?: InternalAuditUpdateManyWithoutCompanyNestedInput
     externalAudits?: ExternalAuditUpdateManyWithoutCompanyNestedInput
+    safetyMeetings?: SafetyMeetingUpdateManyWithoutCompanyNestedInput
+    emergencyDrills?: EmergencyDrillUpdateManyWithoutCompanyNestedInput
+    controlledDocuments?: ControlledDocumentUpdateManyWithoutCompanyNestedInput
+    circulars?: CircularUpdateManyWithoutCompanyNestedInput
+    riskAssessments?: RiskAssessmentUpdateManyWithoutCompanyNestedInput
+    defects?: DefectUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutUsersInput = {
@@ -60552,6 +73282,12 @@ export namespace Prisma {
     cdiInspections?: CdiInspectionUncheckedUpdateManyWithoutCompanyNestedInput
     internalAudits?: InternalAuditUncheckedUpdateManyWithoutCompanyNestedInput
     externalAudits?: ExternalAuditUncheckedUpdateManyWithoutCompanyNestedInput
+    safetyMeetings?: SafetyMeetingUncheckedUpdateManyWithoutCompanyNestedInput
+    emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutCompanyNestedInput
+    controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutCompanyNestedInput
+    circulars?: CircularUncheckedUpdateManyWithoutCompanyNestedInput
+    riskAssessments?: RiskAssessmentUncheckedUpdateManyWithoutCompanyNestedInput
+    defects?: DefectUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type UserRoleUpsertWithWhereUniqueWithoutUserInput = {
@@ -60691,6 +73427,12 @@ export namespace Prisma {
     cdiInspections?: CdiInspectionCreateNestedManyWithoutCompanyInput
     internalAudits?: InternalAuditCreateNestedManyWithoutCompanyInput
     externalAudits?: ExternalAuditCreateNestedManyWithoutCompanyInput
+    safetyMeetings?: SafetyMeetingCreateNestedManyWithoutCompanyInput
+    emergencyDrills?: EmergencyDrillCreateNestedManyWithoutCompanyInput
+    controlledDocuments?: ControlledDocumentCreateNestedManyWithoutCompanyInput
+    circulars?: CircularCreateNestedManyWithoutCompanyInput
+    riskAssessments?: RiskAssessmentCreateNestedManyWithoutCompanyInput
+    defects?: DefectCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutRolesInput = {
@@ -60711,6 +73453,12 @@ export namespace Prisma {
     cdiInspections?: CdiInspectionUncheckedCreateNestedManyWithoutCompanyInput
     internalAudits?: InternalAuditUncheckedCreateNestedManyWithoutCompanyInput
     externalAudits?: ExternalAuditUncheckedCreateNestedManyWithoutCompanyInput
+    safetyMeetings?: SafetyMeetingUncheckedCreateNestedManyWithoutCompanyInput
+    emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutCompanyInput
+    controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutCompanyInput
+    circulars?: CircularUncheckedCreateNestedManyWithoutCompanyInput
+    riskAssessments?: RiskAssessmentUncheckedCreateNestedManyWithoutCompanyInput
+    defects?: DefectUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutRolesInput = {
@@ -60783,6 +73531,12 @@ export namespace Prisma {
     cdiInspections?: CdiInspectionUpdateManyWithoutCompanyNestedInput
     internalAudits?: InternalAuditUpdateManyWithoutCompanyNestedInput
     externalAudits?: ExternalAuditUpdateManyWithoutCompanyNestedInput
+    safetyMeetings?: SafetyMeetingUpdateManyWithoutCompanyNestedInput
+    emergencyDrills?: EmergencyDrillUpdateManyWithoutCompanyNestedInput
+    controlledDocuments?: ControlledDocumentUpdateManyWithoutCompanyNestedInput
+    circulars?: CircularUpdateManyWithoutCompanyNestedInput
+    riskAssessments?: RiskAssessmentUpdateManyWithoutCompanyNestedInput
+    defects?: DefectUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutRolesInput = {
@@ -60803,6 +73557,12 @@ export namespace Prisma {
     cdiInspections?: CdiInspectionUncheckedUpdateManyWithoutCompanyNestedInput
     internalAudits?: InternalAuditUncheckedUpdateManyWithoutCompanyNestedInput
     externalAudits?: ExternalAuditUncheckedUpdateManyWithoutCompanyNestedInput
+    safetyMeetings?: SafetyMeetingUncheckedUpdateManyWithoutCompanyNestedInput
+    emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutCompanyNestedInput
+    controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutCompanyNestedInput
+    circulars?: CircularUncheckedUpdateManyWithoutCompanyNestedInput
+    riskAssessments?: RiskAssessmentUncheckedUpdateManyWithoutCompanyNestedInput
+    defects?: DefectUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type UserRoleUpsertWithWhereUniqueWithoutRoleInput = {
@@ -61169,6 +73929,12 @@ export namespace Prisma {
     cdiInspections?: CdiInspectionCreateNestedManyWithoutCompanyInput
     internalAudits?: InternalAuditCreateNestedManyWithoutCompanyInput
     externalAudits?: ExternalAuditCreateNestedManyWithoutCompanyInput
+    safetyMeetings?: SafetyMeetingCreateNestedManyWithoutCompanyInput
+    emergencyDrills?: EmergencyDrillCreateNestedManyWithoutCompanyInput
+    controlledDocuments?: ControlledDocumentCreateNestedManyWithoutCompanyInput
+    circulars?: CircularCreateNestedManyWithoutCompanyInput
+    riskAssessments?: RiskAssessmentCreateNestedManyWithoutCompanyInput
+    defects?: DefectCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutVesselsInput = {
@@ -61189,6 +73955,12 @@ export namespace Prisma {
     cdiInspections?: CdiInspectionUncheckedCreateNestedManyWithoutCompanyInput
     internalAudits?: InternalAuditUncheckedCreateNestedManyWithoutCompanyInput
     externalAudits?: ExternalAuditUncheckedCreateNestedManyWithoutCompanyInput
+    safetyMeetings?: SafetyMeetingUncheckedCreateNestedManyWithoutCompanyInput
+    emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutCompanyInput
+    controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutCompanyInput
+    circulars?: CircularUncheckedCreateNestedManyWithoutCompanyInput
+    riskAssessments?: RiskAssessmentUncheckedCreateNestedManyWithoutCompanyInput
+    defects?: DefectUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutVesselsInput = {
@@ -61403,9 +74175,8 @@ export namespace Prisma {
     severity: $Enums.Severity
     raisedAt: Date | string
     targetDate?: Date | string | null
-    rootCause?: string | null
-    correctiveAction?: string | null
-    verification?: string | null
+    rootCauseCategory?: $Enums.RootCauseCategory | null
+    rootCauseSubCategory?: string | null
     personInCharge?: string | null
     status?: $Enums.NcrStatus
     closedAt?: Date | string | null
@@ -61431,9 +74202,8 @@ export namespace Prisma {
     severity: $Enums.Severity
     raisedAt: Date | string
     targetDate?: Date | string | null
-    rootCause?: string | null
-    correctiveAction?: string | null
-    verification?: string | null
+    rootCauseCategory?: $Enums.RootCauseCategory | null
+    rootCauseSubCategory?: string | null
     personInCharge?: string | null
     status?: $Enums.NcrStatus
     closedAt?: Date | string | null
@@ -61714,6 +74484,306 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type SafetyMeetingCreateWithoutVesselInput = {
+    id?: string
+    refNo: string
+    meetingType: $Enums.MeetingType
+    meetingDate: Date | string
+    chairedBy?: string | null
+    attendees?: string | null
+    agenda?: string | null
+    minutes?: string | null
+    status?: $Enums.FindingStatus
+    closedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    company: CompanyCreateNestedOneWithoutSafetyMeetingsInput
+  }
+
+  export type SafetyMeetingUncheckedCreateWithoutVesselInput = {
+    id?: string
+    companyId: string
+    refNo: string
+    meetingType: $Enums.MeetingType
+    meetingDate: Date | string
+    chairedBy?: string | null
+    attendees?: string | null
+    agenda?: string | null
+    minutes?: string | null
+    status?: $Enums.FindingStatus
+    closedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+  }
+
+  export type SafetyMeetingCreateOrConnectWithoutVesselInput = {
+    where: SafetyMeetingWhereUniqueInput
+    create: XOR<SafetyMeetingCreateWithoutVesselInput, SafetyMeetingUncheckedCreateWithoutVesselInput>
+  }
+
+  export type SafetyMeetingCreateManyVesselInputEnvelope = {
+    data: SafetyMeetingCreateManyVesselInput | SafetyMeetingCreateManyVesselInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type EmergencyDrillCreateWithoutVesselInput = {
+    id?: string
+    refNo: string
+    drillType: $Enums.DrillType
+    drillDate: Date | string
+    scenario?: string | null
+    participants?: string | null
+    conductedBy?: string | null
+    observations?: string | null
+    status?: $Enums.FindingStatus
+    closedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    company: CompanyCreateNestedOneWithoutEmergencyDrillsInput
+  }
+
+  export type EmergencyDrillUncheckedCreateWithoutVesselInput = {
+    id?: string
+    companyId: string
+    refNo: string
+    drillType: $Enums.DrillType
+    drillDate: Date | string
+    scenario?: string | null
+    participants?: string | null
+    conductedBy?: string | null
+    observations?: string | null
+    status?: $Enums.FindingStatus
+    closedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+  }
+
+  export type EmergencyDrillCreateOrConnectWithoutVesselInput = {
+    where: EmergencyDrillWhereUniqueInput
+    create: XOR<EmergencyDrillCreateWithoutVesselInput, EmergencyDrillUncheckedCreateWithoutVesselInput>
+  }
+
+  export type EmergencyDrillCreateManyVesselInputEnvelope = {
+    data: EmergencyDrillCreateManyVesselInput | EmergencyDrillCreateManyVesselInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ControlledDocumentCreateWithoutVesselInput = {
+    id?: string
+    docNumber: string
+    title: string
+    category: $Enums.DocumentCategory
+    version?: string | null
+    issueDate: Date | string
+    reviewDate?: Date | string | null
+    owner?: string | null
+    description?: string | null
+    status?: $Enums.ControlledDocStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    company: CompanyCreateNestedOneWithoutControlledDocumentsInput
+  }
+
+  export type ControlledDocumentUncheckedCreateWithoutVesselInput = {
+    id?: string
+    companyId: string
+    docNumber: string
+    title: string
+    category: $Enums.DocumentCategory
+    version?: string | null
+    issueDate: Date | string
+    reviewDate?: Date | string | null
+    owner?: string | null
+    description?: string | null
+    status?: $Enums.ControlledDocStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+  }
+
+  export type ControlledDocumentCreateOrConnectWithoutVesselInput = {
+    where: ControlledDocumentWhereUniqueInput
+    create: XOR<ControlledDocumentCreateWithoutVesselInput, ControlledDocumentUncheckedCreateWithoutVesselInput>
+  }
+
+  export type ControlledDocumentCreateManyVesselInputEnvelope = {
+    data: ControlledDocumentCreateManyVesselInput | ControlledDocumentCreateManyVesselInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type CircularCreateWithoutVesselInput = {
+    id?: string
+    refNo: string
+    title: string
+    category: $Enums.CircularCategory
+    issueDate: Date | string
+    body: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    company: CompanyCreateNestedOneWithoutCircularsInput
+  }
+
+  export type CircularUncheckedCreateWithoutVesselInput = {
+    id?: string
+    companyId: string
+    refNo: string
+    title: string
+    category: $Enums.CircularCategory
+    issueDate: Date | string
+    body: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+  }
+
+  export type CircularCreateOrConnectWithoutVesselInput = {
+    where: CircularWhereUniqueInput
+    create: XOR<CircularCreateWithoutVesselInput, CircularUncheckedCreateWithoutVesselInput>
+  }
+
+  export type CircularCreateManyVesselInputEnvelope = {
+    data: CircularCreateManyVesselInput | CircularCreateManyVesselInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type RiskAssessmentCreateWithoutVesselInput = {
+    id?: string
+    refNo: string
+    activity: string
+    hazards: string
+    existingControls?: string | null
+    likelihood: $Enums.RiskRating
+    severity: $Enums.RiskRating
+    additionalControls?: string | null
+    assessedBy?: string | null
+    assessmentDate: Date | string
+    reviewDate?: Date | string | null
+    status?: $Enums.RiskAssessmentStatus
+    closedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    company: CompanyCreateNestedOneWithoutRiskAssessmentsInput
+  }
+
+  export type RiskAssessmentUncheckedCreateWithoutVesselInput = {
+    id?: string
+    companyId: string
+    refNo: string
+    activity: string
+    hazards: string
+    existingControls?: string | null
+    likelihood: $Enums.RiskRating
+    severity: $Enums.RiskRating
+    additionalControls?: string | null
+    assessedBy?: string | null
+    assessmentDate: Date | string
+    reviewDate?: Date | string | null
+    status?: $Enums.RiskAssessmentStatus
+    closedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+  }
+
+  export type RiskAssessmentCreateOrConnectWithoutVesselInput = {
+    where: RiskAssessmentWhereUniqueInput
+    create: XOR<RiskAssessmentCreateWithoutVesselInput, RiskAssessmentUncheckedCreateWithoutVesselInput>
+  }
+
+  export type RiskAssessmentCreateManyVesselInputEnvelope = {
+    data: RiskAssessmentCreateManyVesselInput | RiskAssessmentCreateManyVesselInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type DefectCreateWithoutVesselInput = {
+    id?: string
+    refNo: string
+    equipment: string
+    description: string
+    severity: $Enums.DefectSeverity
+    dateRaised: Date | string
+    targetRectificationDate?: Date | string | null
+    actionTaken?: string | null
+    raisedBy?: string | null
+    status?: $Enums.DefectStatus
+    rectifiedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    company: CompanyCreateNestedOneWithoutDefectsInput
+  }
+
+  export type DefectUncheckedCreateWithoutVesselInput = {
+    id?: string
+    companyId: string
+    refNo: string
+    equipment: string
+    description: string
+    severity: $Enums.DefectSeverity
+    dateRaised: Date | string
+    targetRectificationDate?: Date | string | null
+    actionTaken?: string | null
+    raisedBy?: string | null
+    status?: $Enums.DefectStatus
+    rectifiedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+  }
+
+  export type DefectCreateOrConnectWithoutVesselInput = {
+    where: DefectWhereUniqueInput
+    create: XOR<DefectCreateWithoutVesselInput, DefectUncheckedCreateWithoutVesselInput>
+  }
+
+  export type DefectCreateManyVesselInputEnvelope = {
+    data: DefectCreateManyVesselInput | DefectCreateManyVesselInput[]
+    skipDuplicates?: boolean
+  }
+
   export type CompanyUpsertWithoutVesselsInput = {
     update: XOR<CompanyUpdateWithoutVesselsInput, CompanyUncheckedUpdateWithoutVesselsInput>
     create: XOR<CompanyCreateWithoutVesselsInput, CompanyUncheckedCreateWithoutVesselsInput>
@@ -61743,6 +74813,12 @@ export namespace Prisma {
     cdiInspections?: CdiInspectionUpdateManyWithoutCompanyNestedInput
     internalAudits?: InternalAuditUpdateManyWithoutCompanyNestedInput
     externalAudits?: ExternalAuditUpdateManyWithoutCompanyNestedInput
+    safetyMeetings?: SafetyMeetingUpdateManyWithoutCompanyNestedInput
+    emergencyDrills?: EmergencyDrillUpdateManyWithoutCompanyNestedInput
+    controlledDocuments?: ControlledDocumentUpdateManyWithoutCompanyNestedInput
+    circulars?: CircularUpdateManyWithoutCompanyNestedInput
+    riskAssessments?: RiskAssessmentUpdateManyWithoutCompanyNestedInput
+    defects?: DefectUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutVesselsInput = {
@@ -61763,6 +74839,12 @@ export namespace Prisma {
     cdiInspections?: CdiInspectionUncheckedUpdateManyWithoutCompanyNestedInput
     internalAudits?: InternalAuditUncheckedUpdateManyWithoutCompanyNestedInput
     externalAudits?: ExternalAuditUncheckedUpdateManyWithoutCompanyNestedInput
+    safetyMeetings?: SafetyMeetingUncheckedUpdateManyWithoutCompanyNestedInput
+    emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutCompanyNestedInput
+    controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutCompanyNestedInput
+    circulars?: CircularUncheckedUpdateManyWithoutCompanyNestedInput
+    riskAssessments?: RiskAssessmentUncheckedUpdateManyWithoutCompanyNestedInput
+    defects?: DefectUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type SmsDocumentUpsertWithWhereUniqueWithoutVesselInput = {
@@ -61909,6 +74991,102 @@ export namespace Prisma {
     data: XOR<ExternalAuditUpdateManyMutationInput, ExternalAuditUncheckedUpdateManyWithoutVesselInput>
   }
 
+  export type SafetyMeetingUpsertWithWhereUniqueWithoutVesselInput = {
+    where: SafetyMeetingWhereUniqueInput
+    update: XOR<SafetyMeetingUpdateWithoutVesselInput, SafetyMeetingUncheckedUpdateWithoutVesselInput>
+    create: XOR<SafetyMeetingCreateWithoutVesselInput, SafetyMeetingUncheckedCreateWithoutVesselInput>
+  }
+
+  export type SafetyMeetingUpdateWithWhereUniqueWithoutVesselInput = {
+    where: SafetyMeetingWhereUniqueInput
+    data: XOR<SafetyMeetingUpdateWithoutVesselInput, SafetyMeetingUncheckedUpdateWithoutVesselInput>
+  }
+
+  export type SafetyMeetingUpdateManyWithWhereWithoutVesselInput = {
+    where: SafetyMeetingScalarWhereInput
+    data: XOR<SafetyMeetingUpdateManyMutationInput, SafetyMeetingUncheckedUpdateManyWithoutVesselInput>
+  }
+
+  export type EmergencyDrillUpsertWithWhereUniqueWithoutVesselInput = {
+    where: EmergencyDrillWhereUniqueInput
+    update: XOR<EmergencyDrillUpdateWithoutVesselInput, EmergencyDrillUncheckedUpdateWithoutVesselInput>
+    create: XOR<EmergencyDrillCreateWithoutVesselInput, EmergencyDrillUncheckedCreateWithoutVesselInput>
+  }
+
+  export type EmergencyDrillUpdateWithWhereUniqueWithoutVesselInput = {
+    where: EmergencyDrillWhereUniqueInput
+    data: XOR<EmergencyDrillUpdateWithoutVesselInput, EmergencyDrillUncheckedUpdateWithoutVesselInput>
+  }
+
+  export type EmergencyDrillUpdateManyWithWhereWithoutVesselInput = {
+    where: EmergencyDrillScalarWhereInput
+    data: XOR<EmergencyDrillUpdateManyMutationInput, EmergencyDrillUncheckedUpdateManyWithoutVesselInput>
+  }
+
+  export type ControlledDocumentUpsertWithWhereUniqueWithoutVesselInput = {
+    where: ControlledDocumentWhereUniqueInput
+    update: XOR<ControlledDocumentUpdateWithoutVesselInput, ControlledDocumentUncheckedUpdateWithoutVesselInput>
+    create: XOR<ControlledDocumentCreateWithoutVesselInput, ControlledDocumentUncheckedCreateWithoutVesselInput>
+  }
+
+  export type ControlledDocumentUpdateWithWhereUniqueWithoutVesselInput = {
+    where: ControlledDocumentWhereUniqueInput
+    data: XOR<ControlledDocumentUpdateWithoutVesselInput, ControlledDocumentUncheckedUpdateWithoutVesselInput>
+  }
+
+  export type ControlledDocumentUpdateManyWithWhereWithoutVesselInput = {
+    where: ControlledDocumentScalarWhereInput
+    data: XOR<ControlledDocumentUpdateManyMutationInput, ControlledDocumentUncheckedUpdateManyWithoutVesselInput>
+  }
+
+  export type CircularUpsertWithWhereUniqueWithoutVesselInput = {
+    where: CircularWhereUniqueInput
+    update: XOR<CircularUpdateWithoutVesselInput, CircularUncheckedUpdateWithoutVesselInput>
+    create: XOR<CircularCreateWithoutVesselInput, CircularUncheckedCreateWithoutVesselInput>
+  }
+
+  export type CircularUpdateWithWhereUniqueWithoutVesselInput = {
+    where: CircularWhereUniqueInput
+    data: XOR<CircularUpdateWithoutVesselInput, CircularUncheckedUpdateWithoutVesselInput>
+  }
+
+  export type CircularUpdateManyWithWhereWithoutVesselInput = {
+    where: CircularScalarWhereInput
+    data: XOR<CircularUpdateManyMutationInput, CircularUncheckedUpdateManyWithoutVesselInput>
+  }
+
+  export type RiskAssessmentUpsertWithWhereUniqueWithoutVesselInput = {
+    where: RiskAssessmentWhereUniqueInput
+    update: XOR<RiskAssessmentUpdateWithoutVesselInput, RiskAssessmentUncheckedUpdateWithoutVesselInput>
+    create: XOR<RiskAssessmentCreateWithoutVesselInput, RiskAssessmentUncheckedCreateWithoutVesselInput>
+  }
+
+  export type RiskAssessmentUpdateWithWhereUniqueWithoutVesselInput = {
+    where: RiskAssessmentWhereUniqueInput
+    data: XOR<RiskAssessmentUpdateWithoutVesselInput, RiskAssessmentUncheckedUpdateWithoutVesselInput>
+  }
+
+  export type RiskAssessmentUpdateManyWithWhereWithoutVesselInput = {
+    where: RiskAssessmentScalarWhereInput
+    data: XOR<RiskAssessmentUpdateManyMutationInput, RiskAssessmentUncheckedUpdateManyWithoutVesselInput>
+  }
+
+  export type DefectUpsertWithWhereUniqueWithoutVesselInput = {
+    where: DefectWhereUniqueInput
+    update: XOR<DefectUpdateWithoutVesselInput, DefectUncheckedUpdateWithoutVesselInput>
+    create: XOR<DefectCreateWithoutVesselInput, DefectUncheckedCreateWithoutVesselInput>
+  }
+
+  export type DefectUpdateWithWhereUniqueWithoutVesselInput = {
+    where: DefectWhereUniqueInput
+    data: XOR<DefectUpdateWithoutVesselInput, DefectUncheckedUpdateWithoutVesselInput>
+  }
+
+  export type DefectUpdateManyWithWhereWithoutVesselInput = {
+    where: DefectScalarWhereInput
+    data: XOR<DefectUpdateManyMutationInput, DefectUncheckedUpdateManyWithoutVesselInput>
+  }
+
   export type UserCreateWithoutNotificationsInput = {
     id?: string
     fullName: string
@@ -62035,6 +75213,12 @@ export namespace Prisma {
     cdiInspections?: CdiInspectionCreateNestedManyWithoutCompanyInput
     internalAudits?: InternalAuditCreateNestedManyWithoutCompanyInput
     externalAudits?: ExternalAuditCreateNestedManyWithoutCompanyInput
+    safetyMeetings?: SafetyMeetingCreateNestedManyWithoutCompanyInput
+    emergencyDrills?: EmergencyDrillCreateNestedManyWithoutCompanyInput
+    controlledDocuments?: ControlledDocumentCreateNestedManyWithoutCompanyInput
+    circulars?: CircularCreateNestedManyWithoutCompanyInput
+    riskAssessments?: RiskAssessmentCreateNestedManyWithoutCompanyInput
+    defects?: DefectCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutWorkflowsInput = {
@@ -62055,6 +75239,12 @@ export namespace Prisma {
     cdiInspections?: CdiInspectionUncheckedCreateNestedManyWithoutCompanyInput
     internalAudits?: InternalAuditUncheckedCreateNestedManyWithoutCompanyInput
     externalAudits?: ExternalAuditUncheckedCreateNestedManyWithoutCompanyInput
+    safetyMeetings?: SafetyMeetingUncheckedCreateNestedManyWithoutCompanyInput
+    emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutCompanyInput
+    controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutCompanyInput
+    circulars?: CircularUncheckedCreateNestedManyWithoutCompanyInput
+    riskAssessments?: RiskAssessmentUncheckedCreateNestedManyWithoutCompanyInput
+    defects?: DefectUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutWorkflowsInput = {
@@ -62159,6 +75349,12 @@ export namespace Prisma {
     cdiInspections?: CdiInspectionUpdateManyWithoutCompanyNestedInput
     internalAudits?: InternalAuditUpdateManyWithoutCompanyNestedInput
     externalAudits?: ExternalAuditUpdateManyWithoutCompanyNestedInput
+    safetyMeetings?: SafetyMeetingUpdateManyWithoutCompanyNestedInput
+    emergencyDrills?: EmergencyDrillUpdateManyWithoutCompanyNestedInput
+    controlledDocuments?: ControlledDocumentUpdateManyWithoutCompanyNestedInput
+    circulars?: CircularUpdateManyWithoutCompanyNestedInput
+    riskAssessments?: RiskAssessmentUpdateManyWithoutCompanyNestedInput
+    defects?: DefectUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutWorkflowsInput = {
@@ -62179,6 +75375,12 @@ export namespace Prisma {
     cdiInspections?: CdiInspectionUncheckedUpdateManyWithoutCompanyNestedInput
     internalAudits?: InternalAuditUncheckedUpdateManyWithoutCompanyNestedInput
     externalAudits?: ExternalAuditUncheckedUpdateManyWithoutCompanyNestedInput
+    safetyMeetings?: SafetyMeetingUncheckedUpdateManyWithoutCompanyNestedInput
+    emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutCompanyNestedInput
+    controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutCompanyNestedInput
+    circulars?: CircularUncheckedUpdateManyWithoutCompanyNestedInput
+    riskAssessments?: RiskAssessmentUncheckedUpdateManyWithoutCompanyNestedInput
+    defects?: DefectUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type WorkflowStepUpsertWithWhereUniqueWithoutDefinitionInput = {
@@ -62631,6 +75833,12 @@ export namespace Prisma {
     cdiInspections?: CdiInspectionCreateNestedManyWithoutCompanyInput
     internalAudits?: InternalAuditCreateNestedManyWithoutCompanyInput
     externalAudits?: ExternalAuditCreateNestedManyWithoutCompanyInput
+    safetyMeetings?: SafetyMeetingCreateNestedManyWithoutCompanyInput
+    emergencyDrills?: EmergencyDrillCreateNestedManyWithoutCompanyInput
+    controlledDocuments?: ControlledDocumentCreateNestedManyWithoutCompanyInput
+    circulars?: CircularCreateNestedManyWithoutCompanyInput
+    riskAssessments?: RiskAssessmentCreateNestedManyWithoutCompanyInput
+    defects?: DefectCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutSmsDocumentsInput = {
@@ -62651,6 +75859,12 @@ export namespace Prisma {
     cdiInspections?: CdiInspectionUncheckedCreateNestedManyWithoutCompanyInput
     internalAudits?: InternalAuditUncheckedCreateNestedManyWithoutCompanyInput
     externalAudits?: ExternalAuditUncheckedCreateNestedManyWithoutCompanyInput
+    safetyMeetings?: SafetyMeetingUncheckedCreateNestedManyWithoutCompanyInput
+    emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutCompanyInput
+    controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutCompanyInput
+    circulars?: CircularUncheckedCreateNestedManyWithoutCompanyInput
+    riskAssessments?: RiskAssessmentUncheckedCreateNestedManyWithoutCompanyInput
+    defects?: DefectUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutSmsDocumentsInput = {
@@ -62712,6 +75926,7 @@ export namespace Prisma {
   export type VesselCreateWithoutSmsDocumentsInput = {
     id?: string
     name: string
+    code?: string | null
     imo: string
     officialNumber?: string | null
     callSign?: string | null
@@ -62740,12 +75955,19 @@ export namespace Prisma {
     cdiInspections?: CdiInspectionCreateNestedManyWithoutVesselInput
     internalAudits?: InternalAuditCreateNestedManyWithoutVesselInput
     externalAudits?: ExternalAuditCreateNestedManyWithoutVesselInput
+    safetyMeetings?: SafetyMeetingCreateNestedManyWithoutVesselInput
+    emergencyDrills?: EmergencyDrillCreateNestedManyWithoutVesselInput
+    controlledDocuments?: ControlledDocumentCreateNestedManyWithoutVesselInput
+    circulars?: CircularCreateNestedManyWithoutVesselInput
+    riskAssessments?: RiskAssessmentCreateNestedManyWithoutVesselInput
+    defects?: DefectCreateNestedManyWithoutVesselInput
   }
 
   export type VesselUncheckedCreateWithoutSmsDocumentsInput = {
     id?: string
     companyId: string
     name: string
+    code?: string | null
     imo: string
     officialNumber?: string | null
     callSign?: string | null
@@ -62773,6 +75995,12 @@ export namespace Prisma {
     cdiInspections?: CdiInspectionUncheckedCreateNestedManyWithoutVesselInput
     internalAudits?: InternalAuditUncheckedCreateNestedManyWithoutVesselInput
     externalAudits?: ExternalAuditUncheckedCreateNestedManyWithoutVesselInput
+    safetyMeetings?: SafetyMeetingUncheckedCreateNestedManyWithoutVesselInput
+    emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutVesselInput
+    controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutVesselInput
+    circulars?: CircularUncheckedCreateNestedManyWithoutVesselInput
+    riskAssessments?: RiskAssessmentUncheckedCreateNestedManyWithoutVesselInput
+    defects?: DefectUncheckedCreateNestedManyWithoutVesselInput
   }
 
   export type VesselCreateOrConnectWithoutSmsDocumentsInput = {
@@ -62888,6 +76116,12 @@ export namespace Prisma {
     cdiInspections?: CdiInspectionUpdateManyWithoutCompanyNestedInput
     internalAudits?: InternalAuditUpdateManyWithoutCompanyNestedInput
     externalAudits?: ExternalAuditUpdateManyWithoutCompanyNestedInput
+    safetyMeetings?: SafetyMeetingUpdateManyWithoutCompanyNestedInput
+    emergencyDrills?: EmergencyDrillUpdateManyWithoutCompanyNestedInput
+    controlledDocuments?: ControlledDocumentUpdateManyWithoutCompanyNestedInput
+    circulars?: CircularUpdateManyWithoutCompanyNestedInput
+    riskAssessments?: RiskAssessmentUpdateManyWithoutCompanyNestedInput
+    defects?: DefectUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutSmsDocumentsInput = {
@@ -62908,6 +76142,12 @@ export namespace Prisma {
     cdiInspections?: CdiInspectionUncheckedUpdateManyWithoutCompanyNestedInput
     internalAudits?: InternalAuditUncheckedUpdateManyWithoutCompanyNestedInput
     externalAudits?: ExternalAuditUncheckedUpdateManyWithoutCompanyNestedInput
+    safetyMeetings?: SafetyMeetingUncheckedUpdateManyWithoutCompanyNestedInput
+    emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutCompanyNestedInput
+    controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutCompanyNestedInput
+    circulars?: CircularUncheckedUpdateManyWithoutCompanyNestedInput
+    riskAssessments?: RiskAssessmentUncheckedUpdateManyWithoutCompanyNestedInput
+    defects?: DefectUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type UserUpsertWithoutOwnedDocsInput = {
@@ -62981,6 +76221,7 @@ export namespace Prisma {
   export type VesselUpdateWithoutSmsDocumentsInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    code?: NullableStringFieldUpdateOperationsInput | string | null
     imo?: StringFieldUpdateOperationsInput | string
     officialNumber?: NullableStringFieldUpdateOperationsInput | string | null
     callSign?: NullableStringFieldUpdateOperationsInput | string | null
@@ -63009,12 +76250,19 @@ export namespace Prisma {
     cdiInspections?: CdiInspectionUpdateManyWithoutVesselNestedInput
     internalAudits?: InternalAuditUpdateManyWithoutVesselNestedInput
     externalAudits?: ExternalAuditUpdateManyWithoutVesselNestedInput
+    safetyMeetings?: SafetyMeetingUpdateManyWithoutVesselNestedInput
+    emergencyDrills?: EmergencyDrillUpdateManyWithoutVesselNestedInput
+    controlledDocuments?: ControlledDocumentUpdateManyWithoutVesselNestedInput
+    circulars?: CircularUpdateManyWithoutVesselNestedInput
+    riskAssessments?: RiskAssessmentUpdateManyWithoutVesselNestedInput
+    defects?: DefectUpdateManyWithoutVesselNestedInput
   }
 
   export type VesselUncheckedUpdateWithoutSmsDocumentsInput = {
     id?: StringFieldUpdateOperationsInput | string
     companyId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    code?: NullableStringFieldUpdateOperationsInput | string | null
     imo?: StringFieldUpdateOperationsInput | string
     officialNumber?: NullableStringFieldUpdateOperationsInput | string | null
     callSign?: NullableStringFieldUpdateOperationsInput | string | null
@@ -63042,6 +76290,12 @@ export namespace Prisma {
     cdiInspections?: CdiInspectionUncheckedUpdateManyWithoutVesselNestedInput
     internalAudits?: InternalAuditUncheckedUpdateManyWithoutVesselNestedInput
     externalAudits?: ExternalAuditUncheckedUpdateManyWithoutVesselNestedInput
+    safetyMeetings?: SafetyMeetingUncheckedUpdateManyWithoutVesselNestedInput
+    emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutVesselNestedInput
+    controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutVesselNestedInput
+    circulars?: CircularUncheckedUpdateManyWithoutVesselNestedInput
+    riskAssessments?: RiskAssessmentUncheckedUpdateManyWithoutVesselNestedInput
+    defects?: DefectUncheckedUpdateManyWithoutVesselNestedInput
   }
 
   export type SmsRevisionUpsertWithoutCurrentOfInput = {
@@ -63332,6 +76586,12 @@ export namespace Prisma {
     cdiInspections?: CdiInspectionCreateNestedManyWithoutCompanyInput
     internalAudits?: InternalAuditCreateNestedManyWithoutCompanyInput
     externalAudits?: ExternalAuditCreateNestedManyWithoutCompanyInput
+    safetyMeetings?: SafetyMeetingCreateNestedManyWithoutCompanyInput
+    emergencyDrills?: EmergencyDrillCreateNestedManyWithoutCompanyInput
+    controlledDocuments?: ControlledDocumentCreateNestedManyWithoutCompanyInput
+    circulars?: CircularCreateNestedManyWithoutCompanyInput
+    riskAssessments?: RiskAssessmentCreateNestedManyWithoutCompanyInput
+    defects?: DefectCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutIncidentsInput = {
@@ -63352,6 +76612,12 @@ export namespace Prisma {
     cdiInspections?: CdiInspectionUncheckedCreateNestedManyWithoutCompanyInput
     internalAudits?: InternalAuditUncheckedCreateNestedManyWithoutCompanyInput
     externalAudits?: ExternalAuditUncheckedCreateNestedManyWithoutCompanyInput
+    safetyMeetings?: SafetyMeetingUncheckedCreateNestedManyWithoutCompanyInput
+    emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutCompanyInput
+    controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutCompanyInput
+    circulars?: CircularUncheckedCreateNestedManyWithoutCompanyInput
+    riskAssessments?: RiskAssessmentUncheckedCreateNestedManyWithoutCompanyInput
+    defects?: DefectUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutIncidentsInput = {
@@ -63362,6 +76628,7 @@ export namespace Prisma {
   export type VesselCreateWithoutIncidentsInput = {
     id?: string
     name: string
+    code?: string | null
     imo: string
     officialNumber?: string | null
     callSign?: string | null
@@ -63390,12 +76657,19 @@ export namespace Prisma {
     cdiInspections?: CdiInspectionCreateNestedManyWithoutVesselInput
     internalAudits?: InternalAuditCreateNestedManyWithoutVesselInput
     externalAudits?: ExternalAuditCreateNestedManyWithoutVesselInput
+    safetyMeetings?: SafetyMeetingCreateNestedManyWithoutVesselInput
+    emergencyDrills?: EmergencyDrillCreateNestedManyWithoutVesselInput
+    controlledDocuments?: ControlledDocumentCreateNestedManyWithoutVesselInput
+    circulars?: CircularCreateNestedManyWithoutVesselInput
+    riskAssessments?: RiskAssessmentCreateNestedManyWithoutVesselInput
+    defects?: DefectCreateNestedManyWithoutVesselInput
   }
 
   export type VesselUncheckedCreateWithoutIncidentsInput = {
     id?: string
     companyId: string
     name: string
+    code?: string | null
     imo: string
     officialNumber?: string | null
     callSign?: string | null
@@ -63423,6 +76697,12 @@ export namespace Prisma {
     cdiInspections?: CdiInspectionUncheckedCreateNestedManyWithoutVesselInput
     internalAudits?: InternalAuditUncheckedCreateNestedManyWithoutVesselInput
     externalAudits?: ExternalAuditUncheckedCreateNestedManyWithoutVesselInput
+    safetyMeetings?: SafetyMeetingUncheckedCreateNestedManyWithoutVesselInput
+    emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutVesselInput
+    controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutVesselInput
+    circulars?: CircularUncheckedCreateNestedManyWithoutVesselInput
+    riskAssessments?: RiskAssessmentUncheckedCreateNestedManyWithoutVesselInput
+    defects?: DefectUncheckedCreateNestedManyWithoutVesselInput
   }
 
   export type VesselCreateOrConnectWithoutIncidentsInput = {
@@ -63562,6 +76842,12 @@ export namespace Prisma {
     cdiInspections?: CdiInspectionUpdateManyWithoutCompanyNestedInput
     internalAudits?: InternalAuditUpdateManyWithoutCompanyNestedInput
     externalAudits?: ExternalAuditUpdateManyWithoutCompanyNestedInput
+    safetyMeetings?: SafetyMeetingUpdateManyWithoutCompanyNestedInput
+    emergencyDrills?: EmergencyDrillUpdateManyWithoutCompanyNestedInput
+    controlledDocuments?: ControlledDocumentUpdateManyWithoutCompanyNestedInput
+    circulars?: CircularUpdateManyWithoutCompanyNestedInput
+    riskAssessments?: RiskAssessmentUpdateManyWithoutCompanyNestedInput
+    defects?: DefectUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutIncidentsInput = {
@@ -63582,6 +76868,12 @@ export namespace Prisma {
     cdiInspections?: CdiInspectionUncheckedUpdateManyWithoutCompanyNestedInput
     internalAudits?: InternalAuditUncheckedUpdateManyWithoutCompanyNestedInput
     externalAudits?: ExternalAuditUncheckedUpdateManyWithoutCompanyNestedInput
+    safetyMeetings?: SafetyMeetingUncheckedUpdateManyWithoutCompanyNestedInput
+    emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutCompanyNestedInput
+    controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutCompanyNestedInput
+    circulars?: CircularUncheckedUpdateManyWithoutCompanyNestedInput
+    riskAssessments?: RiskAssessmentUncheckedUpdateManyWithoutCompanyNestedInput
+    defects?: DefectUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type VesselUpsertWithoutIncidentsInput = {
@@ -63598,6 +76890,7 @@ export namespace Prisma {
   export type VesselUpdateWithoutIncidentsInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    code?: NullableStringFieldUpdateOperationsInput | string | null
     imo?: StringFieldUpdateOperationsInput | string
     officialNumber?: NullableStringFieldUpdateOperationsInput | string | null
     callSign?: NullableStringFieldUpdateOperationsInput | string | null
@@ -63626,12 +76919,19 @@ export namespace Prisma {
     cdiInspections?: CdiInspectionUpdateManyWithoutVesselNestedInput
     internalAudits?: InternalAuditUpdateManyWithoutVesselNestedInput
     externalAudits?: ExternalAuditUpdateManyWithoutVesselNestedInput
+    safetyMeetings?: SafetyMeetingUpdateManyWithoutVesselNestedInput
+    emergencyDrills?: EmergencyDrillUpdateManyWithoutVesselNestedInput
+    controlledDocuments?: ControlledDocumentUpdateManyWithoutVesselNestedInput
+    circulars?: CircularUpdateManyWithoutVesselNestedInput
+    riskAssessments?: RiskAssessmentUpdateManyWithoutVesselNestedInput
+    defects?: DefectUpdateManyWithoutVesselNestedInput
   }
 
   export type VesselUncheckedUpdateWithoutIncidentsInput = {
     id?: StringFieldUpdateOperationsInput | string
     companyId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    code?: NullableStringFieldUpdateOperationsInput | string | null
     imo?: StringFieldUpdateOperationsInput | string
     officialNumber?: NullableStringFieldUpdateOperationsInput | string | null
     callSign?: NullableStringFieldUpdateOperationsInput | string | null
@@ -63659,6 +76959,12 @@ export namespace Prisma {
     cdiInspections?: CdiInspectionUncheckedUpdateManyWithoutVesselNestedInput
     internalAudits?: InternalAuditUncheckedUpdateManyWithoutVesselNestedInput
     externalAudits?: ExternalAuditUncheckedUpdateManyWithoutVesselNestedInput
+    safetyMeetings?: SafetyMeetingUncheckedUpdateManyWithoutVesselNestedInput
+    emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutVesselNestedInput
+    controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutVesselNestedInput
+    circulars?: CircularUncheckedUpdateManyWithoutVesselNestedInput
+    riskAssessments?: RiskAssessmentUncheckedUpdateManyWithoutVesselNestedInput
+    defects?: DefectUncheckedUpdateManyWithoutVesselNestedInput
   }
 
   export type IncidentTypeEntryUpsertWithWhereUniqueWithoutIncidentInput = {
@@ -64080,6 +77386,12 @@ export namespace Prisma {
     cdiInspections?: CdiInspectionCreateNestedManyWithoutCompanyInput
     internalAudits?: InternalAuditCreateNestedManyWithoutCompanyInput
     externalAudits?: ExternalAuditCreateNestedManyWithoutCompanyInput
+    safetyMeetings?: SafetyMeetingCreateNestedManyWithoutCompanyInput
+    emergencyDrills?: EmergencyDrillCreateNestedManyWithoutCompanyInput
+    controlledDocuments?: ControlledDocumentCreateNestedManyWithoutCompanyInput
+    circulars?: CircularCreateNestedManyWithoutCompanyInput
+    riskAssessments?: RiskAssessmentCreateNestedManyWithoutCompanyInput
+    defects?: DefectCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutNearMissesInput = {
@@ -64100,6 +77412,12 @@ export namespace Prisma {
     cdiInspections?: CdiInspectionUncheckedCreateNestedManyWithoutCompanyInput
     internalAudits?: InternalAuditUncheckedCreateNestedManyWithoutCompanyInput
     externalAudits?: ExternalAuditUncheckedCreateNestedManyWithoutCompanyInput
+    safetyMeetings?: SafetyMeetingUncheckedCreateNestedManyWithoutCompanyInput
+    emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutCompanyInput
+    controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutCompanyInput
+    circulars?: CircularUncheckedCreateNestedManyWithoutCompanyInput
+    riskAssessments?: RiskAssessmentUncheckedCreateNestedManyWithoutCompanyInput
+    defects?: DefectUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutNearMissesInput = {
@@ -64110,6 +77428,7 @@ export namespace Prisma {
   export type VesselCreateWithoutNearMissesInput = {
     id?: string
     name: string
+    code?: string | null
     imo: string
     officialNumber?: string | null
     callSign?: string | null
@@ -64138,12 +77457,19 @@ export namespace Prisma {
     cdiInspections?: CdiInspectionCreateNestedManyWithoutVesselInput
     internalAudits?: InternalAuditCreateNestedManyWithoutVesselInput
     externalAudits?: ExternalAuditCreateNestedManyWithoutVesselInput
+    safetyMeetings?: SafetyMeetingCreateNestedManyWithoutVesselInput
+    emergencyDrills?: EmergencyDrillCreateNestedManyWithoutVesselInput
+    controlledDocuments?: ControlledDocumentCreateNestedManyWithoutVesselInput
+    circulars?: CircularCreateNestedManyWithoutVesselInput
+    riskAssessments?: RiskAssessmentCreateNestedManyWithoutVesselInput
+    defects?: DefectCreateNestedManyWithoutVesselInput
   }
 
   export type VesselUncheckedCreateWithoutNearMissesInput = {
     id?: string
     companyId: string
     name: string
+    code?: string | null
     imo: string
     officialNumber?: string | null
     callSign?: string | null
@@ -64171,6 +77497,12 @@ export namespace Prisma {
     cdiInspections?: CdiInspectionUncheckedCreateNestedManyWithoutVesselInput
     internalAudits?: InternalAuditUncheckedCreateNestedManyWithoutVesselInput
     externalAudits?: ExternalAuditUncheckedCreateNestedManyWithoutVesselInput
+    safetyMeetings?: SafetyMeetingUncheckedCreateNestedManyWithoutVesselInput
+    emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutVesselInput
+    controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutVesselInput
+    circulars?: CircularUncheckedCreateNestedManyWithoutVesselInput
+    riskAssessments?: RiskAssessmentUncheckedCreateNestedManyWithoutVesselInput
+    defects?: DefectUncheckedCreateNestedManyWithoutVesselInput
   }
 
   export type VesselCreateOrConnectWithoutNearMissesInput = {
@@ -64258,6 +77590,12 @@ export namespace Prisma {
     cdiInspections?: CdiInspectionUpdateManyWithoutCompanyNestedInput
     internalAudits?: InternalAuditUpdateManyWithoutCompanyNestedInput
     externalAudits?: ExternalAuditUpdateManyWithoutCompanyNestedInput
+    safetyMeetings?: SafetyMeetingUpdateManyWithoutCompanyNestedInput
+    emergencyDrills?: EmergencyDrillUpdateManyWithoutCompanyNestedInput
+    controlledDocuments?: ControlledDocumentUpdateManyWithoutCompanyNestedInput
+    circulars?: CircularUpdateManyWithoutCompanyNestedInput
+    riskAssessments?: RiskAssessmentUpdateManyWithoutCompanyNestedInput
+    defects?: DefectUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutNearMissesInput = {
@@ -64278,6 +77616,12 @@ export namespace Prisma {
     cdiInspections?: CdiInspectionUncheckedUpdateManyWithoutCompanyNestedInput
     internalAudits?: InternalAuditUncheckedUpdateManyWithoutCompanyNestedInput
     externalAudits?: ExternalAuditUncheckedUpdateManyWithoutCompanyNestedInput
+    safetyMeetings?: SafetyMeetingUncheckedUpdateManyWithoutCompanyNestedInput
+    emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutCompanyNestedInput
+    controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutCompanyNestedInput
+    circulars?: CircularUncheckedUpdateManyWithoutCompanyNestedInput
+    riskAssessments?: RiskAssessmentUncheckedUpdateManyWithoutCompanyNestedInput
+    defects?: DefectUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type VesselUpsertWithoutNearMissesInput = {
@@ -64294,6 +77638,7 @@ export namespace Prisma {
   export type VesselUpdateWithoutNearMissesInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    code?: NullableStringFieldUpdateOperationsInput | string | null
     imo?: StringFieldUpdateOperationsInput | string
     officialNumber?: NullableStringFieldUpdateOperationsInput | string | null
     callSign?: NullableStringFieldUpdateOperationsInput | string | null
@@ -64322,12 +77667,19 @@ export namespace Prisma {
     cdiInspections?: CdiInspectionUpdateManyWithoutVesselNestedInput
     internalAudits?: InternalAuditUpdateManyWithoutVesselNestedInput
     externalAudits?: ExternalAuditUpdateManyWithoutVesselNestedInput
+    safetyMeetings?: SafetyMeetingUpdateManyWithoutVesselNestedInput
+    emergencyDrills?: EmergencyDrillUpdateManyWithoutVesselNestedInput
+    controlledDocuments?: ControlledDocumentUpdateManyWithoutVesselNestedInput
+    circulars?: CircularUpdateManyWithoutVesselNestedInput
+    riskAssessments?: RiskAssessmentUpdateManyWithoutVesselNestedInput
+    defects?: DefectUpdateManyWithoutVesselNestedInput
   }
 
   export type VesselUncheckedUpdateWithoutNearMissesInput = {
     id?: StringFieldUpdateOperationsInput | string
     companyId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    code?: NullableStringFieldUpdateOperationsInput | string | null
     imo?: StringFieldUpdateOperationsInput | string
     officialNumber?: NullableStringFieldUpdateOperationsInput | string | null
     callSign?: NullableStringFieldUpdateOperationsInput | string | null
@@ -64355,6 +77707,12 @@ export namespace Prisma {
     cdiInspections?: CdiInspectionUncheckedUpdateManyWithoutVesselNestedInput
     internalAudits?: InternalAuditUncheckedUpdateManyWithoutVesselNestedInput
     externalAudits?: ExternalAuditUncheckedUpdateManyWithoutVesselNestedInput
+    safetyMeetings?: SafetyMeetingUncheckedUpdateManyWithoutVesselNestedInput
+    emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutVesselNestedInput
+    controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutVesselNestedInput
+    circulars?: CircularUncheckedUpdateManyWithoutVesselNestedInput
+    riskAssessments?: RiskAssessmentUncheckedUpdateManyWithoutVesselNestedInput
+    defects?: DefectUncheckedUpdateManyWithoutVesselNestedInput
   }
 
   export type UserUpsertWithoutReportedNearMissesInput = {
@@ -64432,6 +77790,12 @@ export namespace Prisma {
     cdiInspections?: CdiInspectionCreateNestedManyWithoutCompanyInput
     internalAudits?: InternalAuditCreateNestedManyWithoutCompanyInput
     externalAudits?: ExternalAuditCreateNestedManyWithoutCompanyInput
+    safetyMeetings?: SafetyMeetingCreateNestedManyWithoutCompanyInput
+    emergencyDrills?: EmergencyDrillCreateNestedManyWithoutCompanyInput
+    controlledDocuments?: ControlledDocumentCreateNestedManyWithoutCompanyInput
+    circulars?: CircularCreateNestedManyWithoutCompanyInput
+    riskAssessments?: RiskAssessmentCreateNestedManyWithoutCompanyInput
+    defects?: DefectCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutNonConformitiesInput = {
@@ -64452,6 +77816,12 @@ export namespace Prisma {
     cdiInspections?: CdiInspectionUncheckedCreateNestedManyWithoutCompanyInput
     internalAudits?: InternalAuditUncheckedCreateNestedManyWithoutCompanyInput
     externalAudits?: ExternalAuditUncheckedCreateNestedManyWithoutCompanyInput
+    safetyMeetings?: SafetyMeetingUncheckedCreateNestedManyWithoutCompanyInput
+    emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutCompanyInput
+    controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutCompanyInput
+    circulars?: CircularUncheckedCreateNestedManyWithoutCompanyInput
+    riskAssessments?: RiskAssessmentUncheckedCreateNestedManyWithoutCompanyInput
+    defects?: DefectUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutNonConformitiesInput = {
@@ -64462,6 +77832,7 @@ export namespace Prisma {
   export type VesselCreateWithoutNonConformitiesInput = {
     id?: string
     name: string
+    code?: string | null
     imo: string
     officialNumber?: string | null
     callSign?: string | null
@@ -64490,12 +77861,19 @@ export namespace Prisma {
     cdiInspections?: CdiInspectionCreateNestedManyWithoutVesselInput
     internalAudits?: InternalAuditCreateNestedManyWithoutVesselInput
     externalAudits?: ExternalAuditCreateNestedManyWithoutVesselInput
+    safetyMeetings?: SafetyMeetingCreateNestedManyWithoutVesselInput
+    emergencyDrills?: EmergencyDrillCreateNestedManyWithoutVesselInput
+    controlledDocuments?: ControlledDocumentCreateNestedManyWithoutVesselInput
+    circulars?: CircularCreateNestedManyWithoutVesselInput
+    riskAssessments?: RiskAssessmentCreateNestedManyWithoutVesselInput
+    defects?: DefectCreateNestedManyWithoutVesselInput
   }
 
   export type VesselUncheckedCreateWithoutNonConformitiesInput = {
     id?: string
     companyId: string
     name: string
+    code?: string | null
     imo: string
     officialNumber?: string | null
     callSign?: string | null
@@ -64523,6 +77901,12 @@ export namespace Prisma {
     cdiInspections?: CdiInspectionUncheckedCreateNestedManyWithoutVesselInput
     internalAudits?: InternalAuditUncheckedCreateNestedManyWithoutVesselInput
     externalAudits?: ExternalAuditUncheckedCreateNestedManyWithoutVesselInput
+    safetyMeetings?: SafetyMeetingUncheckedCreateNestedManyWithoutVesselInput
+    emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutVesselInput
+    controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutVesselInput
+    circulars?: CircularUncheckedCreateNestedManyWithoutVesselInput
+    riskAssessments?: RiskAssessmentUncheckedCreateNestedManyWithoutVesselInput
+    defects?: DefectUncheckedCreateNestedManyWithoutVesselInput
   }
 
   export type VesselCreateOrConnectWithoutNonConformitiesInput = {
@@ -64610,6 +77994,12 @@ export namespace Prisma {
     cdiInspections?: CdiInspectionUpdateManyWithoutCompanyNestedInput
     internalAudits?: InternalAuditUpdateManyWithoutCompanyNestedInput
     externalAudits?: ExternalAuditUpdateManyWithoutCompanyNestedInput
+    safetyMeetings?: SafetyMeetingUpdateManyWithoutCompanyNestedInput
+    emergencyDrills?: EmergencyDrillUpdateManyWithoutCompanyNestedInput
+    controlledDocuments?: ControlledDocumentUpdateManyWithoutCompanyNestedInput
+    circulars?: CircularUpdateManyWithoutCompanyNestedInput
+    riskAssessments?: RiskAssessmentUpdateManyWithoutCompanyNestedInput
+    defects?: DefectUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutNonConformitiesInput = {
@@ -64630,6 +78020,12 @@ export namespace Prisma {
     cdiInspections?: CdiInspectionUncheckedUpdateManyWithoutCompanyNestedInput
     internalAudits?: InternalAuditUncheckedUpdateManyWithoutCompanyNestedInput
     externalAudits?: ExternalAuditUncheckedUpdateManyWithoutCompanyNestedInput
+    safetyMeetings?: SafetyMeetingUncheckedUpdateManyWithoutCompanyNestedInput
+    emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutCompanyNestedInput
+    controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutCompanyNestedInput
+    circulars?: CircularUncheckedUpdateManyWithoutCompanyNestedInput
+    riskAssessments?: RiskAssessmentUncheckedUpdateManyWithoutCompanyNestedInput
+    defects?: DefectUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type VesselUpsertWithoutNonConformitiesInput = {
@@ -64646,6 +78042,7 @@ export namespace Prisma {
   export type VesselUpdateWithoutNonConformitiesInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    code?: NullableStringFieldUpdateOperationsInput | string | null
     imo?: StringFieldUpdateOperationsInput | string
     officialNumber?: NullableStringFieldUpdateOperationsInput | string | null
     callSign?: NullableStringFieldUpdateOperationsInput | string | null
@@ -64674,12 +78071,19 @@ export namespace Prisma {
     cdiInspections?: CdiInspectionUpdateManyWithoutVesselNestedInput
     internalAudits?: InternalAuditUpdateManyWithoutVesselNestedInput
     externalAudits?: ExternalAuditUpdateManyWithoutVesselNestedInput
+    safetyMeetings?: SafetyMeetingUpdateManyWithoutVesselNestedInput
+    emergencyDrills?: EmergencyDrillUpdateManyWithoutVesselNestedInput
+    controlledDocuments?: ControlledDocumentUpdateManyWithoutVesselNestedInput
+    circulars?: CircularUpdateManyWithoutVesselNestedInput
+    riskAssessments?: RiskAssessmentUpdateManyWithoutVesselNestedInput
+    defects?: DefectUpdateManyWithoutVesselNestedInput
   }
 
   export type VesselUncheckedUpdateWithoutNonConformitiesInput = {
     id?: StringFieldUpdateOperationsInput | string
     companyId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    code?: NullableStringFieldUpdateOperationsInput | string | null
     imo?: StringFieldUpdateOperationsInput | string
     officialNumber?: NullableStringFieldUpdateOperationsInput | string | null
     callSign?: NullableStringFieldUpdateOperationsInput | string | null
@@ -64707,6 +78111,12 @@ export namespace Prisma {
     cdiInspections?: CdiInspectionUncheckedUpdateManyWithoutVesselNestedInput
     internalAudits?: InternalAuditUncheckedUpdateManyWithoutVesselNestedInput
     externalAudits?: ExternalAuditUncheckedUpdateManyWithoutVesselNestedInput
+    safetyMeetings?: SafetyMeetingUncheckedUpdateManyWithoutVesselNestedInput
+    emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutVesselNestedInput
+    controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutVesselNestedInput
+    circulars?: CircularUncheckedUpdateManyWithoutVesselNestedInput
+    riskAssessments?: RiskAssessmentUncheckedUpdateManyWithoutVesselNestedInput
+    defects?: DefectUncheckedUpdateManyWithoutVesselNestedInput
   }
 
   export type UserUpsertWithoutRaisedNcrsInput = {
@@ -64784,6 +78194,12 @@ export namespace Prisma {
     cdiInspections?: CdiInspectionCreateNestedManyWithoutCompanyInput
     internalAudits?: InternalAuditCreateNestedManyWithoutCompanyInput
     externalAudits?: ExternalAuditCreateNestedManyWithoutCompanyInput
+    safetyMeetings?: SafetyMeetingCreateNestedManyWithoutCompanyInput
+    emergencyDrills?: EmergencyDrillCreateNestedManyWithoutCompanyInput
+    controlledDocuments?: ControlledDocumentCreateNestedManyWithoutCompanyInput
+    circulars?: CircularCreateNestedManyWithoutCompanyInput
+    riskAssessments?: RiskAssessmentCreateNestedManyWithoutCompanyInput
+    defects?: DefectCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutSireInspectionsInput = {
@@ -64804,6 +78220,12 @@ export namespace Prisma {
     cdiInspections?: CdiInspectionUncheckedCreateNestedManyWithoutCompanyInput
     internalAudits?: InternalAuditUncheckedCreateNestedManyWithoutCompanyInput
     externalAudits?: ExternalAuditUncheckedCreateNestedManyWithoutCompanyInput
+    safetyMeetings?: SafetyMeetingUncheckedCreateNestedManyWithoutCompanyInput
+    emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutCompanyInput
+    controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutCompanyInput
+    circulars?: CircularUncheckedCreateNestedManyWithoutCompanyInput
+    riskAssessments?: RiskAssessmentUncheckedCreateNestedManyWithoutCompanyInput
+    defects?: DefectUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutSireInspectionsInput = {
@@ -64814,6 +78236,7 @@ export namespace Prisma {
   export type VesselCreateWithoutSireInspectionsInput = {
     id?: string
     name: string
+    code?: string | null
     imo: string
     officialNumber?: string | null
     callSign?: string | null
@@ -64842,12 +78265,19 @@ export namespace Prisma {
     cdiInspections?: CdiInspectionCreateNestedManyWithoutVesselInput
     internalAudits?: InternalAuditCreateNestedManyWithoutVesselInput
     externalAudits?: ExternalAuditCreateNestedManyWithoutVesselInput
+    safetyMeetings?: SafetyMeetingCreateNestedManyWithoutVesselInput
+    emergencyDrills?: EmergencyDrillCreateNestedManyWithoutVesselInput
+    controlledDocuments?: ControlledDocumentCreateNestedManyWithoutVesselInput
+    circulars?: CircularCreateNestedManyWithoutVesselInput
+    riskAssessments?: RiskAssessmentCreateNestedManyWithoutVesselInput
+    defects?: DefectCreateNestedManyWithoutVesselInput
   }
 
   export type VesselUncheckedCreateWithoutSireInspectionsInput = {
     id?: string
     companyId: string
     name: string
+    code?: string | null
     imo: string
     officialNumber?: string | null
     callSign?: string | null
@@ -64875,6 +78305,12 @@ export namespace Prisma {
     cdiInspections?: CdiInspectionUncheckedCreateNestedManyWithoutVesselInput
     internalAudits?: InternalAuditUncheckedCreateNestedManyWithoutVesselInput
     externalAudits?: ExternalAuditUncheckedCreateNestedManyWithoutVesselInput
+    safetyMeetings?: SafetyMeetingUncheckedCreateNestedManyWithoutVesselInput
+    emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutVesselInput
+    controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutVesselInput
+    circulars?: CircularUncheckedCreateNestedManyWithoutVesselInput
+    riskAssessments?: RiskAssessmentUncheckedCreateNestedManyWithoutVesselInput
+    defects?: DefectUncheckedCreateNestedManyWithoutVesselInput
   }
 
   export type VesselCreateOrConnectWithoutSireInspectionsInput = {
@@ -64947,6 +78383,12 @@ export namespace Prisma {
     cdiInspections?: CdiInspectionUpdateManyWithoutCompanyNestedInput
     internalAudits?: InternalAuditUpdateManyWithoutCompanyNestedInput
     externalAudits?: ExternalAuditUpdateManyWithoutCompanyNestedInput
+    safetyMeetings?: SafetyMeetingUpdateManyWithoutCompanyNestedInput
+    emergencyDrills?: EmergencyDrillUpdateManyWithoutCompanyNestedInput
+    controlledDocuments?: ControlledDocumentUpdateManyWithoutCompanyNestedInput
+    circulars?: CircularUpdateManyWithoutCompanyNestedInput
+    riskAssessments?: RiskAssessmentUpdateManyWithoutCompanyNestedInput
+    defects?: DefectUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutSireInspectionsInput = {
@@ -64967,6 +78409,12 @@ export namespace Prisma {
     cdiInspections?: CdiInspectionUncheckedUpdateManyWithoutCompanyNestedInput
     internalAudits?: InternalAuditUncheckedUpdateManyWithoutCompanyNestedInput
     externalAudits?: ExternalAuditUncheckedUpdateManyWithoutCompanyNestedInput
+    safetyMeetings?: SafetyMeetingUncheckedUpdateManyWithoutCompanyNestedInput
+    emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutCompanyNestedInput
+    controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutCompanyNestedInput
+    circulars?: CircularUncheckedUpdateManyWithoutCompanyNestedInput
+    riskAssessments?: RiskAssessmentUncheckedUpdateManyWithoutCompanyNestedInput
+    defects?: DefectUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type VesselUpsertWithoutSireInspectionsInput = {
@@ -64983,6 +78431,7 @@ export namespace Prisma {
   export type VesselUpdateWithoutSireInspectionsInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    code?: NullableStringFieldUpdateOperationsInput | string | null
     imo?: StringFieldUpdateOperationsInput | string
     officialNumber?: NullableStringFieldUpdateOperationsInput | string | null
     callSign?: NullableStringFieldUpdateOperationsInput | string | null
@@ -65011,12 +78460,19 @@ export namespace Prisma {
     cdiInspections?: CdiInspectionUpdateManyWithoutVesselNestedInput
     internalAudits?: InternalAuditUpdateManyWithoutVesselNestedInput
     externalAudits?: ExternalAuditUpdateManyWithoutVesselNestedInput
+    safetyMeetings?: SafetyMeetingUpdateManyWithoutVesselNestedInput
+    emergencyDrills?: EmergencyDrillUpdateManyWithoutVesselNestedInput
+    controlledDocuments?: ControlledDocumentUpdateManyWithoutVesselNestedInput
+    circulars?: CircularUpdateManyWithoutVesselNestedInput
+    riskAssessments?: RiskAssessmentUpdateManyWithoutVesselNestedInput
+    defects?: DefectUpdateManyWithoutVesselNestedInput
   }
 
   export type VesselUncheckedUpdateWithoutSireInspectionsInput = {
     id?: StringFieldUpdateOperationsInput | string
     companyId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    code?: NullableStringFieldUpdateOperationsInput | string | null
     imo?: StringFieldUpdateOperationsInput | string
     officialNumber?: NullableStringFieldUpdateOperationsInput | string | null
     callSign?: NullableStringFieldUpdateOperationsInput | string | null
@@ -65044,6 +78500,12 @@ export namespace Prisma {
     cdiInspections?: CdiInspectionUncheckedUpdateManyWithoutVesselNestedInput
     internalAudits?: InternalAuditUncheckedUpdateManyWithoutVesselNestedInput
     externalAudits?: ExternalAuditUncheckedUpdateManyWithoutVesselNestedInput
+    safetyMeetings?: SafetyMeetingUncheckedUpdateManyWithoutVesselNestedInput
+    emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutVesselNestedInput
+    controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutVesselNestedInput
+    circulars?: CircularUncheckedUpdateManyWithoutVesselNestedInput
+    riskAssessments?: RiskAssessmentUncheckedUpdateManyWithoutVesselNestedInput
+    defects?: DefectUncheckedUpdateManyWithoutVesselNestedInput
   }
 
   export type SireObservationUpsertWithWhereUniqueWithoutInspectionInput = {
@@ -65197,6 +78659,12 @@ export namespace Prisma {
     cdiInspections?: CdiInspectionCreateNestedManyWithoutCompanyInput
     internalAudits?: InternalAuditCreateNestedManyWithoutCompanyInput
     externalAudits?: ExternalAuditCreateNestedManyWithoutCompanyInput
+    safetyMeetings?: SafetyMeetingCreateNestedManyWithoutCompanyInput
+    emergencyDrills?: EmergencyDrillCreateNestedManyWithoutCompanyInput
+    controlledDocuments?: ControlledDocumentCreateNestedManyWithoutCompanyInput
+    circulars?: CircularCreateNestedManyWithoutCompanyInput
+    riskAssessments?: RiskAssessmentCreateNestedManyWithoutCompanyInput
+    defects?: DefectCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutPscInspectionsInput = {
@@ -65217,6 +78685,12 @@ export namespace Prisma {
     cdiInspections?: CdiInspectionUncheckedCreateNestedManyWithoutCompanyInput
     internalAudits?: InternalAuditUncheckedCreateNestedManyWithoutCompanyInput
     externalAudits?: ExternalAuditUncheckedCreateNestedManyWithoutCompanyInput
+    safetyMeetings?: SafetyMeetingUncheckedCreateNestedManyWithoutCompanyInput
+    emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutCompanyInput
+    controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutCompanyInput
+    circulars?: CircularUncheckedCreateNestedManyWithoutCompanyInput
+    riskAssessments?: RiskAssessmentUncheckedCreateNestedManyWithoutCompanyInput
+    defects?: DefectUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutPscInspectionsInput = {
@@ -65227,6 +78701,7 @@ export namespace Prisma {
   export type VesselCreateWithoutPscInspectionsInput = {
     id?: string
     name: string
+    code?: string | null
     imo: string
     officialNumber?: string | null
     callSign?: string | null
@@ -65255,12 +78730,19 @@ export namespace Prisma {
     cdiInspections?: CdiInspectionCreateNestedManyWithoutVesselInput
     internalAudits?: InternalAuditCreateNestedManyWithoutVesselInput
     externalAudits?: ExternalAuditCreateNestedManyWithoutVesselInput
+    safetyMeetings?: SafetyMeetingCreateNestedManyWithoutVesselInput
+    emergencyDrills?: EmergencyDrillCreateNestedManyWithoutVesselInput
+    controlledDocuments?: ControlledDocumentCreateNestedManyWithoutVesselInput
+    circulars?: CircularCreateNestedManyWithoutVesselInput
+    riskAssessments?: RiskAssessmentCreateNestedManyWithoutVesselInput
+    defects?: DefectCreateNestedManyWithoutVesselInput
   }
 
   export type VesselUncheckedCreateWithoutPscInspectionsInput = {
     id?: string
     companyId: string
     name: string
+    code?: string | null
     imo: string
     officialNumber?: string | null
     callSign?: string | null
@@ -65288,6 +78770,12 @@ export namespace Prisma {
     cdiInspections?: CdiInspectionUncheckedCreateNestedManyWithoutVesselInput
     internalAudits?: InternalAuditUncheckedCreateNestedManyWithoutVesselInput
     externalAudits?: ExternalAuditUncheckedCreateNestedManyWithoutVesselInput
+    safetyMeetings?: SafetyMeetingUncheckedCreateNestedManyWithoutVesselInput
+    emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutVesselInput
+    controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutVesselInput
+    circulars?: CircularUncheckedCreateNestedManyWithoutVesselInput
+    riskAssessments?: RiskAssessmentUncheckedCreateNestedManyWithoutVesselInput
+    defects?: DefectUncheckedCreateNestedManyWithoutVesselInput
   }
 
   export type VesselCreateOrConnectWithoutPscInspectionsInput = {
@@ -65302,7 +78790,8 @@ export namespace Prisma {
     reference?: string | null
     description: string
     actionCode?: string | null
-    rectification?: string | null
+    rootCauseCategory?: $Enums.RootCauseCategory | null
+    rootCauseSubCategory?: string | null
     status?: $Enums.FindingStatus
     createdAt?: Date | string
     createdBy?: string | null
@@ -65316,7 +78805,8 @@ export namespace Prisma {
     reference?: string | null
     description: string
     actionCode?: string | null
-    rectification?: string | null
+    rootCauseCategory?: $Enums.RootCauseCategory | null
+    rootCauseSubCategory?: string | null
     status?: $Enums.FindingStatus
     createdAt?: Date | string
     createdBy?: string | null
@@ -65362,6 +78852,12 @@ export namespace Prisma {
     cdiInspections?: CdiInspectionUpdateManyWithoutCompanyNestedInput
     internalAudits?: InternalAuditUpdateManyWithoutCompanyNestedInput
     externalAudits?: ExternalAuditUpdateManyWithoutCompanyNestedInput
+    safetyMeetings?: SafetyMeetingUpdateManyWithoutCompanyNestedInput
+    emergencyDrills?: EmergencyDrillUpdateManyWithoutCompanyNestedInput
+    controlledDocuments?: ControlledDocumentUpdateManyWithoutCompanyNestedInput
+    circulars?: CircularUpdateManyWithoutCompanyNestedInput
+    riskAssessments?: RiskAssessmentUpdateManyWithoutCompanyNestedInput
+    defects?: DefectUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutPscInspectionsInput = {
@@ -65382,6 +78878,12 @@ export namespace Prisma {
     cdiInspections?: CdiInspectionUncheckedUpdateManyWithoutCompanyNestedInput
     internalAudits?: InternalAuditUncheckedUpdateManyWithoutCompanyNestedInput
     externalAudits?: ExternalAuditUncheckedUpdateManyWithoutCompanyNestedInput
+    safetyMeetings?: SafetyMeetingUncheckedUpdateManyWithoutCompanyNestedInput
+    emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutCompanyNestedInput
+    controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutCompanyNestedInput
+    circulars?: CircularUncheckedUpdateManyWithoutCompanyNestedInput
+    riskAssessments?: RiskAssessmentUncheckedUpdateManyWithoutCompanyNestedInput
+    defects?: DefectUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type VesselUpsertWithoutPscInspectionsInput = {
@@ -65398,6 +78900,7 @@ export namespace Prisma {
   export type VesselUpdateWithoutPscInspectionsInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    code?: NullableStringFieldUpdateOperationsInput | string | null
     imo?: StringFieldUpdateOperationsInput | string
     officialNumber?: NullableStringFieldUpdateOperationsInput | string | null
     callSign?: NullableStringFieldUpdateOperationsInput | string | null
@@ -65426,12 +78929,19 @@ export namespace Prisma {
     cdiInspections?: CdiInspectionUpdateManyWithoutVesselNestedInput
     internalAudits?: InternalAuditUpdateManyWithoutVesselNestedInput
     externalAudits?: ExternalAuditUpdateManyWithoutVesselNestedInput
+    safetyMeetings?: SafetyMeetingUpdateManyWithoutVesselNestedInput
+    emergencyDrills?: EmergencyDrillUpdateManyWithoutVesselNestedInput
+    controlledDocuments?: ControlledDocumentUpdateManyWithoutVesselNestedInput
+    circulars?: CircularUpdateManyWithoutVesselNestedInput
+    riskAssessments?: RiskAssessmentUpdateManyWithoutVesselNestedInput
+    defects?: DefectUpdateManyWithoutVesselNestedInput
   }
 
   export type VesselUncheckedUpdateWithoutPscInspectionsInput = {
     id?: StringFieldUpdateOperationsInput | string
     companyId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    code?: NullableStringFieldUpdateOperationsInput | string | null
     imo?: StringFieldUpdateOperationsInput | string
     officialNumber?: NullableStringFieldUpdateOperationsInput | string | null
     callSign?: NullableStringFieldUpdateOperationsInput | string | null
@@ -65459,6 +78969,12 @@ export namespace Prisma {
     cdiInspections?: CdiInspectionUncheckedUpdateManyWithoutVesselNestedInput
     internalAudits?: InternalAuditUncheckedUpdateManyWithoutVesselNestedInput
     externalAudits?: ExternalAuditUncheckedUpdateManyWithoutVesselNestedInput
+    safetyMeetings?: SafetyMeetingUncheckedUpdateManyWithoutVesselNestedInput
+    emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutVesselNestedInput
+    controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutVesselNestedInput
+    circulars?: CircularUncheckedUpdateManyWithoutVesselNestedInput
+    riskAssessments?: RiskAssessmentUncheckedUpdateManyWithoutVesselNestedInput
+    defects?: DefectUncheckedUpdateManyWithoutVesselNestedInput
   }
 
   export type PscDeficiencyUpsertWithWhereUniqueWithoutInspectionInput = {
@@ -65488,7 +79004,8 @@ export namespace Prisma {
     reference?: StringNullableFilter<"PscDeficiency"> | string | null
     description?: StringFilter<"PscDeficiency"> | string
     actionCode?: StringNullableFilter<"PscDeficiency"> | string | null
-    rectification?: StringNullableFilter<"PscDeficiency"> | string | null
+    rootCauseCategory?: EnumRootCauseCategoryNullableFilter<"PscDeficiency"> | $Enums.RootCauseCategory | null
+    rootCauseSubCategory?: StringNullableFilter<"PscDeficiency"> | string | null
     status?: EnumFindingStatusFilter<"PscDeficiency"> | $Enums.FindingStatus
     createdAt?: DateTimeFilter<"PscDeficiency"> | Date | string
     createdBy?: StringNullableFilter<"PscDeficiency"> | string | null
@@ -65613,6 +79130,12 @@ export namespace Prisma {
     pscInspections?: PscInspectionCreateNestedManyWithoutCompanyInput
     internalAudits?: InternalAuditCreateNestedManyWithoutCompanyInput
     externalAudits?: ExternalAuditCreateNestedManyWithoutCompanyInput
+    safetyMeetings?: SafetyMeetingCreateNestedManyWithoutCompanyInput
+    emergencyDrills?: EmergencyDrillCreateNestedManyWithoutCompanyInput
+    controlledDocuments?: ControlledDocumentCreateNestedManyWithoutCompanyInput
+    circulars?: CircularCreateNestedManyWithoutCompanyInput
+    riskAssessments?: RiskAssessmentCreateNestedManyWithoutCompanyInput
+    defects?: DefectCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutCdiInspectionsInput = {
@@ -65633,6 +79156,12 @@ export namespace Prisma {
     pscInspections?: PscInspectionUncheckedCreateNestedManyWithoutCompanyInput
     internalAudits?: InternalAuditUncheckedCreateNestedManyWithoutCompanyInput
     externalAudits?: ExternalAuditUncheckedCreateNestedManyWithoutCompanyInput
+    safetyMeetings?: SafetyMeetingUncheckedCreateNestedManyWithoutCompanyInput
+    emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutCompanyInput
+    controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutCompanyInput
+    circulars?: CircularUncheckedCreateNestedManyWithoutCompanyInput
+    riskAssessments?: RiskAssessmentUncheckedCreateNestedManyWithoutCompanyInput
+    defects?: DefectUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutCdiInspectionsInput = {
@@ -65643,6 +79172,7 @@ export namespace Prisma {
   export type VesselCreateWithoutCdiInspectionsInput = {
     id?: string
     name: string
+    code?: string | null
     imo: string
     officialNumber?: string | null
     callSign?: string | null
@@ -65671,12 +79201,19 @@ export namespace Prisma {
     pscInspections?: PscInspectionCreateNestedManyWithoutVesselInput
     internalAudits?: InternalAuditCreateNestedManyWithoutVesselInput
     externalAudits?: ExternalAuditCreateNestedManyWithoutVesselInput
+    safetyMeetings?: SafetyMeetingCreateNestedManyWithoutVesselInput
+    emergencyDrills?: EmergencyDrillCreateNestedManyWithoutVesselInput
+    controlledDocuments?: ControlledDocumentCreateNestedManyWithoutVesselInput
+    circulars?: CircularCreateNestedManyWithoutVesselInput
+    riskAssessments?: RiskAssessmentCreateNestedManyWithoutVesselInput
+    defects?: DefectCreateNestedManyWithoutVesselInput
   }
 
   export type VesselUncheckedCreateWithoutCdiInspectionsInput = {
     id?: string
     companyId: string
     name: string
+    code?: string | null
     imo: string
     officialNumber?: string | null
     callSign?: string | null
@@ -65704,6 +79241,12 @@ export namespace Prisma {
     pscInspections?: PscInspectionUncheckedCreateNestedManyWithoutVesselInput
     internalAudits?: InternalAuditUncheckedCreateNestedManyWithoutVesselInput
     externalAudits?: ExternalAuditUncheckedCreateNestedManyWithoutVesselInput
+    safetyMeetings?: SafetyMeetingUncheckedCreateNestedManyWithoutVesselInput
+    emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutVesselInput
+    controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutVesselInput
+    circulars?: CircularUncheckedCreateNestedManyWithoutVesselInput
+    riskAssessments?: RiskAssessmentUncheckedCreateNestedManyWithoutVesselInput
+    defects?: DefectUncheckedCreateNestedManyWithoutVesselInput
   }
 
   export type VesselCreateOrConnectWithoutCdiInspectionsInput = {
@@ -65774,6 +79317,12 @@ export namespace Prisma {
     pscInspections?: PscInspectionUpdateManyWithoutCompanyNestedInput
     internalAudits?: InternalAuditUpdateManyWithoutCompanyNestedInput
     externalAudits?: ExternalAuditUpdateManyWithoutCompanyNestedInput
+    safetyMeetings?: SafetyMeetingUpdateManyWithoutCompanyNestedInput
+    emergencyDrills?: EmergencyDrillUpdateManyWithoutCompanyNestedInput
+    controlledDocuments?: ControlledDocumentUpdateManyWithoutCompanyNestedInput
+    circulars?: CircularUpdateManyWithoutCompanyNestedInput
+    riskAssessments?: RiskAssessmentUpdateManyWithoutCompanyNestedInput
+    defects?: DefectUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutCdiInspectionsInput = {
@@ -65794,6 +79343,12 @@ export namespace Prisma {
     pscInspections?: PscInspectionUncheckedUpdateManyWithoutCompanyNestedInput
     internalAudits?: InternalAuditUncheckedUpdateManyWithoutCompanyNestedInput
     externalAudits?: ExternalAuditUncheckedUpdateManyWithoutCompanyNestedInput
+    safetyMeetings?: SafetyMeetingUncheckedUpdateManyWithoutCompanyNestedInput
+    emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutCompanyNestedInput
+    controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutCompanyNestedInput
+    circulars?: CircularUncheckedUpdateManyWithoutCompanyNestedInput
+    riskAssessments?: RiskAssessmentUncheckedUpdateManyWithoutCompanyNestedInput
+    defects?: DefectUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type VesselUpsertWithoutCdiInspectionsInput = {
@@ -65810,6 +79365,7 @@ export namespace Prisma {
   export type VesselUpdateWithoutCdiInspectionsInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    code?: NullableStringFieldUpdateOperationsInput | string | null
     imo?: StringFieldUpdateOperationsInput | string
     officialNumber?: NullableStringFieldUpdateOperationsInput | string | null
     callSign?: NullableStringFieldUpdateOperationsInput | string | null
@@ -65838,12 +79394,19 @@ export namespace Prisma {
     pscInspections?: PscInspectionUpdateManyWithoutVesselNestedInput
     internalAudits?: InternalAuditUpdateManyWithoutVesselNestedInput
     externalAudits?: ExternalAuditUpdateManyWithoutVesselNestedInput
+    safetyMeetings?: SafetyMeetingUpdateManyWithoutVesselNestedInput
+    emergencyDrills?: EmergencyDrillUpdateManyWithoutVesselNestedInput
+    controlledDocuments?: ControlledDocumentUpdateManyWithoutVesselNestedInput
+    circulars?: CircularUpdateManyWithoutVesselNestedInput
+    riskAssessments?: RiskAssessmentUpdateManyWithoutVesselNestedInput
+    defects?: DefectUpdateManyWithoutVesselNestedInput
   }
 
   export type VesselUncheckedUpdateWithoutCdiInspectionsInput = {
     id?: StringFieldUpdateOperationsInput | string
     companyId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    code?: NullableStringFieldUpdateOperationsInput | string | null
     imo?: StringFieldUpdateOperationsInput | string
     officialNumber?: NullableStringFieldUpdateOperationsInput | string | null
     callSign?: NullableStringFieldUpdateOperationsInput | string | null
@@ -65871,6 +79434,12 @@ export namespace Prisma {
     pscInspections?: PscInspectionUncheckedUpdateManyWithoutVesselNestedInput
     internalAudits?: InternalAuditUncheckedUpdateManyWithoutVesselNestedInput
     externalAudits?: ExternalAuditUncheckedUpdateManyWithoutVesselNestedInput
+    safetyMeetings?: SafetyMeetingUncheckedUpdateManyWithoutVesselNestedInput
+    emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutVesselNestedInput
+    controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutVesselNestedInput
+    circulars?: CircularUncheckedUpdateManyWithoutVesselNestedInput
+    riskAssessments?: RiskAssessmentUncheckedUpdateManyWithoutVesselNestedInput
+    defects?: DefectUncheckedUpdateManyWithoutVesselNestedInput
   }
 
   export type CdiObservationUpsertWithWhereUniqueWithoutInspectionInput = {
@@ -66019,6 +79588,12 @@ export namespace Prisma {
     pscInspections?: PscInspectionCreateNestedManyWithoutCompanyInput
     cdiInspections?: CdiInspectionCreateNestedManyWithoutCompanyInput
     externalAudits?: ExternalAuditCreateNestedManyWithoutCompanyInput
+    safetyMeetings?: SafetyMeetingCreateNestedManyWithoutCompanyInput
+    emergencyDrills?: EmergencyDrillCreateNestedManyWithoutCompanyInput
+    controlledDocuments?: ControlledDocumentCreateNestedManyWithoutCompanyInput
+    circulars?: CircularCreateNestedManyWithoutCompanyInput
+    riskAssessments?: RiskAssessmentCreateNestedManyWithoutCompanyInput
+    defects?: DefectCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutInternalAuditsInput = {
@@ -66039,6 +79614,12 @@ export namespace Prisma {
     pscInspections?: PscInspectionUncheckedCreateNestedManyWithoutCompanyInput
     cdiInspections?: CdiInspectionUncheckedCreateNestedManyWithoutCompanyInput
     externalAudits?: ExternalAuditUncheckedCreateNestedManyWithoutCompanyInput
+    safetyMeetings?: SafetyMeetingUncheckedCreateNestedManyWithoutCompanyInput
+    emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutCompanyInput
+    controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutCompanyInput
+    circulars?: CircularUncheckedCreateNestedManyWithoutCompanyInput
+    riskAssessments?: RiskAssessmentUncheckedCreateNestedManyWithoutCompanyInput
+    defects?: DefectUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutInternalAuditsInput = {
@@ -66049,6 +79630,7 @@ export namespace Prisma {
   export type VesselCreateWithoutInternalAuditsInput = {
     id?: string
     name: string
+    code?: string | null
     imo: string
     officialNumber?: string | null
     callSign?: string | null
@@ -66077,12 +79659,19 @@ export namespace Prisma {
     pscInspections?: PscInspectionCreateNestedManyWithoutVesselInput
     cdiInspections?: CdiInspectionCreateNestedManyWithoutVesselInput
     externalAudits?: ExternalAuditCreateNestedManyWithoutVesselInput
+    safetyMeetings?: SafetyMeetingCreateNestedManyWithoutVesselInput
+    emergencyDrills?: EmergencyDrillCreateNestedManyWithoutVesselInput
+    controlledDocuments?: ControlledDocumentCreateNestedManyWithoutVesselInput
+    circulars?: CircularCreateNestedManyWithoutVesselInput
+    riskAssessments?: RiskAssessmentCreateNestedManyWithoutVesselInput
+    defects?: DefectCreateNestedManyWithoutVesselInput
   }
 
   export type VesselUncheckedCreateWithoutInternalAuditsInput = {
     id?: string
     companyId: string
     name: string
+    code?: string | null
     imo: string
     officialNumber?: string | null
     callSign?: string | null
@@ -66110,6 +79699,12 @@ export namespace Prisma {
     pscInspections?: PscInspectionUncheckedCreateNestedManyWithoutVesselInput
     cdiInspections?: CdiInspectionUncheckedCreateNestedManyWithoutVesselInput
     externalAudits?: ExternalAuditUncheckedCreateNestedManyWithoutVesselInput
+    safetyMeetings?: SafetyMeetingUncheckedCreateNestedManyWithoutVesselInput
+    emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutVesselInput
+    controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutVesselInput
+    circulars?: CircularUncheckedCreateNestedManyWithoutVesselInput
+    riskAssessments?: RiskAssessmentUncheckedCreateNestedManyWithoutVesselInput
+    defects?: DefectUncheckedCreateNestedManyWithoutVesselInput
   }
 
   export type VesselCreateOrConnectWithoutInternalAuditsInput = {
@@ -66123,7 +79718,8 @@ export namespace Prisma {
     category: $Enums.AuditFindingCategory
     reference?: string | null
     description: string
-    correctiveAction?: string | null
+    rootCauseCategory?: $Enums.RootCauseCategory | null
+    rootCauseSubCategory?: string | null
     status?: $Enums.FindingStatus
     createdAt?: Date | string
     createdBy?: string | null
@@ -66136,7 +79732,8 @@ export namespace Prisma {
     category: $Enums.AuditFindingCategory
     reference?: string | null
     description: string
-    correctiveAction?: string | null
+    rootCauseCategory?: $Enums.RootCauseCategory | null
+    rootCauseSubCategory?: string | null
     status?: $Enums.FindingStatus
     createdAt?: Date | string
     createdBy?: string | null
@@ -66182,6 +79779,12 @@ export namespace Prisma {
     pscInspections?: PscInspectionUpdateManyWithoutCompanyNestedInput
     cdiInspections?: CdiInspectionUpdateManyWithoutCompanyNestedInput
     externalAudits?: ExternalAuditUpdateManyWithoutCompanyNestedInput
+    safetyMeetings?: SafetyMeetingUpdateManyWithoutCompanyNestedInput
+    emergencyDrills?: EmergencyDrillUpdateManyWithoutCompanyNestedInput
+    controlledDocuments?: ControlledDocumentUpdateManyWithoutCompanyNestedInput
+    circulars?: CircularUpdateManyWithoutCompanyNestedInput
+    riskAssessments?: RiskAssessmentUpdateManyWithoutCompanyNestedInput
+    defects?: DefectUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutInternalAuditsInput = {
@@ -66202,6 +79805,12 @@ export namespace Prisma {
     pscInspections?: PscInspectionUncheckedUpdateManyWithoutCompanyNestedInput
     cdiInspections?: CdiInspectionUncheckedUpdateManyWithoutCompanyNestedInput
     externalAudits?: ExternalAuditUncheckedUpdateManyWithoutCompanyNestedInput
+    safetyMeetings?: SafetyMeetingUncheckedUpdateManyWithoutCompanyNestedInput
+    emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutCompanyNestedInput
+    controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutCompanyNestedInput
+    circulars?: CircularUncheckedUpdateManyWithoutCompanyNestedInput
+    riskAssessments?: RiskAssessmentUncheckedUpdateManyWithoutCompanyNestedInput
+    defects?: DefectUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type VesselUpsertWithoutInternalAuditsInput = {
@@ -66218,6 +79827,7 @@ export namespace Prisma {
   export type VesselUpdateWithoutInternalAuditsInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    code?: NullableStringFieldUpdateOperationsInput | string | null
     imo?: StringFieldUpdateOperationsInput | string
     officialNumber?: NullableStringFieldUpdateOperationsInput | string | null
     callSign?: NullableStringFieldUpdateOperationsInput | string | null
@@ -66246,12 +79856,19 @@ export namespace Prisma {
     pscInspections?: PscInspectionUpdateManyWithoutVesselNestedInput
     cdiInspections?: CdiInspectionUpdateManyWithoutVesselNestedInput
     externalAudits?: ExternalAuditUpdateManyWithoutVesselNestedInput
+    safetyMeetings?: SafetyMeetingUpdateManyWithoutVesselNestedInput
+    emergencyDrills?: EmergencyDrillUpdateManyWithoutVesselNestedInput
+    controlledDocuments?: ControlledDocumentUpdateManyWithoutVesselNestedInput
+    circulars?: CircularUpdateManyWithoutVesselNestedInput
+    riskAssessments?: RiskAssessmentUpdateManyWithoutVesselNestedInput
+    defects?: DefectUpdateManyWithoutVesselNestedInput
   }
 
   export type VesselUncheckedUpdateWithoutInternalAuditsInput = {
     id?: StringFieldUpdateOperationsInput | string
     companyId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    code?: NullableStringFieldUpdateOperationsInput | string | null
     imo?: StringFieldUpdateOperationsInput | string
     officialNumber?: NullableStringFieldUpdateOperationsInput | string | null
     callSign?: NullableStringFieldUpdateOperationsInput | string | null
@@ -66279,6 +79896,12 @@ export namespace Prisma {
     pscInspections?: PscInspectionUncheckedUpdateManyWithoutVesselNestedInput
     cdiInspections?: CdiInspectionUncheckedUpdateManyWithoutVesselNestedInput
     externalAudits?: ExternalAuditUncheckedUpdateManyWithoutVesselNestedInput
+    safetyMeetings?: SafetyMeetingUncheckedUpdateManyWithoutVesselNestedInput
+    emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutVesselNestedInput
+    controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutVesselNestedInput
+    circulars?: CircularUncheckedUpdateManyWithoutVesselNestedInput
+    riskAssessments?: RiskAssessmentUncheckedUpdateManyWithoutVesselNestedInput
+    defects?: DefectUncheckedUpdateManyWithoutVesselNestedInput
   }
 
   export type InternalAuditFindingUpsertWithWhereUniqueWithoutAuditInput = {
@@ -66307,7 +79930,8 @@ export namespace Prisma {
     category?: EnumAuditFindingCategoryFilter<"InternalAuditFinding"> | $Enums.AuditFindingCategory
     reference?: StringNullableFilter<"InternalAuditFinding"> | string | null
     description?: StringFilter<"InternalAuditFinding"> | string
-    correctiveAction?: StringNullableFilter<"InternalAuditFinding"> | string | null
+    rootCauseCategory?: EnumRootCauseCategoryNullableFilter<"InternalAuditFinding"> | $Enums.RootCauseCategory | null
+    rootCauseSubCategory?: StringNullableFilter<"InternalAuditFinding"> | string | null
     status?: EnumFindingStatusFilter<"InternalAuditFinding"> | $Enums.FindingStatus
     createdAt?: DateTimeFilter<"InternalAuditFinding"> | Date | string
     createdBy?: StringNullableFilter<"InternalAuditFinding"> | string | null
@@ -66432,6 +80056,12 @@ export namespace Prisma {
     pscInspections?: PscInspectionCreateNestedManyWithoutCompanyInput
     cdiInspections?: CdiInspectionCreateNestedManyWithoutCompanyInput
     internalAudits?: InternalAuditCreateNestedManyWithoutCompanyInput
+    safetyMeetings?: SafetyMeetingCreateNestedManyWithoutCompanyInput
+    emergencyDrills?: EmergencyDrillCreateNestedManyWithoutCompanyInput
+    controlledDocuments?: ControlledDocumentCreateNestedManyWithoutCompanyInput
+    circulars?: CircularCreateNestedManyWithoutCompanyInput
+    riskAssessments?: RiskAssessmentCreateNestedManyWithoutCompanyInput
+    defects?: DefectCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutExternalAuditsInput = {
@@ -66452,6 +80082,12 @@ export namespace Prisma {
     pscInspections?: PscInspectionUncheckedCreateNestedManyWithoutCompanyInput
     cdiInspections?: CdiInspectionUncheckedCreateNestedManyWithoutCompanyInput
     internalAudits?: InternalAuditUncheckedCreateNestedManyWithoutCompanyInput
+    safetyMeetings?: SafetyMeetingUncheckedCreateNestedManyWithoutCompanyInput
+    emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutCompanyInput
+    controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutCompanyInput
+    circulars?: CircularUncheckedCreateNestedManyWithoutCompanyInput
+    riskAssessments?: RiskAssessmentUncheckedCreateNestedManyWithoutCompanyInput
+    defects?: DefectUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutExternalAuditsInput = {
@@ -66462,6 +80098,7 @@ export namespace Prisma {
   export type VesselCreateWithoutExternalAuditsInput = {
     id?: string
     name: string
+    code?: string | null
     imo: string
     officialNumber?: string | null
     callSign?: string | null
@@ -66490,12 +80127,19 @@ export namespace Prisma {
     pscInspections?: PscInspectionCreateNestedManyWithoutVesselInput
     cdiInspections?: CdiInspectionCreateNestedManyWithoutVesselInput
     internalAudits?: InternalAuditCreateNestedManyWithoutVesselInput
+    safetyMeetings?: SafetyMeetingCreateNestedManyWithoutVesselInput
+    emergencyDrills?: EmergencyDrillCreateNestedManyWithoutVesselInput
+    controlledDocuments?: ControlledDocumentCreateNestedManyWithoutVesselInput
+    circulars?: CircularCreateNestedManyWithoutVesselInput
+    riskAssessments?: RiskAssessmentCreateNestedManyWithoutVesselInput
+    defects?: DefectCreateNestedManyWithoutVesselInput
   }
 
   export type VesselUncheckedCreateWithoutExternalAuditsInput = {
     id?: string
     companyId: string
     name: string
+    code?: string | null
     imo: string
     officialNumber?: string | null
     callSign?: string | null
@@ -66523,6 +80167,12 @@ export namespace Prisma {
     pscInspections?: PscInspectionUncheckedCreateNestedManyWithoutVesselInput
     cdiInspections?: CdiInspectionUncheckedCreateNestedManyWithoutVesselInput
     internalAudits?: InternalAuditUncheckedCreateNestedManyWithoutVesselInput
+    safetyMeetings?: SafetyMeetingUncheckedCreateNestedManyWithoutVesselInput
+    emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutVesselInput
+    controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutVesselInput
+    circulars?: CircularUncheckedCreateNestedManyWithoutVesselInput
+    riskAssessments?: RiskAssessmentUncheckedCreateNestedManyWithoutVesselInput
+    defects?: DefectUncheckedCreateNestedManyWithoutVesselInput
   }
 
   export type VesselCreateOrConnectWithoutExternalAuditsInput = {
@@ -66536,7 +80186,8 @@ export namespace Prisma {
     category: $Enums.AuditFindingCategory
     reference?: string | null
     description: string
-    correctiveAction?: string | null
+    rootCauseCategory?: $Enums.RootCauseCategory | null
+    rootCauseSubCategory?: string | null
     status?: $Enums.FindingStatus
     createdAt?: Date | string
     createdBy?: string | null
@@ -66549,7 +80200,8 @@ export namespace Prisma {
     category: $Enums.AuditFindingCategory
     reference?: string | null
     description: string
-    correctiveAction?: string | null
+    rootCauseCategory?: $Enums.RootCauseCategory | null
+    rootCauseSubCategory?: string | null
     status?: $Enums.FindingStatus
     createdAt?: Date | string
     createdBy?: string | null
@@ -66595,6 +80247,12 @@ export namespace Prisma {
     pscInspections?: PscInspectionUpdateManyWithoutCompanyNestedInput
     cdiInspections?: CdiInspectionUpdateManyWithoutCompanyNestedInput
     internalAudits?: InternalAuditUpdateManyWithoutCompanyNestedInput
+    safetyMeetings?: SafetyMeetingUpdateManyWithoutCompanyNestedInput
+    emergencyDrills?: EmergencyDrillUpdateManyWithoutCompanyNestedInput
+    controlledDocuments?: ControlledDocumentUpdateManyWithoutCompanyNestedInput
+    circulars?: CircularUpdateManyWithoutCompanyNestedInput
+    riskAssessments?: RiskAssessmentUpdateManyWithoutCompanyNestedInput
+    defects?: DefectUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutExternalAuditsInput = {
@@ -66615,6 +80273,12 @@ export namespace Prisma {
     pscInspections?: PscInspectionUncheckedUpdateManyWithoutCompanyNestedInput
     cdiInspections?: CdiInspectionUncheckedUpdateManyWithoutCompanyNestedInput
     internalAudits?: InternalAuditUncheckedUpdateManyWithoutCompanyNestedInput
+    safetyMeetings?: SafetyMeetingUncheckedUpdateManyWithoutCompanyNestedInput
+    emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutCompanyNestedInput
+    controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutCompanyNestedInput
+    circulars?: CircularUncheckedUpdateManyWithoutCompanyNestedInput
+    riskAssessments?: RiskAssessmentUncheckedUpdateManyWithoutCompanyNestedInput
+    defects?: DefectUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type VesselUpsertWithoutExternalAuditsInput = {
@@ -66631,6 +80295,7 @@ export namespace Prisma {
   export type VesselUpdateWithoutExternalAuditsInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    code?: NullableStringFieldUpdateOperationsInput | string | null
     imo?: StringFieldUpdateOperationsInput | string
     officialNumber?: NullableStringFieldUpdateOperationsInput | string | null
     callSign?: NullableStringFieldUpdateOperationsInput | string | null
@@ -66659,12 +80324,19 @@ export namespace Prisma {
     pscInspections?: PscInspectionUpdateManyWithoutVesselNestedInput
     cdiInspections?: CdiInspectionUpdateManyWithoutVesselNestedInput
     internalAudits?: InternalAuditUpdateManyWithoutVesselNestedInput
+    safetyMeetings?: SafetyMeetingUpdateManyWithoutVesselNestedInput
+    emergencyDrills?: EmergencyDrillUpdateManyWithoutVesselNestedInput
+    controlledDocuments?: ControlledDocumentUpdateManyWithoutVesselNestedInput
+    circulars?: CircularUpdateManyWithoutVesselNestedInput
+    riskAssessments?: RiskAssessmentUpdateManyWithoutVesselNestedInput
+    defects?: DefectUpdateManyWithoutVesselNestedInput
   }
 
   export type VesselUncheckedUpdateWithoutExternalAuditsInput = {
     id?: StringFieldUpdateOperationsInput | string
     companyId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    code?: NullableStringFieldUpdateOperationsInput | string | null
     imo?: StringFieldUpdateOperationsInput | string
     officialNumber?: NullableStringFieldUpdateOperationsInput | string | null
     callSign?: NullableStringFieldUpdateOperationsInput | string | null
@@ -66692,6 +80364,12 @@ export namespace Prisma {
     pscInspections?: PscInspectionUncheckedUpdateManyWithoutVesselNestedInput
     cdiInspections?: CdiInspectionUncheckedUpdateManyWithoutVesselNestedInput
     internalAudits?: InternalAuditUncheckedUpdateManyWithoutVesselNestedInput
+    safetyMeetings?: SafetyMeetingUncheckedUpdateManyWithoutVesselNestedInput
+    emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutVesselNestedInput
+    controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutVesselNestedInput
+    circulars?: CircularUncheckedUpdateManyWithoutVesselNestedInput
+    riskAssessments?: RiskAssessmentUncheckedUpdateManyWithoutVesselNestedInput
+    defects?: DefectUncheckedUpdateManyWithoutVesselNestedInput
   }
 
   export type ExternalAuditFindingUpsertWithWhereUniqueWithoutAuditInput = {
@@ -66720,7 +80398,8 @@ export namespace Prisma {
     category?: EnumAuditFindingCategoryFilter<"ExternalAuditFinding"> | $Enums.AuditFindingCategory
     reference?: StringNullableFilter<"ExternalAuditFinding"> | string | null
     description?: StringFilter<"ExternalAuditFinding"> | string
-    correctiveAction?: StringNullableFilter<"ExternalAuditFinding"> | string | null
+    rootCauseCategory?: EnumRootCauseCategoryNullableFilter<"ExternalAuditFinding"> | $Enums.RootCauseCategory | null
+    rootCauseSubCategory?: StringNullableFilter<"ExternalAuditFinding"> | string | null
     status?: EnumFindingStatusFilter<"ExternalAuditFinding"> | $Enums.FindingStatus
     createdAt?: DateTimeFilter<"ExternalAuditFinding"> | Date | string
     createdBy?: StringNullableFilter<"ExternalAuditFinding"> | string | null
@@ -66827,6 +80506,1782 @@ export namespace Prisma {
     deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
+  export type CompanyCreateWithoutSafetyMeetingsInput = {
+    id?: string
+    name: string
+    code: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    users?: UserCreateNestedManyWithoutCompanyInput
+    roles?: RoleCreateNestedManyWithoutCompanyInput
+    vessels?: VesselCreateNestedManyWithoutCompanyInput
+    smsDocuments?: SmsDocumentCreateNestedManyWithoutCompanyInput
+    workflows?: WorkflowDefinitionCreateNestedManyWithoutCompanyInput
+    incidents?: IncidentCreateNestedManyWithoutCompanyInput
+    nearMisses?: NearMissCreateNestedManyWithoutCompanyInput
+    nonConformities?: NonConformityCreateNestedManyWithoutCompanyInput
+    sireInspections?: SireInspectionCreateNestedManyWithoutCompanyInput
+    pscInspections?: PscInspectionCreateNestedManyWithoutCompanyInput
+    cdiInspections?: CdiInspectionCreateNestedManyWithoutCompanyInput
+    internalAudits?: InternalAuditCreateNestedManyWithoutCompanyInput
+    externalAudits?: ExternalAuditCreateNestedManyWithoutCompanyInput
+    emergencyDrills?: EmergencyDrillCreateNestedManyWithoutCompanyInput
+    controlledDocuments?: ControlledDocumentCreateNestedManyWithoutCompanyInput
+    circulars?: CircularCreateNestedManyWithoutCompanyInput
+    riskAssessments?: RiskAssessmentCreateNestedManyWithoutCompanyInput
+    defects?: DefectCreateNestedManyWithoutCompanyInput
+  }
+
+  export type CompanyUncheckedCreateWithoutSafetyMeetingsInput = {
+    id?: string
+    name: string
+    code: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    users?: UserUncheckedCreateNestedManyWithoutCompanyInput
+    roles?: RoleUncheckedCreateNestedManyWithoutCompanyInput
+    vessels?: VesselUncheckedCreateNestedManyWithoutCompanyInput
+    smsDocuments?: SmsDocumentUncheckedCreateNestedManyWithoutCompanyInput
+    workflows?: WorkflowDefinitionUncheckedCreateNestedManyWithoutCompanyInput
+    incidents?: IncidentUncheckedCreateNestedManyWithoutCompanyInput
+    nearMisses?: NearMissUncheckedCreateNestedManyWithoutCompanyInput
+    nonConformities?: NonConformityUncheckedCreateNestedManyWithoutCompanyInput
+    sireInspections?: SireInspectionUncheckedCreateNestedManyWithoutCompanyInput
+    pscInspections?: PscInspectionUncheckedCreateNestedManyWithoutCompanyInput
+    cdiInspections?: CdiInspectionUncheckedCreateNestedManyWithoutCompanyInput
+    internalAudits?: InternalAuditUncheckedCreateNestedManyWithoutCompanyInput
+    externalAudits?: ExternalAuditUncheckedCreateNestedManyWithoutCompanyInput
+    emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutCompanyInput
+    controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutCompanyInput
+    circulars?: CircularUncheckedCreateNestedManyWithoutCompanyInput
+    riskAssessments?: RiskAssessmentUncheckedCreateNestedManyWithoutCompanyInput
+    defects?: DefectUncheckedCreateNestedManyWithoutCompanyInput
+  }
+
+  export type CompanyCreateOrConnectWithoutSafetyMeetingsInput = {
+    where: CompanyWhereUniqueInput
+    create: XOR<CompanyCreateWithoutSafetyMeetingsInput, CompanyUncheckedCreateWithoutSafetyMeetingsInput>
+  }
+
+  export type VesselCreateWithoutSafetyMeetingsInput = {
+    id?: string
+    name: string
+    code?: string | null
+    imo: string
+    officialNumber?: string | null
+    callSign?: string | null
+    mmsi?: string | null
+    flag?: string | null
+    type?: string
+    classificationSociety?: string | null
+    yearBuilt?: number | null
+    grossTonnage?: number | null
+    loa?: number | null
+    breadth?: number | null
+    depth?: number | null
+    status?: $Enums.VesselStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    company: CompanyCreateNestedOneWithoutVesselsInput
+    smsDocuments?: SmsDocumentCreateNestedManyWithoutVesselInput
+    incidents?: IncidentCreateNestedManyWithoutVesselInput
+    nearMisses?: NearMissCreateNestedManyWithoutVesselInput
+    nonConformities?: NonConformityCreateNestedManyWithoutVesselInput
+    sireInspections?: SireInspectionCreateNestedManyWithoutVesselInput
+    pscInspections?: PscInspectionCreateNestedManyWithoutVesselInput
+    cdiInspections?: CdiInspectionCreateNestedManyWithoutVesselInput
+    internalAudits?: InternalAuditCreateNestedManyWithoutVesselInput
+    externalAudits?: ExternalAuditCreateNestedManyWithoutVesselInput
+    emergencyDrills?: EmergencyDrillCreateNestedManyWithoutVesselInput
+    controlledDocuments?: ControlledDocumentCreateNestedManyWithoutVesselInput
+    circulars?: CircularCreateNestedManyWithoutVesselInput
+    riskAssessments?: RiskAssessmentCreateNestedManyWithoutVesselInput
+    defects?: DefectCreateNestedManyWithoutVesselInput
+  }
+
+  export type VesselUncheckedCreateWithoutSafetyMeetingsInput = {
+    id?: string
+    companyId: string
+    name: string
+    code?: string | null
+    imo: string
+    officialNumber?: string | null
+    callSign?: string | null
+    mmsi?: string | null
+    flag?: string | null
+    type?: string
+    classificationSociety?: string | null
+    yearBuilt?: number | null
+    grossTonnage?: number | null
+    loa?: number | null
+    breadth?: number | null
+    depth?: number | null
+    status?: $Enums.VesselStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    smsDocuments?: SmsDocumentUncheckedCreateNestedManyWithoutVesselInput
+    incidents?: IncidentUncheckedCreateNestedManyWithoutVesselInput
+    nearMisses?: NearMissUncheckedCreateNestedManyWithoutVesselInput
+    nonConformities?: NonConformityUncheckedCreateNestedManyWithoutVesselInput
+    sireInspections?: SireInspectionUncheckedCreateNestedManyWithoutVesselInput
+    pscInspections?: PscInspectionUncheckedCreateNestedManyWithoutVesselInput
+    cdiInspections?: CdiInspectionUncheckedCreateNestedManyWithoutVesselInput
+    internalAudits?: InternalAuditUncheckedCreateNestedManyWithoutVesselInput
+    externalAudits?: ExternalAuditUncheckedCreateNestedManyWithoutVesselInput
+    emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutVesselInput
+    controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutVesselInput
+    circulars?: CircularUncheckedCreateNestedManyWithoutVesselInput
+    riskAssessments?: RiskAssessmentUncheckedCreateNestedManyWithoutVesselInput
+    defects?: DefectUncheckedCreateNestedManyWithoutVesselInput
+  }
+
+  export type VesselCreateOrConnectWithoutSafetyMeetingsInput = {
+    where: VesselWhereUniqueInput
+    create: XOR<VesselCreateWithoutSafetyMeetingsInput, VesselUncheckedCreateWithoutSafetyMeetingsInput>
+  }
+
+  export type CompanyUpsertWithoutSafetyMeetingsInput = {
+    update: XOR<CompanyUpdateWithoutSafetyMeetingsInput, CompanyUncheckedUpdateWithoutSafetyMeetingsInput>
+    create: XOR<CompanyCreateWithoutSafetyMeetingsInput, CompanyUncheckedCreateWithoutSafetyMeetingsInput>
+    where?: CompanyWhereInput
+  }
+
+  export type CompanyUpdateToOneWithWhereWithoutSafetyMeetingsInput = {
+    where?: CompanyWhereInput
+    data: XOR<CompanyUpdateWithoutSafetyMeetingsInput, CompanyUncheckedUpdateWithoutSafetyMeetingsInput>
+  }
+
+  export type CompanyUpdateWithoutSafetyMeetingsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    users?: UserUpdateManyWithoutCompanyNestedInput
+    roles?: RoleUpdateManyWithoutCompanyNestedInput
+    vessels?: VesselUpdateManyWithoutCompanyNestedInput
+    smsDocuments?: SmsDocumentUpdateManyWithoutCompanyNestedInput
+    workflows?: WorkflowDefinitionUpdateManyWithoutCompanyNestedInput
+    incidents?: IncidentUpdateManyWithoutCompanyNestedInput
+    nearMisses?: NearMissUpdateManyWithoutCompanyNestedInput
+    nonConformities?: NonConformityUpdateManyWithoutCompanyNestedInput
+    sireInspections?: SireInspectionUpdateManyWithoutCompanyNestedInput
+    pscInspections?: PscInspectionUpdateManyWithoutCompanyNestedInput
+    cdiInspections?: CdiInspectionUpdateManyWithoutCompanyNestedInput
+    internalAudits?: InternalAuditUpdateManyWithoutCompanyNestedInput
+    externalAudits?: ExternalAuditUpdateManyWithoutCompanyNestedInput
+    emergencyDrills?: EmergencyDrillUpdateManyWithoutCompanyNestedInput
+    controlledDocuments?: ControlledDocumentUpdateManyWithoutCompanyNestedInput
+    circulars?: CircularUpdateManyWithoutCompanyNestedInput
+    riskAssessments?: RiskAssessmentUpdateManyWithoutCompanyNestedInput
+    defects?: DefectUpdateManyWithoutCompanyNestedInput
+  }
+
+  export type CompanyUncheckedUpdateWithoutSafetyMeetingsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    users?: UserUncheckedUpdateManyWithoutCompanyNestedInput
+    roles?: RoleUncheckedUpdateManyWithoutCompanyNestedInput
+    vessels?: VesselUncheckedUpdateManyWithoutCompanyNestedInput
+    smsDocuments?: SmsDocumentUncheckedUpdateManyWithoutCompanyNestedInput
+    workflows?: WorkflowDefinitionUncheckedUpdateManyWithoutCompanyNestedInput
+    incidents?: IncidentUncheckedUpdateManyWithoutCompanyNestedInput
+    nearMisses?: NearMissUncheckedUpdateManyWithoutCompanyNestedInput
+    nonConformities?: NonConformityUncheckedUpdateManyWithoutCompanyNestedInput
+    sireInspections?: SireInspectionUncheckedUpdateManyWithoutCompanyNestedInput
+    pscInspections?: PscInspectionUncheckedUpdateManyWithoutCompanyNestedInput
+    cdiInspections?: CdiInspectionUncheckedUpdateManyWithoutCompanyNestedInput
+    internalAudits?: InternalAuditUncheckedUpdateManyWithoutCompanyNestedInput
+    externalAudits?: ExternalAuditUncheckedUpdateManyWithoutCompanyNestedInput
+    emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutCompanyNestedInput
+    controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutCompanyNestedInput
+    circulars?: CircularUncheckedUpdateManyWithoutCompanyNestedInput
+    riskAssessments?: RiskAssessmentUncheckedUpdateManyWithoutCompanyNestedInput
+    defects?: DefectUncheckedUpdateManyWithoutCompanyNestedInput
+  }
+
+  export type VesselUpsertWithoutSafetyMeetingsInput = {
+    update: XOR<VesselUpdateWithoutSafetyMeetingsInput, VesselUncheckedUpdateWithoutSafetyMeetingsInput>
+    create: XOR<VesselCreateWithoutSafetyMeetingsInput, VesselUncheckedCreateWithoutSafetyMeetingsInput>
+    where?: VesselWhereInput
+  }
+
+  export type VesselUpdateToOneWithWhereWithoutSafetyMeetingsInput = {
+    where?: VesselWhereInput
+    data: XOR<VesselUpdateWithoutSafetyMeetingsInput, VesselUncheckedUpdateWithoutSafetyMeetingsInput>
+  }
+
+  export type VesselUpdateWithoutSafetyMeetingsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: NullableStringFieldUpdateOperationsInput | string | null
+    imo?: StringFieldUpdateOperationsInput | string
+    officialNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    callSign?: NullableStringFieldUpdateOperationsInput | string | null
+    mmsi?: NullableStringFieldUpdateOperationsInput | string | null
+    flag?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: StringFieldUpdateOperationsInput | string
+    classificationSociety?: NullableStringFieldUpdateOperationsInput | string | null
+    yearBuilt?: NullableIntFieldUpdateOperationsInput | number | null
+    grossTonnage?: NullableFloatFieldUpdateOperationsInput | number | null
+    loa?: NullableFloatFieldUpdateOperationsInput | number | null
+    breadth?: NullableFloatFieldUpdateOperationsInput | number | null
+    depth?: NullableFloatFieldUpdateOperationsInput | number | null
+    status?: EnumVesselStatusFieldUpdateOperationsInput | $Enums.VesselStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    company?: CompanyUpdateOneRequiredWithoutVesselsNestedInput
+    smsDocuments?: SmsDocumentUpdateManyWithoutVesselNestedInput
+    incidents?: IncidentUpdateManyWithoutVesselNestedInput
+    nearMisses?: NearMissUpdateManyWithoutVesselNestedInput
+    nonConformities?: NonConformityUpdateManyWithoutVesselNestedInput
+    sireInspections?: SireInspectionUpdateManyWithoutVesselNestedInput
+    pscInspections?: PscInspectionUpdateManyWithoutVesselNestedInput
+    cdiInspections?: CdiInspectionUpdateManyWithoutVesselNestedInput
+    internalAudits?: InternalAuditUpdateManyWithoutVesselNestedInput
+    externalAudits?: ExternalAuditUpdateManyWithoutVesselNestedInput
+    emergencyDrills?: EmergencyDrillUpdateManyWithoutVesselNestedInput
+    controlledDocuments?: ControlledDocumentUpdateManyWithoutVesselNestedInput
+    circulars?: CircularUpdateManyWithoutVesselNestedInput
+    riskAssessments?: RiskAssessmentUpdateManyWithoutVesselNestedInput
+    defects?: DefectUpdateManyWithoutVesselNestedInput
+  }
+
+  export type VesselUncheckedUpdateWithoutSafetyMeetingsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: NullableStringFieldUpdateOperationsInput | string | null
+    imo?: StringFieldUpdateOperationsInput | string
+    officialNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    callSign?: NullableStringFieldUpdateOperationsInput | string | null
+    mmsi?: NullableStringFieldUpdateOperationsInput | string | null
+    flag?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: StringFieldUpdateOperationsInput | string
+    classificationSociety?: NullableStringFieldUpdateOperationsInput | string | null
+    yearBuilt?: NullableIntFieldUpdateOperationsInput | number | null
+    grossTonnage?: NullableFloatFieldUpdateOperationsInput | number | null
+    loa?: NullableFloatFieldUpdateOperationsInput | number | null
+    breadth?: NullableFloatFieldUpdateOperationsInput | number | null
+    depth?: NullableFloatFieldUpdateOperationsInput | number | null
+    status?: EnumVesselStatusFieldUpdateOperationsInput | $Enums.VesselStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    smsDocuments?: SmsDocumentUncheckedUpdateManyWithoutVesselNestedInput
+    incidents?: IncidentUncheckedUpdateManyWithoutVesselNestedInput
+    nearMisses?: NearMissUncheckedUpdateManyWithoutVesselNestedInput
+    nonConformities?: NonConformityUncheckedUpdateManyWithoutVesselNestedInput
+    sireInspections?: SireInspectionUncheckedUpdateManyWithoutVesselNestedInput
+    pscInspections?: PscInspectionUncheckedUpdateManyWithoutVesselNestedInput
+    cdiInspections?: CdiInspectionUncheckedUpdateManyWithoutVesselNestedInput
+    internalAudits?: InternalAuditUncheckedUpdateManyWithoutVesselNestedInput
+    externalAudits?: ExternalAuditUncheckedUpdateManyWithoutVesselNestedInput
+    emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutVesselNestedInput
+    controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutVesselNestedInput
+    circulars?: CircularUncheckedUpdateManyWithoutVesselNestedInput
+    riskAssessments?: RiskAssessmentUncheckedUpdateManyWithoutVesselNestedInput
+    defects?: DefectUncheckedUpdateManyWithoutVesselNestedInput
+  }
+
+  export type CompanyCreateWithoutEmergencyDrillsInput = {
+    id?: string
+    name: string
+    code: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    users?: UserCreateNestedManyWithoutCompanyInput
+    roles?: RoleCreateNestedManyWithoutCompanyInput
+    vessels?: VesselCreateNestedManyWithoutCompanyInput
+    smsDocuments?: SmsDocumentCreateNestedManyWithoutCompanyInput
+    workflows?: WorkflowDefinitionCreateNestedManyWithoutCompanyInput
+    incidents?: IncidentCreateNestedManyWithoutCompanyInput
+    nearMisses?: NearMissCreateNestedManyWithoutCompanyInput
+    nonConformities?: NonConformityCreateNestedManyWithoutCompanyInput
+    sireInspections?: SireInspectionCreateNestedManyWithoutCompanyInput
+    pscInspections?: PscInspectionCreateNestedManyWithoutCompanyInput
+    cdiInspections?: CdiInspectionCreateNestedManyWithoutCompanyInput
+    internalAudits?: InternalAuditCreateNestedManyWithoutCompanyInput
+    externalAudits?: ExternalAuditCreateNestedManyWithoutCompanyInput
+    safetyMeetings?: SafetyMeetingCreateNestedManyWithoutCompanyInput
+    controlledDocuments?: ControlledDocumentCreateNestedManyWithoutCompanyInput
+    circulars?: CircularCreateNestedManyWithoutCompanyInput
+    riskAssessments?: RiskAssessmentCreateNestedManyWithoutCompanyInput
+    defects?: DefectCreateNestedManyWithoutCompanyInput
+  }
+
+  export type CompanyUncheckedCreateWithoutEmergencyDrillsInput = {
+    id?: string
+    name: string
+    code: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    users?: UserUncheckedCreateNestedManyWithoutCompanyInput
+    roles?: RoleUncheckedCreateNestedManyWithoutCompanyInput
+    vessels?: VesselUncheckedCreateNestedManyWithoutCompanyInput
+    smsDocuments?: SmsDocumentUncheckedCreateNestedManyWithoutCompanyInput
+    workflows?: WorkflowDefinitionUncheckedCreateNestedManyWithoutCompanyInput
+    incidents?: IncidentUncheckedCreateNestedManyWithoutCompanyInput
+    nearMisses?: NearMissUncheckedCreateNestedManyWithoutCompanyInput
+    nonConformities?: NonConformityUncheckedCreateNestedManyWithoutCompanyInput
+    sireInspections?: SireInspectionUncheckedCreateNestedManyWithoutCompanyInput
+    pscInspections?: PscInspectionUncheckedCreateNestedManyWithoutCompanyInput
+    cdiInspections?: CdiInspectionUncheckedCreateNestedManyWithoutCompanyInput
+    internalAudits?: InternalAuditUncheckedCreateNestedManyWithoutCompanyInput
+    externalAudits?: ExternalAuditUncheckedCreateNestedManyWithoutCompanyInput
+    safetyMeetings?: SafetyMeetingUncheckedCreateNestedManyWithoutCompanyInput
+    controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutCompanyInput
+    circulars?: CircularUncheckedCreateNestedManyWithoutCompanyInput
+    riskAssessments?: RiskAssessmentUncheckedCreateNestedManyWithoutCompanyInput
+    defects?: DefectUncheckedCreateNestedManyWithoutCompanyInput
+  }
+
+  export type CompanyCreateOrConnectWithoutEmergencyDrillsInput = {
+    where: CompanyWhereUniqueInput
+    create: XOR<CompanyCreateWithoutEmergencyDrillsInput, CompanyUncheckedCreateWithoutEmergencyDrillsInput>
+  }
+
+  export type VesselCreateWithoutEmergencyDrillsInput = {
+    id?: string
+    name: string
+    code?: string | null
+    imo: string
+    officialNumber?: string | null
+    callSign?: string | null
+    mmsi?: string | null
+    flag?: string | null
+    type?: string
+    classificationSociety?: string | null
+    yearBuilt?: number | null
+    grossTonnage?: number | null
+    loa?: number | null
+    breadth?: number | null
+    depth?: number | null
+    status?: $Enums.VesselStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    company: CompanyCreateNestedOneWithoutVesselsInput
+    smsDocuments?: SmsDocumentCreateNestedManyWithoutVesselInput
+    incidents?: IncidentCreateNestedManyWithoutVesselInput
+    nearMisses?: NearMissCreateNestedManyWithoutVesselInput
+    nonConformities?: NonConformityCreateNestedManyWithoutVesselInput
+    sireInspections?: SireInspectionCreateNestedManyWithoutVesselInput
+    pscInspections?: PscInspectionCreateNestedManyWithoutVesselInput
+    cdiInspections?: CdiInspectionCreateNestedManyWithoutVesselInput
+    internalAudits?: InternalAuditCreateNestedManyWithoutVesselInput
+    externalAudits?: ExternalAuditCreateNestedManyWithoutVesselInput
+    safetyMeetings?: SafetyMeetingCreateNestedManyWithoutVesselInput
+    controlledDocuments?: ControlledDocumentCreateNestedManyWithoutVesselInput
+    circulars?: CircularCreateNestedManyWithoutVesselInput
+    riskAssessments?: RiskAssessmentCreateNestedManyWithoutVesselInput
+    defects?: DefectCreateNestedManyWithoutVesselInput
+  }
+
+  export type VesselUncheckedCreateWithoutEmergencyDrillsInput = {
+    id?: string
+    companyId: string
+    name: string
+    code?: string | null
+    imo: string
+    officialNumber?: string | null
+    callSign?: string | null
+    mmsi?: string | null
+    flag?: string | null
+    type?: string
+    classificationSociety?: string | null
+    yearBuilt?: number | null
+    grossTonnage?: number | null
+    loa?: number | null
+    breadth?: number | null
+    depth?: number | null
+    status?: $Enums.VesselStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    smsDocuments?: SmsDocumentUncheckedCreateNestedManyWithoutVesselInput
+    incidents?: IncidentUncheckedCreateNestedManyWithoutVesselInput
+    nearMisses?: NearMissUncheckedCreateNestedManyWithoutVesselInput
+    nonConformities?: NonConformityUncheckedCreateNestedManyWithoutVesselInput
+    sireInspections?: SireInspectionUncheckedCreateNestedManyWithoutVesselInput
+    pscInspections?: PscInspectionUncheckedCreateNestedManyWithoutVesselInput
+    cdiInspections?: CdiInspectionUncheckedCreateNestedManyWithoutVesselInput
+    internalAudits?: InternalAuditUncheckedCreateNestedManyWithoutVesselInput
+    externalAudits?: ExternalAuditUncheckedCreateNestedManyWithoutVesselInput
+    safetyMeetings?: SafetyMeetingUncheckedCreateNestedManyWithoutVesselInput
+    controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutVesselInput
+    circulars?: CircularUncheckedCreateNestedManyWithoutVesselInput
+    riskAssessments?: RiskAssessmentUncheckedCreateNestedManyWithoutVesselInput
+    defects?: DefectUncheckedCreateNestedManyWithoutVesselInput
+  }
+
+  export type VesselCreateOrConnectWithoutEmergencyDrillsInput = {
+    where: VesselWhereUniqueInput
+    create: XOR<VesselCreateWithoutEmergencyDrillsInput, VesselUncheckedCreateWithoutEmergencyDrillsInput>
+  }
+
+  export type CompanyUpsertWithoutEmergencyDrillsInput = {
+    update: XOR<CompanyUpdateWithoutEmergencyDrillsInput, CompanyUncheckedUpdateWithoutEmergencyDrillsInput>
+    create: XOR<CompanyCreateWithoutEmergencyDrillsInput, CompanyUncheckedCreateWithoutEmergencyDrillsInput>
+    where?: CompanyWhereInput
+  }
+
+  export type CompanyUpdateToOneWithWhereWithoutEmergencyDrillsInput = {
+    where?: CompanyWhereInput
+    data: XOR<CompanyUpdateWithoutEmergencyDrillsInput, CompanyUncheckedUpdateWithoutEmergencyDrillsInput>
+  }
+
+  export type CompanyUpdateWithoutEmergencyDrillsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    users?: UserUpdateManyWithoutCompanyNestedInput
+    roles?: RoleUpdateManyWithoutCompanyNestedInput
+    vessels?: VesselUpdateManyWithoutCompanyNestedInput
+    smsDocuments?: SmsDocumentUpdateManyWithoutCompanyNestedInput
+    workflows?: WorkflowDefinitionUpdateManyWithoutCompanyNestedInput
+    incidents?: IncidentUpdateManyWithoutCompanyNestedInput
+    nearMisses?: NearMissUpdateManyWithoutCompanyNestedInput
+    nonConformities?: NonConformityUpdateManyWithoutCompanyNestedInput
+    sireInspections?: SireInspectionUpdateManyWithoutCompanyNestedInput
+    pscInspections?: PscInspectionUpdateManyWithoutCompanyNestedInput
+    cdiInspections?: CdiInspectionUpdateManyWithoutCompanyNestedInput
+    internalAudits?: InternalAuditUpdateManyWithoutCompanyNestedInput
+    externalAudits?: ExternalAuditUpdateManyWithoutCompanyNestedInput
+    safetyMeetings?: SafetyMeetingUpdateManyWithoutCompanyNestedInput
+    controlledDocuments?: ControlledDocumentUpdateManyWithoutCompanyNestedInput
+    circulars?: CircularUpdateManyWithoutCompanyNestedInput
+    riskAssessments?: RiskAssessmentUpdateManyWithoutCompanyNestedInput
+    defects?: DefectUpdateManyWithoutCompanyNestedInput
+  }
+
+  export type CompanyUncheckedUpdateWithoutEmergencyDrillsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    users?: UserUncheckedUpdateManyWithoutCompanyNestedInput
+    roles?: RoleUncheckedUpdateManyWithoutCompanyNestedInput
+    vessels?: VesselUncheckedUpdateManyWithoutCompanyNestedInput
+    smsDocuments?: SmsDocumentUncheckedUpdateManyWithoutCompanyNestedInput
+    workflows?: WorkflowDefinitionUncheckedUpdateManyWithoutCompanyNestedInput
+    incidents?: IncidentUncheckedUpdateManyWithoutCompanyNestedInput
+    nearMisses?: NearMissUncheckedUpdateManyWithoutCompanyNestedInput
+    nonConformities?: NonConformityUncheckedUpdateManyWithoutCompanyNestedInput
+    sireInspections?: SireInspectionUncheckedUpdateManyWithoutCompanyNestedInput
+    pscInspections?: PscInspectionUncheckedUpdateManyWithoutCompanyNestedInput
+    cdiInspections?: CdiInspectionUncheckedUpdateManyWithoutCompanyNestedInput
+    internalAudits?: InternalAuditUncheckedUpdateManyWithoutCompanyNestedInput
+    externalAudits?: ExternalAuditUncheckedUpdateManyWithoutCompanyNestedInput
+    safetyMeetings?: SafetyMeetingUncheckedUpdateManyWithoutCompanyNestedInput
+    controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutCompanyNestedInput
+    circulars?: CircularUncheckedUpdateManyWithoutCompanyNestedInput
+    riskAssessments?: RiskAssessmentUncheckedUpdateManyWithoutCompanyNestedInput
+    defects?: DefectUncheckedUpdateManyWithoutCompanyNestedInput
+  }
+
+  export type VesselUpsertWithoutEmergencyDrillsInput = {
+    update: XOR<VesselUpdateWithoutEmergencyDrillsInput, VesselUncheckedUpdateWithoutEmergencyDrillsInput>
+    create: XOR<VesselCreateWithoutEmergencyDrillsInput, VesselUncheckedCreateWithoutEmergencyDrillsInput>
+    where?: VesselWhereInput
+  }
+
+  export type VesselUpdateToOneWithWhereWithoutEmergencyDrillsInput = {
+    where?: VesselWhereInput
+    data: XOR<VesselUpdateWithoutEmergencyDrillsInput, VesselUncheckedUpdateWithoutEmergencyDrillsInput>
+  }
+
+  export type VesselUpdateWithoutEmergencyDrillsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: NullableStringFieldUpdateOperationsInput | string | null
+    imo?: StringFieldUpdateOperationsInput | string
+    officialNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    callSign?: NullableStringFieldUpdateOperationsInput | string | null
+    mmsi?: NullableStringFieldUpdateOperationsInput | string | null
+    flag?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: StringFieldUpdateOperationsInput | string
+    classificationSociety?: NullableStringFieldUpdateOperationsInput | string | null
+    yearBuilt?: NullableIntFieldUpdateOperationsInput | number | null
+    grossTonnage?: NullableFloatFieldUpdateOperationsInput | number | null
+    loa?: NullableFloatFieldUpdateOperationsInput | number | null
+    breadth?: NullableFloatFieldUpdateOperationsInput | number | null
+    depth?: NullableFloatFieldUpdateOperationsInput | number | null
+    status?: EnumVesselStatusFieldUpdateOperationsInput | $Enums.VesselStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    company?: CompanyUpdateOneRequiredWithoutVesselsNestedInput
+    smsDocuments?: SmsDocumentUpdateManyWithoutVesselNestedInput
+    incidents?: IncidentUpdateManyWithoutVesselNestedInput
+    nearMisses?: NearMissUpdateManyWithoutVesselNestedInput
+    nonConformities?: NonConformityUpdateManyWithoutVesselNestedInput
+    sireInspections?: SireInspectionUpdateManyWithoutVesselNestedInput
+    pscInspections?: PscInspectionUpdateManyWithoutVesselNestedInput
+    cdiInspections?: CdiInspectionUpdateManyWithoutVesselNestedInput
+    internalAudits?: InternalAuditUpdateManyWithoutVesselNestedInput
+    externalAudits?: ExternalAuditUpdateManyWithoutVesselNestedInput
+    safetyMeetings?: SafetyMeetingUpdateManyWithoutVesselNestedInput
+    controlledDocuments?: ControlledDocumentUpdateManyWithoutVesselNestedInput
+    circulars?: CircularUpdateManyWithoutVesselNestedInput
+    riskAssessments?: RiskAssessmentUpdateManyWithoutVesselNestedInput
+    defects?: DefectUpdateManyWithoutVesselNestedInput
+  }
+
+  export type VesselUncheckedUpdateWithoutEmergencyDrillsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: NullableStringFieldUpdateOperationsInput | string | null
+    imo?: StringFieldUpdateOperationsInput | string
+    officialNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    callSign?: NullableStringFieldUpdateOperationsInput | string | null
+    mmsi?: NullableStringFieldUpdateOperationsInput | string | null
+    flag?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: StringFieldUpdateOperationsInput | string
+    classificationSociety?: NullableStringFieldUpdateOperationsInput | string | null
+    yearBuilt?: NullableIntFieldUpdateOperationsInput | number | null
+    grossTonnage?: NullableFloatFieldUpdateOperationsInput | number | null
+    loa?: NullableFloatFieldUpdateOperationsInput | number | null
+    breadth?: NullableFloatFieldUpdateOperationsInput | number | null
+    depth?: NullableFloatFieldUpdateOperationsInput | number | null
+    status?: EnumVesselStatusFieldUpdateOperationsInput | $Enums.VesselStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    smsDocuments?: SmsDocumentUncheckedUpdateManyWithoutVesselNestedInput
+    incidents?: IncidentUncheckedUpdateManyWithoutVesselNestedInput
+    nearMisses?: NearMissUncheckedUpdateManyWithoutVesselNestedInput
+    nonConformities?: NonConformityUncheckedUpdateManyWithoutVesselNestedInput
+    sireInspections?: SireInspectionUncheckedUpdateManyWithoutVesselNestedInput
+    pscInspections?: PscInspectionUncheckedUpdateManyWithoutVesselNestedInput
+    cdiInspections?: CdiInspectionUncheckedUpdateManyWithoutVesselNestedInput
+    internalAudits?: InternalAuditUncheckedUpdateManyWithoutVesselNestedInput
+    externalAudits?: ExternalAuditUncheckedUpdateManyWithoutVesselNestedInput
+    safetyMeetings?: SafetyMeetingUncheckedUpdateManyWithoutVesselNestedInput
+    controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutVesselNestedInput
+    circulars?: CircularUncheckedUpdateManyWithoutVesselNestedInput
+    riskAssessments?: RiskAssessmentUncheckedUpdateManyWithoutVesselNestedInput
+    defects?: DefectUncheckedUpdateManyWithoutVesselNestedInput
+  }
+
+  export type CompanyCreateWithoutControlledDocumentsInput = {
+    id?: string
+    name: string
+    code: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    users?: UserCreateNestedManyWithoutCompanyInput
+    roles?: RoleCreateNestedManyWithoutCompanyInput
+    vessels?: VesselCreateNestedManyWithoutCompanyInput
+    smsDocuments?: SmsDocumentCreateNestedManyWithoutCompanyInput
+    workflows?: WorkflowDefinitionCreateNestedManyWithoutCompanyInput
+    incidents?: IncidentCreateNestedManyWithoutCompanyInput
+    nearMisses?: NearMissCreateNestedManyWithoutCompanyInput
+    nonConformities?: NonConformityCreateNestedManyWithoutCompanyInput
+    sireInspections?: SireInspectionCreateNestedManyWithoutCompanyInput
+    pscInspections?: PscInspectionCreateNestedManyWithoutCompanyInput
+    cdiInspections?: CdiInspectionCreateNestedManyWithoutCompanyInput
+    internalAudits?: InternalAuditCreateNestedManyWithoutCompanyInput
+    externalAudits?: ExternalAuditCreateNestedManyWithoutCompanyInput
+    safetyMeetings?: SafetyMeetingCreateNestedManyWithoutCompanyInput
+    emergencyDrills?: EmergencyDrillCreateNestedManyWithoutCompanyInput
+    circulars?: CircularCreateNestedManyWithoutCompanyInput
+    riskAssessments?: RiskAssessmentCreateNestedManyWithoutCompanyInput
+    defects?: DefectCreateNestedManyWithoutCompanyInput
+  }
+
+  export type CompanyUncheckedCreateWithoutControlledDocumentsInput = {
+    id?: string
+    name: string
+    code: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    users?: UserUncheckedCreateNestedManyWithoutCompanyInput
+    roles?: RoleUncheckedCreateNestedManyWithoutCompanyInput
+    vessels?: VesselUncheckedCreateNestedManyWithoutCompanyInput
+    smsDocuments?: SmsDocumentUncheckedCreateNestedManyWithoutCompanyInput
+    workflows?: WorkflowDefinitionUncheckedCreateNestedManyWithoutCompanyInput
+    incidents?: IncidentUncheckedCreateNestedManyWithoutCompanyInput
+    nearMisses?: NearMissUncheckedCreateNestedManyWithoutCompanyInput
+    nonConformities?: NonConformityUncheckedCreateNestedManyWithoutCompanyInput
+    sireInspections?: SireInspectionUncheckedCreateNestedManyWithoutCompanyInput
+    pscInspections?: PscInspectionUncheckedCreateNestedManyWithoutCompanyInput
+    cdiInspections?: CdiInspectionUncheckedCreateNestedManyWithoutCompanyInput
+    internalAudits?: InternalAuditUncheckedCreateNestedManyWithoutCompanyInput
+    externalAudits?: ExternalAuditUncheckedCreateNestedManyWithoutCompanyInput
+    safetyMeetings?: SafetyMeetingUncheckedCreateNestedManyWithoutCompanyInput
+    emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutCompanyInput
+    circulars?: CircularUncheckedCreateNestedManyWithoutCompanyInput
+    riskAssessments?: RiskAssessmentUncheckedCreateNestedManyWithoutCompanyInput
+    defects?: DefectUncheckedCreateNestedManyWithoutCompanyInput
+  }
+
+  export type CompanyCreateOrConnectWithoutControlledDocumentsInput = {
+    where: CompanyWhereUniqueInput
+    create: XOR<CompanyCreateWithoutControlledDocumentsInput, CompanyUncheckedCreateWithoutControlledDocumentsInput>
+  }
+
+  export type VesselCreateWithoutControlledDocumentsInput = {
+    id?: string
+    name: string
+    code?: string | null
+    imo: string
+    officialNumber?: string | null
+    callSign?: string | null
+    mmsi?: string | null
+    flag?: string | null
+    type?: string
+    classificationSociety?: string | null
+    yearBuilt?: number | null
+    grossTonnage?: number | null
+    loa?: number | null
+    breadth?: number | null
+    depth?: number | null
+    status?: $Enums.VesselStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    company: CompanyCreateNestedOneWithoutVesselsInput
+    smsDocuments?: SmsDocumentCreateNestedManyWithoutVesselInput
+    incidents?: IncidentCreateNestedManyWithoutVesselInput
+    nearMisses?: NearMissCreateNestedManyWithoutVesselInput
+    nonConformities?: NonConformityCreateNestedManyWithoutVesselInput
+    sireInspections?: SireInspectionCreateNestedManyWithoutVesselInput
+    pscInspections?: PscInspectionCreateNestedManyWithoutVesselInput
+    cdiInspections?: CdiInspectionCreateNestedManyWithoutVesselInput
+    internalAudits?: InternalAuditCreateNestedManyWithoutVesselInput
+    externalAudits?: ExternalAuditCreateNestedManyWithoutVesselInput
+    safetyMeetings?: SafetyMeetingCreateNestedManyWithoutVesselInput
+    emergencyDrills?: EmergencyDrillCreateNestedManyWithoutVesselInput
+    circulars?: CircularCreateNestedManyWithoutVesselInput
+    riskAssessments?: RiskAssessmentCreateNestedManyWithoutVesselInput
+    defects?: DefectCreateNestedManyWithoutVesselInput
+  }
+
+  export type VesselUncheckedCreateWithoutControlledDocumentsInput = {
+    id?: string
+    companyId: string
+    name: string
+    code?: string | null
+    imo: string
+    officialNumber?: string | null
+    callSign?: string | null
+    mmsi?: string | null
+    flag?: string | null
+    type?: string
+    classificationSociety?: string | null
+    yearBuilt?: number | null
+    grossTonnage?: number | null
+    loa?: number | null
+    breadth?: number | null
+    depth?: number | null
+    status?: $Enums.VesselStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    smsDocuments?: SmsDocumentUncheckedCreateNestedManyWithoutVesselInput
+    incidents?: IncidentUncheckedCreateNestedManyWithoutVesselInput
+    nearMisses?: NearMissUncheckedCreateNestedManyWithoutVesselInput
+    nonConformities?: NonConformityUncheckedCreateNestedManyWithoutVesselInput
+    sireInspections?: SireInspectionUncheckedCreateNestedManyWithoutVesselInput
+    pscInspections?: PscInspectionUncheckedCreateNestedManyWithoutVesselInput
+    cdiInspections?: CdiInspectionUncheckedCreateNestedManyWithoutVesselInput
+    internalAudits?: InternalAuditUncheckedCreateNestedManyWithoutVesselInput
+    externalAudits?: ExternalAuditUncheckedCreateNestedManyWithoutVesselInput
+    safetyMeetings?: SafetyMeetingUncheckedCreateNestedManyWithoutVesselInput
+    emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutVesselInput
+    circulars?: CircularUncheckedCreateNestedManyWithoutVesselInput
+    riskAssessments?: RiskAssessmentUncheckedCreateNestedManyWithoutVesselInput
+    defects?: DefectUncheckedCreateNestedManyWithoutVesselInput
+  }
+
+  export type VesselCreateOrConnectWithoutControlledDocumentsInput = {
+    where: VesselWhereUniqueInput
+    create: XOR<VesselCreateWithoutControlledDocumentsInput, VesselUncheckedCreateWithoutControlledDocumentsInput>
+  }
+
+  export type CompanyUpsertWithoutControlledDocumentsInput = {
+    update: XOR<CompanyUpdateWithoutControlledDocumentsInput, CompanyUncheckedUpdateWithoutControlledDocumentsInput>
+    create: XOR<CompanyCreateWithoutControlledDocumentsInput, CompanyUncheckedCreateWithoutControlledDocumentsInput>
+    where?: CompanyWhereInput
+  }
+
+  export type CompanyUpdateToOneWithWhereWithoutControlledDocumentsInput = {
+    where?: CompanyWhereInput
+    data: XOR<CompanyUpdateWithoutControlledDocumentsInput, CompanyUncheckedUpdateWithoutControlledDocumentsInput>
+  }
+
+  export type CompanyUpdateWithoutControlledDocumentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    users?: UserUpdateManyWithoutCompanyNestedInput
+    roles?: RoleUpdateManyWithoutCompanyNestedInput
+    vessels?: VesselUpdateManyWithoutCompanyNestedInput
+    smsDocuments?: SmsDocumentUpdateManyWithoutCompanyNestedInput
+    workflows?: WorkflowDefinitionUpdateManyWithoutCompanyNestedInput
+    incidents?: IncidentUpdateManyWithoutCompanyNestedInput
+    nearMisses?: NearMissUpdateManyWithoutCompanyNestedInput
+    nonConformities?: NonConformityUpdateManyWithoutCompanyNestedInput
+    sireInspections?: SireInspectionUpdateManyWithoutCompanyNestedInput
+    pscInspections?: PscInspectionUpdateManyWithoutCompanyNestedInput
+    cdiInspections?: CdiInspectionUpdateManyWithoutCompanyNestedInput
+    internalAudits?: InternalAuditUpdateManyWithoutCompanyNestedInput
+    externalAudits?: ExternalAuditUpdateManyWithoutCompanyNestedInput
+    safetyMeetings?: SafetyMeetingUpdateManyWithoutCompanyNestedInput
+    emergencyDrills?: EmergencyDrillUpdateManyWithoutCompanyNestedInput
+    circulars?: CircularUpdateManyWithoutCompanyNestedInput
+    riskAssessments?: RiskAssessmentUpdateManyWithoutCompanyNestedInput
+    defects?: DefectUpdateManyWithoutCompanyNestedInput
+  }
+
+  export type CompanyUncheckedUpdateWithoutControlledDocumentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    users?: UserUncheckedUpdateManyWithoutCompanyNestedInput
+    roles?: RoleUncheckedUpdateManyWithoutCompanyNestedInput
+    vessels?: VesselUncheckedUpdateManyWithoutCompanyNestedInput
+    smsDocuments?: SmsDocumentUncheckedUpdateManyWithoutCompanyNestedInput
+    workflows?: WorkflowDefinitionUncheckedUpdateManyWithoutCompanyNestedInput
+    incidents?: IncidentUncheckedUpdateManyWithoutCompanyNestedInput
+    nearMisses?: NearMissUncheckedUpdateManyWithoutCompanyNestedInput
+    nonConformities?: NonConformityUncheckedUpdateManyWithoutCompanyNestedInput
+    sireInspections?: SireInspectionUncheckedUpdateManyWithoutCompanyNestedInput
+    pscInspections?: PscInspectionUncheckedUpdateManyWithoutCompanyNestedInput
+    cdiInspections?: CdiInspectionUncheckedUpdateManyWithoutCompanyNestedInput
+    internalAudits?: InternalAuditUncheckedUpdateManyWithoutCompanyNestedInput
+    externalAudits?: ExternalAuditUncheckedUpdateManyWithoutCompanyNestedInput
+    safetyMeetings?: SafetyMeetingUncheckedUpdateManyWithoutCompanyNestedInput
+    emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutCompanyNestedInput
+    circulars?: CircularUncheckedUpdateManyWithoutCompanyNestedInput
+    riskAssessments?: RiskAssessmentUncheckedUpdateManyWithoutCompanyNestedInput
+    defects?: DefectUncheckedUpdateManyWithoutCompanyNestedInput
+  }
+
+  export type VesselUpsertWithoutControlledDocumentsInput = {
+    update: XOR<VesselUpdateWithoutControlledDocumentsInput, VesselUncheckedUpdateWithoutControlledDocumentsInput>
+    create: XOR<VesselCreateWithoutControlledDocumentsInput, VesselUncheckedCreateWithoutControlledDocumentsInput>
+    where?: VesselWhereInput
+  }
+
+  export type VesselUpdateToOneWithWhereWithoutControlledDocumentsInput = {
+    where?: VesselWhereInput
+    data: XOR<VesselUpdateWithoutControlledDocumentsInput, VesselUncheckedUpdateWithoutControlledDocumentsInput>
+  }
+
+  export type VesselUpdateWithoutControlledDocumentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: NullableStringFieldUpdateOperationsInput | string | null
+    imo?: StringFieldUpdateOperationsInput | string
+    officialNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    callSign?: NullableStringFieldUpdateOperationsInput | string | null
+    mmsi?: NullableStringFieldUpdateOperationsInput | string | null
+    flag?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: StringFieldUpdateOperationsInput | string
+    classificationSociety?: NullableStringFieldUpdateOperationsInput | string | null
+    yearBuilt?: NullableIntFieldUpdateOperationsInput | number | null
+    grossTonnage?: NullableFloatFieldUpdateOperationsInput | number | null
+    loa?: NullableFloatFieldUpdateOperationsInput | number | null
+    breadth?: NullableFloatFieldUpdateOperationsInput | number | null
+    depth?: NullableFloatFieldUpdateOperationsInput | number | null
+    status?: EnumVesselStatusFieldUpdateOperationsInput | $Enums.VesselStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    company?: CompanyUpdateOneRequiredWithoutVesselsNestedInput
+    smsDocuments?: SmsDocumentUpdateManyWithoutVesselNestedInput
+    incidents?: IncidentUpdateManyWithoutVesselNestedInput
+    nearMisses?: NearMissUpdateManyWithoutVesselNestedInput
+    nonConformities?: NonConformityUpdateManyWithoutVesselNestedInput
+    sireInspections?: SireInspectionUpdateManyWithoutVesselNestedInput
+    pscInspections?: PscInspectionUpdateManyWithoutVesselNestedInput
+    cdiInspections?: CdiInspectionUpdateManyWithoutVesselNestedInput
+    internalAudits?: InternalAuditUpdateManyWithoutVesselNestedInput
+    externalAudits?: ExternalAuditUpdateManyWithoutVesselNestedInput
+    safetyMeetings?: SafetyMeetingUpdateManyWithoutVesselNestedInput
+    emergencyDrills?: EmergencyDrillUpdateManyWithoutVesselNestedInput
+    circulars?: CircularUpdateManyWithoutVesselNestedInput
+    riskAssessments?: RiskAssessmentUpdateManyWithoutVesselNestedInput
+    defects?: DefectUpdateManyWithoutVesselNestedInput
+  }
+
+  export type VesselUncheckedUpdateWithoutControlledDocumentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: NullableStringFieldUpdateOperationsInput | string | null
+    imo?: StringFieldUpdateOperationsInput | string
+    officialNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    callSign?: NullableStringFieldUpdateOperationsInput | string | null
+    mmsi?: NullableStringFieldUpdateOperationsInput | string | null
+    flag?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: StringFieldUpdateOperationsInput | string
+    classificationSociety?: NullableStringFieldUpdateOperationsInput | string | null
+    yearBuilt?: NullableIntFieldUpdateOperationsInput | number | null
+    grossTonnage?: NullableFloatFieldUpdateOperationsInput | number | null
+    loa?: NullableFloatFieldUpdateOperationsInput | number | null
+    breadth?: NullableFloatFieldUpdateOperationsInput | number | null
+    depth?: NullableFloatFieldUpdateOperationsInput | number | null
+    status?: EnumVesselStatusFieldUpdateOperationsInput | $Enums.VesselStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    smsDocuments?: SmsDocumentUncheckedUpdateManyWithoutVesselNestedInput
+    incidents?: IncidentUncheckedUpdateManyWithoutVesselNestedInput
+    nearMisses?: NearMissUncheckedUpdateManyWithoutVesselNestedInput
+    nonConformities?: NonConformityUncheckedUpdateManyWithoutVesselNestedInput
+    sireInspections?: SireInspectionUncheckedUpdateManyWithoutVesselNestedInput
+    pscInspections?: PscInspectionUncheckedUpdateManyWithoutVesselNestedInput
+    cdiInspections?: CdiInspectionUncheckedUpdateManyWithoutVesselNestedInput
+    internalAudits?: InternalAuditUncheckedUpdateManyWithoutVesselNestedInput
+    externalAudits?: ExternalAuditUncheckedUpdateManyWithoutVesselNestedInput
+    safetyMeetings?: SafetyMeetingUncheckedUpdateManyWithoutVesselNestedInput
+    emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutVesselNestedInput
+    circulars?: CircularUncheckedUpdateManyWithoutVesselNestedInput
+    riskAssessments?: RiskAssessmentUncheckedUpdateManyWithoutVesselNestedInput
+    defects?: DefectUncheckedUpdateManyWithoutVesselNestedInput
+  }
+
+  export type CompanyCreateWithoutCircularsInput = {
+    id?: string
+    name: string
+    code: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    users?: UserCreateNestedManyWithoutCompanyInput
+    roles?: RoleCreateNestedManyWithoutCompanyInput
+    vessels?: VesselCreateNestedManyWithoutCompanyInput
+    smsDocuments?: SmsDocumentCreateNestedManyWithoutCompanyInput
+    workflows?: WorkflowDefinitionCreateNestedManyWithoutCompanyInput
+    incidents?: IncidentCreateNestedManyWithoutCompanyInput
+    nearMisses?: NearMissCreateNestedManyWithoutCompanyInput
+    nonConformities?: NonConformityCreateNestedManyWithoutCompanyInput
+    sireInspections?: SireInspectionCreateNestedManyWithoutCompanyInput
+    pscInspections?: PscInspectionCreateNestedManyWithoutCompanyInput
+    cdiInspections?: CdiInspectionCreateNestedManyWithoutCompanyInput
+    internalAudits?: InternalAuditCreateNestedManyWithoutCompanyInput
+    externalAudits?: ExternalAuditCreateNestedManyWithoutCompanyInput
+    safetyMeetings?: SafetyMeetingCreateNestedManyWithoutCompanyInput
+    emergencyDrills?: EmergencyDrillCreateNestedManyWithoutCompanyInput
+    controlledDocuments?: ControlledDocumentCreateNestedManyWithoutCompanyInput
+    riskAssessments?: RiskAssessmentCreateNestedManyWithoutCompanyInput
+    defects?: DefectCreateNestedManyWithoutCompanyInput
+  }
+
+  export type CompanyUncheckedCreateWithoutCircularsInput = {
+    id?: string
+    name: string
+    code: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    users?: UserUncheckedCreateNestedManyWithoutCompanyInput
+    roles?: RoleUncheckedCreateNestedManyWithoutCompanyInput
+    vessels?: VesselUncheckedCreateNestedManyWithoutCompanyInput
+    smsDocuments?: SmsDocumentUncheckedCreateNestedManyWithoutCompanyInput
+    workflows?: WorkflowDefinitionUncheckedCreateNestedManyWithoutCompanyInput
+    incidents?: IncidentUncheckedCreateNestedManyWithoutCompanyInput
+    nearMisses?: NearMissUncheckedCreateNestedManyWithoutCompanyInput
+    nonConformities?: NonConformityUncheckedCreateNestedManyWithoutCompanyInput
+    sireInspections?: SireInspectionUncheckedCreateNestedManyWithoutCompanyInput
+    pscInspections?: PscInspectionUncheckedCreateNestedManyWithoutCompanyInput
+    cdiInspections?: CdiInspectionUncheckedCreateNestedManyWithoutCompanyInput
+    internalAudits?: InternalAuditUncheckedCreateNestedManyWithoutCompanyInput
+    externalAudits?: ExternalAuditUncheckedCreateNestedManyWithoutCompanyInput
+    safetyMeetings?: SafetyMeetingUncheckedCreateNestedManyWithoutCompanyInput
+    emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutCompanyInput
+    controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutCompanyInput
+    riskAssessments?: RiskAssessmentUncheckedCreateNestedManyWithoutCompanyInput
+    defects?: DefectUncheckedCreateNestedManyWithoutCompanyInput
+  }
+
+  export type CompanyCreateOrConnectWithoutCircularsInput = {
+    where: CompanyWhereUniqueInput
+    create: XOR<CompanyCreateWithoutCircularsInput, CompanyUncheckedCreateWithoutCircularsInput>
+  }
+
+  export type VesselCreateWithoutCircularsInput = {
+    id?: string
+    name: string
+    code?: string | null
+    imo: string
+    officialNumber?: string | null
+    callSign?: string | null
+    mmsi?: string | null
+    flag?: string | null
+    type?: string
+    classificationSociety?: string | null
+    yearBuilt?: number | null
+    grossTonnage?: number | null
+    loa?: number | null
+    breadth?: number | null
+    depth?: number | null
+    status?: $Enums.VesselStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    company: CompanyCreateNestedOneWithoutVesselsInput
+    smsDocuments?: SmsDocumentCreateNestedManyWithoutVesselInput
+    incidents?: IncidentCreateNestedManyWithoutVesselInput
+    nearMisses?: NearMissCreateNestedManyWithoutVesselInput
+    nonConformities?: NonConformityCreateNestedManyWithoutVesselInput
+    sireInspections?: SireInspectionCreateNestedManyWithoutVesselInput
+    pscInspections?: PscInspectionCreateNestedManyWithoutVesselInput
+    cdiInspections?: CdiInspectionCreateNestedManyWithoutVesselInput
+    internalAudits?: InternalAuditCreateNestedManyWithoutVesselInput
+    externalAudits?: ExternalAuditCreateNestedManyWithoutVesselInput
+    safetyMeetings?: SafetyMeetingCreateNestedManyWithoutVesselInput
+    emergencyDrills?: EmergencyDrillCreateNestedManyWithoutVesselInput
+    controlledDocuments?: ControlledDocumentCreateNestedManyWithoutVesselInput
+    riskAssessments?: RiskAssessmentCreateNestedManyWithoutVesselInput
+    defects?: DefectCreateNestedManyWithoutVesselInput
+  }
+
+  export type VesselUncheckedCreateWithoutCircularsInput = {
+    id?: string
+    companyId: string
+    name: string
+    code?: string | null
+    imo: string
+    officialNumber?: string | null
+    callSign?: string | null
+    mmsi?: string | null
+    flag?: string | null
+    type?: string
+    classificationSociety?: string | null
+    yearBuilt?: number | null
+    grossTonnage?: number | null
+    loa?: number | null
+    breadth?: number | null
+    depth?: number | null
+    status?: $Enums.VesselStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    smsDocuments?: SmsDocumentUncheckedCreateNestedManyWithoutVesselInput
+    incidents?: IncidentUncheckedCreateNestedManyWithoutVesselInput
+    nearMisses?: NearMissUncheckedCreateNestedManyWithoutVesselInput
+    nonConformities?: NonConformityUncheckedCreateNestedManyWithoutVesselInput
+    sireInspections?: SireInspectionUncheckedCreateNestedManyWithoutVesselInput
+    pscInspections?: PscInspectionUncheckedCreateNestedManyWithoutVesselInput
+    cdiInspections?: CdiInspectionUncheckedCreateNestedManyWithoutVesselInput
+    internalAudits?: InternalAuditUncheckedCreateNestedManyWithoutVesselInput
+    externalAudits?: ExternalAuditUncheckedCreateNestedManyWithoutVesselInput
+    safetyMeetings?: SafetyMeetingUncheckedCreateNestedManyWithoutVesselInput
+    emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutVesselInput
+    controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutVesselInput
+    riskAssessments?: RiskAssessmentUncheckedCreateNestedManyWithoutVesselInput
+    defects?: DefectUncheckedCreateNestedManyWithoutVesselInput
+  }
+
+  export type VesselCreateOrConnectWithoutCircularsInput = {
+    where: VesselWhereUniqueInput
+    create: XOR<VesselCreateWithoutCircularsInput, VesselUncheckedCreateWithoutCircularsInput>
+  }
+
+  export type CompanyUpsertWithoutCircularsInput = {
+    update: XOR<CompanyUpdateWithoutCircularsInput, CompanyUncheckedUpdateWithoutCircularsInput>
+    create: XOR<CompanyCreateWithoutCircularsInput, CompanyUncheckedCreateWithoutCircularsInput>
+    where?: CompanyWhereInput
+  }
+
+  export type CompanyUpdateToOneWithWhereWithoutCircularsInput = {
+    where?: CompanyWhereInput
+    data: XOR<CompanyUpdateWithoutCircularsInput, CompanyUncheckedUpdateWithoutCircularsInput>
+  }
+
+  export type CompanyUpdateWithoutCircularsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    users?: UserUpdateManyWithoutCompanyNestedInput
+    roles?: RoleUpdateManyWithoutCompanyNestedInput
+    vessels?: VesselUpdateManyWithoutCompanyNestedInput
+    smsDocuments?: SmsDocumentUpdateManyWithoutCompanyNestedInput
+    workflows?: WorkflowDefinitionUpdateManyWithoutCompanyNestedInput
+    incidents?: IncidentUpdateManyWithoutCompanyNestedInput
+    nearMisses?: NearMissUpdateManyWithoutCompanyNestedInput
+    nonConformities?: NonConformityUpdateManyWithoutCompanyNestedInput
+    sireInspections?: SireInspectionUpdateManyWithoutCompanyNestedInput
+    pscInspections?: PscInspectionUpdateManyWithoutCompanyNestedInput
+    cdiInspections?: CdiInspectionUpdateManyWithoutCompanyNestedInput
+    internalAudits?: InternalAuditUpdateManyWithoutCompanyNestedInput
+    externalAudits?: ExternalAuditUpdateManyWithoutCompanyNestedInput
+    safetyMeetings?: SafetyMeetingUpdateManyWithoutCompanyNestedInput
+    emergencyDrills?: EmergencyDrillUpdateManyWithoutCompanyNestedInput
+    controlledDocuments?: ControlledDocumentUpdateManyWithoutCompanyNestedInput
+    riskAssessments?: RiskAssessmentUpdateManyWithoutCompanyNestedInput
+    defects?: DefectUpdateManyWithoutCompanyNestedInput
+  }
+
+  export type CompanyUncheckedUpdateWithoutCircularsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    users?: UserUncheckedUpdateManyWithoutCompanyNestedInput
+    roles?: RoleUncheckedUpdateManyWithoutCompanyNestedInput
+    vessels?: VesselUncheckedUpdateManyWithoutCompanyNestedInput
+    smsDocuments?: SmsDocumentUncheckedUpdateManyWithoutCompanyNestedInput
+    workflows?: WorkflowDefinitionUncheckedUpdateManyWithoutCompanyNestedInput
+    incidents?: IncidentUncheckedUpdateManyWithoutCompanyNestedInput
+    nearMisses?: NearMissUncheckedUpdateManyWithoutCompanyNestedInput
+    nonConformities?: NonConformityUncheckedUpdateManyWithoutCompanyNestedInput
+    sireInspections?: SireInspectionUncheckedUpdateManyWithoutCompanyNestedInput
+    pscInspections?: PscInspectionUncheckedUpdateManyWithoutCompanyNestedInput
+    cdiInspections?: CdiInspectionUncheckedUpdateManyWithoutCompanyNestedInput
+    internalAudits?: InternalAuditUncheckedUpdateManyWithoutCompanyNestedInput
+    externalAudits?: ExternalAuditUncheckedUpdateManyWithoutCompanyNestedInput
+    safetyMeetings?: SafetyMeetingUncheckedUpdateManyWithoutCompanyNestedInput
+    emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutCompanyNestedInput
+    controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutCompanyNestedInput
+    riskAssessments?: RiskAssessmentUncheckedUpdateManyWithoutCompanyNestedInput
+    defects?: DefectUncheckedUpdateManyWithoutCompanyNestedInput
+  }
+
+  export type VesselUpsertWithoutCircularsInput = {
+    update: XOR<VesselUpdateWithoutCircularsInput, VesselUncheckedUpdateWithoutCircularsInput>
+    create: XOR<VesselCreateWithoutCircularsInput, VesselUncheckedCreateWithoutCircularsInput>
+    where?: VesselWhereInput
+  }
+
+  export type VesselUpdateToOneWithWhereWithoutCircularsInput = {
+    where?: VesselWhereInput
+    data: XOR<VesselUpdateWithoutCircularsInput, VesselUncheckedUpdateWithoutCircularsInput>
+  }
+
+  export type VesselUpdateWithoutCircularsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: NullableStringFieldUpdateOperationsInput | string | null
+    imo?: StringFieldUpdateOperationsInput | string
+    officialNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    callSign?: NullableStringFieldUpdateOperationsInput | string | null
+    mmsi?: NullableStringFieldUpdateOperationsInput | string | null
+    flag?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: StringFieldUpdateOperationsInput | string
+    classificationSociety?: NullableStringFieldUpdateOperationsInput | string | null
+    yearBuilt?: NullableIntFieldUpdateOperationsInput | number | null
+    grossTonnage?: NullableFloatFieldUpdateOperationsInput | number | null
+    loa?: NullableFloatFieldUpdateOperationsInput | number | null
+    breadth?: NullableFloatFieldUpdateOperationsInput | number | null
+    depth?: NullableFloatFieldUpdateOperationsInput | number | null
+    status?: EnumVesselStatusFieldUpdateOperationsInput | $Enums.VesselStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    company?: CompanyUpdateOneRequiredWithoutVesselsNestedInput
+    smsDocuments?: SmsDocumentUpdateManyWithoutVesselNestedInput
+    incidents?: IncidentUpdateManyWithoutVesselNestedInput
+    nearMisses?: NearMissUpdateManyWithoutVesselNestedInput
+    nonConformities?: NonConformityUpdateManyWithoutVesselNestedInput
+    sireInspections?: SireInspectionUpdateManyWithoutVesselNestedInput
+    pscInspections?: PscInspectionUpdateManyWithoutVesselNestedInput
+    cdiInspections?: CdiInspectionUpdateManyWithoutVesselNestedInput
+    internalAudits?: InternalAuditUpdateManyWithoutVesselNestedInput
+    externalAudits?: ExternalAuditUpdateManyWithoutVesselNestedInput
+    safetyMeetings?: SafetyMeetingUpdateManyWithoutVesselNestedInput
+    emergencyDrills?: EmergencyDrillUpdateManyWithoutVesselNestedInput
+    controlledDocuments?: ControlledDocumentUpdateManyWithoutVesselNestedInput
+    riskAssessments?: RiskAssessmentUpdateManyWithoutVesselNestedInput
+    defects?: DefectUpdateManyWithoutVesselNestedInput
+  }
+
+  export type VesselUncheckedUpdateWithoutCircularsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: NullableStringFieldUpdateOperationsInput | string | null
+    imo?: StringFieldUpdateOperationsInput | string
+    officialNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    callSign?: NullableStringFieldUpdateOperationsInput | string | null
+    mmsi?: NullableStringFieldUpdateOperationsInput | string | null
+    flag?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: StringFieldUpdateOperationsInput | string
+    classificationSociety?: NullableStringFieldUpdateOperationsInput | string | null
+    yearBuilt?: NullableIntFieldUpdateOperationsInput | number | null
+    grossTonnage?: NullableFloatFieldUpdateOperationsInput | number | null
+    loa?: NullableFloatFieldUpdateOperationsInput | number | null
+    breadth?: NullableFloatFieldUpdateOperationsInput | number | null
+    depth?: NullableFloatFieldUpdateOperationsInput | number | null
+    status?: EnumVesselStatusFieldUpdateOperationsInput | $Enums.VesselStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    smsDocuments?: SmsDocumentUncheckedUpdateManyWithoutVesselNestedInput
+    incidents?: IncidentUncheckedUpdateManyWithoutVesselNestedInput
+    nearMisses?: NearMissUncheckedUpdateManyWithoutVesselNestedInput
+    nonConformities?: NonConformityUncheckedUpdateManyWithoutVesselNestedInput
+    sireInspections?: SireInspectionUncheckedUpdateManyWithoutVesselNestedInput
+    pscInspections?: PscInspectionUncheckedUpdateManyWithoutVesselNestedInput
+    cdiInspections?: CdiInspectionUncheckedUpdateManyWithoutVesselNestedInput
+    internalAudits?: InternalAuditUncheckedUpdateManyWithoutVesselNestedInput
+    externalAudits?: ExternalAuditUncheckedUpdateManyWithoutVesselNestedInput
+    safetyMeetings?: SafetyMeetingUncheckedUpdateManyWithoutVesselNestedInput
+    emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutVesselNestedInput
+    controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutVesselNestedInput
+    riskAssessments?: RiskAssessmentUncheckedUpdateManyWithoutVesselNestedInput
+    defects?: DefectUncheckedUpdateManyWithoutVesselNestedInput
+  }
+
+  export type CompanyCreateWithoutRiskAssessmentsInput = {
+    id?: string
+    name: string
+    code: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    users?: UserCreateNestedManyWithoutCompanyInput
+    roles?: RoleCreateNestedManyWithoutCompanyInput
+    vessels?: VesselCreateNestedManyWithoutCompanyInput
+    smsDocuments?: SmsDocumentCreateNestedManyWithoutCompanyInput
+    workflows?: WorkflowDefinitionCreateNestedManyWithoutCompanyInput
+    incidents?: IncidentCreateNestedManyWithoutCompanyInput
+    nearMisses?: NearMissCreateNestedManyWithoutCompanyInput
+    nonConformities?: NonConformityCreateNestedManyWithoutCompanyInput
+    sireInspections?: SireInspectionCreateNestedManyWithoutCompanyInput
+    pscInspections?: PscInspectionCreateNestedManyWithoutCompanyInput
+    cdiInspections?: CdiInspectionCreateNestedManyWithoutCompanyInput
+    internalAudits?: InternalAuditCreateNestedManyWithoutCompanyInput
+    externalAudits?: ExternalAuditCreateNestedManyWithoutCompanyInput
+    safetyMeetings?: SafetyMeetingCreateNestedManyWithoutCompanyInput
+    emergencyDrills?: EmergencyDrillCreateNestedManyWithoutCompanyInput
+    controlledDocuments?: ControlledDocumentCreateNestedManyWithoutCompanyInput
+    circulars?: CircularCreateNestedManyWithoutCompanyInput
+    defects?: DefectCreateNestedManyWithoutCompanyInput
+  }
+
+  export type CompanyUncheckedCreateWithoutRiskAssessmentsInput = {
+    id?: string
+    name: string
+    code: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    users?: UserUncheckedCreateNestedManyWithoutCompanyInput
+    roles?: RoleUncheckedCreateNestedManyWithoutCompanyInput
+    vessels?: VesselUncheckedCreateNestedManyWithoutCompanyInput
+    smsDocuments?: SmsDocumentUncheckedCreateNestedManyWithoutCompanyInput
+    workflows?: WorkflowDefinitionUncheckedCreateNestedManyWithoutCompanyInput
+    incidents?: IncidentUncheckedCreateNestedManyWithoutCompanyInput
+    nearMisses?: NearMissUncheckedCreateNestedManyWithoutCompanyInput
+    nonConformities?: NonConformityUncheckedCreateNestedManyWithoutCompanyInput
+    sireInspections?: SireInspectionUncheckedCreateNestedManyWithoutCompanyInput
+    pscInspections?: PscInspectionUncheckedCreateNestedManyWithoutCompanyInput
+    cdiInspections?: CdiInspectionUncheckedCreateNestedManyWithoutCompanyInput
+    internalAudits?: InternalAuditUncheckedCreateNestedManyWithoutCompanyInput
+    externalAudits?: ExternalAuditUncheckedCreateNestedManyWithoutCompanyInput
+    safetyMeetings?: SafetyMeetingUncheckedCreateNestedManyWithoutCompanyInput
+    emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutCompanyInput
+    controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutCompanyInput
+    circulars?: CircularUncheckedCreateNestedManyWithoutCompanyInput
+    defects?: DefectUncheckedCreateNestedManyWithoutCompanyInput
+  }
+
+  export type CompanyCreateOrConnectWithoutRiskAssessmentsInput = {
+    where: CompanyWhereUniqueInput
+    create: XOR<CompanyCreateWithoutRiskAssessmentsInput, CompanyUncheckedCreateWithoutRiskAssessmentsInput>
+  }
+
+  export type VesselCreateWithoutRiskAssessmentsInput = {
+    id?: string
+    name: string
+    code?: string | null
+    imo: string
+    officialNumber?: string | null
+    callSign?: string | null
+    mmsi?: string | null
+    flag?: string | null
+    type?: string
+    classificationSociety?: string | null
+    yearBuilt?: number | null
+    grossTonnage?: number | null
+    loa?: number | null
+    breadth?: number | null
+    depth?: number | null
+    status?: $Enums.VesselStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    company: CompanyCreateNestedOneWithoutVesselsInput
+    smsDocuments?: SmsDocumentCreateNestedManyWithoutVesselInput
+    incidents?: IncidentCreateNestedManyWithoutVesselInput
+    nearMisses?: NearMissCreateNestedManyWithoutVesselInput
+    nonConformities?: NonConformityCreateNestedManyWithoutVesselInput
+    sireInspections?: SireInspectionCreateNestedManyWithoutVesselInput
+    pscInspections?: PscInspectionCreateNestedManyWithoutVesselInput
+    cdiInspections?: CdiInspectionCreateNestedManyWithoutVesselInput
+    internalAudits?: InternalAuditCreateNestedManyWithoutVesselInput
+    externalAudits?: ExternalAuditCreateNestedManyWithoutVesselInput
+    safetyMeetings?: SafetyMeetingCreateNestedManyWithoutVesselInput
+    emergencyDrills?: EmergencyDrillCreateNestedManyWithoutVesselInput
+    controlledDocuments?: ControlledDocumentCreateNestedManyWithoutVesselInput
+    circulars?: CircularCreateNestedManyWithoutVesselInput
+    defects?: DefectCreateNestedManyWithoutVesselInput
+  }
+
+  export type VesselUncheckedCreateWithoutRiskAssessmentsInput = {
+    id?: string
+    companyId: string
+    name: string
+    code?: string | null
+    imo: string
+    officialNumber?: string | null
+    callSign?: string | null
+    mmsi?: string | null
+    flag?: string | null
+    type?: string
+    classificationSociety?: string | null
+    yearBuilt?: number | null
+    grossTonnage?: number | null
+    loa?: number | null
+    breadth?: number | null
+    depth?: number | null
+    status?: $Enums.VesselStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    smsDocuments?: SmsDocumentUncheckedCreateNestedManyWithoutVesselInput
+    incidents?: IncidentUncheckedCreateNestedManyWithoutVesselInput
+    nearMisses?: NearMissUncheckedCreateNestedManyWithoutVesselInput
+    nonConformities?: NonConformityUncheckedCreateNestedManyWithoutVesselInput
+    sireInspections?: SireInspectionUncheckedCreateNestedManyWithoutVesselInput
+    pscInspections?: PscInspectionUncheckedCreateNestedManyWithoutVesselInput
+    cdiInspections?: CdiInspectionUncheckedCreateNestedManyWithoutVesselInput
+    internalAudits?: InternalAuditUncheckedCreateNestedManyWithoutVesselInput
+    externalAudits?: ExternalAuditUncheckedCreateNestedManyWithoutVesselInput
+    safetyMeetings?: SafetyMeetingUncheckedCreateNestedManyWithoutVesselInput
+    emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutVesselInput
+    controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutVesselInput
+    circulars?: CircularUncheckedCreateNestedManyWithoutVesselInput
+    defects?: DefectUncheckedCreateNestedManyWithoutVesselInput
+  }
+
+  export type VesselCreateOrConnectWithoutRiskAssessmentsInput = {
+    where: VesselWhereUniqueInput
+    create: XOR<VesselCreateWithoutRiskAssessmentsInput, VesselUncheckedCreateWithoutRiskAssessmentsInput>
+  }
+
+  export type CompanyUpsertWithoutRiskAssessmentsInput = {
+    update: XOR<CompanyUpdateWithoutRiskAssessmentsInput, CompanyUncheckedUpdateWithoutRiskAssessmentsInput>
+    create: XOR<CompanyCreateWithoutRiskAssessmentsInput, CompanyUncheckedCreateWithoutRiskAssessmentsInput>
+    where?: CompanyWhereInput
+  }
+
+  export type CompanyUpdateToOneWithWhereWithoutRiskAssessmentsInput = {
+    where?: CompanyWhereInput
+    data: XOR<CompanyUpdateWithoutRiskAssessmentsInput, CompanyUncheckedUpdateWithoutRiskAssessmentsInput>
+  }
+
+  export type CompanyUpdateWithoutRiskAssessmentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    users?: UserUpdateManyWithoutCompanyNestedInput
+    roles?: RoleUpdateManyWithoutCompanyNestedInput
+    vessels?: VesselUpdateManyWithoutCompanyNestedInput
+    smsDocuments?: SmsDocumentUpdateManyWithoutCompanyNestedInput
+    workflows?: WorkflowDefinitionUpdateManyWithoutCompanyNestedInput
+    incidents?: IncidentUpdateManyWithoutCompanyNestedInput
+    nearMisses?: NearMissUpdateManyWithoutCompanyNestedInput
+    nonConformities?: NonConformityUpdateManyWithoutCompanyNestedInput
+    sireInspections?: SireInspectionUpdateManyWithoutCompanyNestedInput
+    pscInspections?: PscInspectionUpdateManyWithoutCompanyNestedInput
+    cdiInspections?: CdiInspectionUpdateManyWithoutCompanyNestedInput
+    internalAudits?: InternalAuditUpdateManyWithoutCompanyNestedInput
+    externalAudits?: ExternalAuditUpdateManyWithoutCompanyNestedInput
+    safetyMeetings?: SafetyMeetingUpdateManyWithoutCompanyNestedInput
+    emergencyDrills?: EmergencyDrillUpdateManyWithoutCompanyNestedInput
+    controlledDocuments?: ControlledDocumentUpdateManyWithoutCompanyNestedInput
+    circulars?: CircularUpdateManyWithoutCompanyNestedInput
+    defects?: DefectUpdateManyWithoutCompanyNestedInput
+  }
+
+  export type CompanyUncheckedUpdateWithoutRiskAssessmentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    users?: UserUncheckedUpdateManyWithoutCompanyNestedInput
+    roles?: RoleUncheckedUpdateManyWithoutCompanyNestedInput
+    vessels?: VesselUncheckedUpdateManyWithoutCompanyNestedInput
+    smsDocuments?: SmsDocumentUncheckedUpdateManyWithoutCompanyNestedInput
+    workflows?: WorkflowDefinitionUncheckedUpdateManyWithoutCompanyNestedInput
+    incidents?: IncidentUncheckedUpdateManyWithoutCompanyNestedInput
+    nearMisses?: NearMissUncheckedUpdateManyWithoutCompanyNestedInput
+    nonConformities?: NonConformityUncheckedUpdateManyWithoutCompanyNestedInput
+    sireInspections?: SireInspectionUncheckedUpdateManyWithoutCompanyNestedInput
+    pscInspections?: PscInspectionUncheckedUpdateManyWithoutCompanyNestedInput
+    cdiInspections?: CdiInspectionUncheckedUpdateManyWithoutCompanyNestedInput
+    internalAudits?: InternalAuditUncheckedUpdateManyWithoutCompanyNestedInput
+    externalAudits?: ExternalAuditUncheckedUpdateManyWithoutCompanyNestedInput
+    safetyMeetings?: SafetyMeetingUncheckedUpdateManyWithoutCompanyNestedInput
+    emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutCompanyNestedInput
+    controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutCompanyNestedInput
+    circulars?: CircularUncheckedUpdateManyWithoutCompanyNestedInput
+    defects?: DefectUncheckedUpdateManyWithoutCompanyNestedInput
+  }
+
+  export type VesselUpsertWithoutRiskAssessmentsInput = {
+    update: XOR<VesselUpdateWithoutRiskAssessmentsInput, VesselUncheckedUpdateWithoutRiskAssessmentsInput>
+    create: XOR<VesselCreateWithoutRiskAssessmentsInput, VesselUncheckedCreateWithoutRiskAssessmentsInput>
+    where?: VesselWhereInput
+  }
+
+  export type VesselUpdateToOneWithWhereWithoutRiskAssessmentsInput = {
+    where?: VesselWhereInput
+    data: XOR<VesselUpdateWithoutRiskAssessmentsInput, VesselUncheckedUpdateWithoutRiskAssessmentsInput>
+  }
+
+  export type VesselUpdateWithoutRiskAssessmentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: NullableStringFieldUpdateOperationsInput | string | null
+    imo?: StringFieldUpdateOperationsInput | string
+    officialNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    callSign?: NullableStringFieldUpdateOperationsInput | string | null
+    mmsi?: NullableStringFieldUpdateOperationsInput | string | null
+    flag?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: StringFieldUpdateOperationsInput | string
+    classificationSociety?: NullableStringFieldUpdateOperationsInput | string | null
+    yearBuilt?: NullableIntFieldUpdateOperationsInput | number | null
+    grossTonnage?: NullableFloatFieldUpdateOperationsInput | number | null
+    loa?: NullableFloatFieldUpdateOperationsInput | number | null
+    breadth?: NullableFloatFieldUpdateOperationsInput | number | null
+    depth?: NullableFloatFieldUpdateOperationsInput | number | null
+    status?: EnumVesselStatusFieldUpdateOperationsInput | $Enums.VesselStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    company?: CompanyUpdateOneRequiredWithoutVesselsNestedInput
+    smsDocuments?: SmsDocumentUpdateManyWithoutVesselNestedInput
+    incidents?: IncidentUpdateManyWithoutVesselNestedInput
+    nearMisses?: NearMissUpdateManyWithoutVesselNestedInput
+    nonConformities?: NonConformityUpdateManyWithoutVesselNestedInput
+    sireInspections?: SireInspectionUpdateManyWithoutVesselNestedInput
+    pscInspections?: PscInspectionUpdateManyWithoutVesselNestedInput
+    cdiInspections?: CdiInspectionUpdateManyWithoutVesselNestedInput
+    internalAudits?: InternalAuditUpdateManyWithoutVesselNestedInput
+    externalAudits?: ExternalAuditUpdateManyWithoutVesselNestedInput
+    safetyMeetings?: SafetyMeetingUpdateManyWithoutVesselNestedInput
+    emergencyDrills?: EmergencyDrillUpdateManyWithoutVesselNestedInput
+    controlledDocuments?: ControlledDocumentUpdateManyWithoutVesselNestedInput
+    circulars?: CircularUpdateManyWithoutVesselNestedInput
+    defects?: DefectUpdateManyWithoutVesselNestedInput
+  }
+
+  export type VesselUncheckedUpdateWithoutRiskAssessmentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: NullableStringFieldUpdateOperationsInput | string | null
+    imo?: StringFieldUpdateOperationsInput | string
+    officialNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    callSign?: NullableStringFieldUpdateOperationsInput | string | null
+    mmsi?: NullableStringFieldUpdateOperationsInput | string | null
+    flag?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: StringFieldUpdateOperationsInput | string
+    classificationSociety?: NullableStringFieldUpdateOperationsInput | string | null
+    yearBuilt?: NullableIntFieldUpdateOperationsInput | number | null
+    grossTonnage?: NullableFloatFieldUpdateOperationsInput | number | null
+    loa?: NullableFloatFieldUpdateOperationsInput | number | null
+    breadth?: NullableFloatFieldUpdateOperationsInput | number | null
+    depth?: NullableFloatFieldUpdateOperationsInput | number | null
+    status?: EnumVesselStatusFieldUpdateOperationsInput | $Enums.VesselStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    smsDocuments?: SmsDocumentUncheckedUpdateManyWithoutVesselNestedInput
+    incidents?: IncidentUncheckedUpdateManyWithoutVesselNestedInput
+    nearMisses?: NearMissUncheckedUpdateManyWithoutVesselNestedInput
+    nonConformities?: NonConformityUncheckedUpdateManyWithoutVesselNestedInput
+    sireInspections?: SireInspectionUncheckedUpdateManyWithoutVesselNestedInput
+    pscInspections?: PscInspectionUncheckedUpdateManyWithoutVesselNestedInput
+    cdiInspections?: CdiInspectionUncheckedUpdateManyWithoutVesselNestedInput
+    internalAudits?: InternalAuditUncheckedUpdateManyWithoutVesselNestedInput
+    externalAudits?: ExternalAuditUncheckedUpdateManyWithoutVesselNestedInput
+    safetyMeetings?: SafetyMeetingUncheckedUpdateManyWithoutVesselNestedInput
+    emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutVesselNestedInput
+    controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutVesselNestedInput
+    circulars?: CircularUncheckedUpdateManyWithoutVesselNestedInput
+    defects?: DefectUncheckedUpdateManyWithoutVesselNestedInput
+  }
+
+  export type CompanyCreateWithoutDefectsInput = {
+    id?: string
+    name: string
+    code: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    users?: UserCreateNestedManyWithoutCompanyInput
+    roles?: RoleCreateNestedManyWithoutCompanyInput
+    vessels?: VesselCreateNestedManyWithoutCompanyInput
+    smsDocuments?: SmsDocumentCreateNestedManyWithoutCompanyInput
+    workflows?: WorkflowDefinitionCreateNestedManyWithoutCompanyInput
+    incidents?: IncidentCreateNestedManyWithoutCompanyInput
+    nearMisses?: NearMissCreateNestedManyWithoutCompanyInput
+    nonConformities?: NonConformityCreateNestedManyWithoutCompanyInput
+    sireInspections?: SireInspectionCreateNestedManyWithoutCompanyInput
+    pscInspections?: PscInspectionCreateNestedManyWithoutCompanyInput
+    cdiInspections?: CdiInspectionCreateNestedManyWithoutCompanyInput
+    internalAudits?: InternalAuditCreateNestedManyWithoutCompanyInput
+    externalAudits?: ExternalAuditCreateNestedManyWithoutCompanyInput
+    safetyMeetings?: SafetyMeetingCreateNestedManyWithoutCompanyInput
+    emergencyDrills?: EmergencyDrillCreateNestedManyWithoutCompanyInput
+    controlledDocuments?: ControlledDocumentCreateNestedManyWithoutCompanyInput
+    circulars?: CircularCreateNestedManyWithoutCompanyInput
+    riskAssessments?: RiskAssessmentCreateNestedManyWithoutCompanyInput
+  }
+
+  export type CompanyUncheckedCreateWithoutDefectsInput = {
+    id?: string
+    name: string
+    code: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    users?: UserUncheckedCreateNestedManyWithoutCompanyInput
+    roles?: RoleUncheckedCreateNestedManyWithoutCompanyInput
+    vessels?: VesselUncheckedCreateNestedManyWithoutCompanyInput
+    smsDocuments?: SmsDocumentUncheckedCreateNestedManyWithoutCompanyInput
+    workflows?: WorkflowDefinitionUncheckedCreateNestedManyWithoutCompanyInput
+    incidents?: IncidentUncheckedCreateNestedManyWithoutCompanyInput
+    nearMisses?: NearMissUncheckedCreateNestedManyWithoutCompanyInput
+    nonConformities?: NonConformityUncheckedCreateNestedManyWithoutCompanyInput
+    sireInspections?: SireInspectionUncheckedCreateNestedManyWithoutCompanyInput
+    pscInspections?: PscInspectionUncheckedCreateNestedManyWithoutCompanyInput
+    cdiInspections?: CdiInspectionUncheckedCreateNestedManyWithoutCompanyInput
+    internalAudits?: InternalAuditUncheckedCreateNestedManyWithoutCompanyInput
+    externalAudits?: ExternalAuditUncheckedCreateNestedManyWithoutCompanyInput
+    safetyMeetings?: SafetyMeetingUncheckedCreateNestedManyWithoutCompanyInput
+    emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutCompanyInput
+    controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutCompanyInput
+    circulars?: CircularUncheckedCreateNestedManyWithoutCompanyInput
+    riskAssessments?: RiskAssessmentUncheckedCreateNestedManyWithoutCompanyInput
+  }
+
+  export type CompanyCreateOrConnectWithoutDefectsInput = {
+    where: CompanyWhereUniqueInput
+    create: XOR<CompanyCreateWithoutDefectsInput, CompanyUncheckedCreateWithoutDefectsInput>
+  }
+
+  export type VesselCreateWithoutDefectsInput = {
+    id?: string
+    name: string
+    code?: string | null
+    imo: string
+    officialNumber?: string | null
+    callSign?: string | null
+    mmsi?: string | null
+    flag?: string | null
+    type?: string
+    classificationSociety?: string | null
+    yearBuilt?: number | null
+    grossTonnage?: number | null
+    loa?: number | null
+    breadth?: number | null
+    depth?: number | null
+    status?: $Enums.VesselStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    company: CompanyCreateNestedOneWithoutVesselsInput
+    smsDocuments?: SmsDocumentCreateNestedManyWithoutVesselInput
+    incidents?: IncidentCreateNestedManyWithoutVesselInput
+    nearMisses?: NearMissCreateNestedManyWithoutVesselInput
+    nonConformities?: NonConformityCreateNestedManyWithoutVesselInput
+    sireInspections?: SireInspectionCreateNestedManyWithoutVesselInput
+    pscInspections?: PscInspectionCreateNestedManyWithoutVesselInput
+    cdiInspections?: CdiInspectionCreateNestedManyWithoutVesselInput
+    internalAudits?: InternalAuditCreateNestedManyWithoutVesselInput
+    externalAudits?: ExternalAuditCreateNestedManyWithoutVesselInput
+    safetyMeetings?: SafetyMeetingCreateNestedManyWithoutVesselInput
+    emergencyDrills?: EmergencyDrillCreateNestedManyWithoutVesselInput
+    controlledDocuments?: ControlledDocumentCreateNestedManyWithoutVesselInput
+    circulars?: CircularCreateNestedManyWithoutVesselInput
+    riskAssessments?: RiskAssessmentCreateNestedManyWithoutVesselInput
+  }
+
+  export type VesselUncheckedCreateWithoutDefectsInput = {
+    id?: string
+    companyId: string
+    name: string
+    code?: string | null
+    imo: string
+    officialNumber?: string | null
+    callSign?: string | null
+    mmsi?: string | null
+    flag?: string | null
+    type?: string
+    classificationSociety?: string | null
+    yearBuilt?: number | null
+    grossTonnage?: number | null
+    loa?: number | null
+    breadth?: number | null
+    depth?: number | null
+    status?: $Enums.VesselStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    smsDocuments?: SmsDocumentUncheckedCreateNestedManyWithoutVesselInput
+    incidents?: IncidentUncheckedCreateNestedManyWithoutVesselInput
+    nearMisses?: NearMissUncheckedCreateNestedManyWithoutVesselInput
+    nonConformities?: NonConformityUncheckedCreateNestedManyWithoutVesselInput
+    sireInspections?: SireInspectionUncheckedCreateNestedManyWithoutVesselInput
+    pscInspections?: PscInspectionUncheckedCreateNestedManyWithoutVesselInput
+    cdiInspections?: CdiInspectionUncheckedCreateNestedManyWithoutVesselInput
+    internalAudits?: InternalAuditUncheckedCreateNestedManyWithoutVesselInput
+    externalAudits?: ExternalAuditUncheckedCreateNestedManyWithoutVesselInput
+    safetyMeetings?: SafetyMeetingUncheckedCreateNestedManyWithoutVesselInput
+    emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutVesselInput
+    controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutVesselInput
+    circulars?: CircularUncheckedCreateNestedManyWithoutVesselInput
+    riskAssessments?: RiskAssessmentUncheckedCreateNestedManyWithoutVesselInput
+  }
+
+  export type VesselCreateOrConnectWithoutDefectsInput = {
+    where: VesselWhereUniqueInput
+    create: XOR<VesselCreateWithoutDefectsInput, VesselUncheckedCreateWithoutDefectsInput>
+  }
+
+  export type CompanyUpsertWithoutDefectsInput = {
+    update: XOR<CompanyUpdateWithoutDefectsInput, CompanyUncheckedUpdateWithoutDefectsInput>
+    create: XOR<CompanyCreateWithoutDefectsInput, CompanyUncheckedCreateWithoutDefectsInput>
+    where?: CompanyWhereInput
+  }
+
+  export type CompanyUpdateToOneWithWhereWithoutDefectsInput = {
+    where?: CompanyWhereInput
+    data: XOR<CompanyUpdateWithoutDefectsInput, CompanyUncheckedUpdateWithoutDefectsInput>
+  }
+
+  export type CompanyUpdateWithoutDefectsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    users?: UserUpdateManyWithoutCompanyNestedInput
+    roles?: RoleUpdateManyWithoutCompanyNestedInput
+    vessels?: VesselUpdateManyWithoutCompanyNestedInput
+    smsDocuments?: SmsDocumentUpdateManyWithoutCompanyNestedInput
+    workflows?: WorkflowDefinitionUpdateManyWithoutCompanyNestedInput
+    incidents?: IncidentUpdateManyWithoutCompanyNestedInput
+    nearMisses?: NearMissUpdateManyWithoutCompanyNestedInput
+    nonConformities?: NonConformityUpdateManyWithoutCompanyNestedInput
+    sireInspections?: SireInspectionUpdateManyWithoutCompanyNestedInput
+    pscInspections?: PscInspectionUpdateManyWithoutCompanyNestedInput
+    cdiInspections?: CdiInspectionUpdateManyWithoutCompanyNestedInput
+    internalAudits?: InternalAuditUpdateManyWithoutCompanyNestedInput
+    externalAudits?: ExternalAuditUpdateManyWithoutCompanyNestedInput
+    safetyMeetings?: SafetyMeetingUpdateManyWithoutCompanyNestedInput
+    emergencyDrills?: EmergencyDrillUpdateManyWithoutCompanyNestedInput
+    controlledDocuments?: ControlledDocumentUpdateManyWithoutCompanyNestedInput
+    circulars?: CircularUpdateManyWithoutCompanyNestedInput
+    riskAssessments?: RiskAssessmentUpdateManyWithoutCompanyNestedInput
+  }
+
+  export type CompanyUncheckedUpdateWithoutDefectsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    users?: UserUncheckedUpdateManyWithoutCompanyNestedInput
+    roles?: RoleUncheckedUpdateManyWithoutCompanyNestedInput
+    vessels?: VesselUncheckedUpdateManyWithoutCompanyNestedInput
+    smsDocuments?: SmsDocumentUncheckedUpdateManyWithoutCompanyNestedInput
+    workflows?: WorkflowDefinitionUncheckedUpdateManyWithoutCompanyNestedInput
+    incidents?: IncidentUncheckedUpdateManyWithoutCompanyNestedInput
+    nearMisses?: NearMissUncheckedUpdateManyWithoutCompanyNestedInput
+    nonConformities?: NonConformityUncheckedUpdateManyWithoutCompanyNestedInput
+    sireInspections?: SireInspectionUncheckedUpdateManyWithoutCompanyNestedInput
+    pscInspections?: PscInspectionUncheckedUpdateManyWithoutCompanyNestedInput
+    cdiInspections?: CdiInspectionUncheckedUpdateManyWithoutCompanyNestedInput
+    internalAudits?: InternalAuditUncheckedUpdateManyWithoutCompanyNestedInput
+    externalAudits?: ExternalAuditUncheckedUpdateManyWithoutCompanyNestedInput
+    safetyMeetings?: SafetyMeetingUncheckedUpdateManyWithoutCompanyNestedInput
+    emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutCompanyNestedInput
+    controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutCompanyNestedInput
+    circulars?: CircularUncheckedUpdateManyWithoutCompanyNestedInput
+    riskAssessments?: RiskAssessmentUncheckedUpdateManyWithoutCompanyNestedInput
+  }
+
+  export type VesselUpsertWithoutDefectsInput = {
+    update: XOR<VesselUpdateWithoutDefectsInput, VesselUncheckedUpdateWithoutDefectsInput>
+    create: XOR<VesselCreateWithoutDefectsInput, VesselUncheckedCreateWithoutDefectsInput>
+    where?: VesselWhereInput
+  }
+
+  export type VesselUpdateToOneWithWhereWithoutDefectsInput = {
+    where?: VesselWhereInput
+    data: XOR<VesselUpdateWithoutDefectsInput, VesselUncheckedUpdateWithoutDefectsInput>
+  }
+
+  export type VesselUpdateWithoutDefectsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: NullableStringFieldUpdateOperationsInput | string | null
+    imo?: StringFieldUpdateOperationsInput | string
+    officialNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    callSign?: NullableStringFieldUpdateOperationsInput | string | null
+    mmsi?: NullableStringFieldUpdateOperationsInput | string | null
+    flag?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: StringFieldUpdateOperationsInput | string
+    classificationSociety?: NullableStringFieldUpdateOperationsInput | string | null
+    yearBuilt?: NullableIntFieldUpdateOperationsInput | number | null
+    grossTonnage?: NullableFloatFieldUpdateOperationsInput | number | null
+    loa?: NullableFloatFieldUpdateOperationsInput | number | null
+    breadth?: NullableFloatFieldUpdateOperationsInput | number | null
+    depth?: NullableFloatFieldUpdateOperationsInput | number | null
+    status?: EnumVesselStatusFieldUpdateOperationsInput | $Enums.VesselStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    company?: CompanyUpdateOneRequiredWithoutVesselsNestedInput
+    smsDocuments?: SmsDocumentUpdateManyWithoutVesselNestedInput
+    incidents?: IncidentUpdateManyWithoutVesselNestedInput
+    nearMisses?: NearMissUpdateManyWithoutVesselNestedInput
+    nonConformities?: NonConformityUpdateManyWithoutVesselNestedInput
+    sireInspections?: SireInspectionUpdateManyWithoutVesselNestedInput
+    pscInspections?: PscInspectionUpdateManyWithoutVesselNestedInput
+    cdiInspections?: CdiInspectionUpdateManyWithoutVesselNestedInput
+    internalAudits?: InternalAuditUpdateManyWithoutVesselNestedInput
+    externalAudits?: ExternalAuditUpdateManyWithoutVesselNestedInput
+    safetyMeetings?: SafetyMeetingUpdateManyWithoutVesselNestedInput
+    emergencyDrills?: EmergencyDrillUpdateManyWithoutVesselNestedInput
+    controlledDocuments?: ControlledDocumentUpdateManyWithoutVesselNestedInput
+    circulars?: CircularUpdateManyWithoutVesselNestedInput
+    riskAssessments?: RiskAssessmentUpdateManyWithoutVesselNestedInput
+  }
+
+  export type VesselUncheckedUpdateWithoutDefectsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: NullableStringFieldUpdateOperationsInput | string | null
+    imo?: StringFieldUpdateOperationsInput | string
+    officialNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    callSign?: NullableStringFieldUpdateOperationsInput | string | null
+    mmsi?: NullableStringFieldUpdateOperationsInput | string | null
+    flag?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: StringFieldUpdateOperationsInput | string
+    classificationSociety?: NullableStringFieldUpdateOperationsInput | string | null
+    yearBuilt?: NullableIntFieldUpdateOperationsInput | number | null
+    grossTonnage?: NullableFloatFieldUpdateOperationsInput | number | null
+    loa?: NullableFloatFieldUpdateOperationsInput | number | null
+    breadth?: NullableFloatFieldUpdateOperationsInput | number | null
+    depth?: NullableFloatFieldUpdateOperationsInput | number | null
+    status?: EnumVesselStatusFieldUpdateOperationsInput | $Enums.VesselStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    smsDocuments?: SmsDocumentUncheckedUpdateManyWithoutVesselNestedInput
+    incidents?: IncidentUncheckedUpdateManyWithoutVesselNestedInput
+    nearMisses?: NearMissUncheckedUpdateManyWithoutVesselNestedInput
+    nonConformities?: NonConformityUncheckedUpdateManyWithoutVesselNestedInput
+    sireInspections?: SireInspectionUncheckedUpdateManyWithoutVesselNestedInput
+    pscInspections?: PscInspectionUncheckedUpdateManyWithoutVesselNestedInput
+    cdiInspections?: CdiInspectionUncheckedUpdateManyWithoutVesselNestedInput
+    internalAudits?: InternalAuditUncheckedUpdateManyWithoutVesselNestedInput
+    externalAudits?: ExternalAuditUncheckedUpdateManyWithoutVesselNestedInput
+    safetyMeetings?: SafetyMeetingUncheckedUpdateManyWithoutVesselNestedInput
+    emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutVesselNestedInput
+    controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutVesselNestedInput
+    circulars?: CircularUncheckedUpdateManyWithoutVesselNestedInput
+    riskAssessments?: RiskAssessmentUncheckedUpdateManyWithoutVesselNestedInput
+  }
+
   export type UserCreateManyCompanyInput = {
     id?: string
     fullName: string
@@ -66856,6 +82311,7 @@ export namespace Prisma {
   export type VesselCreateManyCompanyInput = {
     id?: string
     name: string
+    code?: string | null
     imo: string
     officialNumber?: string | null
     callSign?: string | null
@@ -66980,9 +82436,8 @@ export namespace Prisma {
     severity: $Enums.Severity
     raisedAt: Date | string
     targetDate?: Date | string | null
-    rootCause?: string | null
-    correctiveAction?: string | null
-    verification?: string | null
+    rootCauseCategory?: $Enums.RootCauseCategory | null
+    rootCauseSubCategory?: string | null
     personInCharge?: string | null
     status?: $Enums.NcrStatus
     closedAt?: Date | string | null
@@ -67094,6 +82549,126 @@ export namespace Prisma {
     deletedBy?: string | null
   }
 
+  export type SafetyMeetingCreateManyCompanyInput = {
+    id?: string
+    refNo: string
+    vesselId?: string | null
+    meetingType: $Enums.MeetingType
+    meetingDate: Date | string
+    chairedBy?: string | null
+    attendees?: string | null
+    agenda?: string | null
+    minutes?: string | null
+    status?: $Enums.FindingStatus
+    closedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+  }
+
+  export type EmergencyDrillCreateManyCompanyInput = {
+    id?: string
+    refNo: string
+    vesselId: string
+    drillType: $Enums.DrillType
+    drillDate: Date | string
+    scenario?: string | null
+    participants?: string | null
+    conductedBy?: string | null
+    observations?: string | null
+    status?: $Enums.FindingStatus
+    closedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+  }
+
+  export type ControlledDocumentCreateManyCompanyInput = {
+    id?: string
+    docNumber: string
+    vesselId?: string | null
+    title: string
+    category: $Enums.DocumentCategory
+    version?: string | null
+    issueDate: Date | string
+    reviewDate?: Date | string | null
+    owner?: string | null
+    description?: string | null
+    status?: $Enums.ControlledDocStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+  }
+
+  export type CircularCreateManyCompanyInput = {
+    id?: string
+    refNo: string
+    vesselId?: string | null
+    title: string
+    category: $Enums.CircularCategory
+    issueDate: Date | string
+    body: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+  }
+
+  export type RiskAssessmentCreateManyCompanyInput = {
+    id?: string
+    refNo: string
+    vesselId?: string | null
+    activity: string
+    hazards: string
+    existingControls?: string | null
+    likelihood: $Enums.RiskRating
+    severity: $Enums.RiskRating
+    additionalControls?: string | null
+    assessedBy?: string | null
+    assessmentDate: Date | string
+    reviewDate?: Date | string | null
+    status?: $Enums.RiskAssessmentStatus
+    closedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+  }
+
+  export type DefectCreateManyCompanyInput = {
+    id?: string
+    refNo: string
+    vesselId: string
+    equipment: string
+    description: string
+    severity: $Enums.DefectSeverity
+    dateRaised: Date | string
+    targetRectificationDate?: Date | string | null
+    actionTaken?: string | null
+    raisedBy?: string | null
+    status?: $Enums.DefectStatus
+    rectifiedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+  }
+
   export type UserUpdateWithoutCompanyInput = {
     id?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
@@ -67191,6 +82766,7 @@ export namespace Prisma {
   export type VesselUpdateWithoutCompanyInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    code?: NullableStringFieldUpdateOperationsInput | string | null
     imo?: StringFieldUpdateOperationsInput | string
     officialNumber?: NullableStringFieldUpdateOperationsInput | string | null
     callSign?: NullableStringFieldUpdateOperationsInput | string | null
@@ -67219,11 +82795,18 @@ export namespace Prisma {
     cdiInspections?: CdiInspectionUpdateManyWithoutVesselNestedInput
     internalAudits?: InternalAuditUpdateManyWithoutVesselNestedInput
     externalAudits?: ExternalAuditUpdateManyWithoutVesselNestedInput
+    safetyMeetings?: SafetyMeetingUpdateManyWithoutVesselNestedInput
+    emergencyDrills?: EmergencyDrillUpdateManyWithoutVesselNestedInput
+    controlledDocuments?: ControlledDocumentUpdateManyWithoutVesselNestedInput
+    circulars?: CircularUpdateManyWithoutVesselNestedInput
+    riskAssessments?: RiskAssessmentUpdateManyWithoutVesselNestedInput
+    defects?: DefectUpdateManyWithoutVesselNestedInput
   }
 
   export type VesselUncheckedUpdateWithoutCompanyInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    code?: NullableStringFieldUpdateOperationsInput | string | null
     imo?: StringFieldUpdateOperationsInput | string
     officialNumber?: NullableStringFieldUpdateOperationsInput | string | null
     callSign?: NullableStringFieldUpdateOperationsInput | string | null
@@ -67252,11 +82835,18 @@ export namespace Prisma {
     cdiInspections?: CdiInspectionUncheckedUpdateManyWithoutVesselNestedInput
     internalAudits?: InternalAuditUncheckedUpdateManyWithoutVesselNestedInput
     externalAudits?: ExternalAuditUncheckedUpdateManyWithoutVesselNestedInput
+    safetyMeetings?: SafetyMeetingUncheckedUpdateManyWithoutVesselNestedInput
+    emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutVesselNestedInput
+    controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutVesselNestedInput
+    circulars?: CircularUncheckedUpdateManyWithoutVesselNestedInput
+    riskAssessments?: RiskAssessmentUncheckedUpdateManyWithoutVesselNestedInput
+    defects?: DefectUncheckedUpdateManyWithoutVesselNestedInput
   }
 
   export type VesselUncheckedUpdateManyWithoutCompanyInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    code?: NullableStringFieldUpdateOperationsInput | string | null
     imo?: StringFieldUpdateOperationsInput | string
     officialNumber?: NullableStringFieldUpdateOperationsInput | string | null
     callSign?: NullableStringFieldUpdateOperationsInput | string | null
@@ -67572,9 +83162,8 @@ export namespace Prisma {
     severity?: EnumSeverityFieldUpdateOperationsInput | $Enums.Severity
     raisedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     targetDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    rootCause?: NullableStringFieldUpdateOperationsInput | string | null
-    correctiveAction?: NullableStringFieldUpdateOperationsInput | string | null
-    verification?: NullableStringFieldUpdateOperationsInput | string | null
+    rootCauseCategory?: NullableEnumRootCauseCategoryFieldUpdateOperationsInput | $Enums.RootCauseCategory | null
+    rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
     personInCharge?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumNcrStatusFieldUpdateOperationsInput | $Enums.NcrStatus
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -67600,9 +83189,8 @@ export namespace Prisma {
     severity?: EnumSeverityFieldUpdateOperationsInput | $Enums.Severity
     raisedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     targetDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    rootCause?: NullableStringFieldUpdateOperationsInput | string | null
-    correctiveAction?: NullableStringFieldUpdateOperationsInput | string | null
-    verification?: NullableStringFieldUpdateOperationsInput | string | null
+    rootCauseCategory?: NullableEnumRootCauseCategoryFieldUpdateOperationsInput | $Enums.RootCauseCategory | null
+    rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
     personInCharge?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumNcrStatusFieldUpdateOperationsInput | $Enums.NcrStatus
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -67627,9 +83215,8 @@ export namespace Prisma {
     severity?: EnumSeverityFieldUpdateOperationsInput | $Enums.Severity
     raisedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     targetDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    rootCause?: NullableStringFieldUpdateOperationsInput | string | null
-    correctiveAction?: NullableStringFieldUpdateOperationsInput | string | null
-    verification?: NullableStringFieldUpdateOperationsInput | string | null
+    rootCauseCategory?: NullableEnumRootCauseCategoryFieldUpdateOperationsInput | $Enums.RootCauseCategory | null
+    rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
     personInCharge?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumNcrStatusFieldUpdateOperationsInput | $Enums.NcrStatus
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -67949,6 +83536,366 @@ export namespace Prisma {
     deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
+  export type SafetyMeetingUpdateWithoutCompanyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    refNo?: StringFieldUpdateOperationsInput | string
+    meetingType?: EnumMeetingTypeFieldUpdateOperationsInput | $Enums.MeetingType
+    meetingDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    chairedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    attendees?: NullableStringFieldUpdateOperationsInput | string | null
+    agenda?: NullableStringFieldUpdateOperationsInput | string | null
+    minutes?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumFindingStatusFieldUpdateOperationsInput | $Enums.FindingStatus
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    vessel?: VesselUpdateOneWithoutSafetyMeetingsNestedInput
+  }
+
+  export type SafetyMeetingUncheckedUpdateWithoutCompanyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    refNo?: StringFieldUpdateOperationsInput | string
+    vesselId?: NullableStringFieldUpdateOperationsInput | string | null
+    meetingType?: EnumMeetingTypeFieldUpdateOperationsInput | $Enums.MeetingType
+    meetingDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    chairedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    attendees?: NullableStringFieldUpdateOperationsInput | string | null
+    agenda?: NullableStringFieldUpdateOperationsInput | string | null
+    minutes?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumFindingStatusFieldUpdateOperationsInput | $Enums.FindingStatus
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type SafetyMeetingUncheckedUpdateManyWithoutCompanyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    refNo?: StringFieldUpdateOperationsInput | string
+    vesselId?: NullableStringFieldUpdateOperationsInput | string | null
+    meetingType?: EnumMeetingTypeFieldUpdateOperationsInput | $Enums.MeetingType
+    meetingDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    chairedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    attendees?: NullableStringFieldUpdateOperationsInput | string | null
+    agenda?: NullableStringFieldUpdateOperationsInput | string | null
+    minutes?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumFindingStatusFieldUpdateOperationsInput | $Enums.FindingStatus
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type EmergencyDrillUpdateWithoutCompanyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    refNo?: StringFieldUpdateOperationsInput | string
+    drillType?: EnumDrillTypeFieldUpdateOperationsInput | $Enums.DrillType
+    drillDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    scenario?: NullableStringFieldUpdateOperationsInput | string | null
+    participants?: NullableStringFieldUpdateOperationsInput | string | null
+    conductedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    observations?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumFindingStatusFieldUpdateOperationsInput | $Enums.FindingStatus
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    vessel?: VesselUpdateOneRequiredWithoutEmergencyDrillsNestedInput
+  }
+
+  export type EmergencyDrillUncheckedUpdateWithoutCompanyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    refNo?: StringFieldUpdateOperationsInput | string
+    vesselId?: StringFieldUpdateOperationsInput | string
+    drillType?: EnumDrillTypeFieldUpdateOperationsInput | $Enums.DrillType
+    drillDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    scenario?: NullableStringFieldUpdateOperationsInput | string | null
+    participants?: NullableStringFieldUpdateOperationsInput | string | null
+    conductedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    observations?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumFindingStatusFieldUpdateOperationsInput | $Enums.FindingStatus
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type EmergencyDrillUncheckedUpdateManyWithoutCompanyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    refNo?: StringFieldUpdateOperationsInput | string
+    vesselId?: StringFieldUpdateOperationsInput | string
+    drillType?: EnumDrillTypeFieldUpdateOperationsInput | $Enums.DrillType
+    drillDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    scenario?: NullableStringFieldUpdateOperationsInput | string | null
+    participants?: NullableStringFieldUpdateOperationsInput | string | null
+    conductedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    observations?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumFindingStatusFieldUpdateOperationsInput | $Enums.FindingStatus
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type ControlledDocumentUpdateWithoutCompanyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    docNumber?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    category?: EnumDocumentCategoryFieldUpdateOperationsInput | $Enums.DocumentCategory
+    version?: NullableStringFieldUpdateOperationsInput | string | null
+    issueDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    reviewDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    owner?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumControlledDocStatusFieldUpdateOperationsInput | $Enums.ControlledDocStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    vessel?: VesselUpdateOneWithoutControlledDocumentsNestedInput
+  }
+
+  export type ControlledDocumentUncheckedUpdateWithoutCompanyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    docNumber?: StringFieldUpdateOperationsInput | string
+    vesselId?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
+    category?: EnumDocumentCategoryFieldUpdateOperationsInput | $Enums.DocumentCategory
+    version?: NullableStringFieldUpdateOperationsInput | string | null
+    issueDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    reviewDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    owner?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumControlledDocStatusFieldUpdateOperationsInput | $Enums.ControlledDocStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type ControlledDocumentUncheckedUpdateManyWithoutCompanyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    docNumber?: StringFieldUpdateOperationsInput | string
+    vesselId?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
+    category?: EnumDocumentCategoryFieldUpdateOperationsInput | $Enums.DocumentCategory
+    version?: NullableStringFieldUpdateOperationsInput | string | null
+    issueDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    reviewDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    owner?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumControlledDocStatusFieldUpdateOperationsInput | $Enums.ControlledDocStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type CircularUpdateWithoutCompanyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    refNo?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    category?: EnumCircularCategoryFieldUpdateOperationsInput | $Enums.CircularCategory
+    issueDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    body?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    vessel?: VesselUpdateOneWithoutCircularsNestedInput
+  }
+
+  export type CircularUncheckedUpdateWithoutCompanyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    refNo?: StringFieldUpdateOperationsInput | string
+    vesselId?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
+    category?: EnumCircularCategoryFieldUpdateOperationsInput | $Enums.CircularCategory
+    issueDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    body?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type CircularUncheckedUpdateManyWithoutCompanyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    refNo?: StringFieldUpdateOperationsInput | string
+    vesselId?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
+    category?: EnumCircularCategoryFieldUpdateOperationsInput | $Enums.CircularCategory
+    issueDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    body?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type RiskAssessmentUpdateWithoutCompanyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    refNo?: StringFieldUpdateOperationsInput | string
+    activity?: StringFieldUpdateOperationsInput | string
+    hazards?: StringFieldUpdateOperationsInput | string
+    existingControls?: NullableStringFieldUpdateOperationsInput | string | null
+    likelihood?: EnumRiskRatingFieldUpdateOperationsInput | $Enums.RiskRating
+    severity?: EnumRiskRatingFieldUpdateOperationsInput | $Enums.RiskRating
+    additionalControls?: NullableStringFieldUpdateOperationsInput | string | null
+    assessedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    assessmentDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    reviewDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: EnumRiskAssessmentStatusFieldUpdateOperationsInput | $Enums.RiskAssessmentStatus
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    vessel?: VesselUpdateOneWithoutRiskAssessmentsNestedInput
+  }
+
+  export type RiskAssessmentUncheckedUpdateWithoutCompanyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    refNo?: StringFieldUpdateOperationsInput | string
+    vesselId?: NullableStringFieldUpdateOperationsInput | string | null
+    activity?: StringFieldUpdateOperationsInput | string
+    hazards?: StringFieldUpdateOperationsInput | string
+    existingControls?: NullableStringFieldUpdateOperationsInput | string | null
+    likelihood?: EnumRiskRatingFieldUpdateOperationsInput | $Enums.RiskRating
+    severity?: EnumRiskRatingFieldUpdateOperationsInput | $Enums.RiskRating
+    additionalControls?: NullableStringFieldUpdateOperationsInput | string | null
+    assessedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    assessmentDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    reviewDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: EnumRiskAssessmentStatusFieldUpdateOperationsInput | $Enums.RiskAssessmentStatus
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type RiskAssessmentUncheckedUpdateManyWithoutCompanyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    refNo?: StringFieldUpdateOperationsInput | string
+    vesselId?: NullableStringFieldUpdateOperationsInput | string | null
+    activity?: StringFieldUpdateOperationsInput | string
+    hazards?: StringFieldUpdateOperationsInput | string
+    existingControls?: NullableStringFieldUpdateOperationsInput | string | null
+    likelihood?: EnumRiskRatingFieldUpdateOperationsInput | $Enums.RiskRating
+    severity?: EnumRiskRatingFieldUpdateOperationsInput | $Enums.RiskRating
+    additionalControls?: NullableStringFieldUpdateOperationsInput | string | null
+    assessedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    assessmentDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    reviewDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: EnumRiskAssessmentStatusFieldUpdateOperationsInput | $Enums.RiskAssessmentStatus
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type DefectUpdateWithoutCompanyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    refNo?: StringFieldUpdateOperationsInput | string
+    equipment?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    severity?: EnumDefectSeverityFieldUpdateOperationsInput | $Enums.DefectSeverity
+    dateRaised?: DateTimeFieldUpdateOperationsInput | Date | string
+    targetRectificationDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    actionTaken?: NullableStringFieldUpdateOperationsInput | string | null
+    raisedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumDefectStatusFieldUpdateOperationsInput | $Enums.DefectStatus
+    rectifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    vessel?: VesselUpdateOneRequiredWithoutDefectsNestedInput
+  }
+
+  export type DefectUncheckedUpdateWithoutCompanyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    refNo?: StringFieldUpdateOperationsInput | string
+    vesselId?: StringFieldUpdateOperationsInput | string
+    equipment?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    severity?: EnumDefectSeverityFieldUpdateOperationsInput | $Enums.DefectSeverity
+    dateRaised?: DateTimeFieldUpdateOperationsInput | Date | string
+    targetRectificationDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    actionTaken?: NullableStringFieldUpdateOperationsInput | string | null
+    raisedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumDefectStatusFieldUpdateOperationsInput | $Enums.DefectStatus
+    rectifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type DefectUncheckedUpdateManyWithoutCompanyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    refNo?: StringFieldUpdateOperationsInput | string
+    vesselId?: StringFieldUpdateOperationsInput | string
+    equipment?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    severity?: EnumDefectSeverityFieldUpdateOperationsInput | $Enums.DefectSeverity
+    dateRaised?: DateTimeFieldUpdateOperationsInput | Date | string
+    targetRectificationDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    actionTaken?: NullableStringFieldUpdateOperationsInput | string | null
+    raisedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumDefectStatusFieldUpdateOperationsInput | $Enums.DefectStatus
+    rectifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
   export type UserRoleCreateManyUserInput = {
     roleId: string
   }
@@ -68046,9 +83993,8 @@ export namespace Prisma {
     severity: $Enums.Severity
     raisedAt: Date | string
     targetDate?: Date | string | null
-    rootCause?: string | null
-    correctiveAction?: string | null
-    verification?: string | null
+    rootCauseCategory?: $Enums.RootCauseCategory | null
+    rootCauseSubCategory?: string | null
     personInCharge?: string | null
     status?: $Enums.NcrStatus
     closedAt?: Date | string | null
@@ -68340,9 +84286,8 @@ export namespace Prisma {
     severity?: EnumSeverityFieldUpdateOperationsInput | $Enums.Severity
     raisedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     targetDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    rootCause?: NullableStringFieldUpdateOperationsInput | string | null
-    correctiveAction?: NullableStringFieldUpdateOperationsInput | string | null
-    verification?: NullableStringFieldUpdateOperationsInput | string | null
+    rootCauseCategory?: NullableEnumRootCauseCategoryFieldUpdateOperationsInput | $Enums.RootCauseCategory | null
+    rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
     personInCharge?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumNcrStatusFieldUpdateOperationsInput | $Enums.NcrStatus
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -68369,9 +84314,8 @@ export namespace Prisma {
     severity?: EnumSeverityFieldUpdateOperationsInput | $Enums.Severity
     raisedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     targetDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    rootCause?: NullableStringFieldUpdateOperationsInput | string | null
-    correctiveAction?: NullableStringFieldUpdateOperationsInput | string | null
-    verification?: NullableStringFieldUpdateOperationsInput | string | null
+    rootCauseCategory?: NullableEnumRootCauseCategoryFieldUpdateOperationsInput | $Enums.RootCauseCategory | null
+    rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
     personInCharge?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumNcrStatusFieldUpdateOperationsInput | $Enums.NcrStatus
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -68396,9 +84340,8 @@ export namespace Prisma {
     severity?: EnumSeverityFieldUpdateOperationsInput | $Enums.Severity
     raisedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     targetDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    rootCause?: NullableStringFieldUpdateOperationsInput | string | null
-    correctiveAction?: NullableStringFieldUpdateOperationsInput | string | null
-    verification?: NullableStringFieldUpdateOperationsInput | string | null
+    rootCauseCategory?: NullableEnumRootCauseCategoryFieldUpdateOperationsInput | $Enums.RootCauseCategory | null
+    rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
     personInCharge?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumNcrStatusFieldUpdateOperationsInput | $Enums.NcrStatus
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -68583,9 +84526,8 @@ export namespace Prisma {
     severity: $Enums.Severity
     raisedAt: Date | string
     targetDate?: Date | string | null
-    rootCause?: string | null
-    correctiveAction?: string | null
-    verification?: string | null
+    rootCauseCategory?: $Enums.RootCauseCategory | null
+    rootCauseSubCategory?: string | null
     personInCharge?: string | null
     status?: $Enums.NcrStatus
     closedAt?: Date | string | null
@@ -68689,6 +84631,126 @@ export namespace Prisma {
     summary?: string | null
     status?: $Enums.InspectionStatus
     closedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+  }
+
+  export type SafetyMeetingCreateManyVesselInput = {
+    id?: string
+    companyId: string
+    refNo: string
+    meetingType: $Enums.MeetingType
+    meetingDate: Date | string
+    chairedBy?: string | null
+    attendees?: string | null
+    agenda?: string | null
+    minutes?: string | null
+    status?: $Enums.FindingStatus
+    closedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+  }
+
+  export type EmergencyDrillCreateManyVesselInput = {
+    id?: string
+    companyId: string
+    refNo: string
+    drillType: $Enums.DrillType
+    drillDate: Date | string
+    scenario?: string | null
+    participants?: string | null
+    conductedBy?: string | null
+    observations?: string | null
+    status?: $Enums.FindingStatus
+    closedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+  }
+
+  export type ControlledDocumentCreateManyVesselInput = {
+    id?: string
+    companyId: string
+    docNumber: string
+    title: string
+    category: $Enums.DocumentCategory
+    version?: string | null
+    issueDate: Date | string
+    reviewDate?: Date | string | null
+    owner?: string | null
+    description?: string | null
+    status?: $Enums.ControlledDocStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+  }
+
+  export type CircularCreateManyVesselInput = {
+    id?: string
+    companyId: string
+    refNo: string
+    title: string
+    category: $Enums.CircularCategory
+    issueDate: Date | string
+    body: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+  }
+
+  export type RiskAssessmentCreateManyVesselInput = {
+    id?: string
+    companyId: string
+    refNo: string
+    activity: string
+    hazards: string
+    existingControls?: string | null
+    likelihood: $Enums.RiskRating
+    severity: $Enums.RiskRating
+    additionalControls?: string | null
+    assessedBy?: string | null
+    assessmentDate: Date | string
+    reviewDate?: Date | string | null
+    status?: $Enums.RiskAssessmentStatus
+    closedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+  }
+
+  export type DefectCreateManyVesselInput = {
+    id?: string
+    companyId: string
+    refNo: string
+    equipment: string
+    description: string
+    severity: $Enums.DefectSeverity
+    dateRaised: Date | string
+    targetRectificationDate?: Date | string | null
+    actionTaken?: string | null
+    raisedBy?: string | null
+    status?: $Enums.DefectStatus
+    rectifiedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -68954,9 +85016,8 @@ export namespace Prisma {
     severity?: EnumSeverityFieldUpdateOperationsInput | $Enums.Severity
     raisedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     targetDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    rootCause?: NullableStringFieldUpdateOperationsInput | string | null
-    correctiveAction?: NullableStringFieldUpdateOperationsInput | string | null
-    verification?: NullableStringFieldUpdateOperationsInput | string | null
+    rootCauseCategory?: NullableEnumRootCauseCategoryFieldUpdateOperationsInput | $Enums.RootCauseCategory | null
+    rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
     personInCharge?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumNcrStatusFieldUpdateOperationsInput | $Enums.NcrStatus
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -68982,9 +85043,8 @@ export namespace Prisma {
     severity?: EnumSeverityFieldUpdateOperationsInput | $Enums.Severity
     raisedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     targetDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    rootCause?: NullableStringFieldUpdateOperationsInput | string | null
-    correctiveAction?: NullableStringFieldUpdateOperationsInput | string | null
-    verification?: NullableStringFieldUpdateOperationsInput | string | null
+    rootCauseCategory?: NullableEnumRootCauseCategoryFieldUpdateOperationsInput | $Enums.RootCauseCategory | null
+    rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
     personInCharge?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumNcrStatusFieldUpdateOperationsInput | $Enums.NcrStatus
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -69009,9 +85069,8 @@ export namespace Prisma {
     severity?: EnumSeverityFieldUpdateOperationsInput | $Enums.Severity
     raisedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     targetDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    rootCause?: NullableStringFieldUpdateOperationsInput | string | null
-    correctiveAction?: NullableStringFieldUpdateOperationsInput | string | null
-    verification?: NullableStringFieldUpdateOperationsInput | string | null
+    rootCauseCategory?: NullableEnumRootCauseCategoryFieldUpdateOperationsInput | $Enums.RootCauseCategory | null
+    rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
     personInCharge?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumNcrStatusFieldUpdateOperationsInput | $Enums.NcrStatus
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -69323,6 +85382,366 @@ export namespace Prisma {
     summary?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumInspectionStatusFieldUpdateOperationsInput | $Enums.InspectionStatus
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type SafetyMeetingUpdateWithoutVesselInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    refNo?: StringFieldUpdateOperationsInput | string
+    meetingType?: EnumMeetingTypeFieldUpdateOperationsInput | $Enums.MeetingType
+    meetingDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    chairedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    attendees?: NullableStringFieldUpdateOperationsInput | string | null
+    agenda?: NullableStringFieldUpdateOperationsInput | string | null
+    minutes?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumFindingStatusFieldUpdateOperationsInput | $Enums.FindingStatus
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    company?: CompanyUpdateOneRequiredWithoutSafetyMeetingsNestedInput
+  }
+
+  export type SafetyMeetingUncheckedUpdateWithoutVesselInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    refNo?: StringFieldUpdateOperationsInput | string
+    meetingType?: EnumMeetingTypeFieldUpdateOperationsInput | $Enums.MeetingType
+    meetingDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    chairedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    attendees?: NullableStringFieldUpdateOperationsInput | string | null
+    agenda?: NullableStringFieldUpdateOperationsInput | string | null
+    minutes?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumFindingStatusFieldUpdateOperationsInput | $Enums.FindingStatus
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type SafetyMeetingUncheckedUpdateManyWithoutVesselInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    refNo?: StringFieldUpdateOperationsInput | string
+    meetingType?: EnumMeetingTypeFieldUpdateOperationsInput | $Enums.MeetingType
+    meetingDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    chairedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    attendees?: NullableStringFieldUpdateOperationsInput | string | null
+    agenda?: NullableStringFieldUpdateOperationsInput | string | null
+    minutes?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumFindingStatusFieldUpdateOperationsInput | $Enums.FindingStatus
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type EmergencyDrillUpdateWithoutVesselInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    refNo?: StringFieldUpdateOperationsInput | string
+    drillType?: EnumDrillTypeFieldUpdateOperationsInput | $Enums.DrillType
+    drillDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    scenario?: NullableStringFieldUpdateOperationsInput | string | null
+    participants?: NullableStringFieldUpdateOperationsInput | string | null
+    conductedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    observations?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumFindingStatusFieldUpdateOperationsInput | $Enums.FindingStatus
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    company?: CompanyUpdateOneRequiredWithoutEmergencyDrillsNestedInput
+  }
+
+  export type EmergencyDrillUncheckedUpdateWithoutVesselInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    refNo?: StringFieldUpdateOperationsInput | string
+    drillType?: EnumDrillTypeFieldUpdateOperationsInput | $Enums.DrillType
+    drillDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    scenario?: NullableStringFieldUpdateOperationsInput | string | null
+    participants?: NullableStringFieldUpdateOperationsInput | string | null
+    conductedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    observations?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumFindingStatusFieldUpdateOperationsInput | $Enums.FindingStatus
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type EmergencyDrillUncheckedUpdateManyWithoutVesselInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    refNo?: StringFieldUpdateOperationsInput | string
+    drillType?: EnumDrillTypeFieldUpdateOperationsInput | $Enums.DrillType
+    drillDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    scenario?: NullableStringFieldUpdateOperationsInput | string | null
+    participants?: NullableStringFieldUpdateOperationsInput | string | null
+    conductedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    observations?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumFindingStatusFieldUpdateOperationsInput | $Enums.FindingStatus
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type ControlledDocumentUpdateWithoutVesselInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    docNumber?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    category?: EnumDocumentCategoryFieldUpdateOperationsInput | $Enums.DocumentCategory
+    version?: NullableStringFieldUpdateOperationsInput | string | null
+    issueDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    reviewDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    owner?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumControlledDocStatusFieldUpdateOperationsInput | $Enums.ControlledDocStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    company?: CompanyUpdateOneRequiredWithoutControlledDocumentsNestedInput
+  }
+
+  export type ControlledDocumentUncheckedUpdateWithoutVesselInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    docNumber?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    category?: EnumDocumentCategoryFieldUpdateOperationsInput | $Enums.DocumentCategory
+    version?: NullableStringFieldUpdateOperationsInput | string | null
+    issueDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    reviewDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    owner?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumControlledDocStatusFieldUpdateOperationsInput | $Enums.ControlledDocStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type ControlledDocumentUncheckedUpdateManyWithoutVesselInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    docNumber?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    category?: EnumDocumentCategoryFieldUpdateOperationsInput | $Enums.DocumentCategory
+    version?: NullableStringFieldUpdateOperationsInput | string | null
+    issueDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    reviewDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    owner?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumControlledDocStatusFieldUpdateOperationsInput | $Enums.ControlledDocStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type CircularUpdateWithoutVesselInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    refNo?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    category?: EnumCircularCategoryFieldUpdateOperationsInput | $Enums.CircularCategory
+    issueDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    body?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    company?: CompanyUpdateOneRequiredWithoutCircularsNestedInput
+  }
+
+  export type CircularUncheckedUpdateWithoutVesselInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    refNo?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    category?: EnumCircularCategoryFieldUpdateOperationsInput | $Enums.CircularCategory
+    issueDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    body?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type CircularUncheckedUpdateManyWithoutVesselInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    refNo?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    category?: EnumCircularCategoryFieldUpdateOperationsInput | $Enums.CircularCategory
+    issueDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    body?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type RiskAssessmentUpdateWithoutVesselInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    refNo?: StringFieldUpdateOperationsInput | string
+    activity?: StringFieldUpdateOperationsInput | string
+    hazards?: StringFieldUpdateOperationsInput | string
+    existingControls?: NullableStringFieldUpdateOperationsInput | string | null
+    likelihood?: EnumRiskRatingFieldUpdateOperationsInput | $Enums.RiskRating
+    severity?: EnumRiskRatingFieldUpdateOperationsInput | $Enums.RiskRating
+    additionalControls?: NullableStringFieldUpdateOperationsInput | string | null
+    assessedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    assessmentDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    reviewDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: EnumRiskAssessmentStatusFieldUpdateOperationsInput | $Enums.RiskAssessmentStatus
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    company?: CompanyUpdateOneRequiredWithoutRiskAssessmentsNestedInput
+  }
+
+  export type RiskAssessmentUncheckedUpdateWithoutVesselInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    refNo?: StringFieldUpdateOperationsInput | string
+    activity?: StringFieldUpdateOperationsInput | string
+    hazards?: StringFieldUpdateOperationsInput | string
+    existingControls?: NullableStringFieldUpdateOperationsInput | string | null
+    likelihood?: EnumRiskRatingFieldUpdateOperationsInput | $Enums.RiskRating
+    severity?: EnumRiskRatingFieldUpdateOperationsInput | $Enums.RiskRating
+    additionalControls?: NullableStringFieldUpdateOperationsInput | string | null
+    assessedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    assessmentDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    reviewDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: EnumRiskAssessmentStatusFieldUpdateOperationsInput | $Enums.RiskAssessmentStatus
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type RiskAssessmentUncheckedUpdateManyWithoutVesselInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    refNo?: StringFieldUpdateOperationsInput | string
+    activity?: StringFieldUpdateOperationsInput | string
+    hazards?: StringFieldUpdateOperationsInput | string
+    existingControls?: NullableStringFieldUpdateOperationsInput | string | null
+    likelihood?: EnumRiskRatingFieldUpdateOperationsInput | $Enums.RiskRating
+    severity?: EnumRiskRatingFieldUpdateOperationsInput | $Enums.RiskRating
+    additionalControls?: NullableStringFieldUpdateOperationsInput | string | null
+    assessedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    assessmentDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    reviewDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: EnumRiskAssessmentStatusFieldUpdateOperationsInput | $Enums.RiskAssessmentStatus
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type DefectUpdateWithoutVesselInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    refNo?: StringFieldUpdateOperationsInput | string
+    equipment?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    severity?: EnumDefectSeverityFieldUpdateOperationsInput | $Enums.DefectSeverity
+    dateRaised?: DateTimeFieldUpdateOperationsInput | Date | string
+    targetRectificationDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    actionTaken?: NullableStringFieldUpdateOperationsInput | string | null
+    raisedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumDefectStatusFieldUpdateOperationsInput | $Enums.DefectStatus
+    rectifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    company?: CompanyUpdateOneRequiredWithoutDefectsNestedInput
+  }
+
+  export type DefectUncheckedUpdateWithoutVesselInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    refNo?: StringFieldUpdateOperationsInput | string
+    equipment?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    severity?: EnumDefectSeverityFieldUpdateOperationsInput | $Enums.DefectSeverity
+    dateRaised?: DateTimeFieldUpdateOperationsInput | Date | string
+    targetRectificationDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    actionTaken?: NullableStringFieldUpdateOperationsInput | string | null
+    raisedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumDefectStatusFieldUpdateOperationsInput | $Enums.DefectStatus
+    rectifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type DefectUncheckedUpdateManyWithoutVesselInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    refNo?: StringFieldUpdateOperationsInput | string
+    equipment?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    severity?: EnumDefectSeverityFieldUpdateOperationsInput | $Enums.DefectSeverity
+    dateRaised?: DateTimeFieldUpdateOperationsInput | Date | string
+    targetRectificationDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    actionTaken?: NullableStringFieldUpdateOperationsInput | string | null
+    raisedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumDefectStatusFieldUpdateOperationsInput | $Enums.DefectStatus
+    rectifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -69688,7 +86107,8 @@ export namespace Prisma {
     reference?: string | null
     description: string
     actionCode?: string | null
-    rectification?: string | null
+    rootCauseCategory?: $Enums.RootCauseCategory | null
+    rootCauseSubCategory?: string | null
     status?: $Enums.FindingStatus
     createdAt?: Date | string
     createdBy?: string | null
@@ -69702,7 +86122,8 @@ export namespace Prisma {
     reference?: NullableStringFieldUpdateOperationsInput | string | null
     description?: StringFieldUpdateOperationsInput | string
     actionCode?: NullableStringFieldUpdateOperationsInput | string | null
-    rectification?: NullableStringFieldUpdateOperationsInput | string | null
+    rootCauseCategory?: NullableEnumRootCauseCategoryFieldUpdateOperationsInput | $Enums.RootCauseCategory | null
+    rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumFindingStatusFieldUpdateOperationsInput | $Enums.FindingStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -69716,7 +86137,8 @@ export namespace Prisma {
     reference?: NullableStringFieldUpdateOperationsInput | string | null
     description?: StringFieldUpdateOperationsInput | string
     actionCode?: NullableStringFieldUpdateOperationsInput | string | null
-    rectification?: NullableStringFieldUpdateOperationsInput | string | null
+    rootCauseCategory?: NullableEnumRootCauseCategoryFieldUpdateOperationsInput | $Enums.RootCauseCategory | null
+    rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumFindingStatusFieldUpdateOperationsInput | $Enums.FindingStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -69730,7 +86152,8 @@ export namespace Prisma {
     reference?: NullableStringFieldUpdateOperationsInput | string | null
     description?: StringFieldUpdateOperationsInput | string
     actionCode?: NullableStringFieldUpdateOperationsInput | string | null
-    rectification?: NullableStringFieldUpdateOperationsInput | string | null
+    rootCauseCategory?: NullableEnumRootCauseCategoryFieldUpdateOperationsInput | $Enums.RootCauseCategory | null
+    rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumFindingStatusFieldUpdateOperationsInput | $Enums.FindingStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -69791,7 +86214,8 @@ export namespace Prisma {
     category: $Enums.AuditFindingCategory
     reference?: string | null
     description: string
-    correctiveAction?: string | null
+    rootCauseCategory?: $Enums.RootCauseCategory | null
+    rootCauseSubCategory?: string | null
     status?: $Enums.FindingStatus
     createdAt?: Date | string
     createdBy?: string | null
@@ -69804,7 +86228,8 @@ export namespace Prisma {
     category?: EnumAuditFindingCategoryFieldUpdateOperationsInput | $Enums.AuditFindingCategory
     reference?: NullableStringFieldUpdateOperationsInput | string | null
     description?: StringFieldUpdateOperationsInput | string
-    correctiveAction?: NullableStringFieldUpdateOperationsInput | string | null
+    rootCauseCategory?: NullableEnumRootCauseCategoryFieldUpdateOperationsInput | $Enums.RootCauseCategory | null
+    rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumFindingStatusFieldUpdateOperationsInput | $Enums.FindingStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -69817,7 +86242,8 @@ export namespace Prisma {
     category?: EnumAuditFindingCategoryFieldUpdateOperationsInput | $Enums.AuditFindingCategory
     reference?: NullableStringFieldUpdateOperationsInput | string | null
     description?: StringFieldUpdateOperationsInput | string
-    correctiveAction?: NullableStringFieldUpdateOperationsInput | string | null
+    rootCauseCategory?: NullableEnumRootCauseCategoryFieldUpdateOperationsInput | $Enums.RootCauseCategory | null
+    rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumFindingStatusFieldUpdateOperationsInput | $Enums.FindingStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -69830,7 +86256,8 @@ export namespace Prisma {
     category?: EnumAuditFindingCategoryFieldUpdateOperationsInput | $Enums.AuditFindingCategory
     reference?: NullableStringFieldUpdateOperationsInput | string | null
     description?: StringFieldUpdateOperationsInput | string
-    correctiveAction?: NullableStringFieldUpdateOperationsInput | string | null
+    rootCauseCategory?: NullableEnumRootCauseCategoryFieldUpdateOperationsInput | $Enums.RootCauseCategory | null
+    rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumFindingStatusFieldUpdateOperationsInput | $Enums.FindingStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -69843,7 +86270,8 @@ export namespace Prisma {
     category: $Enums.AuditFindingCategory
     reference?: string | null
     description: string
-    correctiveAction?: string | null
+    rootCauseCategory?: $Enums.RootCauseCategory | null
+    rootCauseSubCategory?: string | null
     status?: $Enums.FindingStatus
     createdAt?: Date | string
     createdBy?: string | null
@@ -69856,7 +86284,8 @@ export namespace Prisma {
     category?: EnumAuditFindingCategoryFieldUpdateOperationsInput | $Enums.AuditFindingCategory
     reference?: NullableStringFieldUpdateOperationsInput | string | null
     description?: StringFieldUpdateOperationsInput | string
-    correctiveAction?: NullableStringFieldUpdateOperationsInput | string | null
+    rootCauseCategory?: NullableEnumRootCauseCategoryFieldUpdateOperationsInput | $Enums.RootCauseCategory | null
+    rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumFindingStatusFieldUpdateOperationsInput | $Enums.FindingStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -69869,7 +86298,8 @@ export namespace Prisma {
     category?: EnumAuditFindingCategoryFieldUpdateOperationsInput | $Enums.AuditFindingCategory
     reference?: NullableStringFieldUpdateOperationsInput | string | null
     description?: StringFieldUpdateOperationsInput | string
-    correctiveAction?: NullableStringFieldUpdateOperationsInput | string | null
+    rootCauseCategory?: NullableEnumRootCauseCategoryFieldUpdateOperationsInput | $Enums.RootCauseCategory | null
+    rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumFindingStatusFieldUpdateOperationsInput | $Enums.FindingStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -69882,7 +86312,8 @@ export namespace Prisma {
     category?: EnumAuditFindingCategoryFieldUpdateOperationsInput | $Enums.AuditFindingCategory
     reference?: NullableStringFieldUpdateOperationsInput | string | null
     description?: StringFieldUpdateOperationsInput | string
-    correctiveAction?: NullableStringFieldUpdateOperationsInput | string | null
+    rootCauseCategory?: NullableEnumRootCauseCategoryFieldUpdateOperationsInput | $Enums.RootCauseCategory | null
+    rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumFindingStatusFieldUpdateOperationsInput | $Enums.FindingStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null

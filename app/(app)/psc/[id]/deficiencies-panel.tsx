@@ -11,9 +11,19 @@ import {
   type ActionResult,
 } from "@/features/psc/actions";
 import { ncrPrefillHref } from "@/lib/ncr-link";
+import { formatRootCause, type RootCauseCategoryValue } from "@/lib/root-cause";
+import {
+  CapaTracker,
+  CapaSummaryTable,
+  renumberCapaCodeForGroup,
+  type CapaRowView,
+  type CapaSummaryRowView,
+} from "@/components/capa/capa-tracker";
 import { AutoGrowInput, Label, Select } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { DeficiencyRootCauseForm } from "./deficiency-root-cause-form";
+import { RootCauseForm as NcrRootCauseForm } from "@/app/(app)/non-conformities/[id]/root-cause-form";
 
 export type NcrContext = {
   vesselId: string | null;
@@ -28,9 +38,11 @@ export type DeficiencyView = {
   reference: string | null;
   actionCode: string | null;
   description: string;
-  rectification: string | null;
   status: "OPEN" | "CLOSED";
 };
+
+type RootCauseValue = { category: string | null; subCategory: string | null };
+type CapaEntityRef = { entityType: string; entityId: string };
 
 function AddButton() {
   const { pending } = useFormStatus();
@@ -45,29 +57,32 @@ function DeficiencyRow({
   def,
   editable,
   canCreateNcr,
+  canUpdateNcr,
   existingNcr,
   ncrContext,
+  correctiveRows,
+  rootCause,
+  capaEntity,
 }: {
   def: DeficiencyView;
   editable: boolean;
   canCreateNcr: boolean;
+  canUpdateNcr: boolean;
   existingNcr?: { id: string; refNo: string };
   ncrContext: NcrContext;
+  correctiveRows: CapaRowView[];
+  rootCause: RootCauseValue;
+  capaEntity: CapaEntityRef;
 }) {
   const [pending, startTransition] = useTransition();
-  const [error, setError] = useState<string | null>(null);
-  const [rectification, setRectification] = useState(def.rectification ?? "");
   const [status, setStatus] = useState<"OPEN" | "CLOSED">(def.status);
 
-  function save() {
-    setError(null);
+  function saveStatus() {
     const fd = new FormData();
     fd.set("deficiencyId", def.id);
-    fd.set("rectification", rectification);
     fd.set("status", status);
     startTransition(async () => {
-      const res = await updateDeficiencyAction(fd);
-      if (!res.ok) setError(res.error);
+      await updateDeficiencyAction(fd);
     });
   }
   function remove() {
@@ -79,9 +94,9 @@ function DeficiencyRow({
   }
 
   return (
-    <li className="space-y-2 p-3">
+    <li className="space-y-3 p-3">
       <div className="flex items-start justify-between gap-3">
-        <div className="min-w-0">
+        <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
             {def.natureCode && <span className="font-mono">Code {def.natureCode}</span>}
             {def.reference && <span>· {def.reference}</span>}
@@ -89,31 +104,30 @@ function DeficiencyRow({
             <Badge tone={def.status === "CLOSED" ? "success" : "warning"}>
               {def.status === "CLOSED" ? "Rectified" : "Open"}
             </Badge>
+            {existingNcr ? (
+              <Link href={`/non-conformities/${existingNcr.id}`}>
+                <Button type="button" size="sm" variant="outline">View {existingNcr.refNo}</Button>
+              </Link>
+            ) : (
+              canCreateNcr && (
+                <Link
+                  href={ncrPrefillHref({
+                    vesselId: ncrContext.vesselId,
+                    source: "PSC",
+                    sourceEntityId: def.id,
+                    requirement: def.reference,
+                    description: def.description,
+                    raisedAt: ncrContext.raisedAt,
+                    reportRefNo: ncrContext.reportRefNo,
+                    port: ncrContext.port,
+                  })}
+                >
+                  <Button type="button" size="sm">Raise NCR</Button>
+                </Link>
+              )
+            )}
           </div>
           <p className="mt-1 text-sm">{def.description}</p>
-          {existingNcr ? (
-            <Link href={`/non-conformities/${existingNcr.id}`} className="mt-1 inline-block text-xs text-primary hover:underline">
-              View {existingNcr.refNo}
-            </Link>
-          ) : (
-            canCreateNcr && (
-              <Link
-                href={ncrPrefillHref({
-                  vesselId: ncrContext.vesselId,
-                  source: "PSC",
-                  sourceEntityId: def.id,
-                  requirement: def.reference,
-                  description: def.description,
-                  raisedAt: ncrContext.raisedAt,
-                  reportRefNo: ncrContext.reportRefNo,
-                  port: ncrContext.port,
-                })}
-                className="mt-1 inline-block text-xs text-primary hover:underline"
-              >
-                Raise NCR
-              </Link>
-            )
-          )}
         </div>
         {editable && (
           <button type="button" onClick={remove} disabled={pending} aria-label="Delete deficiency"
@@ -123,22 +137,68 @@ function DeficiencyRow({
         )}
       </div>
 
-      {editable ? (
-        <div className="grid grid-cols-1 gap-2 sm:grid-cols-[1fr_auto_auto] sm:items-end">
-          <div className="space-y-1">
-            <Label className="text-xs">Rectification / action taken</Label>
-            <AutoGrowInput value={rectification} onChange={(e) => setRectification(e.target.value)} placeholder="Action taken…" />
-          </div>
+      {editable && (
+        <div className="flex items-center gap-2">
           <Select value={status} onChange={(e) => setStatus(e.target.value as "OPEN" | "CLOSED")} className="w-36">
             <option value="OPEN">Open</option>
             <option value="CLOSED">Rectified</option>
           </Select>
-          <Button size="sm" variant="outline" onClick={save} disabled={pending}>Save</Button>
+          <Button size="sm" variant="outline" onClick={saveStatus} disabled={pending}>Save status</Button>
         </div>
-      ) : (
-        def.rectification && <p className="text-sm text-muted-foreground">Rectification: {def.rectification}</p>
       )}
-      {error && <p className="text-sm text-danger">{error}</p>}
+
+      <div className="rounded-md border border-border p-3">
+        <h4 className="mb-2 text-sm font-semibold">
+          Root cause
+          {existingNcr && (
+            <span className="ml-2 text-xs font-normal text-muted-foreground">
+              (synced with {existingNcr.refNo})
+            </span>
+          )}
+        </h4>
+        {existingNcr ? (
+          canUpdateNcr ? (
+            <NcrRootCauseForm
+              ncrId={existingNcr.id}
+              rootCauseCategory={rootCause.category ?? ""}
+              rootCauseSubCategory={rootCause.subCategory ?? ""}
+            />
+          ) : rootCause.category ? (
+            <p className="text-sm">{formatRootCause(rootCause.category as RootCauseCategoryValue | null, rootCause.subCategory)}</p>
+          ) : (
+            <p className="text-sm text-muted-foreground">No root cause recorded yet.</p>
+          )
+        ) : editable ? (
+          <DeficiencyRootCauseForm
+            deficiencyId={def.id}
+            rootCauseCategory={rootCause.category ?? ""}
+            rootCauseSubCategory={rootCause.subCategory ?? ""}
+          />
+        ) : rootCause.category ? (
+          <p className="text-sm">{formatRootCause(rootCause.category as RootCauseCategoryValue | null, rootCause.subCategory)}</p>
+        ) : (
+          <p className="text-sm text-muted-foreground">No root cause recorded yet.</p>
+        )}
+      </div>
+
+      <div className="rounded-md border border-border p-3 space-y-4">
+        <h4 className="text-sm font-semibold">
+          Corrective Action
+          {existingNcr && (
+            <span className="ml-2 text-xs font-normal text-muted-foreground">
+              (synced with {existingNcr.refNo})
+            </span>
+          )}
+        </h4>
+        <CapaTracker
+          entityType={capaEntity.entityType}
+          entityId={capaEntity.entityId}
+          kind="CORRECTIVE"
+          title="Corrective Actions"
+          editable={existingNcr ? canUpdateNcr : editable}
+          rows={correctiveRows}
+        />
+      </div>
     </li>
   );
 }
@@ -148,15 +208,25 @@ export function DeficienciesPanel({
   deficiencies,
   editable,
   canCreateNcr,
+  canUpdateNcr,
   ncrBySourceId,
   ncrContext,
+  correctiveRowsByDeficiency,
+  allCapaRowsByDeficiency,
+  rootCauseByDeficiency,
+  capaEntityByDeficiency,
 }: {
   inspectionId: string;
   deficiencies: DeficiencyView[];
   editable: boolean;
   canCreateNcr: boolean;
+  canUpdateNcr: boolean;
   ncrBySourceId: Record<string, { id: string; refNo: string }>;
   ncrContext: NcrContext;
+  correctiveRowsByDeficiency: Record<string, CapaRowView[]>;
+  allCapaRowsByDeficiency: Record<string, CapaSummaryRowView[]>;
+  rootCauseByDeficiency: Record<string, RootCauseValue>;
+  capaEntityByDeficiency: Record<string, CapaEntityRef>;
 }) {
   const [addState, addAction] = useActionState<ActionResult, FormData>(
     addDeficiencyAction,
@@ -166,6 +236,19 @@ export function DeficienciesPanel({
   useEffect(() => {
     if (addState.ok) formRef.current?.reset();
   }, [addState.ok]);
+
+  // One consolidated CAPA register for the whole inspection, below every
+  // deficiency, so what's still pending is visible at a glance instead of
+  // buried inside each individual card.
+  const allCapaRows: CapaSummaryRowView[] = deficiencies.flatMap((d, i) => {
+    const rows = allCapaRowsByDeficiency[d.id] ?? [];
+    const rowEditable = ncrBySourceId[d.id] ? canUpdateNcr : editable;
+    return rows.map((r) => ({
+      ...r,
+      code: renumberCapaCodeForGroup(r.code, i + 1),
+      editable: rowEditable,
+    }));
+  });
 
   return (
     <div className="space-y-4">
@@ -179,11 +262,22 @@ export function DeficienciesPanel({
               def={d}
               editable={editable}
               canCreateNcr={canCreateNcr}
+              canUpdateNcr={canUpdateNcr}
               existingNcr={ncrBySourceId[d.id]}
               ncrContext={ncrContext}
+              correctiveRows={correctiveRowsByDeficiency[d.id] ?? []}
+              rootCause={rootCauseByDeficiency[d.id] ?? { category: null, subCategory: null }}
+              capaEntity={capaEntityByDeficiency[d.id] ?? { entityType: "PscDeficiency", entityId: d.id }}
             />
           ))}
         </ul>
+      )}
+
+      {deficiencies.length > 0 && (
+        <div className="space-y-2 rounded-md border border-border p-3">
+          <h4 className="text-sm font-semibold">All CAPA Tracker</h4>
+          <CapaSummaryTable rows={allCapaRows} editable={editable || canUpdateNcr} />
+        </div>
       )}
 
       {editable && (

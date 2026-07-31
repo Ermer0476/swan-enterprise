@@ -34,10 +34,12 @@ export function severityTone(severity: string): BadgeTone {
     case "CRITICAL":
       return "danger";
     case "HIGH":
+    case "MAJOR":
       return "warning";
     case "MEDIUM":
       return "accent";
     case "LOW":
+    case "MINOR":
     default:
       return "neutral";
   }

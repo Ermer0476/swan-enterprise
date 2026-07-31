@@ -23,7 +23,11 @@ const fail = (error: string): ActionResult => ({ ok: false, error });
  */
 const REGISTRY: Record<
   string,
-  { permission: PermissionKey; path: (id: string) => string; guard?: (user: SessionUser) => boolean }
+  {
+    permission: PermissionKey;
+    path: (id: string) => string | Promise<string>;
+    guard?: (user: SessionUser) => boolean;
+  }
 > = {
   Incident: { permission: "incident:update", path: (id) => `/incidents/${id}` },
   // Corrective actions are owned/monitored by the vessel — office roles hold
@@ -33,6 +37,41 @@ const REGISTRY: Record<
     permission: "nm:create",
     path: (id) => `/near-miss/${id}`,
     guard: (user) => user.department === "SHIPBOARD",
+  },
+  NonConformity: { permission: "ncr:update", path: (id) => `/non-conformities/${id}` },
+  // A deficiency has no page of its own — it lives inside its parent PSC
+  // inspection — so the path has to be looked up rather than derived from
+  // the entityId directly.
+  PscDeficiency: {
+    permission: "psc:update",
+    path: async (deficiencyId) => {
+      const def = await prisma.pscDeficiency.findUnique({
+        where: { id: deficiencyId },
+        select: { inspectionId: true },
+      });
+      return `/psc/${def?.inspectionId ?? ""}`;
+    },
+  },
+  // Same "lives inside its parent" shape as PscDeficiency, one per audit type.
+  InternalAuditFinding: {
+    permission: "iaudit:update",
+    path: async (findingId) => {
+      const f = await prisma.internalAuditFinding.findUnique({
+        where: { id: findingId },
+        select: { auditId: true },
+      });
+      return `/internal-audits/${f?.auditId ?? ""}`;
+    },
+  },
+  ExternalAuditFinding: {
+    permission: "eaudit:update",
+    path: async (findingId) => {
+      const f = await prisma.externalAuditFinding.findUnique({
+        where: { id: findingId },
+        select: { auditId: true },
+      });
+      return `/external-audits/${f?.auditId ?? ""}`;
+    },
   },
 };
 
@@ -105,7 +144,7 @@ export async function addCapaAction(
     summary: `Added ${row.code} to ${d.entityType} ${d.entityId}`,
   });
 
-  revalidatePath(path(d.entityId));
+  revalidatePath(await path(d.entityId));
   return OK;
 }
 
@@ -148,7 +187,7 @@ export async function updateCapaAction(formData: FormData): Promise<ActionResult
     },
   });
 
-  revalidatePath(path(existing.entityId));
+  revalidatePath(await path(existing.entityId));
   return OK;
 }
 
@@ -179,6 +218,6 @@ export async function deleteCapaAction(formData: FormData): Promise<ActionResult
     summary: `Removed ${existing.code} from ${existing.entityType} ${existing.entityId}`,
   });
 
-  revalidatePath(path(existing.entityId));
+  revalidatePath(await path(existing.entityId));
   return OK;
 }

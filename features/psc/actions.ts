@@ -9,6 +9,7 @@ import {
   createPscSchema,
   addDeficiencySchema,
   updateDeficiencySchema,
+  deficiencyRootCauseSchema,
 } from "./schema";
 
 export type ActionResult = { ok: boolean; error: string | null };
@@ -132,7 +133,6 @@ export async function updateDeficiencyAction(
   const user = await requirePermission("psc:update");
   const parsed = updateDeficiencySchema.safeParse({
     deficiencyId: formData.get("deficiencyId"),
-    rectification: formData.get("rectification"),
     status: formData.get("status"),
   });
   if (!parsed.success) return fail("Invalid input");
@@ -145,7 +145,47 @@ export async function updateDeficiencyAction(
 
   await prisma.pscDeficiency.update({
     where: { id: def.id },
-    data: { rectification: d.rectification || null, status: d.status },
+    data: { status: d.status },
+  });
+
+  revalidatePath(`/psc/${def.inspectionId}`);
+  return OK;
+}
+
+export async function saveDeficiencyRootCauseAction(
+  _prev: ActionResult,
+  formData: FormData,
+): Promise<ActionResult> {
+  const user = await requirePermission("psc:update");
+  const parsed = deficiencyRootCauseSchema.safeParse({
+    deficiencyId: formData.get("deficiencyId"),
+    rootCauseCategory: formData.get("rootCauseCategory"),
+    rootCauseSubCategory: formData.get("rootCauseSubCategory"),
+  });
+  if (!parsed.success) {
+    return fail(parsed.error.issues[0]?.message ?? "Invalid input");
+  }
+  const d = parsed.data;
+
+  const def = await prisma.pscDeficiency.findFirst({
+    where: { id: d.deficiencyId, companyId: user.companyId, deletedAt: null },
+  });
+  if (!def) return fail("Deficiency not found");
+
+  await prisma.pscDeficiency.update({
+    where: { id: def.id },
+    data: {
+      rootCauseCategory: d.rootCauseCategory,
+      rootCauseSubCategory: d.rootCauseSubCategory,
+    },
+  });
+
+  await writeAudit({
+    actor: user,
+    action: "UPDATE",
+    entityType: "PscDeficiency",
+    entityId: def.id,
+    summary: `Recorded root cause for a deficiency on ${def.inspectionId}`,
   });
 
   revalidatePath(`/psc/${def.inspectionId}`);

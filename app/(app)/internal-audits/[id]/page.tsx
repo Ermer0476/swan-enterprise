@@ -3,11 +3,13 @@ import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { requirePermission, can } from "@/lib/rbac";
 import { getInternalAudit } from "@/features/internal-audits/queries";
-import { listNcrsBySourceEntityIds } from "@/features/non-conformities/queries";
+import { listNcrsBySourceEntityIds, listNcrRootCauses } from "@/features/non-conformities/queries";
+import { listAllCapaActionsForEntities } from "@/features/capa/queries";
 import {
   addFindingAction,
   updateFindingAction,
   deleteFindingAction,
+  saveFindingRootCauseAction,
   closeInternalAuditAction,
   deleteInternalAuditAction,
 } from "@/features/internal-audits/actions";
@@ -17,7 +19,26 @@ import { Badge } from "@/components/ui/badge";
 import { formatDate, humanize } from "@/lib/utils";
 import { AuditFindingsPanel } from "@/components/audit/findings-panel";
 import { AuditStatusActions } from "@/components/audit/audit-status-actions";
-import type { AuditFindingCategory } from "@/components/audit/types";
+import type { AuditFindingCategory, RootCauseValue, CapaEntityRef } from "@/components/audit/types";
+import type { CapaRowView, CapaSummaryRowView } from "@/components/capa/capa-tracker";
+import { Button } from "@/components/ui/button";
+import { FileText } from "lucide-react";
+
+function toRowView(r: {
+  id: string;
+  code: string;
+  action: string;
+  responsible: string | null;
+  targetDate: Date | null;
+  status: "OPEN" | "IN_PROGRESS" | "CLOSED";
+  closedDate: Date | null;
+}): CapaRowView {
+  return {
+    ...r,
+    targetDate: r.targetDate ? r.targetDate.toISOString() : null,
+    closedDate: r.closedDate ? r.closedDate.toISOString() : null,
+  };
+}
 
 function statusTone(s: string) {
   return s === "CLOSED" ? "success" : s === "IN_PROGRESS" ? "warning" : "accent";
@@ -37,10 +58,58 @@ export default async function InternalAuditDetailPage({
   const canClose = can(user, "iaudit:close");
   const canDelete = can(user, "iaudit:delete");
   const canCreateNcr = can(user, "ncr:create");
-  const ncrBySourceId = await listNcrsBySourceEntityIds(
-    user.companyId,
-    audit.findings.map((f) => f.id),
-  );
+  const canUpdateNcr = can(user, "ncr:update");
+  const findingIds = audit.findings.map((f) => f.id);
+  const ncrBySourceId = await listNcrsBySourceEntityIds(user.companyId, findingIds);
+
+  // Once a finding is raised into an NCR, the NCR is the single source of
+  // truth for root cause + corrective actions (see createNcrAction) — read
+  // and write through to it directly instead of a separate copy.
+  const unlinkedIds = findingIds.filter((fid) => !ncrBySourceId[fid]);
+  const linkedNcrIds = Object.values(ncrBySourceId).map((n) => n.id);
+  const [ownCapaRows, ncrCapaRows, ncrRootCauses] = await Promise.all([
+    listAllCapaActionsForEntities(user.companyId, "InternalAuditFinding", unlinkedIds),
+    listAllCapaActionsForEntities(user.companyId, "NonConformity", linkedNcrIds),
+    listNcrRootCauses(user.companyId, linkedNcrIds),
+  ]);
+
+  const correctiveRowsByFinding: Record<string, CapaRowView[]> = {};
+  const allCapaRowsByFinding: Record<string, CapaSummaryRowView[]> = {};
+  const rootCauseByFinding: Record<string, RootCauseValue> = {};
+  const capaEntityByFinding: Record<string, CapaEntityRef> = {};
+
+  for (const f of audit.findings) {
+    const linked = ncrBySourceId[f.id];
+    capaEntityByFinding[f.id] = linked
+      ? { entityType: "NonConformity", entityId: linked.id }
+      : { entityType: "InternalAuditFinding", entityId: f.id };
+    rootCauseByFinding[f.id] = linked
+      ? {
+          category: ncrRootCauses[linked.id]?.rootCauseCategory ?? null,
+          subCategory: ncrRootCauses[linked.id]?.rootCauseSubCategory ?? null,
+        }
+      : { category: f.rootCauseCategory, subCategory: f.rootCauseSubCategory };
+  }
+
+  for (const row of ownCapaRows) {
+    const view = toRowView(row);
+    (allCapaRowsByFinding[row.entityId] ??= []).push({ ...view, kind: row.kind });
+    if (row.kind === "CORRECTIVE") {
+      (correctiveRowsByFinding[row.entityId] ??= []).push(view);
+    }
+  }
+  const ncrRowsByNcrId: Record<string, CapaSummaryRowView[]> = {};
+  for (const row of ncrCapaRows) {
+    const view = toRowView(row);
+    (ncrRowsByNcrId[row.entityId] ??= []).push({ ...view, kind: row.kind });
+  }
+  for (const f of audit.findings) {
+    const linked = ncrBySourceId[f.id];
+    if (!linked) continue;
+    const rows = ncrRowsByNcrId[linked.id] ?? [];
+    allCapaRowsByFinding[f.id] = rows;
+    correctiveRowsByFinding[f.id] = rows.filter((r) => r.kind === "CORRECTIVE");
+  }
 
   const meta = [
     { label: "Standard", value: audit.standard },
@@ -59,7 +128,16 @@ export default async function InternalAuditDetailPage({
 
       <PageHeader
         title={`${audit.refNo} — ${audit.scope}`}
-        actions={<Badge tone={statusTone(audit.status)}>{humanize(audit.status)}</Badge>}
+        actions={
+          <div className="flex items-center gap-2">
+            <Badge tone={statusTone(audit.status)}>{humanize(audit.status)}</Badge>
+            <Link href={`/internal-audits/${audit.id}/report`} target="_blank" rel="noopener noreferrer">
+              <Button type="button" variant="outline" size="sm">
+                <FileText className="h-4 w-4" /> Show Report
+              </Button>
+            </Link>
+          </div>
+        }
       />
 
       <div className="mb-6 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
@@ -101,15 +179,16 @@ export default async function InternalAuditDetailPage({
             addAction={addFindingAction}
             updateAction={updateFindingAction}
             deleteAction={deleteFindingAction}
+            saveRootCauseAction={saveFindingRootCauseAction}
             findings={audit.findings.map((f) => ({
               id: f.id,
               category: f.category as AuditFindingCategory,
               reference: f.reference,
               description: f.description,
-              correctiveAction: f.correctiveAction,
               status: f.status,
             }))}
             canCreateNcr={canCreateNcr}
+            canUpdateNcr={canUpdateNcr}
             ncrBySourceId={ncrBySourceId}
             ncrContext={{
               vesselId: audit.vesselId,
@@ -117,6 +196,10 @@ export default async function InternalAuditDetailPage({
               raisedAt: audit.auditDate.toISOString().slice(0, 10),
               source: "INTERNAL_AUDIT",
             }}
+            correctiveRowsByFinding={correctiveRowsByFinding}
+            allCapaRowsByFinding={allCapaRowsByFinding}
+            rootCauseByFinding={rootCauseByFinding}
+            capaEntityByFinding={capaEntityByFinding}
           />
         </CardContent>
       </Card>

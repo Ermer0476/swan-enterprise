@@ -25,6 +25,13 @@ const optionalYear = z.preprocess(
 
 export const vesselSchema = z.object({
   name: z.string().trim().min(2, "Vessel name is required").max(200),
+  // Short fleet code (e.g. "SWA") prefixed onto this vessel's NCR numbers —
+  // uppercased so "swa" and "SWA" aren't treated as different codes.
+  code: z
+    .string()
+    .trim()
+    .toUpperCase()
+    .regex(/^[A-Z0-9]{2,6}$/, "Code must be 2-6 letters/numbers"),
   imo: z.string().trim().regex(/^\d{7}$/, "IMO number must be 7 digits"),
   officialNumber: optionalText(50),
   callSign: optionalText(20),

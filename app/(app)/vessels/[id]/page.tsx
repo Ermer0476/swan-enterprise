@@ -25,6 +25,7 @@ export default async function VesselDetailPage({
   const canDelete = can(user, "vessel:delete");
 
   const meta = [
+    { label: "Vessel Code", value: vessel.code ?? "—" },
     { label: "Official Number", value: vessel.officialNumber ?? "—" },
     { label: "Call Sign", value: vessel.callSign ?? "—" },
     { label: "MMSI", value: vessel.mmsi ?? "—" },
@@ -73,6 +74,7 @@ export default async function VesselDetailPage({
           values={{
             id: vessel.id,
             name: vessel.name,
+            code: vessel.code ?? "",
             imo: vessel.imo,
             officialNumber: vessel.officialNumber ?? "",
             callSign: vessel.callSign ?? "",

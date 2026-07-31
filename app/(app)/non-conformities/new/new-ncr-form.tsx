@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import { useFormStatus } from "react-dom";
 import {
   createNcrAction,
@@ -23,6 +23,7 @@ function SubmitButton() {
 }
 
 type Prefill = {
+  title: string;
   vesselId: string;
   source: string;
   sourceEntityId: string;
@@ -33,17 +34,22 @@ type Prefill = {
 
 export function NewNcrForm({
   vessels,
-  suggestedRefNo,
+  suggestedRefNoByVessel,
   prefill,
 }: {
-  vessels: { id: string; name: string }[];
-  suggestedRefNo: string;
+  vessels: { id: string; name: string; code: string | null }[];
+  suggestedRefNoByVessel: Record<string, string>;
   prefill: Prefill;
 }) {
   const [state, formAction] = useActionState<ActionResult, FormData>(
     createNcrAction,
     { ok: false, error: null },
   );
+  // Each vessel has its own NCR sequence (see suggestNextRefNo) — re-derive
+  // the preview instantly as the user switches vessels, no round trip needed
+  // since the server already computed every vessel's next number up front.
+  const [vesselId, setVesselId] = useState(prefill.vesselId);
+  const suggestedRefNo = suggestedRefNoByVessel[vesselId] ?? suggestedRefNoByVessel[""] ?? "";
 
   return (
     <Card>
@@ -54,11 +60,12 @@ export function NewNcrForm({
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div className="space-y-1.5">
               <Label htmlFor="refNo">NCR number</Label>
-              <Input id="refNo" name="refNo" defaultValue={suggestedRefNo} required />
+              <Input id="refNo" value={suggestedRefNo} disabled />
+              <p className="text-xs text-muted-foreground">Assigned automatically — each vessel keeps its own sequence.</p>
             </div>
             <div className="space-y-1.5">
               <Label htmlFor="title">Title</Label>
-              <AutoGrowInput id="title" name="title" placeholder="Brief summary of the finding" required />
+              <AutoGrowInput id="title" name="title" defaultValue={prefill.title} placeholder="Brief summary of the finding" required />
             </div>
           </div>
 
@@ -77,9 +84,13 @@ export function NewNcrForm({
             </div>
             <div className="space-y-1.5">
               <Label htmlFor="vesselId">Vessel</Label>
-              <Select id="vesselId" name="vesselId" defaultValue={prefill.vesselId}>
+              <Select id="vesselId" name="vesselId" value={vesselId} onChange={(e) => setVesselId(e.target.value)}>
                 <option value="">— Shore / N/A —</option>
-                {vessels.map((v) => <option key={v.id} value={v.id}>{v.name}</option>)}
+                {vessels.map((v) => (
+                  <option key={v.id} value={v.id}>
+                    {v.name}{v.code ? ` (${v.code})` : ""}
+                  </option>
+                ))}
               </Select>
             </div>
           </div>

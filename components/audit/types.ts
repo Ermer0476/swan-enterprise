@@ -11,7 +11,6 @@ export type AuditFindingView = {
   category: AuditFindingCategory;
   reference: string | null;
   description: string;
-  correctiveAction: string | null;
   status: "OPEN" | "CLOSED";
 };
 
@@ -23,6 +22,13 @@ export type AuditNcrContext = {
   raisedAt: string; // yyyy-mm-dd
   source: "INTERNAL_AUDIT" | "EXTERNAL_AUDIT";
 };
+
+// A finding's own entity type ("InternalAuditFinding" / "ExternalAuditFinding")
+// — used as the CAPA entityType when a finding has no linked NCR yet.
+export type AuditFindingEntityType = "InternalAuditFinding" | "ExternalAuditFinding";
+
+export type RootCauseValue = { category: string | null; subCategory: string | null };
+export type CapaEntityRef = { entityType: string; entityId: string };
 
 export const AUDIT_FINDING_CATEGORIES: AuditFindingCategory[] = [
   "MAJOR_NC",

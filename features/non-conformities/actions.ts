@@ -5,8 +5,9 @@ import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { requirePermission } from "@/lib/rbac";
 import { writeAudit } from "@/lib/audit";
-import type { NcrStatus } from "@/lib/generated/prisma";
-import { createNcrSchema, capaNcrSchema, NCR_STATUSES, NCR_SHIP_CREATOR_RANKS } from "./schema";
+import { Prisma, type NcrStatus, type RootCauseCategory } from "@/lib/generated/prisma";
+import { createNcrSchema, rootCauseSchema, NCR_STATUSES, NCR_SHIP_CREATOR_RANKS } from "./schema";
+import { suggestNextRefNo } from "./queries";
 
 export type ActionResult = { ok: boolean; error: string | null };
 const OK: ActionResult = { ok: true, error: null };
@@ -31,7 +32,6 @@ export async function createNcrAction(
     return fail("Only Master, Chief Officer, or Chief Engineer may raise an NCR onboard");
   }
   const parsed = createNcrSchema.safeParse({
-    refNo: formData.get("refNo"),
     title: formData.get("title"),
     vesselId: formData.get("vesselId"),
     source: formData.get("source"),
@@ -48,34 +48,104 @@ export async function createNcrAction(
   }
   const d = parsed.data;
 
-  const existing = await prisma.nonConformity.findFirst({
-    where: { companyId: user.companyId, refNo: d.refNo },
-    select: { id: true },
-  });
-  if (existing) {
-    return fail(`NCR number ${d.refNo} is already in use — please choose another`);
+  // Each vessel keeps its own NCR sequence, prefixed with its fleet code
+  // (SWA-NCR-2026-0001), so two ships' Nth NCR of the year never collide —
+  // shore-raised NCRs (no vessel) fall into a plain NCR-2026-0001 bucket.
+  let vesselCode: string | null = null;
+  if (d.vesselId) {
+    const vessel = await prisma.vessel.findFirst({
+      where: { id: d.vesselId, companyId: user.companyId },
+      select: { code: true },
+    });
+    if (!vessel) return fail("Vessel not found");
+    if (!vessel.code) return fail("This vessel has no NCR code set — add one in Vessel Master first");
+    vesselCode = vessel.code;
   }
 
-  const ncr = await prisma.nonConformity.create({
-    data: {
-      companyId: user.companyId,
-      refNo: d.refNo,
-      title: d.title,
-      vesselId: d.vesselId || null,
-      source: d.source,
-      sourceEntityId: d.sourceEntityId || null,
-      requirement: d.requirement,
-      severity: d.severity,
-      raisedAt: new Date(d.raisedAt),
-      targetDate: d.targetDate ? new Date(d.targetDate) : null,
-      description: d.description,
-      personInCharge: d.personInCharge,
-      status: "OPEN",
-      raisedById: user.id,
-      createdBy: user.id,
-      updatedBy: user.id,
-    },
-  });
+  // Number is assigned here, not typed by the user — always taken from the
+  // last NCR on record for this vessel (or the shore bucket) for the current
+  // year, so it can't drift out of sequence or collide with one someone else
+  // just raised. The unique constraint on (companyId, refNo) is the real
+  // guard against a race with a concurrent submission; on that rare
+  // conflict, re-derive (the other submission is committed by now, so this
+  // naturally advances) and retry.
+  let ncr;
+  for (let attempt = 0; ; attempt++) {
+    const refNo = await suggestNextRefNo(user.companyId, vesselCode);
+
+    try {
+      ncr = await prisma.nonConformity.create({
+        data: {
+          companyId: user.companyId,
+          refNo,
+          title: d.title,
+          vesselId: d.vesselId || null,
+          source: d.source,
+          sourceEntityId: d.sourceEntityId || null,
+          requirement: d.requirement,
+          severity: d.severity,
+          raisedAt: new Date(d.raisedAt),
+          targetDate: d.targetDate ? new Date(d.targetDate) : null,
+          description: d.description,
+          personInCharge: d.personInCharge,
+          status: "OPEN",
+          raisedById: user.id,
+          createdBy: user.id,
+          updatedBy: user.id,
+        },
+      });
+      break;
+    } catch (err) {
+      const isDuplicate = err instanceof Prisma.PrismaClientKnownRequestError && err.code === "P2002";
+      if (!isDuplicate || attempt >= 5) throw err;
+    }
+  }
+
+  // One finding = one NCR: once a source finding is raised into an NCR, the
+  // NCR becomes the single source of truth for root cause and corrective
+  // actions — carry over anything already recorded against the finding
+  // (rather than leaving two independent, driftable copies) and re-parent
+  // its CAPA rows so both pages read/write the exact same records from here.
+  if (d.sourceEntityId) {
+    let sourceRootCause: { rootCauseCategory: RootCauseCategory | null; rootCauseSubCategory: string | null } | null = null;
+    let sourceEntityType: string | null = null;
+
+    if (d.source === "PSC") {
+      sourceEntityType = "PscDeficiency";
+      sourceRootCause = await prisma.pscDeficiency.findFirst({
+        where: { id: d.sourceEntityId, companyId: user.companyId },
+        select: { rootCauseCategory: true, rootCauseSubCategory: true },
+      });
+    } else if (d.source === "INTERNAL_AUDIT") {
+      sourceEntityType = "InternalAuditFinding";
+      sourceRootCause = await prisma.internalAuditFinding.findFirst({
+        where: { id: d.sourceEntityId, companyId: user.companyId },
+        select: { rootCauseCategory: true, rootCauseSubCategory: true },
+      });
+    } else if (d.source === "EXTERNAL_AUDIT") {
+      sourceEntityType = "ExternalAuditFinding";
+      sourceRootCause = await prisma.externalAuditFinding.findFirst({
+        where: { id: d.sourceEntityId, companyId: user.companyId },
+        select: { rootCauseCategory: true, rootCauseSubCategory: true },
+      });
+    }
+
+    if (sourceEntityType) {
+      if (sourceRootCause?.rootCauseCategory) {
+        await prisma.nonConformity.update({
+          where: { id: ncr.id },
+          data: {
+            rootCauseCategory: sourceRootCause.rootCauseCategory,
+            rootCauseSubCategory: sourceRootCause.rootCauseSubCategory,
+          },
+        });
+      }
+      await prisma.capaAction.updateMany({
+        where: { companyId: user.companyId, entityType: sourceEntityType, entityId: d.sourceEntityId },
+        data: { entityType: "NonConformity", entityId: ncr.id },
+      });
+    }
+  }
 
   await writeAudit({
     actor: user,
@@ -89,18 +159,19 @@ export async function createNcrAction(
   redirect(`/non-conformities/${ncr.id}`);
 }
 
-export async function saveCapaAction(
+export async function saveRootCauseAction(
   _prev: ActionResult,
   formData: FormData,
 ): Promise<ActionResult> {
   const user = await requirePermission("ncr:update");
-  const parsed = capaNcrSchema.safeParse({
+  const parsed = rootCauseSchema.safeParse({
     ncrId: formData.get("ncrId"),
-    rootCause: formData.get("rootCause"),
-    correctiveAction: formData.get("correctiveAction"),
-    verification: formData.get("verification"),
+    rootCauseCategory: formData.get("rootCauseCategory"),
+    rootCauseSubCategory: formData.get("rootCauseSubCategory"),
   });
-  if (!parsed.success) return fail("Invalid input");
+  if (!parsed.success) {
+    return fail(parsed.error.issues[0]?.message ?? "Invalid input");
+  }
   const d = parsed.data;
 
   const ncr = await prisma.nonConformity.findFirst({
@@ -112,9 +183,8 @@ export async function saveCapaAction(
   await prisma.nonConformity.update({
     where: { id: ncr.id },
     data: {
-      rootCause: d.rootCause || null,
-      correctiveAction: d.correctiveAction || null,
-      verification: d.verification || null,
+      rootCauseCategory: d.rootCauseCategory,
+      rootCauseSubCategory: d.rootCauseSubCategory,
       status: ncr.status === "OPEN" ? "SUBMITTED_TO_OFFICE" : ncr.status,
       updatedBy: user.id,
     },
@@ -125,7 +195,7 @@ export async function saveCapaAction(
     action: "UPDATE",
     entityType: "NonConformity",
     entityId: ncr.id,
-    summary: `Updated CAPA for ${ncr.refNo}`,
+    summary: `Recorded root cause for ${ncr.refNo}`,
   });
 
   revalidatePath(`/non-conformities/${ncr.id}`);
@@ -149,8 +219,8 @@ export async function advanceNcrAction(
   if (next === "CLOSED" && !user.permissions.has("ncr:close")) {
     return fail("You don't have permission to verify/close NCRs");
   }
-  if (next === "CLOSED" && !ncr.correctiveAction) {
-    return fail("Record a corrective action before verifying");
+  if (next === "CLOSED" && !ncr.rootCauseCategory) {
+    return fail("Record a root cause before verifying");
   }
 
   await prisma.nonConformity.update({

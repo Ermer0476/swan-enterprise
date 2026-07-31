@@ -1,7 +1,12 @@
 import Link from "next/link";
 import { Plus, AlertTriangle } from "lucide-react";
 import { requirePermission, can } from "@/lib/rbac";
-import { listIncidents } from "@/features/incidents/queries";
+import {
+  listIncidents,
+  getIncidentKpis,
+  getIncidentRootCauseTrends,
+  getIncidentTypeTrends,
+} from "@/features/incidents/queries";
 import {
   INCIDENT_STATUSES,
   INCIDENT_SEVERITIES,
@@ -13,6 +18,9 @@ import { Card } from "@/components/ui/card";
 import { Input, Select } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { IncidentsTable } from "./incidents-table";
+import { IncidentKpiStrip } from "./incident-kpis";
+import { RootCauseTrends } from "./root-cause-trends";
+import { IncidentTypeTrends } from "./incident-type-trends";
 import type { IncidentStatus, Severity } from "@/lib/generated/prisma";
 
 export default async function IncidentsPage({
@@ -23,11 +31,16 @@ export default async function IncidentsPage({
   const user = await requirePermission("incident:read");
   const sp = await searchParams;
 
-  const incidents = await listIncidents(user.companyId, {
-    search: sp.q || undefined,
-    status: (sp.status as IncidentStatus) || undefined,
-    severity: (sp.severity as Severity) || undefined,
-  });
+  const [incidents, kpis, rootCauseTrends, typeTrends] = await Promise.all([
+    listIncidents(user.companyId, {
+      search: sp.q || undefined,
+      status: (sp.status as IncidentStatus) || undefined,
+      severity: (sp.severity as Severity) || undefined,
+    }),
+    getIncidentKpis(user.companyId),
+    getIncidentRootCauseTrends(user.companyId),
+    getIncidentTypeTrends(user.companyId),
+  ]);
   const canCreate = can(user, "incident:create");
 
   return (
@@ -45,6 +58,12 @@ export default async function IncidentsPage({
           ) : undefined
         }
       />
+
+      <IncidentKpiStrip kpis={kpis} />
+      <div className="mb-6 grid grid-cols-1 gap-4 lg:grid-cols-2">
+        <RootCauseTrends rows={rootCauseTrends} />
+        <IncidentTypeTrends rows={typeTrends} />
+      </div>
 
       <form className="mb-4 flex flex-wrap items-end gap-2">
         <div className="min-w-52 flex-1">

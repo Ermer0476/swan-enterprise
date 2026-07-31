@@ -8,6 +8,16 @@ import { AutoGrowInput, Label, Select } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ncrPrefillHref } from "@/lib/ncr-link";
+import { formatRootCause, type RootCauseCategoryValue } from "@/lib/root-cause";
+import {
+  CapaTracker,
+  CapaSummaryTable,
+  renumberCapaCodeForGroup,
+  type CapaRowView,
+  type CapaSummaryRowView,
+} from "@/components/capa/capa-tracker";
+import { RootCauseForm as NcrRootCauseForm } from "@/app/(app)/non-conformities/[id]/root-cause-form";
+import { FindingRootCauseForm } from "./finding-root-cause-form";
 import {
   AUDIT_FINDING_CATEGORIES,
   auditCategoryLabel,
@@ -15,6 +25,8 @@ import {
   type AuditActionResult,
   type AuditFindingView,
   type AuditNcrContext,
+  type RootCauseValue,
+  type CapaEntityRef,
 } from "./types";
 
 // Server actions are passed in by each module (internal / external audits).
@@ -23,6 +35,10 @@ type AddAction = (
   fd: FormData,
 ) => Promise<AuditActionResult>;
 type FindingAction = (fd: FormData) => Promise<AuditActionResult>;
+type SaveRootCauseAction = (
+  prev: AuditActionResult,
+  fd: FormData,
+) => Promise<AuditActionResult>;
 
 function AddButton() {
   const { pending } = useFormStatus();
@@ -38,34 +54,37 @@ function FindingRow({
   editable,
   updateAction,
   deleteAction,
+  saveRootCauseAction,
   canCreateNcr,
+  canUpdateNcr,
   existingNcr,
   ncrContext,
+  correctiveRows,
+  rootCause,
+  capaEntity,
 }: {
   finding: AuditFindingView;
   editable: boolean;
   updateAction: FindingAction;
   deleteAction: FindingAction;
+  saveRootCauseAction: SaveRootCauseAction;
   canCreateNcr: boolean;
+  canUpdateNcr: boolean;
   existingNcr?: { id: string; refNo: string };
   ncrContext: AuditNcrContext;
+  correctiveRows: CapaRowView[];
+  rootCause: RootCauseValue;
+  capaEntity: CapaEntityRef;
 }) {
   const [pending, startTransition] = useTransition();
-  const [error, setError] = useState<string | null>(null);
-  const [correctiveAction, setCorrectiveAction] = useState(
-    finding.correctiveAction ?? "",
-  );
   const [status, setStatus] = useState<"OPEN" | "CLOSED">(finding.status);
 
-  function save() {
-    setError(null);
+  function saveStatus() {
     const fd = new FormData();
     fd.set("findingId", finding.id);
-    fd.set("correctiveAction", correctiveAction);
     fd.set("status", status);
     startTransition(async () => {
-      const res = await updateAction(fd);
-      if (!res.ok) setError(res.error);
+      await updateAction(fd);
     });
   }
   function remove() {
@@ -77,9 +96,9 @@ function FindingRow({
   }
 
   return (
-    <li className="space-y-2 p-3">
+    <li className="space-y-3 p-3">
       <div className="flex items-start justify-between gap-3">
-        <div className="min-w-0">
+        <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
             <Badge tone={auditCategoryTone(finding.category)}>
               {auditCategoryLabel(finding.category)}
@@ -88,30 +107,29 @@ function FindingRow({
             <Badge tone={finding.status === "CLOSED" ? "success" : "warning"}>
               {finding.status === "CLOSED" ? "Closed" : "Open"}
             </Badge>
+            {existingNcr ? (
+              <Link href={`/non-conformities/${existingNcr.id}`}>
+                <Button type="button" size="sm" variant="outline">View {existingNcr.refNo}</Button>
+              </Link>
+            ) : (
+              canCreateNcr && (
+                <Link
+                  href={ncrPrefillHref({
+                    vesselId: ncrContext.vesselId,
+                    source: ncrContext.source,
+                    sourceEntityId: finding.id,
+                    requirement: finding.reference,
+                    description: finding.description,
+                    raisedAt: ncrContext.raisedAt,
+                    reportRefNo: ncrContext.reportRefNo,
+                  })}
+                >
+                  <Button type="button" size="sm">Raise NCR</Button>
+                </Link>
+              )
+            )}
           </div>
           <p className="mt-1 text-sm">{finding.description}</p>
-          {existingNcr ? (
-            <Link href={`/non-conformities/${existingNcr.id}`} className="mt-1 inline-block text-xs text-primary hover:underline">
-              View {existingNcr.refNo}
-            </Link>
-          ) : (
-            canCreateNcr && (
-              <Link
-                href={ncrPrefillHref({
-                  vesselId: ncrContext.vesselId,
-                  source: ncrContext.source,
-                  sourceEntityId: finding.id,
-                  requirement: finding.reference,
-                  description: finding.description,
-                  raisedAt: ncrContext.raisedAt,
-                  reportRefNo: ncrContext.reportRefNo,
-                })}
-                className="mt-1 inline-block text-xs text-primary hover:underline"
-              >
-                Raise NCR
-              </Link>
-            )
-          )}
         </div>
         {editable && (
           <button
@@ -126,36 +144,71 @@ function FindingRow({
         )}
       </div>
 
-      {editable ? (
-        <div className="grid grid-cols-1 gap-2 sm:grid-cols-[1fr_auto_auto] sm:items-end">
-          <div className="space-y-1">
-            <Label className="text-xs">Corrective action</Label>
-            <AutoGrowInput
-              value={correctiveAction}
-              onChange={(e) => setCorrectiveAction(e.target.value)}
-              placeholder="Corrective action…"
-            />
-          </div>
-          <Select
-            value={status}
-            onChange={(e) => setStatus(e.target.value as "OPEN" | "CLOSED")}
-            className="w-32"
-          >
+      {editable && (
+        <div className="flex items-center gap-2">
+          <Select value={status} onChange={(e) => setStatus(e.target.value as "OPEN" | "CLOSED")} className="w-32">
             <option value="OPEN">Open</option>
             <option value="CLOSED">Closed</option>
           </Select>
-          <Button size="sm" variant="outline" onClick={save} disabled={pending}>
-            Save
-          </Button>
+          <Button size="sm" variant="outline" onClick={saveStatus} disabled={pending}>Save status</Button>
         </div>
-      ) : (
-        finding.correctiveAction && (
-          <p className="text-sm text-muted-foreground">
-            Corrective action: {finding.correctiveAction}
-          </p>
-        )
       )}
-      {error && <p className="text-sm text-danger">{error}</p>}
+
+      {finding.category !== "OBSERVATION" && (
+        <div className="rounded-md border border-border p-3">
+          <h4 className="mb-2 text-sm font-semibold">
+            Root cause
+            {existingNcr && (
+              <span className="ml-2 text-xs font-normal text-muted-foreground">
+                (synced with {existingNcr.refNo})
+              </span>
+            )}
+          </h4>
+          {existingNcr ? (
+            canUpdateNcr ? (
+              <NcrRootCauseForm
+                ncrId={existingNcr.id}
+                rootCauseCategory={rootCause.category ?? ""}
+                rootCauseSubCategory={rootCause.subCategory ?? ""}
+              />
+            ) : rootCause.category ? (
+              <p className="text-sm">{formatRootCause(rootCause.category as RootCauseCategoryValue | null, rootCause.subCategory)}</p>
+            ) : (
+              <p className="text-sm text-muted-foreground">No root cause recorded yet.</p>
+            )
+          ) : editable ? (
+            <FindingRootCauseForm
+              findingId={finding.id}
+              rootCauseCategory={rootCause.category ?? ""}
+              rootCauseSubCategory={rootCause.subCategory ?? ""}
+              saveAction={saveRootCauseAction}
+            />
+          ) : rootCause.category ? (
+            <p className="text-sm">{formatRootCause(rootCause.category as RootCauseCategoryValue | null, rootCause.subCategory)}</p>
+          ) : (
+            <p className="text-sm text-muted-foreground">No root cause recorded yet.</p>
+          )}
+        </div>
+      )}
+
+      <div className="rounded-md border border-border p-3 space-y-4">
+        <h4 className="text-sm font-semibold">
+          Corrective Action
+          {existingNcr && (
+            <span className="ml-2 text-xs font-normal text-muted-foreground">
+              (synced with {existingNcr.refNo})
+            </span>
+          )}
+        </h4>
+        <CapaTracker
+          entityType={capaEntity.entityType}
+          entityId={capaEntity.entityId}
+          kind="CORRECTIVE"
+          title="Corrective Actions"
+          editable={existingNcr ? canUpdateNcr : editable}
+          rows={correctiveRows}
+        />
+      </div>
     </li>
   );
 }
@@ -167,9 +220,15 @@ export function AuditFindingsPanel({
   addAction,
   updateAction,
   deleteAction,
+  saveRootCauseAction,
   canCreateNcr,
+  canUpdateNcr,
   ncrBySourceId,
   ncrContext,
+  correctiveRowsByFinding,
+  allCapaRowsByFinding,
+  rootCauseByFinding,
+  capaEntityByFinding,
 }: {
   auditId: string;
   findings: AuditFindingView[];
@@ -177,9 +236,15 @@ export function AuditFindingsPanel({
   addAction: AddAction;
   updateAction: FindingAction;
   deleteAction: FindingAction;
+  saveRootCauseAction: SaveRootCauseAction;
   canCreateNcr: boolean;
+  canUpdateNcr: boolean;
   ncrBySourceId: Record<string, { id: string; refNo: string }>;
   ncrContext: AuditNcrContext;
+  correctiveRowsByFinding: Record<string, CapaRowView[]>;
+  allCapaRowsByFinding: Record<string, CapaSummaryRowView[]>;
+  rootCauseByFinding: Record<string, RootCauseValue>;
+  capaEntityByFinding: Record<string, CapaEntityRef>;
 }) {
   const [addState, formAction] = useActionState<AuditActionResult, FormData>(
     addAction,
@@ -189,6 +254,19 @@ export function AuditFindingsPanel({
   useEffect(() => {
     if (addState.ok) formRef.current?.reset();
   }, [addState.ok]);
+
+  // One consolidated CAPA register for the whole audit, below every finding,
+  // so what's still pending is visible at a glance instead of buried inside
+  // each individual card.
+  const allCapaRows: CapaSummaryRowView[] = findings.flatMap((f, i) => {
+    const rows = allCapaRowsByFinding[f.id] ?? [];
+    const rowEditable = ncrBySourceId[f.id] ? canUpdateNcr : editable;
+    return rows.map((r) => ({
+      ...r,
+      code: renumberCapaCodeForGroup(r.code, i + 1),
+      editable: rowEditable,
+    }));
+  });
 
   return (
     <div className="space-y-4">
@@ -203,12 +281,24 @@ export function AuditFindingsPanel({
               editable={editable}
               updateAction={updateAction}
               deleteAction={deleteAction}
+              saveRootCauseAction={saveRootCauseAction}
               canCreateNcr={canCreateNcr}
+              canUpdateNcr={canUpdateNcr}
               existingNcr={ncrBySourceId[f.id]}
               ncrContext={ncrContext}
+              correctiveRows={correctiveRowsByFinding[f.id] ?? []}
+              rootCause={rootCauseByFinding[f.id] ?? { category: null, subCategory: null }}
+              capaEntity={capaEntityByFinding[f.id] ?? { entityType: "", entityId: f.id }}
             />
           ))}
         </ul>
+      )}
+
+      {findings.length > 0 && (
+        <div className="space-y-2 rounded-md border border-border p-3">
+          <h4 className="text-sm font-semibold">All CAPA Tracker</h4>
+          <CapaSummaryTable rows={allCapaRows} editable={editable || canUpdateNcr} />
+        </div>
       )}
 
       {editable && (
