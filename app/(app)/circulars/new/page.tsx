@@ -7,7 +7,7 @@ export default async function NewCircularPage() {
   const user = await requirePermission("circular:create");
   const vessels = await listVesselOptions(user.companyId);
   return (
-    <div className="mx-auto max-w-2xl">
+    <div className="mx-auto max-w-7xl">
       <PageHeader
         title="Issue Circular"
         description="Notify the fleet, or a specific vessel, of a safety, technical, operational, HR, or regulatory matter."

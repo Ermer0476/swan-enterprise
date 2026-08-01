@@ -60,7 +60,7 @@ export default async function IncidentsPage({
       />
 
       <IncidentKpiStrip kpis={kpis} />
-      <div className="mb-6 grid grid-cols-1 gap-4 lg:grid-cols-2">
+      <div className="mb-6 grid grid-cols-1 gap-4 md:grid-cols-2">
         <RootCauseTrends rows={rootCauseTrends} />
         <IncidentTypeTrends rows={typeTrends} />
       </div>

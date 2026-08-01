@@ -14,8 +14,8 @@ export async function listPsc(companyId: string, filters: PscFilters = {}) {
       ...(filters.search
         ? {
             OR: [
-              { refNo: { contains: filters.search, mode: "insensitive" } },
-              { authority: { contains: filters.search, mode: "insensitive" } },
+              { refNo: { contains: filters.search } },
+              { authority: { contains: filters.search } },
             ],
           }
         : {}),

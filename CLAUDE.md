@@ -1,8 +1,8 @@
 # SWAN Enterprise — notes for Claude
 
 Maritime ERP for Swan Shipping Corp. Next.js 15 + TypeScript (strict) + Tailwind
-v4 + Prisma 6 + **PostgreSQL**. Custom session auth (jose + bcrypt), data-driven
-RBAC. Read `docs/ARCHITECTURE.md` before adding features.
+v4 + Prisma 6 + **SQLite** (local dev). Custom session auth (jose + bcrypt),
+data-driven RBAC. Read `docs/ARCHITECTURE.md` before adding features.
 
 ## Core rule
 
@@ -28,5 +28,8 @@ feature must trace back to an SMS procedure.
 ## Local workflow
 
 Iterate locally; don't deploy until asked. Verify with `npm run typecheck` and
-`npm run build`. Needs a Postgres `DATABASE_URL`; `npm run db:push && npm run db:seed`
-to reset demo data. Seeded logins use password `swan1234`.
+`npm run build`. Uses a local SQLite file (`prisma/dev.db`) — `DATABASE_URL` in
+`.env` must be an **absolute** `file:` path (Next.js's bundler breaks Prisma's
+relative-path resolution for SQLite). `npm run db:push && npm run db:seed` to
+reset demo data. Seeded logins use password `swan1234`. No `mode: "insensitive"`
+or `skipDuplicates` — unsupported by SQLite.

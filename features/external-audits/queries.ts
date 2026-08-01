@@ -16,9 +16,9 @@ export async function listExternalAudits(
       ...(filters.search
         ? {
             OR: [
-              { refNo: { contains: filters.search, mode: "insensitive" } },
-              { scope: { contains: filters.search, mode: "insensitive" } },
-              { auditBody: { contains: filters.search, mode: "insensitive" } },
+              { refNo: { contains: filters.search } },
+              { scope: { contains: filters.search } },
+              { auditBody: { contains: filters.search } },
             ],
           }
         : {}),

@@ -7,7 +7,7 @@ export default async function NewDocumentPage() {
   await requirePermission("sms:create");
 
   return (
-    <div className="mx-auto max-w-2xl">
+    <div className="mx-auto max-w-7xl">
       <PageHeader
         title="New SMS Document"
         description="Create a controlled document. It starts as a draft revision 1."

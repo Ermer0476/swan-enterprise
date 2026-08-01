@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════════════════
-//  SWAN Enterprise — Prisma schema (PostgreSQL)
+//  SWAN Enterprise — Prisma schema (SQLite, local dev)
 //
 //  Conventions (enforced across every business table):
 //    • id         String  @id @default(uuid())         — UUID primary key
@@ -20,7 +20,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
@@ -225,6 +225,36 @@ enum FindingStatus {
   CLOSED
 }
 
+enum SireInspectionType {
+  LOADING_OPERATION
+  DISCHARGING_OPERATION
+  BUNKERING
+  IDLE
+}
+
+enum SireOverallResult {
+  SATISFACTORY
+  OBSERVATIONS
+  MAJOR_CONCERN
+}
+
+// SIRE observations run a longer lifecycle than the generic FindingStatus
+// (OPEN/CLOSED) — verification is its own step, not just a status label.
+enum SireObservationStatus {
+  OPEN
+  ONGOING
+  PENDING_VERIFICATION
+  CLOSED
+}
+
+// SIRE 2.0 observation category.
+enum SireObservationCategory {
+  HARDWARE
+  PROCESS
+  HUMAN
+  PHOTOGRAPH
+}
+
 // Audit finding severity (Internal & External audits share this).
 enum AuditFindingCategory {
   MAJOR_NC
@@ -254,7 +284,7 @@ model Company {
   cdiInspections      CdiInspection[]
   internalAudits      InternalAudit[]
   externalAudits      ExternalAudit[]
-  safetyMeetings      SafetyMeeting[]
+  committeeMeetings   CommitteeMeeting[]
   emergencyDrills     EmergencyDrill[]
   controlledDocuments ControlledDocument[]
   circulars           Circular[]
@@ -274,6 +304,12 @@ model User {
   active       Boolean        @default(true)
   lastLoginAt  DateTime?
 
+  // Which vessel this account represents — only meaningful for
+  // department = SHIPBOARD (one account per ship, e.g. the Master's login).
+  // Null for office accounts, which aren't tied to a single vessel.
+  vesselId String?
+  vessel   Vessel? @relation("UserVessel", fields: [vesselId], references: [id])
+
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   createdBy String?
@@ -282,14 +318,18 @@ model User {
   deletedBy String?
 
   roles              UserRole[]
-  ownedDocs          SmsDocument[]   @relation("DocumentOwner")
-  reportedIncidents  Incident[]      @relation("IncidentReporter")
-  reportedNearMisses NearMiss[]      @relation("NearMissReporter")
-  raisedNcrs         NonConformity[] @relation("NcrRaisedBy")
+  ownedDocs          SmsDocument[]            @relation("DocumentOwner")
+  reportedIncidents  Incident[]               @relation("IncidentReporter")
+  reportedNearMisses NearMiss[]               @relation("NearMissReporter")
+  raisedNcrs         NonConformity[]          @relation("NcrRaisedBy")
   notifications      Notification[]
+  sireResponsibleFor SireObservation[]        @relation("SireObservationResponsible")
+  sireVerifierFor    SireObservation[]        @relation("SireObservationVerifier")
+  sireComments       SireObservationComment[] @relation("SireObservationCommentAuthor")
 
   @@index([companyId])
   @@index([department])
+  @@index([vesselId])
 }
 
 // ─── RBAC (data-driven, not hardcoded) ─────────────────────────────────────────
@@ -379,12 +419,13 @@ model Vessel {
   cdiInspections      CdiInspection[]
   internalAudits      InternalAudit[]
   externalAudits      ExternalAudit[]
-  safetyMeetings      SafetyMeeting[]
+  committeeMeetings   CommitteeMeeting[]
   emergencyDrills     EmergencyDrill[]
   controlledDocuments ControlledDocument[]
   circulars           Circular[]
   riskAssessments     RiskAssessment[]
   defects             Defect[]
+  users               User[]               @relation("UserVessel")
 
   @@unique([companyId, code])
   @@index([companyId])
@@ -832,6 +873,7 @@ model NonConformity {
   // Miss use, so "add another corrective action" is already supported.
   rootCauseCategory    RootCauseCategory?
   rootCauseSubCategory String? // one flat sub-cause per category — see lib/root-cause.ts
+  rootCause            String? // free-text root cause description
   // Single owner of the corrective action — a person (by title/rank) or a
   // whole department; office NCRs are often owned by a department, not one
   // named individual.
@@ -866,11 +908,13 @@ model SireInspection {
   vessel   Vessel? @relation(fields: [vesselId], references: [id])
 
   inspectingCompany String // OCIMF operator / oil major that vetted
-  inspectorName     String?
+  inspectorName     String
   port              String?
   inspectionDate    DateTime
-  sireVersion       String?  @default("2.0")
-  summary           String?
+  inspectionType    SireInspectionType?
+  sireVersion       String?             @default("2.0")
+  overallResult     SireOverallResult?
+  summary           String? // "Remarks" in the UI
 
   status   InspectionStatus @default(OPEN)
   closedAt DateTime?
@@ -893,17 +937,54 @@ model SireObservation {
   companyId    String
   inspectionId String
   inspection   SireInspection @relation(fields: [inspectionId], references: [id], onDelete: Cascade)
-  viqRef       String? // VIQ chapter / question reference
-  category     String? // Hardware / Process / Human / Photograph
-  observation  String
-  response     String? // operator response / corrective action
-  status       FindingStatus  @default(OPEN)
+
+  // Stable per-inspection ordinal for "Observation No. N" — assigned once at
+  // creation, so it doesn't shift if an earlier observation is later deleted.
+  seq         Int
+  chapter     Int? // OCIMF VIQ chapter, 1–13
+  category    SireObservationCategory?
+  viqRef      String? // Question number, e.g. "3.5.1"
+  question    String? // the VIQ question text, for reference
+  observation String // Finding / Inspector Observation
+
+  immediateCause       String?
+  rootCauseCategory    RootCauseCategory?
+  rootCauseSubCategory String? // one flat sub-cause per category — see lib/root-cause.ts
+  rootCause            String? // free-text root cause description
+  correctiveAction     String?
+  preventiveMeasure    String?
+
+  responsiblePersonId  String?
+  responsiblePerson    User?     @relation("SireObservationResponsible", fields: [responsiblePersonId], references: [id])
+  targetDate           DateTime?
+  actualCompletionDate DateTime?
+
+  status SireObservationStatus @default(OPEN)
+
+  verifiedById String?
+  verifiedBy   User?   @relation("SireObservationVerifier", fields: [verifiedById], references: [id])
+
+  comments SireObservationComment[]
 
   createdAt DateTime  @default(now())
   createdBy String?
   deletedAt DateTime?
 
   @@index([inspectionId])
+}
+
+model SireObservationComment {
+  id            String          @id @default(uuid())
+  companyId     String
+  observationId String
+  observation   SireObservation @relation(fields: [observationId], references: [id], onDelete: Cascade)
+  authorId      String?
+  author        User?           @relation("SireObservationCommentAuthor", fields: [authorId], references: [id])
+  body          String
+
+  createdAt DateTime @default(now())
+
+  @@index([observationId])
 }
 
 // ─── Phase 1 module: PSC Inspection (Port State Control) ─────────────────────
@@ -955,7 +1036,11 @@ model PscDeficiency {
   // rectification field with the same tracker used company-wide.
   rootCauseCategory    RootCauseCategory?
   rootCauseSubCategory String? // one flat sub-cause per category — see lib/root-cause.ts
-  status               FindingStatus      @default(OPEN)
+  rootCause            String? // free-text root cause description
+  // Resolved status is derived from its linked CapaAction rows (all Closed =
+  // rectified), not stored — a manual flag here could drift out of sync with
+  // the actual corrective actions, which is exactly what caused inspections
+  // to close with CAPA items still open. See closePscAction.
 
   createdAt DateTime  @default(now())
   createdBy String?
@@ -1065,7 +1150,10 @@ model InternalAuditFinding {
   // correctiveAction field with the same tracker used company-wide.
   rootCauseCategory    RootCauseCategory?
   rootCauseSubCategory String? // one flat sub-cause per category — see lib/root-cause.ts
-  status               FindingStatus        @default(OPEN)
+  rootCause            String? // free-text root cause description
+  // Resolved status is derived from its linked CapaAction rows (all Closed =
+  // resolved), not stored — a manual flag here could drift out of sync with
+  // the actual corrective actions. See closeInternalAuditAction / closeExternalAuditAction.
 
   createdAt DateTime  @default(now())
   createdBy String?
@@ -1120,7 +1208,10 @@ model ExternalAuditFinding {
   // correctiveAction field with the same tracker used company-wide.
   rootCauseCategory    RootCauseCategory?
   rootCauseSubCategory String? // one flat sub-cause per category — see lib/root-cause.ts
-  status               FindingStatus        @default(OPEN)
+  rootCause            String? // free-text root cause description
+  // Resolved status is derived from its linked CapaAction rows (all Closed =
+  // resolved), not stored — a manual flag here could drift out of sync with
+  // the actual corrective actions. See closeInternalAuditAction / closeExternalAuditAction.
 
   createdAt DateTime  @default(now())
   createdBy String?
@@ -1129,32 +1220,51 @@ model ExternalAuditFinding {
   @@index([auditId])
 }
 
-// ─── Phase 1 module: Safety Meetings ──────────────────────────────────────────
-
-enum MeetingType {
-  SAFETY_COMMITTEE
-  OFFICE_SAFETY
-  MANAGEMENT_REVIEW
+// ─── Phase 1 module: Committee Meetings (ADM-04 / RC-013) ─────────────────────
+//  A vessel's monthly committee meeting(s) per ADM-04 — Safety, Maintenance,
+//  Health & Hygiene, and Shipboard Management Team each have their own fixed
+//  agenda template (see lib in features/committee-meetings/schema.ts); a
+//  single meeting instance can combine several committee types at once (the
+//  "type of meeting" shown to the user is simply the distinct set of
+//  committeeType values across its agenda items). OTHERS covers ad hoc /
+//  extraordinary meetings with no fixed template — their agenda items are
+//  freely authored (custom label) rather than pulled from AGENDA_TEMPLATES.
+enum CommitteeType {
+  SAFETY
+  MAINTENANCE
+  HEALTH_HYGIENE
+  SHIPBOARD_MANAGEMENT_TEAM
+  OTHERS
 }
 
-model SafetyMeeting {
+model CommitteeMeeting {
   id        String  @id @default(uuid())
   companyId String
   company   Company @relation(fields: [companyId], references: [id])
   refNo     String
 
-  vesselId String? // null = office / shore meeting
+  vesselId String? // null = shore/office-originated record
   vessel   Vessel? @relation(fields: [vesselId], references: [id])
 
-  meetingType MeetingType
+  position    String? // vessel's location at time of meeting, e.g. "TEMA, GHANA - ANCHORAGE"
   meetingDate DateTime
-  chairedBy   String?
-  attendees   String?
-  agenda      String?
-  minutes     String?
+  meetingTime String? // free text — often a range, e.g. "1100H-1130"
 
-  status   FindingStatus @default(OPEN)
-  closedAt DateTime?
+  chairman     String?
+  inCharge     String?
+  members      String? // free text, one per line
+  inAttendance String? // free text, one per line
+
+  // Crew who could not attend and must acknowledge the minutes separately.
+  forAcknowledgement String?
+
+  vesselRemarks String? // Master's overall closing remarks
+  shoreRemarks  String? // office's overall reply, once reviewed
+
+  published Boolean @default(false)
+  approved  Boolean @default(false)
+
+  agendaItems CommitteeMeetingAgenda[]
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
@@ -1164,7 +1274,27 @@ model SafetyMeeting {
   deletedBy String?
 
   @@unique([companyId, refNo])
-  @@index([companyId, status])
+  @@index([companyId, vesselId])
+}
+
+model CommitteeMeetingAgenda {
+  id        String           @id @default(uuid())
+  companyId String
+  meetingId String
+  meeting   CommitteeMeeting @relation(fields: [meetingId], references: [id], onDelete: Cascade)
+
+  // Stable ordinal for numbering ("1", "2", "3"…) — assigned once at
+  // creation, so it doesn't shift if an earlier item is later deleted.
+  seq           Int
+  committeeType CommitteeType
+  code          String? // "A", "B"… for fixed-template items; null for ad hoc Others topics
+  label         String // full agenda line text
+  details       String? // discussion details, filled in by the vessel
+  shoreComments String? // office's per-item reply, once reviewed
+
+  createdAt DateTime @default(now())
+
+  @@index([meetingId])
 }
 
 // ─── Phase 1 module: Emergency Drills ─────────────────────────────────────────

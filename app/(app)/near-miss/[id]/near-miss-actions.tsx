@@ -35,10 +35,10 @@ export function NearMissActions({
   }
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-3 print:hidden">
       <div className="flex flex-wrap items-center gap-2">
         {canAdvance && nextStatus && (
-          <Button onClick={() => run(advanceNearMissAction)} disabled={pending}>
+          <Button type="button" onClick={() => run(advanceNearMissAction)} disabled={pending}>
             Advance to {humanize(nextStatus)} <ArrowRight className="h-4 w-4" />
           </Button>
         )}
@@ -49,6 +49,7 @@ export function NearMissActions({
         )}
         {canDelete && (
           <Button
+            type="button"
             variant="outline"
             onClick={() => {
               if (confirm("Delete this near miss?")) run(deleteNearMissAction);

@@ -10,7 +10,7 @@ import {
 import { CIRCULAR_CATEGORIES } from "@/features/circulars/schema";
 import { humanize } from "@/lib/utils";
 import { Card, CardContent } from "@/components/ui/card";
-import { AutoGrowInput, Input, Textarea, Label, Select } from "@/components/ui/input";
+import { AutoGrowInput, Input, Label, Select } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 function SubmitButton() {
@@ -63,7 +63,7 @@ export function NewCircularForm({
 
           <div className="space-y-1.5">
             <Label htmlFor="body">Content</Label>
-            <Textarea id="body" name="body" rows={8} placeholder="Circular content…" required />
+            <AutoGrowInput id="body" name="body" placeholder="Circular content…" required />
           </div>
 
           {state.error && <p className="text-sm text-danger" role="alert">{state.error}</p>}

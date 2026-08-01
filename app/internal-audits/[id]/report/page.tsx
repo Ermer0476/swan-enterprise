@@ -58,7 +58,7 @@ export default async function InternalAuditReportPage({
   for (const row of ncrCapaRows) {
     (ncrRowsByNcrId[row.entityId] ??= []).push(toView(row));
   }
-  const rootCauseByFinding: Record<string, { category: string | null; subCategory: string | null }> = {};
+  const rootCauseByFinding: Record<string, { category: string | null; subCategory: string | null; description: string | null }> = {};
   for (const f of audit.findings) {
     const linked = ncrBySourceId[f.id];
     if (linked) {
@@ -66,9 +66,10 @@ export default async function InternalAuditReportPage({
       rootCauseByFinding[f.id] = {
         category: ncrRootCauses[linked.id]?.rootCauseCategory ?? null,
         subCategory: ncrRootCauses[linked.id]?.rootCauseSubCategory ?? null,
+        description: ncrRootCauses[linked.id]?.rootCause ?? null,
       };
     } else {
-      rootCauseByFinding[f.id] = { category: f.rootCauseCategory, subCategory: f.rootCauseSubCategory };
+      rootCauseByFinding[f.id] = { category: f.rootCauseCategory, subCategory: f.rootCauseSubCategory, description: f.rootCause };
     }
   }
 
@@ -121,15 +122,18 @@ export default async function InternalAuditReportPage({
             <p className="text-sm text-muted-foreground">No findings recorded.</p>
           ) : (
             <ul className="divide-y divide-border rounded-md border border-border">
-              {audit.findings.map((f) => (
+              {audit.findings.map((f) => {
+                const capaRows = allCapaRowsByFinding[f.id] ?? [];
+                const resolved = capaRows.length > 0 && capaRows.every((r) => r.status === "CLOSED");
+                return (
                 <li key={f.id} className="space-y-2 p-3">
                   <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
                     <Badge tone={auditCategoryTone(f.category as AuditFindingCategory)}>
                       {auditCategoryLabel(f.category as AuditFindingCategory)}
                     </Badge>
                     {f.reference && <span className="font-mono">{f.reference}</span>}
-                    <Badge tone={f.status === "CLOSED" ? "success" : "warning"}>
-                      {f.status === "CLOSED" ? "Closed" : "Open"}
+                    <Badge tone={resolved ? "success" : "warning"}>
+                      {resolved ? "Closed" : "Open"}
                     </Badge>
                   </div>
                   <p className="text-sm">{f.description}</p>
@@ -139,15 +143,17 @@ export default async function InternalAuditReportPage({
                         rootCauseByFinding[f.id]!.category as RootCauseCategoryValue | null,
                         rootCauseByFinding[f.id]!.subCategory,
                       )}
+                      {rootCauseByFinding[f.id]!.description && ` — ${rootCauseByFinding[f.id]!.description}`}
                     </p>
                   )}
-                  {(allCapaRowsByFinding[f.id]?.length ?? 0) > 0 && (
+                  {capaRows.length > 0 && (
                     <div className="pt-1">
-                      <CapaSummaryTable rows={allCapaRowsByFinding[f.id] ?? []} editable={false} />
+                      <CapaSummaryTable rows={capaRows} editable={false} />
                     </div>
                   )}
                 </li>
-              ))}
+                );
+              })}
             </ul>
           )}
         </CardContent>

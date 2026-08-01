@@ -47,7 +47,7 @@ export default async function DocumentDetailPage({
     doc.status !== "IN_REVIEW" && doc.status !== "ARCHIVED" && canEdit;
 
   return (
-    <div className="mx-auto max-w-4xl">
+    <div className="mx-auto max-w-7xl">
       <Link
         href="/sms-manual"
         className="mb-3 inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground"

@@ -8,7 +8,6 @@ import { writeAudit } from "@/lib/audit";
 import {
   createPscSchema,
   addDeficiencySchema,
-  updateDeficiencySchema,
   deficiencyRootCauseSchema,
 } from "./schema";
 
@@ -104,7 +103,6 @@ export async function addDeficiencyAction(
       reference: d.reference || null,
       actionCode: d.actionCode || null,
       description: d.description,
-      status: "OPEN",
       createdBy: user.id,
     },
   });
@@ -127,31 +125,6 @@ export async function addDeficiencyAction(
   return OK;
 }
 
-export async function updateDeficiencyAction(
-  formData: FormData,
-): Promise<ActionResult> {
-  const user = await requirePermission("psc:update");
-  const parsed = updateDeficiencySchema.safeParse({
-    deficiencyId: formData.get("deficiencyId"),
-    status: formData.get("status"),
-  });
-  if (!parsed.success) return fail("Invalid input");
-  const d = parsed.data;
-
-  const def = await prisma.pscDeficiency.findFirst({
-    where: { id: d.deficiencyId, companyId: user.companyId, deletedAt: null },
-  });
-  if (!def) return fail("Deficiency not found");
-
-  await prisma.pscDeficiency.update({
-    where: { id: def.id },
-    data: { status: d.status },
-  });
-
-  revalidatePath(`/psc/${def.inspectionId}`);
-  return OK;
-}
-
 export async function saveDeficiencyRootCauseAction(
   _prev: ActionResult,
   formData: FormData,
@@ -161,6 +134,7 @@ export async function saveDeficiencyRootCauseAction(
     deficiencyId: formData.get("deficiencyId"),
     rootCauseCategory: formData.get("rootCauseCategory"),
     rootCauseSubCategory: formData.get("rootCauseSubCategory"),
+    rootCause: formData.get("rootCause"),
   });
   if (!parsed.success) {
     return fail(parsed.error.issues[0]?.message ?? "Invalid input");
@@ -177,6 +151,7 @@ export async function saveDeficiencyRootCauseAction(
     data: {
       rootCauseCategory: d.rootCauseCategory,
       rootCauseSubCategory: d.rootCauseSubCategory,
+      rootCause: d.rootCause || null,
     },
   });
 
@@ -214,12 +189,39 @@ export async function closePscAction(formData: FormData): Promise<ActionResult> 
   const id = String(formData.get("inspectionId") ?? "");
   const insp = await prisma.pscInspection.findFirst({
     where: { id, companyId: user.companyId, deletedAt: null },
-    include: { deficiencies: { where: { deletedAt: null, status: "OPEN" } } },
   });
   if (!insp) return fail("Inspection not found");
   if (insp.status === "CLOSED") return fail("Inspection is already closed");
-  if (insp.deficiencies.length > 0) {
-    return fail("Rectify all deficiencies before closing the inspection");
+
+  const deficiencies = await prisma.pscDeficiency.findMany({
+    where: { inspectionId: insp.id, deletedAt: null },
+    select: { id: true },
+  });
+  // A deficiency is only "rectified" once it has at least one CAPA row and
+  // every one of them is Closed — a deficiency with no recorded corrective
+  // action at all is still pending, not just one with open CAPA rows. A
+  // deficiency raised into an NCR moves its CAPA rows under entityType
+  // "NonConformity" (entityId = the NCR's id, not the deficiency's) — the
+  // NCR becomes the single source of truth (see createNcrAction).
+  let unresolvedCount = 0;
+  for (const def of deficiencies) {
+    const linkedNcr = await prisma.nonConformity.findFirst({
+      where: { companyId: user.companyId, sourceEntityId: def.id, deletedAt: null },
+      select: { id: true },
+    });
+    const capaWhere = linkedNcr
+      ? { entityType: "NonConformity", entityId: linkedNcr.id }
+      : { entityType: "PscDeficiency", entityId: def.id };
+    const [total, open] = await Promise.all([
+      prisma.capaAction.count({ where: { companyId: user.companyId, deletedAt: null, ...capaWhere } }),
+      prisma.capaAction.count({ where: { companyId: user.companyId, deletedAt: null, status: { not: "CLOSED" }, ...capaWhere } }),
+    ]);
+    if (total === 0 || open > 0) unresolvedCount++;
+  }
+  if (unresolvedCount > 0) {
+    return fail(
+      `Close all CAPA items before closing the inspection (${unresolvedCount} deficienc${unresolvedCount === 1 ? "y" : "ies"} still pending).`,
+    );
   }
 
   await prisma.pscInspection.update({

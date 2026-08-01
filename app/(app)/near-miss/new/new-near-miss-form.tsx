@@ -25,7 +25,7 @@ import {
 } from "@/lib/root-cause";
 import { humanize } from "@/lib/utils";
 import { Card, CardContent } from "@/components/ui/card";
-import { AutoGrowInput, Input, Textarea, Label, Select } from "@/components/ui/input";
+import { AutoGrowInput, Input, Label, Select } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 function SubmitButton() {
@@ -136,7 +136,7 @@ export function NewNearMissForm({
 
           <div className="space-y-1.5">
             <Label htmlFor="description">Details of the Near Miss</Label>
-            <Textarea id="description" name="description" rows={4} required
+            <AutoGrowInput id="description" name="description" required
               placeholder="Describe the near miss…" />
           </div>
 
@@ -160,7 +160,7 @@ export function NewNearMissForm({
 
           <div className="space-y-1.5">
             <Label htmlFor="immediateAction">Immediate action taken</Label>
-            <Textarea id="immediateAction" name="immediateAction" rows={2}
+            <AutoGrowInput id="immediateAction" name="immediateAction"
               placeholder="What was done right away?" />
           </div>
 

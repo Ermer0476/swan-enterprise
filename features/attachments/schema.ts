@@ -18,4 +18,4 @@ export const ALLOWED_MIME_TYPES = new Set<string>([
   "application/x-zip-compressed",
 ]);
 
-export const MAX_ATTACHMENT_SIZE = 25 * 1024 * 1024; // 25MB
+export const MAX_ATTACHMENT_SIZE = 100 * 1024 * 1024; // 100MB

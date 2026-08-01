@@ -14,8 +14,8 @@ export async function listDocuments(companyId: string, filters: DocumentFilters 
       ...(filters.search
         ? {
             OR: [
-              { docNumber: { contains: filters.search, mode: "insensitive" } },
-              { title: { contains: filters.search, mode: "insensitive" } },
+              { docNumber: { contains: filters.search } },
+              { title: { contains: filters.search } },
             ],
           }
         : {}),

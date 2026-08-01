@@ -9,7 +9,7 @@ import {
 } from "@/features/sms-manual/actions";
 import { DEPARTMENTS } from "@/features/sms-manual/schema";
 import { Card, CardContent } from "@/components/ui/card";
-import { AutoGrowInput, Textarea, Label, Select } from "@/components/ui/input";
+import { AutoGrowInput, Label, Select } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 function SubmitButton() {
@@ -80,10 +80,9 @@ export function NewDocumentForm() {
 
           <div className="space-y-1.5">
             <Label htmlFor="content">Content (revision 1)</Label>
-            <Textarea
+            <AutoGrowInput
               id="content"
               name="content"
-              rows={10}
               placeholder="Procedure text (Markdown supported)…"
             />
           </div>

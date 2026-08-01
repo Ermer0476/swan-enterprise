@@ -82,12 +82,12 @@ export const PERMISSIONS = {
   "vessel:update": "Edit vessel particulars",
   "vessel:delete": "Remove vessels from the fleet",
 
-  // Safety Meetings module
-  "meeting:read": "View safety meetings",
-  "meeting:create": "Record safety meetings",
-  "meeting:update": "Edit meeting minutes and attendees",
-  "meeting:close": "Close safety meetings",
-  "meeting:delete": "Delete safety meetings",
+  // Committee Meetings module (ADM-04 / RC-013)
+  "meeting:read": "View committee meetings",
+  "meeting:create": "Record committee meetings",
+  "meeting:update": "Edit committee meeting minutes and reply as shore",
+  "meeting:close": "Reserved — committee meetings currently have no closed state",
+  "meeting:delete": "Delete committee meetings",
 
   // Emergency Drills module
   "drill:read": "View emergency drills",

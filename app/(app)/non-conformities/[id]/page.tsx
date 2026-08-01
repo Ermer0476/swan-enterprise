@@ -87,7 +87,7 @@ export default async function NcrDetailPage({
   ];
 
   return (
-    <div className="mx-auto max-w-4xl">
+    <div className="mx-auto max-w-7xl">
       <Link href="/non-conformities" className="mb-3 inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground">
         <ArrowLeft className="h-4 w-4" /> Back to Non-Conformities
       </Link>
@@ -117,13 +117,6 @@ export default async function NcrDetailPage({
       </div>
 
       <Card className="mb-6">
-        <CardHeader><CardTitle>Lifecycle</CardTitle></CardHeader>
-        <CardContent>
-          <NcrActions ncrId={ncr.id} nextStatus={next} canAdvance={canAdvance} canDelete={canDelete} />
-        </CardContent>
-      </Card>
-
-      <Card className="mb-6">
         <CardHeader><CardTitle>Finding</CardTitle></CardHeader>
         <CardContent className="space-y-4">
           <Field label="Requirement breached" value={ncr.requirement} />
@@ -136,24 +129,28 @@ export default async function NcrDetailPage({
         <CardContent>
           {editable ? (
             <RootCauseForm
+              key={ncr.updatedAt.getTime()}
               ncrId={ncr.id}
               rootCauseCategory={ncr.rootCauseCategory ?? ""}
               rootCauseSubCategory={ncr.rootCauseSubCategory ?? ""}
+              rootCause={ncr.rootCause ?? ""}
             />
           ) : ncr.rootCauseCategory ? (
-            <Field
-              label="Root cause"
-              value={formatRootCause(ncr.rootCauseCategory, ncr.rootCauseSubCategory)}
-            />
+            <div className="space-y-4">
+              <Field
+                label="Root cause"
+                value={formatRootCause(ncr.rootCauseCategory, ncr.rootCauseSubCategory)}
+              />
+              {ncr.rootCause && <Field label="Root cause description" value={ncr.rootCause} />}
+            </div>
           ) : (
             <p className="text-sm text-muted-foreground">No root cause recorded yet.</p>
           )}
         </CardContent>
       </Card>
 
-      <Card>
-        <CardHeader><CardTitle>Corrective Action</CardTitle></CardHeader>
-        <CardContent className="space-y-6">
+      <Card className="mb-6">
+        <CardContent className="space-y-6 pt-5">
           <CapaTracker
             entityType="NonConformity"
             entityId={ncr.id}
@@ -170,6 +167,13 @@ export default async function NcrDetailPage({
               editable={editable}
             />
           </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader><CardTitle>Lifecycle</CardTitle></CardHeader>
+        <CardContent>
+          <NcrActions ncrId={ncr.id} nextStatus={next} canAdvance={canAdvance} canDelete={canDelete} />
         </CardContent>
       </Card>
     </div>

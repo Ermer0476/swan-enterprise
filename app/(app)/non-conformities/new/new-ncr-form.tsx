@@ -10,7 +10,7 @@ import {
 import { SEVERITIES, NCR_SOURCES, PERSON_IN_CHARGE_OPTIONS } from "@/features/non-conformities/schema";
 import { humanize } from "@/lib/utils";
 import { Card, CardContent } from "@/components/ui/card";
-import { AutoGrowInput, Input, Textarea, Label, Select } from "@/components/ui/input";
+import { AutoGrowInput, Input, Label, Select } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 function SubmitButton() {
@@ -114,7 +114,7 @@ export function NewNcrForm({
 
           <div className="space-y-1.5">
             <Label htmlFor="description">Description of non-conformity</Label>
-            <Textarea id="description" name="description" rows={4} required
+            <AutoGrowInput id="description" name="description" required
               defaultValue={prefill.description}
               placeholder="What was found, and how it fails the requirement…" />
           </div>

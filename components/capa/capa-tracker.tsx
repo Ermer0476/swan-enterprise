@@ -1,19 +1,11 @@
 "use client";
 
-import {
-  useState,
-  useTransition,
-  useActionState,
-  useRef,
-  useEffect,
-} from "react";
-import { useFormStatus } from "react-dom";
-import { Plus, Trash2, Save } from "lucide-react";
+import { useState, useTransition } from "react";
+import { Plus, Trash2 } from "lucide-react";
 import {
   addCapaAction,
   updateCapaAction,
   deleteCapaAction,
-  type ActionResult,
 } from "@/features/capa/actions";
 import { CAPA_STATUSES } from "@/features/capa/schema";
 import { humanize } from "@/lib/utils";
@@ -52,52 +44,36 @@ function toDateInput(v: string | null): string {
   return v.slice(0, 10);
 }
 
-function AddButton() {
-  const { pending } = useFormStatus();
-  return (
-    <Button type="submit" size="sm" disabled={pending}>
-      <Plus className="h-4 w-4" /> {pending ? "Adding…" : "Add"}
-    </Button>
-  );
-}
-
 function statusTone(s: string): "neutral" | "warning" | "success" {
   if (s === "CLOSED") return "success";
   if (s === "IN_PROGRESS") return "warning";
   return "neutral";
 }
 
-function CapaRow({ row, editable }: { row: CapaRowView; editable: boolean }) {
-  const [pending, startTransition] = useTransition();
-  const [error, setError] = useState<string | null>(null);
-  const [action, setAction] = useState(row.action);
-  const [responsible, setResponsible] = useState(row.responsible ?? "");
-  const [targetDate, setTargetDate] = useState(toDateInput(row.targetDate));
+type CapaRowEdit = { action: string; responsible: string; targetDate: string };
 
-  function save() {
-    setError(null);
-    const fd = new FormData();
-    fd.set("id", row.id);
-    fd.set("action", action);
-    fd.set("responsible", responsible);
-    fd.set("targetDate", targetDate);
-    // Status and Closed Out Date are tracked in the combined CAPA Tracker
-    // below, not here — resend the row's current values unchanged.
-    fd.set("status", row.status);
-    fd.set("closedDate", toDateInput(row.closedDate));
-    startTransition(async () => {
-      const res = await updateCapaAction(fd);
-      if (!res.ok) setError(res.error);
-    });
-  }
+function rowValues(row: CapaRowView): CapaRowEdit {
+  return { action: row.action, responsible: row.responsible ?? "", targetDate: toDateInput(row.targetDate) };
+}
+
+function CapaRow({
+  row,
+  editable,
+  values,
+  onChange,
+  onDelete,
+}: {
+  row: CapaRowView;
+  editable: boolean;
+  values: CapaRowEdit;
+  onChange: (field: keyof CapaRowEdit, value: string) => void;
+  onDelete: () => void;
+}) {
+  const [deleting, startDeleting] = useTransition();
 
   function remove() {
     if (!confirm(`Remove ${row.code}?`)) return;
-    const fd = new FormData();
-    fd.set("id", row.id);
-    startTransition(async () => {
-      await deleteCapaAction(fd);
-    });
+    startDeleting(onDelete);
   }
 
   const cellClass = "px-2 py-1.5 align-top";
@@ -110,9 +86,9 @@ function CapaRow({ row, editable }: { row: CapaRowView; editable: boolean }) {
       <td className={cellClass}>
         {editable ? (
           <AutoGrowInput
-            value={action}
-            onChange={(e) => setAction(e.target.value)}
-            className="w-full"
+            value={values.action}
+            onChange={(e) => onChange("action", e.target.value)}
+            className="w-full min-w-40"
           />
         ) : (
           <span className="text-sm">{row.action}</span>
@@ -121,8 +97,8 @@ function CapaRow({ row, editable }: { row: CapaRowView; editable: boolean }) {
       <td className={cellClass}>
         {editable ? (
           <AutoGrowInput
-            value={responsible}
-            onChange={(e) => setResponsible(e.target.value)}
+            value={values.responsible}
+            onChange={(e) => onChange("responsible", e.target.value)}
             placeholder="C/M"
             className="w-full px-1.5"
           />
@@ -134,8 +110,8 @@ function CapaRow({ row, editable }: { row: CapaRowView; editable: boolean }) {
         {editable ? (
           <Input
             type="date"
-            value={targetDate}
-            onChange={(e) => setTargetDate(e.target.value)}
+            value={values.targetDate}
+            onChange={(e) => onChange("targetDate", e.target.value)}
             className="w-full px-1.5"
           />
         ) : (
@@ -144,32 +120,22 @@ function CapaRow({ row, editable }: { row: CapaRowView; editable: boolean }) {
       </td>
       {editable && (
         <td className={`${cellClass} whitespace-nowrap print:hidden`}>
-          <div className="flex items-center gap-1">
-            <button
-              type="button"
-              onClick={save}
-              disabled={pending}
-              aria-label="Save row"
-              className="rounded p-1.5 text-muted-foreground hover:bg-muted hover:text-accent disabled:opacity-30"
-            >
-              <Save className="h-4 w-4" />
-            </button>
-            <button
-              type="button"
-              onClick={remove}
-              disabled={pending}
-              aria-label="Delete row"
-              className="rounded p-1.5 text-muted-foreground hover:bg-muted hover:text-danger disabled:opacity-30"
-            >
-              <Trash2 className="h-4 w-4" />
-            </button>
-          </div>
-          {error && <p className="mt-1 text-xs text-danger">{error}</p>}
+          <button
+            type="button"
+            onClick={remove}
+            disabled={deleting}
+            aria-label="Delete row"
+            className="rounded p-1.5 text-muted-foreground hover:bg-muted hover:text-danger disabled:opacity-30"
+          >
+            <Trash2 className="h-4 w-4" />
+          </button>
         </td>
       )}
     </tr>
   );
 }
+
+const emptyDraft: CapaRowEdit = { action: "", responsible: "", targetDate: "" };
 
 export function CapaTracker({
   entityType,
@@ -186,79 +152,200 @@ export function CapaTracker({
   rows: CapaRowView[];
   editable: boolean;
 }) {
-  const [addState, formAction] = useActionState<ActionResult, FormData>(
-    addCapaAction,
-    { ok: false, error: null },
-  );
-  const formRef = useRef<HTMLFormElement>(null);
-  useEffect(() => {
-    if (addState.ok) formRef.current?.reset();
-  }, [addState.ok]);
+  // Edits to existing rows (Action/Responsible/Target date) accumulate here
+  // instead of saving per row — one "Save changes" button below the table
+  // covers everything at once, so there's a single, unmissable save control
+  // instead of a floppy-disk icon on every row. The blank add-row at the
+  // bottom feeds the same button: typing into it is just another kind of
+  // unsaved change, not a separate submit action, so there's exactly one
+  // mental model for "I typed something, now I click Save".
+  const [edits, setEdits] = useState<Record<string, CapaRowEdit>>({});
+  const [addDraft, setAddDraft] = useState<CapaRowEdit>(emptyDraft);
+  const [saveErrors, setSaveErrors] = useState<Record<string, string>>({});
+  const [addError, setAddError] = useState<string | null>(null);
+  const [isSaving, startSaving] = useTransition();
+
+  function valuesFor(row: CapaRowView): CapaRowEdit {
+    return edits[row.id] ?? rowValues(row);
+  }
+  function isRowDirty(row: CapaRowView): boolean {
+    const e = edits[row.id];
+    if (!e) return false;
+    const base = rowValues(row);
+    return e.action !== base.action || e.responsible !== base.responsible || e.targetDate !== base.targetDate;
+  }
+  function setField(row: CapaRowView, field: keyof CapaRowEdit, value: string) {
+    // Read the base values from `prev`, not the render-closure `valuesFor` —
+    // two onChange calls can land in the same tick (e.g. status auto-filling
+    // Closed Out Date below), and reading outside `prev` would let the second
+    // call clobber the first with stale data.
+    setEdits((prev) => ({
+      ...prev,
+      [row.id]: { ...(prev[row.id] ?? rowValues(row)), [field]: value },
+    }));
+  }
+  function setDraftField(field: keyof CapaRowEdit, value: string) {
+    setAddDraft((prev) => ({ ...prev, [field]: value }));
+  }
+  async function deleteRow(id: string) {
+    const fd = new FormData();
+    fd.set("id", id);
+    await deleteCapaAction(fd);
+  }
+
+  const dirtyRows = rows.filter(isRowDirty);
+  const hasDraft = addDraft.action.trim() !== "";
+  const isDirty = dirtyRows.length > 0 || hasDraft;
+
+  function saveAll() {
+    startSaving(async () => {
+      const [addResult, ...results] = await Promise.all([
+        hasDraft
+          ? (async () => {
+              const fd = new FormData();
+              fd.set("entityType", entityType);
+              fd.set("entityId", entityId);
+              fd.set("kind", kind);
+              fd.set("action", addDraft.action);
+              fd.set("responsible", addDraft.responsible);
+              fd.set("targetDate", addDraft.targetDate);
+              return addCapaAction({ ok: false, error: null }, fd);
+            })()
+          : Promise.resolve(null),
+        ...dirtyRows.map(async (row) => {
+          const v = valuesFor(row);
+          const fd = new FormData();
+          fd.set("id", row.id);
+          fd.set("action", v.action);
+          fd.set("responsible", v.responsible);
+          fd.set("targetDate", v.targetDate);
+          // Status and Closed Out Date are tracked in the combined CAPA
+          // Tracker below, not here — resend the row's current values unchanged.
+          fd.set("status", row.status);
+          fd.set("closedDate", toDateInput(row.closedDate));
+          const res = await updateCapaAction(fd);
+          return { row, res };
+        }),
+      ]);
+      if (addResult) {
+        if (addResult.ok) {
+          setAddDraft(emptyDraft);
+          setAddError(null);
+        } else {
+          setAddError(addResult.error ?? "Failed to add");
+        }
+      }
+      const nextErrors: Record<string, string> = {};
+      setEdits((prev) => {
+        const next = { ...prev };
+        for (const { row, res } of results) {
+          if (res.ok) delete next[row.id];
+          else nextErrors[row.code] = res.error ?? "Failed to save";
+        }
+        return next;
+      });
+      setSaveErrors(nextErrors);
+    });
+  }
+
+  if (!editable && rows.length === 0) {
+    return (
+      <div className="space-y-3">
+        <h4 className="text-sm font-semibold">{title}</h4>
+        <p className="text-sm text-muted-foreground">No {title.toLowerCase()} recorded yet.</p>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-3">
       <h4 className="text-sm font-semibold">{title}</h4>
 
-      {rows.length === 0 ? (
-        <p className="text-sm text-muted-foreground">No {title.toLowerCase()} recorded yet.</p>
-      ) : (
-        <div className="overflow-x-auto rounded-md border border-border">
-          <table className="w-full table-fixed text-sm">
-            {/* Only Action is left unconstrained — it absorbs all remaining
-                width, since that's the field with the most to write. Every
-                other column holds short values (codes, dates, a status word)
-                and stays deliberately narrow. */}
-            <colgroup>
-              <col className="w-14" />
-              <col />
-              <col className="w-20" />
-              <col className="w-28" />
-              {editable && <col className="w-16" />}
-            </colgroup>
-            <thead className="bg-muted/40 text-left text-xs uppercase tracking-wide text-muted-foreground">
-              <tr>
-                <th className="truncate px-2 py-2 font-medium">CAPA ID</th>
-                <th className="truncate px-2 py-2 font-medium">Action</th>
-                <th className="truncate px-2 py-2 font-medium">Responsible</th>
-                <th className="truncate px-2 py-2 font-medium">Target Date</th>
-                {editable && <th className="px-2 py-2 font-medium" />}
+      <div className="overflow-x-auto rounded-md border border-border">
+        <table className="w-full table-fixed text-sm">
+          {/* Only Action is left unconstrained — it absorbs all remaining
+              width, since that's the field with the most to write. Every
+              other column holds short values (codes, dates, a status word)
+              and stays deliberately narrow. */}
+          <colgroup>
+            <col className="w-14" />
+            <col className="min-w-40" />
+            <col className="w-20" />
+            <col className="w-28" />
+            {editable && <col className="w-16" />}
+          </colgroup>
+          <thead className="bg-muted/40 text-left text-xs uppercase tracking-wide text-muted-foreground">
+            <tr>
+              <th className="truncate px-2 py-2 font-medium">CAPA ID</th>
+              <th className="truncate px-2 py-2 font-medium">Action</th>
+              <th className="truncate px-2 py-2 font-medium">Responsible</th>
+              <th className="truncate px-2 py-2 font-medium">Target Date</th>
+              {editable && <th className="px-2 py-2 font-medium" />}
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((r) => (
+              <CapaRow
+                key={r.id}
+                row={r}
+                editable={editable}
+                values={valuesFor(r)}
+                onChange={(field, value) => setField(r, field, value)}
+                onDelete={() => deleteRow(r.id)}
+              />
+            ))}
+            {editable && (
+              <tr className="border-t border-border bg-primary/[0.03] print:hidden">
+                <td className="px-2 py-1.5 align-top text-xs text-muted-foreground">
+                  <Plus className="h-4 w-4" />
+                </td>
+                <td className="px-2 py-1.5 align-top">
+                  <AutoGrowInput
+                    value={addDraft.action}
+                    onChange={(e) => setDraftField("action", e.target.value)}
+                    placeholder="Describe the action"
+                    className="w-full min-w-40"
+                  />
+                </td>
+                <td className="px-2 py-1.5 align-top">
+                  <AutoGrowInput
+                    value={addDraft.responsible}
+                    onChange={(e) => setDraftField("responsible", e.target.value)}
+                    placeholder="C/M"
+                    className="w-full px-1.5"
+                  />
+                </td>
+                <td className="px-2 py-1.5 align-top">
+                  <Input
+                    type="date"
+                    value={addDraft.targetDate}
+                    onChange={(e) => setDraftField("targetDate", e.target.value)}
+                    className="w-full px-1.5"
+                  />
+                </td>
+                <td className="px-2 py-1.5 align-top" />
               </tr>
-            </thead>
-            <tbody>
-              {rows.map((r) => (
-                <CapaRow key={r.id} row={r} editable={editable} />
-              ))}
-            </tbody>
-          </table>
-        </div>
+            )}
+          </tbody>
+        </table>
+      </div>
+      {addError && <p className="text-sm text-danger">{addError}</p>}
+      {Object.keys(saveErrors).length > 0 && (
+        <p className="text-sm text-danger">
+          Couldn&apos;t save {Object.keys(saveErrors).join(", ")} — try again.
+        </p>
       )}
-
       {editable && (
-        <form
-          ref={formRef}
-          action={formAction}
-          className="grid grid-cols-1 items-end gap-2 rounded-md border border-dashed border-border p-3 sm:grid-cols-[1fr_6rem_9rem_auto] print:hidden"
-        >
-          <input type="hidden" name="entityType" value={entityType} />
-          <input type="hidden" name="entityId" value={entityId} />
-          <input type="hidden" name="kind" value={kind} />
-          <div className="space-y-1">
-            <label className="text-xs text-muted-foreground">Action</label>
-            <AutoGrowInput name="action" placeholder="Describe the action" required />
-          </div>
-          <div className="space-y-1">
-            <label className="text-xs text-muted-foreground">Responsible</label>
-            <AutoGrowInput name="responsible" placeholder="C/M" />
-          </div>
-          <div className="space-y-1">
-            <label className="text-xs text-muted-foreground">Target date</label>
-            <Input name="targetDate" type="date" />
-          </div>
-          <AddButton />
-          {addState.error && (
-            <p className="text-sm text-danger sm:col-span-4">{addState.error}</p>
-          )}
-        </form>
+        <div className="flex justify-end print:hidden">
+          <Button
+            type="button"
+            variant={isDirty ? "success" : "outline"}
+            disabled={!isDirty || isSaving}
+            onClick={saveAll}
+          >
+            {isSaving ? "Saving…" : "Save changes"}
+          </Button>
+        </div>
       )}
     </div>
   );
@@ -272,48 +359,37 @@ export type CapaSummaryRowView = CapaRowView & {
   editable?: boolean;
 };
 
+type CapaSummaryEdit = { status: CapaRowView["status"]; closedDate: string };
+
+function summaryValues(row: CapaSummaryRowView): CapaSummaryEdit {
+  return { status: row.status, closedDate: toDateInput(row.closedDate) };
+}
+
 function CapaSummaryRow({
   row,
   editable: tableEditable,
+  values,
+  onChange,
 }: {
   row: CapaSummaryRowView;
   editable: boolean;
+  values: CapaSummaryEdit;
+  onChange: (field: keyof CapaSummaryEdit, value: string) => void;
 }) {
   // A combined, multi-entity table may show the edit column overall (because
   // at least one row is editable) while this particular row is read-only
   // (e.g. it's NCR-synced and the viewer lacks ncr:update) — the cell must
-  // still render, just without the Save control, to keep columns aligned.
+  // still render, just without the edit controls, to keep columns aligned.
   const editable = row.editable ?? tableEditable;
-  const [pending, startTransition] = useTransition();
-  const [error, setError] = useState<string | null>(null);
-  const [status, setStatus] = useState(row.status);
-  const [closedDate, setClosedDate] = useState(toDateInput(row.closedDate));
 
   // Auto-capture today's date the moment an item is marked Closed — relying
   // on someone to separately remember to also type the date is exactly how
   // "Closed with no Closed Out Date" gaps slip through to an audit.
   function handleStatusChange(next: CapaRowView["status"]) {
-    setStatus(next);
-    if (next === "CLOSED" && !closedDate) {
-      setClosedDate(new Date().toISOString().slice(0, 10));
+    onChange("status", next);
+    if (next === "CLOSED" && !values.closedDate) {
+      onChange("closedDate", new Date().toISOString().slice(0, 10));
     }
-  }
-
-  function save() {
-    setError(null);
-    const fd = new FormData();
-    fd.set("id", row.id);
-    // Action/Responsible/Target Date are authored in the per-kind table
-    // above — resend them unchanged so this save only affects status/date.
-    fd.set("action", row.action);
-    fd.set("responsible", row.responsible ?? "");
-    fd.set("targetDate", toDateInput(row.targetDate));
-    fd.set("status", status);
-    fd.set("closedDate", closedDate);
-    startTransition(async () => {
-      const res = await updateCapaAction(fd);
-      if (!res.ok) setError(res.error);
-    });
   }
 
   const cellClass = "px-2 py-1.5 align-top";
@@ -328,7 +404,7 @@ function CapaSummaryRow({
           {row.kind === "CORRECTIVE" ? "Corrective" : "Preventive"}
         </Badge>
       </td>
-      <td className={`${cellClass} text-sm`}>{row.action}</td>
+      <td className={`${cellClass} min-w-40 text-sm`}>{row.action}</td>
       <td className={`${cellClass} text-sm text-muted-foreground`}>
         {row.responsible || "—"}
       </td>
@@ -338,7 +414,7 @@ function CapaSummaryRow({
       <td className={cellClass}>
         {editable ? (
           <Select
-            value={status}
+            value={values.status}
             onChange={(e) => handleStatusChange(e.target.value as CapaRowView["status"])}
             className="w-full px-1.5"
           >
@@ -365,8 +441,8 @@ function CapaSummaryRow({
         {editable ? (
           <Input
             type="date"
-            value={closedDate}
-            onChange={(e) => setClosedDate(e.target.value)}
+            value={values.closedDate}
+            onChange={(e) => onChange("closedDate", e.target.value)}
             className="w-full px-1.5"
           />
         ) : (
@@ -375,22 +451,6 @@ function CapaSummaryRow({
           </span>
         )}
       </td>
-      {tableEditable && (
-        <td className={`${cellClass} whitespace-nowrap print:hidden`}>
-          {editable && (
-            <button
-              type="button"
-              onClick={save}
-              disabled={pending}
-              aria-label="Save row"
-              className="rounded p-1.5 text-muted-foreground hover:bg-muted hover:text-accent disabled:opacity-30"
-            >
-              <Save className="h-4 w-4" />
-            </button>
-          )}
-          {error && <p className="mt-1 text-xs text-danger">{error}</p>}
-        </td>
-      )}
     </tr>
   );
 }
@@ -409,41 +469,123 @@ export function CapaSummaryTable({
   rows: CapaSummaryRowView[];
   editable: boolean;
 }) {
+  const [edits, setEdits] = useState<Record<string, CapaSummaryEdit>>({});
+  const [saveErrors, setSaveErrors] = useState<Record<string, string>>({});
+  const [isSaving, startSaving] = useTransition();
+
+  function valuesFor(row: CapaSummaryRowView): CapaSummaryEdit {
+    return edits[row.id] ?? summaryValues(row);
+  }
+  function isRowDirty(row: CapaSummaryRowView): boolean {
+    const e = edits[row.id];
+    if (!e) return false;
+    const base = summaryValues(row);
+    return e.status !== base.status || e.closedDate !== base.closedDate;
+  }
+  function setField(row: CapaSummaryRowView, field: keyof CapaSummaryEdit, value: string) {
+    // Read the base values from `prev`, not the render-closure `valuesFor` —
+    // marking a row Closed calls onChange twice in the same tick (status,
+    // then the auto-filled Closed Out Date), and reading outside `prev`
+    // would let the second call clobber the first with stale data.
+    setEdits((prev) => ({
+      ...prev,
+      [row.id]: { ...(prev[row.id] ?? summaryValues(row)), [field]: value },
+    }));
+  }
+
+  const editableRows = rows.filter((r) => r.editable ?? editable);
+  const dirtyRows = editableRows.filter(isRowDirty);
+  const isDirty = dirtyRows.length > 0;
+
+  function saveAll() {
+    startSaving(async () => {
+      const results = await Promise.all(
+        dirtyRows.map(async (row) => {
+          const v = valuesFor(row);
+          const fd = new FormData();
+          fd.set("id", row.id);
+          // Action/Responsible/Target Date are authored in the per-kind table
+          // above — resend them unchanged so this only affects status/date.
+          fd.set("action", row.action);
+          fd.set("responsible", row.responsible ?? "");
+          fd.set("targetDate", toDateInput(row.targetDate));
+          fd.set("status", v.status);
+          fd.set("closedDate", v.closedDate);
+          const res = await updateCapaAction(fd);
+          return { row, res };
+        }),
+      );
+      const nextErrors: Record<string, string> = {};
+      setEdits((prev) => {
+        const next = { ...prev };
+        for (const { row, res } of results) {
+          if (res.ok) delete next[row.id];
+          else nextErrors[row.code] = res.error ?? "Failed to save";
+        }
+        return next;
+      });
+      setSaveErrors(nextErrors);
+    });
+  }
+
   if (rows.length === 0) {
     return <p className="text-sm text-muted-foreground">No CAPA items recorded yet.</p>;
   }
 
   return (
-    <div className="overflow-x-auto rounded-md border border-border">
-      <table className="w-full table-fixed text-sm">
-        <colgroup>
-          <col className="w-16" />
-          <col className="w-24" />
-          <col />
-          <col className="w-20" />
-          <col className="w-24" />
-          <col className="w-28" />
-          <col className="w-28" />
-          {editable && <col className="w-10" />}
-        </colgroup>
-        <thead className="bg-muted/40 text-left text-xs uppercase tracking-wide text-muted-foreground">
-          <tr>
-            <th className="truncate px-2 py-2 font-medium">ID</th>
-            <th className="truncate px-2 py-2 font-medium">Type</th>
-            <th className="truncate px-2 py-2 font-medium">Action</th>
-            <th className="truncate px-2 py-2 font-medium">Responsible</th>
-            <th className="truncate px-2 py-2 font-medium">Target Date</th>
-            <th className="truncate px-2 py-2 font-medium">Status</th>
-            <th className="truncate px-2 py-2 font-medium">Closed Out</th>
-            {editable && <th className="px-2 py-2 font-medium" />}
-          </tr>
-        </thead>
-        <tbody>
-          {rows.map((r) => (
-            <CapaSummaryRow key={r.id} row={r} editable={editable} />
-          ))}
-        </tbody>
-      </table>
+    <div className="space-y-2">
+      <div className="overflow-x-auto rounded-md border border-border">
+        <table className="w-full table-fixed text-sm">
+          <colgroup>
+            <col className="w-16" />
+            <col className="w-24" />
+            <col />
+            <col className="w-20" />
+            <col className="w-24" />
+            <col className="w-28" />
+            <col className="w-28" />
+          </colgroup>
+          <thead className="bg-muted/40 text-left text-xs uppercase tracking-wide text-muted-foreground">
+            <tr>
+              <th className="truncate px-2 py-2 font-medium">ID</th>
+              <th className="truncate px-2 py-2 font-medium">Type</th>
+              <th className="truncate px-2 py-2 font-medium">Action</th>
+              <th className="truncate px-2 py-2 font-medium">Responsible</th>
+              <th className="truncate px-2 py-2 font-medium">Target Date</th>
+              <th className="truncate px-2 py-2 font-medium">Status</th>
+              <th className="truncate px-2 py-2 font-medium">Closed Out</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((r) => (
+              <CapaSummaryRow
+                key={r.id}
+                row={r}
+                editable={editable}
+                values={valuesFor(r)}
+                onChange={(field, value) => setField(r, field, value)}
+              />
+            ))}
+          </tbody>
+        </table>
+      </div>
+      {Object.keys(saveErrors).length > 0 && (
+        <p className="text-sm text-danger">
+          Couldn&apos;t save {Object.keys(saveErrors).join(", ")} — try again.
+        </p>
+      )}
+      {editable && (
+        <div className="flex justify-end print:hidden">
+          <Button
+            type="button"
+            variant={isDirty ? "success" : "outline"}
+            disabled={!isDirty || isSaving}
+            onClick={saveAll}
+          >
+            {isSaving ? "Saving…" : "Save changes"}
+          </Button>
+        </div>
+      )}
     </div>
   );
 }

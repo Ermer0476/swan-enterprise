@@ -46,7 +46,7 @@ export default async function RiskAssessmentDetailPage({
   ];
 
   return (
-    <div className="mx-auto max-w-4xl">
+    <div className="mx-auto max-w-7xl">
       <Link href="/risk" className="mb-3 inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground">
         <ArrowLeft className="h-4 w-4" /> Back to Risk Assessments
       </Link>
@@ -71,13 +71,6 @@ export default async function RiskAssessmentDetailPage({
       </div>
 
       <Card className="mb-6">
-        <CardHeader><CardTitle>Assessment status</CardTitle></CardHeader>
-        <CardContent>
-          <RiskActions riskId={ra.id} isActive={ra.status === "ACTIVE"} canClose={canClose} canDelete={canDelete} />
-        </CardContent>
-      </Card>
-
-      <Card className="mb-6">
         <CardHeader><CardTitle>Hazards identified</CardTitle></CardHeader>
         <CardContent><p className="whitespace-pre-wrap text-sm">{ra.hazards}</p></CardContent>
       </Card>
@@ -87,9 +80,16 @@ export default async function RiskAssessmentDetailPage({
         <CardContent><p className="whitespace-pre-wrap text-sm">{ra.existingControls || "—"}</p></CardContent>
       </Card>
 
-      <Card>
+      <Card className="mb-6">
         <CardHeader><CardTitle>Additional controls required</CardTitle></CardHeader>
         <CardContent><p className="whitespace-pre-wrap text-sm">{ra.additionalControls || "—"}</p></CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader><CardTitle>Assessment status</CardTitle></CardHeader>
+        <CardContent>
+          <RiskActions riskId={ra.id} isActive={ra.status === "ACTIVE"} canClose={canClose} canDelete={canDelete} />
+        </CardContent>
       </Card>
     </div>
   );

@@ -74,6 +74,7 @@ export const rootCauseSchema = z
     ncrId: z.string().uuid(),
     rootCauseCategory: z.enum(ROOT_CAUSE_CATEGORIES),
     rootCauseSubCategory: z.string().trim().min(1, "Select the root cause sub-category"),
+    rootCause: z.string().trim().max(10000).optional().or(z.literal("")),
   })
   .superRefine((v, ctx) => {
     const allowed = ROOT_CAUSE_SUBCATEGORIES[v.rootCauseCategory as RootCauseCategoryValue];

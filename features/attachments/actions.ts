@@ -20,8 +20,24 @@ const fail = (error: string): ActionResult => ({ ok: false, error });
  * and the page to revalidate — same entity-agnostic pattern as the CAPA
  * tracker. Register a new module here when it adopts attachments.
  */
-const REGISTRY: Record<string, { permission: PermissionKey; pagePath: (id: string) => string }> = {
+const REGISTRY: Record<
+  string,
+  { permission: PermissionKey; pagePath: (id: string) => string | Promise<string> }
+> = {
   Incident: { permission: "incident:update", pagePath: (id) => `/incidents/${id}` },
+  // A SIRE observation has no page of its own — it lives inside its parent
+  // inspection — so the path has to be looked up rather than derived from
+  // the entityId directly.
+  SireObservation: {
+    permission: "sire:update",
+    pagePath: async (observationId) => {
+      const obs = await prisma.sireObservation.findUnique({
+        where: { id: observationId },
+        select: { inspectionId: true },
+      });
+      return `/sire/${obs?.inspectionId ?? ""}`;
+    },
+  },
 };
 
 function registryFor(entityType: string) {
@@ -78,7 +94,7 @@ export async function uploadAttachmentAction(
     summary: `Uploaded ${attachment.fileName} to ${entityType} ${entityId}`,
   });
 
-  revalidatePath(pagePath(entityId));
+  revalidatePath(await pagePath(entityId));
   return OK;
 }
 
@@ -110,6 +126,6 @@ export async function deleteAttachmentAction(formData: FormData): Promise<Action
     summary: `Deleted attachment ${existing.fileName} from ${existing.entityType} ${existing.entityId}`,
   });
 
-  revalidatePath(pagePath(existing.entityId));
+  revalidatePath(await pagePath(existing.entityId));
   return OK;
 }

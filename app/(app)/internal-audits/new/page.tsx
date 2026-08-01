@@ -8,7 +8,7 @@ export default async function NewInternalAuditPage() {
   const user = await requirePermission("iaudit:create");
   const vessels = await listVesselOptions(user.companyId);
   return (
-    <div className="mx-auto max-w-2xl">
+    <div className="mx-auto max-w-7xl">
       <PageHeader
         title="New Internal Audit"
         description="Create the audit header, then record findings on the detail page."

@@ -1,12 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useTransition, useActionState, useRef, useEffect } from "react";
+import { useTransition, useActionState, useRef, useEffect } from "react";
 import { useFormStatus } from "react-dom";
 import { Plus, Trash2 } from "lucide-react";
 import {
   addDeficiencyAction,
-  updateDeficiencyAction,
   deleteDeficiencyAction,
   type ActionResult,
 } from "@/features/psc/actions";
@@ -19,7 +18,7 @@ import {
   type CapaRowView,
   type CapaSummaryRowView,
 } from "@/components/capa/capa-tracker";
-import { AutoGrowInput, Label, Select } from "@/components/ui/input";
+import { AutoGrowInput, Label } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { DeficiencyRootCauseForm } from "./deficiency-root-cause-form";
@@ -38,10 +37,9 @@ export type DeficiencyView = {
   reference: string | null;
   actionCode: string | null;
   description: string;
-  status: "OPEN" | "CLOSED";
 };
 
-type RootCauseValue = { category: string | null; subCategory: string | null };
+type RootCauseValue = { category: string | null; subCategory: string | null; description: string | null };
 type CapaEntityRef = { entityType: string; entityId: string };
 
 function AddButton() {
@@ -61,6 +59,7 @@ function DeficiencyRow({
   existingNcr,
   ncrContext,
   correctiveRows,
+  allCapaRows,
   rootCause,
   capaEntity,
 }: {
@@ -71,20 +70,15 @@ function DeficiencyRow({
   existingNcr?: { id: string; refNo: string };
   ncrContext: NcrContext;
   correctiveRows: CapaRowView[];
+  allCapaRows: CapaSummaryRowView[];
   rootCause: RootCauseValue;
   capaEntity: CapaEntityRef;
 }) {
   const [pending, startTransition] = useTransition();
-  const [status, setStatus] = useState<"OPEN" | "CLOSED">(def.status);
+  // Resolved only once there's at least one CAPA row and every one of them
+  // is Closed — no CAPA row at all still counts as pending, not resolved.
+  const resolved = allCapaRows.length > 0 && allCapaRows.every((r) => r.status === "CLOSED");
 
-  function saveStatus() {
-    const fd = new FormData();
-    fd.set("deficiencyId", def.id);
-    fd.set("status", status);
-    startTransition(async () => {
-      await updateDeficiencyAction(fd);
-    });
-  }
   function remove() {
     const fd = new FormData();
     fd.set("deficiencyId", def.id);
@@ -101,8 +95,8 @@ function DeficiencyRow({
             {def.natureCode && <span className="font-mono">Code {def.natureCode}</span>}
             {def.reference && <span>· {def.reference}</span>}
             {def.actionCode && <Badge tone="accent">Action {def.actionCode}</Badge>}
-            <Badge tone={def.status === "CLOSED" ? "success" : "warning"}>
-              {def.status === "CLOSED" ? "Rectified" : "Open"}
+            <Badge tone={resolved ? "success" : "warning"}>
+              {resolved ? "Rectified" : "Open"}
             </Badge>
             {existingNcr ? (
               <Link href={`/non-conformities/${existingNcr.id}`}>
@@ -137,16 +131,6 @@ function DeficiencyRow({
         )}
       </div>
 
-      {editable && (
-        <div className="flex items-center gap-2">
-          <Select value={status} onChange={(e) => setStatus(e.target.value as "OPEN" | "CLOSED")} className="w-36">
-            <option value="OPEN">Open</option>
-            <option value="CLOSED">Rectified</option>
-          </Select>
-          <Button size="sm" variant="outline" onClick={saveStatus} disabled={pending}>Save status</Button>
-        </div>
-      )}
-
       <div className="rounded-md border border-border p-3">
         <h4 className="mb-2 text-sm font-semibold">
           Root cause
@@ -159,23 +143,33 @@ function DeficiencyRow({
         {existingNcr ? (
           canUpdateNcr ? (
             <NcrRootCauseForm
+              key={`${rootCause.category ?? ""}|${rootCause.subCategory ?? ""}`}
               ncrId={existingNcr.id}
               rootCauseCategory={rootCause.category ?? ""}
               rootCauseSubCategory={rootCause.subCategory ?? ""}
+              rootCause={rootCause.description ?? ""}
             />
           ) : rootCause.category ? (
-            <p className="text-sm">{formatRootCause(rootCause.category as RootCauseCategoryValue | null, rootCause.subCategory)}</p>
+            <div className="space-y-1">
+              <p className="text-sm">{formatRootCause(rootCause.category as RootCauseCategoryValue | null, rootCause.subCategory)}</p>
+              {rootCause.description && <p className="text-sm text-muted-foreground">{rootCause.description}</p>}
+            </div>
           ) : (
             <p className="text-sm text-muted-foreground">No root cause recorded yet.</p>
           )
         ) : editable ? (
           <DeficiencyRootCauseForm
+            key={`${rootCause.category ?? ""}|${rootCause.subCategory ?? ""}`}
             deficiencyId={def.id}
             rootCauseCategory={rootCause.category ?? ""}
             rootCauseSubCategory={rootCause.subCategory ?? ""}
+            rootCause={rootCause.description ?? ""}
           />
         ) : rootCause.category ? (
-          <p className="text-sm">{formatRootCause(rootCause.category as RootCauseCategoryValue | null, rootCause.subCategory)}</p>
+          <div className="space-y-1">
+            <p className="text-sm">{formatRootCause(rootCause.category as RootCauseCategoryValue | null, rootCause.subCategory)}</p>
+            {rootCause.description && <p className="text-sm text-muted-foreground">{rootCause.description}</p>}
+          </div>
         ) : (
           <p className="text-sm text-muted-foreground">No root cause recorded yet.</p>
         )}
@@ -266,7 +260,8 @@ export function DeficienciesPanel({
               existingNcr={ncrBySourceId[d.id]}
               ncrContext={ncrContext}
               correctiveRows={correctiveRowsByDeficiency[d.id] ?? []}
-              rootCause={rootCauseByDeficiency[d.id] ?? { category: null, subCategory: null }}
+              allCapaRows={allCapaRowsByDeficiency[d.id] ?? []}
+              rootCause={rootCauseByDeficiency[d.id] ?? { category: null, subCategory: null, description: null }}
               capaEntity={capaEntityByDeficiency[d.id] ?? { entityType: "PscDeficiency", entityId: d.id }}
             />
           ))}

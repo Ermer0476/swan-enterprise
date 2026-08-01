@@ -16,8 +16,8 @@ export async function listInternalAudits(
       ...(filters.search
         ? {
             OR: [
-              { refNo: { contains: filters.search, mode: "insensitive" } },
-              { scope: { contains: filters.search, mode: "insensitive" } },
+              { refNo: { contains: filters.search } },
+              { scope: { contains: filters.search } },
             ],
           }
         : {}),

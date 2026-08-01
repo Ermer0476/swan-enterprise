@@ -10,7 +10,7 @@ export default async function NewIncidentPage() {
   const positions = positionsFor(user.department);
 
   return (
-    <div className="mx-auto max-w-2xl">
+    <div className="mx-auto max-w-7xl">
       <PageHeader
         title="Report Incident"
         description="Capture what happened and its consequences. Root cause is established later, during investigation."

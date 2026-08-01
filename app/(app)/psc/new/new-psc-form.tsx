@@ -6,7 +6,7 @@ import { useFormStatus } from "react-dom";
 import { createPscAction, type ActionResult } from "@/features/psc/actions";
 import { MOU_REGIONS } from "@/features/psc/schema";
 import { Card, CardContent } from "@/components/ui/card";
-import { AutoGrowInput, Input, Textarea, Label, Select } from "@/components/ui/input";
+import { AutoGrowInput, Input, Label, Select } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 function SubmitButton() {
@@ -62,7 +62,7 @@ export function NewPscForm({ vessels }: { vessels: { id: string; name: string }[
           </div>
           <div className="space-y-1.5">
             <Label htmlFor="summary">Summary</Label>
-            <Textarea id="summary" name="summary" rows={3} placeholder="Overall summary / outcome…" />
+            <AutoGrowInput id="summary" name="summary" placeholder="Overall summary / outcome…" />
           </div>
           {state.error && <p className="text-sm text-danger" role="alert">{state.error}</p>}
           <div className="flex items-center gap-2">

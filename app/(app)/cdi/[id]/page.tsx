@@ -38,7 +38,7 @@ export default async function CdiDetailPage({
   ];
 
   return (
-    <div className="mx-auto max-w-4xl">
+    <div className="mx-auto max-w-7xl">
       <Link href="/cdi" className="mb-3 inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground">
         <ArrowLeft className="h-4 w-4" /> Back to CDI Inspections
       </Link>
@@ -65,13 +65,6 @@ export default async function CdiDetailPage({
       )}
 
       <Card className="mb-6">
-        <CardHeader><CardTitle>Inspection status</CardTitle></CardHeader>
-        <CardContent>
-          <CdiActions inspectionId={insp.id} status={insp.status} canClose={canClose} canDelete={canDelete} />
-        </CardContent>
-      </Card>
-
-      <Card>
         <CardHeader><CardTitle>Observations</CardTitle></CardHeader>
         <CardContent>
           <ObservationsPanel
@@ -85,6 +78,13 @@ export default async function CdiDetailPage({
               status: o.status,
             }))}
           />
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader><CardTitle>Inspection status</CardTitle></CardHeader>
+        <CardContent>
+          <CdiActions inspectionId={insp.id} status={insp.status} canClose={canClose} canDelete={canDelete} />
         </CardContent>
       </Card>
     </div>

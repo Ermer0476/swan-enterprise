@@ -7,7 +7,7 @@ export default async function NewRiskAssessmentPage() {
   const user = await requirePermission("risk:create");
   const vessels = await listVesselOptions(user.companyId);
   return (
-    <div className="mx-auto max-w-2xl">
+    <div className="mx-auto max-w-7xl">
       <PageHeader
         title="New Risk Assessment"
         description="Assess the hazards, controls, and likelihood × severity of a task or operation."

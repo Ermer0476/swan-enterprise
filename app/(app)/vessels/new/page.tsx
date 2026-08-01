@@ -6,7 +6,7 @@ import { VesselForm } from "@/components/vessels/vessel-form";
 export default async function NewVesselPage() {
   await requirePermission("vessel:create");
   return (
-    <div className="mx-auto max-w-2xl">
+    <div className="mx-auto max-w-7xl">
       <PageHeader
         title="Add Vessel"
         description="Enter the vessel's particulars once — every safety module reuses it from here."

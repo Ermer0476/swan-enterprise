@@ -7,7 +7,6 @@ import { listNcrsBySourceEntityIds, listNcrRootCauses } from "@/features/non-con
 import { listAllCapaActionsForEntities } from "@/features/capa/queries";
 import {
   addFindingAction,
-  updateFindingAction,
   deleteFindingAction,
   saveFindingRootCauseAction,
   closeInternalAuditAction,
@@ -87,8 +86,9 @@ export default async function InternalAuditDetailPage({
       ? {
           category: ncrRootCauses[linked.id]?.rootCauseCategory ?? null,
           subCategory: ncrRootCauses[linked.id]?.rootCauseSubCategory ?? null,
+          description: ncrRootCauses[linked.id]?.rootCause ?? null,
         }
-      : { category: f.rootCauseCategory, subCategory: f.rootCauseSubCategory };
+      : { category: f.rootCauseCategory, subCategory: f.rootCauseSubCategory, description: f.rootCause };
   }
 
   for (const row of ownCapaRows) {
@@ -121,7 +121,7 @@ export default async function InternalAuditDetailPage({
   ];
 
   return (
-    <div className="mx-auto max-w-4xl">
+    <div className="mx-auto max-w-7xl">
       <Link href="/internal-audits" className="mb-3 inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground">
         <ArrowLeft className="h-4 w-4" /> Back to Internal Audits
       </Link>
@@ -157,27 +157,12 @@ export default async function InternalAuditDetailPage({
       )}
 
       <Card className="mb-6">
-        <CardHeader><CardTitle>Audit status</CardTitle></CardHeader>
-        <CardContent>
-          <AuditStatusActions
-            auditId={audit.id}
-            status={audit.status}
-            canClose={canClose}
-            canDelete={canDelete}
-            closeAction={closeInternalAuditAction}
-            deleteAction={deleteInternalAuditAction}
-          />
-        </CardContent>
-      </Card>
-
-      <Card>
         <CardHeader><CardTitle>Findings</CardTitle></CardHeader>
         <CardContent>
           <AuditFindingsPanel
             auditId={audit.id}
             editable={editable}
             addAction={addFindingAction}
-            updateAction={updateFindingAction}
             deleteAction={deleteFindingAction}
             saveRootCauseAction={saveFindingRootCauseAction}
             findings={audit.findings.map((f) => ({
@@ -185,7 +170,6 @@ export default async function InternalAuditDetailPage({
               category: f.category as AuditFindingCategory,
               reference: f.reference,
               description: f.description,
-              status: f.status,
             }))}
             canCreateNcr={canCreateNcr}
             canUpdateNcr={canUpdateNcr}
@@ -200,6 +184,20 @@ export default async function InternalAuditDetailPage({
             allCapaRowsByFinding={allCapaRowsByFinding}
             rootCauseByFinding={rootCauseByFinding}
             capaEntityByFinding={capaEntityByFinding}
+          />
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader><CardTitle>Audit status</CardTitle></CardHeader>
+        <CardContent>
+          <AuditStatusActions
+            auditId={audit.id}
+            status={audit.status}
+            canClose={canClose}
+            canDelete={canDelete}
+            closeAction={closeInternalAuditAction}
+            deleteAction={deleteInternalAuditAction}
           />
         </CardContent>
       </Card>

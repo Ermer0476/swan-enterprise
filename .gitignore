@@ -17,6 +17,8 @@ next-env.d.ts
 
 # prisma
 /prisma/generated
+/prisma/dev.db
+/prisma/dev.db-journal
 
 # uploaded attachments (local-disk storage — never committed)
 /storage

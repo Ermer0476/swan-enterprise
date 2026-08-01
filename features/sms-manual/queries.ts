@@ -25,8 +25,8 @@ export async function listDocuments(
       ...(filters.search
         ? {
             OR: [
-              { code: { contains: filters.search, mode: "insensitive" } },
-              { title: { contains: filters.search, mode: "insensitive" } },
+              { code: { contains: filters.search } },
+              { title: { contains: filters.search } },
             ],
           }
         : {}),

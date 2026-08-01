@@ -7,7 +7,7 @@ export default async function NewSirePage() {
   const user = await requirePermission("sire:create");
   const vessels = await listVesselOptions(user.companyId);
   return (
-    <div className="mx-auto max-w-2xl">
+    <div className="mx-auto max-w-7xl">
       <PageHeader
         title="Record SIRE Inspection"
         description="Create the inspection header, then log observations on the detail page."

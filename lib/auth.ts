@@ -18,6 +18,7 @@ export type SessionUser = {
   email: string;
   department: DepartmentType;
   rank: string | null;
+  vesselId: string | null;
   roles: string[];
   permissions: Set<PermissionKey>;
 };
@@ -100,6 +101,7 @@ export async function getCurrentUser(): Promise<SessionUser | null> {
     email: user.email,
     department: user.department,
     rank: user.rank,
+    vesselId: user.vesselId,
     roles: roleNames,
     permissions,
   };

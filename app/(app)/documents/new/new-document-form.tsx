@@ -10,7 +10,7 @@ import {
 import { DOCUMENT_CATEGORIES } from "@/features/documents/schema";
 import { humanize } from "@/lib/utils";
 import { Card, CardContent } from "@/components/ui/card";
-import { AutoGrowInput, Input, Textarea, Label, Select } from "@/components/ui/input";
+import { AutoGrowInput, Input, Label, Select } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 function SubmitButton() {
@@ -79,7 +79,7 @@ export function NewDocumentForm({
 
           <div className="space-y-1.5">
             <Label htmlFor="description">Description</Label>
-            <Textarea id="description" name="description" rows={4} placeholder="Purpose / scope of this document…" />
+            <AutoGrowInput id="description" name="description" placeholder="Purpose / scope of this document…" />
           </div>
 
           {state.error && <p className="text-sm text-danger" role="alert">{state.error}</p>}

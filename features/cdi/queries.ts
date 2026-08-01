@@ -13,8 +13,8 @@ export async function listCdi(companyId: string, filters: CdiFilters = {}) {
       ...(filters.search
         ? {
             OR: [
-              { refNo: { contains: filters.search, mode: "insensitive" } },
-              { inspectorName: { contains: filters.search, mode: "insensitive" } },
+              { refNo: { contains: filters.search } },
+              { inspectorName: { contains: filters.search } },
             ],
           }
         : {}),

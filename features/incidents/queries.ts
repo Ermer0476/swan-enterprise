@@ -28,8 +28,8 @@ export async function listIncidents(
       ...(filters.search
         ? {
             OR: [
-              { refNo: { contains: filters.search, mode: "insensitive" } },
-              { title: { contains: filters.search, mode: "insensitive" } },
+              { refNo: { contains: filters.search } },
+              { title: { contains: filters.search } },
             ],
           }
         : {}),

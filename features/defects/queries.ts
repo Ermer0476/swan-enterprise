@@ -14,8 +14,8 @@ export async function listDefects(companyId: string, filters: DefectFilters = {}
       ...(filters.search
         ? {
             OR: [
-              { refNo: { contains: filters.search, mode: "insensitive" } },
-              { equipment: { contains: filters.search, mode: "insensitive" } },
+              { refNo: { contains: filters.search } },
+              { equipment: { contains: filters.search } },
             ],
           }
         : {}),

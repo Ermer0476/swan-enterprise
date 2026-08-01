@@ -13,8 +13,8 @@ export async function listRiskAssessments(companyId: string, filters: RiskFilter
       ...(filters.search
         ? {
             OR: [
-              { refNo: { contains: filters.search, mode: "insensitive" } },
-              { activity: { contains: filters.search, mode: "insensitive" } },
+              { refNo: { contains: filters.search } },
+              { activity: { contains: filters.search } },
             ],
           }
         : {}),

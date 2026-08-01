@@ -9,7 +9,7 @@ import {
   ROOT_CAUSE_SUBCATEGORIES,
   ROOT_CAUSE_SUBCATEGORY_LABELS,
 } from "@/lib/root-cause";
-import { Label, Select } from "@/components/ui/input";
+import { AutoGrowInput, Label, Select } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import type { AuditActionResult } from "./types";
 
@@ -30,11 +30,13 @@ export function FindingRootCauseForm({
   findingId,
   rootCauseCategory,
   rootCauseSubCategory,
+  rootCause,
   saveAction,
 }: {
   findingId: string;
   rootCauseCategory: string;
   rootCauseSubCategory: string;
+  rootCause: string;
   saveAction: (prev: AuditActionResult, fd: FormData) => Promise<AuditActionResult>;
 }) {
   const [state, formAction] = useActionState<AuditActionResult, FormData>(
@@ -90,6 +92,15 @@ export function FindingRootCauseForm({
             </Select>
           </div>
         )}
+      </div>
+
+      <div className="space-y-1">
+        <Label className="text-xs">Root cause description</Label>
+        <AutoGrowInput
+          name="rootCause"
+          defaultValue={rootCause}
+          placeholder="Explain the underlying cause identified during investigation…"
+        />
       </div>
 
       {state.error && <p className="text-sm text-danger">{state.error}</p>}

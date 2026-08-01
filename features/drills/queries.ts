@@ -14,8 +14,8 @@ export async function listDrills(companyId: string, filters: DrillFilters = {}) 
       ...(filters.search
         ? {
             OR: [
-              { refNo: { contains: filters.search, mode: "insensitive" } },
-              { conductedBy: { contains: filters.search, mode: "insensitive" } },
+              { refNo: { contains: filters.search } },
+              { conductedBy: { contains: filters.search } },
             ],
           }
         : {}),

@@ -11,7 +11,6 @@ export type AuditFindingView = {
   category: AuditFindingCategory;
   reference: string | null;
   description: string;
-  status: "OPEN" | "CLOSED";
 };
 
 // Context needed to build a "Raise NCR" prefill link from a finding —
@@ -27,7 +26,7 @@ export type AuditNcrContext = {
 // — used as the CAPA entityType when a finding has no linked NCR yet.
 export type AuditFindingEntityType = "InternalAuditFinding" | "ExternalAuditFinding";
 
-export type RootCauseValue = { category: string | null; subCategory: string | null };
+export type RootCauseValue = { category: string | null; subCategory: string | null; description: string | null };
 export type CapaEntityRef = { entityType: string; entityId: string };
 
 export const AUDIT_FINDING_CATEGORIES: AuditFindingCategory[] = [

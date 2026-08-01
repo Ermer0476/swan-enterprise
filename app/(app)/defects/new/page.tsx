@@ -7,7 +7,7 @@ export default async function NewDefectPage() {
   const user = await requirePermission("defect:create");
   const vessels = await listVesselOptions(user.companyId);
   return (
-    <div className="mx-auto max-w-2xl">
+    <div className="mx-auto max-w-7xl">
       <PageHeader
         title="Report Defect"
         description="Log an equipment or machinery defect for tracking to rectification."

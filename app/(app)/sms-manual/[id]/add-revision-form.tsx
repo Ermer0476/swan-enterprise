@@ -6,7 +6,7 @@ import {
   addRevisionAction,
   type ActionResult,
 } from "@/features/sms-manual/actions";
-import { AutoGrowInput, Textarea, Label } from "@/components/ui/input";
+import { AutoGrowInput, Label } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 function SubmitButton() {
@@ -43,10 +43,9 @@ export function AddRevisionForm({ documentId }: { documentId: string }) {
       </div>
       <div className="space-y-1.5">
         <Label htmlFor="revContent">Content</Label>
-        <Textarea
+        <AutoGrowInput
           id="revContent"
           name="content"
-          rows={6}
           placeholder="Updated procedure text (Markdown supported)…"
         />
       </div>

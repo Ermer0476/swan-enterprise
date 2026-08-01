@@ -60,7 +60,7 @@ export const NAV: NavGroup[] = [
       { label: "CDI Inspections", href: "/cdi", icon: FlaskConical, permission: "cdi:read" },
       { label: "Internal Audits", href: "/internal-audits", icon: ShieldCheck, permission: "iaudit:read" },
       { label: "External Audits", href: "/external-audits", icon: ShieldCheck, permission: "eaudit:read" },
-      { label: "Safety Meetings", href: "/meetings", icon: CalendarClock, permission: "meeting:read" },
+      { label: "Committee Meetings", href: "/meetings", icon: CalendarClock, permission: "meeting:read" },
       { label: "Emergency Drills", href: "/drills", icon: Flame, permission: "drill:read" },
       { label: "Documents", href: "/documents", icon: FolderOpen, permission: "doc:read" },
       { label: "Circulars", href: "/circulars", icon: Megaphone, permission: "circular:read" },

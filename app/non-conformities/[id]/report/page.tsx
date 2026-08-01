@@ -113,10 +113,13 @@ export default async function NcrReportPage({
         <CardHeader><CardTitle>Root cause</CardTitle></CardHeader>
         <CardContent>
           {ncr.rootCauseCategory ? (
-            <Field
-              label="Root cause"
-              value={formatRootCause(ncr.rootCauseCategory, ncr.rootCauseSubCategory)}
-            />
+            <div className="space-y-4">
+              <Field
+                label="Root cause"
+                value={formatRootCause(ncr.rootCauseCategory, ncr.rootCauseSubCategory)}
+              />
+              {ncr.rootCause && <Field label="Root cause description" value={ncr.rootCause} />}
+            </div>
           ) : (
             <p className="text-sm text-muted-foreground">No root cause recorded yet.</p>
           )}

@@ -18,8 +18,8 @@ export async function listNcrs(companyId: string, filters: NcrFilters = {}) {
       ...(filters.search
         ? {
             OR: [
-              { refNo: { contains: filters.search, mode: "insensitive" } },
-              { title: { contains: filters.search, mode: "insensitive" } },
+              { refNo: { contains: filters.search } },
+              { title: { contains: filters.search } },
             ],
           }
         : {}),
@@ -78,11 +78,11 @@ export async function listNcrRootCauses(companyId: string, ncrIds: string[]) {
   if (ncrIds.length === 0) return {};
   const rows = await prisma.nonConformity.findMany({
     where: { companyId, id: { in: ncrIds }, deletedAt: null },
-    select: { id: true, rootCauseCategory: true, rootCauseSubCategory: true, status: true },
+    select: { id: true, rootCauseCategory: true, rootCauseSubCategory: true, rootCause: true, status: true },
   });
-  const map: Record<string, { rootCauseCategory: string | null; rootCauseSubCategory: string | null; status: NcrStatus }> = {};
+  const map: Record<string, { rootCauseCategory: string | null; rootCauseSubCategory: string | null; rootCause: string | null; status: NcrStatus }> = {};
   for (const r of rows) {
-    map[r.id] = { rootCauseCategory: r.rootCauseCategory, rootCauseSubCategory: r.rootCauseSubCategory, status: r.status };
+    map[r.id] = { rootCauseCategory: r.rootCauseCategory, rootCauseSubCategory: r.rootCauseSubCategory, rootCause: r.rootCause, status: r.status };
   }
   return map;
 }

@@ -2,12 +2,10 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { requirePermission, can } from "@/lib/rbac";
-import { getMeeting } from "@/features/safety-meetings/queries";
+import { getCommitteeMeeting } from "@/features/committee-meetings/queries";
 import { PageHeader } from "@/components/ui/page-header";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { formatDate, humanize } from "@/lib/utils";
-import { MeetingActions } from "./meeting-actions";
+import { formatDate } from "@/lib/utils";
+import { MeetingEditForm } from "./meeting-edit-form";
 
 export default async function MeetingDetailPage({
   params,
@@ -16,32 +14,29 @@ export default async function MeetingDetailPage({
 }) {
   const user = await requirePermission("meeting:read");
   const { id } = await params;
-  const meeting = await getMeeting(user.companyId, id);
+  const meeting = await getCommitteeMeeting(user, id);
   if (!meeting) notFound();
 
-  const canClose = can(user, "meeting:close");
+  const canUpdate = can(user, "meeting:update");
   const canDelete = can(user, "meeting:delete");
+  const canApprove = user.department === "SHIPBOARD";
 
   const meta = [
-    { label: "Type", value: humanize(meeting.meetingType) },
-    { label: "Vessel", value: meeting.vessel?.name ?? "Office / Shore" },
+    { label: "Vessel", value: meeting.vessel?.name ?? "Shore" },
+    { label: "Position", value: meeting.position ?? "—" },
     { label: "Date", value: formatDate(meeting.meetingDate) },
-    { label: "Chaired by", value: meeting.chairedBy ?? "—" },
-    { label: "Closed", value: meeting.closedAt ? formatDate(meeting.closedAt) : "—" },
+    { label: "Time", value: meeting.meetingTime ?? "—" },
   ];
 
   return (
-    <div className="mx-auto max-w-4xl">
+    <div className="mx-auto max-w-7xl">
       <Link href="/meetings" className="mb-3 inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground">
-        <ArrowLeft className="h-4 w-4" /> Back to Safety Meetings
+        <ArrowLeft className="h-4 w-4" /> Back to Committee Meetings
       </Link>
 
-      <PageHeader
-        title={meeting.refNo}
-        actions={<Badge tone={meeting.status === "CLOSED" ? "success" : "warning"}>{humanize(meeting.status)}</Badge>}
-      />
+      <PageHeader title={meeting.refNo} />
 
-      <div className="mb-6 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
+      <div className="mb-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
         {meta.map((m) => (
           <div key={m.label}>
             <div className="text-xs uppercase tracking-wide text-muted-foreground">{m.label}</div>
@@ -50,27 +45,36 @@ export default async function MeetingDetailPage({
         ))}
       </div>
 
-      <Card className="mb-6">
-        <CardHeader><CardTitle>Meeting status</CardTitle></CardHeader>
-        <CardContent>
-          <MeetingActions meetingId={meeting.id} isOpen={meeting.status !== "CLOSED"} canClose={canClose} canDelete={canDelete} />
-        </CardContent>
-      </Card>
-
-      <Card className="mb-6">
-        <CardHeader><CardTitle>Attendees</CardTitle></CardHeader>
-        <CardContent><p className="whitespace-pre-wrap text-sm">{meeting.attendees || "—"}</p></CardContent>
-      </Card>
-
-      <Card className="mb-6">
-        <CardHeader><CardTitle>Agenda / topics discussed</CardTitle></CardHeader>
-        <CardContent><p className="whitespace-pre-wrap text-sm">{meeting.agenda || "—"}</p></CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader><CardTitle>Minutes</CardTitle></CardHeader>
-        <CardContent><p className="whitespace-pre-wrap text-sm">{meeting.minutes || "—"}</p></CardContent>
-      </Card>
+      <MeetingEditForm
+        meeting={{
+          id: meeting.id,
+          vesselId: meeting.vesselId,
+          position: meeting.position,
+          meetingDate: meeting.meetingDate.toISOString().slice(0, 10),
+          meetingTime: meeting.meetingTime,
+          chairman: meeting.chairman,
+          inCharge: meeting.inCharge,
+          members: meeting.members,
+          inAttendance: meeting.inAttendance,
+          forAcknowledgement: meeting.forAcknowledgement,
+          vesselRemarks: meeting.vesselRemarks,
+          shoreRemarks: meeting.shoreRemarks,
+          published: meeting.published,
+          approved: meeting.approved,
+        }}
+        agendaItems={meeting.agendaItems.map((a) => ({
+          id: a.id,
+          seq: a.seq,
+          committeeType: a.committeeType,
+          code: a.code,
+          label: a.label,
+          details: a.details,
+          shoreComments: a.shoreComments,
+        }))}
+        editable={canUpdate}
+        canDelete={canDelete}
+        canApprove={canApprove}
+      />
     </div>
   );
 }

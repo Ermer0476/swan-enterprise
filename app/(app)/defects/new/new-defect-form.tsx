@@ -10,7 +10,7 @@ import {
 import { DEFECT_SEVERITIES } from "@/features/defects/schema";
 import { humanize } from "@/lib/utils";
 import { Card, CardContent } from "@/components/ui/card";
-import { AutoGrowInput, Input, Textarea, Label, Select } from "@/components/ui/input";
+import { AutoGrowInput, Input, Label, Select } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 function SubmitButton() {
@@ -58,7 +58,7 @@ export function NewDefectForm({
 
           <div className="space-y-1.5">
             <Label htmlFor="description">Description</Label>
-            <Textarea id="description" name="description" rows={4} placeholder="What's wrong, and how it was found…" required />
+            <AutoGrowInput id="description" name="description" placeholder="What's wrong, and how it was found…" required />
           </div>
 
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">

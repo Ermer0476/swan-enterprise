@@ -9,6 +9,7 @@ import {
   createSireSchema,
   addObservationSchema,
   updateObservationSchema,
+  addCommentSchema,
 } from "./schema";
 
 export type ActionResult = { ok: boolean; error: string | null };
@@ -35,6 +36,8 @@ export async function createSireAction(
     inspectorName: formData.get("inspectorName"),
     port: formData.get("port"),
     inspectionDate: formData.get("inspectionDate"),
+    inspectionType: formData.get("inspectionType"),
+    overallResult: formData.get("overallResult"),
     sireVersion: formData.get("sireVersion"),
     summary: formData.get("summary"),
   });
@@ -49,9 +52,11 @@ export async function createSireAction(
       refNo: await nextRefNo(user.companyId),
       vesselId: d.vesselId || null,
       inspectingCompany: d.inspectingCompany,
-      inspectorName: d.inspectorName || null,
+      inspectorName: d.inspectorName,
       port: d.port || null,
       inspectionDate: new Date(d.inspectionDate),
+      inspectionType: d.inspectionType || null,
+      overallResult: d.overallResult || null,
       sireVersion: d.sireVersion || "2.0",
       summary: d.summary || null,
       status: "OPEN",
@@ -79,9 +84,22 @@ export async function addObservationAction(
   const user = await requirePermission("sire:update");
   const parsed = addObservationSchema.safeParse({
     inspectionId: formData.get("inspectionId"),
-    viqRef: formData.get("viqRef"),
+    chapter: formData.get("chapter"),
     category: formData.get("category"),
+    viqRef: formData.get("viqRef"),
+    question: formData.get("question"),
     observation: formData.get("observation"),
+    immediateCause: formData.get("immediateCause"),
+    rootCauseCategory: formData.get("rootCauseCategory"),
+    rootCauseSubCategory: formData.get("rootCauseSubCategory"),
+    rootCause: formData.get("rootCause"),
+    correctiveAction: formData.get("correctiveAction"),
+    preventiveMeasure: formData.get("preventiveMeasure"),
+    responsiblePersonId: formData.get("responsiblePersonId"),
+    targetDate: formData.get("targetDate"),
+    actualCompletionDate: formData.get("actualCompletionDate"),
+    status: formData.get("status") || "OPEN",
+    verifiedById: formData.get("verifiedById"),
   });
   if (!parsed.success) {
     return fail(parsed.error.issues[0]?.message ?? "Invalid input");
@@ -94,14 +112,29 @@ export async function addObservationAction(
   if (!insp) return fail("Inspection not found");
   if (insp.status === "CLOSED") return fail("Inspection is closed");
 
+  const seq = (await prisma.sireObservation.count({ where: { inspectionId: insp.id } })) + 1;
+
   await prisma.sireObservation.create({
     data: {
       companyId: user.companyId,
       inspectionId: insp.id,
-      viqRef: d.viqRef || null,
+      seq,
+      chapter: d.chapter || null,
       category: d.category || null,
+      viqRef: d.viqRef || null,
+      question: d.question || null,
       observation: d.observation,
-      status: "OPEN",
+      immediateCause: d.immediateCause || null,
+      rootCauseCategory: d.rootCauseCategory || null,
+      rootCauseSubCategory: d.rootCauseSubCategory || null,
+      rootCause: d.rootCause || null,
+      correctiveAction: d.correctiveAction || null,
+      preventiveMeasure: d.preventiveMeasure || null,
+      responsiblePersonId: d.responsiblePersonId || null,
+      targetDate: d.targetDate ? new Date(d.targetDate) : null,
+      actualCompletionDate: d.actualCompletionDate ? new Date(d.actualCompletionDate) : null,
+      status: d.status,
+      verifiedById: d.verifiedById || null,
       createdBy: user.id,
     },
   });
@@ -117,23 +150,35 @@ export async function addObservationAction(
     action: "CREATE",
     entityType: "SireObservation",
     entityId: insp.id,
-    summary: `Added observation to ${insp.refNo}`,
+    summary: `Added observation ${seq} to ${insp.refNo}`,
   });
 
   revalidatePath(`/sire/${insp.id}`);
   return OK;
 }
 
-export async function updateObservationAction(
-  formData: FormData,
-): Promise<ActionResult> {
+export async function updateObservationAction(formData: FormData): Promise<ActionResult> {
   const user = await requirePermission("sire:update");
   const parsed = updateObservationSchema.safeParse({
     observationId: formData.get("observationId"),
-    response: formData.get("response"),
-    status: formData.get("status"),
+    chapter: formData.get("chapter"),
+    category: formData.get("category"),
+    viqRef: formData.get("viqRef"),
+    question: formData.get("question"),
+    observation: formData.get("observation"),
+    immediateCause: formData.get("immediateCause"),
+    rootCauseCategory: formData.get("rootCauseCategory"),
+    rootCauseSubCategory: formData.get("rootCauseSubCategory"),
+    rootCause: formData.get("rootCause"),
+    correctiveAction: formData.get("correctiveAction"),
+    preventiveMeasure: formData.get("preventiveMeasure"),
+    responsiblePersonId: formData.get("responsiblePersonId"),
+    targetDate: formData.get("targetDate"),
+    actualCompletionDate: formData.get("actualCompletionDate"),
+    status: formData.get("status") || "OPEN",
+    verifiedById: formData.get("verifiedById"),
   });
-  if (!parsed.success) return fail("Invalid input");
+  if (!parsed.success) return fail(parsed.error.issues[0]?.message ?? "Invalid input");
   const d = parsed.data;
 
   const obs = await prisma.sireObservation.findFirst({
@@ -143,16 +188,31 @@ export async function updateObservationAction(
 
   await prisma.sireObservation.update({
     where: { id: obs.id },
-    data: { response: d.response || null, status: d.status },
+    data: {
+      chapter: d.chapter || null,
+      category: d.category || null,
+      viqRef: d.viqRef || null,
+      question: d.question || null,
+      observation: d.observation,
+      immediateCause: d.immediateCause || null,
+      rootCauseCategory: d.rootCauseCategory || null,
+      rootCauseSubCategory: d.rootCauseSubCategory || null,
+      rootCause: d.rootCause || null,
+      correctiveAction: d.correctiveAction || null,
+      preventiveMeasure: d.preventiveMeasure || null,
+      responsiblePersonId: d.responsiblePersonId || null,
+      targetDate: d.targetDate ? new Date(d.targetDate) : null,
+      actualCompletionDate: d.actualCompletionDate ? new Date(d.actualCompletionDate) : null,
+      status: d.status,
+      verifiedById: d.verifiedById || null,
+    },
   });
 
   revalidatePath(`/sire/${obs.inspectionId}`);
   return OK;
 }
 
-export async function deleteObservationAction(
-  formData: FormData,
-): Promise<ActionResult> {
+export async function deleteObservationAction(formData: FormData): Promise<ActionResult> {
   const user = await requirePermission("sire:update");
   const id = String(formData.get("observationId") ?? "");
   const obs = await prisma.sireObservation.findFirst({
@@ -167,12 +227,41 @@ export async function deleteObservationAction(
   return OK;
 }
 
+export async function addCommentAction(formData: FormData): Promise<ActionResult> {
+  const user = await requirePermission("sire:update");
+  const parsed = addCommentSchema.safeParse({
+    observationId: formData.get("observationId"),
+    body: formData.get("body"),
+  });
+  if (!parsed.success) return fail(parsed.error.issues[0]?.message ?? "Invalid input");
+  const d = parsed.data;
+
+  const obs = await prisma.sireObservation.findFirst({
+    where: { id: d.observationId, companyId: user.companyId, deletedAt: null },
+  });
+  if (!obs) return fail("Observation not found");
+
+  await prisma.sireObservationComment.create({
+    data: {
+      companyId: user.companyId,
+      observationId: obs.id,
+      authorId: user.id,
+      body: d.body,
+    },
+  });
+
+  revalidatePath(`/sire/${obs.inspectionId}`);
+  return OK;
+}
+
 export async function closeSireAction(formData: FormData): Promise<ActionResult> {
   const user = await requirePermission("sire:close");
   const id = String(formData.get("inspectionId") ?? "");
   const insp = await prisma.sireInspection.findFirst({
     where: { id, companyId: user.companyId, deletedAt: null },
-    include: { observations: { where: { deletedAt: null, status: "OPEN" } } },
+    include: {
+      observations: { where: { deletedAt: null, status: { not: "CLOSED" } } },
+    },
   });
   if (!insp) return fail("Inspection not found");
   if (insp.status === "CLOSED") return fail("Inspection is already closed");

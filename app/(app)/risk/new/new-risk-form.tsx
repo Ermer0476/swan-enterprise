@@ -10,7 +10,7 @@ import {
 import { RISK_RATINGS } from "@/features/risk/schema";
 import { humanize } from "@/lib/utils";
 import { Card, CardContent } from "@/components/ui/card";
-import { AutoGrowInput, Input, Textarea, Label, Select } from "@/components/ui/input";
+import { AutoGrowInput, Input, Label, Select } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 function SubmitButton() {
@@ -57,12 +57,12 @@ export function NewRiskAssessmentForm({
 
           <div className="space-y-1.5">
             <Label htmlFor="hazards">Hazards identified</Label>
-            <Textarea id="hazards" name="hazards" rows={3} placeholder="What could go wrong…" required />
+            <AutoGrowInput id="hazards" name="hazards" placeholder="What could go wrong…" required />
           </div>
 
           <div className="space-y-1.5">
             <Label htmlFor="existingControls">Existing controls</Label>
-            <Textarea id="existingControls" name="existingControls" rows={2} placeholder="Controls already in place…" />
+            <AutoGrowInput id="existingControls" name="existingControls" placeholder="Controls already in place…" />
           </div>
 
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -82,7 +82,7 @@ export function NewRiskAssessmentForm({
 
           <div className="space-y-1.5">
             <Label htmlFor="additionalControls">Additional controls required</Label>
-            <Textarea id="additionalControls" name="additionalControls" rows={2} placeholder="Further mitigation before proceeding…" />
+            <AutoGrowInput id="additionalControls" name="additionalControls" placeholder="Further mitigation before proceeding…" />
           </div>
 
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">

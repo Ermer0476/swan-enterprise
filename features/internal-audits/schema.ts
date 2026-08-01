@@ -7,7 +7,6 @@ import {
 
 export const INSPECTION_STATUSES = ["OPEN", "IN_PROGRESS", "CLOSED"] as const;
 export const FINDING_CATEGORIES = ["MAJOR_NC", "MINOR_NC", "OBSERVATION"] as const;
-export const FINDING_STATUSES = ["OPEN", "CLOSED"] as const;
 
 export const createInternalAuditSchema = z.object({
   vesselId: z.string().uuid().optional().or(z.literal("")),
@@ -29,11 +28,6 @@ export const addFindingSchema = z.object({
   description: z.string().trim().min(3, "Description is required").max(10000),
 });
 
-export const updateFindingSchema = z.object({
-  findingId: z.string().uuid(),
-  status: z.enum(FINDING_STATUSES),
-});
-
 // Root cause classification — same shared taxonomy Incident/Near Miss/NCR/PSC
 // use (lib/root-cause.ts). Corrective actions themselves are recorded in the
 // shared CapaAction tracker (entityType "InternalAuditFinding"), not here.
@@ -42,6 +36,7 @@ export const findingRootCauseSchema = z
     findingId: z.string().uuid(),
     rootCauseCategory: z.enum(ROOT_CAUSE_CATEGORIES),
     rootCauseSubCategory: z.string().trim().min(1, "Select the root cause sub-category"),
+    rootCause: z.string().trim().max(10000).optional().or(z.literal("")),
   })
   .superRefine((v, ctx) => {
     const allowed = ROOT_CAUSE_SUBCATEGORIES[v.rootCauseCategory as RootCauseCategoryValue];

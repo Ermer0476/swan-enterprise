@@ -100,7 +100,7 @@ export default async function NearMissDetailPage({
   ];
 
   return (
-    <div className="mx-auto max-w-4xl">
+    <div className="mx-auto max-w-7xl">
       <Link href="/near-miss" className="mb-3 inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground print:hidden">
         <ArrowLeft className="h-4 w-4" /> Back to Near Miss
       </Link>
@@ -170,13 +170,6 @@ export default async function NearMissDetailPage({
         </CardContent>
       </Card>
 
-      <Card className="mb-6 print:hidden">
-        <CardHeader><CardTitle>Lifecycle</CardTitle></CardHeader>
-        <CardContent>
-          <NearMissActions nearMissId={nm.id} nextStatus={next} canAdvance={canAdvance} canDelete={canDelete} />
-        </CardContent>
-      </Card>
-
       <Card>
         <CardHeader><CardTitle>Office Review</CardTitle></CardHeader>
         <CardContent>
@@ -185,6 +178,9 @@ export default async function NearMissDetailPage({
             companyComments={nm.companyComments ?? ""}
             reviewedAt={nm.reviewedAt ? nm.reviewedAt.toISOString() : null}
             disabled={!(canUpdate && nm.status !== "CLOSED")}
+            lifecycleActions={
+              <NearMissActions nearMissId={nm.id} nextStatus={next} canAdvance={canAdvance} canDelete={canDelete} />
+            }
           />
         </CardContent>
       </Card>

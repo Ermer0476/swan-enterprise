@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useTransition, useActionState, useRef, useEffect } from "react";
+import { useTransition, useActionState, useRef, useEffect } from "react";
 import { useFormStatus } from "react-dom";
 import { Plus, Trash2 } from "lucide-react";
 import { AutoGrowInput, Label, Select } from "@/components/ui/input";
@@ -39,6 +39,10 @@ type SaveRootCauseAction = (
   prev: AuditActionResult,
   fd: FormData,
 ) => Promise<AuditActionResult>;
+type CapaRow = { status: "OPEN" | "IN_PROGRESS" | "CLOSED" };
+function isResolved(rows: CapaRow[]): boolean {
+  return rows.length > 0 && rows.every((r) => r.status === "CLOSED");
+}
 
 function AddButton() {
   const { pending } = useFormStatus();
@@ -52,7 +56,6 @@ function AddButton() {
 function FindingRow({
   finding,
   editable,
-  updateAction,
   deleteAction,
   saveRootCauseAction,
   canCreateNcr,
@@ -60,12 +63,12 @@ function FindingRow({
   existingNcr,
   ncrContext,
   correctiveRows,
+  allCapaRows,
   rootCause,
   capaEntity,
 }: {
   finding: AuditFindingView;
   editable: boolean;
-  updateAction: FindingAction;
   deleteAction: FindingAction;
   saveRootCauseAction: SaveRootCauseAction;
   canCreateNcr: boolean;
@@ -73,20 +76,13 @@ function FindingRow({
   existingNcr?: { id: string; refNo: string };
   ncrContext: AuditNcrContext;
   correctiveRows: CapaRowView[];
+  allCapaRows: CapaSummaryRowView[];
   rootCause: RootCauseValue;
   capaEntity: CapaEntityRef;
 }) {
   const [pending, startTransition] = useTransition();
-  const [status, setStatus] = useState<"OPEN" | "CLOSED">(finding.status);
+  const resolved = isResolved(allCapaRows);
 
-  function saveStatus() {
-    const fd = new FormData();
-    fd.set("findingId", finding.id);
-    fd.set("status", status);
-    startTransition(async () => {
-      await updateAction(fd);
-    });
-  }
   function remove() {
     const fd = new FormData();
     fd.set("findingId", finding.id);
@@ -104,8 +100,8 @@ function FindingRow({
               {auditCategoryLabel(finding.category)}
             </Badge>
             {finding.reference && <span className="font-mono">{finding.reference}</span>}
-            <Badge tone={finding.status === "CLOSED" ? "success" : "warning"}>
-              {finding.status === "CLOSED" ? "Closed" : "Open"}
+            <Badge tone={resolved ? "success" : "warning"}>
+              {resolved ? "Closed" : "Open"}
             </Badge>
             {existingNcr ? (
               <Link href={`/non-conformities/${existingNcr.id}`}>
@@ -144,16 +140,6 @@ function FindingRow({
         )}
       </div>
 
-      {editable && (
-        <div className="flex items-center gap-2">
-          <Select value={status} onChange={(e) => setStatus(e.target.value as "OPEN" | "CLOSED")} className="w-32">
-            <option value="OPEN">Open</option>
-            <option value="CLOSED">Closed</option>
-          </Select>
-          <Button size="sm" variant="outline" onClick={saveStatus} disabled={pending}>Save status</Button>
-        </div>
-      )}
-
       {finding.category !== "OBSERVATION" && (
         <div className="rounded-md border border-border p-3">
           <h4 className="mb-2 text-sm font-semibold">
@@ -167,24 +153,34 @@ function FindingRow({
           {existingNcr ? (
             canUpdateNcr ? (
               <NcrRootCauseForm
+                key={`${rootCause.category ?? ""}|${rootCause.subCategory ?? ""}`}
                 ncrId={existingNcr.id}
                 rootCauseCategory={rootCause.category ?? ""}
                 rootCauseSubCategory={rootCause.subCategory ?? ""}
+                rootCause={rootCause.description ?? ""}
               />
             ) : rootCause.category ? (
-              <p className="text-sm">{formatRootCause(rootCause.category as RootCauseCategoryValue | null, rootCause.subCategory)}</p>
+              <div className="space-y-1">
+                <p className="text-sm">{formatRootCause(rootCause.category as RootCauseCategoryValue | null, rootCause.subCategory)}</p>
+                {rootCause.description && <p className="text-sm text-muted-foreground">{rootCause.description}</p>}
+              </div>
             ) : (
               <p className="text-sm text-muted-foreground">No root cause recorded yet.</p>
             )
           ) : editable ? (
             <FindingRootCauseForm
+              key={`${rootCause.category ?? ""}|${rootCause.subCategory ?? ""}`}
               findingId={finding.id}
               rootCauseCategory={rootCause.category ?? ""}
               rootCauseSubCategory={rootCause.subCategory ?? ""}
+              rootCause={rootCause.description ?? ""}
               saveAction={saveRootCauseAction}
             />
           ) : rootCause.category ? (
-            <p className="text-sm">{formatRootCause(rootCause.category as RootCauseCategoryValue | null, rootCause.subCategory)}</p>
+            <div className="space-y-1">
+              <p className="text-sm">{formatRootCause(rootCause.category as RootCauseCategoryValue | null, rootCause.subCategory)}</p>
+              {rootCause.description && <p className="text-sm text-muted-foreground">{rootCause.description}</p>}
+            </div>
           ) : (
             <p className="text-sm text-muted-foreground">No root cause recorded yet.</p>
           )}
@@ -218,7 +214,6 @@ export function AuditFindingsPanel({
   findings,
   editable,
   addAction,
-  updateAction,
   deleteAction,
   saveRootCauseAction,
   canCreateNcr,
@@ -234,7 +229,6 @@ export function AuditFindingsPanel({
   findings: AuditFindingView[];
   editable: boolean;
   addAction: AddAction;
-  updateAction: FindingAction;
   deleteAction: FindingAction;
   saveRootCauseAction: SaveRootCauseAction;
   canCreateNcr: boolean;
@@ -279,7 +273,6 @@ export function AuditFindingsPanel({
               key={f.id}
               finding={f}
               editable={editable}
-              updateAction={updateAction}
               deleteAction={deleteAction}
               saveRootCauseAction={saveRootCauseAction}
               canCreateNcr={canCreateNcr}
@@ -287,7 +280,8 @@ export function AuditFindingsPanel({
               existingNcr={ncrBySourceId[f.id]}
               ncrContext={ncrContext}
               correctiveRows={correctiveRowsByFinding[f.id] ?? []}
-              rootCause={rootCauseByFinding[f.id] ?? { category: null, subCategory: null }}
+              allCapaRows={allCapaRowsByFinding[f.id] ?? []}
+              rootCause={rootCauseByFinding[f.id] ?? { category: null, subCategory: null, description: null }}
               capaEntity={capaEntityByFinding[f.id] ?? { entityType: "", entityId: f.id }}
             />
           ))}

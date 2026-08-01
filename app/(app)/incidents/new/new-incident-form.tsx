@@ -17,7 +17,7 @@ import {
   type IncidentTypeValue,
 } from "@/features/incidents/schema";
 import { Card, CardContent } from "@/components/ui/card";
-import { AutoGrowInput, Input, Textarea, Label, Select } from "@/components/ui/input";
+import { AutoGrowInput, Input, Label, Select } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 function SubmitButton() {
@@ -85,7 +85,7 @@ export function NewIncidentForm({
             <legend className="text-sm font-medium">
               Type of incident <span className="text-muted-foreground">(select all that apply)</span>
             </legend>
-            <div className="space-y-1.5">
+            <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
               {INCIDENT_TYPES.map((t) => {
                 const checked = checkedTypes.has(t);
                 return (
@@ -121,7 +121,7 @@ export function NewIncidentForm({
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div className="space-y-1.5">
               <Label htmlFor="occurredAt">Occurred at</Label>
-              <Input id="occurredAt" name="occurredAt" type="datetime-local" required />
+              <Input id="occurredAt" name="occurredAt" type="date" required />
             </div>
             <div className="space-y-1.5">
               <Label htmlFor="vesselId">Vessel</Label>
@@ -139,7 +139,7 @@ export function NewIncidentForm({
 
           <div className="space-y-1.5">
             <Label htmlFor="description">What happened</Label>
-            <Textarea id="description" name="description" rows={4} required placeholder="Describe the sequence of events…" />
+            <AutoGrowInput id="description" name="description" required placeholder="Describe the sequence of events…" />
           </div>
 
           {/* Statement of Facts — chronological timeline of events/response */}
@@ -183,7 +183,7 @@ export function NewIncidentForm({
 
           <div className="space-y-1.5">
             <Label htmlFor="immediateAction">Immediate action taken</Label>
-            <Textarea id="immediateAction" name="immediateAction" rows={2} placeholder="Actions taken to make the situation safe…" />
+            <AutoGrowInput id="immediateAction" name="immediateAction" placeholder="Actions taken to make the situation safe…" />
           </div>
 
           {/* No root cause / human factors here — this is the initial report

@@ -13,7 +13,7 @@ import {
   ROOT_CAUSE_SUBCATEGORIES,
   ROOT_CAUSE_SUBCATEGORY_LABELS,
 } from "@/lib/root-cause";
-import { Label, Select } from "@/components/ui/input";
+import { AutoGrowInput, Label, Select } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 function SaveButton() {
@@ -29,10 +29,12 @@ export function DeficiencyRootCauseForm({
   deficiencyId,
   rootCauseCategory,
   rootCauseSubCategory,
+  rootCause,
 }: {
   deficiencyId: string;
   rootCauseCategory: string;
   rootCauseSubCategory: string;
+  rootCause: string;
 }) {
   const [state, formAction] = useActionState<ActionResult, FormData>(
     saveDeficiencyRootCauseAction,
@@ -87,6 +89,16 @@ export function DeficiencyRootCauseForm({
             </Select>
           </div>
         )}
+      </div>
+
+      <div className="space-y-1">
+        <Label htmlFor="rootCause">Root cause description</Label>
+        <AutoGrowInput
+          id="rootCause"
+          name="rootCause"
+          defaultValue={rootCause}
+          placeholder="Explain the underlying cause identified during investigation…"
+        />
       </div>
 
       {state.error && <p className="text-sm text-danger">{state.error}</p>}

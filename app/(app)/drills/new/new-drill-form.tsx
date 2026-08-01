@@ -10,7 +10,7 @@ import {
 import { DRILL_TYPES } from "@/features/drills/schema";
 import { humanize } from "@/lib/utils";
 import { Card, CardContent } from "@/components/ui/card";
-import { AutoGrowInput, Input, Textarea, Label, Select } from "@/components/ui/input";
+import { AutoGrowInput, Input, Label, Select } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 function SubmitButton() {
@@ -68,12 +68,12 @@ export function NewDrillForm({
 
           <div className="space-y-1.5">
             <Label htmlFor="participants">Participants</Label>
-            <Textarea id="participants" name="participants" rows={2} placeholder="Names / ranks / count of participants…" />
+            <AutoGrowInput id="participants" name="participants" placeholder="Names / ranks / count of participants…" />
           </div>
 
           <div className="space-y-1.5">
             <Label htmlFor="observations">Observations / follow-up</Label>
-            <Textarea id="observations" name="observations" rows={4} placeholder="Deficiencies noted, lessons learned…" />
+            <AutoGrowInput id="observations" name="observations" placeholder="Deficiencies noted, lessons learned…" />
           </div>
 
           {state.error && <p className="text-sm text-danger" role="alert">{state.error}</p>}

@@ -9,7 +9,7 @@ export default async function NewNearMissPage() {
   const vessels = await listVesselOptions(user.companyId);
   const positions = positionsFor(user.department);
   return (
-    <div className="mx-auto max-w-4xl">
+    <div className="mx-auto max-w-7xl">
       <PageHeader
         title="Report Near Miss/HOR"
         description="No one was hurt — but capture what could have happened, or what unsafe act/condition you observed, so it never does."

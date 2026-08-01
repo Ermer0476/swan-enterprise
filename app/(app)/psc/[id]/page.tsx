@@ -67,7 +67,7 @@ export default async function PscDetailPage({
 
   const correctiveRowsByDeficiency: Record<string, CapaRowView[]> = {};
   const allCapaRowsByDeficiency: Record<string, CapaSummaryRowView[]> = {};
-  const rootCauseByDeficiency: Record<string, { category: string | null; subCategory: string | null }> = {};
+  const rootCauseByDeficiency: Record<string, { category: string | null; subCategory: string | null; description: string | null }> = {};
   const capaEntityByDeficiency: Record<string, { entityType: string; entityId: string }> = {};
 
   for (const d of insp.deficiencies) {
@@ -79,8 +79,9 @@ export default async function PscDetailPage({
       ? {
           category: ncrRootCauses[linked.id]?.rootCauseCategory ?? null,
           subCategory: ncrRootCauses[linked.id]?.rootCauseSubCategory ?? null,
+          description: ncrRootCauses[linked.id]?.rootCause ?? null,
         }
-      : { category: d.rootCauseCategory, subCategory: d.rootCauseSubCategory };
+      : { category: d.rootCauseCategory, subCategory: d.rootCauseSubCategory, description: d.rootCause };
   }
 
   for (const row of pscCapaRows) {
@@ -115,7 +116,7 @@ export default async function PscDetailPage({
   ];
 
   return (
-    <div className="mx-auto max-w-4xl">
+    <div className="mx-auto max-w-7xl">
       <Link href="/psc" className="mb-3 inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground">
         <ArrowLeft className="h-4 w-4" /> Back to PSC Inspections
       </Link>
@@ -152,13 +153,6 @@ export default async function PscDetailPage({
       )}
 
       <Card className="mb-6">
-        <CardHeader><CardTitle>Inspection status</CardTitle></CardHeader>
-        <CardContent>
-          <PscActions inspectionId={insp.id} status={insp.status} canClose={canClose} canDelete={canDelete} />
-        </CardContent>
-      </Card>
-
-      <Card>
         <CardHeader><CardTitle>Deficiencies</CardTitle></CardHeader>
         <CardContent>
           <DeficienciesPanel
@@ -170,7 +164,6 @@ export default async function PscDetailPage({
               reference: d.reference,
               actionCode: d.actionCode,
               description: d.description,
-              status: d.status,
             }))}
             canCreateNcr={canCreateNcr}
             canUpdateNcr={canUpdateNcr}
@@ -186,6 +179,13 @@ export default async function PscDetailPage({
             rootCauseByDeficiency={rootCauseByDeficiency}
             capaEntityByDeficiency={capaEntityByDeficiency}
           />
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader><CardTitle>Inspection status</CardTitle></CardHeader>
+        <CardContent>
+          <PscActions inspectionId={insp.id} status={insp.status} canClose={canClose} canDelete={canDelete} />
         </CardContent>
       </Card>
     </div>

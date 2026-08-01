@@ -30,7 +30,7 @@ export default async function NewNcrPage({
   };
 
   return (
-    <div className="mx-auto max-w-2xl">
+    <div className="mx-auto max-w-7xl">
       <PageHeader
         title="Raise Non-Conformity"
         description="Record a finding where an SMS clause, regulation or standard is not met."

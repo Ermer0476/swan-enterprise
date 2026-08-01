@@ -108,7 +108,7 @@ export default async function IncidentDetailPage({
   ];
 
   return (
-    <div className="mx-auto max-w-4xl">
+    <div className="mx-auto max-w-7xl">
       <Link
         href="/incidents"
         className="mb-3 inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground"
@@ -283,6 +283,11 @@ export default async function IncidentDetailPage({
         <CardContent>
           {editable ? (
             <InvestigationForm
+              // Remounts whenever the saved investigation actually changes —
+              // otherwise this client component's own useState(prop) initial
+              // values go stale (they only run once, at first mount) and the
+              // selects silently drift back to defaults on a later visit.
+              key={inc.updatedAt.getTime()}
               incidentId={inc.id}
               investigationDetails={inc.investigationDetails ?? ""}
               severity={inc.severity ?? ""}
@@ -333,10 +338,11 @@ export default async function IncidentDetailPage({
         </CardContent>
       </Card>
 
-      {/* CAPA tracker — TMSA-style corrective & preventive action plan */}
+      {/* Corrective & preventive action plan — the merged CAPA Tracker
+          register at the bottom is where progress is actually monitored. */}
       <Card className="mb-6">
         <CardHeader>
-          <CardTitle>CAPA Tracker</CardTitle>
+          <CardTitle>Corrective &amp; Preventive Actions</CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
           <CapaTracker
@@ -360,7 +366,7 @@ export default async function IncidentDetailPage({
               preventive together, identified by their CA-/PA- ID so both stay
               easy to track from one place. */}
           <div className="space-y-3">
-            <h4 className="text-sm font-semibold">All CAPA Items</h4>
+            <h4 className="text-sm font-semibold">CAPA Tracker</h4>
             <CapaSummaryTable
               rows={allCapaRows.map(toSummaryRowView)}
               editable={editable}

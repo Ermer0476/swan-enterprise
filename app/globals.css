@@ -22,9 +22,9 @@
   --danger: 0 72% 48%;
   --warning: 38 92% 45%;
   --ring: 217 91% 45%;
-  --sidebar: 222 30% 13%;
-  --sidebar-foreground: 220 14% 88%;
-  --sidebar-muted: 220 12% 60%;
+  --sidebar: 217 76% 28%;
+  --sidebar-foreground: 217 30% 95%;
+  --sidebar-muted: 217 30% 74%;
   --radius: 0.5rem;
 }
 
@@ -45,9 +45,9 @@
   --danger: 0 70% 58%;
   --warning: 38 92% 55%;
   --ring: 217 91% 60%;
-  --sidebar: 222 26% 8%;
-  --sidebar-foreground: 220 14% 82%;
-  --sidebar-muted: 220 10% 52%;
+  --sidebar: 217 70% 20%;
+  --sidebar-foreground: 217 25% 90%;
+  --sidebar-muted: 217 25% 64%;
 }
 
 @theme inline {

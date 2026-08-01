@@ -15,7 +15,7 @@ import {
   INCIDENT_SEVERITIES,
   humanize,
 } from "@/features/incidents/schema";
-import { Textarea, Label, Select } from "@/components/ui/input";
+import { AutoGrowInput, Label, Select } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 function SaveButton() {
@@ -62,10 +62,9 @@ export function InvestigationForm({
       <input type="hidden" name="incidentId" value={incidentId} />
       <div className="space-y-1.5">
         <Label htmlFor="investigationDetails">Details</Label>
-        <Textarea
+        <AutoGrowInput
           id="investigationDetails"
           name="investigationDetails"
-          rows={4}
           required
           defaultValue={investigationDetails}
           placeholder="What happened, based on the investigation — the office's own account…"
@@ -119,10 +118,9 @@ export function InvestigationForm({
 
       <div className="space-y-1.5">
         <Label htmlFor="rootCause">Root cause description</Label>
-        <Textarea
+        <AutoGrowInput
           id="rootCause"
           name="rootCause"
-          rows={3}
           defaultValue={rootCause}
           placeholder="Underlying cause identified during investigation…"
         />

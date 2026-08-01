@@ -31,7 +31,7 @@ export default async function DrillDetailPage({
   ];
 
   return (
-    <div className="mx-auto max-w-4xl">
+    <div className="mx-auto max-w-7xl">
       <Link href="/drills" className="mb-3 inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground">
         <ArrowLeft className="h-4 w-4" /> Back to Emergency Drills
       </Link>
@@ -51,13 +51,6 @@ export default async function DrillDetailPage({
       </div>
 
       <Card className="mb-6">
-        <CardHeader><CardTitle>Drill status</CardTitle></CardHeader>
-        <CardContent>
-          <DrillActions drillId={drill.id} isOpen={drill.status !== "CLOSED"} canClose={canClose} canDelete={canDelete} />
-        </CardContent>
-      </Card>
-
-      <Card className="mb-6">
         <CardHeader><CardTitle>Scenario</CardTitle></CardHeader>
         <CardContent><p className="whitespace-pre-wrap text-sm">{drill.scenario || "—"}</p></CardContent>
       </Card>
@@ -67,9 +60,16 @@ export default async function DrillDetailPage({
         <CardContent><p className="whitespace-pre-wrap text-sm">{drill.participants || "—"}</p></CardContent>
       </Card>
 
-      <Card>
+      <Card className="mb-6">
         <CardHeader><CardTitle>Observations / follow-up</CardTitle></CardHeader>
         <CardContent><p className="whitespace-pre-wrap text-sm">{drill.observations || "—"}</p></CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader><CardTitle>Drill status</CardTitle></CardHeader>
+        <CardContent>
+          <DrillActions drillId={drill.id} isOpen={drill.status !== "CLOSED"} canClose={canClose} canDelete={canDelete} />
+        </CardContent>
       </Card>
     </div>
   );

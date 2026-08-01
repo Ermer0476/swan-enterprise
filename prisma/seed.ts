@@ -201,7 +201,6 @@ async function main() {
     });
     await prisma.rolePermission.createMany({
       data: perms_.map((p) => ({ roleId: role.id, permissionId: p.id })),
-      skipDuplicates: true,
     });
   }
 
@@ -352,6 +351,15 @@ async function main() {
     orderBy: { name: "asc" },
   });
 
+  // Tie the demo Master's account to a single vessel — one account per ship,
+  // per how shipboard logins actually work (Ermer confirmed 2026-08-01).
+  if (firstVessel) {
+    await prisma.user.updateMany({
+      where: { companyId: company.id, email: "master@swanshipping.com" },
+      data: { vesselId: firstVessel.id },
+    });
+  }
+
   // Sample incidents using the structured classification.
   let inc1 = await prisma.incident.findFirst({
     where: { companyId: company.id, refNo: "INC-2026-0001" },
@@ -376,7 +384,7 @@ async function main() {
         investigationDetails:
           "Per ECFA follow-up: AB was handling the mooring line during final heaving on the winch when the rope bight came under sudden tension as the vessel surged alongside. AB's hand was inside the bight at the moment of load-up, resulting in a laceration. First aid was administered promptly by the OOW; no further medical evacuation was required.",
         rootCauseCategory: "HUMAN_FACTORS",
-        rootCauseSubCategory: "LACK_OF_ATTENTION",
+        rootCauseSubCategory: "SITUATIONAL_AWARENESS_REDUCED",
         rootCause: "Improper hand placement near the rope bight under tension.",
         reportedById: adminId || null,
         createdBy: adminId || null,
@@ -471,7 +479,7 @@ async function main() {
         potentialSeverity: "HIGH",
         immediateAction: "Work stopped; toolbox talk conducted before resuming.",
         rootCauseCategory: "HUMAN_FACTORS",
-        rootCauseSubCategory: "LACK_OF_ATTENTION",
+        rootCauseSubCategory: "SITUATIONAL_AWARENESS_REDUCED",
         status: "UNDER_REVIEW",
         reportedById: adminId || null,
         createdBy: adminId || null,
@@ -538,7 +546,9 @@ async function main() {
         inspectorName: "J. Miller",
         port: "Singapore",
         inspectionDate: new Date(),
+        inspectionType: "LOADING_OPERATION",
         sireVersion: "2.0",
+        overallResult: "OBSERVATIONS",
         summary: "Two observations raised; no critical findings.",
         status: "IN_PROGRESS",
         createdBy: adminId || null,
@@ -546,19 +556,35 @@ async function main() {
           create: [
             {
               companyId: company.id,
+              seq: 1,
+              chapter: 3,
+              category: "PROCESS",
               viqRef: "3.1",
-              category: "Process",
+              question: "Was a documented passage plan available covering the entire intended voyage?",
               observation: "Bridge passage plan not signed by the Master for the current voyage.",
-              status: "OPEN",
+              rootCauseCategory: "PROCESS_METHODS",
+              rootCauseSubCategory: "CHECKLIST_NOT_USED",
+              rootCause: "Passage plan checklist step for Master's countersignature was skipped.",
+              correctiveAction: "Master countersigned the current passage plan.",
+              preventiveMeasure: "Passage plan checklist amended to make countersignature a hard gate before departure.",
+              responsiblePersonId: adminId || null,
+              targetDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000),
+              status: "ONGOING",
               createdBy: adminId || null,
             },
             {
               companyId: company.id,
+              seq: 2,
+              chapter: 9,
+              category: "HARDWARE",
               viqRef: "9.4",
-              category: "Hardware",
+              question: "Were emergency escape breathing devices (EEBDs) correctly stowed and clearly marked?",
               observation: "One EEBD stowage location not clearly marked.",
-              response: "Signage renewed; photo evidence filed.",
+              correctiveAction: "Signage renewed; photo evidence filed.",
+              responsiblePersonId: adminId || null,
+              actualCompletionDate: new Date(),
               status: "CLOSED",
+              verifiedById: adminId || null,
               createdBy: adminId || null,
             },
           ],
@@ -590,7 +616,6 @@ async function main() {
               reference: "SOLAS III/19",
               actionCode: "17",
               description: "Fire drill not carried out at required interval.",
-              status: "OPEN",
               createdBy: adminId || null,
             },
             {
@@ -600,8 +625,7 @@ async function main() {
               actionCode: "17",
               description: "Galley exhaust not adequately cleaned.",
               rootCauseCategory: "MANAGEMENT_GOVERNANCE",
-              rootCauseSubCategory: "POOR_PLANNING",
-              status: "CLOSED",
+              rootCauseSubCategory: "PLANNING_INADEQUATE",
               createdBy: adminId || null,
             },
           ],
@@ -661,7 +685,6 @@ async function main() {
               category: "MINOR_NC",
               reference: "ISM 10.3",
               description: "Some PMS jobs overdue without documented postponement.",
-              status: "OPEN",
               createdBy: adminId || null,
             },
             {
@@ -670,8 +693,7 @@ async function main() {
               reference: "ISM 7",
               description: "Consider adding a checklist for enclosed-space entry drills.",
               rootCauseCategory: "MANAGEMENT_GOVERNANCE",
-              rootCauseSubCategory: "POOR_PLANNING",
-              status: "CLOSED",
+              rootCauseSubCategory: "PLANNING_INADEQUATE",
               createdBy: adminId || null,
             },
           ],
@@ -702,7 +724,6 @@ async function main() {
               category: "MINOR_NC",
               reference: "ISM 12.1",
               description: "Management review records incomplete for the prior period.",
-              status: "OPEN",
               createdBy: adminId || null,
             },
           ],
@@ -711,21 +732,67 @@ async function main() {
     });
   }
 
-  // Sample Safety Meeting
-  if (!(await prisma.safetyMeeting.findFirst({ where: { companyId: company.id, refNo: "SM-2026-0001" } }))) {
-    await prisma.safetyMeeting.create({
+  // Sample Committee Meeting — combined Safety Committee + Health & Hygiene,
+  // per ADM-04 / RC-013 (one meeting instance can cover several committees).
+  if (!(await prisma.committeeMeeting.findFirst({ where: { companyId: company.id, refNo: "CM-2026-0001" } }))) {
+    await prisma.committeeMeeting.create({
       data: {
         companyId: company.id,
-        refNo: "SM-2026-0001",
+        refNo: "CM-2026-0001",
         vesselId: firstVessel?.id ?? null,
-        meetingType: "SAFETY_COMMITTEE",
+        position: "Singapore — Anchorage",
         meetingDate: new Date(),
-        chairedBy: "Capt. Ramon Reyes",
-        attendees: "Master, C/Off, C/Engr, Bosun",
-        agenda: "Monthly safety review; PPE compliance; near-miss follow-up.",
-        minutes: "No outstanding safety concerns raised. PPE stock replenished.",
-        status: "OPEN",
+        meetingTime: "1100H-1130",
+        chairman: "Capt. Ramon Reyes",
+        inCharge: "C/Off Ronald Cariño",
+        members: "C/Off Ronald Cariño\nC/Engr Rommel Mapalad\n2/Engr Andy Dela Merced",
+        inAttendance: "2/Off Royce Hautea\n3/Engr Joy Amoronio\nBosun",
+        vesselRemarks: "Monthly safety meeting carried out for the month; all pending items completed.",
         createdBy: adminId || null,
+        agendaItems: {
+          create: [
+            {
+              companyId: company.id,
+              seq: 1,
+              committeeType: "SAFETY",
+              code: "A",
+              label: "Previous minutes meeting — reading of the previous meeting minutes and confirmation that all pending items have been completed.",
+              details: "No outstanding items from the previous meeting.",
+            },
+            {
+              companyId: company.id,
+              seq: 2,
+              committeeType: "SAFETY",
+              code: "B",
+              label: "Accident/Incident discussion — discussions on any accidents/incidents that have occurred on the ship or in the fleet.",
+              details: "No incidents to report this period.",
+            },
+            {
+              companyId: company.id,
+              seq: 3,
+              committeeType: "SAFETY",
+              code: "D",
+              label: "Near Miss / Non-Conformity issues — discussion on any reported near miss incidents on board.",
+              details: "Reminded all crew of the importance of reporting near misses promptly.",
+            },
+            {
+              companyId: company.id,
+              seq: 4,
+              committeeType: "HEALTH_HYGIENE",
+              code: "A",
+              label: "Cleanliness of galley, crew cabins, mess halls, hospital room, toilets, bathrooms, laundry room and others.",
+              details: "Cleaning stations reminded to all crew; maintained weekly and before/after port stay.",
+            },
+            {
+              companyId: company.id,
+              seq: 5,
+              committeeType: "HEALTH_HYGIENE",
+              code: "C",
+              label: "Crew physical condition.",
+              details: "Work/rest hour periods monitored; monthly BMI and blood pressure checks conducted.",
+            },
+          ],
+        },
       },
     });
   }

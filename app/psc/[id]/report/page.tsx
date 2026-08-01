@@ -57,7 +57,7 @@ export default async function PscReportPage({
   for (const row of ncrCapaRows) {
     (ncrRowsByNcrId[row.entityId] ??= []).push(toView(row));
   }
-  const rootCauseByDeficiency: Record<string, { category: string | null; subCategory: string | null }> = {};
+  const rootCauseByDeficiency: Record<string, { category: string | null; subCategory: string | null; description: string | null }> = {};
   for (const d of insp.deficiencies) {
     const linked = ncrBySourceId[d.id];
     if (linked) {
@@ -65,9 +65,10 @@ export default async function PscReportPage({
       rootCauseByDeficiency[d.id] = {
         category: ncrRootCauses[linked.id]?.rootCauseCategory ?? null,
         subCategory: ncrRootCauses[linked.id]?.rootCauseSubCategory ?? null,
+        description: ncrRootCauses[linked.id]?.rootCause ?? null,
       };
     } else {
-      rootCauseByDeficiency[d.id] = { category: d.rootCauseCategory, subCategory: d.rootCauseSubCategory };
+      rootCauseByDeficiency[d.id] = { category: d.rootCauseCategory, subCategory: d.rootCauseSubCategory, description: d.rootCause };
     }
   }
 
@@ -122,14 +123,17 @@ export default async function PscReportPage({
             <p className="text-sm text-muted-foreground">No deficiencies recorded.</p>
           ) : (
             <ul className="divide-y divide-border rounded-md border border-border">
-              {insp.deficiencies.map((d) => (
+              {insp.deficiencies.map((d) => {
+                const capaRows = allCapaRowsByDeficiency[d.id] ?? [];
+                const resolved = capaRows.length > 0 && capaRows.every((r) => r.status === "CLOSED");
+                return (
                 <li key={d.id} className="space-y-2 p-3">
                   <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
                     {d.natureCode && <span className="font-mono">Code {d.natureCode}</span>}
                     {d.reference && <span>· {d.reference}</span>}
                     {d.actionCode && <Badge tone="accent">Action {d.actionCode}</Badge>}
-                    <Badge tone={d.status === "CLOSED" ? "success" : "warning"}>
-                      {d.status === "CLOSED" ? "Rectified" : "Open"}
+                    <Badge tone={resolved ? "success" : "warning"}>
+                      {resolved ? "Rectified" : "Open"}
                     </Badge>
                   </div>
                   <p className="text-sm">{d.description}</p>
@@ -139,15 +143,17 @@ export default async function PscReportPage({
                         rootCauseByDeficiency[d.id]!.category as RootCauseCategoryValue | null,
                         rootCauseByDeficiency[d.id]!.subCategory,
                       )}
+                      {rootCauseByDeficiency[d.id]!.description && ` — ${rootCauseByDeficiency[d.id]!.description}`}
                     </p>
                   )}
-                  {(allCapaRowsByDeficiency[d.id]?.length ?? 0) > 0 && (
+                  {capaRows.length > 0 && (
                     <div className="pt-1">
-                      <CapaSummaryTable rows={allCapaRowsByDeficiency[d.id] ?? []} editable={false} />
+                      <CapaSummaryTable rows={capaRows} editable={false} />
                     </div>
                   )}
                 </li>
-              ))}
+                );
+              })}
             </ul>
           )}
         </CardContent>

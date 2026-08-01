@@ -8,7 +8,6 @@ import { writeAudit } from "@/lib/audit";
 import {
   createInternalAuditSchema,
   addFindingSchema,
-  updateFindingSchema,
   findingRootCauseSchema,
 } from "./schema";
 
@@ -102,7 +101,6 @@ export async function addFindingAction(
       category: d.category,
       reference: d.reference || null,
       description: d.description,
-      status: "OPEN",
       createdBy: user.id,
     },
   });
@@ -125,31 +123,6 @@ export async function addFindingAction(
   return OK;
 }
 
-export async function updateFindingAction(
-  formData: FormData,
-): Promise<ActionResult> {
-  const user = await requirePermission("iaudit:update");
-  const parsed = updateFindingSchema.safeParse({
-    findingId: formData.get("findingId"),
-    status: formData.get("status"),
-  });
-  if (!parsed.success) return fail("Invalid input");
-  const d = parsed.data;
-
-  const finding = await prisma.internalAuditFinding.findFirst({
-    where: { id: d.findingId, companyId: user.companyId, deletedAt: null },
-  });
-  if (!finding) return fail("Finding not found");
-
-  await prisma.internalAuditFinding.update({
-    where: { id: finding.id },
-    data: { status: d.status },
-  });
-
-  revalidatePath(`/internal-audits/${finding.auditId}`);
-  return OK;
-}
-
 export async function saveFindingRootCauseAction(
   _prev: ActionResult,
   formData: FormData,
@@ -159,6 +132,7 @@ export async function saveFindingRootCauseAction(
     findingId: formData.get("findingId"),
     rootCauseCategory: formData.get("rootCauseCategory"),
     rootCauseSubCategory: formData.get("rootCauseSubCategory"),
+    rootCause: formData.get("rootCause"),
   });
   if (!parsed.success) {
     return fail(parsed.error.issues[0]?.message ?? "Invalid input");
@@ -175,6 +149,7 @@ export async function saveFindingRootCauseAction(
     data: {
       rootCauseCategory: d.rootCauseCategory,
       rootCauseSubCategory: d.rootCauseSubCategory,
+      rootCause: d.rootCause || null,
     },
   });
 
@@ -206,12 +181,39 @@ export async function closeInternalAuditAction(
   const id = String(formData.get("auditId") ?? "");
   const audit = await prisma.internalAudit.findFirst({
     where: { id, companyId: user.companyId, deletedAt: null },
-    include: { findings: { where: { deletedAt: null, status: "OPEN" } } },
   });
   if (!audit) return fail("Audit not found");
   if (audit.status === "CLOSED") return fail("Audit is already closed");
-  if (audit.findings.length > 0) {
-    return fail("Close all findings before closing the audit");
+
+  const findings = await prisma.internalAuditFinding.findMany({
+    where: { auditId: audit.id, deletedAt: null },
+    select: { id: true },
+  });
+  // A finding is only "closed" once it has at least one CAPA row and every
+  // one of them is Closed — a finding with no recorded corrective action at
+  // all is still pending, not just one with open CAPA rows. A finding raised
+  // into an NCR moves its CAPA rows under entityType "NonConformity" (entityId
+  // = the NCR's id, not the finding's) — the NCR becomes the single source of
+  // truth (see createNcrAction).
+  let unresolvedCount = 0;
+  for (const finding of findings) {
+    const linkedNcr = await prisma.nonConformity.findFirst({
+      where: { companyId: user.companyId, sourceEntityId: finding.id, deletedAt: null },
+      select: { id: true },
+    });
+    const capaWhere = linkedNcr
+      ? { entityType: "NonConformity", entityId: linkedNcr.id }
+      : { entityType: "InternalAuditFinding", entityId: finding.id };
+    const [total, open] = await Promise.all([
+      prisma.capaAction.count({ where: { companyId: user.companyId, deletedAt: null, ...capaWhere } }),
+      prisma.capaAction.count({ where: { companyId: user.companyId, deletedAt: null, status: { not: "CLOSED" }, ...capaWhere } }),
+    ]);
+    if (total === 0 || open > 0) unresolvedCount++;
+  }
+  if (unresolvedCount > 0) {
+    return fail(
+      `Close all CAPA items before closing the audit (${unresolvedCount} finding${unresolvedCount === 1 ? "" : "s"} still pending).`,
+    );
   }
 
   await prisma.internalAudit.update({

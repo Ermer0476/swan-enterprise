@@ -46,7 +46,7 @@ export default async function DocumentDetailPage({
   ];
 
   return (
-    <div className="mx-auto max-w-4xl">
+    <div className="mx-auto max-w-7xl">
       <Link href="/documents" className="mb-3 inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground">
         <ArrowLeft className="h-4 w-4" /> Back to Documents
       </Link>
@@ -66,15 +66,15 @@ export default async function DocumentDetailPage({
       </div>
 
       <Card className="mb-6">
+        <CardHeader><CardTitle>Description</CardTitle></CardHeader>
+        <CardContent><p className="whitespace-pre-wrap text-sm">{doc.description || "—"}</p></CardContent>
+      </Card>
+
+      <Card>
         <CardHeader><CardTitle>Document status</CardTitle></CardHeader>
         <CardContent>
           <DocumentActions docId={doc.id} nextStatus={next} canAdvance={canAdvance} canDelete={canDelete} />
         </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader><CardTitle>Description</CardTitle></CardHeader>
-        <CardContent><p className="whitespace-pre-wrap text-sm">{doc.description || "—"}</p></CardContent>
       </Card>
     </div>
   );

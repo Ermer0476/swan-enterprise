@@ -168,6 +168,7 @@ export async function saveRootCauseAction(
     ncrId: formData.get("ncrId"),
     rootCauseCategory: formData.get("rootCauseCategory"),
     rootCauseSubCategory: formData.get("rootCauseSubCategory"),
+    rootCause: formData.get("rootCause"),
   });
   if (!parsed.success) {
     return fail(parsed.error.issues[0]?.message ?? "Invalid input");
@@ -185,6 +186,7 @@ export async function saveRootCauseAction(
     data: {
       rootCauseCategory: d.rootCauseCategory,
       rootCauseSubCategory: d.rootCauseSubCategory,
+      rootCause: d.rootCause || null,
       status: ncr.status === "OPEN" ? "SUBMITTED_TO_OFFICE" : ncr.status,
       updatedBy: user.id,
     },
@@ -221,6 +223,22 @@ export async function advanceNcrAction(
   }
   if (next === "CLOSED" && !ncr.rootCauseCategory) {
     return fail("Record a root cause before verifying");
+  }
+  if (next === "CLOSED") {
+    const openCapaCount = await prisma.capaAction.count({
+      where: {
+        companyId: user.companyId,
+        entityType: "NonConformity",
+        entityId: ncr.id,
+        deletedAt: null,
+        status: { not: "CLOSED" },
+      },
+    });
+    if (openCapaCount > 0) {
+      return fail(
+        `Close all CAPA items before closing the NCR (${openCapaCount} still open).`,
+      );
+    }
   }
 
   await prisma.nonConformity.update({
