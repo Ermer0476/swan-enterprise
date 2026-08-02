@@ -5,6 +5,8 @@ import { requirePermission, can } from "@/lib/rbac";
 import { getExternalAudit } from "@/features/external-audits/queries";
 import { listNcrsBySourceEntityIds, listNcrRootCauses } from "@/features/non-conformities/queries";
 import { listAllCapaActionsForEntities } from "@/features/capa/queries";
+import { listAttachments } from "@/features/attachments/queries";
+import { AttachmentList } from "@/components/attachments/attachment-list";
 import {
   addFindingAction,
   deleteFindingAction,
@@ -63,10 +65,11 @@ export default async function ExternalAuditDetailPage({
   // and write through to it directly instead of a separate copy.
   const unlinkedIds = findingIds.filter((fid) => !ncrBySourceId[fid]);
   const linkedNcrIds = Object.values(ncrBySourceId).map((n) => n.id);
-  const [ownCapaRows, ncrCapaRows, ncrRootCauses] = await Promise.all([
+  const [ownCapaRows, ncrCapaRows, ncrRootCauses, reportAttachments] = await Promise.all([
     listAllCapaActionsForEntities(user.companyId, "ExternalAuditFinding", unlinkedIds),
     listAllCapaActionsForEntities(user.companyId, "NonConformity", linkedNcrIds),
     listNcrRootCauses(user.companyId, linkedNcrIds),
+    listAttachments(user.companyId, "ExternalAudit", audit.id),
   ]);
 
   const correctiveRowsByFinding: Record<string, CapaRowView[]> = {};
@@ -163,6 +166,24 @@ export default async function ExternalAuditDetailPage({
           <CardContent><p className="whitespace-pre-wrap text-sm">{audit.summary}</p></CardContent>
         </Card>
       )}
+
+      <Card className="mb-6">
+        <CardHeader><CardTitle>Report Attachments</CardTitle></CardHeader>
+        <CardContent>
+          <AttachmentList
+            entityType="ExternalAudit"
+            entityId={audit.id}
+            editable={editable}
+            attachments={reportAttachments.map((a) => ({
+              id: a.id,
+              fileName: a.fileName,
+              mimeType: a.mimeType,
+              sizeBytes: a.sizeBytes,
+              createdAt: a.createdAt.toISOString(),
+            }))}
+          />
+        </CardContent>
+      </Card>
 
       <Card className="mb-6">
         <CardHeader><CardTitle>Findings</CardTitle></CardHeader>

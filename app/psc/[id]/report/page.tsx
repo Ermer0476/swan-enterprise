@@ -7,6 +7,8 @@ import { listNcrsBySourceEntityIds, listNcrRootCauses } from "@/features/non-con
 import { listAllCapaActionsForEntities } from "@/features/capa/queries";
 import { CapaSummaryTable, type CapaSummaryRowView } from "@/components/capa/capa-tracker";
 import { formatRootCause, type RootCauseCategoryValue } from "@/lib/root-cause";
+import { listAttachments } from "@/features/attachments/queries";
+import { AttachmentList } from "@/components/attachments/attachment-list";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { formatDate, humanize } from "@/lib/utils";
@@ -34,10 +36,11 @@ export default async function PscReportPage({
   const unlinkedIds = deficiencyIds.filter((did) => !ncrBySourceId[did]);
   const linkedNcrIds = Object.values(ncrBySourceId).map((n) => n.id);
 
-  const [pscCapaRows, ncrCapaRows, ncrRootCauses] = await Promise.all([
+  const [pscCapaRows, ncrCapaRows, ncrRootCauses, reportAttachments] = await Promise.all([
     listAllCapaActionsForEntities(user.companyId, "PscDeficiency", unlinkedIds),
     listAllCapaActionsForEntities(user.companyId, "NonConformity", linkedNcrIds),
     listNcrRootCauses(user.companyId, linkedNcrIds),
+    listAttachments(user.companyId, "PscInspection", insp.id),
   ]);
 
   const toView = (row: (typeof pscCapaRows)[number]): CapaSummaryRowView => ({
@@ -112,6 +115,24 @@ export default async function PscReportPage({
           <CardContent><p className="whitespace-pre-wrap text-sm">{insp.summary}</p></CardContent>
         </Card>
       )}
+
+      <Card className="mb-6">
+        <CardHeader><CardTitle>Report Attachments</CardTitle></CardHeader>
+        <CardContent>
+          <AttachmentList
+            entityType="PscInspection"
+            entityId={insp.id}
+            editable={false}
+            attachments={reportAttachments.map((a) => ({
+              id: a.id,
+              fileName: a.fileName,
+              mimeType: a.mimeType,
+              sizeBytes: a.sizeBytes,
+              createdAt: a.createdAt.toISOString(),
+            }))}
+          />
+        </CardContent>
+      </Card>
 
       <Card>
         <CardHeader><CardTitle>Deficiencies</CardTitle></CardHeader>

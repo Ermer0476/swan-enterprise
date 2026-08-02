@@ -7,6 +7,8 @@ import { listNcrsBySourceEntityIds, listNcrRootCauses } from "@/features/non-con
 import { listAllCapaActionsForEntities } from "@/features/capa/queries";
 import { CapaSummaryTable, type CapaSummaryRowView } from "@/components/capa/capa-tracker";
 import { formatRootCause, type RootCauseCategoryValue } from "@/lib/root-cause";
+import { listAttachments } from "@/features/attachments/queries";
+import { AttachmentList } from "@/components/attachments/attachment-list";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { formatDate, humanize } from "@/lib/utils";
@@ -35,10 +37,11 @@ export default async function InternalAuditReportPage({
   const unlinkedIds = findingIds.filter((fid) => !ncrBySourceId[fid]);
   const linkedNcrIds = Object.values(ncrBySourceId).map((n) => n.id);
 
-  const [ownCapaRows, ncrCapaRows, ncrRootCauses] = await Promise.all([
+  const [ownCapaRows, ncrCapaRows, ncrRootCauses, reportAttachments] = await Promise.all([
     listAllCapaActionsForEntities(user.companyId, "InternalAuditFinding", unlinkedIds),
     listAllCapaActionsForEntities(user.companyId, "NonConformity", linkedNcrIds),
     listNcrRootCauses(user.companyId, linkedNcrIds),
+    listAttachments(user.companyId, "InternalAudit", audit.id),
   ]);
 
   const toView = (row: (typeof ownCapaRows)[number]): CapaSummaryRowView => ({
@@ -111,6 +114,24 @@ export default async function InternalAuditReportPage({
           <CardContent><p className="whitespace-pre-wrap text-sm">{audit.summary}</p></CardContent>
         </Card>
       )}
+
+      <Card className="mb-6">
+        <CardHeader><CardTitle>Report Attachments</CardTitle></CardHeader>
+        <CardContent>
+          <AttachmentList
+            entityType="InternalAudit"
+            entityId={audit.id}
+            editable={false}
+            attachments={reportAttachments.map((a) => ({
+              id: a.id,
+              fileName: a.fileName,
+              mimeType: a.mimeType,
+              sizeBytes: a.sizeBytes,
+              createdAt: a.createdAt.toISOString(),
+            }))}
+          />
+        </CardContent>
+      </Card>
 
       <Card>
         <CardHeader><CardTitle>Findings</CardTitle></CardHeader>

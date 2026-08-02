@@ -45,6 +45,12 @@ const REGISTRY: Record<
     },
   },
   NonConformity: { permission: "ncr:update", pagePath: (id) => `/non-conformities/${id}` },
+  // The inspection/audit's own report document (e.g. the PSC report form,
+  // the audit report itself) — distinct from PscDeficiency/*Finding below,
+  // which are per-finding evidence. Both scopes coexist on the same page.
+  PscInspection: { permission: "psc:update", pagePath: (id) => `/psc/${id}` },
+  InternalAudit: { permission: "iaudit:update", pagePath: (id) => `/internal-audits/${id}` },
+  ExternalAudit: { permission: "eaudit:update", pagePath: (id) => `/external-audits/${id}` },
   PscDeficiency: {
     permission: "psc:update",
     pagePath: async (deficiencyId) => {

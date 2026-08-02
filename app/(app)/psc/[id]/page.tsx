@@ -6,6 +6,8 @@ import { getPsc } from "@/features/psc/queries";
 import { listNcrsBySourceEntityIds, listNcrRootCauses } from "@/features/non-conformities/queries";
 import { listAllCapaActionsForEntities } from "@/features/capa/queries";
 import type { CapaRowView, CapaSummaryRowView } from "@/components/capa/capa-tracker";
+import { listAttachments } from "@/features/attachments/queries";
+import { AttachmentList } from "@/components/attachments/attachment-list";
 import { PageHeader } from "@/components/ui/page-header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -56,10 +58,11 @@ export default async function PscDetailPage({
   // from either PSC or the NCR page updates the same record.
   const unlinkedIds = deficiencyIds.filter((did) => !ncrBySourceId[did]);
   const linkedNcrIds = Object.values(ncrBySourceId).map((n) => n.id);
-  const [pscCapaRows, ncrCapaRows, ncrRootCauses] = await Promise.all([
+  const [pscCapaRows, ncrCapaRows, ncrRootCauses, reportAttachments] = await Promise.all([
     listAllCapaActionsForEntities(user.companyId, "PscDeficiency", unlinkedIds),
     listAllCapaActionsForEntities(user.companyId, "NonConformity", linkedNcrIds),
     listNcrRootCauses(user.companyId, linkedNcrIds),
+    listAttachments(user.companyId, "PscInspection", insp.id),
   ]);
 
   const correctiveRowsByDeficiency: Record<string, CapaRowView[]> = {};
@@ -159,6 +162,24 @@ export default async function PscDetailPage({
           <CardContent><p className="whitespace-pre-wrap text-sm">{insp.summary}</p></CardContent>
         </Card>
       )}
+
+      <Card className="mb-6">
+        <CardHeader><CardTitle>Report Attachments</CardTitle></CardHeader>
+        <CardContent>
+          <AttachmentList
+            entityType="PscInspection"
+            entityId={insp.id}
+            editable={editable}
+            attachments={reportAttachments.map((a) => ({
+              id: a.id,
+              fileName: a.fileName,
+              mimeType: a.mimeType,
+              sizeBytes: a.sizeBytes,
+              createdAt: a.createdAt.toISOString(),
+            }))}
+          />
+        </CardContent>
+      </Card>
 
       <Card className="mb-6">
         <CardHeader><CardTitle>Deficiencies</CardTitle></CardHeader>
