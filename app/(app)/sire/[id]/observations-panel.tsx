@@ -2,14 +2,18 @@
 
 import { useActionState, useRef, useEffect, useState, useTransition } from "react";
 import { useFormStatus } from "react-dom";
-import { Plus, Trash2 } from "lucide-react";
+import { Plus, Trash2, FileUp, X } from "lucide-react";
 import {
   addObservationAction,
   updateObservationAction,
   deleteObservationAction,
   addCommentAction,
+  parseSireDocumentAction,
+  bulkAddObservationsAction,
   type ActionResult,
+  type ParseDocumentResult,
 } from "@/features/sire/actions";
+import type { ParsedObservationDraft } from "@/features/sire/document-parser";
 import {
   VIQ_CHAPTERS,
   VIQ_CHAPTER_TITLES,
@@ -26,7 +30,7 @@ import {
   formatRootCause,
   type RootCauseCategoryValue,
 } from "@/lib/root-cause";
-import { AutoGrowInput, Input, Label, Select, Textarea } from "@/components/ui/input";
+import { AutoGrowInput, Input, Label, Select } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import type { BadgeTone } from "@/lib/utils";
@@ -235,6 +239,10 @@ function ObservationCard({
 
   function save() {
     setError(null);
+    // Both feed the SIRE KPI — block the save client-side rather than
+    // round-tripping to the server just to find out they're missing.
+    if (!values.category) return setError("Category is required");
+    if (!values.rootCauseCategory) return setError("Root cause category is required");
     const fd = new FormData();
     fd.set("observationId", obs.id);
     fd.set("chapter", values.chapter);
@@ -307,7 +315,7 @@ function ObservationCard({
             </div>
             <div className="space-y-1">
               <Label className="text-xs">Category</Label>
-              <Select value={values.category} onChange={(e) => setField("category", e.target.value as ObservationEdit["category"])}>
+              <Select value={values.category} onChange={(e) => setField("category", e.target.value as ObservationEdit["category"])} required>
                 <option value="">— Select —</option>
                 {SIRE_OBSERVATION_CATEGORIES.map((c) => (
                   <option key={c} value={c}>{SIRE_OBSERVATION_CATEGORY_LABELS[c]}</option>
@@ -321,15 +329,15 @@ function ObservationCard({
           </div>
           <div className="space-y-1">
             <Label className="text-xs">Question</Label>
-            <Textarea value={values.question} onChange={(e) => setField("question", e.target.value)} rows={2} />
+            <AutoGrowInput className="max-h-none" value={values.question} onChange={(e) => setField("question", e.target.value)} />
           </div>
           <div className="space-y-1">
             <Label className="text-xs">Finding / Inspector observation</Label>
-            <Textarea value={values.observation} onChange={(e) => setField("observation", e.target.value)} rows={3} required />
+            <AutoGrowInput className="max-h-none" value={values.observation} onChange={(e) => setField("observation", e.target.value)} required />
           </div>
           <div className="space-y-1">
             <Label className="text-xs">Immediate cause</Label>
-            <Textarea value={values.immediateCause} onChange={(e) => setField("immediateCause", e.target.value)} rows={2} />
+            <AutoGrowInput className="max-h-none" value={values.immediateCause} onChange={(e) => setField("immediateCause", e.target.value)} />
           </div>
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <div className="space-y-1">
@@ -340,6 +348,7 @@ function ObservationCard({
                   setField("rootCauseCategory", e.target.value as RootCauseCategoryValue | "");
                   setField("rootCauseSubCategory", ""); // sub-category list differs per category — reset on change
                 }}
+                required
               >
                 <option value="">— Select —</option>
                 {ROOT_CAUSE_CATEGORIES.map((c) => (
@@ -364,15 +373,15 @@ function ObservationCard({
           </div>
           <div className="space-y-1">
             <Label className="text-xs">Root cause description</Label>
-            <Textarea value={values.rootCause} onChange={(e) => setField("rootCause", e.target.value)} rows={2} />
+            <AutoGrowInput className="max-h-none" value={values.rootCause} onChange={(e) => setField("rootCause", e.target.value)} />
           </div>
           <div className="space-y-1">
             <Label className="text-xs">Corrective action</Label>
-            <Textarea value={values.correctiveAction} onChange={(e) => setField("correctiveAction", e.target.value)} rows={2} />
+            <AutoGrowInput className="max-h-none" value={values.correctiveAction} onChange={(e) => setField("correctiveAction", e.target.value)} />
           </div>
           <div className="space-y-1">
             <Label className="text-xs">Preventive measure</Label>
-            <Textarea value={values.preventiveMeasure} onChange={(e) => setField("preventiveMeasure", e.target.value)} rows={2} />
+            <AutoGrowInput className="max-h-none" value={values.preventiveMeasure} onChange={(e) => setField("preventiveMeasure", e.target.value)} />
           </div>
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
             <div className="space-y-1">
@@ -498,6 +507,246 @@ function AddButton() {
   );
 }
 
+function ParseButton() {
+  const { pending } = useFormStatus();
+  return (
+    <Button type="submit" size="sm" disabled={pending}>
+      <FileUp className="h-4 w-4" /> {pending ? "Reading document…" : "Parse document"}
+    </Button>
+  );
+}
+
+/** One review row for a parsed draft — every field stays editable so the
+ * uploader can fix anything the parser got wrong or left blank before it's
+ * actually saved; nothing here is written until "Confirm & add all". */
+function DraftCard({
+  draft,
+  index,
+  onChange,
+  onRemove,
+}: {
+  draft: ParsedObservationDraft;
+  index: number;
+  onChange: (index: number, next: ParsedObservationDraft) => void;
+  onRemove: (index: number) => void;
+}) {
+  function setField<K extends keyof ParsedObservationDraft>(field: K, value: ParsedObservationDraft[K]) {
+    onChange(index, { ...draft, [field]: value });
+  }
+
+  return (
+    <div className="space-y-3 rounded-md border border-border bg-muted/20 p-4">
+      <div className="flex items-center justify-between gap-2">
+        <span className="text-xs font-semibold text-muted-foreground">{draft.groupLabel}</span>
+        <button
+          type="button"
+          onClick={() => onRemove(index)}
+          aria-label="Remove this draft"
+          className="rounded p-1 text-muted-foreground hover:bg-muted hover:text-danger"
+        >
+          <X className="h-4 w-4" />
+        </button>
+      </div>
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+        <div className="space-y-1">
+          <Label className="text-xs">Chapter</Label>
+          <Select
+            value={draft.chapter ? String(draft.chapter) : ""}
+            onChange={(e) => setField("chapter", e.target.value ? Number(e.target.value) : null)}
+          >
+            <option value="">— Select —</option>
+            {VIQ_CHAPTERS.map((c) => <option key={c.no} value={c.no}>{c.no}. {c.title}</option>)}
+          </Select>
+        </div>
+        <div className="space-y-1">
+          <Label className="text-xs">Category</Label>
+          <Select
+            value={draft.category ?? ""}
+            onChange={(e) => setField("category", (e.target.value || null) as ParsedObservationDraft["category"])}
+            required
+          >
+            <option value="">— Select —</option>
+            {SIRE_OBSERVATION_CATEGORIES.map((c) => (
+              <option key={c} value={c}>{SIRE_OBSERVATION_CATEGORY_LABELS[c]}</option>
+            ))}
+          </Select>
+        </div>
+        <div className="space-y-1">
+          <Label className="text-xs">Question number</Label>
+          <AutoGrowInput value={draft.viqRef ?? ""} onChange={(e) => setField("viqRef", e.target.value || null)} placeholder="e.g. 3.5.1" />
+        </div>
+      </div>
+      <div className="space-y-1">
+        <Label className="text-xs">Question</Label>
+        <AutoGrowInput className="max-h-none" value={draft.question ?? ""} onChange={(e) => setField("question", e.target.value || null)} />
+      </div>
+      <div className="space-y-1">
+        <Label className="text-xs">Finding / Inspector observation</Label>
+        <AutoGrowInput className="max-h-none" value={draft.observation} onChange={(e) => setField("observation", e.target.value)} required />
+      </div>
+      <div className="space-y-1">
+        <Label className="text-xs">Immediate cause</Label>
+        <AutoGrowInput className="max-h-none" value={draft.immediateCause ?? ""} onChange={(e) => setField("immediateCause", e.target.value || null)} />
+      </div>
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        <div className="space-y-1">
+          <Label className="text-xs">Root cause category</Label>
+          <Select
+            value={draft.rootCauseCategory ?? ""}
+            onChange={(e) => {
+              // One combined update, not two setField calls — setField
+              // spreads the `draft` prop, which doesn't change until the
+              // next render, so a second call in the same handler would
+              // overwrite the first (this dropped the category pick back to
+              // blank every time — same bug as the fix below sidesteps).
+              const value = (e.target.value || null) as ParsedObservationDraft["rootCauseCategory"];
+              onChange(index, { ...draft, rootCauseCategory: value, rootCauseSubCategory: null });
+            }}
+            required
+          >
+            <option value="">— Select —</option>
+            {ROOT_CAUSE_CATEGORIES.map((c) => (
+              <option key={c} value={c}>{ROOT_CAUSE_LABELS[c]}</option>
+            ))}
+          </Select>
+        </div>
+        {draft.rootCauseCategory && (
+          <div className="space-y-1">
+            <Label className="text-xs">Sub-category</Label>
+            <Select
+              value={draft.rootCauseSubCategory ?? ""}
+              onChange={(e) => setField("rootCauseSubCategory", e.target.value || null)}
+            >
+              <option value="">— Select —</option>
+              {ROOT_CAUSE_SUBCATEGORIES[draft.rootCauseCategory].map((s) => (
+                <option key={s} value={s}>{ROOT_CAUSE_SUBCATEGORY_LABELS[draft.rootCauseCategory!][s]}</option>
+              ))}
+            </Select>
+          </div>
+        )}
+      </div>
+      <div className="space-y-1">
+        <Label className="text-xs">Root cause description</Label>
+        <AutoGrowInput className="max-h-none" value={draft.rootCause ?? ""} onChange={(e) => setField("rootCause", e.target.value || null)} />
+      </div>
+      <div className="space-y-1">
+        <Label className="text-xs">Corrective action</Label>
+        <AutoGrowInput className="max-h-none" value={draft.correctiveAction ?? ""} onChange={(e) => setField("correctiveAction", e.target.value || null)} />
+      </div>
+      <div className="space-y-1">
+        <Label className="text-xs">Preventive measure</Label>
+        <AutoGrowInput className="max-h-none" value={draft.preventiveMeasure ?? ""} onChange={(e) => setField("preventiveMeasure", e.target.value || null)} />
+      </div>
+    </div>
+  );
+}
+
+function ImportDraftsPanel({ inspectionId, onImported }: { inspectionId: string; onImported: () => void }) {
+  const [parseState, parseAction] = useActionState<ParseDocumentResult, FormData>(
+    parseSireDocumentAction,
+    { ok: false, error: null, drafts: [] },
+  );
+  const [drafts, setDrafts] = useState<ParsedObservationDraft[] | null>(null);
+  const [confirming, startConfirming] = useTransition();
+  const [confirmError, setConfirmError] = useState<string | null>(null);
+  const fileFormRef = useRef<HTMLFormElement>(null);
+
+  useEffect(() => {
+    if (parseState.ok && parseState.drafts.length > 0) {
+      setDrafts(parseState.drafts);
+    }
+  }, [parseState]);
+
+  function updateDraft(index: number, next: ParsedObservationDraft) {
+    setDrafts((prev) => (prev ? prev.map((d, i) => (i === index ? next : d)) : prev));
+  }
+
+  function removeDraft(index: number) {
+    setDrafts((prev) => (prev ? prev.filter((_, i) => i !== index) : prev));
+  }
+
+  function cancel() {
+    setDrafts(null);
+    setConfirmError(null);
+    fileFormRef.current?.reset();
+  }
+
+  function confirm() {
+    if (!drafts || drafts.length === 0) return;
+    setConfirmError(null);
+    // Both feed the SIRE KPI — block the import client-side (this button
+    // doesn't go through a native form submit, so `required` on the selects
+    // alone wouldn't stop it) rather than round-tripping to the server.
+    const incomplete = drafts.filter((d) => !d.category || !d.rootCauseCategory);
+    if (incomplete.length > 0) {
+      setConfirmError(
+        `Category and root cause category are required — missing on: ${incomplete.map((d) => d.groupLabel).join(", ")}`,
+      );
+      return;
+    }
+    const fd = new FormData();
+    fd.set("inspectionId", inspectionId);
+    fd.set("drafts", JSON.stringify(drafts));
+    startConfirming(async () => {
+      const res = await bulkAddObservationsAction(fd);
+      if (!res.ok) {
+        setConfirmError(res.error);
+        return;
+      }
+      cancel();
+      onImported();
+    });
+  }
+
+  if (drafts && drafts.length > 0) {
+    return (
+      <div className="space-y-4 rounded-md border border-dashed border-border p-4">
+        <p className="text-sm font-semibold">
+          Review {drafts.length} observation{drafts.length === 1 ? "" : "s"} found in the document
+        </p>
+        <p className="text-xs text-muted-foreground">
+          Check each one before adding — fix anything the reader got wrong or left blank, or remove a row entirely.
+        </p>
+        <div className="space-y-3">
+          {drafts.map((d, i) => (
+            <DraftCard key={i} draft={d} index={i} onChange={updateDraft} onRemove={removeDraft} />
+          ))}
+        </div>
+        {confirmError && <p className="text-sm text-danger">{confirmError}</p>}
+        <div className="flex items-center gap-2">
+          <Button type="button" disabled={confirming} onClick={confirm}>
+            {confirming ? "Adding…" : `Confirm & add all (${drafts.length})`}
+          </Button>
+          <Button type="button" variant="ghost" disabled={confirming} onClick={cancel}>
+            Cancel
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <form
+      ref={fileFormRef}
+      action={parseAction}
+      className="flex flex-wrap items-end gap-2 rounded-md border border-dashed border-border p-4"
+    >
+      <div className="space-y-1">
+        <Label className="text-xs">Import from document (.docx)</Label>
+        <input
+          type="file"
+          name="file"
+          required
+          accept=".docx"
+          className="max-w-full text-sm file:mr-3 file:rounded-md file:border-0 file:bg-muted file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-foreground hover:file:bg-muted/70"
+        />
+      </div>
+      <ParseButton />
+      {parseState.error && <p className="w-full text-sm text-danger">{parseState.error}</p>}
+    </form>
+  );
+}
+
 export function ObservationsPanel({
   inspectionId,
   observations,
@@ -515,15 +764,19 @@ export function ObservationsPanel({
   );
   const formRef = useRef<HTMLFormElement>(null);
   const [addRootCauseCategory, setAddRootCauseCategory] = useState<RootCauseCategoryValue | "">("");
+  const [showAddForm, setShowAddForm] = useState(false);
   useEffect(() => {
     if (addState.ok) {
       formRef.current?.reset();
       setAddRootCauseCategory("");
+      setShowAddForm(false);
     }
   }, [addState.ok]);
 
   return (
     <div className="space-y-4">
+      {editable && <ImportDraftsPanel inspectionId={inspectionId} onImported={() => {}} />}
+
       {observations.length === 0 ? (
         <p className="text-sm text-muted-foreground">No observations recorded.</p>
       ) : (
@@ -534,7 +787,13 @@ export function ObservationsPanel({
         </div>
       )}
 
-      {editable && (
+      {editable && !showAddForm && (
+        <Button type="button" variant="outline" onClick={() => setShowAddForm(true)}>
+          <Plus className="h-4 w-4" /> Add observation
+        </Button>
+      )}
+
+      {editable && showAddForm && (
         <form ref={formRef} action={addAction} className="space-y-3 rounded-md border border-dashed border-border p-4">
           <input type="hidden" name="inspectionId" value={inspectionId} />
           <p className="text-sm font-semibold">New observation</p>
@@ -548,7 +807,7 @@ export function ObservationsPanel({
             </div>
             <div className="space-y-1">
               <Label className="text-xs">Category</Label>
-              <Select name="category" defaultValue="">
+              <Select name="category" defaultValue="" required>
                 <option value="">— Select —</option>
                 {SIRE_OBSERVATION_CATEGORIES.map((c) => (
                   <option key={c} value={c}>{SIRE_OBSERVATION_CATEGORY_LABELS[c]}</option>
@@ -562,15 +821,15 @@ export function ObservationsPanel({
           </div>
           <div className="space-y-1">
             <Label className="text-xs">Question</Label>
-            <Textarea name="question" rows={2} />
+            <AutoGrowInput className="max-h-none" name="question" />
           </div>
           <div className="space-y-1">
             <Label className="text-xs">Finding / Inspector observation</Label>
-            <Textarea name="observation" rows={3} required />
+            <AutoGrowInput className="max-h-none" name="observation" required />
           </div>
           <div className="space-y-1">
             <Label className="text-xs">Immediate cause</Label>
-            <Textarea name="immediateCause" rows={2} />
+            <AutoGrowInput className="max-h-none" name="immediateCause" />
           </div>
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <div className="space-y-1">
@@ -579,6 +838,7 @@ export function ObservationsPanel({
                 name="rootCauseCategory"
                 value={addRootCauseCategory}
                 onChange={(e) => setAddRootCauseCategory(e.target.value as RootCauseCategoryValue | "")}
+                required
               >
                 <option value="">— Select —</option>
                 {ROOT_CAUSE_CATEGORIES.map((c) => (
@@ -600,15 +860,15 @@ export function ObservationsPanel({
           </div>
           <div className="space-y-1">
             <Label className="text-xs">Root cause description</Label>
-            <Textarea name="rootCause" rows={2} />
+            <AutoGrowInput className="max-h-none" name="rootCause" />
           </div>
           <div className="space-y-1">
             <Label className="text-xs">Corrective action</Label>
-            <Textarea name="correctiveAction" rows={2} />
+            <AutoGrowInput className="max-h-none" name="correctiveAction" />
           </div>
           <div className="space-y-1">
             <Label className="text-xs">Preventive measure</Label>
-            <Textarea name="preventiveMeasure" rows={2} />
+            <AutoGrowInput className="max-h-none" name="preventiveMeasure" />
           </div>
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
             <div className="space-y-1">
@@ -648,7 +908,12 @@ export function ObservationsPanel({
               </Select>
             </div>
           </div>
-          <AddButton />
+          <div className="flex items-center gap-2">
+            <AddButton />
+            <Button type="button" variant="ghost" onClick={() => setShowAddForm(false)}>
+              Cancel
+            </Button>
+          </div>
           {addState.error && <p className="text-sm text-danger">{addState.error}</p>}
         </form>
       )}

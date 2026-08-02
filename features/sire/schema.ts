@@ -92,12 +92,14 @@ const optionalDate = z
 export const addObservationSchema = z.object({
   inspectionId: z.string().uuid(),
   chapter: z.coerce.number().int().min(1).max(12).optional().or(z.literal("")),
-  category: z.enum(SIRE_OBSERVATION_CATEGORIES).optional().or(z.literal("")),
+  // Required — feeds the SIRE KPI, so an observation can't be saved without
+  // it (a missing value here would silently drop out of that reporting).
+  category: z.enum(SIRE_OBSERVATION_CATEGORIES, { message: "Category is required" }),
   viqRef: z.string().trim().max(40).optional().or(z.literal("")),
   question: z.string().trim().max(10000).optional().or(z.literal("")),
   observation: z.string().trim().min(3, "Finding is required").max(10000),
   immediateCause: z.string().trim().max(10000).optional().or(z.literal("")),
-  rootCauseCategory: z.enum(ROOT_CAUSE_CATEGORIES).optional().or(z.literal("")),
+  rootCauseCategory: z.enum(ROOT_CAUSE_CATEGORIES, { message: "Root cause category is required" }),
   rootCauseSubCategory: z.string().trim().max(60).optional().or(z.literal("")),
   rootCause: z.string().trim().max(10000).optional().or(z.literal("")),
   correctiveAction: z.string().trim().max(10000).optional().or(z.literal("")),

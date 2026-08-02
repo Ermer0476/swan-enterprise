@@ -2,15 +2,20 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { z } from "zod";
+import mammoth from "mammoth";
 import { prisma } from "@/lib/prisma";
 import { requirePermission } from "@/lib/rbac";
 import { writeAudit } from "@/lib/audit";
+import { ROOT_CAUSE_CATEGORIES } from "@/lib/root-cause";
 import {
   createSireSchema,
   addObservationSchema,
   updateObservationSchema,
   addCommentSchema,
+  SIRE_OBSERVATION_CATEGORIES,
 } from "./schema";
+import { parseSireDraftResponse, type ParsedObservationDraft } from "./document-parser";
 
 export type ActionResult = { ok: boolean; error: string | null };
 const OK: ActionResult = { ok: true, error: null };
@@ -224,6 +229,139 @@ export async function deleteObservationAction(formData: FormData): Promise<Actio
     data: { deletedAt: new Date() },
   });
   revalidatePath(`/sire/${obs.inspectionId}`);
+  return OK;
+}
+
+export type ParseDocumentResult = {
+  ok: boolean;
+  error: string | null;
+  drafts: ParsedObservationDraft[];
+};
+
+/**
+ * Reads an uploaded SIRE Draft Response Template (.docx) and returns parsed
+ * draft observations — nothing is saved here. The caller reviews/edits the
+ * drafts client-side and only then calls bulkAddObservationsAction, so a
+ * misread document never silently becomes bad data.
+ */
+export async function parseSireDocumentAction(
+  _prev: ParseDocumentResult,
+  formData: FormData,
+): Promise<ParseDocumentResult> {
+  await requirePermission("sire:update");
+
+  const file = formData.get("file");
+  if (!(file instanceof File) || file.size === 0) {
+    return { ok: false, error: "Choose a file to upload", drafts: [] };
+  }
+  const isDocx =
+    file.name.toLowerCase().endsWith(".docx") ||
+    file.type === "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+  if (!isDocx) {
+    return { ok: false, error: "Only Word (.docx) files are supported", drafts: [] };
+  }
+
+  let text: string;
+  try {
+    const buffer = Buffer.from(await file.arrayBuffer());
+    const result = await mammoth.extractRawText({ buffer });
+    text = result.value;
+  } catch {
+    return { ok: false, error: "Could not read this document — it may be corrupted", drafts: [] };
+  }
+
+  const drafts = parseSireDraftResponse(text);
+  if (drafts.length === 0) {
+    return {
+      ok: false,
+      error: "No observations were recognized — check the document matches the SIRE Draft Response Template format",
+      drafts: [],
+    };
+  }
+  return { ok: true, error: null, drafts };
+}
+
+const bulkDraftSchema = z.object({
+  chapter: z.number().int().min(1).max(12).nullable(),
+  // Required, same as the manual Add Observation form — both feed the SIRE
+  // KPI, so an imported row can't skip them just because the source
+  // document didn't state one; the reviewer must pick a value.
+  category: z.enum(SIRE_OBSERVATION_CATEGORIES, { message: "Category is required" }),
+  viqRef: z.string().trim().max(40).nullable(),
+  question: z.string().trim().max(10000).nullable(),
+  observation: z.string().trim().min(1).max(10000),
+  immediateCause: z.string().trim().max(10000).nullable(),
+  rootCauseCategory: z.enum(ROOT_CAUSE_CATEGORIES, { message: "Root cause category is required" }),
+  rootCauseSubCategory: z.string().trim().max(60).nullable(),
+  rootCause: z.string().trim().max(10000).nullable(),
+  correctiveAction: z.string().trim().max(10000).nullable(),
+  preventiveMeasure: z.string().trim().max(10000).nullable(),
+});
+
+/** Confirmed-by-reviewer drafts only — this is the actual save step. */
+export async function bulkAddObservationsAction(formData: FormData): Promise<ActionResult> {
+  const user = await requirePermission("sire:update");
+  const inspectionId = String(formData.get("inspectionId") ?? "");
+
+  let raw: unknown;
+  try {
+    raw = JSON.parse(String(formData.get("drafts") ?? "[]"));
+  } catch {
+    return fail("Invalid import payload");
+  }
+  const parsed = z.array(bulkDraftSchema).min(1).max(50).safeParse(raw);
+  if (!parsed.success) return fail("Invalid import payload");
+  const drafts = parsed.data;
+
+  const insp = await prisma.sireInspection.findFirst({
+    where: { id: inspectionId, companyId: user.companyId, deletedAt: null },
+  });
+  if (!insp) return fail("Inspection not found");
+  if (insp.status === "CLOSED") return fail("Inspection is closed");
+
+  let seq = await prisma.sireObservation.count({ where: { inspectionId: insp.id } });
+  await prisma.$transaction(
+    drafts.map((d) => {
+      seq += 1;
+      return prisma.sireObservation.create({
+        data: {
+          companyId: user.companyId,
+          inspectionId: insp.id,
+          seq,
+          chapter: d.chapter,
+          category: d.category,
+          viqRef: d.viqRef,
+          question: d.question,
+          observation: d.observation,
+          immediateCause: d.immediateCause,
+          rootCauseCategory: d.rootCauseCategory,
+          rootCauseSubCategory: d.rootCauseSubCategory,
+          rootCause: d.rootCause,
+          correctiveAction: d.correctiveAction,
+          preventiveMeasure: d.preventiveMeasure,
+          status: "OPEN",
+          createdBy: user.id,
+        },
+      });
+    }),
+  );
+
+  if (insp.status === "OPEN") {
+    await prisma.sireInspection.update({
+      where: { id: insp.id },
+      data: { status: "IN_PROGRESS", updatedBy: user.id },
+    });
+  }
+
+  await writeAudit({
+    actor: user,
+    action: "CREATE",
+    entityType: "SireObservation",
+    entityId: insp.id,
+    summary: `Imported ${drafts.length} observation(s) into ${insp.refNo} from an uploaded document`,
+  });
+
+  revalidatePath(`/sire/${insp.id}`);
   return OK;
 }
 
