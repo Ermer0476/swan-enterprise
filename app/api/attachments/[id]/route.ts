@@ -25,7 +25,10 @@ export async function GET(
   return new NextResponse(new Uint8Array(buffer), {
     headers: {
       "Content-Type": attachment.mimeType,
-      "Content-Disposition": `attachment; filename="${encodeURIComponent(attachment.fileName)}"`,
+      // Inline, not attachment — the browser previews PDFs/images/video
+      // directly; types it can't render (Word, Excel, zip) still fall back
+      // to a download on their own, no extra branching needed here.
+      "Content-Disposition": `inline; filename="${encodeURIComponent(attachment.fileName)}"`,
       "Content-Length": String(attachment.sizeBytes),
     },
   });

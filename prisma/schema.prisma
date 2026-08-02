@@ -1417,9 +1417,24 @@ model ControlledDocument {
 
 // ─── Phase 1 module: Circulars ────────────────────────────────────────────────
 
+// Who issued it — a separate facet from `category` (what it's about) below.
+// Flag/Class/Insurance circulars still carry a subject (a Panama circular can
+// still be about Safety), so the two facets are independent, not nested.
+enum CircularSource {
+  FLAG
+  CLASS
+  INSURANCE
+  COMPANY
+}
+
 enum CircularCategory {
   SAFETY
   TECHNICAL
+  NAVIGATIONAL
+  SECURITY
+  ENVIRONMENTAL
+  SAFETY_CAMPAIGN
+  HEALTH_HYGIENE
   OPERATIONAL
   HR
   REGULATORY
@@ -1436,9 +1451,22 @@ model Circular {
   vessel   Vessel? @relation(fields: [vesselId], references: [id])
 
   title     String
-  category  CircularCategory
-  issueDate DateTime
-  body      String
+  source    CircularSource
+  // Free text, not an enum — the set of flag states / class societies a
+  // fleet deals with grows over time (today: Panama, Singapore, Malaysia,
+  // Marshall Islands, Malta for FLAG; NKK, BV for CLASS). Not applicable
+  // when source = COMPANY. features/circulars/schema.ts suggests common
+  // values per source without locking the field to them.
+  issuingBody String?
+  category    CircularCategory
+  issueDate   DateTime // when the source actually issued it
+  // When the company logged/received it — separate from issueDate because
+  // the whole point of this field is catching the "we have no record of
+  // when this actually arrived" gap in the old manual process.
+  dateReceived DateTime?
+  body         String
+
+  acknowledgements CircularAcknowledgement[]
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
@@ -1448,7 +1476,40 @@ model Circular {
   deletedBy String?
 
   @@unique([companyId, refNo])
+  @@index([companyId, source])
   @@index([companyId, category])
+}
+
+/// One row per recipient who must acknowledge a circular — replaces "emailed
+/// it, but nobody reads email" with an in-app pending/acknowledged status per
+/// recipient. Recipients are computed once at creation time (see
+/// createCircularAction): every targeted vessel gets a row (any shipboard
+/// user aboard may acknowledge on its behalf), plus one row per named office
+/// user explicitly selected to be tracked (e.g. the Superintendent).
+///
+/// Same entity-agnostic soft-reference pattern as Attachment/CapaAction
+/// (recipientType + recipientId, no FK) rather than two nullable typed
+/// relations — avoids adding back-relation arrays to Vessel/User for what is
+/// a peripheral tracking table, and keeps this consistent with how the rest
+/// of the app models "attaches to one of several possible parent shapes."
+model CircularAcknowledgement {
+  id         String   @id @default(uuid())
+  companyId  String
+  circularId String
+  circular   Circular @relation(fields: [circularId], references: [id], onDelete: Cascade)
+
+  recipientType  String // "VESSEL" | "USER"
+  recipientId    String
+  recipientLabel String // denormalized snapshot — vessel name or user full name, so the ack list renders with no extra join
+
+  acknowledgedAt     DateTime?
+  acknowledgedById   String?
+  acknowledgedByName String?
+
+  createdAt DateTime @default(now())
+
+  @@unique([circularId, recipientType, recipientId])
+  @@index([companyId, recipientType, recipientId])
 }
 
 // ─── Phase 1 module: Risk Assessments ─────────────────────────────────────────

@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ChevronLeft, Menu, X, Moon, Sun, Search, LogOut, Ship } from "lucide-react";
+import { ChevronLeft, ChevronRight, Menu, X, Moon, Sun, Search, LogOut, Ship } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { NAV } from "./nav";
 import { logoutAction } from "@/app/(auth)/actions";
@@ -35,12 +36,43 @@ export function AppShell({
   const [mobileOpen, setMobileOpen] = useState(false); // touch: drawer open
   const [isDesktop, setIsDesktop] = useState(true); // SSR-safe default
   const [dark, setDark] = useState(false);
+  // Which nav item's flyout submenu is open (by href), Searchgear-CRM-style.
+  // The flyout itself is rendered via a portal to document.body — the
+  // sidebar's <nav> has overflow-y-auto, and per the CSS overflow spec,
+  // setting only one axis forces the other to "auto" too, so anything
+  // absolutely positioned past the nav's right edge gets silently clipped
+  // unless it escapes that scroll container entirely.
+  const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
+  const [submenuPos, setSubmenuPos] = useState<{ top: number; left: number } | null>(null);
+  const navRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     if (localStorage.getItem("swan-sidebar-collapsed") === "1") setCollapsed(true);
     setIsDesktop(!window.matchMedia("(pointer: coarse)").matches);
     setDark(document.documentElement.classList.contains("dark"));
   }, []);
+
+  function closeSubmenu() {
+    setOpenSubmenu(null);
+    setSubmenuPos(null);
+  }
+
+  // Close the flyout on outside click (but not on a click inside the
+  // portaled flyout itself, which lives outside navRef), and on route change.
+  useEffect(() => {
+    if (!openSubmenu) return;
+    function handleClick(e: MouseEvent) {
+      const target = e.target as Element;
+      if (navRef.current?.contains(target) || target.closest("[data-nav-flyout]")) return;
+      closeSubmenu();
+    }
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, [openSubmenu]);
+
+  useEffect(() => {
+    closeSubmenu();
+  }, [pathname]);
 
   function toggleDesktop() {
     setCollapsed((c) => {
@@ -76,7 +108,7 @@ export function AppShell({
   );
 
   const navLinks = (onNavigate?: () => void) => (
-    <nav className="flex-1 overflow-y-auto px-2 py-3">
+    <nav ref={navRef} className="flex-1 overflow-y-auto px-2 py-3">
       {NAV.map((group) => {
         const items = group.items.filter((i) => !i.permission || perms.has(i.permission));
         if (items.length === 0) return null;
@@ -100,6 +132,65 @@ export function AppShell({
                           Soon
                         </span>
                       </span>
+                    </li>
+                  );
+                }
+                if (item.children) {
+                  const submenuOpen = openSubmenu === item.href;
+                  return (
+                    <li key={item.href} className="relative">
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          if (submenuOpen) {
+                            closeSubmenu();
+                            return;
+                          }
+                          const rect = e.currentTarget.closest("li")!.getBoundingClientRect();
+                          setSubmenuPos({ top: rect.top, left: rect.right + 4 });
+                          setOpenSubmenu(item.href);
+                        }}
+                        aria-label={`${submenuOpen ? "Close" : "Open"} ${item.label} submenu`}
+                        aria-expanded={submenuOpen}
+                        className={cn(
+                          base,
+                          "w-full",
+                          active
+                            ? "bg-accent/90 text-accent-foreground"
+                            : "text-sidebar-foreground hover:bg-white/5",
+                        )}
+                      >
+                        <Icon className="h-4 w-4 shrink-0" />
+                        <span className="min-w-0 flex-1 truncate text-left">{item.label}</span>
+                        <ChevronRight className={cn("h-3.5 w-3.5 shrink-0 transition-transform", submenuOpen && "rotate-90")} />
+                      </button>
+                      {submenuOpen && submenuPos && typeof document !== "undefined" && createPortal(
+                        <div
+                          data-nav-flyout
+                          style={{ position: "fixed", top: submenuPos.top, left: submenuPos.left }}
+                          className="z-50 w-56 rounded-md bg-accent p-1.5 shadow-xl"
+                        >
+                          {item.children.map((child) => {
+                            const ChildIcon = child.icon;
+                            return (
+                              <Link
+                                key={child.href}
+                                href={child.href}
+                                prefetch={false}
+                                onClick={() => {
+                                  closeSubmenu();
+                                  onNavigate?.();
+                                }}
+                                className="flex items-center gap-2.5 rounded-md px-2.5 py-2 text-sm text-accent-foreground hover:bg-white/10"
+                              >
+                                <ChildIcon className="h-4 w-4 shrink-0" />
+                                <span className="truncate">{child.label}</span>
+                              </Link>
+                            );
+                          })}
+                        </div>,
+                        document.body,
+                      )}
                     </li>
                   );
                 }

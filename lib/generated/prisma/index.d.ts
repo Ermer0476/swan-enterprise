@@ -212,6 +212,22 @@ export type ControlledDocument = $Result.DefaultSelection<Prisma.$ControlledDocu
  */
 export type Circular = $Result.DefaultSelection<Prisma.$CircularPayload>
 /**
+ * Model CircularAcknowledgement
+ * One row per recipient who must acknowledge a circular — replaces "emailed
+ * it, but nobody reads email" with an in-app pending/acknowledged status per
+ * recipient. Recipients are computed once at creation time (see
+ * createCircularAction): every targeted vessel gets a row (any shipboard
+ * user aboard may acknowledge on its behalf), plus one row per named office
+ * user explicitly selected to be tracked (e.g. the Superintendent).
+ * 
+ * Same entity-agnostic soft-reference pattern as Attachment/CapaAction
+ * (recipientType + recipientId, no FK) rather than two nullable typed
+ * relations — avoids adding back-relation arrays to Vessel/User for what is
+ * a peripheral tracking table, and keeps this consistent with how the rest
+ * of the app models "attaches to one of several possible parent shapes."
+ */
+export type CircularAcknowledgement = $Result.DefaultSelection<Prisma.$CircularAcknowledgementPayload>
+/**
  * Model RiskAssessment
  * 
  */
@@ -577,9 +593,24 @@ export const ControlledDocStatus: {
 export type ControlledDocStatus = (typeof ControlledDocStatus)[keyof typeof ControlledDocStatus]
 
 
+export const CircularSource: {
+  FLAG: 'FLAG',
+  CLASS: 'CLASS',
+  INSURANCE: 'INSURANCE',
+  COMPANY: 'COMPANY'
+};
+
+export type CircularSource = (typeof CircularSource)[keyof typeof CircularSource]
+
+
 export const CircularCategory: {
   SAFETY: 'SAFETY',
   TECHNICAL: 'TECHNICAL',
+  NAVIGATIONAL: 'NAVIGATIONAL',
+  SECURITY: 'SECURITY',
+  ENVIRONMENTAL: 'ENVIRONMENTAL',
+  SAFETY_CAMPAIGN: 'SAFETY_CAMPAIGN',
+  HEALTH_HYGIENE: 'HEALTH_HYGIENE',
   OPERATIONAL: 'OPERATIONAL',
   HR: 'HR',
   REGULATORY: 'REGULATORY',
@@ -754,6 +785,10 @@ export const DocumentCategory: typeof $Enums.DocumentCategory
 export type ControlledDocStatus = $Enums.ControlledDocStatus
 
 export const ControlledDocStatus: typeof $Enums.ControlledDocStatus
+
+export type CircularSource = $Enums.CircularSource
+
+export const CircularSource: typeof $Enums.CircularSource
 
 export type CircularCategory = $Enums.CircularCategory
 
@@ -1284,6 +1319,16 @@ export class PrismaClient<
   get circular(): Prisma.CircularDelegate<ExtArgs, ClientOptions>;
 
   /**
+   * `prisma.circularAcknowledgement`: Exposes CRUD operations for the **CircularAcknowledgement** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more CircularAcknowledgements
+    * const circularAcknowledgements = await prisma.circularAcknowledgement.findMany()
+    * ```
+    */
+  get circularAcknowledgement(): Prisma.CircularAcknowledgementDelegate<ExtArgs, ClientOptions>;
+
+  /**
    * `prisma.riskAssessment`: Exposes CRUD operations for the **RiskAssessment** model.
     * Example usage:
     * ```ts
@@ -1782,6 +1827,7 @@ export namespace Prisma {
     EmergencyDrill: 'EmergencyDrill',
     ControlledDocument: 'ControlledDocument',
     Circular: 'Circular',
+    CircularAcknowledgement: 'CircularAcknowledgement',
     RiskAssessment: 'RiskAssessment',
     Defect: 'Defect'
   };
@@ -1802,7 +1848,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "company" | "user" | "role" | "permission" | "rolePermission" | "userRole" | "vessel" | "auditLog" | "attachment" | "comment" | "capaAction" | "notification" | "workflowDefinition" | "workflowStep" | "workflowInstance" | "workflowAction" | "smsDocument" | "smsRevision" | "incident" | "incidentSofEntry" | "incidentTypeEntry" | "nearMiss" | "nonConformity" | "sireInspection" | "sireObservation" | "sireObservationComment" | "pscInspection" | "pscDeficiency" | "cdiInspection" | "cdiObservation" | "internalAudit" | "internalAuditFinding" | "externalAudit" | "externalAuditFinding" | "committeeMeeting" | "committeeMeetingAgenda" | "emergencyDrill" | "controlledDocument" | "circular" | "riskAssessment" | "defect"
+      modelProps: "company" | "user" | "role" | "permission" | "rolePermission" | "userRole" | "vessel" | "auditLog" | "attachment" | "comment" | "capaAction" | "notification" | "workflowDefinition" | "workflowStep" | "workflowInstance" | "workflowAction" | "smsDocument" | "smsRevision" | "incident" | "incidentSofEntry" | "incidentTypeEntry" | "nearMiss" | "nonConformity" | "sireInspection" | "sireObservation" | "sireObservationComment" | "pscInspection" | "pscDeficiency" | "cdiInspection" | "cdiObservation" | "internalAudit" | "internalAuditFinding" | "externalAudit" | "externalAuditFinding" | "committeeMeeting" | "committeeMeetingAgenda" | "emergencyDrill" | "controlledDocument" | "circular" | "circularAcknowledgement" | "riskAssessment" | "defect"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -4692,6 +4738,80 @@ export namespace Prisma {
           }
         }
       }
+      CircularAcknowledgement: {
+        payload: Prisma.$CircularAcknowledgementPayload<ExtArgs>
+        fields: Prisma.CircularAcknowledgementFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.CircularAcknowledgementFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CircularAcknowledgementPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.CircularAcknowledgementFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CircularAcknowledgementPayload>
+          }
+          findFirst: {
+            args: Prisma.CircularAcknowledgementFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CircularAcknowledgementPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.CircularAcknowledgementFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CircularAcknowledgementPayload>
+          }
+          findMany: {
+            args: Prisma.CircularAcknowledgementFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CircularAcknowledgementPayload>[]
+          }
+          create: {
+            args: Prisma.CircularAcknowledgementCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CircularAcknowledgementPayload>
+          }
+          createMany: {
+            args: Prisma.CircularAcknowledgementCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.CircularAcknowledgementCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CircularAcknowledgementPayload>[]
+          }
+          delete: {
+            args: Prisma.CircularAcknowledgementDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CircularAcknowledgementPayload>
+          }
+          update: {
+            args: Prisma.CircularAcknowledgementUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CircularAcknowledgementPayload>
+          }
+          deleteMany: {
+            args: Prisma.CircularAcknowledgementDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.CircularAcknowledgementUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.CircularAcknowledgementUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CircularAcknowledgementPayload>[]
+          }
+          upsert: {
+            args: Prisma.CircularAcknowledgementUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CircularAcknowledgementPayload>
+          }
+          aggregate: {
+            args: Prisma.CircularAcknowledgementAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateCircularAcknowledgement>
+          }
+          groupBy: {
+            args: Prisma.CircularAcknowledgementGroupByArgs<ExtArgs>
+            result: $Utils.Optional<CircularAcknowledgementGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.CircularAcknowledgementCountArgs<ExtArgs>
+            result: $Utils.Optional<CircularAcknowledgementCountAggregateOutputType> | number
+          }
+        }
+      }
       RiskAssessment: {
         payload: Prisma.$RiskAssessmentPayload<ExtArgs>
         fields: Prisma.RiskAssessmentFieldRefs
@@ -4975,6 +5095,7 @@ export namespace Prisma {
     emergencyDrill?: EmergencyDrillOmit
     controlledDocument?: ControlledDocumentOmit
     circular?: CircularOmit
+    circularAcknowledgement?: CircularAcknowledgementOmit
     riskAssessment?: RiskAssessmentOmit
     defect?: DefectOmit
   }
@@ -5972,6 +6093,37 @@ export namespace Prisma {
    */
   export type CommitteeMeetingCountOutputTypeCountAgendaItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: CommitteeMeetingAgendaWhereInput
+  }
+
+
+  /**
+   * Count Type CircularCountOutputType
+   */
+
+  export type CircularCountOutputType = {
+    acknowledgements: number
+  }
+
+  export type CircularCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    acknowledgements?: boolean | CircularCountOutputTypeCountAcknowledgementsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * CircularCountOutputType without action
+   */
+  export type CircularCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CircularCountOutputType
+     */
+    select?: CircularCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * CircularCountOutputType without action
+   */
+  export type CircularCountOutputTypeCountAcknowledgementsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CircularAcknowledgementWhereInput
   }
 
 
@@ -52736,8 +52888,11 @@ export namespace Prisma {
     refNo: string | null
     vesselId: string | null
     title: string | null
+    source: $Enums.CircularSource | null
+    issuingBody: string | null
     category: $Enums.CircularCategory | null
     issueDate: Date | null
+    dateReceived: Date | null
     body: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -52753,8 +52908,11 @@ export namespace Prisma {
     refNo: string | null
     vesselId: string | null
     title: string | null
+    source: $Enums.CircularSource | null
+    issuingBody: string | null
     category: $Enums.CircularCategory | null
     issueDate: Date | null
+    dateReceived: Date | null
     body: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -52770,8 +52928,11 @@ export namespace Prisma {
     refNo: number
     vesselId: number
     title: number
+    source: number
+    issuingBody: number
     category: number
     issueDate: number
+    dateReceived: number
     body: number
     createdAt: number
     updatedAt: number
@@ -52789,8 +52950,11 @@ export namespace Prisma {
     refNo?: true
     vesselId?: true
     title?: true
+    source?: true
+    issuingBody?: true
     category?: true
     issueDate?: true
+    dateReceived?: true
     body?: true
     createdAt?: true
     updatedAt?: true
@@ -52806,8 +52970,11 @@ export namespace Prisma {
     refNo?: true
     vesselId?: true
     title?: true
+    source?: true
+    issuingBody?: true
     category?: true
     issueDate?: true
+    dateReceived?: true
     body?: true
     createdAt?: true
     updatedAt?: true
@@ -52823,8 +52990,11 @@ export namespace Prisma {
     refNo?: true
     vesselId?: true
     title?: true
+    source?: true
+    issuingBody?: true
     category?: true
     issueDate?: true
+    dateReceived?: true
     body?: true
     createdAt?: true
     updatedAt?: true
@@ -52913,8 +53083,11 @@ export namespace Prisma {
     refNo: string
     vesselId: string | null
     title: string
+    source: $Enums.CircularSource
+    issuingBody: string | null
     category: $Enums.CircularCategory
     issueDate: Date
+    dateReceived: Date | null
     body: string
     createdAt: Date
     updatedAt: Date
@@ -52947,8 +53120,11 @@ export namespace Prisma {
     refNo?: boolean
     vesselId?: boolean
     title?: boolean
+    source?: boolean
+    issuingBody?: boolean
     category?: boolean
     issueDate?: boolean
+    dateReceived?: boolean
     body?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -52958,6 +53134,8 @@ export namespace Prisma {
     deletedBy?: boolean
     company?: boolean | CompanyDefaultArgs<ExtArgs>
     vessel?: boolean | Circular$vesselArgs<ExtArgs>
+    acknowledgements?: boolean | Circular$acknowledgementsArgs<ExtArgs>
+    _count?: boolean | CircularCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["circular"]>
 
   export type CircularSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -52966,8 +53144,11 @@ export namespace Prisma {
     refNo?: boolean
     vesselId?: boolean
     title?: boolean
+    source?: boolean
+    issuingBody?: boolean
     category?: boolean
     issueDate?: boolean
+    dateReceived?: boolean
     body?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -52985,8 +53166,11 @@ export namespace Prisma {
     refNo?: boolean
     vesselId?: boolean
     title?: boolean
+    source?: boolean
+    issuingBody?: boolean
     category?: boolean
     issueDate?: boolean
+    dateReceived?: boolean
     body?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -53004,8 +53188,11 @@ export namespace Prisma {
     refNo?: boolean
     vesselId?: boolean
     title?: boolean
+    source?: boolean
+    issuingBody?: boolean
     category?: boolean
     issueDate?: boolean
+    dateReceived?: boolean
     body?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -53015,10 +53202,12 @@ export namespace Prisma {
     deletedBy?: boolean
   }
 
-  export type CircularOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "companyId" | "refNo" | "vesselId" | "title" | "category" | "issueDate" | "body" | "createdAt" | "updatedAt" | "createdBy" | "updatedBy" | "deletedAt" | "deletedBy", ExtArgs["result"]["circular"]>
+  export type CircularOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "companyId" | "refNo" | "vesselId" | "title" | "source" | "issuingBody" | "category" | "issueDate" | "dateReceived" | "body" | "createdAt" | "updatedAt" | "createdBy" | "updatedBy" | "deletedAt" | "deletedBy", ExtArgs["result"]["circular"]>
   export type CircularInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     company?: boolean | CompanyDefaultArgs<ExtArgs>
     vessel?: boolean | Circular$vesselArgs<ExtArgs>
+    acknowledgements?: boolean | Circular$acknowledgementsArgs<ExtArgs>
+    _count?: boolean | CircularCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type CircularIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     company?: boolean | CompanyDefaultArgs<ExtArgs>
@@ -53034,6 +53223,7 @@ export namespace Prisma {
     objects: {
       company: Prisma.$CompanyPayload<ExtArgs>
       vessel: Prisma.$VesselPayload<ExtArgs> | null
+      acknowledgements: Prisma.$CircularAcknowledgementPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -53041,8 +53231,11 @@ export namespace Prisma {
       refNo: string
       vesselId: string | null
       title: string
+      source: $Enums.CircularSource
+      issuingBody: string | null
       category: $Enums.CircularCategory
       issueDate: Date
+      dateReceived: Date | null
       body: string
       createdAt: Date
       updatedAt: Date
@@ -53446,6 +53639,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     company<T extends CompanyDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CompanyDefaultArgs<ExtArgs>>): Prisma__CompanyClient<$Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     vessel<T extends Circular$vesselArgs<ExtArgs> = {}>(args?: Subset<T, Circular$vesselArgs<ExtArgs>>): Prisma__VesselClient<$Result.GetResult<Prisma.$VesselPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    acknowledgements<T extends Circular$acknowledgementsArgs<ExtArgs> = {}>(args?: Subset<T, Circular$acknowledgementsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CircularAcknowledgementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -53480,8 +53674,11 @@ export namespace Prisma {
     readonly refNo: FieldRef<"Circular", 'String'>
     readonly vesselId: FieldRef<"Circular", 'String'>
     readonly title: FieldRef<"Circular", 'String'>
+    readonly source: FieldRef<"Circular", 'CircularSource'>
+    readonly issuingBody: FieldRef<"Circular", 'String'>
     readonly category: FieldRef<"Circular", 'CircularCategory'>
     readonly issueDate: FieldRef<"Circular", 'DateTime'>
+    readonly dateReceived: FieldRef<"Circular", 'DateTime'>
     readonly body: FieldRef<"Circular", 'String'>
     readonly createdAt: FieldRef<"Circular", 'DateTime'>
     readonly updatedAt: FieldRef<"Circular", 'DateTime'>
@@ -53902,6 +54099,30 @@ export namespace Prisma {
   }
 
   /**
+   * Circular.acknowledgements
+   */
+  export type Circular$acknowledgementsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CircularAcknowledgement
+     */
+    select?: CircularAcknowledgementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CircularAcknowledgement
+     */
+    omit?: CircularAcknowledgementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CircularAcknowledgementInclude<ExtArgs> | null
+    where?: CircularAcknowledgementWhereInput
+    orderBy?: CircularAcknowledgementOrderByWithRelationInput | CircularAcknowledgementOrderByWithRelationInput[]
+    cursor?: CircularAcknowledgementWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: CircularAcknowledgementScalarFieldEnum | CircularAcknowledgementScalarFieldEnum[]
+  }
+
+  /**
    * Circular without action
    */
   export type CircularDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -53917,6 +54138,1127 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: CircularInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model CircularAcknowledgement
+   */
+
+  export type AggregateCircularAcknowledgement = {
+    _count: CircularAcknowledgementCountAggregateOutputType | null
+    _min: CircularAcknowledgementMinAggregateOutputType | null
+    _max: CircularAcknowledgementMaxAggregateOutputType | null
+  }
+
+  export type CircularAcknowledgementMinAggregateOutputType = {
+    id: string | null
+    companyId: string | null
+    circularId: string | null
+    recipientType: string | null
+    recipientId: string | null
+    recipientLabel: string | null
+    acknowledgedAt: Date | null
+    acknowledgedById: string | null
+    acknowledgedByName: string | null
+    createdAt: Date | null
+  }
+
+  export type CircularAcknowledgementMaxAggregateOutputType = {
+    id: string | null
+    companyId: string | null
+    circularId: string | null
+    recipientType: string | null
+    recipientId: string | null
+    recipientLabel: string | null
+    acknowledgedAt: Date | null
+    acknowledgedById: string | null
+    acknowledgedByName: string | null
+    createdAt: Date | null
+  }
+
+  export type CircularAcknowledgementCountAggregateOutputType = {
+    id: number
+    companyId: number
+    circularId: number
+    recipientType: number
+    recipientId: number
+    recipientLabel: number
+    acknowledgedAt: number
+    acknowledgedById: number
+    acknowledgedByName: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type CircularAcknowledgementMinAggregateInputType = {
+    id?: true
+    companyId?: true
+    circularId?: true
+    recipientType?: true
+    recipientId?: true
+    recipientLabel?: true
+    acknowledgedAt?: true
+    acknowledgedById?: true
+    acknowledgedByName?: true
+    createdAt?: true
+  }
+
+  export type CircularAcknowledgementMaxAggregateInputType = {
+    id?: true
+    companyId?: true
+    circularId?: true
+    recipientType?: true
+    recipientId?: true
+    recipientLabel?: true
+    acknowledgedAt?: true
+    acknowledgedById?: true
+    acknowledgedByName?: true
+    createdAt?: true
+  }
+
+  export type CircularAcknowledgementCountAggregateInputType = {
+    id?: true
+    companyId?: true
+    circularId?: true
+    recipientType?: true
+    recipientId?: true
+    recipientLabel?: true
+    acknowledgedAt?: true
+    acknowledgedById?: true
+    acknowledgedByName?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type CircularAcknowledgementAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which CircularAcknowledgement to aggregate.
+     */
+    where?: CircularAcknowledgementWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CircularAcknowledgements to fetch.
+     */
+    orderBy?: CircularAcknowledgementOrderByWithRelationInput | CircularAcknowledgementOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: CircularAcknowledgementWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CircularAcknowledgements from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CircularAcknowledgements.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned CircularAcknowledgements
+    **/
+    _count?: true | CircularAcknowledgementCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: CircularAcknowledgementMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: CircularAcknowledgementMaxAggregateInputType
+  }
+
+  export type GetCircularAcknowledgementAggregateType<T extends CircularAcknowledgementAggregateArgs> = {
+        [P in keyof T & keyof AggregateCircularAcknowledgement]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateCircularAcknowledgement[P]>
+      : GetScalarType<T[P], AggregateCircularAcknowledgement[P]>
+  }
+
+
+
+
+  export type CircularAcknowledgementGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CircularAcknowledgementWhereInput
+    orderBy?: CircularAcknowledgementOrderByWithAggregationInput | CircularAcknowledgementOrderByWithAggregationInput[]
+    by: CircularAcknowledgementScalarFieldEnum[] | CircularAcknowledgementScalarFieldEnum
+    having?: CircularAcknowledgementScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: CircularAcknowledgementCountAggregateInputType | true
+    _min?: CircularAcknowledgementMinAggregateInputType
+    _max?: CircularAcknowledgementMaxAggregateInputType
+  }
+
+  export type CircularAcknowledgementGroupByOutputType = {
+    id: string
+    companyId: string
+    circularId: string
+    recipientType: string
+    recipientId: string
+    recipientLabel: string
+    acknowledgedAt: Date | null
+    acknowledgedById: string | null
+    acknowledgedByName: string | null
+    createdAt: Date
+    _count: CircularAcknowledgementCountAggregateOutputType | null
+    _min: CircularAcknowledgementMinAggregateOutputType | null
+    _max: CircularAcknowledgementMaxAggregateOutputType | null
+  }
+
+  type GetCircularAcknowledgementGroupByPayload<T extends CircularAcknowledgementGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<CircularAcknowledgementGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof CircularAcknowledgementGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], CircularAcknowledgementGroupByOutputType[P]>
+            : GetScalarType<T[P], CircularAcknowledgementGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type CircularAcknowledgementSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    companyId?: boolean
+    circularId?: boolean
+    recipientType?: boolean
+    recipientId?: boolean
+    recipientLabel?: boolean
+    acknowledgedAt?: boolean
+    acknowledgedById?: boolean
+    acknowledgedByName?: boolean
+    createdAt?: boolean
+    circular?: boolean | CircularDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["circularAcknowledgement"]>
+
+  export type CircularAcknowledgementSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    companyId?: boolean
+    circularId?: boolean
+    recipientType?: boolean
+    recipientId?: boolean
+    recipientLabel?: boolean
+    acknowledgedAt?: boolean
+    acknowledgedById?: boolean
+    acknowledgedByName?: boolean
+    createdAt?: boolean
+    circular?: boolean | CircularDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["circularAcknowledgement"]>
+
+  export type CircularAcknowledgementSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    companyId?: boolean
+    circularId?: boolean
+    recipientType?: boolean
+    recipientId?: boolean
+    recipientLabel?: boolean
+    acknowledgedAt?: boolean
+    acknowledgedById?: boolean
+    acknowledgedByName?: boolean
+    createdAt?: boolean
+    circular?: boolean | CircularDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["circularAcknowledgement"]>
+
+  export type CircularAcknowledgementSelectScalar = {
+    id?: boolean
+    companyId?: boolean
+    circularId?: boolean
+    recipientType?: boolean
+    recipientId?: boolean
+    recipientLabel?: boolean
+    acknowledgedAt?: boolean
+    acknowledgedById?: boolean
+    acknowledgedByName?: boolean
+    createdAt?: boolean
+  }
+
+  export type CircularAcknowledgementOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "companyId" | "circularId" | "recipientType" | "recipientId" | "recipientLabel" | "acknowledgedAt" | "acknowledgedById" | "acknowledgedByName" | "createdAt", ExtArgs["result"]["circularAcknowledgement"]>
+  export type CircularAcknowledgementInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    circular?: boolean | CircularDefaultArgs<ExtArgs>
+  }
+  export type CircularAcknowledgementIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    circular?: boolean | CircularDefaultArgs<ExtArgs>
+  }
+  export type CircularAcknowledgementIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    circular?: boolean | CircularDefaultArgs<ExtArgs>
+  }
+
+  export type $CircularAcknowledgementPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "CircularAcknowledgement"
+    objects: {
+      circular: Prisma.$CircularPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      companyId: string
+      circularId: string
+      recipientType: string
+      recipientId: string
+      recipientLabel: string
+      acknowledgedAt: Date | null
+      acknowledgedById: string | null
+      acknowledgedByName: string | null
+      createdAt: Date
+    }, ExtArgs["result"]["circularAcknowledgement"]>
+    composites: {}
+  }
+
+  type CircularAcknowledgementGetPayload<S extends boolean | null | undefined | CircularAcknowledgementDefaultArgs> = $Result.GetResult<Prisma.$CircularAcknowledgementPayload, S>
+
+  type CircularAcknowledgementCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<CircularAcknowledgementFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: CircularAcknowledgementCountAggregateInputType | true
+    }
+
+  export interface CircularAcknowledgementDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['CircularAcknowledgement'], meta: { name: 'CircularAcknowledgement' } }
+    /**
+     * Find zero or one CircularAcknowledgement that matches the filter.
+     * @param {CircularAcknowledgementFindUniqueArgs} args - Arguments to find a CircularAcknowledgement
+     * @example
+     * // Get one CircularAcknowledgement
+     * const circularAcknowledgement = await prisma.circularAcknowledgement.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends CircularAcknowledgementFindUniqueArgs>(args: SelectSubset<T, CircularAcknowledgementFindUniqueArgs<ExtArgs>>): Prisma__CircularAcknowledgementClient<$Result.GetResult<Prisma.$CircularAcknowledgementPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one CircularAcknowledgement that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {CircularAcknowledgementFindUniqueOrThrowArgs} args - Arguments to find a CircularAcknowledgement
+     * @example
+     * // Get one CircularAcknowledgement
+     * const circularAcknowledgement = await prisma.circularAcknowledgement.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends CircularAcknowledgementFindUniqueOrThrowArgs>(args: SelectSubset<T, CircularAcknowledgementFindUniqueOrThrowArgs<ExtArgs>>): Prisma__CircularAcknowledgementClient<$Result.GetResult<Prisma.$CircularAcknowledgementPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first CircularAcknowledgement that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CircularAcknowledgementFindFirstArgs} args - Arguments to find a CircularAcknowledgement
+     * @example
+     * // Get one CircularAcknowledgement
+     * const circularAcknowledgement = await prisma.circularAcknowledgement.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends CircularAcknowledgementFindFirstArgs>(args?: SelectSubset<T, CircularAcknowledgementFindFirstArgs<ExtArgs>>): Prisma__CircularAcknowledgementClient<$Result.GetResult<Prisma.$CircularAcknowledgementPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first CircularAcknowledgement that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CircularAcknowledgementFindFirstOrThrowArgs} args - Arguments to find a CircularAcknowledgement
+     * @example
+     * // Get one CircularAcknowledgement
+     * const circularAcknowledgement = await prisma.circularAcknowledgement.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends CircularAcknowledgementFindFirstOrThrowArgs>(args?: SelectSubset<T, CircularAcknowledgementFindFirstOrThrowArgs<ExtArgs>>): Prisma__CircularAcknowledgementClient<$Result.GetResult<Prisma.$CircularAcknowledgementPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more CircularAcknowledgements that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CircularAcknowledgementFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all CircularAcknowledgements
+     * const circularAcknowledgements = await prisma.circularAcknowledgement.findMany()
+     * 
+     * // Get first 10 CircularAcknowledgements
+     * const circularAcknowledgements = await prisma.circularAcknowledgement.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const circularAcknowledgementWithIdOnly = await prisma.circularAcknowledgement.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends CircularAcknowledgementFindManyArgs>(args?: SelectSubset<T, CircularAcknowledgementFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CircularAcknowledgementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a CircularAcknowledgement.
+     * @param {CircularAcknowledgementCreateArgs} args - Arguments to create a CircularAcknowledgement.
+     * @example
+     * // Create one CircularAcknowledgement
+     * const CircularAcknowledgement = await prisma.circularAcknowledgement.create({
+     *   data: {
+     *     // ... data to create a CircularAcknowledgement
+     *   }
+     * })
+     * 
+     */
+    create<T extends CircularAcknowledgementCreateArgs>(args: SelectSubset<T, CircularAcknowledgementCreateArgs<ExtArgs>>): Prisma__CircularAcknowledgementClient<$Result.GetResult<Prisma.$CircularAcknowledgementPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many CircularAcknowledgements.
+     * @param {CircularAcknowledgementCreateManyArgs} args - Arguments to create many CircularAcknowledgements.
+     * @example
+     * // Create many CircularAcknowledgements
+     * const circularAcknowledgement = await prisma.circularAcknowledgement.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends CircularAcknowledgementCreateManyArgs>(args?: SelectSubset<T, CircularAcknowledgementCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many CircularAcknowledgements and returns the data saved in the database.
+     * @param {CircularAcknowledgementCreateManyAndReturnArgs} args - Arguments to create many CircularAcknowledgements.
+     * @example
+     * // Create many CircularAcknowledgements
+     * const circularAcknowledgement = await prisma.circularAcknowledgement.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many CircularAcknowledgements and only return the `id`
+     * const circularAcknowledgementWithIdOnly = await prisma.circularAcknowledgement.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends CircularAcknowledgementCreateManyAndReturnArgs>(args?: SelectSubset<T, CircularAcknowledgementCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CircularAcknowledgementPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a CircularAcknowledgement.
+     * @param {CircularAcknowledgementDeleteArgs} args - Arguments to delete one CircularAcknowledgement.
+     * @example
+     * // Delete one CircularAcknowledgement
+     * const CircularAcknowledgement = await prisma.circularAcknowledgement.delete({
+     *   where: {
+     *     // ... filter to delete one CircularAcknowledgement
+     *   }
+     * })
+     * 
+     */
+    delete<T extends CircularAcknowledgementDeleteArgs>(args: SelectSubset<T, CircularAcknowledgementDeleteArgs<ExtArgs>>): Prisma__CircularAcknowledgementClient<$Result.GetResult<Prisma.$CircularAcknowledgementPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one CircularAcknowledgement.
+     * @param {CircularAcknowledgementUpdateArgs} args - Arguments to update one CircularAcknowledgement.
+     * @example
+     * // Update one CircularAcknowledgement
+     * const circularAcknowledgement = await prisma.circularAcknowledgement.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends CircularAcknowledgementUpdateArgs>(args: SelectSubset<T, CircularAcknowledgementUpdateArgs<ExtArgs>>): Prisma__CircularAcknowledgementClient<$Result.GetResult<Prisma.$CircularAcknowledgementPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more CircularAcknowledgements.
+     * @param {CircularAcknowledgementDeleteManyArgs} args - Arguments to filter CircularAcknowledgements to delete.
+     * @example
+     * // Delete a few CircularAcknowledgements
+     * const { count } = await prisma.circularAcknowledgement.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends CircularAcknowledgementDeleteManyArgs>(args?: SelectSubset<T, CircularAcknowledgementDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more CircularAcknowledgements.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CircularAcknowledgementUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many CircularAcknowledgements
+     * const circularAcknowledgement = await prisma.circularAcknowledgement.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends CircularAcknowledgementUpdateManyArgs>(args: SelectSubset<T, CircularAcknowledgementUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more CircularAcknowledgements and returns the data updated in the database.
+     * @param {CircularAcknowledgementUpdateManyAndReturnArgs} args - Arguments to update many CircularAcknowledgements.
+     * @example
+     * // Update many CircularAcknowledgements
+     * const circularAcknowledgement = await prisma.circularAcknowledgement.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more CircularAcknowledgements and only return the `id`
+     * const circularAcknowledgementWithIdOnly = await prisma.circularAcknowledgement.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends CircularAcknowledgementUpdateManyAndReturnArgs>(args: SelectSubset<T, CircularAcknowledgementUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CircularAcknowledgementPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one CircularAcknowledgement.
+     * @param {CircularAcknowledgementUpsertArgs} args - Arguments to update or create a CircularAcknowledgement.
+     * @example
+     * // Update or create a CircularAcknowledgement
+     * const circularAcknowledgement = await prisma.circularAcknowledgement.upsert({
+     *   create: {
+     *     // ... data to create a CircularAcknowledgement
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the CircularAcknowledgement we want to update
+     *   }
+     * })
+     */
+    upsert<T extends CircularAcknowledgementUpsertArgs>(args: SelectSubset<T, CircularAcknowledgementUpsertArgs<ExtArgs>>): Prisma__CircularAcknowledgementClient<$Result.GetResult<Prisma.$CircularAcknowledgementPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of CircularAcknowledgements.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CircularAcknowledgementCountArgs} args - Arguments to filter CircularAcknowledgements to count.
+     * @example
+     * // Count the number of CircularAcknowledgements
+     * const count = await prisma.circularAcknowledgement.count({
+     *   where: {
+     *     // ... the filter for the CircularAcknowledgements we want to count
+     *   }
+     * })
+    **/
+    count<T extends CircularAcknowledgementCountArgs>(
+      args?: Subset<T, CircularAcknowledgementCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], CircularAcknowledgementCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a CircularAcknowledgement.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CircularAcknowledgementAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends CircularAcknowledgementAggregateArgs>(args: Subset<T, CircularAcknowledgementAggregateArgs>): Prisma.PrismaPromise<GetCircularAcknowledgementAggregateType<T>>
+
+    /**
+     * Group by CircularAcknowledgement.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CircularAcknowledgementGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends CircularAcknowledgementGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: CircularAcknowledgementGroupByArgs['orderBy'] }
+        : { orderBy?: CircularAcknowledgementGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, CircularAcknowledgementGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCircularAcknowledgementGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the CircularAcknowledgement model
+   */
+  readonly fields: CircularAcknowledgementFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for CircularAcknowledgement.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__CircularAcknowledgementClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    circular<T extends CircularDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CircularDefaultArgs<ExtArgs>>): Prisma__CircularClient<$Result.GetResult<Prisma.$CircularPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the CircularAcknowledgement model
+   */
+  interface CircularAcknowledgementFieldRefs {
+    readonly id: FieldRef<"CircularAcknowledgement", 'String'>
+    readonly companyId: FieldRef<"CircularAcknowledgement", 'String'>
+    readonly circularId: FieldRef<"CircularAcknowledgement", 'String'>
+    readonly recipientType: FieldRef<"CircularAcknowledgement", 'String'>
+    readonly recipientId: FieldRef<"CircularAcknowledgement", 'String'>
+    readonly recipientLabel: FieldRef<"CircularAcknowledgement", 'String'>
+    readonly acknowledgedAt: FieldRef<"CircularAcknowledgement", 'DateTime'>
+    readonly acknowledgedById: FieldRef<"CircularAcknowledgement", 'String'>
+    readonly acknowledgedByName: FieldRef<"CircularAcknowledgement", 'String'>
+    readonly createdAt: FieldRef<"CircularAcknowledgement", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * CircularAcknowledgement findUnique
+   */
+  export type CircularAcknowledgementFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CircularAcknowledgement
+     */
+    select?: CircularAcknowledgementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CircularAcknowledgement
+     */
+    omit?: CircularAcknowledgementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CircularAcknowledgementInclude<ExtArgs> | null
+    /**
+     * Filter, which CircularAcknowledgement to fetch.
+     */
+    where: CircularAcknowledgementWhereUniqueInput
+  }
+
+  /**
+   * CircularAcknowledgement findUniqueOrThrow
+   */
+  export type CircularAcknowledgementFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CircularAcknowledgement
+     */
+    select?: CircularAcknowledgementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CircularAcknowledgement
+     */
+    omit?: CircularAcknowledgementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CircularAcknowledgementInclude<ExtArgs> | null
+    /**
+     * Filter, which CircularAcknowledgement to fetch.
+     */
+    where: CircularAcknowledgementWhereUniqueInput
+  }
+
+  /**
+   * CircularAcknowledgement findFirst
+   */
+  export type CircularAcknowledgementFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CircularAcknowledgement
+     */
+    select?: CircularAcknowledgementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CircularAcknowledgement
+     */
+    omit?: CircularAcknowledgementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CircularAcknowledgementInclude<ExtArgs> | null
+    /**
+     * Filter, which CircularAcknowledgement to fetch.
+     */
+    where?: CircularAcknowledgementWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CircularAcknowledgements to fetch.
+     */
+    orderBy?: CircularAcknowledgementOrderByWithRelationInput | CircularAcknowledgementOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CircularAcknowledgements.
+     */
+    cursor?: CircularAcknowledgementWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CircularAcknowledgements from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CircularAcknowledgements.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CircularAcknowledgements.
+     */
+    distinct?: CircularAcknowledgementScalarFieldEnum | CircularAcknowledgementScalarFieldEnum[]
+  }
+
+  /**
+   * CircularAcknowledgement findFirstOrThrow
+   */
+  export type CircularAcknowledgementFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CircularAcknowledgement
+     */
+    select?: CircularAcknowledgementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CircularAcknowledgement
+     */
+    omit?: CircularAcknowledgementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CircularAcknowledgementInclude<ExtArgs> | null
+    /**
+     * Filter, which CircularAcknowledgement to fetch.
+     */
+    where?: CircularAcknowledgementWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CircularAcknowledgements to fetch.
+     */
+    orderBy?: CircularAcknowledgementOrderByWithRelationInput | CircularAcknowledgementOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CircularAcknowledgements.
+     */
+    cursor?: CircularAcknowledgementWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CircularAcknowledgements from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CircularAcknowledgements.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CircularAcknowledgements.
+     */
+    distinct?: CircularAcknowledgementScalarFieldEnum | CircularAcknowledgementScalarFieldEnum[]
+  }
+
+  /**
+   * CircularAcknowledgement findMany
+   */
+  export type CircularAcknowledgementFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CircularAcknowledgement
+     */
+    select?: CircularAcknowledgementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CircularAcknowledgement
+     */
+    omit?: CircularAcknowledgementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CircularAcknowledgementInclude<ExtArgs> | null
+    /**
+     * Filter, which CircularAcknowledgements to fetch.
+     */
+    where?: CircularAcknowledgementWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CircularAcknowledgements to fetch.
+     */
+    orderBy?: CircularAcknowledgementOrderByWithRelationInput | CircularAcknowledgementOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing CircularAcknowledgements.
+     */
+    cursor?: CircularAcknowledgementWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CircularAcknowledgements from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CircularAcknowledgements.
+     */
+    skip?: number
+    distinct?: CircularAcknowledgementScalarFieldEnum | CircularAcknowledgementScalarFieldEnum[]
+  }
+
+  /**
+   * CircularAcknowledgement create
+   */
+  export type CircularAcknowledgementCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CircularAcknowledgement
+     */
+    select?: CircularAcknowledgementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CircularAcknowledgement
+     */
+    omit?: CircularAcknowledgementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CircularAcknowledgementInclude<ExtArgs> | null
+    /**
+     * The data needed to create a CircularAcknowledgement.
+     */
+    data: XOR<CircularAcknowledgementCreateInput, CircularAcknowledgementUncheckedCreateInput>
+  }
+
+  /**
+   * CircularAcknowledgement createMany
+   */
+  export type CircularAcknowledgementCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many CircularAcknowledgements.
+     */
+    data: CircularAcknowledgementCreateManyInput | CircularAcknowledgementCreateManyInput[]
+  }
+
+  /**
+   * CircularAcknowledgement createManyAndReturn
+   */
+  export type CircularAcknowledgementCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CircularAcknowledgement
+     */
+    select?: CircularAcknowledgementSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the CircularAcknowledgement
+     */
+    omit?: CircularAcknowledgementOmit<ExtArgs> | null
+    /**
+     * The data used to create many CircularAcknowledgements.
+     */
+    data: CircularAcknowledgementCreateManyInput | CircularAcknowledgementCreateManyInput[]
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CircularAcknowledgementIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * CircularAcknowledgement update
+   */
+  export type CircularAcknowledgementUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CircularAcknowledgement
+     */
+    select?: CircularAcknowledgementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CircularAcknowledgement
+     */
+    omit?: CircularAcknowledgementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CircularAcknowledgementInclude<ExtArgs> | null
+    /**
+     * The data needed to update a CircularAcknowledgement.
+     */
+    data: XOR<CircularAcknowledgementUpdateInput, CircularAcknowledgementUncheckedUpdateInput>
+    /**
+     * Choose, which CircularAcknowledgement to update.
+     */
+    where: CircularAcknowledgementWhereUniqueInput
+  }
+
+  /**
+   * CircularAcknowledgement updateMany
+   */
+  export type CircularAcknowledgementUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update CircularAcknowledgements.
+     */
+    data: XOR<CircularAcknowledgementUpdateManyMutationInput, CircularAcknowledgementUncheckedUpdateManyInput>
+    /**
+     * Filter which CircularAcknowledgements to update
+     */
+    where?: CircularAcknowledgementWhereInput
+    /**
+     * Limit how many CircularAcknowledgements to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * CircularAcknowledgement updateManyAndReturn
+   */
+  export type CircularAcknowledgementUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CircularAcknowledgement
+     */
+    select?: CircularAcknowledgementSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the CircularAcknowledgement
+     */
+    omit?: CircularAcknowledgementOmit<ExtArgs> | null
+    /**
+     * The data used to update CircularAcknowledgements.
+     */
+    data: XOR<CircularAcknowledgementUpdateManyMutationInput, CircularAcknowledgementUncheckedUpdateManyInput>
+    /**
+     * Filter which CircularAcknowledgements to update
+     */
+    where?: CircularAcknowledgementWhereInput
+    /**
+     * Limit how many CircularAcknowledgements to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CircularAcknowledgementIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * CircularAcknowledgement upsert
+   */
+  export type CircularAcknowledgementUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CircularAcknowledgement
+     */
+    select?: CircularAcknowledgementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CircularAcknowledgement
+     */
+    omit?: CircularAcknowledgementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CircularAcknowledgementInclude<ExtArgs> | null
+    /**
+     * The filter to search for the CircularAcknowledgement to update in case it exists.
+     */
+    where: CircularAcknowledgementWhereUniqueInput
+    /**
+     * In case the CircularAcknowledgement found by the `where` argument doesn't exist, create a new CircularAcknowledgement with this data.
+     */
+    create: XOR<CircularAcknowledgementCreateInput, CircularAcknowledgementUncheckedCreateInput>
+    /**
+     * In case the CircularAcknowledgement was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<CircularAcknowledgementUpdateInput, CircularAcknowledgementUncheckedUpdateInput>
+  }
+
+  /**
+   * CircularAcknowledgement delete
+   */
+  export type CircularAcknowledgementDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CircularAcknowledgement
+     */
+    select?: CircularAcknowledgementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CircularAcknowledgement
+     */
+    omit?: CircularAcknowledgementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CircularAcknowledgementInclude<ExtArgs> | null
+    /**
+     * Filter which CircularAcknowledgement to delete.
+     */
+    where: CircularAcknowledgementWhereUniqueInput
+  }
+
+  /**
+   * CircularAcknowledgement deleteMany
+   */
+  export type CircularAcknowledgementDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which CircularAcknowledgements to delete
+     */
+    where?: CircularAcknowledgementWhereInput
+    /**
+     * Limit how many CircularAcknowledgements to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * CircularAcknowledgement without action
+   */
+  export type CircularAcknowledgementDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CircularAcknowledgement
+     */
+    select?: CircularAcknowledgementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CircularAcknowledgement
+     */
+    omit?: CircularAcknowledgementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CircularAcknowledgementInclude<ExtArgs> | null
   }
 
 
@@ -57218,8 +58560,11 @@ export namespace Prisma {
     refNo: 'refNo',
     vesselId: 'vesselId',
     title: 'title',
+    source: 'source',
+    issuingBody: 'issuingBody',
     category: 'category',
     issueDate: 'issueDate',
+    dateReceived: 'dateReceived',
     body: 'body',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
@@ -57230,6 +58575,22 @@ export namespace Prisma {
   };
 
   export type CircularScalarFieldEnum = (typeof CircularScalarFieldEnum)[keyof typeof CircularScalarFieldEnum]
+
+
+  export const CircularAcknowledgementScalarFieldEnum: {
+    id: 'id',
+    companyId: 'companyId',
+    circularId: 'circularId',
+    recipientType: 'recipientType',
+    recipientId: 'recipientId',
+    recipientLabel: 'recipientLabel',
+    acknowledgedAt: 'acknowledgedAt',
+    acknowledgedById: 'acknowledgedById',
+    acknowledgedByName: 'acknowledgedByName',
+    createdAt: 'createdAt'
+  };
+
+  export type CircularAcknowledgementScalarFieldEnum = (typeof CircularAcknowledgementScalarFieldEnum)[keyof typeof CircularAcknowledgementScalarFieldEnum]
 
 
   export const RiskAssessmentScalarFieldEnum: {
@@ -57600,6 +58961,13 @@ export namespace Prisma {
    * Reference to a field of type 'ControlledDocStatus'
    */
   export type EnumControlledDocStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ControlledDocStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'CircularSource'
+   */
+  export type EnumCircularSourceFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CircularSource'>
     
 
 
@@ -61647,8 +63015,11 @@ export namespace Prisma {
     refNo?: StringFilter<"Circular"> | string
     vesselId?: StringNullableFilter<"Circular"> | string | null
     title?: StringFilter<"Circular"> | string
+    source?: EnumCircularSourceFilter<"Circular"> | $Enums.CircularSource
+    issuingBody?: StringNullableFilter<"Circular"> | string | null
     category?: EnumCircularCategoryFilter<"Circular"> | $Enums.CircularCategory
     issueDate?: DateTimeFilter<"Circular"> | Date | string
+    dateReceived?: DateTimeNullableFilter<"Circular"> | Date | string | null
     body?: StringFilter<"Circular"> | string
     createdAt?: DateTimeFilter<"Circular"> | Date | string
     updatedAt?: DateTimeFilter<"Circular"> | Date | string
@@ -61658,6 +63029,7 @@ export namespace Prisma {
     deletedBy?: StringNullableFilter<"Circular"> | string | null
     company?: XOR<CompanyScalarRelationFilter, CompanyWhereInput>
     vessel?: XOR<VesselNullableScalarRelationFilter, VesselWhereInput> | null
+    acknowledgements?: CircularAcknowledgementListRelationFilter
   }
 
   export type CircularOrderByWithRelationInput = {
@@ -61666,8 +63038,11 @@ export namespace Prisma {
     refNo?: SortOrder
     vesselId?: SortOrderInput | SortOrder
     title?: SortOrder
+    source?: SortOrder
+    issuingBody?: SortOrderInput | SortOrder
     category?: SortOrder
     issueDate?: SortOrder
+    dateReceived?: SortOrderInput | SortOrder
     body?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -61677,6 +63052,7 @@ export namespace Prisma {
     deletedBy?: SortOrderInput | SortOrder
     company?: CompanyOrderByWithRelationInput
     vessel?: VesselOrderByWithRelationInput
+    acknowledgements?: CircularAcknowledgementOrderByRelationAggregateInput
   }
 
   export type CircularWhereUniqueInput = Prisma.AtLeast<{
@@ -61689,8 +63065,11 @@ export namespace Prisma {
     refNo?: StringFilter<"Circular"> | string
     vesselId?: StringNullableFilter<"Circular"> | string | null
     title?: StringFilter<"Circular"> | string
+    source?: EnumCircularSourceFilter<"Circular"> | $Enums.CircularSource
+    issuingBody?: StringNullableFilter<"Circular"> | string | null
     category?: EnumCircularCategoryFilter<"Circular"> | $Enums.CircularCategory
     issueDate?: DateTimeFilter<"Circular"> | Date | string
+    dateReceived?: DateTimeNullableFilter<"Circular"> | Date | string | null
     body?: StringFilter<"Circular"> | string
     createdAt?: DateTimeFilter<"Circular"> | Date | string
     updatedAt?: DateTimeFilter<"Circular"> | Date | string
@@ -61700,6 +63079,7 @@ export namespace Prisma {
     deletedBy?: StringNullableFilter<"Circular"> | string | null
     company?: XOR<CompanyScalarRelationFilter, CompanyWhereInput>
     vessel?: XOR<VesselNullableScalarRelationFilter, VesselWhereInput> | null
+    acknowledgements?: CircularAcknowledgementListRelationFilter
   }, "id" | "companyId_refNo">
 
   export type CircularOrderByWithAggregationInput = {
@@ -61708,8 +63088,11 @@ export namespace Prisma {
     refNo?: SortOrder
     vesselId?: SortOrderInput | SortOrder
     title?: SortOrder
+    source?: SortOrder
+    issuingBody?: SortOrderInput | SortOrder
     category?: SortOrder
     issueDate?: SortOrder
+    dateReceived?: SortOrderInput | SortOrder
     body?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -61731,8 +63114,11 @@ export namespace Prisma {
     refNo?: StringWithAggregatesFilter<"Circular"> | string
     vesselId?: StringNullableWithAggregatesFilter<"Circular"> | string | null
     title?: StringWithAggregatesFilter<"Circular"> | string
+    source?: EnumCircularSourceWithAggregatesFilter<"Circular"> | $Enums.CircularSource
+    issuingBody?: StringNullableWithAggregatesFilter<"Circular"> | string | null
     category?: EnumCircularCategoryWithAggregatesFilter<"Circular"> | $Enums.CircularCategory
     issueDate?: DateTimeWithAggregatesFilter<"Circular"> | Date | string
+    dateReceived?: DateTimeNullableWithAggregatesFilter<"Circular"> | Date | string | null
     body?: StringWithAggregatesFilter<"Circular"> | string
     createdAt?: DateTimeWithAggregatesFilter<"Circular"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Circular"> | Date | string
@@ -61740,6 +63126,87 @@ export namespace Prisma {
     updatedBy?: StringNullableWithAggregatesFilter<"Circular"> | string | null
     deletedAt?: DateTimeNullableWithAggregatesFilter<"Circular"> | Date | string | null
     deletedBy?: StringNullableWithAggregatesFilter<"Circular"> | string | null
+  }
+
+  export type CircularAcknowledgementWhereInput = {
+    AND?: CircularAcknowledgementWhereInput | CircularAcknowledgementWhereInput[]
+    OR?: CircularAcknowledgementWhereInput[]
+    NOT?: CircularAcknowledgementWhereInput | CircularAcknowledgementWhereInput[]
+    id?: StringFilter<"CircularAcknowledgement"> | string
+    companyId?: StringFilter<"CircularAcknowledgement"> | string
+    circularId?: StringFilter<"CircularAcknowledgement"> | string
+    recipientType?: StringFilter<"CircularAcknowledgement"> | string
+    recipientId?: StringFilter<"CircularAcknowledgement"> | string
+    recipientLabel?: StringFilter<"CircularAcknowledgement"> | string
+    acknowledgedAt?: DateTimeNullableFilter<"CircularAcknowledgement"> | Date | string | null
+    acknowledgedById?: StringNullableFilter<"CircularAcknowledgement"> | string | null
+    acknowledgedByName?: StringNullableFilter<"CircularAcknowledgement"> | string | null
+    createdAt?: DateTimeFilter<"CircularAcknowledgement"> | Date | string
+    circular?: XOR<CircularScalarRelationFilter, CircularWhereInput>
+  }
+
+  export type CircularAcknowledgementOrderByWithRelationInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    circularId?: SortOrder
+    recipientType?: SortOrder
+    recipientId?: SortOrder
+    recipientLabel?: SortOrder
+    acknowledgedAt?: SortOrderInput | SortOrder
+    acknowledgedById?: SortOrderInput | SortOrder
+    acknowledgedByName?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    circular?: CircularOrderByWithRelationInput
+  }
+
+  export type CircularAcknowledgementWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    circularId_recipientType_recipientId?: CircularAcknowledgementCircularIdRecipientTypeRecipientIdCompoundUniqueInput
+    AND?: CircularAcknowledgementWhereInput | CircularAcknowledgementWhereInput[]
+    OR?: CircularAcknowledgementWhereInput[]
+    NOT?: CircularAcknowledgementWhereInput | CircularAcknowledgementWhereInput[]
+    companyId?: StringFilter<"CircularAcknowledgement"> | string
+    circularId?: StringFilter<"CircularAcknowledgement"> | string
+    recipientType?: StringFilter<"CircularAcknowledgement"> | string
+    recipientId?: StringFilter<"CircularAcknowledgement"> | string
+    recipientLabel?: StringFilter<"CircularAcknowledgement"> | string
+    acknowledgedAt?: DateTimeNullableFilter<"CircularAcknowledgement"> | Date | string | null
+    acknowledgedById?: StringNullableFilter<"CircularAcknowledgement"> | string | null
+    acknowledgedByName?: StringNullableFilter<"CircularAcknowledgement"> | string | null
+    createdAt?: DateTimeFilter<"CircularAcknowledgement"> | Date | string
+    circular?: XOR<CircularScalarRelationFilter, CircularWhereInput>
+  }, "id" | "circularId_recipientType_recipientId">
+
+  export type CircularAcknowledgementOrderByWithAggregationInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    circularId?: SortOrder
+    recipientType?: SortOrder
+    recipientId?: SortOrder
+    recipientLabel?: SortOrder
+    acknowledgedAt?: SortOrderInput | SortOrder
+    acknowledgedById?: SortOrderInput | SortOrder
+    acknowledgedByName?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    _count?: CircularAcknowledgementCountOrderByAggregateInput
+    _max?: CircularAcknowledgementMaxOrderByAggregateInput
+    _min?: CircularAcknowledgementMinOrderByAggregateInput
+  }
+
+  export type CircularAcknowledgementScalarWhereWithAggregatesInput = {
+    AND?: CircularAcknowledgementScalarWhereWithAggregatesInput | CircularAcknowledgementScalarWhereWithAggregatesInput[]
+    OR?: CircularAcknowledgementScalarWhereWithAggregatesInput[]
+    NOT?: CircularAcknowledgementScalarWhereWithAggregatesInput | CircularAcknowledgementScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"CircularAcknowledgement"> | string
+    companyId?: StringWithAggregatesFilter<"CircularAcknowledgement"> | string
+    circularId?: StringWithAggregatesFilter<"CircularAcknowledgement"> | string
+    recipientType?: StringWithAggregatesFilter<"CircularAcknowledgement"> | string
+    recipientId?: StringWithAggregatesFilter<"CircularAcknowledgement"> | string
+    recipientLabel?: StringWithAggregatesFilter<"CircularAcknowledgement"> | string
+    acknowledgedAt?: DateTimeNullableWithAggregatesFilter<"CircularAcknowledgement"> | Date | string | null
+    acknowledgedById?: StringNullableWithAggregatesFilter<"CircularAcknowledgement"> | string | null
+    acknowledgedByName?: StringNullableWithAggregatesFilter<"CircularAcknowledgement"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"CircularAcknowledgement"> | Date | string
   }
 
   export type RiskAssessmentWhereInput = {
@@ -66618,8 +68085,11 @@ export namespace Prisma {
     id?: string
     refNo: string
     title: string
+    source: $Enums.CircularSource
+    issuingBody?: string | null
     category: $Enums.CircularCategory
     issueDate: Date | string
+    dateReceived?: Date | string | null
     body: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -66629,6 +68099,7 @@ export namespace Prisma {
     deletedBy?: string | null
     company: CompanyCreateNestedOneWithoutCircularsInput
     vessel?: VesselCreateNestedOneWithoutCircularsInput
+    acknowledgements?: CircularAcknowledgementCreateNestedManyWithoutCircularInput
   }
 
   export type CircularUncheckedCreateInput = {
@@ -66637,8 +68108,11 @@ export namespace Prisma {
     refNo: string
     vesselId?: string | null
     title: string
+    source: $Enums.CircularSource
+    issuingBody?: string | null
     category: $Enums.CircularCategory
     issueDate: Date | string
+    dateReceived?: Date | string | null
     body: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -66646,14 +68120,18 @@ export namespace Prisma {
     updatedBy?: string | null
     deletedAt?: Date | string | null
     deletedBy?: string | null
+    acknowledgements?: CircularAcknowledgementUncheckedCreateNestedManyWithoutCircularInput
   }
 
   export type CircularUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     refNo?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
+    source?: EnumCircularSourceFieldUpdateOperationsInput | $Enums.CircularSource
+    issuingBody?: NullableStringFieldUpdateOperationsInput | string | null
     category?: EnumCircularCategoryFieldUpdateOperationsInput | $Enums.CircularCategory
     issueDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    dateReceived?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     body?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -66663,6 +68141,7 @@ export namespace Prisma {
     deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     company?: CompanyUpdateOneRequiredWithoutCircularsNestedInput
     vessel?: VesselUpdateOneWithoutCircularsNestedInput
+    acknowledgements?: CircularAcknowledgementUpdateManyWithoutCircularNestedInput
   }
 
   export type CircularUncheckedUpdateInput = {
@@ -66671,8 +68150,11 @@ export namespace Prisma {
     refNo?: StringFieldUpdateOperationsInput | string
     vesselId?: NullableStringFieldUpdateOperationsInput | string | null
     title?: StringFieldUpdateOperationsInput | string
+    source?: EnumCircularSourceFieldUpdateOperationsInput | $Enums.CircularSource
+    issuingBody?: NullableStringFieldUpdateOperationsInput | string | null
     category?: EnumCircularCategoryFieldUpdateOperationsInput | $Enums.CircularCategory
     issueDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    dateReceived?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     body?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -66680,6 +68162,7 @@ export namespace Prisma {
     updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    acknowledgements?: CircularAcknowledgementUncheckedUpdateManyWithoutCircularNestedInput
   }
 
   export type CircularCreateManyInput = {
@@ -66688,8 +68171,11 @@ export namespace Prisma {
     refNo: string
     vesselId?: string | null
     title: string
+    source: $Enums.CircularSource
+    issuingBody?: string | null
     category: $Enums.CircularCategory
     issueDate: Date | string
+    dateReceived?: Date | string | null
     body: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -66703,8 +68189,11 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     refNo?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
+    source?: EnumCircularSourceFieldUpdateOperationsInput | $Enums.CircularSource
+    issuingBody?: NullableStringFieldUpdateOperationsInput | string | null
     category?: EnumCircularCategoryFieldUpdateOperationsInput | $Enums.CircularCategory
     issueDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    dateReceived?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     body?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -66720,8 +68209,11 @@ export namespace Prisma {
     refNo?: StringFieldUpdateOperationsInput | string
     vesselId?: NullableStringFieldUpdateOperationsInput | string | null
     title?: StringFieldUpdateOperationsInput | string
+    source?: EnumCircularSourceFieldUpdateOperationsInput | $Enums.CircularSource
+    issuingBody?: NullableStringFieldUpdateOperationsInput | string | null
     category?: EnumCircularCategoryFieldUpdateOperationsInput | $Enums.CircularCategory
     issueDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    dateReceived?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     body?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -66729,6 +68221,96 @@ export namespace Prisma {
     updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type CircularAcknowledgementCreateInput = {
+    id?: string
+    companyId: string
+    recipientType: string
+    recipientId: string
+    recipientLabel: string
+    acknowledgedAt?: Date | string | null
+    acknowledgedById?: string | null
+    acknowledgedByName?: string | null
+    createdAt?: Date | string
+    circular: CircularCreateNestedOneWithoutAcknowledgementsInput
+  }
+
+  export type CircularAcknowledgementUncheckedCreateInput = {
+    id?: string
+    companyId: string
+    circularId: string
+    recipientType: string
+    recipientId: string
+    recipientLabel: string
+    acknowledgedAt?: Date | string | null
+    acknowledgedById?: string | null
+    acknowledgedByName?: string | null
+    createdAt?: Date | string
+  }
+
+  export type CircularAcknowledgementUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    recipientType?: StringFieldUpdateOperationsInput | string
+    recipientId?: StringFieldUpdateOperationsInput | string
+    recipientLabel?: StringFieldUpdateOperationsInput | string
+    acknowledgedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    acknowledgedById?: NullableStringFieldUpdateOperationsInput | string | null
+    acknowledgedByName?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    circular?: CircularUpdateOneRequiredWithoutAcknowledgementsNestedInput
+  }
+
+  export type CircularAcknowledgementUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    circularId?: StringFieldUpdateOperationsInput | string
+    recipientType?: StringFieldUpdateOperationsInput | string
+    recipientId?: StringFieldUpdateOperationsInput | string
+    recipientLabel?: StringFieldUpdateOperationsInput | string
+    acknowledgedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    acknowledgedById?: NullableStringFieldUpdateOperationsInput | string | null
+    acknowledgedByName?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CircularAcknowledgementCreateManyInput = {
+    id?: string
+    companyId: string
+    circularId: string
+    recipientType: string
+    recipientId: string
+    recipientLabel: string
+    acknowledgedAt?: Date | string | null
+    acknowledgedById?: string | null
+    acknowledgedByName?: string | null
+    createdAt?: Date | string
+  }
+
+  export type CircularAcknowledgementUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    recipientType?: StringFieldUpdateOperationsInput | string
+    recipientId?: StringFieldUpdateOperationsInput | string
+    recipientLabel?: StringFieldUpdateOperationsInput | string
+    acknowledgedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    acknowledgedById?: NullableStringFieldUpdateOperationsInput | string | null
+    acknowledgedByName?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CircularAcknowledgementUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    circularId?: StringFieldUpdateOperationsInput | string
+    recipientType?: StringFieldUpdateOperationsInput | string
+    recipientId?: StringFieldUpdateOperationsInput | string
+    recipientLabel?: StringFieldUpdateOperationsInput | string
+    acknowledgedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    acknowledgedById?: NullableStringFieldUpdateOperationsInput | string | null
+    acknowledgedByName?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type RiskAssessmentCreateInput = {
@@ -70416,11 +71998,28 @@ export namespace Prisma {
     _max?: NestedEnumControlledDocStatusFilter<$PrismaModel>
   }
 
+  export type EnumCircularSourceFilter<$PrismaModel = never> = {
+    equals?: $Enums.CircularSource | EnumCircularSourceFieldRefInput<$PrismaModel>
+    in?: $Enums.CircularSource[]
+    notIn?: $Enums.CircularSource[]
+    not?: NestedEnumCircularSourceFilter<$PrismaModel> | $Enums.CircularSource
+  }
+
   export type EnumCircularCategoryFilter<$PrismaModel = never> = {
     equals?: $Enums.CircularCategory | EnumCircularCategoryFieldRefInput<$PrismaModel>
     in?: $Enums.CircularCategory[]
     notIn?: $Enums.CircularCategory[]
     not?: NestedEnumCircularCategoryFilter<$PrismaModel> | $Enums.CircularCategory
+  }
+
+  export type CircularAcknowledgementListRelationFilter = {
+    every?: CircularAcknowledgementWhereInput
+    some?: CircularAcknowledgementWhereInput
+    none?: CircularAcknowledgementWhereInput
+  }
+
+  export type CircularAcknowledgementOrderByRelationAggregateInput = {
+    _count?: SortOrder
   }
 
   export type CircularCompanyIdRefNoCompoundUniqueInput = {
@@ -70434,8 +72033,11 @@ export namespace Prisma {
     refNo?: SortOrder
     vesselId?: SortOrder
     title?: SortOrder
+    source?: SortOrder
+    issuingBody?: SortOrder
     category?: SortOrder
     issueDate?: SortOrder
+    dateReceived?: SortOrder
     body?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -70451,8 +72053,11 @@ export namespace Prisma {
     refNo?: SortOrder
     vesselId?: SortOrder
     title?: SortOrder
+    source?: SortOrder
+    issuingBody?: SortOrder
     category?: SortOrder
     issueDate?: SortOrder
+    dateReceived?: SortOrder
     body?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -70468,8 +72073,11 @@ export namespace Prisma {
     refNo?: SortOrder
     vesselId?: SortOrder
     title?: SortOrder
+    source?: SortOrder
+    issuingBody?: SortOrder
     category?: SortOrder
     issueDate?: SortOrder
+    dateReceived?: SortOrder
     body?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -70477,6 +72085,16 @@ export namespace Prisma {
     updatedBy?: SortOrder
     deletedAt?: SortOrder
     deletedBy?: SortOrder
+  }
+
+  export type EnumCircularSourceWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.CircularSource | EnumCircularSourceFieldRefInput<$PrismaModel>
+    in?: $Enums.CircularSource[]
+    notIn?: $Enums.CircularSource[]
+    not?: NestedEnumCircularSourceWithAggregatesFilter<$PrismaModel> | $Enums.CircularSource
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumCircularSourceFilter<$PrismaModel>
+    _max?: NestedEnumCircularSourceFilter<$PrismaModel>
   }
 
   export type EnumCircularCategoryWithAggregatesFilter<$PrismaModel = never> = {
@@ -70487,6 +72105,56 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumCircularCategoryFilter<$PrismaModel>
     _max?: NestedEnumCircularCategoryFilter<$PrismaModel>
+  }
+
+  export type CircularScalarRelationFilter = {
+    is?: CircularWhereInput
+    isNot?: CircularWhereInput
+  }
+
+  export type CircularAcknowledgementCircularIdRecipientTypeRecipientIdCompoundUniqueInput = {
+    circularId: string
+    recipientType: string
+    recipientId: string
+  }
+
+  export type CircularAcknowledgementCountOrderByAggregateInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    circularId?: SortOrder
+    recipientType?: SortOrder
+    recipientId?: SortOrder
+    recipientLabel?: SortOrder
+    acknowledgedAt?: SortOrder
+    acknowledgedById?: SortOrder
+    acknowledgedByName?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type CircularAcknowledgementMaxOrderByAggregateInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    circularId?: SortOrder
+    recipientType?: SortOrder
+    recipientId?: SortOrder
+    recipientLabel?: SortOrder
+    acknowledgedAt?: SortOrder
+    acknowledgedById?: SortOrder
+    acknowledgedByName?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type CircularAcknowledgementMinOrderByAggregateInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    circularId?: SortOrder
+    recipientType?: SortOrder
+    recipientId?: SortOrder
+    recipientLabel?: SortOrder
+    acknowledgedAt?: SortOrder
+    acknowledgedById?: SortOrder
+    acknowledgedByName?: SortOrder
+    createdAt?: SortOrder
   }
 
   export type EnumRiskRatingFilter<$PrismaModel = never> = {
@@ -74319,6 +75987,24 @@ export namespace Prisma {
     connect?: VesselWhereUniqueInput
   }
 
+  export type CircularAcknowledgementCreateNestedManyWithoutCircularInput = {
+    create?: XOR<CircularAcknowledgementCreateWithoutCircularInput, CircularAcknowledgementUncheckedCreateWithoutCircularInput> | CircularAcknowledgementCreateWithoutCircularInput[] | CircularAcknowledgementUncheckedCreateWithoutCircularInput[]
+    connectOrCreate?: CircularAcknowledgementCreateOrConnectWithoutCircularInput | CircularAcknowledgementCreateOrConnectWithoutCircularInput[]
+    createMany?: CircularAcknowledgementCreateManyCircularInputEnvelope
+    connect?: CircularAcknowledgementWhereUniqueInput | CircularAcknowledgementWhereUniqueInput[]
+  }
+
+  export type CircularAcknowledgementUncheckedCreateNestedManyWithoutCircularInput = {
+    create?: XOR<CircularAcknowledgementCreateWithoutCircularInput, CircularAcknowledgementUncheckedCreateWithoutCircularInput> | CircularAcknowledgementCreateWithoutCircularInput[] | CircularAcknowledgementUncheckedCreateWithoutCircularInput[]
+    connectOrCreate?: CircularAcknowledgementCreateOrConnectWithoutCircularInput | CircularAcknowledgementCreateOrConnectWithoutCircularInput[]
+    createMany?: CircularAcknowledgementCreateManyCircularInputEnvelope
+    connect?: CircularAcknowledgementWhereUniqueInput | CircularAcknowledgementWhereUniqueInput[]
+  }
+
+  export type EnumCircularSourceFieldUpdateOperationsInput = {
+    set?: $Enums.CircularSource
+  }
+
   export type EnumCircularCategoryFieldUpdateOperationsInput = {
     set?: $Enums.CircularCategory
   }
@@ -74339,6 +76025,48 @@ export namespace Prisma {
     delete?: VesselWhereInput | boolean
     connect?: VesselWhereUniqueInput
     update?: XOR<XOR<VesselUpdateToOneWithWhereWithoutCircularsInput, VesselUpdateWithoutCircularsInput>, VesselUncheckedUpdateWithoutCircularsInput>
+  }
+
+  export type CircularAcknowledgementUpdateManyWithoutCircularNestedInput = {
+    create?: XOR<CircularAcknowledgementCreateWithoutCircularInput, CircularAcknowledgementUncheckedCreateWithoutCircularInput> | CircularAcknowledgementCreateWithoutCircularInput[] | CircularAcknowledgementUncheckedCreateWithoutCircularInput[]
+    connectOrCreate?: CircularAcknowledgementCreateOrConnectWithoutCircularInput | CircularAcknowledgementCreateOrConnectWithoutCircularInput[]
+    upsert?: CircularAcknowledgementUpsertWithWhereUniqueWithoutCircularInput | CircularAcknowledgementUpsertWithWhereUniqueWithoutCircularInput[]
+    createMany?: CircularAcknowledgementCreateManyCircularInputEnvelope
+    set?: CircularAcknowledgementWhereUniqueInput | CircularAcknowledgementWhereUniqueInput[]
+    disconnect?: CircularAcknowledgementWhereUniqueInput | CircularAcknowledgementWhereUniqueInput[]
+    delete?: CircularAcknowledgementWhereUniqueInput | CircularAcknowledgementWhereUniqueInput[]
+    connect?: CircularAcknowledgementWhereUniqueInput | CircularAcknowledgementWhereUniqueInput[]
+    update?: CircularAcknowledgementUpdateWithWhereUniqueWithoutCircularInput | CircularAcknowledgementUpdateWithWhereUniqueWithoutCircularInput[]
+    updateMany?: CircularAcknowledgementUpdateManyWithWhereWithoutCircularInput | CircularAcknowledgementUpdateManyWithWhereWithoutCircularInput[]
+    deleteMany?: CircularAcknowledgementScalarWhereInput | CircularAcknowledgementScalarWhereInput[]
+  }
+
+  export type CircularAcknowledgementUncheckedUpdateManyWithoutCircularNestedInput = {
+    create?: XOR<CircularAcknowledgementCreateWithoutCircularInput, CircularAcknowledgementUncheckedCreateWithoutCircularInput> | CircularAcknowledgementCreateWithoutCircularInput[] | CircularAcknowledgementUncheckedCreateWithoutCircularInput[]
+    connectOrCreate?: CircularAcknowledgementCreateOrConnectWithoutCircularInput | CircularAcknowledgementCreateOrConnectWithoutCircularInput[]
+    upsert?: CircularAcknowledgementUpsertWithWhereUniqueWithoutCircularInput | CircularAcknowledgementUpsertWithWhereUniqueWithoutCircularInput[]
+    createMany?: CircularAcknowledgementCreateManyCircularInputEnvelope
+    set?: CircularAcknowledgementWhereUniqueInput | CircularAcknowledgementWhereUniqueInput[]
+    disconnect?: CircularAcknowledgementWhereUniqueInput | CircularAcknowledgementWhereUniqueInput[]
+    delete?: CircularAcknowledgementWhereUniqueInput | CircularAcknowledgementWhereUniqueInput[]
+    connect?: CircularAcknowledgementWhereUniqueInput | CircularAcknowledgementWhereUniqueInput[]
+    update?: CircularAcknowledgementUpdateWithWhereUniqueWithoutCircularInput | CircularAcknowledgementUpdateWithWhereUniqueWithoutCircularInput[]
+    updateMany?: CircularAcknowledgementUpdateManyWithWhereWithoutCircularInput | CircularAcknowledgementUpdateManyWithWhereWithoutCircularInput[]
+    deleteMany?: CircularAcknowledgementScalarWhereInput | CircularAcknowledgementScalarWhereInput[]
+  }
+
+  export type CircularCreateNestedOneWithoutAcknowledgementsInput = {
+    create?: XOR<CircularCreateWithoutAcknowledgementsInput, CircularUncheckedCreateWithoutAcknowledgementsInput>
+    connectOrCreate?: CircularCreateOrConnectWithoutAcknowledgementsInput
+    connect?: CircularWhereUniqueInput
+  }
+
+  export type CircularUpdateOneRequiredWithoutAcknowledgementsNestedInput = {
+    create?: XOR<CircularCreateWithoutAcknowledgementsInput, CircularUncheckedCreateWithoutAcknowledgementsInput>
+    connectOrCreate?: CircularCreateOrConnectWithoutAcknowledgementsInput
+    upsert?: CircularUpsertWithoutAcknowledgementsInput
+    connect?: CircularWhereUniqueInput
+    update?: XOR<XOR<CircularUpdateToOneWithWhereWithoutAcknowledgementsInput, CircularUpdateWithoutAcknowledgementsInput>, CircularUncheckedUpdateWithoutAcknowledgementsInput>
   }
 
   export type CompanyCreateNestedOneWithoutRiskAssessmentsInput = {
@@ -75245,11 +76973,28 @@ export namespace Prisma {
     _max?: NestedEnumControlledDocStatusFilter<$PrismaModel>
   }
 
+  export type NestedEnumCircularSourceFilter<$PrismaModel = never> = {
+    equals?: $Enums.CircularSource | EnumCircularSourceFieldRefInput<$PrismaModel>
+    in?: $Enums.CircularSource[]
+    notIn?: $Enums.CircularSource[]
+    not?: NestedEnumCircularSourceFilter<$PrismaModel> | $Enums.CircularSource
+  }
+
   export type NestedEnumCircularCategoryFilter<$PrismaModel = never> = {
     equals?: $Enums.CircularCategory | EnumCircularCategoryFieldRefInput<$PrismaModel>
     in?: $Enums.CircularCategory[]
     notIn?: $Enums.CircularCategory[]
     not?: NestedEnumCircularCategoryFilter<$PrismaModel> | $Enums.CircularCategory
+  }
+
+  export type NestedEnumCircularSourceWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.CircularSource | EnumCircularSourceFieldRefInput<$PrismaModel>
+    in?: $Enums.CircularSource[]
+    notIn?: $Enums.CircularSource[]
+    not?: NestedEnumCircularSourceWithAggregatesFilter<$PrismaModel> | $Enums.CircularSource
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumCircularSourceFilter<$PrismaModel>
+    _max?: NestedEnumCircularSourceFilter<$PrismaModel>
   }
 
   export type NestedEnumCircularCategoryWithAggregatesFilter<$PrismaModel = never> = {
@@ -76230,8 +77975,11 @@ export namespace Prisma {
     id?: string
     refNo: string
     title: string
+    source: $Enums.CircularSource
+    issuingBody?: string | null
     category: $Enums.CircularCategory
     issueDate: Date | string
+    dateReceived?: Date | string | null
     body: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -76240,6 +77988,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     deletedBy?: string | null
     vessel?: VesselCreateNestedOneWithoutCircularsInput
+    acknowledgements?: CircularAcknowledgementCreateNestedManyWithoutCircularInput
   }
 
   export type CircularUncheckedCreateWithoutCompanyInput = {
@@ -76247,8 +77996,11 @@ export namespace Prisma {
     refNo: string
     vesselId?: string | null
     title: string
+    source: $Enums.CircularSource
+    issuingBody?: string | null
     category: $Enums.CircularCategory
     issueDate: Date | string
+    dateReceived?: Date | string | null
     body: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -76256,6 +78008,7 @@ export namespace Prisma {
     updatedBy?: string | null
     deletedAt?: Date | string | null
     deletedBy?: string | null
+    acknowledgements?: CircularAcknowledgementUncheckedCreateNestedManyWithoutCircularInput
   }
 
   export type CircularCreateOrConnectWithoutCompanyInput = {
@@ -77056,8 +78809,11 @@ export namespace Prisma {
     refNo?: StringFilter<"Circular"> | string
     vesselId?: StringNullableFilter<"Circular"> | string | null
     title?: StringFilter<"Circular"> | string
+    source?: EnumCircularSourceFilter<"Circular"> | $Enums.CircularSource
+    issuingBody?: StringNullableFilter<"Circular"> | string | null
     category?: EnumCircularCategoryFilter<"Circular"> | $Enums.CircularCategory
     issueDate?: DateTimeFilter<"Circular"> | Date | string
+    dateReceived?: DateTimeNullableFilter<"Circular"> | Date | string | null
     body?: StringFilter<"Circular"> | string
     createdAt?: DateTimeFilter<"Circular"> | Date | string
     updatedAt?: DateTimeFilter<"Circular"> | Date | string
@@ -79364,8 +81120,11 @@ export namespace Prisma {
     id?: string
     refNo: string
     title: string
+    source: $Enums.CircularSource
+    issuingBody?: string | null
     category: $Enums.CircularCategory
     issueDate: Date | string
+    dateReceived?: Date | string | null
     body: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -79374,6 +81133,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     deletedBy?: string | null
     company: CompanyCreateNestedOneWithoutCircularsInput
+    acknowledgements?: CircularAcknowledgementCreateNestedManyWithoutCircularInput
   }
 
   export type CircularUncheckedCreateWithoutVesselInput = {
@@ -79381,8 +81141,11 @@ export namespace Prisma {
     companyId: string
     refNo: string
     title: string
+    source: $Enums.CircularSource
+    issuingBody?: string | null
     category: $Enums.CircularCategory
     issueDate: Date | string
+    dateReceived?: Date | string | null
     body: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -79390,6 +81153,7 @@ export namespace Prisma {
     updatedBy?: string | null
     deletedAt?: Date | string | null
     deletedBy?: string | null
+    acknowledgements?: CircularAcknowledgementUncheckedCreateNestedManyWithoutCircularInput
   }
 
   export type CircularCreateOrConnectWithoutVesselInput = {
@@ -87195,6 +88959,39 @@ export namespace Prisma {
     create: XOR<VesselCreateWithoutCircularsInput, VesselUncheckedCreateWithoutCircularsInput>
   }
 
+  export type CircularAcknowledgementCreateWithoutCircularInput = {
+    id?: string
+    companyId: string
+    recipientType: string
+    recipientId: string
+    recipientLabel: string
+    acknowledgedAt?: Date | string | null
+    acknowledgedById?: string | null
+    acknowledgedByName?: string | null
+    createdAt?: Date | string
+  }
+
+  export type CircularAcknowledgementUncheckedCreateWithoutCircularInput = {
+    id?: string
+    companyId: string
+    recipientType: string
+    recipientId: string
+    recipientLabel: string
+    acknowledgedAt?: Date | string | null
+    acknowledgedById?: string | null
+    acknowledgedByName?: string | null
+    createdAt?: Date | string
+  }
+
+  export type CircularAcknowledgementCreateOrConnectWithoutCircularInput = {
+    where: CircularAcknowledgementWhereUniqueInput
+    create: XOR<CircularAcknowledgementCreateWithoutCircularInput, CircularAcknowledgementUncheckedCreateWithoutCircularInput>
+  }
+
+  export type CircularAcknowledgementCreateManyCircularInputEnvelope = {
+    data: CircularAcknowledgementCreateManyCircularInput | CircularAcknowledgementCreateManyCircularInput[]
+  }
+
   export type CompanyUpsertWithoutCircularsInput = {
     update: XOR<CompanyUpdateWithoutCircularsInput, CompanyUncheckedUpdateWithoutCircularsInput>
     create: XOR<CompanyCreateWithoutCircularsInput, CompanyUncheckedCreateWithoutCircularsInput>
@@ -87349,6 +89146,134 @@ export namespace Prisma {
     riskAssessments?: RiskAssessmentUncheckedUpdateManyWithoutVesselNestedInput
     defects?: DefectUncheckedUpdateManyWithoutVesselNestedInput
     users?: UserUncheckedUpdateManyWithoutVesselNestedInput
+  }
+
+  export type CircularAcknowledgementUpsertWithWhereUniqueWithoutCircularInput = {
+    where: CircularAcknowledgementWhereUniqueInput
+    update: XOR<CircularAcknowledgementUpdateWithoutCircularInput, CircularAcknowledgementUncheckedUpdateWithoutCircularInput>
+    create: XOR<CircularAcknowledgementCreateWithoutCircularInput, CircularAcknowledgementUncheckedCreateWithoutCircularInput>
+  }
+
+  export type CircularAcknowledgementUpdateWithWhereUniqueWithoutCircularInput = {
+    where: CircularAcknowledgementWhereUniqueInput
+    data: XOR<CircularAcknowledgementUpdateWithoutCircularInput, CircularAcknowledgementUncheckedUpdateWithoutCircularInput>
+  }
+
+  export type CircularAcknowledgementUpdateManyWithWhereWithoutCircularInput = {
+    where: CircularAcknowledgementScalarWhereInput
+    data: XOR<CircularAcknowledgementUpdateManyMutationInput, CircularAcknowledgementUncheckedUpdateManyWithoutCircularInput>
+  }
+
+  export type CircularAcknowledgementScalarWhereInput = {
+    AND?: CircularAcknowledgementScalarWhereInput | CircularAcknowledgementScalarWhereInput[]
+    OR?: CircularAcknowledgementScalarWhereInput[]
+    NOT?: CircularAcknowledgementScalarWhereInput | CircularAcknowledgementScalarWhereInput[]
+    id?: StringFilter<"CircularAcknowledgement"> | string
+    companyId?: StringFilter<"CircularAcknowledgement"> | string
+    circularId?: StringFilter<"CircularAcknowledgement"> | string
+    recipientType?: StringFilter<"CircularAcknowledgement"> | string
+    recipientId?: StringFilter<"CircularAcknowledgement"> | string
+    recipientLabel?: StringFilter<"CircularAcknowledgement"> | string
+    acknowledgedAt?: DateTimeNullableFilter<"CircularAcknowledgement"> | Date | string | null
+    acknowledgedById?: StringNullableFilter<"CircularAcknowledgement"> | string | null
+    acknowledgedByName?: StringNullableFilter<"CircularAcknowledgement"> | string | null
+    createdAt?: DateTimeFilter<"CircularAcknowledgement"> | Date | string
+  }
+
+  export type CircularCreateWithoutAcknowledgementsInput = {
+    id?: string
+    refNo: string
+    title: string
+    source: $Enums.CircularSource
+    issuingBody?: string | null
+    category: $Enums.CircularCategory
+    issueDate: Date | string
+    dateReceived?: Date | string | null
+    body: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    company: CompanyCreateNestedOneWithoutCircularsInput
+    vessel?: VesselCreateNestedOneWithoutCircularsInput
+  }
+
+  export type CircularUncheckedCreateWithoutAcknowledgementsInput = {
+    id?: string
+    companyId: string
+    refNo: string
+    vesselId?: string | null
+    title: string
+    source: $Enums.CircularSource
+    issuingBody?: string | null
+    category: $Enums.CircularCategory
+    issueDate: Date | string
+    dateReceived?: Date | string | null
+    body: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+  }
+
+  export type CircularCreateOrConnectWithoutAcknowledgementsInput = {
+    where: CircularWhereUniqueInput
+    create: XOR<CircularCreateWithoutAcknowledgementsInput, CircularUncheckedCreateWithoutAcknowledgementsInput>
+  }
+
+  export type CircularUpsertWithoutAcknowledgementsInput = {
+    update: XOR<CircularUpdateWithoutAcknowledgementsInput, CircularUncheckedUpdateWithoutAcknowledgementsInput>
+    create: XOR<CircularCreateWithoutAcknowledgementsInput, CircularUncheckedCreateWithoutAcknowledgementsInput>
+    where?: CircularWhereInput
+  }
+
+  export type CircularUpdateToOneWithWhereWithoutAcknowledgementsInput = {
+    where?: CircularWhereInput
+    data: XOR<CircularUpdateWithoutAcknowledgementsInput, CircularUncheckedUpdateWithoutAcknowledgementsInput>
+  }
+
+  export type CircularUpdateWithoutAcknowledgementsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    refNo?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    source?: EnumCircularSourceFieldUpdateOperationsInput | $Enums.CircularSource
+    issuingBody?: NullableStringFieldUpdateOperationsInput | string | null
+    category?: EnumCircularCategoryFieldUpdateOperationsInput | $Enums.CircularCategory
+    issueDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    dateReceived?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    body?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    company?: CompanyUpdateOneRequiredWithoutCircularsNestedInput
+    vessel?: VesselUpdateOneWithoutCircularsNestedInput
+  }
+
+  export type CircularUncheckedUpdateWithoutAcknowledgementsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    refNo?: StringFieldUpdateOperationsInput | string
+    vesselId?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
+    source?: EnumCircularSourceFieldUpdateOperationsInput | $Enums.CircularSource
+    issuingBody?: NullableStringFieldUpdateOperationsInput | string | null
+    category?: EnumCircularCategoryFieldUpdateOperationsInput | $Enums.CircularCategory
+    issueDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    dateReceived?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    body?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type CompanyCreateWithoutRiskAssessmentsInput = {
@@ -88294,8 +90219,11 @@ export namespace Prisma {
     refNo: string
     vesselId?: string | null
     title: string
+    source: $Enums.CircularSource
+    issuingBody?: string | null
     category: $Enums.CircularCategory
     issueDate: Date | string
+    dateReceived?: Date | string | null
     body: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -89443,8 +91371,11 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     refNo?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
+    source?: EnumCircularSourceFieldUpdateOperationsInput | $Enums.CircularSource
+    issuingBody?: NullableStringFieldUpdateOperationsInput | string | null
     category?: EnumCircularCategoryFieldUpdateOperationsInput | $Enums.CircularCategory
     issueDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    dateReceived?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     body?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -89453,6 +91384,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     vessel?: VesselUpdateOneWithoutCircularsNestedInput
+    acknowledgements?: CircularAcknowledgementUpdateManyWithoutCircularNestedInput
   }
 
   export type CircularUncheckedUpdateWithoutCompanyInput = {
@@ -89460,8 +91392,11 @@ export namespace Prisma {
     refNo?: StringFieldUpdateOperationsInput | string
     vesselId?: NullableStringFieldUpdateOperationsInput | string | null
     title?: StringFieldUpdateOperationsInput | string
+    source?: EnumCircularSourceFieldUpdateOperationsInput | $Enums.CircularSource
+    issuingBody?: NullableStringFieldUpdateOperationsInput | string | null
     category?: EnumCircularCategoryFieldUpdateOperationsInput | $Enums.CircularCategory
     issueDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    dateReceived?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     body?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -89469,6 +91404,7 @@ export namespace Prisma {
     updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    acknowledgements?: CircularAcknowledgementUncheckedUpdateManyWithoutCircularNestedInput
   }
 
   export type CircularUncheckedUpdateManyWithoutCompanyInput = {
@@ -89476,8 +91412,11 @@ export namespace Prisma {
     refNo?: StringFieldUpdateOperationsInput | string
     vesselId?: NullableStringFieldUpdateOperationsInput | string | null
     title?: StringFieldUpdateOperationsInput | string
+    source?: EnumCircularSourceFieldUpdateOperationsInput | $Enums.CircularSource
+    issuingBody?: NullableStringFieldUpdateOperationsInput | string | null
     category?: EnumCircularCategoryFieldUpdateOperationsInput | $Enums.CircularCategory
     issueDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    dateReceived?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     body?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -90681,8 +92620,11 @@ export namespace Prisma {
     companyId: string
     refNo: string
     title: string
+    source: $Enums.CircularSource
+    issuingBody?: string | null
     category: $Enums.CircularCategory
     issueDate: Date | string
+    dateReceived?: Date | string | null
     body: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -91601,8 +93543,11 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     refNo?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
+    source?: EnumCircularSourceFieldUpdateOperationsInput | $Enums.CircularSource
+    issuingBody?: NullableStringFieldUpdateOperationsInput | string | null
     category?: EnumCircularCategoryFieldUpdateOperationsInput | $Enums.CircularCategory
     issueDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    dateReceived?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     body?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -91611,6 +93556,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     company?: CompanyUpdateOneRequiredWithoutCircularsNestedInput
+    acknowledgements?: CircularAcknowledgementUpdateManyWithoutCircularNestedInput
   }
 
   export type CircularUncheckedUpdateWithoutVesselInput = {
@@ -91618,8 +93564,11 @@ export namespace Prisma {
     companyId?: StringFieldUpdateOperationsInput | string
     refNo?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
+    source?: EnumCircularSourceFieldUpdateOperationsInput | $Enums.CircularSource
+    issuingBody?: NullableStringFieldUpdateOperationsInput | string | null
     category?: EnumCircularCategoryFieldUpdateOperationsInput | $Enums.CircularCategory
     issueDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    dateReceived?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     body?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -91627,6 +93576,7 @@ export namespace Prisma {
     updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    acknowledgements?: CircularAcknowledgementUncheckedUpdateManyWithoutCircularNestedInput
   }
 
   export type CircularUncheckedUpdateManyWithoutVesselInput = {
@@ -91634,8 +93584,11 @@ export namespace Prisma {
     companyId?: StringFieldUpdateOperationsInput | string
     refNo?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
+    source?: EnumCircularSourceFieldUpdateOperationsInput | $Enums.CircularSource
+    issuingBody?: NullableStringFieldUpdateOperationsInput | string | null
     category?: EnumCircularCategoryFieldUpdateOperationsInput | $Enums.CircularCategory
     issueDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    dateReceived?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     body?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -92546,6 +94499,54 @@ export namespace Prisma {
     label?: StringFieldUpdateOperationsInput | string
     details?: NullableStringFieldUpdateOperationsInput | string | null
     shoreComments?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CircularAcknowledgementCreateManyCircularInput = {
+    id?: string
+    companyId: string
+    recipientType: string
+    recipientId: string
+    recipientLabel: string
+    acknowledgedAt?: Date | string | null
+    acknowledgedById?: string | null
+    acknowledgedByName?: string | null
+    createdAt?: Date | string
+  }
+
+  export type CircularAcknowledgementUpdateWithoutCircularInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    recipientType?: StringFieldUpdateOperationsInput | string
+    recipientId?: StringFieldUpdateOperationsInput | string
+    recipientLabel?: StringFieldUpdateOperationsInput | string
+    acknowledgedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    acknowledgedById?: NullableStringFieldUpdateOperationsInput | string | null
+    acknowledgedByName?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CircularAcknowledgementUncheckedUpdateWithoutCircularInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    recipientType?: StringFieldUpdateOperationsInput | string
+    recipientId?: StringFieldUpdateOperationsInput | string
+    recipientLabel?: StringFieldUpdateOperationsInput | string
+    acknowledgedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    acknowledgedById?: NullableStringFieldUpdateOperationsInput | string | null
+    acknowledgedByName?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CircularAcknowledgementUncheckedUpdateManyWithoutCircularInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    recipientType?: StringFieldUpdateOperationsInput | string
+    recipientId?: StringFieldUpdateOperationsInput | string
+    recipientLabel?: StringFieldUpdateOperationsInput | string
+    acknowledgedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    acknowledgedById?: NullableStringFieldUpdateOperationsInput | string | null
+    acknowledgedByName?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 

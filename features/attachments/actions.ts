@@ -96,6 +96,7 @@ const REGISTRY: Record<
       return `/cdi/${obs?.inspectionId ?? ""}`;
     },
   },
+  Circular: { permission: "circular:update", pagePath: (id) => `/circulars/${id}` },
 };
 
 function registryFor(entityType: string) {

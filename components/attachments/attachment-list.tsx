@@ -9,6 +9,7 @@ import {
   type ActionResult,
 } from "@/features/attachments/actions";
 import { Button } from "@/components/ui/button";
+import { AttachmentViewerModal } from "./attachment-viewer-modal";
 
 export type AttachmentView = {
   id: string;
@@ -33,41 +34,87 @@ function UploadButton() {
   );
 }
 
-function AttachmentRow({ file, editable }: { file: AttachmentView; editable: boolean }) {
+function AttachmentRow({
+  file,
+  editable,
+  onView,
+}: {
+  file: AttachmentView;
+  editable: boolean;
+  onView: (file: AttachmentView) => void;
+}) {
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
+  const [confirming, setConfirming] = useState(false);
+  const isPdf = file.mimeType === "application/pdf";
 
   function remove() {
-    if (!confirm(`Delete "${file.fileName}"?`)) return;
     const fd = new FormData();
     fd.set("id", file.id);
     startTransition(async () => {
       const res = await deleteAttachmentAction(fd);
       if (!res.ok) setError(res.error);
+      setConfirming(false);
     });
   }
 
   return (
     <li className="flex items-center justify-between gap-3 px-3 py-2 text-sm">
-      <a
-        href={`/api/attachments/${file.id}`}
-        className="flex min-w-0 items-center gap-2 text-accent hover:underline"
-      >
-        <Paperclip className="h-4 w-4 shrink-0" />
-        <span className="truncate">{file.fileName}</span>
-      </a>
+      {isPdf ? (
+        <button
+          type="button"
+          onClick={() => onView(file)}
+          className="flex min-w-0 items-center gap-2 text-accent hover:underline"
+        >
+          <Paperclip className="h-4 w-4 shrink-0" />
+          <span className="truncate">{file.fileName}</span>
+        </button>
+      ) : (
+        <a
+          href={`/api/attachments/${file.id}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex min-w-0 items-center gap-2 text-accent hover:underline"
+        >
+          <Paperclip className="h-4 w-4 shrink-0" />
+          <span className="truncate">{file.fileName}</span>
+        </a>
+      )}
       <div className="flex shrink-0 items-center gap-3 text-xs text-muted-foreground">
-        <span>{formatSize(file.sizeBytes)}</span>
-        {editable && (
-          <button
-            type="button"
-            onClick={remove}
-            disabled={pending}
-            aria-label="Delete attachment"
-            className="rounded p-1 hover:bg-muted hover:text-danger disabled:opacity-30"
-          >
-            <Trash2 className="h-4 w-4" />
-          </button>
+        {confirming ? (
+          <>
+            <span>Delete this file?</span>
+            <button
+              type="button"
+              onClick={remove}
+              disabled={pending}
+              className="font-medium text-danger hover:underline disabled:opacity-50"
+            >
+              {pending ? "Deleting…" : "Yes"}
+            </button>
+            <button
+              type="button"
+              onClick={() => setConfirming(false)}
+              disabled={pending}
+              className="hover:underline disabled:opacity-50"
+            >
+              Cancel
+            </button>
+          </>
+        ) : (
+          <>
+            <span>{formatSize(file.sizeBytes)}</span>
+            {editable && (
+              <button
+                type="button"
+                onClick={() => setConfirming(true)}
+                aria-label="Delete attachment"
+                className="rounded p-1 hover:bg-muted hover:text-danger"
+              >
+                <Trash2 className="h-4 w-4" />
+              </button>
+            )}
+          </>
         )}
       </div>
       {error && <p className="text-xs text-danger">{error}</p>}
@@ -94,6 +141,7 @@ export function AttachmentList({
   useEffect(() => {
     if (state.ok) formRef.current?.reset();
   }, [state.ok]);
+  const [viewingFile, setViewingFile] = useState<AttachmentView | null>(null);
 
   return (
     <div className="space-y-3">
@@ -102,9 +150,13 @@ export function AttachmentList({
       ) : (
         <ul className="divide-y divide-border rounded-md border border-border">
           {attachments.map((a) => (
-            <AttachmentRow key={a.id} file={a} editable={editable} />
+            <AttachmentRow key={a.id} file={a} editable={editable} onView={setViewingFile} />
           ))}
         </ul>
+      )}
+
+      {viewingFile && (
+        <AttachmentViewerModal file={viewingFile} onClose={() => setViewingFile(null)} />
       )}
 
       {editable && (

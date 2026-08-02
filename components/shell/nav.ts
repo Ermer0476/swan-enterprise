@@ -20,8 +20,19 @@ import {
   Ship,
   BarChart3,
   GitBranch,
+  Flag,
+  Award,
+  Umbrella,
+  Building2,
+  Archive,
 } from "lucide-react";
 import type { PermissionKey } from "@/lib/permissions";
+
+export type NavChild = {
+  label: string;
+  href: string;
+  icon: LucideIcon;
+};
 
 export type NavItem = {
   label: string;
@@ -31,6 +42,10 @@ export type NavItem = {
   permission?: PermissionKey;
   /** Not yet implemented — shown as a roadmap placeholder. */
   soon?: boolean;
+  /** Flyout submenu (Searchgear-style CRM pattern) — the parent item still
+   * links to its own page; the chevron opens a floating list of shortcuts
+   * next to it, same shape as filtering the parent page by a query param. */
+  children?: NavChild[];
 };
 
 export type NavGroup = {
@@ -63,7 +78,19 @@ export const NAV: NavGroup[] = [
       { label: "Committee Meetings", href: "/meetings", icon: CalendarClock, permission: "meeting:read" },
       { label: "Emergency Drills", href: "/drills", icon: Flame, permission: "drill:read" },
       { label: "Documents", href: "/documents", icon: FolderOpen, permission: "doc:read" },
-      { label: "Circulars", href: "/circulars", icon: Megaphone, permission: "circular:read" },
+      {
+        label: "Circulars",
+        href: "/circulars",
+        icon: Megaphone,
+        permission: "circular:read",
+        children: [
+          { label: "Flag State", href: "/circulars?source=FLAG", icon: Flag },
+          { label: "Classification Society", href: "/circulars?source=CLASS", icon: Award },
+          { label: "Insurance / P&I Club", href: "/circulars?source=INSURANCE", icon: Umbrella },
+          { label: "Company Circulars", href: "/circulars?source=COMPANY", icon: Building2 },
+          { label: "Archive", href: "/circulars?archive=1", icon: Archive },
+        ],
+      },
       { label: "Risk Assessments", href: "/risk", icon: ShieldCheck, permission: "risk:read" },
       { label: "Defect List", href: "/defects", icon: ListChecks, permission: "defect:read" },
     ],

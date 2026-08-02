@@ -845,16 +845,48 @@ async function main() {
     });
   }
 
-  // Sample Circular
+  // Sample Circulars — one per source, so the taxonomy is visible in demo data
   if (!(await prisma.circular.findFirst({ where: { companyId: company.id, refNo: "CIR-2026-0001" } }))) {
     await prisma.circular.create({
       data: {
         companyId: company.id,
         refNo: "CIR-2026-0001",
         title: "Updated enclosed space entry procedure",
+        source: "COMPANY",
         category: "SAFETY",
         issueDate: new Date(),
+        dateReceived: new Date(),
         body: "Please note the enclosed space entry permit (DOC-2026-0001) has been revised to Rev 2, adding a mandatory gas-free re-check after any break exceeding 30 minutes.",
+        createdBy: adminId || null,
+      },
+    });
+  }
+  if (!(await prisma.circular.findFirst({ where: { companyId: company.id, refNo: "CIR-2026-0002" } }))) {
+    await prisma.circular.create({
+      data: {
+        companyId: company.id,
+        refNo: "CIR-2026-0002",
+        title: "Amendment to annual survey requirements",
+        source: "FLAG",
+        issuingBody: "Panama",
+        category: "REGULATORY",
+        issueDate: new Date(),
+        body: "Panama Maritime Authority circular amending the annual survey window for vessels over 20 years of age — refer to the attached notice for the revised schedule.",
+        createdBy: adminId || null,
+      },
+    });
+  }
+  if (!(await prisma.circular.findFirst({ where: { companyId: company.id, refNo: "CIR-2026-0003" } }))) {
+    await prisma.circular.create({
+      data: {
+        companyId: company.id,
+        refNo: "CIR-2026-0003",
+        title: "Class notation update for hull maintenance intervals",
+        source: "CLASS",
+        issuingBody: "NKK",
+        category: "TECHNICAL",
+        issueDate: new Date(),
+        body: "NKK technical circular on revised hull maintenance and thickness-gauging intervals for bulk carriers — engineering department to review against the PMS.",
         createdBy: adminId || null,
       },
     });
