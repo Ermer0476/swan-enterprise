@@ -28,13 +28,30 @@ export async function listCdi(companyId: string, filters: CdiFilters = {}) {
 }
 
 export async function getCdi(companyId: string, id: string) {
-  return prisma.cdiInspection.findFirst({
+  const insp = await prisma.cdiInspection.findFirst({
     where: { id, companyId, deletedAt: null },
     include: {
       vessel: { select: { name: true } },
       observations: { where: { deletedAt: null }, orderBy: { createdAt: "asc" } },
     },
   });
+  if (!insp) return null;
+
+  const observationIds = insp.observations.map((o) => o.id);
+  const attachments = observationIds.length
+    ? await prisma.attachment.findMany({
+        where: { companyId, entityType: "CdiObservation", entityId: { in: observationIds }, deletedAt: null },
+        orderBy: { createdAt: "desc" },
+      })
+    : [];
+
+  return {
+    ...insp,
+    observations: insp.observations.map((o) => ({
+      ...o,
+      attachments: attachments.filter((a) => a.entityId === o.id),
+    })),
+  };
 }
 
 export async function listVesselOptions(companyId: string) {

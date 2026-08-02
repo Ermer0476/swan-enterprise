@@ -5,8 +5,8 @@ import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { requirePermission } from "@/lib/rbac";
 import { writeAudit } from "@/lib/audit";
-import type { NearMissStatus, NearMissKind } from "@/lib/generated/prisma";
-import { CAPA_PREFIX } from "@/features/capa/schema";
+import type { NearMissStatus, NearMissKind, CapaStatus } from "@/lib/generated/prisma";
+import { CAPA_PREFIX, CAPA_STATUSES } from "@/features/capa/schema";
 import {
   createNearMissSchema,
   officeReviewSchema,
@@ -59,6 +59,8 @@ export async function createNearMissAction(
     caAction: formData.getAll("caAction").map(String),
     caResponsible: formData.getAll("caResponsible").map(String),
     caTargetDate: formData.getAll("caTargetDate").map(String),
+    caStatus: formData.getAll("caStatus").map(String),
+    caClosedDate: formData.getAll("caClosedDate").map(String),
   });
   if (!parsed.success) {
     return fail(parsed.error.issues[0]?.message ?? "Invalid input");
@@ -71,10 +73,20 @@ export async function createNearMissAction(
     return fail("Select a valid position for your department");
   }
 
+  // "Save as Draft" is a vessel-only workflow step — a draft is invisible to
+  // everyone but its own SHIPBOARD reporter (see queries.ts), so honoring it
+  // for an office user would orphan the record (not even they could see it
+  // again). Anyone else always lands on REPORTED.
+  const status: NearMissStatus =
+    formData.get("intent") === "draft" && user.department === "SHIPBOARD" ? "DRAFT" : "REPORTED";
+
   const nm = await prisma.nearMiss.create({
     data: {
       companyId: user.companyId,
-      refNo: await nextRefNo(user.companyId, d.kind),
+      // A draft hasn't been reported yet, so it doesn't burn a ref number —
+      // one is assigned only when reportDraftNearMissAction moves it to
+      // REPORTED (or immediately below, for a non-draft submission).
+      refNo: status === "REPORTED" ? await nextRefNo(user.companyId, d.kind) : null,
       title: d.title,
       reporterName: d.reporterName,
       reporterPosition: d.reporterPosition,
@@ -90,29 +102,39 @@ export async function createNearMissAction(
       immediateAction: d.immediateAction || null,
       rootCauseCategory: d.rootCauseCategory,
       rootCauseSubCategory: d.rootCauseSubCategory,
-      status: "REPORTED",
+      status,
       reportedById: user.id,
       createdBy: user.id,
       updatedBy: user.id,
     },
   });
 
-  const capaRows = buildCapaRows(d.caAction, d.caResponsible, d.caTargetDate);
+  const capaRows = buildCapaRows(d.caAction, d.caResponsible, d.caTargetDate, d.caStatus, d.caClosedDate);
   if (capaRows.length > 0) {
+    // A corrective action can only be filed as already In Progress/Closed by
+    // the vessel itself — an office-filed report always starts every row OPEN.
+    const isShipboard = user.department === "SHIPBOARD";
     await prisma.capaAction.createMany({
-      data: capaRows.map((r, i) => ({
-        companyId: user.companyId,
-        entityType: "NearMiss",
-        entityId: nm.id,
-        kind: "CORRECTIVE",
-        code: `${CAPA_PREFIX.CORRECTIVE}-${String(i + 1).padStart(2, "0")}`,
-        action: r.action,
-        responsible: r.responsible || null,
-        targetDate: r.targetDate ? new Date(r.targetDate) : null,
-        status: "OPEN",
-        createdBy: user.id,
-        updatedBy: user.id,
-      })),
+      data: capaRows.map((r, i) => {
+        const status: CapaStatus =
+          isShipboard && CAPA_STATUSES.includes(r.status as (typeof CAPA_STATUSES)[number])
+            ? (r.status as CapaStatus)
+            : "OPEN";
+        return {
+          companyId: user.companyId,
+          entityType: "NearMiss",
+          entityId: nm.id,
+          kind: "CORRECTIVE",
+          code: `${CAPA_PREFIX.CORRECTIVE}-${String(i + 1).padStart(2, "0")}`,
+          action: r.action,
+          responsible: r.responsible || null,
+          targetDate: r.targetDate ? new Date(r.targetDate) : null,
+          status,
+          closedDate: status === "CLOSED" && r.closedDate ? new Date(r.closedDate) : null,
+          createdBy: user.id,
+          updatedBy: user.id,
+        };
+      }),
     });
   }
 
@@ -121,7 +143,10 @@ export async function createNearMissAction(
     action: "CREATE",
     entityType: "NearMiss",
     entityId: nm.id,
-    summary: `Reported near miss ${nm.refNo} — ${nm.title}`,
+    summary:
+      status === "REPORTED"
+        ? `Reported near miss ${nm.refNo} — ${nm.title}`
+        : `Saved draft — ${nm.title}`,
   });
 
   revalidatePath("/near-miss");
@@ -135,7 +160,7 @@ export async function saveOfficeReviewAction(
   const user = await requirePermission("nm:update");
   const parsed = officeReviewSchema.safeParse({
     nearMissId: formData.get("nearMissId"),
-    companyComments: formData.get("companyComments"),
+    shoreRemarks: formData.get("shoreRemarks"),
     reviewedAt: formData.get("reviewedAt"),
   });
   if (!parsed.success) return fail("Invalid input");
@@ -149,7 +174,7 @@ export async function saveOfficeReviewAction(
   await prisma.nearMiss.update({
     where: { id: nm.id },
     data: {
-      companyComments: parsed.data.companyComments || null,
+      shoreRemarks: parsed.data.shoreRemarks || null,
       reviewedAt: parsed.data.reviewedAt ? new Date(parsed.data.reviewedAt) : null,
       status: nm.status === "REPORTED" ? "UNDER_REVIEW" : nm.status,
       updatedBy: user.id,
@@ -177,6 +202,9 @@ export async function advanceNearMissAction(
     where: { id, companyId: user.companyId, deletedAt: null },
   });
   if (!nm) return fail("Near miss not found");
+  // DRAFT → REPORTED is a vessel-only step (reportDraftNearMissAction) — the
+  // office never even sees a draft to advance it from here.
+  if (nm.status === "DRAFT") return fail("This report is still a draft — the vessel must submit it first");
 
   const next = nextStatus(nm.status);
   if (!next) return fail("Near miss is already closed");
@@ -219,6 +247,170 @@ export async function advanceNearMissAction(
 
   revalidatePath(`/near-miss/${nm.id}`);
   return OK;
+}
+
+/** Vessel-only: submits a Draft for office review — status DRAFT → REPORTED. */
+export async function reportDraftNearMissAction(formData: FormData): Promise<ActionResult> {
+  const user = await requirePermission("nm:create");
+  if (user.department !== "SHIPBOARD") {
+    return fail("Only the vessel can submit a draft for office review");
+  }
+  const id = String(formData.get("nearMissId") ?? "");
+  const nm = await prisma.nearMiss.findFirst({
+    where: { id, companyId: user.companyId, deletedAt: null, status: "DRAFT" },
+  });
+  if (!nm) return fail("Draft not found");
+
+  const openCapaCount = await prisma.capaAction.count({
+    where: {
+      companyId: user.companyId,
+      entityType: "NearMiss",
+      entityId: nm.id,
+      deletedAt: null,
+      status: { not: "CLOSED" },
+    },
+  });
+  if (openCapaCount > 0) {
+    return fail(
+      `Close all corrective actions before reporting to the office (${openCapaCount} still open).`,
+    );
+  }
+
+  // Only assigned now — a draft that's abandoned or edited repeatedly never
+  // burns a sequence number.
+  const refNo = await nextRefNo(user.companyId, nm.kind);
+  await prisma.nearMiss.update({
+    where: { id: nm.id },
+    data: { status: "REPORTED", refNo, updatedBy: user.id },
+  });
+
+  await writeAudit({
+    actor: user,
+    action: "UPDATE",
+    entityType: "NearMiss",
+    entityId: nm.id,
+    summary: `Submitted draft — now ${refNo} — for office review`,
+  });
+
+  revalidatePath(`/near-miss/${nm.id}`);
+  revalidatePath("/near-miss");
+  return OK;
+}
+
+/**
+ * Vessel-only: fully edits a Draft's own report fields (everything except
+ * the corrective action rows, which the shared CAPA tracker already lets the
+ * vessel add/remove/edit in place). Locked to DRAFT so a REPORTED/CLOSED
+ * record — now visible to and possibly already reviewed by the office —
+ * can't be silently rewritten out from under them.
+ */
+export async function updateDraftNearMissAction(
+  nearMissId: string,
+  _prev: ActionResult,
+  formData: FormData,
+): Promise<ActionResult> {
+  const user = await requirePermission("nm:create");
+  if (user.department !== "SHIPBOARD") {
+    return fail("Only the vessel can edit its own draft");
+  }
+  const nm = await prisma.nearMiss.findFirst({
+    where: { id: nearMissId, companyId: user.companyId, deletedAt: null, status: "DRAFT" },
+  });
+  if (!nm) return fail("Draft not found");
+
+  const parsed = createNearMissSchema.safeParse({
+    title: formData.get("title"),
+    reporterName: formData.get("reporterName"),
+    reporterPosition: formData.get("reporterPosition"),
+    kind: formData.get("kind") || "NEAR_MISS",
+    horCategory: formData.get("horCategory") || undefined,
+    stopAuthorityExercised: formData.get("stopAuthorityExercised") === "on",
+    // Vessel is locked (not resubmitted) — the edit form only shows it as
+    // read-only text, so it's left out of the record entirely rather than
+    // touched below.
+    vesselId: undefined,
+    occurredAt: formData.get("occurredAt"),
+    location: formData.get("location"),
+    description: formData.get("description"),
+    potentialConsequence: formData.get("potentialConsequence"),
+    potentialSeverity: formData.get("potentialSeverity"),
+    immediateAction: formData.get("immediateAction"),
+    rootCauseCategory: formData.get("rootCauseCategory"),
+    rootCauseSubCategory: formData.get("rootCauseSubCategory"),
+    caAction: [],
+    caResponsible: [],
+    caTargetDate: [],
+    caStatus: [],
+    caClosedDate: [],
+  });
+  if (!parsed.success) {
+    return fail(parsed.error.issues[0]?.message ?? "Invalid input");
+  }
+  const d = parsed.data;
+
+  if (!positionsFor(user.department).includes(d.reporterPosition)) {
+    return fail("Select a valid position for your department");
+  }
+
+  await prisma.nearMiss.update({
+    where: { id: nm.id },
+    data: {
+      title: d.title,
+      reporterName: d.reporterName,
+      reporterPosition: d.reporterPosition,
+      kind: d.kind,
+      horCategory: d.kind === "HOR" ? d.horCategory : null,
+      stopAuthorityExercised: d.kind === "HOR" ? d.stopAuthorityExercised : false,
+      occurredAt: new Date(d.occurredAt),
+      location: d.location || null,
+      description: d.description,
+      potentialConsequence: d.potentialConsequence,
+      potentialSeverity: d.potentialSeverity,
+      immediateAction: d.immediateAction || null,
+      rootCauseCategory: d.rootCauseCategory,
+      rootCauseSubCategory: d.rootCauseSubCategory,
+      updatedBy: user.id,
+    },
+  });
+
+  await writeAudit({
+    actor: user,
+    action: "UPDATE",
+    entityType: "NearMiss",
+    entityId: nm.id,
+    summary: `Updated draft — ${d.title}`,
+  });
+
+  revalidatePath(`/near-miss/${nm.id}`);
+  return OK;
+}
+
+/** Vessel-only: deletes its own Draft — never a REPORTED/CLOSED record (use deleteNearMissAction for those, office-only). */
+export async function deleteDraftNearMissAction(formData: FormData): Promise<ActionResult> {
+  const user = await requirePermission("nm:create");
+  if (user.department !== "SHIPBOARD") {
+    return fail("Only the vessel can delete its own draft");
+  }
+  const id = String(formData.get("nearMissId") ?? "");
+  const nm = await prisma.nearMiss.findFirst({
+    where: { id, companyId: user.companyId, deletedAt: null, status: "DRAFT" },
+  });
+  if (!nm) return fail("Draft not found");
+
+  await prisma.nearMiss.update({
+    where: { id: nm.id },
+    data: { deletedAt: new Date(), deletedBy: user.id },
+  });
+  await writeAudit({
+    actor: user,
+    action: "DELETE",
+    entityType: "NearMiss",
+    entityId: nm.id,
+    summary: `Deleted draft — ${nm.title}`,
+  });
+
+  revalidatePath("/near-miss");
+  redirect("/near-miss");
 }
 
 export async function deleteNearMissAction(

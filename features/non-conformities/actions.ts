@@ -6,7 +6,7 @@ import { prisma } from "@/lib/prisma";
 import { requirePermission } from "@/lib/rbac";
 import { writeAudit } from "@/lib/audit";
 import { Prisma, type NcrStatus, type RootCauseCategory } from "@/lib/generated/prisma";
-import { createNcrSchema, rootCauseSchema, NCR_STATUSES, NCR_SHIP_CREATOR_RANKS } from "./schema";
+import { createNcrSchema, rootCauseSchema, shoreRemarksSchema, NCR_STATUSES, NCR_SHIP_CREATOR_RANKS } from "./schema";
 import { suggestNextRefNo } from "./queries";
 
 export type ActionResult = { ok: boolean; error: string | null };
@@ -198,6 +198,46 @@ export async function saveRootCauseAction(
     entityType: "NonConformity",
     entityId: ncr.id,
     summary: `Recorded root cause for ${ncr.refNo}`,
+  });
+
+  revalidatePath(`/non-conformities/${ncr.id}`);
+  return OK;
+}
+
+export async function saveShoreRemarksAction(
+  _prev: ActionResult,
+  formData: FormData,
+): Promise<ActionResult> {
+  const user = await requirePermission("ncr:update");
+  const parsed = shoreRemarksSchema.safeParse({
+    ncrId: formData.get("ncrId"),
+    shoreRemarks: formData.get("shoreRemarks"),
+  });
+  if (!parsed.success) {
+    return fail(parsed.error.issues[0]?.message ?? "Invalid input");
+  }
+  const d = parsed.data;
+
+  const ncr = await prisma.nonConformity.findFirst({
+    where: { id: d.ncrId, companyId: user.companyId, deletedAt: null },
+  });
+  if (!ncr) return fail("Non-conformity not found");
+  if (ncr.status === "CLOSED") return fail("Closed NCRs are read-only");
+
+  await prisma.nonConformity.update({
+    where: { id: ncr.id },
+    data: {
+      shoreRemarks: d.shoreRemarks || null,
+      updatedBy: user.id,
+    },
+  });
+
+  await writeAudit({
+    actor: user,
+    action: "UPDATE",
+    entityType: "NonConformity",
+    entityId: ncr.id,
+    summary: `Shore remarks recorded for ${ncr.refNo}`,
   });
 
   revalidatePath(`/non-conformities/${ncr.id}`);

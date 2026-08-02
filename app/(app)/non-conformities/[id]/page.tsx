@@ -12,11 +12,15 @@ import {
   type CapaSummaryRowView,
 } from "@/components/capa/capa-tracker";
 import { formatRootCause } from "@/lib/root-cause";
+import { listAttachments } from "@/features/attachments/queries";
+import { AttachmentList } from "@/components/attachments/attachment-list";
 import { PageHeader } from "@/components/ui/page-header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { formatDate, humanize, severityTone } from "@/lib/utils";
+import { ncrStatusTone } from "@/features/non-conformities/ui";
 import { RootCauseForm } from "./root-cause-form";
+import { ShoreRemarksForm } from "./shore-remarks-form";
 import { NcrActions } from "./ncr-actions";
 import { Button } from "@/components/ui/button";
 import { FileText } from "lucide-react";
@@ -48,11 +52,6 @@ function nextOf(status: NcrStatus): NcrStatus | null {
   const i = NCR_STATUSES.indexOf(status);
   return (NCR_STATUSES[i + 1] as NcrStatus | undefined) ?? null;
 }
-function statusTone(s: string) {
-  if (s === "CLOSED") return "success";
-  if (s === "SUBMITTED_TO_OFFICE") return "warning";
-  return "danger";
-}
 
 export default async function NcrDetailPage({
   params,
@@ -72,9 +71,10 @@ export default async function NcrDetailPage({
     canUpdate && !!next && (next === "CLOSED" ? canClose : true);
   const editable = canUpdate && ncr.status !== "CLOSED";
 
-  const [correctiveRows, allCapaRows] = await Promise.all([
+  const [correctiveRows, allCapaRows, attachments] = await Promise.all([
     listCapaActions(user.companyId, "NonConformity", ncr.id, "CORRECTIVE"),
     listAllCapaActions(user.companyId, "NonConformity", ncr.id),
+    listAttachments(user.companyId, "NonConformity", ncr.id),
   ]);
 
   const meta = [
@@ -97,7 +97,7 @@ export default async function NcrDetailPage({
         actions={
           <div className="flex items-center gap-2">
             <Badge tone={severityTone(ncr.severity)}>{humanize(ncr.severity)}</Badge>
-            <Badge tone={statusTone(ncr.status)}>{humanize(ncr.status)}</Badge>
+            <Badge tone={ncrStatusTone(ncr.status)}>{humanize(ncr.status)}</Badge>
             <Link href={`/non-conformities/${ncr.id}/report`} target="_blank" rel="noopener noreferrer">
               <Button type="button" variant="outline" size="sm">
                 <FileText className="h-4 w-4" /> Show Report
@@ -167,6 +167,41 @@ export default async function NcrDetailPage({
               editable={editable}
             />
           </div>
+        </CardContent>
+      </Card>
+
+      <Card className="mb-6">
+        <CardHeader><CardTitle>Attachments</CardTitle></CardHeader>
+        <CardContent>
+          <AttachmentList
+            entityType="NonConformity"
+            entityId={ncr.id}
+            editable={editable}
+            attachments={attachments.map((a) => ({
+              id: a.id,
+              fileName: a.fileName,
+              mimeType: a.mimeType,
+              sizeBytes: a.sizeBytes,
+              createdAt: a.createdAt.toISOString(),
+            }))}
+          />
+        </CardContent>
+      </Card>
+
+      <Card className="mb-6">
+        <CardHeader><CardTitle>Shore Remarks</CardTitle></CardHeader>
+        <CardContent>
+          {editable ? (
+            <ShoreRemarksForm
+              key={ncr.updatedAt.getTime()}
+              ncrId={ncr.id}
+              shoreRemarks={ncr.shoreRemarks ?? ""}
+            />
+          ) : ncr.shoreRemarks ? (
+            <Field label="Shore Remarks" value={ncr.shoreRemarks} />
+          ) : (
+            <p className="text-sm text-muted-foreground">No shore remarks recorded yet.</p>
+          )}
         </CardContent>
       </Card>
 

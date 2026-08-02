@@ -8,6 +8,9 @@ import {
   NEARMISS_CONSEQUENCE_LABELS,
   NEARMISS_KIND_LABELS,
   HOR_CATEGORY_LABELS,
+  nearMissStatusLabel,
+  nearMissStatusTone,
+  positionsFor,
 } from "@/features/near-miss/schema";
 import { listCapaActions, listAllCapaActions } from "@/features/capa/queries";
 import {
@@ -17,11 +20,14 @@ import {
   type CapaSummaryRowView,
 } from "@/components/capa/capa-tracker";
 import { formatRootCause } from "@/lib/root-cause";
+import { listAttachments } from "@/features/attachments/queries";
+import { AttachmentList } from "@/components/attachments/attachment-list";
 import { PageHeader } from "@/components/ui/page-header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { formatDate, humanize, severityTone } from "@/lib/utils";
-import { NearMissActions } from "./near-miss-actions";
+import { NearMissActions, ReportDraftButton, DeleteDraftButton } from "./near-miss-actions";
+import { EditDraftNearMissForm } from "./edit-draft-form";
 import { OfficeReviewForm } from "@/components/near-miss/office-review-form";
 import { Button } from "@/components/ui/button";
 import { FileText } from "lucide-react";
@@ -53,10 +59,6 @@ function nextOf(status: NearMissStatus): NearMissStatus | null {
   const i = NM_STATUSES.indexOf(status);
   return (NM_STATUSES[i + 1] as NearMissStatus | undefined) ?? null;
 }
-function statusTone(s: string) {
-  return s === "CLOSED" ? "success" : s === "UNDER_REVIEW" ? "warning" : "accent";
-}
-
 export default async function NearMissDetailPage({
   params,
 }: {
@@ -64,7 +66,7 @@ export default async function NearMissDetailPage({
 }) {
   const user = await requirePermission("nm:read");
   const { id } = await params;
-  const nm = await getNearMiss(user.companyId, id);
+  const nm = await getNearMiss(user.companyId, id, user.department === "SHIPBOARD");
   if (!nm) notFound();
 
   const canUpdate = can(user, "nm:update");
@@ -79,11 +81,21 @@ export default async function NearMissDetailPage({
   // REGISTRY's server-side guard for NearMiss in features/capa/actions.ts).
   const canEditCapa =
     can(user, "nm:create") && user.department === "SHIPBOARD" && nm.status !== "CLOSED";
+  // A draft is only ever visible to its own vessel (see queries.ts) — so
+  // reaching this page while it's still DRAFT already means "this is my own
+  // draft." Drives the full edit form, the Report button, and Delete alike.
+  const isOwnDraft = nm.status === "DRAFT" && can(user, "nm:create") && user.department === "SHIPBOARD";
 
-  const [correctiveRows, allCapaRows] = await Promise.all([
+  const [correctiveRows, allCapaRows, attachments] = await Promise.all([
     listCapaActions(user.companyId, "NearMiss", nm.id, "CORRECTIVE"),
     listAllCapaActions(user.companyId, "NearMiss", nm.id),
+    listAttachments(user.companyId, "NearMiss", nm.id),
   ]);
+  const allCapaClosed = allCapaRows.every((r) => r.status === "CLOSED");
+  // Same "who may act on this record right now" logic as CAPA above (ship
+  // owns it while reporting, office owns it while reviewing) — attachments
+  // follow the same edit window rather than inventing a separate rule.
+  const attachmentsEditable = canEditCapa || (canUpdate && nm.status !== "CLOSED");
 
   const meta = [
     { label: "Vessel", value: nm.vessel?.name ?? "Shore / N/A" },
@@ -106,47 +118,75 @@ export default async function NearMissDetailPage({
       </Link>
 
       <PageHeader
-        title={`${nm.refNo} — ${nm.title}`}
+        title={nm.refNo ? `${nm.refNo} — ${nm.title}` : `Draft — ${nm.title}`}
         actions={
           <div className="flex items-center gap-2">
             <Badge tone={nm.kind === "HOR" ? "warning" : "accent"}>{NEARMISS_KIND_LABELS[nm.kind]}</Badge>
             <Badge tone={severityTone(nm.potentialSeverity)}>Potential: {humanize(nm.potentialSeverity)}</Badge>
-            <Badge tone={statusTone(nm.status)}>{humanize(nm.status)}</Badge>
+            <Badge tone={nearMissStatusTone(nm.status)}>{nearMissStatusLabel(nm.status, user.department)}</Badge>
             <Link href={`/near-miss/${nm.id}/report`} target="_blank" rel="noopener noreferrer">
               <Button type="button" variant="outline" size="sm">
                 <FileText className="h-4 w-4" /> Show Report
               </Button>
             </Link>
+            {isOwnDraft && <DeleteDraftButton nearMissId={nm.id} />}
+            {isOwnDraft && <ReportDraftButton nearMissId={nm.id} blocked={!allCapaClosed} />}
           </div>
         }
       />
 
-      <div className="mb-6 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
-        {meta.map((m) => (
-          <div key={m.label}>
-            <div className="text-xs uppercase tracking-wide text-muted-foreground">{m.label}</div>
-            <div className="mt-0.5 text-sm font-medium">{m.value}</div>
+      {isOwnDraft ? (
+        <EditDraftNearMissForm
+          nearMiss={{
+            id: nm.id,
+            title: nm.title,
+            reporterName: nm.reporterName ?? "",
+            reporterPosition: nm.reporterPosition ?? "",
+            kind: nm.kind,
+            horCategory: nm.horCategory,
+            stopAuthorityExercised: nm.stopAuthorityExercised,
+            occurredAt: nm.occurredAt.toISOString().slice(0, 10),
+            location: nm.location,
+            description: nm.description,
+            potentialConsequence: nm.potentialConsequence,
+            potentialSeverity: nm.potentialSeverity,
+            immediateAction: nm.immediateAction,
+            rootCauseCategory: nm.rootCauseCategory,
+            rootCauseSubCategory: nm.rootCauseSubCategory,
+          }}
+          positions={positionsFor(user.department)}
+          ownVesselName={nm.vessel?.name ?? null}
+        />
+      ) : (
+        <>
+          <div className="mb-6 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
+            {meta.map((m) => (
+              <div key={m.label}>
+                <div className="text-xs uppercase tracking-wide text-muted-foreground">{m.label}</div>
+                <div className="mt-0.5 text-sm font-medium">{m.value}</div>
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
 
-      <Card className="mb-6">
-        <CardHeader><CardTitle>What happened</CardTitle></CardHeader>
-        <CardContent className="space-y-4">
-          <Field
-            label={nm.kind === "HOR" ? "Details of the Observation" : "Details of the Near Miss"}
-            value={nm.description}
-          />
-          {nm.kind === "HOR" && nm.horCategory && (
-            <Field label="Category" value={HOR_CATEGORY_LABELS[nm.horCategory]} />
-          )}
-          {nm.kind === "HOR" && (
-            <Field label="Stop Work Authority Exercised" value={nm.stopAuthorityExercised ? "Yes" : "No"} />
-          )}
-          <Field label="Potential consequence" value={NEARMISS_CONSEQUENCE_LABELS[nm.potentialConsequence]} />
-          {nm.immediateAction && <Field label="Immediate action" value={nm.immediateAction} />}
-        </CardContent>
-      </Card>
+          <Card className="mb-6">
+            <CardHeader><CardTitle>What happened</CardTitle></CardHeader>
+            <CardContent className="space-y-4">
+              <Field
+                label={nm.kind === "HOR" ? "Details of the Observation" : "Details of the Near Miss"}
+                value={nm.description}
+              />
+              {nm.kind === "HOR" && nm.horCategory && (
+                <Field label="Category" value={HOR_CATEGORY_LABELS[nm.horCategory]} />
+              )}
+              {nm.kind === "HOR" && (
+                <Field label="Stop Work Authority Exercised" value={nm.stopAuthorityExercised ? "Yes" : "No"} />
+              )}
+              <Field label="Potential consequence" value={NEARMISS_CONSEQUENCE_LABELS[nm.potentialConsequence]} />
+              {nm.immediateAction && <Field label="Immediate action" value={nm.immediateAction} />}
+            </CardContent>
+          </Card>
+        </>
+      )}
 
       <Card className="mb-6">
         <CardHeader><CardTitle>Corrective Action</CardTitle></CardHeader>
@@ -170,12 +210,30 @@ export default async function NearMissDetailPage({
         </CardContent>
       </Card>
 
+      <Card className="mb-6">
+        <CardHeader><CardTitle>Attachments</CardTitle></CardHeader>
+        <CardContent>
+          <AttachmentList
+            entityType="NearMiss"
+            entityId={nm.id}
+            editable={attachmentsEditable}
+            attachments={attachments.map((a) => ({
+              id: a.id,
+              fileName: a.fileName,
+              mimeType: a.mimeType,
+              sizeBytes: a.sizeBytes,
+              createdAt: a.createdAt.toISOString(),
+            }))}
+          />
+        </CardContent>
+      </Card>
+
       <Card>
         <CardHeader><CardTitle>Office Review</CardTitle></CardHeader>
         <CardContent>
           <OfficeReviewForm
             nearMissId={nm.id}
-            companyComments={nm.companyComments ?? ""}
+            shoreRemarks={nm.shoreRemarks ?? ""}
             reviewedAt={nm.reviewedAt ? nm.reviewedAt.toISOString() : null}
             disabled={!(canUpdate && nm.status !== "CLOSED")}
             lifecycleActions={

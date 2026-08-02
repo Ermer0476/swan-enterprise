@@ -9,11 +9,8 @@ import { Badge } from "@/components/ui/badge";
 import { Input, Select } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { formatDate, humanize } from "@/lib/utils";
+import { lifecycleStatusTone } from "@/lib/status";
 import type { InspectionStatus } from "@/lib/generated/prisma";
-
-function statusTone(s: string) {
-  return s === "CLOSED" ? "success" : s === "IN_PROGRESS" ? "warning" : "accent";
-}
 
 export default async function SirePage({
   searchParams,
@@ -89,7 +86,7 @@ export default async function SirePage({
                     <td className="px-4 py-2.5 text-muted-foreground">{r.port ?? "—"}</td>
                     <td className="px-4 py-2.5 text-muted-foreground">{formatDate(r.inspectionDate)}</td>
                     <td className="px-4 py-2.5 tabular-nums text-muted-foreground">{r._count.observations}</td>
-                    <td className="px-4 py-2.5"><Badge tone={statusTone(r.status)}>{humanize(r.status)}</Badge></td>
+                    <td className="px-4 py-2.5"><Badge tone={lifecycleStatusTone(r.status)}>{humanize(r.status)}</Badge></td>
                   </tr>
                 ))}
               </tbody>

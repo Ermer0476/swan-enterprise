@@ -2,14 +2,13 @@ import Link from "next/link";
 import { Plus, CalendarClock } from "lucide-react";
 import { requirePermission, can } from "@/lib/rbac";
 import { listCommitteeMeetings, listVesselOptions } from "@/features/committee-meetings/queries";
-import { COMMITTEE_TYPE_LABELS } from "@/features/committee-meetings/schema";
+import { COMMITTEE_TYPE_LABELS, meetingStatusTone } from "@/features/committee-meetings/schema";
 import { PageHeader } from "@/components/ui/page-header";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input, Select } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { formatDate } from "@/lib/utils";
-import { Check } from "lucide-react";
+import { formatDate, humanize } from "@/lib/utils";
 
 export default async function MeetingsPage({
   searchParams,
@@ -66,21 +65,23 @@ export default async function MeetingsPage({
             <table className="w-full text-sm">
               <thead className="border-b border-border bg-muted/40 text-left text-xs uppercase tracking-wide text-muted-foreground">
                 <tr>
+                  <th className="px-4 py-2.5 font-medium">Ref</th>
                   <th className="px-4 py-2.5 font-medium">Date</th>
                   <th className="px-4 py-2.5 font-medium">Shore/Vessel</th>
                   <th className="px-4 py-2.5 font-medium">Type</th>
                   <th className="px-4 py-2.5 font-medium">Chairman</th>
                   <th className="px-4 py-2.5 font-medium">In-charge</th>
-                  <th className="px-4 py-2.5 font-medium">Shore Remarks</th>
-                  <th className="px-4 py-2.5 font-medium">Published</th>
-                  <th className="px-4 py-2.5 font-medium">Approved</th>
+                  <th className="px-4 py-2.5 font-medium">Status</th>
                 </tr>
               </thead>
               <tbody>
                 {rows.map((r) => (
                   <tr key={r.id} className="border-b border-border last:border-0 hover:bg-muted/30">
+                    <td className="px-4 py-2.5 font-mono text-xs">
+                      <Link href={`/meetings/${r.id}`} className="text-accent hover:underline">{r.refNo ?? "Draft"}</Link>
+                    </td>
                     <td className="px-4 py-2.5 text-muted-foreground">
-                      <Link href={`/meetings/${r.id}`} className="text-accent hover:underline">{formatDate(r.meetingDate)}</Link>
+                      <Link href={`/meetings/${r.id}`} className="hover:underline">{formatDate(r.meetingDate)}</Link>
                     </td>
                     <td className="px-4 py-2.5 text-muted-foreground">{r.vessel?.name ?? "Shore"}</td>
                     <td className="px-4 py-2.5">
@@ -92,9 +93,14 @@ export default async function MeetingsPage({
                     </td>
                     <td className="px-4 py-2.5 text-muted-foreground">{r.chairman ?? "—"}</td>
                     <td className="px-4 py-2.5 text-muted-foreground">{r.inCharge ?? "—"}</td>
-                    <td className="px-4 py-2.5 text-center">{r.shoreRemarks ? <Check className="mx-auto h-4 w-4 text-success" /> : null}</td>
-                    <td className="px-4 py-2.5 text-center">{r.published ? <Check className="mx-auto h-4 w-4 text-success" /> : null}</td>
-                    <td className="px-4 py-2.5 text-center">{r.approved ? <Check className="mx-auto h-4 w-4 text-success" /> : null}</td>
+                    <td className="px-4 py-2.5">
+                      <div className="flex flex-wrap items-center gap-1">
+                        <Badge tone={meetingStatusTone(r.status)}>{humanize(r.status)}</Badge>
+                        {r.revisedAfterReview && r.status === "REPORTED" && (
+                          <Badge tone="warning">Revised</Badge>
+                        )}
+                      </div>
+                    </td>
                   </tr>
                 ))}
               </tbody>

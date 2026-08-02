@@ -7,6 +7,8 @@ import { AuditForm } from "@/components/audit/audit-form";
 export default async function NewInternalAuditPage() {
   const user = await requirePermission("iaudit:create");
   const vessels = await listVesselOptions(user.companyId);
+  const isShipboard = user.department === "SHIPBOARD";
+  const ownVesselName = vessels.find((v) => v.id === user.vesselId)?.name ?? null;
   return (
     <div className="mx-auto max-w-7xl">
       <PageHeader
@@ -19,6 +21,9 @@ export default async function NewInternalAuditPage() {
         cancelHref="/internal-audits"
         bodyLabel="Auditing team / department"
         bodyPlaceholder="e.g. QHSE Department"
+        isShipboard={isShipboard}
+        ownVesselId={user.vesselId}
+        ownVesselName={ownVesselName}
       />
     </div>
   );

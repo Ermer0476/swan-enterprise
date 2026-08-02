@@ -161,6 +161,7 @@ enum Severity {
 
 // ─── Near Miss ────────────────────────────────────────────────────────────
 enum NearMissStatus {
+  DRAFT
   REPORTED
   UNDER_REVIEW
   CLOSED
@@ -785,7 +786,9 @@ model NearMiss {
   id        String  @id @default(uuid())
   companyId String
   company   Company @relation(fields: [companyId], references: [id])
-  refNo     String
+  // Null while status = DRAFT — assigned only once the vessel reports it, so
+  // a draft that's abandoned/edited repeatedly never burns a sequence number.
+  refNo     String?
 
   title                  String
   // Near Miss vs Hazard Observation (HOR) — one merged report; a HOR
@@ -817,8 +820,10 @@ model NearMiss {
   // vessel-owned report + corrective actions above. No CAPA duplication
   // here; the vessel already tracks/monitors that in their own section.
   // reviewedAt is entered manually by the reviewer, not auto-captured.
-  companyComments String?
-  reviewedAt      DateTime?
+  // Named `shoreRemarks` app-wide (see COMMENTS_STANDARDIZATION_REPORT.md) —
+  // was `companyComments` prior to that standardization pass.
+  shoreRemarks String?
+  reviewedAt   DateTime?
 
   reportedById     String?
   reportedBy       User?   @relation("NearMissReporter", fields: [reportedById], references: [id])
@@ -878,6 +883,14 @@ model NonConformity {
   // whole department; office NCRs are often owned by a department, not one
   // named individual.
   personInCharge       String?
+
+  // Office's written reply on this NCR — same app-wide "shore feedback on a
+  // vessel/office-raised report" field as NearMiss.shoreRemarks and
+  // CommitteeMeeting.shoreRemarks (see COMMENTS_STANDARDIZATION_REPORT.md).
+  // NCR has no ship/office permission split elsewhere in this module, so
+  // this is gated by the same ncr:update permission as root cause, not a
+  // separate office-only key.
+  shoreRemarks String?
 
   status   NcrStatus @default(OPEN)
   closedAt DateTime?
@@ -1237,11 +1250,19 @@ enum CommitteeType {
   OTHERS
 }
 
+enum CommitteeMeetingStatus {
+  DRAFT
+  REPORTED
+  CLOSED
+}
+
 model CommitteeMeeting {
   id        String  @id @default(uuid())
   companyId String
   company   Company @relation(fields: [companyId], references: [id])
-  refNo     String
+  // Null while status = DRAFT — assigned once on the first "Report Meeting"
+  // and never reassigned again, even across a later revert-and-resend cycle.
+  refNo     String?
 
   vesselId String? // null = shore/office-originated record
   vessel   Vessel? @relation(fields: [vesselId], references: [id])
@@ -1259,10 +1280,16 @@ model CommitteeMeeting {
   forAcknowledgement String?
 
   vesselRemarks String? // Master's overall closing remarks
-  shoreRemarks  String? // office's overall reply, once reviewed
+  shoreRemarks  String? // office's overall reply — required before Close
 
-  published Boolean @default(false)
-  approved  Boolean @default(false)
+  status             CommitteeMeetingStatus @default(DRAFT)
+  reportedAt         DateTime? // set (and refreshed) every time the vessel reports
+  closedAt           DateTime? // set when the office closes it out
+  // True the moment the vessel edits+re-reports a meeting the office has
+  // already closed once — cleared when the office closes it again. Lets the
+  // office notice "the vessel changed something since I last reviewed this"
+  // without losing the shoreRemarks/agenda shoreComments already on file.
+  revisedAfterReview Boolean                @default(false)
 
   agendaItems CommitteeMeetingAgenda[]
 

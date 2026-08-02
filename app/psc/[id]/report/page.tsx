@@ -10,11 +10,8 @@ import { formatRootCause, type RootCauseCategoryValue } from "@/lib/root-cause";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { formatDate, humanize } from "@/lib/utils";
+import { lifecycleStatusTone } from "@/lib/status";
 import { PrintButton } from "@/components/ui/print-button";
-
-function statusTone(s: string) {
-  return s === "CLOSED" ? "success" : s === "IN_PROGRESS" ? "warning" : "accent";
-}
 
 // Clean, fully read-only view of a PSC inspection — for looking at "what the
 // document looks like" without touching Print, and for the browser's print
@@ -96,7 +93,7 @@ export default async function PscReportPage({
         <h1 className="text-xl font-semibold">{insp.refNo} — {insp.authority}</h1>
         <div className="flex shrink-0 items-center gap-2">
           {insp.detained ? <Badge tone="danger">Detained</Badge> : <Badge tone="success">Not detained</Badge>}
-          <Badge tone={statusTone(insp.status)}>{humanize(insp.status)}</Badge>
+          <Badge tone={lifecycleStatusTone(insp.status)}>{humanize(insp.status)}</Badge>
         </div>
       </div>
 

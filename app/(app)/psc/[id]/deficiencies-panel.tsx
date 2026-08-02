@@ -21,6 +21,7 @@ import {
 import { AutoGrowInput, Label } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { AttachmentList, type AttachmentView } from "@/components/attachments/attachment-list";
 import { DeficiencyRootCauseForm } from "./deficiency-root-cause-form";
 import { RootCauseForm as NcrRootCauseForm } from "@/app/(app)/non-conformities/[id]/root-cause-form";
 
@@ -62,6 +63,7 @@ function DeficiencyRow({
   allCapaRows,
   rootCause,
   capaEntity,
+  attachments,
 }: {
   def: DeficiencyView;
   editable: boolean;
@@ -73,6 +75,7 @@ function DeficiencyRow({
   allCapaRows: CapaSummaryRowView[];
   rootCause: RootCauseValue;
   capaEntity: CapaEntityRef;
+  attachments: AttachmentView[];
 }) {
   const [pending, startTransition] = useTransition();
   // Resolved only once there's at least one CAPA row and every one of them
@@ -193,6 +196,16 @@ function DeficiencyRow({
           rows={correctiveRows}
         />
       </div>
+
+      <div className="space-y-1.5">
+        <Label className="text-xs">Attachments</Label>
+        <AttachmentList
+          entityType="PscDeficiency"
+          entityId={def.id}
+          attachments={attachments}
+          editable={editable}
+        />
+      </div>
     </li>
   );
 }
@@ -209,6 +222,7 @@ export function DeficienciesPanel({
   allCapaRowsByDeficiency,
   rootCauseByDeficiency,
   capaEntityByDeficiency,
+  attachmentsByDeficiency,
 }: {
   inspectionId: string;
   deficiencies: DeficiencyView[];
@@ -221,6 +235,7 @@ export function DeficienciesPanel({
   allCapaRowsByDeficiency: Record<string, CapaSummaryRowView[]>;
   rootCauseByDeficiency: Record<string, RootCauseValue>;
   capaEntityByDeficiency: Record<string, CapaEntityRef>;
+  attachmentsByDeficiency: Record<string, AttachmentView[]>;
 }) {
   const [addState, addAction] = useActionState<ActionResult, FormData>(
     addDeficiencyAction,
@@ -263,6 +278,7 @@ export function DeficienciesPanel({
               allCapaRows={allCapaRowsByDeficiency[d.id] ?? []}
               rootCause={rootCauseByDeficiency[d.id] ?? { category: null, subCategory: null, description: null }}
               capaEntity={capaEntityByDeficiency[d.id] ?? { entityType: "PscDeficiency", entityId: d.id }}
+              attachments={attachmentsByDeficiency[d.id] ?? []}
             />
           ))}
         </ul>

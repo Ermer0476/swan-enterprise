@@ -29,13 +29,30 @@ export async function listPsc(companyId: string, filters: PscFilters = {}) {
 }
 
 export async function getPsc(companyId: string, id: string) {
-  return prisma.pscInspection.findFirst({
+  const insp = await prisma.pscInspection.findFirst({
     where: { id, companyId, deletedAt: null },
     include: {
       vessel: { select: { name: true } },
       deficiencies: { where: { deletedAt: null }, orderBy: { createdAt: "asc" } },
     },
   });
+  if (!insp) return null;
+
+  const deficiencyIds = insp.deficiencies.map((d) => d.id);
+  const attachments = deficiencyIds.length
+    ? await prisma.attachment.findMany({
+        where: { companyId, entityType: "PscDeficiency", entityId: { in: deficiencyIds }, deletedAt: null },
+        orderBy: { createdAt: "desc" },
+      })
+    : [];
+
+  return {
+    ...insp,
+    deficiencies: insp.deficiencies.map((d) => ({
+      ...d,
+      attachments: attachments.filter((a) => a.entityId === d.id),
+    })),
+  };
 }
 
 export async function listVesselOptions(companyId: string) {

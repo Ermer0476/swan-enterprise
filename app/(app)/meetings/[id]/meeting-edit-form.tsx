@@ -3,16 +3,18 @@
 import { useState, useTransition } from "react";
 import { Plus, Trash2, X } from "lucide-react";
 import {
-  updateCommitteeMeetingAction,
+  updateDraftMeetingAction,
+  saveOfficeReviewMeetingAction,
+  closeMeetingAction,
   deleteCommitteeMeetingAction,
 } from "@/features/committee-meetings/actions";
 import { COMMITTEE_TYPE_LABELS, type CommitteeTypeValue } from "@/features/committee-meetings/schema";
 import { AutoGrowInput, Input, Label, Textarea } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { AttachmentList, type AttachmentView } from "@/components/attachments/attachment-list";
 
 type MeetingHeader = {
   id: string;
-  vesselId: string | null;
   position: string | null;
   meetingDate: string; // yyyy-mm-dd
   meetingTime: string | null;
@@ -23,8 +25,6 @@ type MeetingHeader = {
   forAcknowledgement: string | null;
   vesselRemarks: string | null;
   shoreRemarks: string | null;
-  published: boolean;
-  approved: boolean;
 };
 
 type AgendaItemView = {
@@ -46,16 +46,24 @@ function textOrEmpty(v: string | null): string {
 export function MeetingEditForm({
   meeting,
   agendaItems,
-  editable,
+  shipEditable,
+  officeEditable,
+  canClose,
   canDelete,
-  canApprove,
+  attachments,
 }: {
   meeting: MeetingHeader;
   agendaItems: AgendaItemView[];
-  editable: boolean;
+  /** Ship's own fields — position/date/agenda details/etc. — only while status = DRAFT. */
+  shipEditable: boolean;
+  /** Office's own fields — shore remarks + per-item shore comments — only while status = REPORTED. */
+  officeEditable: boolean;
+  /** Office-only, status = REPORTED: closes the meeting out, saving whatever's currently typed first. */
+  canClose: boolean;
   canDelete: boolean;
-  canApprove: boolean;
+  attachments: AttachmentView[];
 }) {
+  const editable = shipEditable || officeEditable;
   const [header, setHeader] = useState({
     position: textOrEmpty(meeting.position),
     meetingDate: meeting.meetingDate,
@@ -67,8 +75,6 @@ export function MeetingEditForm({
     forAcknowledgement: textOrEmpty(meeting.forAcknowledgement),
     vesselRemarks: textOrEmpty(meeting.vesselRemarks),
     shoreRemarks: textOrEmpty(meeting.shoreRemarks),
-    published: meeting.published,
-    approved: meeting.approved,
   });
   const baseHeader = {
     position: textOrEmpty(meeting.position),
@@ -81,8 +87,6 @@ export function MeetingEditForm({
     forAcknowledgement: textOrEmpty(meeting.forAcknowledgement),
     vesselRemarks: textOrEmpty(meeting.vesselRemarks),
     shoreRemarks: textOrEmpty(meeting.shoreRemarks),
-    published: meeting.published,
-    approved: meeting.approved,
   };
 
   const [agendaEdits, setAgendaEdits] = useState<Record<string, { details: string; shoreComments: string }>>(
@@ -97,6 +101,7 @@ export function MeetingEditForm({
   const [newTopics, setNewTopics] = useState<NewTopic[]>([]);
   const [pending, startTransition] = useTransition();
   const [deleting, startDeleting] = useTransition();
+  const [closing, startClosing] = useTransition();
   const [error, setError] = useState<string | null>(null);
 
   function setField<K extends keyof typeof header>(field: K, value: (typeof header)[K]) {
@@ -118,57 +123,83 @@ export function MeetingEditForm({
     setNewTopics((prev) => prev.map((t) => (t.key === key ? { ...t, [field]: value } : t)));
   }
 
-  const isDirty =
-    JSON.stringify(header) !== JSON.stringify(baseHeader) ||
-    JSON.stringify(agendaEdits) !== JSON.stringify(baseAgenda) ||
-    newTopics.some((t) => t.label.trim() !== "");
+  const isDirty = shipEditable
+    ? JSON.stringify({ ...header, shoreRemarks: undefined }) !== JSON.stringify({ ...baseHeader, shoreRemarks: undefined }) ||
+      Object.keys(agendaEdits).some((id) => agendaEdits[id]?.details !== baseAgenda[id]?.details) ||
+      newTopics.some((t) => t.label.trim() !== "")
+    : officeEditable
+      ? header.shoreRemarks !== baseHeader.shoreRemarks ||
+        Object.keys(agendaEdits).some((id) => agendaEdits[id]?.shoreComments !== baseAgenda[id]?.shoreComments)
+      : false;
 
   function save() {
     setError(null);
+    if (shipEditable) {
+      const fd = new FormData();
+      fd.set("position", header.position);
+      fd.set("meetingDate", header.meetingDate);
+      fd.set("meetingTime", header.meetingTime);
+      fd.set("chairman", header.chairman);
+      fd.set("inCharge", header.inCharge);
+      fd.set("members", header.members);
+      fd.set("inAttendance", header.inAttendance);
+      fd.set("forAcknowledgement", header.forAcknowledgement);
+      fd.set("vesselRemarks", header.vesselRemarks);
+      for (const a of agendaItems) {
+        fd.append("agendaId", a.id);
+        fd.append("agendaCommitteeType", a.committeeType);
+        fd.append("agendaCode", a.code ?? "");
+        fd.append("agendaLabel", a.label);
+        fd.append("agendaDetails", agendaEdits[a.id]?.details ?? "");
+      }
+      for (const t of newTopics) {
+        if (!t.label.trim()) continue;
+        fd.append("agendaId", "");
+        fd.append("agendaCommitteeType", "OTHERS");
+        fd.append("agendaCode", "");
+        fd.append("agendaLabel", t.label);
+        fd.append("agendaDetails", t.details);
+      }
+      startTransition(async () => {
+        const res = await updateDraftMeetingAction(meeting.id, { ok: false, error: null }, fd);
+        if (!res.ok) setError(res.error);
+        else setNewTopics([]);
+      });
+    } else if (officeEditable) {
+      const fd = new FormData();
+      fd.set("meetingId", meeting.id);
+      fd.set("shoreRemarks", header.shoreRemarks);
+      for (const a of agendaItems) {
+        fd.append("agendaId", a.id);
+        fd.append("agendaShoreComments", agendaEdits[a.id]?.shoreComments ?? "");
+      }
+      startTransition(async () => {
+        const res = await saveOfficeReviewMeetingAction({ ok: false, error: null }, fd);
+        if (!res.ok) setError(res.error);
+      });
+    }
+  }
+
+  /** Saves whatever shore remarks/comments are currently typed and closes the
+   * meeting out in the same action — clicking Close never depends on Save
+   * having been clicked first. */
+  function closeOut() {
+    setError(null);
     const fd = new FormData();
     fd.set("meetingId", meeting.id);
-    fd.set("vesselId", meeting.vesselId ?? "");
-    fd.set("position", header.position);
-    fd.set("meetingDate", header.meetingDate);
-    fd.set("meetingTime", header.meetingTime);
-    fd.set("chairman", header.chairman);
-    fd.set("inCharge", header.inCharge);
-    fd.set("members", header.members);
-    fd.set("inAttendance", header.inAttendance);
-    fd.set("forAcknowledgement", header.forAcknowledgement);
-    fd.set("vesselRemarks", header.vesselRemarks);
     fd.set("shoreRemarks", header.shoreRemarks);
-    fd.set("published", header.published ? "true" : "false");
-    fd.set("approved", header.approved ? "true" : "false");
-
     for (const a of agendaItems) {
-      const e = agendaEdits[a.id];
       fd.append("agendaId", a.id);
-      fd.append("agendaCommitteeType", a.committeeType);
-      fd.append("agendaCode", a.code ?? "");
-      fd.append("agendaLabel", a.label);
-      fd.append("agendaDetails", e?.details ?? "");
-      fd.append("agendaShoreComments", e?.shoreComments ?? "");
+      fd.append("agendaShoreComments", agendaEdits[a.id]?.shoreComments ?? "");
     }
-    for (const t of newTopics) {
-      if (!t.label.trim()) continue;
-      fd.append("agendaId", "");
-      fd.append("agendaCommitteeType", "OTHERS");
-      fd.append("agendaCode", "");
-      fd.append("agendaLabel", t.label);
-      fd.append("agendaDetails", t.details);
-      fd.append("agendaShoreComments", "");
-    }
-
-    startTransition(async () => {
-      const res = await updateCommitteeMeetingAction(fd);
+    startClosing(async () => {
+      const res = await closeMeetingAction({ ok: false, error: null }, fd);
       if (!res.ok) setError(res.error);
-      else setNewTopics([]);
     });
   }
 
   function remove() {
-    if (!confirm(`Delete ${meeting.id ? "this" : ""} committee meeting record?`)) return;
+    if (!confirm("Delete this committee meeting record?")) return;
     const fd = new FormData();
     fd.set("meetingId", meeting.id);
     startDeleting(async () => {
@@ -188,38 +219,38 @@ export function MeetingEditForm({
       <div className="grid grid-cols-1 gap-4 rounded-md border border-border p-4 sm:grid-cols-3">
         <div className="space-y-1.5">
           <Label htmlFor="position">Position</Label>
-          <AutoGrowInput id="position" value={header.position} disabled={!editable} onChange={(e) => setField("position", e.target.value)} />
+          <AutoGrowInput id="position" value={header.position} disabled={!shipEditable} onChange={(e) => setField("position", e.target.value)} />
         </div>
         <div className="space-y-1.5">
           <Label htmlFor="meetingDate">Date</Label>
-          <Input id="meetingDate" type="date" value={header.meetingDate} disabled={!editable} onChange={(e) => setField("meetingDate", e.target.value)} />
+          <Input id="meetingDate" type="date" value={header.meetingDate} disabled={!shipEditable} onChange={(e) => setField("meetingDate", e.target.value)} />
         </div>
         <div className="space-y-1.5">
           <Label htmlFor="meetingTime">Time</Label>
-          <AutoGrowInput id="meetingTime" value={header.meetingTime} disabled={!editable} onChange={(e) => setField("meetingTime", e.target.value)} />
+          <AutoGrowInput id="meetingTime" value={header.meetingTime} disabled={!shipEditable} onChange={(e) => setField("meetingTime", e.target.value)} />
         </div>
         <div className="space-y-1.5">
           <Label htmlFor="chairman">Chairman</Label>
-          <AutoGrowInput id="chairman" value={header.chairman} disabled={!editable} onChange={(e) => setField("chairman", e.target.value)} />
+          <AutoGrowInput id="chairman" value={header.chairman} disabled={!shipEditable} onChange={(e) => setField("chairman", e.target.value)} />
         </div>
         <div className="space-y-1.5">
           <Label htmlFor="inCharge">In-charge</Label>
-          <AutoGrowInput id="inCharge" value={header.inCharge} disabled={!editable} onChange={(e) => setField("inCharge", e.target.value)} />
+          <AutoGrowInput id="inCharge" value={header.inCharge} disabled={!shipEditable} onChange={(e) => setField("inCharge", e.target.value)} />
         </div>
       </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         <div className="space-y-1.5">
           <Label htmlFor="members">Members</Label>
-          <Textarea id="members" rows={3} value={header.members} disabled={!editable} onChange={(e) => setField("members", e.target.value)} />
+          <Textarea id="members" rows={3} value={header.members} disabled={!shipEditable} onChange={(e) => setField("members", e.target.value)} />
         </div>
         <div className="space-y-1.5">
           <Label htmlFor="inAttendance">In attendance</Label>
-          <Textarea id="inAttendance" rows={3} value={header.inAttendance} disabled={!editable} onChange={(e) => setField("inAttendance", e.target.value)} />
+          <Textarea id="inAttendance" rows={3} value={header.inAttendance} disabled={!shipEditable} onChange={(e) => setField("inAttendance", e.target.value)} />
         </div>
         <div className="space-y-1.5">
           <Label htmlFor="forAcknowledgement">For acknowledgement</Label>
-          <Textarea id="forAcknowledgement" rows={3} value={header.forAcknowledgement} disabled={!editable} onChange={(e) => setField("forAcknowledgement", e.target.value)} />
+          <Textarea id="forAcknowledgement" rows={3} value={header.forAcknowledgement} disabled={!shipEditable} onChange={(e) => setField("forAcknowledgement", e.target.value)} />
         </div>
       </div>
 
@@ -235,8 +266,9 @@ export function MeetingEditForm({
                 <div className="space-y-1">
                   <Label className="text-xs text-muted-foreground">Discussion details</Label>
                   <AutoGrowInput
+                    className="max-h-none"
                     value={agendaEdits[a.id]?.details ?? ""}
-                    disabled={!editable}
+                    disabled={!shipEditable}
                     onChange={(e) => setAgendaField(a.id, "details", e.target.value)}
                     placeholder="Discussion details…"
                   />
@@ -244,8 +276,9 @@ export function MeetingEditForm({
                 <div className="space-y-1">
                   <Label className="text-xs text-muted-foreground">Shore comments</Label>
                   <AutoGrowInput
+                    className="max-h-none"
                     value={agendaEdits[a.id]?.shoreComments ?? ""}
-                    disabled={!editable}
+                    disabled={!officeEditable}
                     onChange={(e) => setAgendaField(a.id, "shoreComments", e.target.value)}
                     placeholder="Office reply…"
                   />
@@ -255,7 +288,7 @@ export function MeetingEditForm({
           </div>
         ))}
 
-        {editable && (
+        {shipEditable && (
           <div className="space-y-3 rounded-md border border-dashed border-border p-4">
             <h4 className="text-sm font-semibold">Add topic (Others)</h4>
             {newTopics.map((t) => (
@@ -274,7 +307,7 @@ export function MeetingEditForm({
                     <X className="h-4 w-4" />
                   </button>
                 </div>
-                <AutoGrowInput value={t.details} onChange={(e) => updateTopic(t.key, "details", e.target.value)} placeholder="Discussion details…" />
+                <AutoGrowInput className="max-h-none" value={t.details} onChange={(e) => updateTopic(t.key, "details", e.target.value)} placeholder="Discussion details…" />
               </div>
             ))}
             <Button type="button" variant="outline" size="sm" onClick={addTopic}>
@@ -287,32 +320,23 @@ export function MeetingEditForm({
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div className="space-y-1.5">
           <Label htmlFor="vesselRemarks">Vessel remarks</Label>
-          <AutoGrowInput id="vesselRemarks" value={header.vesselRemarks} disabled={!editable} onChange={(e) => setField("vesselRemarks", e.target.value)} />
+          <AutoGrowInput id="vesselRemarks" className="max-h-none" value={header.vesselRemarks} disabled={!shipEditable} onChange={(e) => setField("vesselRemarks", e.target.value)} />
         </div>
         <div className="space-y-1.5">
           <Label htmlFor="shoreRemarks">Shore remarks</Label>
-          <AutoGrowInput id="shoreRemarks" value={header.shoreRemarks} disabled={!editable} onChange={(e) => setField("shoreRemarks", e.target.value)} />
+          <AutoGrowInput id="shoreRemarks" className="max-h-none" value={header.shoreRemarks} disabled={!officeEditable} onChange={(e) => setField("shoreRemarks", e.target.value)} />
         </div>
       </div>
 
-      {editable && (
-        <div className="flex flex-wrap items-center gap-4 rounded-md border border-border p-4">
-          <label className="flex items-center gap-2 text-sm">
-            <input type="checkbox" checked={header.published} onChange={(e) => setField("published", e.target.checked)} className="h-4 w-4" />
-            Published
-          </label>
-          <label className="flex items-center gap-2 text-sm" title={canApprove ? undefined : "Only the vessel (Master) can approve — this marks the minutes as complete and sends them to the office."}>
-            <input
-              type="checkbox"
-              checked={header.approved}
-              disabled={!canApprove}
-              onChange={(e) => setField("approved", e.target.checked)}
-              className="h-4 w-4"
-            />
-            Approved{!canApprove && <span className="text-xs text-muted-foreground">(vessel only)</span>}
-          </label>
-        </div>
-      )}
+      <div className="space-y-1.5">
+        <Label className="text-xs">Attachments</Label>
+        <AttachmentList
+          entityType="CommitteeMeeting"
+          entityId={meeting.id}
+          attachments={attachments}
+          editable={editable}
+        />
+      </div>
 
       {error && <p className="text-sm text-danger" role="alert">{error}</p>}
 
@@ -322,11 +346,28 @@ export function MeetingEditForm({
             <Trash2 className="h-4 w-4" /> Delete
           </Button>
         ) : <span />}
-        {editable && (
-          <Button type="button" variant={isDirty ? "success" : "outline"} disabled={!isDirty || pending} onClick={save}>
-            {pending ? "Saving…" : "Save changes"}
-          </Button>
-        )}
+        <div className="flex items-center gap-2">
+          {editable && (
+            <Button type="button" variant={isDirty ? "success" : "outline"} disabled={!isDirty || pending} onClick={save}>
+              {pending ? "Saving…" : "Save changes"}
+            </Button>
+          )}
+          {canClose && (
+            <div className="flex flex-col items-end gap-1">
+              <Button
+                type="button"
+                onClick={closeOut}
+                disabled={closing || !header.shoreRemarks.trim()}
+                title={!header.shoreRemarks.trim() ? "Add shore remarks before closing this meeting out" : undefined}
+              >
+                {closing ? "Closing…" : "Close"}
+              </Button>
+              {!header.shoreRemarks.trim() && (
+                <p className="text-xs text-muted-foreground">Add shore remarks first.</p>
+              )}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

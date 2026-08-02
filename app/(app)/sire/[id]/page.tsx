@@ -8,12 +8,9 @@ import { PageHeader } from "@/components/ui/page-header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { formatDate, humanize } from "@/lib/utils";
+import { lifecycleStatusTone } from "@/lib/status";
 import { ObservationsPanel } from "./observations-panel";
 import { SireActions } from "./sire-actions";
-
-function statusTone(s: string) {
-  return s === "CLOSED" ? "success" : s === "IN_PROGRESS" ? "warning" : "accent";
-}
 
 export default async function SireDetailPage({
   params,
@@ -49,7 +46,7 @@ export default async function SireDetailPage({
 
       <PageHeader
         title={`${insp.refNo} — ${insp.inspectingCompany}`}
-        actions={<Badge tone={statusTone(insp.status)}>{humanize(insp.status)}</Badge>}
+        actions={<Badge tone={lifecycleStatusTone(insp.status)}>{humanize(insp.status)}</Badge>}
       />
 
       <div className="mb-6 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">

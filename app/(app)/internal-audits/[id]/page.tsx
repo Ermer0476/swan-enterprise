@@ -16,6 +16,7 @@ import { PageHeader } from "@/components/ui/page-header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { formatDate, humanize } from "@/lib/utils";
+import { lifecycleStatusTone } from "@/lib/status";
 import { AuditFindingsPanel } from "@/components/audit/findings-panel";
 import { AuditStatusActions } from "@/components/audit/audit-status-actions";
 import type { AuditFindingCategory, RootCauseValue, CapaEntityRef } from "@/components/audit/types";
@@ -37,10 +38,6 @@ function toRowView(r: {
     targetDate: r.targetDate ? r.targetDate.toISOString() : null,
     closedDate: r.closedDate ? r.closedDate.toISOString() : null,
   };
-}
-
-function statusTone(s: string) {
-  return s === "CLOSED" ? "success" : s === "IN_PROGRESS" ? "warning" : "accent";
 }
 
 export default async function InternalAuditDetailPage({
@@ -76,6 +73,17 @@ export default async function InternalAuditDetailPage({
   const allCapaRowsByFinding: Record<string, CapaSummaryRowView[]> = {};
   const rootCauseByFinding: Record<string, RootCauseValue> = {};
   const capaEntityByFinding: Record<string, CapaEntityRef> = {};
+
+  const attachmentsByFinding: Record<string, { id: string; fileName: string; mimeType: string; sizeBytes: number; createdAt: string }[]> = {};
+  for (const f of audit.findings) {
+    attachmentsByFinding[f.id] = f.attachments.map((a) => ({
+      id: a.id,
+      fileName: a.fileName,
+      mimeType: a.mimeType,
+      sizeBytes: a.sizeBytes,
+      createdAt: a.createdAt.toISOString(),
+    }));
+  }
 
   for (const f of audit.findings) {
     const linked = ncrBySourceId[f.id];
@@ -130,7 +138,7 @@ export default async function InternalAuditDetailPage({
         title={`${audit.refNo} — ${audit.scope}`}
         actions={
           <div className="flex items-center gap-2">
-            <Badge tone={statusTone(audit.status)}>{humanize(audit.status)}</Badge>
+            <Badge tone={lifecycleStatusTone(audit.status)}>{humanize(audit.status)}</Badge>
             <Link href={`/internal-audits/${audit.id}/report`} target="_blank" rel="noopener noreferrer">
               <Button type="button" variant="outline" size="sm">
                 <FileText className="h-4 w-4" /> Show Report
@@ -184,6 +192,8 @@ export default async function InternalAuditDetailPage({
             allCapaRowsByFinding={allCapaRowsByFinding}
             rootCauseByFinding={rootCauseByFinding}
             capaEntityByFinding={capaEntityByFinding}
+            entityType="InternalAuditFinding"
+            attachmentsByFinding={attachmentsByFinding}
           />
         </CardContent>
       </Card>

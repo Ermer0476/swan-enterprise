@@ -7,6 +7,9 @@ import { PageHeader } from "@/components/ui/page-header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { formatDate, humanize } from "@/lib/utils";
+import { lifecycleStatusTone } from "@/lib/status";
+import { listAttachments } from "@/features/attachments/queries";
+import { AttachmentList } from "@/components/attachments/attachment-list";
 import { DrillActions } from "./drill-actions";
 
 export default async function DrillDetailPage({
@@ -19,8 +22,10 @@ export default async function DrillDetailPage({
   const drill = await getDrill(user.companyId, id);
   if (!drill) notFound();
 
+  const editable = can(user, "drill:update") && drill.status !== "CLOSED";
   const canClose = can(user, "drill:close");
   const canDelete = can(user, "drill:delete");
+  const attachments = await listAttachments(user.companyId, "EmergencyDrill", drill.id);
 
   const meta = [
     { label: "Type", value: humanize(drill.drillType) },
@@ -38,7 +43,7 @@ export default async function DrillDetailPage({
 
       <PageHeader
         title={drill.refNo}
-        actions={<Badge tone={drill.status === "CLOSED" ? "success" : "warning"}>{humanize(drill.status)}</Badge>}
+        actions={<Badge tone={lifecycleStatusTone(drill.status)}>{humanize(drill.status)}</Badge>}
       />
 
       <div className="mb-6 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
@@ -63,6 +68,24 @@ export default async function DrillDetailPage({
       <Card className="mb-6">
         <CardHeader><CardTitle>Observations / follow-up</CardTitle></CardHeader>
         <CardContent><p className="whitespace-pre-wrap text-sm">{drill.observations || "—"}</p></CardContent>
+      </Card>
+
+      <Card className="mb-6">
+        <CardHeader><CardTitle>Attachments</CardTitle></CardHeader>
+        <CardContent>
+          <AttachmentList
+            entityType="EmergencyDrill"
+            entityId={drill.id}
+            editable={editable}
+            attachments={attachments.map((a) => ({
+              id: a.id,
+              fileName: a.fileName,
+              mimeType: a.mimeType,
+              sizeBytes: a.sizeBytes,
+              createdAt: a.createdAt.toISOString(),
+            }))}
+          />
+        </CardContent>
       </Card>
 
       <Card>

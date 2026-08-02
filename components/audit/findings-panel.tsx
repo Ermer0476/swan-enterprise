@@ -7,6 +7,7 @@ import { Plus, Trash2 } from "lucide-react";
 import { AutoGrowInput, Label, Select } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { AttachmentList, type AttachmentView } from "@/components/attachments/attachment-list";
 import { ncrPrefillHref } from "@/lib/ncr-link";
 import { formatRootCause, type RootCauseCategoryValue } from "@/lib/root-cause";
 import {
@@ -25,6 +26,7 @@ import {
   type AuditActionResult,
   type AuditFindingView,
   type AuditNcrContext,
+  type AuditFindingEntityType,
   type RootCauseValue,
   type CapaEntityRef,
 } from "./types";
@@ -66,6 +68,8 @@ function FindingRow({
   allCapaRows,
   rootCause,
   capaEntity,
+  entityType,
+  attachments,
 }: {
   finding: AuditFindingView;
   editable: boolean;
@@ -79,6 +83,8 @@ function FindingRow({
   allCapaRows: CapaSummaryRowView[];
   rootCause: RootCauseValue;
   capaEntity: CapaEntityRef;
+  entityType: AuditFindingEntityType;
+  attachments: AttachmentView[];
 }) {
   const [pending, startTransition] = useTransition();
   const resolved = isResolved(allCapaRows);
@@ -205,6 +211,16 @@ function FindingRow({
           rows={correctiveRows}
         />
       </div>
+
+      <div className="space-y-1.5">
+        <Label className="text-xs">Attachments</Label>
+        <AttachmentList
+          entityType={entityType}
+          entityId={finding.id}
+          attachments={attachments}
+          editable={editable}
+        />
+      </div>
     </li>
   );
 }
@@ -224,6 +240,8 @@ export function AuditFindingsPanel({
   allCapaRowsByFinding,
   rootCauseByFinding,
   capaEntityByFinding,
+  entityType,
+  attachmentsByFinding,
 }: {
   auditId: string;
   findings: AuditFindingView[];
@@ -239,6 +257,8 @@ export function AuditFindingsPanel({
   allCapaRowsByFinding: Record<string, CapaSummaryRowView[]>;
   rootCauseByFinding: Record<string, RootCauseValue>;
   capaEntityByFinding: Record<string, CapaEntityRef>;
+  entityType: AuditFindingEntityType;
+  attachmentsByFinding: Record<string, AttachmentView[]>;
 }) {
   const [addState, formAction] = useActionState<AuditActionResult, FormData>(
     addAction,
@@ -283,6 +303,8 @@ export function AuditFindingsPanel({
               allCapaRows={allCapaRowsByFinding[f.id] ?? []}
               rootCause={rootCauseByFinding[f.id] ?? { category: null, subCategory: null, description: null }}
               capaEntity={capaEntityByFinding[f.id] ?? { entityType: "", entityId: f.id }}
+              entityType={entityType}
+              attachments={attachmentsByFinding[f.id] ?? []}
             />
           ))}
         </ul>

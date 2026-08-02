@@ -13,7 +13,7 @@ function SaveButton({ disabled }: { disabled: boolean }) {
   const { pending } = useFormStatus();
   return (
     <Button type="submit" size="sm" disabled={disabled || pending}>
-      {pending ? "Saving…" : "Save comments"}
+      {pending ? "Saving…" : "Save Shore Remarks"}
     </Button>
   );
 }
@@ -26,13 +26,13 @@ function toDateInput(v: string | null): string {
 
 export function OfficeReviewForm({
   nearMissId,
-  companyComments,
+  shoreRemarks,
   reviewedAt = null,
   disabled = false,
   lifecycleActions,
 }: {
   nearMissId: string;
-  companyComments: string;
+  shoreRemarks: string;
   reviewedAt?: string | null;
   disabled?: boolean;
   // Lifecycle (advance/delete) sits at the bottom of this card, to the left
@@ -54,12 +54,12 @@ export function OfficeReviewForm({
           main field, a narrow date field, button at the end. */}
       <div className="grid grid-cols-1 items-end gap-2 rounded-md border border-dashed border-border p-3 sm:grid-cols-[1fr_9rem_auto]">
         <div className="space-y-1.5">
-          <Label htmlFor="companyComments">Company comments</Label>
+          <Label htmlFor="shoreRemarks">Shore Remarks</Label>
           <AutoGrowInput
-            id="companyComments"
-            name="companyComments"
-            defaultValue={companyComments}
-            placeholder="Office oversight / comments…"
+            id="shoreRemarks"
+            name="shoreRemarks"
+            defaultValue={shoreRemarks}
+            placeholder="Office oversight / remarks…"
             disabled={disabled}
           />
         </div>

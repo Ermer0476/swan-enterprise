@@ -34,7 +34,10 @@ export default async function DashboardPage() {
     }),
   ]);
 
-  const firstName = user.fullName.split(" ")[0];
+  // Shipboard accounts are named after the vessel itself (e.g. "Swan
+  // Aquarius"), not a person — truncating to the first word would read as a
+  // cut-off name ("Welcome, Swan"), so show the full name for those.
+  const firstName = user.department === "SHIPBOARD" ? user.fullName : user.fullName.split(" ")[0];
   const dept = user.department
     .toLowerCase()
     .replace(/^\w/, (c) => c.toUpperCase());

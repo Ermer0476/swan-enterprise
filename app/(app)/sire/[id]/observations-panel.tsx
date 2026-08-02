@@ -30,6 +30,7 @@ import { AutoGrowInput, Input, Label, Select, Textarea } from "@/components/ui/i
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import type { BadgeTone } from "@/lib/utils";
+import { LIFECYCLE_TONE } from "@/lib/status";
 import { AttachmentList, type AttachmentView } from "@/components/attachments/attachment-list";
 
 export type PersonnelOption = { id: string; fullName: string; rank: string | null };
@@ -112,10 +113,9 @@ function editValues(o: ObservationView): ObservationEdit {
 }
 
 function statusTone(s: ObservationView["status"]): BadgeTone {
-  if (s === "CLOSED") return "success";
-  if (s === "PENDING_VERIFICATION") return "accent";
-  if (s === "ONGOING") return "warning";
-  return "neutral";
+  if (s === "CLOSED") return LIFECYCLE_TONE.CLOSED;
+  if (s === "PENDING_VERIFICATION" || s === "ONGOING") return LIFECYCLE_TONE.UNDER_REVIEW;
+  return LIFECYCLE_TONE.OPEN; // OPEN
 }
 
 function formatDateTime(v: string): string {

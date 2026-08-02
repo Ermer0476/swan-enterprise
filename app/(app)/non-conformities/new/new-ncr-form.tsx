@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useActionState, useState } from "react";
+import { useActionState, useEffect, useRef, useState } from "react";
 import { useFormStatus } from "react-dom";
 import {
   createNcrAction,
@@ -36,25 +36,76 @@ export function NewNcrForm({
   vessels,
   suggestedRefNoByVessel,
   prefill,
+  isShipboard,
+  ownVesselId,
+  ownVesselName,
 }: {
   vessels: { id: string; name: string; code: string | null }[];
   suggestedRefNoByVessel: Record<string, string>;
   prefill: Prefill;
+  isShipboard: boolean;
+  ownVesselId: string | null;
+  ownVesselName: string | null;
 }) {
+  const formRef = useRef<HTMLFormElement>(null);
+  // The browser resets every field in the <form> the moment a form action
+  // resolves — even on a rejected (fail()) result. Capture what was
+  // submitted so a failed submission only has to point at what's missing,
+  // not force the user to retype everything else. Same pattern as
+  // near-miss/new/new-near-miss-form.tsx.
+  const lastSubmittedFormData = useRef<FormData | null>(null);
+
+  async function guardedCreateNcrAction(
+    prev: ActionResult,
+    formData: FormData,
+  ): Promise<ActionResult> {
+    lastSubmittedFormData.current = formData;
+    return createNcrAction(prev, formData);
+  }
+
   const [state, formAction] = useActionState<ActionResult, FormData>(
-    createNcrAction,
+    guardedCreateNcrAction,
     { ok: false, error: null },
   );
   // Each vessel has its own NCR sequence (see suggestNextRefNo) — re-derive
   // the preview instantly as the user switches vessels, no round trip needed
   // since the server already computed every vessel's next number up front.
-  const [vesselId, setVesselId] = useState(prefill.vesselId);
+  // Shipboard is locked to its own vessel regardless of any prefill.
+  const [vesselId, setVesselId] = useState(isShipboard ? (ownVesselId ?? "") : prefill.vesselId);
   const suggestedRefNo = suggestedRefNoByVessel[vesselId] ?? suggestedRefNoByVessel[""] ?? "";
+
+  // Runs after every rejected submission — repairs the fields the browser
+  // just wiped (plain inputs directly on the DOM; the vessel select via its
+  // own React state) using exactly what was typed.
+  useEffect(() => {
+    if (state.ok || !state.error) return;
+    const fd = lastSubmittedFormData.current;
+    const form = formRef.current;
+    if (!fd || !form) return;
+
+    const restore = (name: string) => {
+      const el = form.elements.namedItem(name) as
+        | HTMLInputElement
+        | HTMLSelectElement
+        | HTMLTextAreaElement
+        | null;
+      if (!el) return;
+      el.value = String(fd.get(name) ?? "");
+      // AutoGrowInput only re-measures its height on an "input" event; a
+      // direct .value write doesn't fire one, so it'd render collapsed.
+      el.dispatchEvent(new Event("input", { bubbles: true }));
+    };
+    ["title", "source", "severity", "requirement", "raisedAt", "targetDate",
+      "description", "personInCharge",
+    ].forEach(restore);
+
+    if (!isShipboard) setVesselId(String(fd.get("vesselId") ?? ""));
+  }, [state, isShipboard]);
 
   return (
     <Card>
       <CardContent className="pt-5">
-        <form action={formAction} className="space-y-4">
+        <form ref={formRef} action={formAction} className="space-y-4">
           <input type="hidden" name="sourceEntityId" value={prefill.sourceEntityId} />
 
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -82,17 +133,27 @@ export function NewNcrForm({
                 {SEVERITIES.map((s) => <option key={s} value={s}>{humanize(s)}</option>)}
               </Select>
             </div>
-            <div className="space-y-1.5">
-              <Label htmlFor="vesselId">Vessel</Label>
-              <Select id="vesselId" name="vesselId" value={vesselId} onChange={(e) => setVesselId(e.target.value)}>
-                <option value="">— Shore / N/A —</option>
-                {vessels.map((v) => (
-                  <option key={v.id} value={v.id}>
-                    {v.name}{v.code ? ` (${v.code})` : ""}
-                  </option>
-                ))}
-              </Select>
-            </div>
+            {isShipboard ? (
+              <div className="space-y-1.5">
+                <Label>Vessel</Label>
+                <input type="hidden" name="vesselId" value={vesselId} />
+                <div className="flex h-9 w-full items-center rounded-md border border-input bg-muted px-3 text-sm text-muted-foreground">
+                  {ownVesselName ?? "— No vessel assigned —"}
+                </div>
+              </div>
+            ) : (
+              <div className="space-y-1.5">
+                <Label htmlFor="vesselId">Vessel</Label>
+                <Select id="vesselId" name="vesselId" value={vesselId} onChange={(e) => setVesselId(e.target.value)}>
+                  <option value="">— Shore / N/A —</option>
+                  {vessels.map((v) => (
+                    <option key={v.id} value={v.id}>
+                      {v.name}{v.code ? ` (${v.code})` : ""}
+                    </option>
+                  ))}
+                </Select>
+              </div>
+            )}
           </div>
 
           <div className="space-y-1.5">

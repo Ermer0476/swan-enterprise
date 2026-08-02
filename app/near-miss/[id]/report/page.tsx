@@ -60,7 +60,7 @@ export default async function NearMissReportPage({
 }) {
   const user = await requirePermission("nm:read");
   const { id } = await params;
-  const nm = await getNearMiss(user.companyId, id);
+  const nm = await getNearMiss(user.companyId, id, user.department === "SHIPBOARD");
   if (!nm) notFound();
 
   const [correctiveRows, allCapaRows] = await Promise.all([
@@ -95,7 +95,7 @@ export default async function NearMissReportPage({
       </div>
 
       <div className="mb-6 flex items-center justify-between gap-3">
-        <h1 className="text-xl font-semibold">{nm.refNo} — {nm.title}</h1>
+        <h1 className="text-xl font-semibold">{nm.refNo ?? "Draft"} — {nm.title}</h1>
         <div className="flex shrink-0 items-center gap-2">
           <Badge tone={nm.kind === "HOR" ? "warning" : "accent"}>{NEARMISS_KIND_LABELS[nm.kind]}</Badge>
           <Badge tone={severityTone(nm.potentialSeverity)}>Potential: {humanize(nm.potentialSeverity)}</Badge>
@@ -158,7 +158,7 @@ export default async function NearMissReportPage({
         <CardContent>
           <OfficeReviewForm
             nearMissId={nm.id}
-            companyComments={nm.companyComments ?? ""}
+            shoreRemarks={nm.shoreRemarks ?? ""}
             reviewedAt={nm.reviewedAt ? nm.reviewedAt.toISOString() : null}
             disabled
           />

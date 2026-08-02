@@ -102,7 +102,12 @@ const USERS: {
   { email: "admin@swanshipping.com", name: "System Administrator", role: "Administrator", department: "IT" },
   { email: "qhse@swanshipping.com", name: "Maria Santos", role: "QHSE Manager", department: "QHSE" },
   { email: "marine@swanshipping.com", name: "Juan Dela Cruz", role: "Marine Superintendent", department: "MARINE" },
-  { email: "master@swanshipping.com", name: "Capt. Ramon Reyes", role: "Ship Officer", department: "SHIPBOARD", rank: "Master" },
+  // Shipboard logins represent the VESSEL, not whoever currently holds the
+  // rank — the Captain rotates, but the account (and everything tied to it,
+  // e.g. Committee Meetings' vesselId) shouldn't. One shared login per ship.
+  { email: "swanaquarius@swanshipping.com", name: "Swan Aquarius", role: "Ship Officer", department: "SHIPBOARD", rank: "Master" },
+  { email: "swanorion@swanshipping.com", name: "Swan Orion", role: "Ship Officer", department: "SHIPBOARD", rank: "Master" },
+  { email: "swanlyra@swanshipping.com", name: "Swan Lyra", role: "Ship Officer", department: "SHIPBOARD", rank: "Master" },
   { email: "dpa@swanshipping.com", name: "Capt. Eduardo Villanueva", role: "DPA", department: "MARINE" },
   { email: "gm@swanshipping.com", name: "Roberto Lim", role: "General Manager", department: "EXECUTIVE" },
 ];
@@ -351,13 +356,18 @@ async function main() {
     orderBy: { name: "asc" },
   });
 
-  // Tie the demo Master's account to a single vessel — one account per ship,
-  // per how shipboard logins actually work (Ermer confirmed 2026-08-01).
-  if (firstVessel) {
-    await prisma.user.updateMany({
-      where: { companyId: company.id, email: "master@swanshipping.com" },
-      data: { vesselId: firstVessel.id },
-    });
+  // Tie each vessel's Ship Officer login to that same vessel — one shared
+  // account per ship, keyed by name so it doesn't depend on seeding order.
+  const shipVesselLogins: Record<string, string> = {
+    "swanaquarius@swanshipping.com": "Swan Aquarius",
+    "swanorion@swanshipping.com": "Swan Orion",
+    "swanlyra@swanshipping.com": "Swan Lyra",
+  };
+  for (const [email, vesselName] of Object.entries(shipVesselLogins)) {
+    const vessel = await prisma.vessel.findFirst({ where: { companyId: company.id, name: vesselName } });
+    if (vessel) {
+      await prisma.user.updateMany({ where: { companyId: company.id, email }, data: { vesselId: vessel.id } });
+    }
   }
 
   // Sample incidents using the structured classification.
@@ -739,6 +749,7 @@ async function main() {
       data: {
         companyId: company.id,
         refNo: "CM-2026-0001",
+        status: "REPORTED",
         vesselId: firstVessel?.id ?? null,
         position: "Singapore — Anchorage",
         meetingDate: new Date(),

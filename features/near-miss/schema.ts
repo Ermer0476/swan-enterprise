@@ -5,11 +5,42 @@ import {
   type RootCauseCategoryValue,
 } from "@/lib/root-cause";
 import { REPORTER_POSITIONS, SHIP_POSITIONS, OFFICE_POSITIONS, positionsFor } from "@/lib/crew-ranks";
+import { humanize } from "@/lib/utils";
+import { LIFECYCLE_TONE } from "@/lib/status";
 
 export { REPORTER_POSITIONS, SHIP_POSITIONS, OFFICE_POSITIONS, positionsFor };
 
 export const SEVERITIES = ["LOW", "MEDIUM", "HIGH", "CRITICAL"] as const;
-export const NM_STATUSES = ["REPORTED", "UNDER_REVIEW", "CLOSED"] as const;
+// DRAFT is the vessel's own work-in-progress, invisible to the office (see
+// queries.ts) until "Report Near Miss" moves it to REPORTED.
+export const NM_STATUSES = ["DRAFT", "REPORTED", "UNDER_REVIEW", "CLOSED"] as const;
+
+/**
+ * Office-facing status label. The vessel's own "Reported"/"Under Review"
+ * distinction is an internal office-review detail — from the office side,
+ * anything not yet Closed just reads "For Review". Shipboard viewers keep
+ * seeing the underlying status as-is. (DRAFT never reaches an office viewer
+ * at all — filtered out at the query layer — but falls through to humanize
+ * here defensively.)
+ */
+export function nearMissStatusLabel(status: string, department: string): string {
+  if (department === "SHIPBOARD" || status === "CLOSED" || status === "DRAFT") return humanize(status);
+  return "For Review";
+}
+
+/**
+ * Badge tone — app-wide OPEN/UNDER_REVIEW/CLOSED color standard. DRAFT (still
+ * being actively edited by the vessel) is the OPEN case; REPORTED and
+ * UNDER_REVIEW both mean "out of the vessel's hands, awaiting the other
+ * side," so both are UNDER_REVIEW regardless of which department is looking
+ * — only the *label* (`nearMissStatusLabel`) varies by department, not the
+ * color, so the same underlying status always reads as the same color.
+ */
+export function nearMissStatusTone(status: string): "success" | "warning" | "neutral" {
+  if (status === "CLOSED") return LIFECYCLE_TONE.CLOSED;
+  if (status === "DRAFT") return LIFECYCLE_TONE.OPEN;
+  return LIFECYCLE_TONE.UNDER_REVIEW; // REPORTED or UNDER_REVIEW
+}
 
 // Near Miss vs Hazard Observation (HOR) — one merged report/module.
 export const NEARMISS_KINDS = ["NEAR_MISS", "HOR"] as const;
@@ -86,6 +117,11 @@ export const createNearMissSchema = z
     caAction: z.array(z.string()).default([]),
     caResponsible: z.array(z.string()).default([]),
     caTargetDate: z.array(z.string()).default([]),
+    // Only ever honored server-side when the reporter is SHIPBOARD — lets the
+    // vessel mark a corrective action already resolved at the time of filing,
+    // instead of always starting every row as OPEN.
+    caStatus: z.array(z.string()).default([]),
+    caClosedDate: z.array(z.string()).default([]),
   })
   .superRefine((v, ctx) => {
     const allowed = ROOT_CAUSE_SUBCATEGORIES[v.rootCauseCategory as RootCauseCategoryValue];
@@ -107,7 +143,7 @@ export const createNearMissSchema = z
 
 export const officeReviewSchema = z.object({
   nearMissId: z.string().uuid(),
-  companyComments: z.string().trim().max(10000).optional().or(z.literal("")),
+  shoreRemarks: z.string().trim().max(10000).optional().or(z.literal("")),
   // Entered manually by the reviewer — never auto-filled.
   reviewedAt: z
     .string()
@@ -116,13 +152,21 @@ export const officeReviewSchema = z.object({
     .refine((v) => !v || !Number.isNaN(Date.parse(v)), "Invalid date"),
 });
 
-export type CapaPlanRow = { action: string; responsible: string; targetDate: string };
+export type CapaPlanRow = {
+  action: string;
+  responsible: string;
+  targetDate: string;
+  status: string;
+  closedDate: string;
+};
 
-/** Zips caAction/caResponsible/caTargetDate (paired by index); drops rows with no action text. */
+/** Zips the caAction/caResponsible/caTargetDate/caStatus/caClosedDate arrays (paired by index); drops rows with no action text. */
 export function buildCapaRows(
   caAction: string[],
   caResponsible: string[],
   caTargetDate: string[],
+  caStatus: string[] = [],
+  caClosedDate: string[] = [],
 ): CapaPlanRow[] {
   const rows: CapaPlanRow[] = [];
   for (let i = 0; i < caAction.length; i++) {
@@ -132,6 +176,8 @@ export function buildCapaRows(
       action,
       responsible: (caResponsible[i] ?? "").trim(),
       targetDate: (caTargetDate[i] ?? "").trim(),
+      status: (caStatus[i] ?? "").trim(),
+      closedDate: (caClosedDate[i] ?? "").trim(),
     });
   }
   return rows;

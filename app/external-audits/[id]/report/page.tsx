@@ -10,12 +10,9 @@ import { formatRootCause, type RootCauseCategoryValue } from "@/lib/root-cause";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { formatDate, humanize } from "@/lib/utils";
+import { lifecycleStatusTone } from "@/lib/status";
 import { PrintButton } from "@/components/ui/print-button";
 import { auditCategoryLabel, auditCategoryTone, type AuditFindingCategory } from "@/components/audit/types";
-
-function statusTone(s: string) {
-  return s === "CLOSED" ? "success" : s === "IN_PROGRESS" ? "warning" : "accent";
-}
 
 // Clean, fully read-only view of an External Audit — for looking at "what the
 // document looks like" without touching Print, and for the browser's print
@@ -96,7 +93,7 @@ export default async function ExternalAuditReportPage({
 
       <div className="mb-6 flex items-center justify-between gap-3">
         <h1 className="text-xl font-semibold">{audit.refNo} — {audit.scope}</h1>
-        <Badge tone={statusTone(audit.status)}>{humanize(audit.status)}</Badge>
+        <Badge tone={lifecycleStatusTone(audit.status)}>{humanize(audit.status)}</Badge>
       </div>
 
       <div className="mb-6 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">

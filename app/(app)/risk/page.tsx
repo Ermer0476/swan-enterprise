@@ -9,18 +9,13 @@ import { Badge } from "@/components/ui/badge";
 import { Input, Select } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { formatDate, humanize } from "@/lib/utils";
+import { riskAssessmentStatusTone } from "@/features/risk/ui";
 import type { RiskAssessmentStatus } from "@/lib/generated/prisma";
 
 function riskTone(level: string) {
   if (level === "HIGH") return "danger";
   if (level === "MEDIUM") return "warning";
   return "success";
-}
-
-function statusTone(s: string) {
-  if (s === "CLOSED") return "success";
-  if (s === "SUPERSEDED") return "danger";
-  return "warning"; // ACTIVE
 }
 
 export default async function RiskAssessmentsPage({
@@ -99,7 +94,7 @@ export default async function RiskAssessmentsPage({
                       <td className="px-4 py-2.5 text-muted-foreground">{r.vessel?.name ?? "Shore"}</td>
                       <td className="px-4 py-2.5"><Badge tone={riskTone(level)}>{humanize(level)}</Badge></td>
                       <td className="px-4 py-2.5 text-muted-foreground">{formatDate(r.assessmentDate)}</td>
-                      <td className="px-4 py-2.5"><Badge tone={statusTone(r.status)}>{humanize(r.status)}</Badge></td>
+                      <td className="px-4 py-2.5"><Badge tone={riskAssessmentStatusTone(r.status)}>{humanize(r.status)}</Badge></td>
                     </tr>
                   );
                 })}

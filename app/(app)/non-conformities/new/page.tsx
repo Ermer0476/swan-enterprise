@@ -29,13 +29,23 @@ export default async function NewNcrPage({
     raisedAt: first(sp.raisedAt) ?? "",
   };
 
+  const isShipboard = user.department === "SHIPBOARD";
+  const ownVesselName = vessels.find((v) => v.id === user.vesselId)?.name ?? null;
+
   return (
     <div className="mx-auto max-w-7xl">
       <PageHeader
         title="Raise Non-Conformity"
         description="Record a finding where an SMS clause, regulation or standard is not met."
       />
-      <NewNcrForm vessels={vessels} suggestedRefNoByVessel={suggestedRefNoByVessel} prefill={prefill} />
+      <NewNcrForm
+        vessels={vessels}
+        suggestedRefNoByVessel={suggestedRefNoByVessel}
+        prefill={prefill}
+        isShipboard={isShipboard}
+        ownVesselId={user.vesselId}
+        ownVesselName={ownVesselName}
+      />
     </div>
   );
 }

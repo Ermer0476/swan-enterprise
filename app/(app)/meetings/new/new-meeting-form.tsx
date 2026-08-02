@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useActionState } from "react";
 import { useFormStatus } from "react-dom";
 import { Plus, X } from "lucide-react";
@@ -17,14 +17,24 @@ import {
   type CommitteeTypeValue,
 } from "@/features/committee-meetings/schema";
 import { Card, CardContent } from "@/components/ui/card";
-import { AutoGrowInput, Input, Label, Select, Textarea } from "@/components/ui/input";
+import { AutoGrowInput, Input, Label, Textarea } from "@/components/ui/input";
+import { VesselField } from "@/components/ui/vessel-field";
 import { Button } from "@/components/ui/button";
 
-function SubmitButton() {
+function ReportSubmitButton() {
   const { pending } = useFormStatus();
   return (
-    <Button type="submit" disabled={pending}>
-      {pending ? "Saving…" : "Record Meeting"}
+    <Button type="submit" name="intent" value="report" disabled={pending}>
+      {pending ? "Reporting…" : "Report Meeting"}
+    </Button>
+  );
+}
+
+function DraftSubmitButton() {
+  const { pending } = useFormStatus();
+  return (
+    <Button type="submit" name="intent" value="draft" variant="outline" disabled={pending}>
+      {pending ? "Saving…" : "Save as Draft"}
     </Button>
   );
 }
@@ -33,17 +43,90 @@ type OthersRow = { key: string; label: string; details: string };
 
 export function NewMeetingForm({
   vessels,
+  isShipboard,
+  ownVesselId,
+  ownVesselName,
 }: {
   vessels: { id: string; name: string }[];
+  isShipboard: boolean;
+  ownVesselId: string | null;
+  ownVesselName: string | null;
 }) {
+  const formRef = useRef<HTMLFormElement>(null);
+  // The browser resets every field in the <form> the moment a form action
+  // resolves — even on a rejected (fail()) result. Capture what was
+  // submitted so a failed submission only has to point at what's missing,
+  // not force the user to retype everything else. Same pattern as
+  // near-miss/new/new-near-miss-form.tsx.
+  const lastSubmittedFormData = useRef<FormData | null>(null);
+
+  async function guardedCreateCommitteeMeetingAction(
+    prev: ActionResult,
+    formData: FormData,
+  ): Promise<ActionResult> {
+    lastSubmittedFormData.current = formData;
+    return createCommitteeMeetingAction(prev, formData);
+  }
+
   const [state, formAction] = useActionState<ActionResult, FormData>(
-    createCommitteeMeetingAction,
+    guardedCreateCommitteeMeetingAction,
     { ok: false, error: null },
   );
 
   const [selectedTypes, setSelectedTypes] = useState<Set<CommitteeTypeValue>>(new Set(["SAFETY"]));
   const [details, setDetails] = useState<Record<string, string>>({});
   const [othersRows, setOthersRows] = useState<OthersRow[]>([]);
+
+  // Runs after every rejected submission — repairs the fields the browser
+  // just wiped (plain inputs directly on the DOM; the meeting-type
+  // checkboxes and their agenda rows via React state, reconstructed from
+  // the agendaCommitteeType/agendaCode/agendaLabel/agendaDetails arrays
+  // that were actually submitted).
+  useEffect(() => {
+    if (state.ok || !state.error) return;
+    const fd = lastSubmittedFormData.current;
+    const form = formRef.current;
+    if (!fd || !form) return;
+
+    const restore = (name: string) => {
+      const el = form.elements.namedItem(name) as
+        | HTMLInputElement
+        | HTMLSelectElement
+        | HTMLTextAreaElement
+        | null;
+      if (!el) return;
+      el.value = String(fd.get(name) ?? "");
+      // AutoGrowInput only re-measures its height on an "input" event; a
+      // direct .value write doesn't fire one, so it'd render collapsed.
+      el.dispatchEvent(new Event("input", { bubbles: true }));
+    };
+    ["vesselId", "position", "meetingDate", "meetingTime", "chairman",
+      "inCharge", "members", "inAttendance", "forAcknowledgement", "vesselRemarks",
+    ].forEach(restore);
+
+    const agendaCommitteeTypes = fd.getAll("agendaCommitteeType").map(String);
+    const agendaCodes = fd.getAll("agendaCode").map(String);
+    const agendaLabels = fd.getAll("agendaLabel").map(String);
+    const agendaDetailsArr = fd.getAll("agendaDetails").map(String);
+
+    const restoredTypes = new Set(
+      agendaCommitteeTypes.filter(Boolean),
+    ) as Set<CommitteeTypeValue>;
+    setSelectedTypes(restoredTypes);
+
+    const newDetails: Record<string, string> = {};
+    const newOthersRows: OthersRow[] = [];
+    agendaCommitteeTypes.forEach((type, i) => {
+      const detail = agendaDetailsArr[i] ?? "";
+      if (type === "OTHERS") {
+        newOthersRows.push({ key: crypto.randomUUID(), label: agendaLabels[i] ?? "", details: detail });
+      } else {
+        newDetails[`${type}-${agendaCodes[i]}`] = detail;
+      }
+    });
+    setDetails(newDetails);
+    setOthersRows(newOthersRows);
+  }, [state]);
 
   function toggleType(t: CommitteeTypeValue, checked: boolean) {
     setSelectedTypes((prev) => {
@@ -74,15 +157,15 @@ export function NewMeetingForm({
   return (
     <Card>
       <CardContent className="pt-5">
-        <form action={formAction} className="space-y-6">
+        <form ref={formRef} action={formAction} className="space-y-6">
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-            <div className="space-y-1.5">
-              <Label htmlFor="vesselId">Vessel</Label>
-              <Select id="vesselId" name="vesselId" defaultValue="">
-                <option value="">— Shore / Office —</option>
-                {vessels.map((v) => <option key={v.id} value={v.id}>{v.name}</option>)}
-              </Select>
-            </div>
+            <VesselField
+              vessels={vessels}
+              isShipboard={isShipboard}
+              ownVesselId={ownVesselId}
+              ownVesselName={ownVesselName}
+              blankLabel="— Shore / Office —"
+            />
             <div className="space-y-1.5">
               <Label htmlFor="position">Position</Label>
               <AutoGrowInput id="position" name="position" placeholder="e.g. Tema, Ghana — Anchorage" />
@@ -160,6 +243,7 @@ export function NewMeetingForm({
                       <Label className="text-sm">{item.code}) {item.label}</Label>
                       <AutoGrowInput
                         name="agendaDetails"
+                        className="max-h-none"
                         value={details[key] ?? ""}
                         onChange={(e) => setDetails((prev) => ({ ...prev, [key]: e.target.value }))}
                         placeholder="Discussion details…"
@@ -200,6 +284,7 @@ export function NewMeetingForm({
                     </div>
                     <AutoGrowInput
                       name="agendaDetails"
+                      className="max-h-none"
                       value={row.details}
                       onChange={(e) => updateOthersRow(row.key, "details", e.target.value)}
                       placeholder="Discussion details…"
@@ -215,12 +300,13 @@ export function NewMeetingForm({
 
           <div className="space-y-1.5">
             <Label htmlFor="vesselRemarks">Vessel remarks</Label>
-            <AutoGrowInput id="vesselRemarks" name="vesselRemarks" placeholder="Master's overall closing remarks…" />
+            <AutoGrowInput id="vesselRemarks" name="vesselRemarks" className="max-h-none" placeholder="Master's overall closing remarks…" />
           </div>
 
           {state.error && <p className="text-sm text-danger" role="alert">{state.error}</p>}
           <div className="flex items-center gap-2">
-            <SubmitButton />
+            <ReportSubmitButton />
+            {isShipboard && <DraftSubmitButton />}
             <Link href="/meetings"><Button type="button" variant="ghost">Cancel</Button></Link>
           </div>
         </form>

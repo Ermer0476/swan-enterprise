@@ -9,18 +9,17 @@ import { NEARMISS_KIND_LABELS } from "@/features/near-miss/schema";
 
 export type NearMissRowView = {
   id: string;
-  refNo: string;
+  refNo: string | null;
   title: string;
   vesselName: string | null;
   kind: keyof typeof NEARMISS_KIND_LABELS;
   potentialSeverity: string;
   occurredAt: string; // ISO
   status: string;
+  statusLabel: string;
+  statusTone: "success" | "warning" | "accent" | "neutral";
 };
 
-function statusTone(s: string) {
-  return s === "CLOSED" ? "success" : s === "UNDER_REVIEW" ? "warning" : "accent";
-}
 function kindTone(k: string) {
   return k === "HOR" ? "warning" : "accent";
 }
@@ -33,7 +32,7 @@ export function NearMissTable({ rows }: { rows: NearMissRowView[] }) {
         case "vessel":
           return r.vesselName ?? "";
         case "ref":
-          return r.refNo;
+          return r.refNo ?? "";
         case "kind":
           return NEARMISS_KIND_LABELS[r.kind];
         case "title":
@@ -69,7 +68,7 @@ export function NearMissTable({ rows }: { rows: NearMissRowView[] }) {
             <td className="px-4 py-2.5 text-muted-foreground">{r.vesselName ?? "—"}</td>
             <td className="px-4 py-2.5 font-mono text-xs">
               <Link href={`/near-miss/${r.id}`} className="text-accent hover:underline">
-                {r.refNo}
+                {r.refNo ?? "Draft"}
               </Link>
             </td>
             <td className="px-4 py-2.5">
@@ -83,7 +82,7 @@ export function NearMissTable({ rows }: { rows: NearMissRowView[] }) {
             </td>
             <td className="px-4 py-2.5 text-muted-foreground">{formatDate(r.occurredAt)}</td>
             <td className="px-4 py-2.5">
-              <Badge tone={statusTone(r.status)}>{humanize(r.status)}</Badge>
+              <Badge tone={r.statusTone}>{r.statusLabel}</Badge>
             </td>
           </tr>
         ))}

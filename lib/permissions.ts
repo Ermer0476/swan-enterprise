@@ -86,7 +86,7 @@ export const PERMISSIONS = {
   "meeting:read": "View committee meetings",
   "meeting:create": "Record committee meetings",
   "meeting:update": "Edit committee meeting minutes and reply as shore",
-  "meeting:close": "Reserved — committee meetings currently have no closed state",
+  "meeting:close": "Close out a reported committee meeting once shore has commented",
   "meeting:delete": "Delete committee meetings",
 
   // Emergency Drills module

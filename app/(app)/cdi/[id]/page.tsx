@@ -7,12 +7,9 @@ import { PageHeader } from "@/components/ui/page-header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { formatDate, humanize } from "@/lib/utils";
+import { lifecycleStatusTone } from "@/lib/status";
 import { ObservationsPanel } from "./observations-panel";
 import { CdiActions } from "./cdi-actions";
-
-function statusTone(s: string) {
-  return s === "CLOSED" ? "success" : s === "IN_PROGRESS" ? "warning" : "accent";
-}
 
 export default async function CdiDetailPage({
   params,
@@ -45,7 +42,7 @@ export default async function CdiDetailPage({
 
       <PageHeader
         title={`${insp.refNo} — ${insp.scheme ?? "CDI"}`}
-        actions={<Badge tone={statusTone(insp.status)}>{humanize(insp.status)}</Badge>}
+        actions={<Badge tone={lifecycleStatusTone(insp.status)}>{humanize(insp.status)}</Badge>}
       />
 
       <div className="mb-6 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
@@ -76,6 +73,13 @@ export default async function CdiDetailPage({
               observation: o.observation,
               response: o.response,
               status: o.status,
+              attachments: o.attachments.map((a) => ({
+                id: a.id,
+                fileName: a.fileName,
+                mimeType: a.mimeType,
+                sizeBytes: a.sizeBytes,
+                createdAt: a.createdAt.toISOString(),
+              })),
             }))}
           />
         </CardContent>

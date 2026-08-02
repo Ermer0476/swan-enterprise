@@ -6,13 +6,20 @@ import { NewPscForm } from "./new-psc-form";
 export default async function NewPscPage() {
   const user = await requirePermission("psc:create");
   const vessels = await listVesselOptions(user.companyId);
+  const isShipboard = user.department === "SHIPBOARD";
+  const ownVesselName = vessels.find((v) => v.id === user.vesselId)?.name ?? null;
   return (
     <div className="mx-auto max-w-7xl">
       <PageHeader
         title="Record PSC Inspection"
         description="Create the inspection header, then log deficiencies on the detail page."
       />
-      <NewPscForm vessels={vessels} />
+      <NewPscForm
+        vessels={vessels}
+        isShipboard={isShipboard}
+        ownVesselId={user.vesselId}
+        ownVesselName={ownVesselName}
+      />
     </div>
   );
 }

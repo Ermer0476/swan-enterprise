@@ -529,7 +529,13 @@ export function CapaSummaryTable({
   }
 
   if (rows.length === 0) {
-    return <p className="text-sm text-muted-foreground">No CAPA items recorded yet.</p>;
+    return (
+      <p className="text-sm text-muted-foreground">
+        {editable
+          ? "No corrective actions yet — add one above and save it, then its status and closed date can be set here."
+          : "No CAPA items recorded yet."}
+      </p>
+    );
   }
 
   return (

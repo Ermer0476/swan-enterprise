@@ -9,13 +9,8 @@ import { Badge } from "@/components/ui/badge";
 import { Input, Select } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { formatDate, humanize, severityTone } from "@/lib/utils";
+import { ncrStatusTone } from "@/features/non-conformities/ui";
 import type { NcrStatus, NcrSource } from "@/lib/generated/prisma";
-
-function statusTone(s: string) {
-  if (s === "CLOSED") return "success";
-  if (s === "SUBMITTED_TO_OFFICE") return "warning";
-  return "danger"; // OPEN
-}
 
 export default async function NcrPage({
   searchParams,
@@ -96,7 +91,7 @@ export default async function NcrPage({
                     <td className="px-4 py-2.5"><Badge tone={severityTone(r.severity)}>{humanize(r.severity)}</Badge></td>
                     <td className="px-4 py-2.5 text-muted-foreground">{formatDate(r.raisedAt)}</td>
                     <td className="px-4 py-2.5 text-muted-foreground">{formatDate(r.targetDate)}</td>
-                    <td className="px-4 py-2.5"><Badge tone={statusTone(r.status)}>{humanize(r.status)}</Badge></td>
+                    <td className="px-4 py-2.5"><Badge tone={ncrStatusTone(r.status)}>{humanize(r.status)}</Badge></td>
                   </tr>
                 ))}
               </tbody>

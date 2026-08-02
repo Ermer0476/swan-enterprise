@@ -394,6 +394,7 @@ export type Severity = (typeof Severity)[keyof typeof Severity]
 
 
 export const NearMissStatus: {
+  DRAFT: 'DRAFT',
   REPORTED: 'REPORTED',
   UNDER_REVIEW: 'UNDER_REVIEW',
   CLOSED: 'CLOSED'
@@ -529,6 +530,15 @@ export const CommitteeType: {
 };
 
 export type CommitteeType = (typeof CommitteeType)[keyof typeof CommitteeType]
+
+
+export const CommitteeMeetingStatus: {
+  DRAFT: 'DRAFT',
+  REPORTED: 'REPORTED',
+  CLOSED: 'CLOSED'
+};
+
+export type CommitteeMeetingStatus = (typeof CommitteeMeetingStatus)[keyof typeof CommitteeMeetingStatus]
 
 
 export const DrillType: {
@@ -728,6 +738,10 @@ export const AuditFindingCategory: typeof $Enums.AuditFindingCategory
 export type CommitteeType = $Enums.CommitteeType
 
 export const CommitteeType: typeof $Enums.CommitteeType
+
+export type CommitteeMeetingStatus = $Enums.CommitteeMeetingStatus
+
+export const CommitteeMeetingStatus: typeof $Enums.CommitteeMeetingStatus
 
 export type DrillType = $Enums.DrillType
 
@@ -31424,7 +31438,7 @@ export namespace Prisma {
     rootCauseSubCategory: string | null
     status: $Enums.NearMissStatus | null
     closedAt: Date | null
-    companyComments: string | null
+    shoreRemarks: string | null
     reviewedAt: Date | null
     reportedById: string | null
     reporterName: string | null
@@ -31456,7 +31470,7 @@ export namespace Prisma {
     rootCauseSubCategory: string | null
     status: $Enums.NearMissStatus | null
     closedAt: Date | null
-    companyComments: string | null
+    shoreRemarks: string | null
     reviewedAt: Date | null
     reportedById: string | null
     reporterName: string | null
@@ -31488,7 +31502,7 @@ export namespace Prisma {
     rootCauseSubCategory: number
     status: number
     closedAt: number
-    companyComments: number
+    shoreRemarks: number
     reviewedAt: number
     reportedById: number
     reporterName: number
@@ -31522,7 +31536,7 @@ export namespace Prisma {
     rootCauseSubCategory?: true
     status?: true
     closedAt?: true
-    companyComments?: true
+    shoreRemarks?: true
     reviewedAt?: true
     reportedById?: true
     reporterName?: true
@@ -31554,7 +31568,7 @@ export namespace Prisma {
     rootCauseSubCategory?: true
     status?: true
     closedAt?: true
-    companyComments?: true
+    shoreRemarks?: true
     reviewedAt?: true
     reportedById?: true
     reporterName?: true
@@ -31586,7 +31600,7 @@ export namespace Prisma {
     rootCauseSubCategory?: true
     status?: true
     closedAt?: true
-    companyComments?: true
+    shoreRemarks?: true
     reviewedAt?: true
     reportedById?: true
     reporterName?: true
@@ -31675,7 +31689,7 @@ export namespace Prisma {
   export type NearMissGroupByOutputType = {
     id: string
     companyId: string
-    refNo: string
+    refNo: string | null
     title: string
     kind: $Enums.NearMissKind
     horCategory: $Enums.HazardType | null
@@ -31691,7 +31705,7 @@ export namespace Prisma {
     rootCauseSubCategory: string | null
     status: $Enums.NearMissStatus
     closedAt: Date | null
-    companyComments: string | null
+    shoreRemarks: string | null
     reviewedAt: Date | null
     reportedById: string | null
     reporterName: string | null
@@ -31740,7 +31754,7 @@ export namespace Prisma {
     rootCauseSubCategory?: boolean
     status?: boolean
     closedAt?: boolean
-    companyComments?: boolean
+    shoreRemarks?: boolean
     reviewedAt?: boolean
     reportedById?: boolean
     reporterName?: boolean
@@ -31775,7 +31789,7 @@ export namespace Prisma {
     rootCauseSubCategory?: boolean
     status?: boolean
     closedAt?: boolean
-    companyComments?: boolean
+    shoreRemarks?: boolean
     reviewedAt?: boolean
     reportedById?: boolean
     reporterName?: boolean
@@ -31810,7 +31824,7 @@ export namespace Prisma {
     rootCauseSubCategory?: boolean
     status?: boolean
     closedAt?: boolean
-    companyComments?: boolean
+    shoreRemarks?: boolean
     reviewedAt?: boolean
     reportedById?: boolean
     reporterName?: boolean
@@ -31845,7 +31859,7 @@ export namespace Prisma {
     rootCauseSubCategory?: boolean
     status?: boolean
     closedAt?: boolean
-    companyComments?: boolean
+    shoreRemarks?: boolean
     reviewedAt?: boolean
     reportedById?: boolean
     reporterName?: boolean
@@ -31858,7 +31872,7 @@ export namespace Prisma {
     deletedBy?: boolean
   }
 
-  export type NearMissOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "companyId" | "refNo" | "title" | "kind" | "horCategory" | "stopAuthorityExercised" | "vesselId" | "occurredAt" | "location" | "description" | "potentialConsequence" | "potentialSeverity" | "immediateAction" | "rootCauseCategory" | "rootCauseSubCategory" | "status" | "closedAt" | "companyComments" | "reviewedAt" | "reportedById" | "reporterName" | "reporterPosition" | "createdAt" | "updatedAt" | "createdBy" | "updatedBy" | "deletedAt" | "deletedBy", ExtArgs["result"]["nearMiss"]>
+  export type NearMissOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "companyId" | "refNo" | "title" | "kind" | "horCategory" | "stopAuthorityExercised" | "vesselId" | "occurredAt" | "location" | "description" | "potentialConsequence" | "potentialSeverity" | "immediateAction" | "rootCauseCategory" | "rootCauseSubCategory" | "status" | "closedAt" | "shoreRemarks" | "reviewedAt" | "reportedById" | "reporterName" | "reporterPosition" | "createdAt" | "updatedAt" | "createdBy" | "updatedBy" | "deletedAt" | "deletedBy", ExtArgs["result"]["nearMiss"]>
   export type NearMissInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     company?: boolean | CompanyDefaultArgs<ExtArgs>
     vessel?: boolean | NearMiss$vesselArgs<ExtArgs>
@@ -31885,7 +31899,7 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: string
       companyId: string
-      refNo: string
+      refNo: string | null
       title: string
       kind: $Enums.NearMissKind
       horCategory: $Enums.HazardType | null
@@ -31901,7 +31915,7 @@ export namespace Prisma {
       rootCauseSubCategory: string | null
       status: $Enums.NearMissStatus
       closedAt: Date | null
-      companyComments: string | null
+      shoreRemarks: string | null
       reviewedAt: Date | null
       reportedById: string | null
       reporterName: string | null
@@ -32356,7 +32370,7 @@ export namespace Prisma {
     readonly rootCauseSubCategory: FieldRef<"NearMiss", 'String'>
     readonly status: FieldRef<"NearMiss", 'NearMissStatus'>
     readonly closedAt: FieldRef<"NearMiss", 'DateTime'>
-    readonly companyComments: FieldRef<"NearMiss", 'String'>
+    readonly shoreRemarks: FieldRef<"NearMiss", 'String'>
     readonly reviewedAt: FieldRef<"NearMiss", 'DateTime'>
     readonly reportedById: FieldRef<"NearMiss", 'String'>
     readonly reporterName: FieldRef<"NearMiss", 'String'>
@@ -32844,6 +32858,7 @@ export namespace Prisma {
     rootCauseSubCategory: string | null
     rootCause: string | null
     personInCharge: string | null
+    shoreRemarks: string | null
     status: $Enums.NcrStatus | null
     closedAt: Date | null
     raisedById: string | null
@@ -32872,6 +32887,7 @@ export namespace Prisma {
     rootCauseSubCategory: string | null
     rootCause: string | null
     personInCharge: string | null
+    shoreRemarks: string | null
     status: $Enums.NcrStatus | null
     closedAt: Date | null
     raisedById: string | null
@@ -32900,6 +32916,7 @@ export namespace Prisma {
     rootCauseSubCategory: number
     rootCause: number
     personInCharge: number
+    shoreRemarks: number
     status: number
     closedAt: number
     raisedById: number
@@ -32930,6 +32947,7 @@ export namespace Prisma {
     rootCauseSubCategory?: true
     rootCause?: true
     personInCharge?: true
+    shoreRemarks?: true
     status?: true
     closedAt?: true
     raisedById?: true
@@ -32958,6 +32976,7 @@ export namespace Prisma {
     rootCauseSubCategory?: true
     rootCause?: true
     personInCharge?: true
+    shoreRemarks?: true
     status?: true
     closedAt?: true
     raisedById?: true
@@ -32986,6 +33005,7 @@ export namespace Prisma {
     rootCauseSubCategory?: true
     rootCause?: true
     personInCharge?: true
+    shoreRemarks?: true
     status?: true
     closedAt?: true
     raisedById?: true
@@ -33087,6 +33107,7 @@ export namespace Prisma {
     rootCauseSubCategory: string | null
     rootCause: string | null
     personInCharge: string | null
+    shoreRemarks: string | null
     status: $Enums.NcrStatus
     closedAt: Date | null
     raisedById: string | null
@@ -33132,6 +33153,7 @@ export namespace Prisma {
     rootCauseSubCategory?: boolean
     rootCause?: boolean
     personInCharge?: boolean
+    shoreRemarks?: boolean
     status?: boolean
     closedAt?: boolean
     raisedById?: boolean
@@ -33163,6 +33185,7 @@ export namespace Prisma {
     rootCauseSubCategory?: boolean
     rootCause?: boolean
     personInCharge?: boolean
+    shoreRemarks?: boolean
     status?: boolean
     closedAt?: boolean
     raisedById?: boolean
@@ -33194,6 +33217,7 @@ export namespace Prisma {
     rootCauseSubCategory?: boolean
     rootCause?: boolean
     personInCharge?: boolean
+    shoreRemarks?: boolean
     status?: boolean
     closedAt?: boolean
     raisedById?: boolean
@@ -33225,6 +33249,7 @@ export namespace Prisma {
     rootCauseSubCategory?: boolean
     rootCause?: boolean
     personInCharge?: boolean
+    shoreRemarks?: boolean
     status?: boolean
     closedAt?: boolean
     raisedById?: boolean
@@ -33236,7 +33261,7 @@ export namespace Prisma {
     deletedBy?: boolean
   }
 
-  export type NonConformityOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "companyId" | "refNo" | "title" | "vesselId" | "source" | "sourceEntityId" | "requirement" | "description" | "severity" | "raisedAt" | "targetDate" | "rootCauseCategory" | "rootCauseSubCategory" | "rootCause" | "personInCharge" | "status" | "closedAt" | "raisedById" | "createdAt" | "updatedAt" | "createdBy" | "updatedBy" | "deletedAt" | "deletedBy", ExtArgs["result"]["nonConformity"]>
+  export type NonConformityOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "companyId" | "refNo" | "title" | "vesselId" | "source" | "sourceEntityId" | "requirement" | "description" | "severity" | "raisedAt" | "targetDate" | "rootCauseCategory" | "rootCauseSubCategory" | "rootCause" | "personInCharge" | "shoreRemarks" | "status" | "closedAt" | "raisedById" | "createdAt" | "updatedAt" | "createdBy" | "updatedBy" | "deletedAt" | "deletedBy", ExtArgs["result"]["nonConformity"]>
   export type NonConformityInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     company?: boolean | CompanyDefaultArgs<ExtArgs>
     vessel?: boolean | NonConformity$vesselArgs<ExtArgs>
@@ -33277,6 +33302,7 @@ export namespace Prisma {
       rootCauseSubCategory: string | null
       rootCause: string | null
       personInCharge: string | null
+      shoreRemarks: string | null
       status: $Enums.NcrStatus
       closedAt: Date | null
       raisedById: string | null
@@ -33728,6 +33754,7 @@ export namespace Prisma {
     readonly rootCauseSubCategory: FieldRef<"NonConformity", 'String'>
     readonly rootCause: FieldRef<"NonConformity", 'String'>
     readonly personInCharge: FieldRef<"NonConformity", 'String'>
+    readonly shoreRemarks: FieldRef<"NonConformity", 'String'>
     readonly status: FieldRef<"NonConformity", 'NcrStatus'>
     readonly closedAt: FieldRef<"NonConformity", 'DateTime'>
     readonly raisedById: FieldRef<"NonConformity", 'String'>
@@ -47718,8 +47745,10 @@ export namespace Prisma {
     forAcknowledgement: string | null
     vesselRemarks: string | null
     shoreRemarks: string | null
-    published: boolean | null
-    approved: boolean | null
+    status: $Enums.CommitteeMeetingStatus | null
+    reportedAt: Date | null
+    closedAt: Date | null
+    revisedAfterReview: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
     createdBy: string | null
@@ -47743,8 +47772,10 @@ export namespace Prisma {
     forAcknowledgement: string | null
     vesselRemarks: string | null
     shoreRemarks: string | null
-    published: boolean | null
-    approved: boolean | null
+    status: $Enums.CommitteeMeetingStatus | null
+    reportedAt: Date | null
+    closedAt: Date | null
+    revisedAfterReview: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
     createdBy: string | null
@@ -47768,8 +47799,10 @@ export namespace Prisma {
     forAcknowledgement: number
     vesselRemarks: number
     shoreRemarks: number
-    published: number
-    approved: number
+    status: number
+    reportedAt: number
+    closedAt: number
+    revisedAfterReview: number
     createdAt: number
     updatedAt: number
     createdBy: number
@@ -47795,8 +47828,10 @@ export namespace Prisma {
     forAcknowledgement?: true
     vesselRemarks?: true
     shoreRemarks?: true
-    published?: true
-    approved?: true
+    status?: true
+    reportedAt?: true
+    closedAt?: true
+    revisedAfterReview?: true
     createdAt?: true
     updatedAt?: true
     createdBy?: true
@@ -47820,8 +47855,10 @@ export namespace Prisma {
     forAcknowledgement?: true
     vesselRemarks?: true
     shoreRemarks?: true
-    published?: true
-    approved?: true
+    status?: true
+    reportedAt?: true
+    closedAt?: true
+    revisedAfterReview?: true
     createdAt?: true
     updatedAt?: true
     createdBy?: true
@@ -47845,8 +47882,10 @@ export namespace Prisma {
     forAcknowledgement?: true
     vesselRemarks?: true
     shoreRemarks?: true
-    published?: true
-    approved?: true
+    status?: true
+    reportedAt?: true
+    closedAt?: true
+    revisedAfterReview?: true
     createdAt?: true
     updatedAt?: true
     createdBy?: true
@@ -47931,7 +47970,7 @@ export namespace Prisma {
   export type CommitteeMeetingGroupByOutputType = {
     id: string
     companyId: string
-    refNo: string
+    refNo: string | null
     vesselId: string | null
     position: string | null
     meetingDate: Date
@@ -47943,8 +47982,10 @@ export namespace Prisma {
     forAcknowledgement: string | null
     vesselRemarks: string | null
     shoreRemarks: string | null
-    published: boolean
-    approved: boolean
+    status: $Enums.CommitteeMeetingStatus
+    reportedAt: Date | null
+    closedAt: Date | null
+    revisedAfterReview: boolean
     createdAt: Date
     updatedAt: Date
     createdBy: string | null
@@ -47985,8 +48026,10 @@ export namespace Prisma {
     forAcknowledgement?: boolean
     vesselRemarks?: boolean
     shoreRemarks?: boolean
-    published?: boolean
-    approved?: boolean
+    status?: boolean
+    reportedAt?: boolean
+    closedAt?: boolean
+    revisedAfterReview?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     createdBy?: boolean
@@ -48014,8 +48057,10 @@ export namespace Prisma {
     forAcknowledgement?: boolean
     vesselRemarks?: boolean
     shoreRemarks?: boolean
-    published?: boolean
-    approved?: boolean
+    status?: boolean
+    reportedAt?: boolean
+    closedAt?: boolean
+    revisedAfterReview?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     createdBy?: boolean
@@ -48041,8 +48086,10 @@ export namespace Prisma {
     forAcknowledgement?: boolean
     vesselRemarks?: boolean
     shoreRemarks?: boolean
-    published?: boolean
-    approved?: boolean
+    status?: boolean
+    reportedAt?: boolean
+    closedAt?: boolean
+    revisedAfterReview?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     createdBy?: boolean
@@ -48068,8 +48115,10 @@ export namespace Prisma {
     forAcknowledgement?: boolean
     vesselRemarks?: boolean
     shoreRemarks?: boolean
-    published?: boolean
-    approved?: boolean
+    status?: boolean
+    reportedAt?: boolean
+    closedAt?: boolean
+    revisedAfterReview?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     createdBy?: boolean
@@ -48078,7 +48127,7 @@ export namespace Prisma {
     deletedBy?: boolean
   }
 
-  export type CommitteeMeetingOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "companyId" | "refNo" | "vesselId" | "position" | "meetingDate" | "meetingTime" | "chairman" | "inCharge" | "members" | "inAttendance" | "forAcknowledgement" | "vesselRemarks" | "shoreRemarks" | "published" | "approved" | "createdAt" | "updatedAt" | "createdBy" | "updatedBy" | "deletedAt" | "deletedBy", ExtArgs["result"]["committeeMeeting"]>
+  export type CommitteeMeetingOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "companyId" | "refNo" | "vesselId" | "position" | "meetingDate" | "meetingTime" | "chairman" | "inCharge" | "members" | "inAttendance" | "forAcknowledgement" | "vesselRemarks" | "shoreRemarks" | "status" | "reportedAt" | "closedAt" | "revisedAfterReview" | "createdAt" | "updatedAt" | "createdBy" | "updatedBy" | "deletedAt" | "deletedBy", ExtArgs["result"]["committeeMeeting"]>
   export type CommitteeMeetingInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     company?: boolean | CompanyDefaultArgs<ExtArgs>
     vessel?: boolean | CommitteeMeeting$vesselArgs<ExtArgs>
@@ -48104,7 +48153,7 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: string
       companyId: string
-      refNo: string
+      refNo: string | null
       vesselId: string | null
       position: string | null
       meetingDate: Date
@@ -48116,8 +48165,10 @@ export namespace Prisma {
       forAcknowledgement: string | null
       vesselRemarks: string | null
       shoreRemarks: string | null
-      published: boolean
-      approved: boolean
+      status: $Enums.CommitteeMeetingStatus
+      reportedAt: Date | null
+      closedAt: Date | null
+      revisedAfterReview: boolean
       createdAt: Date
       updatedAt: Date
       createdBy: string | null
@@ -48564,8 +48615,10 @@ export namespace Prisma {
     readonly forAcknowledgement: FieldRef<"CommitteeMeeting", 'String'>
     readonly vesselRemarks: FieldRef<"CommitteeMeeting", 'String'>
     readonly shoreRemarks: FieldRef<"CommitteeMeeting", 'String'>
-    readonly published: FieldRef<"CommitteeMeeting", 'Boolean'>
-    readonly approved: FieldRef<"CommitteeMeeting", 'Boolean'>
+    readonly status: FieldRef<"CommitteeMeeting", 'CommitteeMeetingStatus'>
+    readonly reportedAt: FieldRef<"CommitteeMeeting", 'DateTime'>
+    readonly closedAt: FieldRef<"CommitteeMeeting", 'DateTime'>
+    readonly revisedAfterReview: FieldRef<"CommitteeMeeting", 'Boolean'>
     readonly createdAt: FieldRef<"CommitteeMeeting", 'DateTime'>
     readonly updatedAt: FieldRef<"CommitteeMeeting", 'DateTime'>
     readonly createdBy: FieldRef<"CommitteeMeeting", 'String'>
@@ -56784,7 +56837,7 @@ export namespace Prisma {
     rootCauseSubCategory: 'rootCauseSubCategory',
     status: 'status',
     closedAt: 'closedAt',
-    companyComments: 'companyComments',
+    shoreRemarks: 'shoreRemarks',
     reviewedAt: 'reviewedAt',
     reportedById: 'reportedById',
     reporterName: 'reporterName',
@@ -56817,6 +56870,7 @@ export namespace Prisma {
     rootCauseSubCategory: 'rootCauseSubCategory',
     rootCause: 'rootCause',
     personInCharge: 'personInCharge',
+    shoreRemarks: 'shoreRemarks',
     status: 'status',
     closedAt: 'closedAt',
     raisedById: 'raisedById',
@@ -57079,8 +57133,10 @@ export namespace Prisma {
     forAcknowledgement: 'forAcknowledgement',
     vesselRemarks: 'vesselRemarks',
     shoreRemarks: 'shoreRemarks',
-    published: 'published',
-    approved: 'approved',
+    status: 'status',
+    reportedAt: 'reportedAt',
+    closedAt: 'closedAt',
+    revisedAfterReview: 'revisedAfterReview',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
     createdBy: 'createdBy',
@@ -57509,6 +57565,13 @@ export namespace Prisma {
    * Reference to a field of type 'AuditFindingCategory'
    */
   export type EnumAuditFindingCategoryFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AuditFindingCategory'>
+    
+
+
+  /**
+   * Reference to a field of type 'CommitteeMeetingStatus'
+   */
+  export type EnumCommitteeMeetingStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CommitteeMeetingStatus'>
     
 
 
@@ -59531,7 +59594,7 @@ export namespace Prisma {
     NOT?: NearMissWhereInput | NearMissWhereInput[]
     id?: StringFilter<"NearMiss"> | string
     companyId?: StringFilter<"NearMiss"> | string
-    refNo?: StringFilter<"NearMiss"> | string
+    refNo?: StringNullableFilter<"NearMiss"> | string | null
     title?: StringFilter<"NearMiss"> | string
     kind?: EnumNearMissKindFilter<"NearMiss"> | $Enums.NearMissKind
     horCategory?: EnumHazardTypeNullableFilter<"NearMiss"> | $Enums.HazardType | null
@@ -59547,7 +59610,7 @@ export namespace Prisma {
     rootCauseSubCategory?: StringNullableFilter<"NearMiss"> | string | null
     status?: EnumNearMissStatusFilter<"NearMiss"> | $Enums.NearMissStatus
     closedAt?: DateTimeNullableFilter<"NearMiss"> | Date | string | null
-    companyComments?: StringNullableFilter<"NearMiss"> | string | null
+    shoreRemarks?: StringNullableFilter<"NearMiss"> | string | null
     reviewedAt?: DateTimeNullableFilter<"NearMiss"> | Date | string | null
     reportedById?: StringNullableFilter<"NearMiss"> | string | null
     reporterName?: StringNullableFilter<"NearMiss"> | string | null
@@ -59566,7 +59629,7 @@ export namespace Prisma {
   export type NearMissOrderByWithRelationInput = {
     id?: SortOrder
     companyId?: SortOrder
-    refNo?: SortOrder
+    refNo?: SortOrderInput | SortOrder
     title?: SortOrder
     kind?: SortOrder
     horCategory?: SortOrderInput | SortOrder
@@ -59582,7 +59645,7 @@ export namespace Prisma {
     rootCauseSubCategory?: SortOrderInput | SortOrder
     status?: SortOrder
     closedAt?: SortOrderInput | SortOrder
-    companyComments?: SortOrderInput | SortOrder
+    shoreRemarks?: SortOrderInput | SortOrder
     reviewedAt?: SortOrderInput | SortOrder
     reportedById?: SortOrderInput | SortOrder
     reporterName?: SortOrderInput | SortOrder
@@ -59605,7 +59668,7 @@ export namespace Prisma {
     OR?: NearMissWhereInput[]
     NOT?: NearMissWhereInput | NearMissWhereInput[]
     companyId?: StringFilter<"NearMiss"> | string
-    refNo?: StringFilter<"NearMiss"> | string
+    refNo?: StringNullableFilter<"NearMiss"> | string | null
     title?: StringFilter<"NearMiss"> | string
     kind?: EnumNearMissKindFilter<"NearMiss"> | $Enums.NearMissKind
     horCategory?: EnumHazardTypeNullableFilter<"NearMiss"> | $Enums.HazardType | null
@@ -59621,7 +59684,7 @@ export namespace Prisma {
     rootCauseSubCategory?: StringNullableFilter<"NearMiss"> | string | null
     status?: EnumNearMissStatusFilter<"NearMiss"> | $Enums.NearMissStatus
     closedAt?: DateTimeNullableFilter<"NearMiss"> | Date | string | null
-    companyComments?: StringNullableFilter<"NearMiss"> | string | null
+    shoreRemarks?: StringNullableFilter<"NearMiss"> | string | null
     reviewedAt?: DateTimeNullableFilter<"NearMiss"> | Date | string | null
     reportedById?: StringNullableFilter<"NearMiss"> | string | null
     reporterName?: StringNullableFilter<"NearMiss"> | string | null
@@ -59640,7 +59703,7 @@ export namespace Prisma {
   export type NearMissOrderByWithAggregationInput = {
     id?: SortOrder
     companyId?: SortOrder
-    refNo?: SortOrder
+    refNo?: SortOrderInput | SortOrder
     title?: SortOrder
     kind?: SortOrder
     horCategory?: SortOrderInput | SortOrder
@@ -59656,7 +59719,7 @@ export namespace Prisma {
     rootCauseSubCategory?: SortOrderInput | SortOrder
     status?: SortOrder
     closedAt?: SortOrderInput | SortOrder
-    companyComments?: SortOrderInput | SortOrder
+    shoreRemarks?: SortOrderInput | SortOrder
     reviewedAt?: SortOrderInput | SortOrder
     reportedById?: SortOrderInput | SortOrder
     reporterName?: SortOrderInput | SortOrder
@@ -59678,7 +59741,7 @@ export namespace Prisma {
     NOT?: NearMissScalarWhereWithAggregatesInput | NearMissScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"NearMiss"> | string
     companyId?: StringWithAggregatesFilter<"NearMiss"> | string
-    refNo?: StringWithAggregatesFilter<"NearMiss"> | string
+    refNo?: StringNullableWithAggregatesFilter<"NearMiss"> | string | null
     title?: StringWithAggregatesFilter<"NearMiss"> | string
     kind?: EnumNearMissKindWithAggregatesFilter<"NearMiss"> | $Enums.NearMissKind
     horCategory?: EnumHazardTypeNullableWithAggregatesFilter<"NearMiss"> | $Enums.HazardType | null
@@ -59694,7 +59757,7 @@ export namespace Prisma {
     rootCauseSubCategory?: StringNullableWithAggregatesFilter<"NearMiss"> | string | null
     status?: EnumNearMissStatusWithAggregatesFilter<"NearMiss"> | $Enums.NearMissStatus
     closedAt?: DateTimeNullableWithAggregatesFilter<"NearMiss"> | Date | string | null
-    companyComments?: StringNullableWithAggregatesFilter<"NearMiss"> | string | null
+    shoreRemarks?: StringNullableWithAggregatesFilter<"NearMiss"> | string | null
     reviewedAt?: DateTimeNullableWithAggregatesFilter<"NearMiss"> | Date | string | null
     reportedById?: StringNullableWithAggregatesFilter<"NearMiss"> | string | null
     reporterName?: StringNullableWithAggregatesFilter<"NearMiss"> | string | null
@@ -59727,6 +59790,7 @@ export namespace Prisma {
     rootCauseSubCategory?: StringNullableFilter<"NonConformity"> | string | null
     rootCause?: StringNullableFilter<"NonConformity"> | string | null
     personInCharge?: StringNullableFilter<"NonConformity"> | string | null
+    shoreRemarks?: StringNullableFilter<"NonConformity"> | string | null
     status?: EnumNcrStatusFilter<"NonConformity"> | $Enums.NcrStatus
     closedAt?: DateTimeNullableFilter<"NonConformity"> | Date | string | null
     raisedById?: StringNullableFilter<"NonConformity"> | string | null
@@ -59758,6 +59822,7 @@ export namespace Prisma {
     rootCauseSubCategory?: SortOrderInput | SortOrder
     rootCause?: SortOrderInput | SortOrder
     personInCharge?: SortOrderInput | SortOrder
+    shoreRemarks?: SortOrderInput | SortOrder
     status?: SortOrder
     closedAt?: SortOrderInput | SortOrder
     raisedById?: SortOrderInput | SortOrder
@@ -59793,6 +59858,7 @@ export namespace Prisma {
     rootCauseSubCategory?: StringNullableFilter<"NonConformity"> | string | null
     rootCause?: StringNullableFilter<"NonConformity"> | string | null
     personInCharge?: StringNullableFilter<"NonConformity"> | string | null
+    shoreRemarks?: StringNullableFilter<"NonConformity"> | string | null
     status?: EnumNcrStatusFilter<"NonConformity"> | $Enums.NcrStatus
     closedAt?: DateTimeNullableFilter<"NonConformity"> | Date | string | null
     raisedById?: StringNullableFilter<"NonConformity"> | string | null
@@ -59824,6 +59890,7 @@ export namespace Prisma {
     rootCauseSubCategory?: SortOrderInput | SortOrder
     rootCause?: SortOrderInput | SortOrder
     personInCharge?: SortOrderInput | SortOrder
+    shoreRemarks?: SortOrderInput | SortOrder
     status?: SortOrder
     closedAt?: SortOrderInput | SortOrder
     raisedById?: SortOrderInput | SortOrder
@@ -59858,6 +59925,7 @@ export namespace Prisma {
     rootCauseSubCategory?: StringNullableWithAggregatesFilter<"NonConformity"> | string | null
     rootCause?: StringNullableWithAggregatesFilter<"NonConformity"> | string | null
     personInCharge?: StringNullableWithAggregatesFilter<"NonConformity"> | string | null
+    shoreRemarks?: StringNullableWithAggregatesFilter<"NonConformity"> | string | null
     status?: EnumNcrStatusWithAggregatesFilter<"NonConformity"> | $Enums.NcrStatus
     closedAt?: DateTimeNullableWithAggregatesFilter<"NonConformity"> | Date | string | null
     raisedById?: StringNullableWithAggregatesFilter<"NonConformity"> | string | null
@@ -61089,7 +61157,7 @@ export namespace Prisma {
     NOT?: CommitteeMeetingWhereInput | CommitteeMeetingWhereInput[]
     id?: StringFilter<"CommitteeMeeting"> | string
     companyId?: StringFilter<"CommitteeMeeting"> | string
-    refNo?: StringFilter<"CommitteeMeeting"> | string
+    refNo?: StringNullableFilter<"CommitteeMeeting"> | string | null
     vesselId?: StringNullableFilter<"CommitteeMeeting"> | string | null
     position?: StringNullableFilter<"CommitteeMeeting"> | string | null
     meetingDate?: DateTimeFilter<"CommitteeMeeting"> | Date | string
@@ -61101,8 +61169,10 @@ export namespace Prisma {
     forAcknowledgement?: StringNullableFilter<"CommitteeMeeting"> | string | null
     vesselRemarks?: StringNullableFilter<"CommitteeMeeting"> | string | null
     shoreRemarks?: StringNullableFilter<"CommitteeMeeting"> | string | null
-    published?: BoolFilter<"CommitteeMeeting"> | boolean
-    approved?: BoolFilter<"CommitteeMeeting"> | boolean
+    status?: EnumCommitteeMeetingStatusFilter<"CommitteeMeeting"> | $Enums.CommitteeMeetingStatus
+    reportedAt?: DateTimeNullableFilter<"CommitteeMeeting"> | Date | string | null
+    closedAt?: DateTimeNullableFilter<"CommitteeMeeting"> | Date | string | null
+    revisedAfterReview?: BoolFilter<"CommitteeMeeting"> | boolean
     createdAt?: DateTimeFilter<"CommitteeMeeting"> | Date | string
     updatedAt?: DateTimeFilter<"CommitteeMeeting"> | Date | string
     createdBy?: StringNullableFilter<"CommitteeMeeting"> | string | null
@@ -61117,7 +61187,7 @@ export namespace Prisma {
   export type CommitteeMeetingOrderByWithRelationInput = {
     id?: SortOrder
     companyId?: SortOrder
-    refNo?: SortOrder
+    refNo?: SortOrderInput | SortOrder
     vesselId?: SortOrderInput | SortOrder
     position?: SortOrderInput | SortOrder
     meetingDate?: SortOrder
@@ -61129,8 +61199,10 @@ export namespace Prisma {
     forAcknowledgement?: SortOrderInput | SortOrder
     vesselRemarks?: SortOrderInput | SortOrder
     shoreRemarks?: SortOrderInput | SortOrder
-    published?: SortOrder
-    approved?: SortOrder
+    status?: SortOrder
+    reportedAt?: SortOrderInput | SortOrder
+    closedAt?: SortOrderInput | SortOrder
+    revisedAfterReview?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     createdBy?: SortOrderInput | SortOrder
@@ -61149,7 +61221,7 @@ export namespace Prisma {
     OR?: CommitteeMeetingWhereInput[]
     NOT?: CommitteeMeetingWhereInput | CommitteeMeetingWhereInput[]
     companyId?: StringFilter<"CommitteeMeeting"> | string
-    refNo?: StringFilter<"CommitteeMeeting"> | string
+    refNo?: StringNullableFilter<"CommitteeMeeting"> | string | null
     vesselId?: StringNullableFilter<"CommitteeMeeting"> | string | null
     position?: StringNullableFilter<"CommitteeMeeting"> | string | null
     meetingDate?: DateTimeFilter<"CommitteeMeeting"> | Date | string
@@ -61161,8 +61233,10 @@ export namespace Prisma {
     forAcknowledgement?: StringNullableFilter<"CommitteeMeeting"> | string | null
     vesselRemarks?: StringNullableFilter<"CommitteeMeeting"> | string | null
     shoreRemarks?: StringNullableFilter<"CommitteeMeeting"> | string | null
-    published?: BoolFilter<"CommitteeMeeting"> | boolean
-    approved?: BoolFilter<"CommitteeMeeting"> | boolean
+    status?: EnumCommitteeMeetingStatusFilter<"CommitteeMeeting"> | $Enums.CommitteeMeetingStatus
+    reportedAt?: DateTimeNullableFilter<"CommitteeMeeting"> | Date | string | null
+    closedAt?: DateTimeNullableFilter<"CommitteeMeeting"> | Date | string | null
+    revisedAfterReview?: BoolFilter<"CommitteeMeeting"> | boolean
     createdAt?: DateTimeFilter<"CommitteeMeeting"> | Date | string
     updatedAt?: DateTimeFilter<"CommitteeMeeting"> | Date | string
     createdBy?: StringNullableFilter<"CommitteeMeeting"> | string | null
@@ -61177,7 +61251,7 @@ export namespace Prisma {
   export type CommitteeMeetingOrderByWithAggregationInput = {
     id?: SortOrder
     companyId?: SortOrder
-    refNo?: SortOrder
+    refNo?: SortOrderInput | SortOrder
     vesselId?: SortOrderInput | SortOrder
     position?: SortOrderInput | SortOrder
     meetingDate?: SortOrder
@@ -61189,8 +61263,10 @@ export namespace Prisma {
     forAcknowledgement?: SortOrderInput | SortOrder
     vesselRemarks?: SortOrderInput | SortOrder
     shoreRemarks?: SortOrderInput | SortOrder
-    published?: SortOrder
-    approved?: SortOrder
+    status?: SortOrder
+    reportedAt?: SortOrderInput | SortOrder
+    closedAt?: SortOrderInput | SortOrder
+    revisedAfterReview?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     createdBy?: SortOrderInput | SortOrder
@@ -61208,7 +61284,7 @@ export namespace Prisma {
     NOT?: CommitteeMeetingScalarWhereWithAggregatesInput | CommitteeMeetingScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"CommitteeMeeting"> | string
     companyId?: StringWithAggregatesFilter<"CommitteeMeeting"> | string
-    refNo?: StringWithAggregatesFilter<"CommitteeMeeting"> | string
+    refNo?: StringNullableWithAggregatesFilter<"CommitteeMeeting"> | string | null
     vesselId?: StringNullableWithAggregatesFilter<"CommitteeMeeting"> | string | null
     position?: StringNullableWithAggregatesFilter<"CommitteeMeeting"> | string | null
     meetingDate?: DateTimeWithAggregatesFilter<"CommitteeMeeting"> | Date | string
@@ -61220,8 +61296,10 @@ export namespace Prisma {
     forAcknowledgement?: StringNullableWithAggregatesFilter<"CommitteeMeeting"> | string | null
     vesselRemarks?: StringNullableWithAggregatesFilter<"CommitteeMeeting"> | string | null
     shoreRemarks?: StringNullableWithAggregatesFilter<"CommitteeMeeting"> | string | null
-    published?: BoolWithAggregatesFilter<"CommitteeMeeting"> | boolean
-    approved?: BoolWithAggregatesFilter<"CommitteeMeeting"> | boolean
+    status?: EnumCommitteeMeetingStatusWithAggregatesFilter<"CommitteeMeeting"> | $Enums.CommitteeMeetingStatus
+    reportedAt?: DateTimeNullableWithAggregatesFilter<"CommitteeMeeting"> | Date | string | null
+    closedAt?: DateTimeNullableWithAggregatesFilter<"CommitteeMeeting"> | Date | string | null
+    revisedAfterReview?: BoolWithAggregatesFilter<"CommitteeMeeting"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"CommitteeMeeting"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"CommitteeMeeting"> | Date | string
     createdBy?: StringNullableWithAggregatesFilter<"CommitteeMeeting"> | string | null
@@ -64141,7 +64219,7 @@ export namespace Prisma {
 
   export type NearMissCreateInput = {
     id?: string
-    refNo: string
+    refNo?: string | null
     title: string
     kind?: $Enums.NearMissKind
     horCategory?: $Enums.HazardType | null
@@ -64156,7 +64234,7 @@ export namespace Prisma {
     rootCauseSubCategory?: string | null
     status?: $Enums.NearMissStatus
     closedAt?: Date | string | null
-    companyComments?: string | null
+    shoreRemarks?: string | null
     reviewedAt?: Date | string | null
     reporterName?: string | null
     reporterPosition?: string | null
@@ -64174,7 +64252,7 @@ export namespace Prisma {
   export type NearMissUncheckedCreateInput = {
     id?: string
     companyId: string
-    refNo: string
+    refNo?: string | null
     title: string
     kind?: $Enums.NearMissKind
     horCategory?: $Enums.HazardType | null
@@ -64190,7 +64268,7 @@ export namespace Prisma {
     rootCauseSubCategory?: string | null
     status?: $Enums.NearMissStatus
     closedAt?: Date | string | null
-    companyComments?: string | null
+    shoreRemarks?: string | null
     reviewedAt?: Date | string | null
     reportedById?: string | null
     reporterName?: string | null
@@ -64205,7 +64283,7 @@ export namespace Prisma {
 
   export type NearMissUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    refNo?: StringFieldUpdateOperationsInput | string
+    refNo?: NullableStringFieldUpdateOperationsInput | string | null
     title?: StringFieldUpdateOperationsInput | string
     kind?: EnumNearMissKindFieldUpdateOperationsInput | $Enums.NearMissKind
     horCategory?: NullableEnumHazardTypeFieldUpdateOperationsInput | $Enums.HazardType | null
@@ -64220,7 +64298,7 @@ export namespace Prisma {
     rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumNearMissStatusFieldUpdateOperationsInput | $Enums.NearMissStatus
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    companyComments?: NullableStringFieldUpdateOperationsInput | string | null
+    shoreRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     reporterName?: NullableStringFieldUpdateOperationsInput | string | null
     reporterPosition?: NullableStringFieldUpdateOperationsInput | string | null
@@ -64238,7 +64316,7 @@ export namespace Prisma {
   export type NearMissUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     companyId?: StringFieldUpdateOperationsInput | string
-    refNo?: StringFieldUpdateOperationsInput | string
+    refNo?: NullableStringFieldUpdateOperationsInput | string | null
     title?: StringFieldUpdateOperationsInput | string
     kind?: EnumNearMissKindFieldUpdateOperationsInput | $Enums.NearMissKind
     horCategory?: NullableEnumHazardTypeFieldUpdateOperationsInput | $Enums.HazardType | null
@@ -64254,7 +64332,7 @@ export namespace Prisma {
     rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumNearMissStatusFieldUpdateOperationsInput | $Enums.NearMissStatus
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    companyComments?: NullableStringFieldUpdateOperationsInput | string | null
+    shoreRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     reportedById?: NullableStringFieldUpdateOperationsInput | string | null
     reporterName?: NullableStringFieldUpdateOperationsInput | string | null
@@ -64270,7 +64348,7 @@ export namespace Prisma {
   export type NearMissCreateManyInput = {
     id?: string
     companyId: string
-    refNo: string
+    refNo?: string | null
     title: string
     kind?: $Enums.NearMissKind
     horCategory?: $Enums.HazardType | null
@@ -64286,7 +64364,7 @@ export namespace Prisma {
     rootCauseSubCategory?: string | null
     status?: $Enums.NearMissStatus
     closedAt?: Date | string | null
-    companyComments?: string | null
+    shoreRemarks?: string | null
     reviewedAt?: Date | string | null
     reportedById?: string | null
     reporterName?: string | null
@@ -64301,7 +64379,7 @@ export namespace Prisma {
 
   export type NearMissUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    refNo?: StringFieldUpdateOperationsInput | string
+    refNo?: NullableStringFieldUpdateOperationsInput | string | null
     title?: StringFieldUpdateOperationsInput | string
     kind?: EnumNearMissKindFieldUpdateOperationsInput | $Enums.NearMissKind
     horCategory?: NullableEnumHazardTypeFieldUpdateOperationsInput | $Enums.HazardType | null
@@ -64316,7 +64394,7 @@ export namespace Prisma {
     rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumNearMissStatusFieldUpdateOperationsInput | $Enums.NearMissStatus
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    companyComments?: NullableStringFieldUpdateOperationsInput | string | null
+    shoreRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     reporterName?: NullableStringFieldUpdateOperationsInput | string | null
     reporterPosition?: NullableStringFieldUpdateOperationsInput | string | null
@@ -64331,7 +64409,7 @@ export namespace Prisma {
   export type NearMissUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     companyId?: StringFieldUpdateOperationsInput | string
-    refNo?: StringFieldUpdateOperationsInput | string
+    refNo?: NullableStringFieldUpdateOperationsInput | string | null
     title?: StringFieldUpdateOperationsInput | string
     kind?: EnumNearMissKindFieldUpdateOperationsInput | $Enums.NearMissKind
     horCategory?: NullableEnumHazardTypeFieldUpdateOperationsInput | $Enums.HazardType | null
@@ -64347,7 +64425,7 @@ export namespace Prisma {
     rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumNearMissStatusFieldUpdateOperationsInput | $Enums.NearMissStatus
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    companyComments?: NullableStringFieldUpdateOperationsInput | string | null
+    shoreRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     reportedById?: NullableStringFieldUpdateOperationsInput | string | null
     reporterName?: NullableStringFieldUpdateOperationsInput | string | null
@@ -64375,6 +64453,7 @@ export namespace Prisma {
     rootCauseSubCategory?: string | null
     rootCause?: string | null
     personInCharge?: string | null
+    shoreRemarks?: string | null
     status?: $Enums.NcrStatus
     closedAt?: Date | string | null
     createdAt?: Date | string
@@ -64405,6 +64484,7 @@ export namespace Prisma {
     rootCauseSubCategory?: string | null
     rootCause?: string | null
     personInCharge?: string | null
+    shoreRemarks?: string | null
     status?: $Enums.NcrStatus
     closedAt?: Date | string | null
     raisedById?: string | null
@@ -64431,6 +64511,7 @@ export namespace Prisma {
     rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
     rootCause?: NullableStringFieldUpdateOperationsInput | string | null
     personInCharge?: NullableStringFieldUpdateOperationsInput | string | null
+    shoreRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumNcrStatusFieldUpdateOperationsInput | $Enums.NcrStatus
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -64461,6 +64542,7 @@ export namespace Prisma {
     rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
     rootCause?: NullableStringFieldUpdateOperationsInput | string | null
     personInCharge?: NullableStringFieldUpdateOperationsInput | string | null
+    shoreRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumNcrStatusFieldUpdateOperationsInput | $Enums.NcrStatus
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     raisedById?: NullableStringFieldUpdateOperationsInput | string | null
@@ -64489,6 +64571,7 @@ export namespace Prisma {
     rootCauseSubCategory?: string | null
     rootCause?: string | null
     personInCharge?: string | null
+    shoreRemarks?: string | null
     status?: $Enums.NcrStatus
     closedAt?: Date | string | null
     raisedById?: string | null
@@ -64515,6 +64598,7 @@ export namespace Prisma {
     rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
     rootCause?: NullableStringFieldUpdateOperationsInput | string | null
     personInCharge?: NullableStringFieldUpdateOperationsInput | string | null
+    shoreRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumNcrStatusFieldUpdateOperationsInput | $Enums.NcrStatus
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -64542,6 +64626,7 @@ export namespace Prisma {
     rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
     rootCause?: NullableStringFieldUpdateOperationsInput | string | null
     personInCharge?: NullableStringFieldUpdateOperationsInput | string | null
+    shoreRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumNcrStatusFieldUpdateOperationsInput | $Enums.NcrStatus
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     raisedById?: NullableStringFieldUpdateOperationsInput | string | null
@@ -65960,7 +66045,7 @@ export namespace Prisma {
 
   export type CommitteeMeetingCreateInput = {
     id?: string
-    refNo: string
+    refNo?: string | null
     position?: string | null
     meetingDate: Date | string
     meetingTime?: string | null
@@ -65971,8 +66056,10 @@ export namespace Prisma {
     forAcknowledgement?: string | null
     vesselRemarks?: string | null
     shoreRemarks?: string | null
-    published?: boolean
-    approved?: boolean
+    status?: $Enums.CommitteeMeetingStatus
+    reportedAt?: Date | string | null
+    closedAt?: Date | string | null
+    revisedAfterReview?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -65987,7 +66074,7 @@ export namespace Prisma {
   export type CommitteeMeetingUncheckedCreateInput = {
     id?: string
     companyId: string
-    refNo: string
+    refNo?: string | null
     vesselId?: string | null
     position?: string | null
     meetingDate: Date | string
@@ -65999,8 +66086,10 @@ export namespace Prisma {
     forAcknowledgement?: string | null
     vesselRemarks?: string | null
     shoreRemarks?: string | null
-    published?: boolean
-    approved?: boolean
+    status?: $Enums.CommitteeMeetingStatus
+    reportedAt?: Date | string | null
+    closedAt?: Date | string | null
+    revisedAfterReview?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -66012,7 +66101,7 @@ export namespace Prisma {
 
   export type CommitteeMeetingUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    refNo?: StringFieldUpdateOperationsInput | string
+    refNo?: NullableStringFieldUpdateOperationsInput | string | null
     position?: NullableStringFieldUpdateOperationsInput | string | null
     meetingDate?: DateTimeFieldUpdateOperationsInput | Date | string
     meetingTime?: NullableStringFieldUpdateOperationsInput | string | null
@@ -66023,8 +66112,10 @@ export namespace Prisma {
     forAcknowledgement?: NullableStringFieldUpdateOperationsInput | string | null
     vesselRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     shoreRemarks?: NullableStringFieldUpdateOperationsInput | string | null
-    published?: BoolFieldUpdateOperationsInput | boolean
-    approved?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumCommitteeMeetingStatusFieldUpdateOperationsInput | $Enums.CommitteeMeetingStatus
+    reportedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    revisedAfterReview?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -66039,7 +66130,7 @@ export namespace Prisma {
   export type CommitteeMeetingUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     companyId?: StringFieldUpdateOperationsInput | string
-    refNo?: StringFieldUpdateOperationsInput | string
+    refNo?: NullableStringFieldUpdateOperationsInput | string | null
     vesselId?: NullableStringFieldUpdateOperationsInput | string | null
     position?: NullableStringFieldUpdateOperationsInput | string | null
     meetingDate?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -66051,8 +66142,10 @@ export namespace Prisma {
     forAcknowledgement?: NullableStringFieldUpdateOperationsInput | string | null
     vesselRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     shoreRemarks?: NullableStringFieldUpdateOperationsInput | string | null
-    published?: BoolFieldUpdateOperationsInput | boolean
-    approved?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumCommitteeMeetingStatusFieldUpdateOperationsInput | $Enums.CommitteeMeetingStatus
+    reportedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    revisedAfterReview?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -66065,7 +66158,7 @@ export namespace Prisma {
   export type CommitteeMeetingCreateManyInput = {
     id?: string
     companyId: string
-    refNo: string
+    refNo?: string | null
     vesselId?: string | null
     position?: string | null
     meetingDate: Date | string
@@ -66077,8 +66170,10 @@ export namespace Prisma {
     forAcknowledgement?: string | null
     vesselRemarks?: string | null
     shoreRemarks?: string | null
-    published?: boolean
-    approved?: boolean
+    status?: $Enums.CommitteeMeetingStatus
+    reportedAt?: Date | string | null
+    closedAt?: Date | string | null
+    revisedAfterReview?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -66089,7 +66184,7 @@ export namespace Prisma {
 
   export type CommitteeMeetingUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    refNo?: StringFieldUpdateOperationsInput | string
+    refNo?: NullableStringFieldUpdateOperationsInput | string | null
     position?: NullableStringFieldUpdateOperationsInput | string | null
     meetingDate?: DateTimeFieldUpdateOperationsInput | Date | string
     meetingTime?: NullableStringFieldUpdateOperationsInput | string | null
@@ -66100,8 +66195,10 @@ export namespace Prisma {
     forAcknowledgement?: NullableStringFieldUpdateOperationsInput | string | null
     vesselRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     shoreRemarks?: NullableStringFieldUpdateOperationsInput | string | null
-    published?: BoolFieldUpdateOperationsInput | boolean
-    approved?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumCommitteeMeetingStatusFieldUpdateOperationsInput | $Enums.CommitteeMeetingStatus
+    reportedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    revisedAfterReview?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -66113,7 +66210,7 @@ export namespace Prisma {
   export type CommitteeMeetingUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     companyId?: StringFieldUpdateOperationsInput | string
-    refNo?: StringFieldUpdateOperationsInput | string
+    refNo?: NullableStringFieldUpdateOperationsInput | string | null
     vesselId?: NullableStringFieldUpdateOperationsInput | string | null
     position?: NullableStringFieldUpdateOperationsInput | string | null
     meetingDate?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -66125,8 +66222,10 @@ export namespace Prisma {
     forAcknowledgement?: NullableStringFieldUpdateOperationsInput | string | null
     vesselRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     shoreRemarks?: NullableStringFieldUpdateOperationsInput | string | null
-    published?: BoolFieldUpdateOperationsInput | boolean
-    approved?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumCommitteeMeetingStatusFieldUpdateOperationsInput | $Enums.CommitteeMeetingStatus
+    reportedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    revisedAfterReview?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -68856,7 +68955,7 @@ export namespace Prisma {
     rootCauseSubCategory?: SortOrder
     status?: SortOrder
     closedAt?: SortOrder
-    companyComments?: SortOrder
+    shoreRemarks?: SortOrder
     reviewedAt?: SortOrder
     reportedById?: SortOrder
     reporterName?: SortOrder
@@ -68888,7 +68987,7 @@ export namespace Prisma {
     rootCauseSubCategory?: SortOrder
     status?: SortOrder
     closedAt?: SortOrder
-    companyComments?: SortOrder
+    shoreRemarks?: SortOrder
     reviewedAt?: SortOrder
     reportedById?: SortOrder
     reporterName?: SortOrder
@@ -68920,7 +69019,7 @@ export namespace Prisma {
     rootCauseSubCategory?: SortOrder
     status?: SortOrder
     closedAt?: SortOrder
-    companyComments?: SortOrder
+    shoreRemarks?: SortOrder
     reviewedAt?: SortOrder
     reportedById?: SortOrder
     reporterName?: SortOrder
@@ -69029,6 +69128,7 @@ export namespace Prisma {
     rootCauseSubCategory?: SortOrder
     rootCause?: SortOrder
     personInCharge?: SortOrder
+    shoreRemarks?: SortOrder
     status?: SortOrder
     closedAt?: SortOrder
     raisedById?: SortOrder
@@ -69057,6 +69157,7 @@ export namespace Prisma {
     rootCauseSubCategory?: SortOrder
     rootCause?: SortOrder
     personInCharge?: SortOrder
+    shoreRemarks?: SortOrder
     status?: SortOrder
     closedAt?: SortOrder
     raisedById?: SortOrder
@@ -69085,6 +69186,7 @@ export namespace Prisma {
     rootCauseSubCategory?: SortOrder
     rootCause?: SortOrder
     personInCharge?: SortOrder
+    shoreRemarks?: SortOrder
     status?: SortOrder
     closedAt?: SortOrder
     raisedById?: SortOrder
@@ -69940,6 +70042,13 @@ export namespace Prisma {
     deletedAt?: SortOrder
   }
 
+  export type EnumCommitteeMeetingStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.CommitteeMeetingStatus | EnumCommitteeMeetingStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.CommitteeMeetingStatus[]
+    notIn?: $Enums.CommitteeMeetingStatus[]
+    not?: NestedEnumCommitteeMeetingStatusFilter<$PrismaModel> | $Enums.CommitteeMeetingStatus
+  }
+
   export type CommitteeMeetingAgendaListRelationFilter = {
     every?: CommitteeMeetingAgendaWhereInput
     some?: CommitteeMeetingAgendaWhereInput
@@ -69970,8 +70079,10 @@ export namespace Prisma {
     forAcknowledgement?: SortOrder
     vesselRemarks?: SortOrder
     shoreRemarks?: SortOrder
-    published?: SortOrder
-    approved?: SortOrder
+    status?: SortOrder
+    reportedAt?: SortOrder
+    closedAt?: SortOrder
+    revisedAfterReview?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     createdBy?: SortOrder
@@ -69995,8 +70106,10 @@ export namespace Prisma {
     forAcknowledgement?: SortOrder
     vesselRemarks?: SortOrder
     shoreRemarks?: SortOrder
-    published?: SortOrder
-    approved?: SortOrder
+    status?: SortOrder
+    reportedAt?: SortOrder
+    closedAt?: SortOrder
+    revisedAfterReview?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     createdBy?: SortOrder
@@ -70020,14 +70133,26 @@ export namespace Prisma {
     forAcknowledgement?: SortOrder
     vesselRemarks?: SortOrder
     shoreRemarks?: SortOrder
-    published?: SortOrder
-    approved?: SortOrder
+    status?: SortOrder
+    reportedAt?: SortOrder
+    closedAt?: SortOrder
+    revisedAfterReview?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     createdBy?: SortOrder
     updatedBy?: SortOrder
     deletedAt?: SortOrder
     deletedBy?: SortOrder
+  }
+
+  export type EnumCommitteeMeetingStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.CommitteeMeetingStatus | EnumCommitteeMeetingStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.CommitteeMeetingStatus[]
+    notIn?: $Enums.CommitteeMeetingStatus[]
+    not?: NestedEnumCommitteeMeetingStatusWithAggregatesFilter<$PrismaModel> | $Enums.CommitteeMeetingStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumCommitteeMeetingStatusFilter<$PrismaModel>
+    _max?: NestedEnumCommitteeMeetingStatusFilter<$PrismaModel>
   }
 
   export type EnumCommitteeTypeFilter<$PrismaModel = never> = {
@@ -74044,6 +74169,10 @@ export namespace Prisma {
     connect?: CommitteeMeetingAgendaWhereUniqueInput | CommitteeMeetingAgendaWhereUniqueInput[]
   }
 
+  export type EnumCommitteeMeetingStatusFieldUpdateOperationsInput = {
+    set?: $Enums.CommitteeMeetingStatus
+  }
+
   export type CompanyUpdateOneRequiredWithoutCommitteeMeetingsNestedInput = {
     create?: XOR<CompanyCreateWithoutCommitteeMeetingsInput, CompanyUncheckedCreateWithoutCommitteeMeetingsInput>
     connectOrCreate?: CompanyCreateOrConnectWithoutCommitteeMeetingsInput
@@ -75031,6 +75160,23 @@ export namespace Prisma {
     _max?: NestedEnumAuditFindingCategoryFilter<$PrismaModel>
   }
 
+  export type NestedEnumCommitteeMeetingStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.CommitteeMeetingStatus | EnumCommitteeMeetingStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.CommitteeMeetingStatus[]
+    notIn?: $Enums.CommitteeMeetingStatus[]
+    not?: NestedEnumCommitteeMeetingStatusFilter<$PrismaModel> | $Enums.CommitteeMeetingStatus
+  }
+
+  export type NestedEnumCommitteeMeetingStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.CommitteeMeetingStatus | EnumCommitteeMeetingStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.CommitteeMeetingStatus[]
+    notIn?: $Enums.CommitteeMeetingStatus[]
+    not?: NestedEnumCommitteeMeetingStatusWithAggregatesFilter<$PrismaModel> | $Enums.CommitteeMeetingStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumCommitteeMeetingStatusFilter<$PrismaModel>
+    _max?: NestedEnumCommitteeMeetingStatusFilter<$PrismaModel>
+  }
+
   export type NestedEnumCommitteeTypeFilter<$PrismaModel = never> = {
     equals?: $Enums.CommitteeType | EnumCommitteeTypeFieldRefInput<$PrismaModel>
     in?: $Enums.CommitteeType[]
@@ -75528,7 +75674,7 @@ export namespace Prisma {
 
   export type NearMissCreateWithoutCompanyInput = {
     id?: string
-    refNo: string
+    refNo?: string | null
     title: string
     kind?: $Enums.NearMissKind
     horCategory?: $Enums.HazardType | null
@@ -75543,7 +75689,7 @@ export namespace Prisma {
     rootCauseSubCategory?: string | null
     status?: $Enums.NearMissStatus
     closedAt?: Date | string | null
-    companyComments?: string | null
+    shoreRemarks?: string | null
     reviewedAt?: Date | string | null
     reporterName?: string | null
     reporterPosition?: string | null
@@ -75559,7 +75705,7 @@ export namespace Prisma {
 
   export type NearMissUncheckedCreateWithoutCompanyInput = {
     id?: string
-    refNo: string
+    refNo?: string | null
     title: string
     kind?: $Enums.NearMissKind
     horCategory?: $Enums.HazardType | null
@@ -75575,7 +75721,7 @@ export namespace Prisma {
     rootCauseSubCategory?: string | null
     status?: $Enums.NearMissStatus
     closedAt?: Date | string | null
-    companyComments?: string | null
+    shoreRemarks?: string | null
     reviewedAt?: Date | string | null
     reportedById?: string | null
     reporterName?: string | null
@@ -75612,6 +75758,7 @@ export namespace Prisma {
     rootCauseSubCategory?: string | null
     rootCause?: string | null
     personInCharge?: string | null
+    shoreRemarks?: string | null
     status?: $Enums.NcrStatus
     closedAt?: Date | string | null
     createdAt?: Date | string
@@ -75640,6 +75787,7 @@ export namespace Prisma {
     rootCauseSubCategory?: string | null
     rootCause?: string | null
     personInCharge?: string | null
+    shoreRemarks?: string | null
     status?: $Enums.NcrStatus
     closedAt?: Date | string | null
     raisedById?: string | null
@@ -75919,7 +76067,7 @@ export namespace Prisma {
 
   export type CommitteeMeetingCreateWithoutCompanyInput = {
     id?: string
-    refNo: string
+    refNo?: string | null
     position?: string | null
     meetingDate: Date | string
     meetingTime?: string | null
@@ -75930,8 +76078,10 @@ export namespace Prisma {
     forAcknowledgement?: string | null
     vesselRemarks?: string | null
     shoreRemarks?: string | null
-    published?: boolean
-    approved?: boolean
+    status?: $Enums.CommitteeMeetingStatus
+    reportedAt?: Date | string | null
+    closedAt?: Date | string | null
+    revisedAfterReview?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -75944,7 +76094,7 @@ export namespace Prisma {
 
   export type CommitteeMeetingUncheckedCreateWithoutCompanyInput = {
     id?: string
-    refNo: string
+    refNo?: string | null
     vesselId?: string | null
     position?: string | null
     meetingDate: Date | string
@@ -75956,8 +76106,10 @@ export namespace Prisma {
     forAcknowledgement?: string | null
     vesselRemarks?: string | null
     shoreRemarks?: string | null
-    published?: boolean
-    approved?: boolean
+    status?: $Enums.CommitteeMeetingStatus
+    reportedAt?: Date | string | null
+    closedAt?: Date | string | null
+    revisedAfterReview?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -76475,7 +76627,7 @@ export namespace Prisma {
     NOT?: NearMissScalarWhereInput | NearMissScalarWhereInput[]
     id?: StringFilter<"NearMiss"> | string
     companyId?: StringFilter<"NearMiss"> | string
-    refNo?: StringFilter<"NearMiss"> | string
+    refNo?: StringNullableFilter<"NearMiss"> | string | null
     title?: StringFilter<"NearMiss"> | string
     kind?: EnumNearMissKindFilter<"NearMiss"> | $Enums.NearMissKind
     horCategory?: EnumHazardTypeNullableFilter<"NearMiss"> | $Enums.HazardType | null
@@ -76491,7 +76643,7 @@ export namespace Prisma {
     rootCauseSubCategory?: StringNullableFilter<"NearMiss"> | string | null
     status?: EnumNearMissStatusFilter<"NearMiss"> | $Enums.NearMissStatus
     closedAt?: DateTimeNullableFilter<"NearMiss"> | Date | string | null
-    companyComments?: StringNullableFilter<"NearMiss"> | string | null
+    shoreRemarks?: StringNullableFilter<"NearMiss"> | string | null
     reviewedAt?: DateTimeNullableFilter<"NearMiss"> | Date | string | null
     reportedById?: StringNullableFilter<"NearMiss"> | string | null
     reporterName?: StringNullableFilter<"NearMiss"> | string | null
@@ -76540,6 +76692,7 @@ export namespace Prisma {
     rootCauseSubCategory?: StringNullableFilter<"NonConformity"> | string | null
     rootCause?: StringNullableFilter<"NonConformity"> | string | null
     personInCharge?: StringNullableFilter<"NonConformity"> | string | null
+    shoreRemarks?: StringNullableFilter<"NonConformity"> | string | null
     status?: EnumNcrStatusFilter<"NonConformity"> | $Enums.NcrStatus
     closedAt?: DateTimeNullableFilter<"NonConformity"> | Date | string | null
     raisedById?: StringNullableFilter<"NonConformity"> | string | null
@@ -76774,7 +76927,7 @@ export namespace Prisma {
     NOT?: CommitteeMeetingScalarWhereInput | CommitteeMeetingScalarWhereInput[]
     id?: StringFilter<"CommitteeMeeting"> | string
     companyId?: StringFilter<"CommitteeMeeting"> | string
-    refNo?: StringFilter<"CommitteeMeeting"> | string
+    refNo?: StringNullableFilter<"CommitteeMeeting"> | string | null
     vesselId?: StringNullableFilter<"CommitteeMeeting"> | string | null
     position?: StringNullableFilter<"CommitteeMeeting"> | string | null
     meetingDate?: DateTimeFilter<"CommitteeMeeting"> | Date | string
@@ -76786,8 +76939,10 @@ export namespace Prisma {
     forAcknowledgement?: StringNullableFilter<"CommitteeMeeting"> | string | null
     vesselRemarks?: StringNullableFilter<"CommitteeMeeting"> | string | null
     shoreRemarks?: StringNullableFilter<"CommitteeMeeting"> | string | null
-    published?: BoolFilter<"CommitteeMeeting"> | boolean
-    approved?: BoolFilter<"CommitteeMeeting"> | boolean
+    status?: EnumCommitteeMeetingStatusFilter<"CommitteeMeeting"> | $Enums.CommitteeMeetingStatus
+    reportedAt?: DateTimeNullableFilter<"CommitteeMeeting"> | Date | string | null
+    closedAt?: DateTimeNullableFilter<"CommitteeMeeting"> | Date | string | null
+    revisedAfterReview?: BoolFilter<"CommitteeMeeting"> | boolean
     createdAt?: DateTimeFilter<"CommitteeMeeting"> | Date | string
     updatedAt?: DateTimeFilter<"CommitteeMeeting"> | Date | string
     createdBy?: StringNullableFilter<"CommitteeMeeting"> | string | null
@@ -77281,7 +77436,7 @@ export namespace Prisma {
 
   export type NearMissCreateWithoutReportedByInput = {
     id?: string
-    refNo: string
+    refNo?: string | null
     title: string
     kind?: $Enums.NearMissKind
     horCategory?: $Enums.HazardType | null
@@ -77296,7 +77451,7 @@ export namespace Prisma {
     rootCauseSubCategory?: string | null
     status?: $Enums.NearMissStatus
     closedAt?: Date | string | null
-    companyComments?: string | null
+    shoreRemarks?: string | null
     reviewedAt?: Date | string | null
     reporterName?: string | null
     reporterPosition?: string | null
@@ -77313,7 +77468,7 @@ export namespace Prisma {
   export type NearMissUncheckedCreateWithoutReportedByInput = {
     id?: string
     companyId: string
-    refNo: string
+    refNo?: string | null
     title: string
     kind?: $Enums.NearMissKind
     horCategory?: $Enums.HazardType | null
@@ -77329,7 +77484,7 @@ export namespace Prisma {
     rootCauseSubCategory?: string | null
     status?: $Enums.NearMissStatus
     closedAt?: Date | string | null
-    companyComments?: string | null
+    shoreRemarks?: string | null
     reviewedAt?: Date | string | null
     reporterName?: string | null
     reporterPosition?: string | null
@@ -77365,6 +77520,7 @@ export namespace Prisma {
     rootCauseSubCategory?: string | null
     rootCause?: string | null
     personInCharge?: string | null
+    shoreRemarks?: string | null
     status?: $Enums.NcrStatus
     closedAt?: Date | string | null
     createdAt?: Date | string
@@ -77394,6 +77550,7 @@ export namespace Prisma {
     rootCauseSubCategory?: string | null
     rootCause?: string | null
     personInCharge?: string | null
+    shoreRemarks?: string | null
     status?: $Enums.NcrStatus
     closedAt?: Date | string | null
     createdAt?: Date | string
@@ -78651,7 +78808,7 @@ export namespace Prisma {
 
   export type NearMissCreateWithoutVesselInput = {
     id?: string
-    refNo: string
+    refNo?: string | null
     title: string
     kind?: $Enums.NearMissKind
     horCategory?: $Enums.HazardType | null
@@ -78666,7 +78823,7 @@ export namespace Prisma {
     rootCauseSubCategory?: string | null
     status?: $Enums.NearMissStatus
     closedAt?: Date | string | null
-    companyComments?: string | null
+    shoreRemarks?: string | null
     reviewedAt?: Date | string | null
     reporterName?: string | null
     reporterPosition?: string | null
@@ -78683,7 +78840,7 @@ export namespace Prisma {
   export type NearMissUncheckedCreateWithoutVesselInput = {
     id?: string
     companyId: string
-    refNo: string
+    refNo?: string | null
     title: string
     kind?: $Enums.NearMissKind
     horCategory?: $Enums.HazardType | null
@@ -78698,7 +78855,7 @@ export namespace Prisma {
     rootCauseSubCategory?: string | null
     status?: $Enums.NearMissStatus
     closedAt?: Date | string | null
-    companyComments?: string | null
+    shoreRemarks?: string | null
     reviewedAt?: Date | string | null
     reportedById?: string | null
     reporterName?: string | null
@@ -78735,6 +78892,7 @@ export namespace Prisma {
     rootCauseSubCategory?: string | null
     rootCause?: string | null
     personInCharge?: string | null
+    shoreRemarks?: string | null
     status?: $Enums.NcrStatus
     closedAt?: Date | string | null
     createdAt?: Date | string
@@ -78763,6 +78921,7 @@ export namespace Prisma {
     rootCauseSubCategory?: string | null
     rootCause?: string | null
     personInCharge?: string | null
+    shoreRemarks?: string | null
     status?: $Enums.NcrStatus
     closedAt?: Date | string | null
     raisedById?: string | null
@@ -79042,7 +79201,7 @@ export namespace Prisma {
 
   export type CommitteeMeetingCreateWithoutVesselInput = {
     id?: string
-    refNo: string
+    refNo?: string | null
     position?: string | null
     meetingDate: Date | string
     meetingTime?: string | null
@@ -79053,8 +79212,10 @@ export namespace Prisma {
     forAcknowledgement?: string | null
     vesselRemarks?: string | null
     shoreRemarks?: string | null
-    published?: boolean
-    approved?: boolean
+    status?: $Enums.CommitteeMeetingStatus
+    reportedAt?: Date | string | null
+    closedAt?: Date | string | null
+    revisedAfterReview?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -79068,7 +79229,7 @@ export namespace Prisma {
   export type CommitteeMeetingUncheckedCreateWithoutVesselInput = {
     id?: string
     companyId: string
-    refNo: string
+    refNo?: string | null
     position?: string | null
     meetingDate: Date | string
     meetingTime?: string | null
@@ -79079,8 +79240,10 @@ export namespace Prisma {
     forAcknowledgement?: string | null
     vesselRemarks?: string | null
     shoreRemarks?: string | null
-    published?: boolean
-    approved?: boolean
+    status?: $Enums.CommitteeMeetingStatus
+    reportedAt?: Date | string | null
+    closedAt?: Date | string | null
+    revisedAfterReview?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -86166,7 +86329,7 @@ export namespace Prisma {
 
   export type CommitteeMeetingCreateWithoutAgendaItemsInput = {
     id?: string
-    refNo: string
+    refNo?: string | null
     position?: string | null
     meetingDate: Date | string
     meetingTime?: string | null
@@ -86177,8 +86340,10 @@ export namespace Prisma {
     forAcknowledgement?: string | null
     vesselRemarks?: string | null
     shoreRemarks?: string | null
-    published?: boolean
-    approved?: boolean
+    status?: $Enums.CommitteeMeetingStatus
+    reportedAt?: Date | string | null
+    closedAt?: Date | string | null
+    revisedAfterReview?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -86192,7 +86357,7 @@ export namespace Prisma {
   export type CommitteeMeetingUncheckedCreateWithoutAgendaItemsInput = {
     id?: string
     companyId: string
-    refNo: string
+    refNo?: string | null
     vesselId?: string | null
     position?: string | null
     meetingDate: Date | string
@@ -86204,8 +86369,10 @@ export namespace Prisma {
     forAcknowledgement?: string | null
     vesselRemarks?: string | null
     shoreRemarks?: string | null
-    published?: boolean
-    approved?: boolean
+    status?: $Enums.CommitteeMeetingStatus
+    reportedAt?: Date | string | null
+    closedAt?: Date | string | null
+    revisedAfterReview?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -86232,7 +86399,7 @@ export namespace Prisma {
 
   export type CommitteeMeetingUpdateWithoutAgendaItemsInput = {
     id?: StringFieldUpdateOperationsInput | string
-    refNo?: StringFieldUpdateOperationsInput | string
+    refNo?: NullableStringFieldUpdateOperationsInput | string | null
     position?: NullableStringFieldUpdateOperationsInput | string | null
     meetingDate?: DateTimeFieldUpdateOperationsInput | Date | string
     meetingTime?: NullableStringFieldUpdateOperationsInput | string | null
@@ -86243,8 +86410,10 @@ export namespace Prisma {
     forAcknowledgement?: NullableStringFieldUpdateOperationsInput | string | null
     vesselRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     shoreRemarks?: NullableStringFieldUpdateOperationsInput | string | null
-    published?: BoolFieldUpdateOperationsInput | boolean
-    approved?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumCommitteeMeetingStatusFieldUpdateOperationsInput | $Enums.CommitteeMeetingStatus
+    reportedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    revisedAfterReview?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -86258,7 +86427,7 @@ export namespace Prisma {
   export type CommitteeMeetingUncheckedUpdateWithoutAgendaItemsInput = {
     id?: StringFieldUpdateOperationsInput | string
     companyId?: StringFieldUpdateOperationsInput | string
-    refNo?: StringFieldUpdateOperationsInput | string
+    refNo?: NullableStringFieldUpdateOperationsInput | string | null
     vesselId?: NullableStringFieldUpdateOperationsInput | string | null
     position?: NullableStringFieldUpdateOperationsInput | string | null
     meetingDate?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -86270,8 +86439,10 @@ export namespace Prisma {
     forAcknowledgement?: NullableStringFieldUpdateOperationsInput | string | null
     vesselRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     shoreRemarks?: NullableStringFieldUpdateOperationsInput | string | null
-    published?: BoolFieldUpdateOperationsInput | boolean
-    approved?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumCommitteeMeetingStatusFieldUpdateOperationsInput | $Enums.CommitteeMeetingStatus
+    reportedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    revisedAfterReview?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -87894,7 +88065,7 @@ export namespace Prisma {
 
   export type NearMissCreateManyCompanyInput = {
     id?: string
-    refNo: string
+    refNo?: string | null
     title: string
     kind?: $Enums.NearMissKind
     horCategory?: $Enums.HazardType | null
@@ -87910,7 +88081,7 @@ export namespace Prisma {
     rootCauseSubCategory?: string | null
     status?: $Enums.NearMissStatus
     closedAt?: Date | string | null
-    companyComments?: string | null
+    shoreRemarks?: string | null
     reviewedAt?: Date | string | null
     reportedById?: string | null
     reporterName?: string | null
@@ -87939,6 +88110,7 @@ export namespace Prisma {
     rootCauseSubCategory?: string | null
     rootCause?: string | null
     personInCharge?: string | null
+    shoreRemarks?: string | null
     status?: $Enums.NcrStatus
     closedAt?: Date | string | null
     raisedById?: string | null
@@ -88053,7 +88225,7 @@ export namespace Prisma {
 
   export type CommitteeMeetingCreateManyCompanyInput = {
     id?: string
-    refNo: string
+    refNo?: string | null
     vesselId?: string | null
     position?: string | null
     meetingDate: Date | string
@@ -88065,8 +88237,10 @@ export namespace Prisma {
     forAcknowledgement?: string | null
     vesselRemarks?: string | null
     shoreRemarks?: string | null
-    published?: boolean
-    approved?: boolean
+    status?: $Enums.CommitteeMeetingStatus
+    reportedAt?: Date | string | null
+    closedAt?: Date | string | null
+    revisedAfterReview?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -88577,7 +88751,7 @@ export namespace Prisma {
 
   export type NearMissUpdateWithoutCompanyInput = {
     id?: StringFieldUpdateOperationsInput | string
-    refNo?: StringFieldUpdateOperationsInput | string
+    refNo?: NullableStringFieldUpdateOperationsInput | string | null
     title?: StringFieldUpdateOperationsInput | string
     kind?: EnumNearMissKindFieldUpdateOperationsInput | $Enums.NearMissKind
     horCategory?: NullableEnumHazardTypeFieldUpdateOperationsInput | $Enums.HazardType | null
@@ -88592,7 +88766,7 @@ export namespace Prisma {
     rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumNearMissStatusFieldUpdateOperationsInput | $Enums.NearMissStatus
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    companyComments?: NullableStringFieldUpdateOperationsInput | string | null
+    shoreRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     reporterName?: NullableStringFieldUpdateOperationsInput | string | null
     reporterPosition?: NullableStringFieldUpdateOperationsInput | string | null
@@ -88608,7 +88782,7 @@ export namespace Prisma {
 
   export type NearMissUncheckedUpdateWithoutCompanyInput = {
     id?: StringFieldUpdateOperationsInput | string
-    refNo?: StringFieldUpdateOperationsInput | string
+    refNo?: NullableStringFieldUpdateOperationsInput | string | null
     title?: StringFieldUpdateOperationsInput | string
     kind?: EnumNearMissKindFieldUpdateOperationsInput | $Enums.NearMissKind
     horCategory?: NullableEnumHazardTypeFieldUpdateOperationsInput | $Enums.HazardType | null
@@ -88624,7 +88798,7 @@ export namespace Prisma {
     rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumNearMissStatusFieldUpdateOperationsInput | $Enums.NearMissStatus
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    companyComments?: NullableStringFieldUpdateOperationsInput | string | null
+    shoreRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     reportedById?: NullableStringFieldUpdateOperationsInput | string | null
     reporterName?: NullableStringFieldUpdateOperationsInput | string | null
@@ -88639,7 +88813,7 @@ export namespace Prisma {
 
   export type NearMissUncheckedUpdateManyWithoutCompanyInput = {
     id?: StringFieldUpdateOperationsInput | string
-    refNo?: StringFieldUpdateOperationsInput | string
+    refNo?: NullableStringFieldUpdateOperationsInput | string | null
     title?: StringFieldUpdateOperationsInput | string
     kind?: EnumNearMissKindFieldUpdateOperationsInput | $Enums.NearMissKind
     horCategory?: NullableEnumHazardTypeFieldUpdateOperationsInput | $Enums.HazardType | null
@@ -88655,7 +88829,7 @@ export namespace Prisma {
     rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumNearMissStatusFieldUpdateOperationsInput | $Enums.NearMissStatus
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    companyComments?: NullableStringFieldUpdateOperationsInput | string | null
+    shoreRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     reportedById?: NullableStringFieldUpdateOperationsInput | string | null
     reporterName?: NullableStringFieldUpdateOperationsInput | string | null
@@ -88683,6 +88857,7 @@ export namespace Prisma {
     rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
     rootCause?: NullableStringFieldUpdateOperationsInput | string | null
     personInCharge?: NullableStringFieldUpdateOperationsInput | string | null
+    shoreRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumNcrStatusFieldUpdateOperationsInput | $Enums.NcrStatus
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -88711,6 +88886,7 @@ export namespace Prisma {
     rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
     rootCause?: NullableStringFieldUpdateOperationsInput | string | null
     personInCharge?: NullableStringFieldUpdateOperationsInput | string | null
+    shoreRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumNcrStatusFieldUpdateOperationsInput | $Enums.NcrStatus
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     raisedById?: NullableStringFieldUpdateOperationsInput | string | null
@@ -88738,6 +88914,7 @@ export namespace Prisma {
     rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
     rootCause?: NullableStringFieldUpdateOperationsInput | string | null
     personInCharge?: NullableStringFieldUpdateOperationsInput | string | null
+    shoreRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumNcrStatusFieldUpdateOperationsInput | $Enums.NcrStatus
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     raisedById?: NullableStringFieldUpdateOperationsInput | string | null
@@ -89064,7 +89241,7 @@ export namespace Prisma {
 
   export type CommitteeMeetingUpdateWithoutCompanyInput = {
     id?: StringFieldUpdateOperationsInput | string
-    refNo?: StringFieldUpdateOperationsInput | string
+    refNo?: NullableStringFieldUpdateOperationsInput | string | null
     position?: NullableStringFieldUpdateOperationsInput | string | null
     meetingDate?: DateTimeFieldUpdateOperationsInput | Date | string
     meetingTime?: NullableStringFieldUpdateOperationsInput | string | null
@@ -89075,8 +89252,10 @@ export namespace Prisma {
     forAcknowledgement?: NullableStringFieldUpdateOperationsInput | string | null
     vesselRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     shoreRemarks?: NullableStringFieldUpdateOperationsInput | string | null
-    published?: BoolFieldUpdateOperationsInput | boolean
-    approved?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumCommitteeMeetingStatusFieldUpdateOperationsInput | $Enums.CommitteeMeetingStatus
+    reportedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    revisedAfterReview?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -89089,7 +89268,7 @@ export namespace Prisma {
 
   export type CommitteeMeetingUncheckedUpdateWithoutCompanyInput = {
     id?: StringFieldUpdateOperationsInput | string
-    refNo?: StringFieldUpdateOperationsInput | string
+    refNo?: NullableStringFieldUpdateOperationsInput | string | null
     vesselId?: NullableStringFieldUpdateOperationsInput | string | null
     position?: NullableStringFieldUpdateOperationsInput | string | null
     meetingDate?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -89101,8 +89280,10 @@ export namespace Prisma {
     forAcknowledgement?: NullableStringFieldUpdateOperationsInput | string | null
     vesselRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     shoreRemarks?: NullableStringFieldUpdateOperationsInput | string | null
-    published?: BoolFieldUpdateOperationsInput | boolean
-    approved?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumCommitteeMeetingStatusFieldUpdateOperationsInput | $Enums.CommitteeMeetingStatus
+    reportedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    revisedAfterReview?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -89114,7 +89295,7 @@ export namespace Prisma {
 
   export type CommitteeMeetingUncheckedUpdateManyWithoutCompanyInput = {
     id?: StringFieldUpdateOperationsInput | string
-    refNo?: StringFieldUpdateOperationsInput | string
+    refNo?: NullableStringFieldUpdateOperationsInput | string | null
     vesselId?: NullableStringFieldUpdateOperationsInput | string | null
     position?: NullableStringFieldUpdateOperationsInput | string | null
     meetingDate?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -89126,8 +89307,10 @@ export namespace Prisma {
     forAcknowledgement?: NullableStringFieldUpdateOperationsInput | string | null
     vesselRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     shoreRemarks?: NullableStringFieldUpdateOperationsInput | string | null
-    published?: BoolFieldUpdateOperationsInput | boolean
-    approved?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumCommitteeMeetingStatusFieldUpdateOperationsInput | $Enums.CommitteeMeetingStatus
+    reportedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    revisedAfterReview?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -89492,7 +89675,7 @@ export namespace Prisma {
   export type NearMissCreateManyReportedByInput = {
     id?: string
     companyId: string
-    refNo: string
+    refNo?: string | null
     title: string
     kind?: $Enums.NearMissKind
     horCategory?: $Enums.HazardType | null
@@ -89508,7 +89691,7 @@ export namespace Prisma {
     rootCauseSubCategory?: string | null
     status?: $Enums.NearMissStatus
     closedAt?: Date | string | null
-    companyComments?: string | null
+    shoreRemarks?: string | null
     reviewedAt?: Date | string | null
     reporterName?: string | null
     reporterPosition?: string | null
@@ -89537,6 +89720,7 @@ export namespace Prisma {
     rootCauseSubCategory?: string | null
     rootCause?: string | null
     personInCharge?: string | null
+    shoreRemarks?: string | null
     status?: $Enums.NcrStatus
     closedAt?: Date | string | null
     createdAt?: Date | string
@@ -89783,7 +89967,7 @@ export namespace Prisma {
 
   export type NearMissUpdateWithoutReportedByInput = {
     id?: StringFieldUpdateOperationsInput | string
-    refNo?: StringFieldUpdateOperationsInput | string
+    refNo?: NullableStringFieldUpdateOperationsInput | string | null
     title?: StringFieldUpdateOperationsInput | string
     kind?: EnumNearMissKindFieldUpdateOperationsInput | $Enums.NearMissKind
     horCategory?: NullableEnumHazardTypeFieldUpdateOperationsInput | $Enums.HazardType | null
@@ -89798,7 +89982,7 @@ export namespace Prisma {
     rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumNearMissStatusFieldUpdateOperationsInput | $Enums.NearMissStatus
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    companyComments?: NullableStringFieldUpdateOperationsInput | string | null
+    shoreRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     reporterName?: NullableStringFieldUpdateOperationsInput | string | null
     reporterPosition?: NullableStringFieldUpdateOperationsInput | string | null
@@ -89815,7 +89999,7 @@ export namespace Prisma {
   export type NearMissUncheckedUpdateWithoutReportedByInput = {
     id?: StringFieldUpdateOperationsInput | string
     companyId?: StringFieldUpdateOperationsInput | string
-    refNo?: StringFieldUpdateOperationsInput | string
+    refNo?: NullableStringFieldUpdateOperationsInput | string | null
     title?: StringFieldUpdateOperationsInput | string
     kind?: EnumNearMissKindFieldUpdateOperationsInput | $Enums.NearMissKind
     horCategory?: NullableEnumHazardTypeFieldUpdateOperationsInput | $Enums.HazardType | null
@@ -89831,7 +90015,7 @@ export namespace Prisma {
     rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumNearMissStatusFieldUpdateOperationsInput | $Enums.NearMissStatus
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    companyComments?: NullableStringFieldUpdateOperationsInput | string | null
+    shoreRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     reporterName?: NullableStringFieldUpdateOperationsInput | string | null
     reporterPosition?: NullableStringFieldUpdateOperationsInput | string | null
@@ -89846,7 +90030,7 @@ export namespace Prisma {
   export type NearMissUncheckedUpdateManyWithoutReportedByInput = {
     id?: StringFieldUpdateOperationsInput | string
     companyId?: StringFieldUpdateOperationsInput | string
-    refNo?: StringFieldUpdateOperationsInput | string
+    refNo?: NullableStringFieldUpdateOperationsInput | string | null
     title?: StringFieldUpdateOperationsInput | string
     kind?: EnumNearMissKindFieldUpdateOperationsInput | $Enums.NearMissKind
     horCategory?: NullableEnumHazardTypeFieldUpdateOperationsInput | $Enums.HazardType | null
@@ -89862,7 +90046,7 @@ export namespace Prisma {
     rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumNearMissStatusFieldUpdateOperationsInput | $Enums.NearMissStatus
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    companyComments?: NullableStringFieldUpdateOperationsInput | string | null
+    shoreRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     reporterName?: NullableStringFieldUpdateOperationsInput | string | null
     reporterPosition?: NullableStringFieldUpdateOperationsInput | string | null
@@ -89889,6 +90073,7 @@ export namespace Prisma {
     rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
     rootCause?: NullableStringFieldUpdateOperationsInput | string | null
     personInCharge?: NullableStringFieldUpdateOperationsInput | string | null
+    shoreRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumNcrStatusFieldUpdateOperationsInput | $Enums.NcrStatus
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -89918,6 +90103,7 @@ export namespace Prisma {
     rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
     rootCause?: NullableStringFieldUpdateOperationsInput | string | null
     personInCharge?: NullableStringFieldUpdateOperationsInput | string | null
+    shoreRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumNcrStatusFieldUpdateOperationsInput | $Enums.NcrStatus
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -89945,6 +90131,7 @@ export namespace Prisma {
     rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
     rootCause?: NullableStringFieldUpdateOperationsInput | string | null
     personInCharge?: NullableStringFieldUpdateOperationsInput | string | null
+    shoreRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumNcrStatusFieldUpdateOperationsInput | $Enums.NcrStatus
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -90266,7 +90453,7 @@ export namespace Prisma {
   export type NearMissCreateManyVesselInput = {
     id?: string
     companyId: string
-    refNo: string
+    refNo?: string | null
     title: string
     kind?: $Enums.NearMissKind
     horCategory?: $Enums.HazardType | null
@@ -90281,7 +90468,7 @@ export namespace Prisma {
     rootCauseSubCategory?: string | null
     status?: $Enums.NearMissStatus
     closedAt?: Date | string | null
-    companyComments?: string | null
+    shoreRemarks?: string | null
     reviewedAt?: Date | string | null
     reportedById?: string | null
     reporterName?: string | null
@@ -90310,6 +90497,7 @@ export namespace Prisma {
     rootCauseSubCategory?: string | null
     rootCause?: string | null
     personInCharge?: string | null
+    shoreRemarks?: string | null
     status?: $Enums.NcrStatus
     closedAt?: Date | string | null
     raisedById?: string | null
@@ -90425,7 +90613,7 @@ export namespace Prisma {
   export type CommitteeMeetingCreateManyVesselInput = {
     id?: string
     companyId: string
-    refNo: string
+    refNo?: string | null
     position?: string | null
     meetingDate: Date | string
     meetingTime?: string | null
@@ -90436,8 +90624,10 @@ export namespace Prisma {
     forAcknowledgement?: string | null
     vesselRemarks?: string | null
     shoreRemarks?: string | null
-    published?: boolean
-    approved?: boolean
+    status?: $Enums.CommitteeMeetingStatus
+    reportedAt?: Date | string | null
+    closedAt?: Date | string | null
+    revisedAfterReview?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -90719,7 +90909,7 @@ export namespace Prisma {
 
   export type NearMissUpdateWithoutVesselInput = {
     id?: StringFieldUpdateOperationsInput | string
-    refNo?: StringFieldUpdateOperationsInput | string
+    refNo?: NullableStringFieldUpdateOperationsInput | string | null
     title?: StringFieldUpdateOperationsInput | string
     kind?: EnumNearMissKindFieldUpdateOperationsInput | $Enums.NearMissKind
     horCategory?: NullableEnumHazardTypeFieldUpdateOperationsInput | $Enums.HazardType | null
@@ -90734,7 +90924,7 @@ export namespace Prisma {
     rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumNearMissStatusFieldUpdateOperationsInput | $Enums.NearMissStatus
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    companyComments?: NullableStringFieldUpdateOperationsInput | string | null
+    shoreRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     reporterName?: NullableStringFieldUpdateOperationsInput | string | null
     reporterPosition?: NullableStringFieldUpdateOperationsInput | string | null
@@ -90751,7 +90941,7 @@ export namespace Prisma {
   export type NearMissUncheckedUpdateWithoutVesselInput = {
     id?: StringFieldUpdateOperationsInput | string
     companyId?: StringFieldUpdateOperationsInput | string
-    refNo?: StringFieldUpdateOperationsInput | string
+    refNo?: NullableStringFieldUpdateOperationsInput | string | null
     title?: StringFieldUpdateOperationsInput | string
     kind?: EnumNearMissKindFieldUpdateOperationsInput | $Enums.NearMissKind
     horCategory?: NullableEnumHazardTypeFieldUpdateOperationsInput | $Enums.HazardType | null
@@ -90766,7 +90956,7 @@ export namespace Prisma {
     rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumNearMissStatusFieldUpdateOperationsInput | $Enums.NearMissStatus
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    companyComments?: NullableStringFieldUpdateOperationsInput | string | null
+    shoreRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     reportedById?: NullableStringFieldUpdateOperationsInput | string | null
     reporterName?: NullableStringFieldUpdateOperationsInput | string | null
@@ -90782,7 +90972,7 @@ export namespace Prisma {
   export type NearMissUncheckedUpdateManyWithoutVesselInput = {
     id?: StringFieldUpdateOperationsInput | string
     companyId?: StringFieldUpdateOperationsInput | string
-    refNo?: StringFieldUpdateOperationsInput | string
+    refNo?: NullableStringFieldUpdateOperationsInput | string | null
     title?: StringFieldUpdateOperationsInput | string
     kind?: EnumNearMissKindFieldUpdateOperationsInput | $Enums.NearMissKind
     horCategory?: NullableEnumHazardTypeFieldUpdateOperationsInput | $Enums.HazardType | null
@@ -90797,7 +90987,7 @@ export namespace Prisma {
     rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumNearMissStatusFieldUpdateOperationsInput | $Enums.NearMissStatus
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    companyComments?: NullableStringFieldUpdateOperationsInput | string | null
+    shoreRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     reportedById?: NullableStringFieldUpdateOperationsInput | string | null
     reporterName?: NullableStringFieldUpdateOperationsInput | string | null
@@ -90825,6 +91015,7 @@ export namespace Prisma {
     rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
     rootCause?: NullableStringFieldUpdateOperationsInput | string | null
     personInCharge?: NullableStringFieldUpdateOperationsInput | string | null
+    shoreRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumNcrStatusFieldUpdateOperationsInput | $Enums.NcrStatus
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -90853,6 +91044,7 @@ export namespace Prisma {
     rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
     rootCause?: NullableStringFieldUpdateOperationsInput | string | null
     personInCharge?: NullableStringFieldUpdateOperationsInput | string | null
+    shoreRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumNcrStatusFieldUpdateOperationsInput | $Enums.NcrStatus
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     raisedById?: NullableStringFieldUpdateOperationsInput | string | null
@@ -90880,6 +91072,7 @@ export namespace Prisma {
     rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
     rootCause?: NullableStringFieldUpdateOperationsInput | string | null
     personInCharge?: NullableStringFieldUpdateOperationsInput | string | null
+    shoreRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumNcrStatusFieldUpdateOperationsInput | $Enums.NcrStatus
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     raisedById?: NullableStringFieldUpdateOperationsInput | string | null
@@ -91206,7 +91399,7 @@ export namespace Prisma {
 
   export type CommitteeMeetingUpdateWithoutVesselInput = {
     id?: StringFieldUpdateOperationsInput | string
-    refNo?: StringFieldUpdateOperationsInput | string
+    refNo?: NullableStringFieldUpdateOperationsInput | string | null
     position?: NullableStringFieldUpdateOperationsInput | string | null
     meetingDate?: DateTimeFieldUpdateOperationsInput | Date | string
     meetingTime?: NullableStringFieldUpdateOperationsInput | string | null
@@ -91217,8 +91410,10 @@ export namespace Prisma {
     forAcknowledgement?: NullableStringFieldUpdateOperationsInput | string | null
     vesselRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     shoreRemarks?: NullableStringFieldUpdateOperationsInput | string | null
-    published?: BoolFieldUpdateOperationsInput | boolean
-    approved?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumCommitteeMeetingStatusFieldUpdateOperationsInput | $Enums.CommitteeMeetingStatus
+    reportedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    revisedAfterReview?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -91232,7 +91427,7 @@ export namespace Prisma {
   export type CommitteeMeetingUncheckedUpdateWithoutVesselInput = {
     id?: StringFieldUpdateOperationsInput | string
     companyId?: StringFieldUpdateOperationsInput | string
-    refNo?: StringFieldUpdateOperationsInput | string
+    refNo?: NullableStringFieldUpdateOperationsInput | string | null
     position?: NullableStringFieldUpdateOperationsInput | string | null
     meetingDate?: DateTimeFieldUpdateOperationsInput | Date | string
     meetingTime?: NullableStringFieldUpdateOperationsInput | string | null
@@ -91243,8 +91438,10 @@ export namespace Prisma {
     forAcknowledgement?: NullableStringFieldUpdateOperationsInput | string | null
     vesselRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     shoreRemarks?: NullableStringFieldUpdateOperationsInput | string | null
-    published?: BoolFieldUpdateOperationsInput | boolean
-    approved?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumCommitteeMeetingStatusFieldUpdateOperationsInput | $Enums.CommitteeMeetingStatus
+    reportedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    revisedAfterReview?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -91257,7 +91454,7 @@ export namespace Prisma {
   export type CommitteeMeetingUncheckedUpdateManyWithoutVesselInput = {
     id?: StringFieldUpdateOperationsInput | string
     companyId?: StringFieldUpdateOperationsInput | string
-    refNo?: StringFieldUpdateOperationsInput | string
+    refNo?: NullableStringFieldUpdateOperationsInput | string | null
     position?: NullableStringFieldUpdateOperationsInput | string | null
     meetingDate?: DateTimeFieldUpdateOperationsInput | Date | string
     meetingTime?: NullableStringFieldUpdateOperationsInput | string | null
@@ -91268,8 +91465,10 @@ export namespace Prisma {
     forAcknowledgement?: NullableStringFieldUpdateOperationsInput | string | null
     vesselRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     shoreRemarks?: NullableStringFieldUpdateOperationsInput | string | null
-    published?: BoolFieldUpdateOperationsInput | boolean
-    approved?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumCommitteeMeetingStatusFieldUpdateOperationsInput | $Enums.CommitteeMeetingStatus
+    reportedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    revisedAfterReview?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null

@@ -10,6 +10,7 @@ import { PageHeader } from "@/components/ui/page-header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { formatDate, humanize } from "@/lib/utils";
+import { lifecycleStatusTone } from "@/lib/status";
 import { DeficienciesPanel } from "./deficiencies-panel";
 import { PscActions } from "./psc-actions";
 import { Button } from "@/components/ui/button";
@@ -29,10 +30,6 @@ function toRowView(r: {
     targetDate: r.targetDate ? r.targetDate.toISOString() : null,
     closedDate: r.closedDate ? r.closedDate.toISOString() : null,
   };
-}
-
-function statusTone(s: string) {
-  return s === "CLOSED" ? "success" : s === "IN_PROGRESS" ? "warning" : "accent";
 }
 
 export default async function PscDetailPage({
@@ -69,6 +66,17 @@ export default async function PscDetailPage({
   const allCapaRowsByDeficiency: Record<string, CapaSummaryRowView[]> = {};
   const rootCauseByDeficiency: Record<string, { category: string | null; subCategory: string | null; description: string | null }> = {};
   const capaEntityByDeficiency: Record<string, { entityType: string; entityId: string }> = {};
+
+  const attachmentsByDeficiency: Record<string, { id: string; fileName: string; mimeType: string; sizeBytes: number; createdAt: string }[]> = {};
+  for (const d of insp.deficiencies) {
+    attachmentsByDeficiency[d.id] = d.attachments.map((a) => ({
+      id: a.id,
+      fileName: a.fileName,
+      mimeType: a.mimeType,
+      sizeBytes: a.sizeBytes,
+      createdAt: a.createdAt.toISOString(),
+    }));
+  }
 
   for (const d of insp.deficiencies) {
     const linked = ncrBySourceId[d.id];
@@ -126,7 +134,7 @@ export default async function PscDetailPage({
         actions={
           <div className="flex items-center gap-2">
             {insp.detained ? <Badge tone="danger">Detained</Badge> : <Badge tone="success">Not detained</Badge>}
-            <Badge tone={statusTone(insp.status)}>{humanize(insp.status)}</Badge>
+            <Badge tone={lifecycleStatusTone(insp.status)}>{humanize(insp.status)}</Badge>
             <Link href={`/psc/${insp.id}/report`} target="_blank" rel="noopener noreferrer">
               <Button type="button" variant="outline" size="sm">
                 <FileText className="h-4 w-4" /> Show Report
@@ -178,6 +186,7 @@ export default async function PscDetailPage({
             allCapaRowsByDeficiency={allCapaRowsByDeficiency}
             rootCauseByDeficiency={rootCauseByDeficiency}
             capaEntityByDeficiency={capaEntityByDeficiency}
+            attachmentsByDeficiency={attachmentsByDeficiency}
           />
         </CardContent>
       </Card>

@@ -9,11 +9,8 @@ import { Badge } from "@/components/ui/badge";
 import { Input, Select } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { formatDate, humanize } from "@/lib/utils";
+import { lifecycleStatusTone } from "@/lib/status";
 import type { InspectionStatus } from "@/lib/generated/prisma";
-
-function statusTone(s: string) {
-  return s === "CLOSED" ? "success" : s === "IN_PROGRESS" ? "warning" : "accent";
-}
 
 export default async function PscPage({
   searchParams,
@@ -98,7 +95,7 @@ export default async function PscPage({
                     <td className="px-4 py-2.5">
                       {r.detained ? <Badge tone="danger">Detained</Badge> : <Badge tone="success">Not detained</Badge>}
                     </td>
-                    <td className="px-4 py-2.5"><Badge tone={statusTone(r.status)}>{humanize(r.status)}</Badge></td>
+                    <td className="px-4 py-2.5"><Badge tone={lifecycleStatusTone(r.status)}>{humanize(r.status)}</Badge></td>
                   </tr>
                 ))}
               </tbody>

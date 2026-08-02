@@ -4,7 +4,9 @@ import { useState, useTransition } from "react";
 import { ArrowRight, Trash2 } from "lucide-react";
 import {
   advanceNearMissAction,
+  deleteDraftNearMissAction,
   deleteNearMissAction,
+  reportDraftNearMissAction,
   type ActionResult,
 } from "@/features/near-miss/actions";
 import { humanize } from "@/lib/utils";
@@ -60,6 +62,71 @@ export function NearMissActions({
           </Button>
         )}
       </div>
+      {error && <p className="text-sm text-danger" role="alert">{error}</p>}
+    </div>
+  );
+}
+
+/** Vessel-only: deletes its own Draft — a permanent action, so it's confirmed first. */
+export function DeleteDraftButton({ nearMissId }: { nearMissId: string }) {
+  const [pending, startTransition] = useTransition();
+  const [error, setError] = useState<string | null>(null);
+
+  function submit() {
+    if (!confirm("Delete this draft? This can't be undone.")) return;
+    setError(null);
+    const fd = new FormData();
+    fd.set("nearMissId", nearMissId);
+    startTransition(async () => {
+      const res = await deleteDraftNearMissAction(fd);
+      if (!res.ok) setError(res.error);
+    });
+  }
+
+  return (
+    <div className="flex flex-col items-end gap-1">
+      <Button type="button" variant="outline" onClick={submit} disabled={pending}>
+        <Trash2 className="h-4 w-4" /> Delete Draft
+      </Button>
+      {error && <p className="text-sm text-danger" role="alert">{error}</p>}
+    </div>
+  );
+}
+
+/**
+ * Vessel-only: submits a Draft for office review (status DRAFT → REPORTED).
+ * `blocked` mirrors the same rule enforced server-side in
+ * reportDraftNearMissAction — every corrective action must be Closed first.
+ */
+export function ReportDraftButton({ nearMissId, blocked }: { nearMissId: string; blocked: boolean }) {
+  const [pending, startTransition] = useTransition();
+  const [error, setError] = useState<string | null>(null);
+
+  function submit() {
+    setError(null);
+    const fd = new FormData();
+    fd.set("nearMissId", nearMissId);
+    startTransition(async () => {
+      const res = await reportDraftNearMissAction(fd);
+      if (!res.ok) setError(res.error);
+    });
+  }
+
+  return (
+    <div className="flex flex-col items-end gap-1">
+      <Button
+        type="button"
+        onClick={submit}
+        disabled={pending || blocked}
+        title={blocked ? "Close every corrective action in the All CAPA Items table before reporting to the office" : undefined}
+      >
+        {pending ? "Submitting…" : "Report Near Miss"} <ArrowRight className="h-4 w-4" />
+      </Button>
+      {blocked && (
+        <p className="text-xs text-muted-foreground">
+          Close all corrective actions first.
+        </p>
+      )}
       {error && <p className="text-sm text-danger" role="alert">{error}</p>}
     </div>
   );

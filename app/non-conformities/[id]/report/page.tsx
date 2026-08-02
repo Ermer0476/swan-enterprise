@@ -126,7 +126,7 @@ export default async function NcrReportPage({
         </CardContent>
       </Card>
 
-      <Card>
+      <Card className="mb-6">
         <CardHeader><CardTitle>Corrective Action</CardTitle></CardHeader>
         <CardContent className="space-y-6">
           {/* Always read-only here — this is a report view, not a working page. */}
@@ -146,6 +146,17 @@ export default async function NcrReportPage({
               editable={false}
             />
           </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader><CardTitle>Shore Remarks</CardTitle></CardHeader>
+        <CardContent>
+          {ncr.shoreRemarks ? (
+            <Field label="Shore Remarks" value={ncr.shoreRemarks} />
+          ) : (
+            <p className="text-sm text-muted-foreground">No shore remarks recorded yet.</p>
+          )}
         </CardContent>
       </Card>
     </div>

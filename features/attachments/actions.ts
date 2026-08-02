@@ -19,10 +19,16 @@ const fail = (error: string): ActionResult => ({ ok: false, error });
  * Registry mapping an entityType to the permission that gates uploads/deletes
  * and the page to revalidate — same entity-agnostic pattern as the CAPA
  * tracker. Register a new module here when it adopts attachments.
+ *
+ * `permission` is usually a single key, but Near Miss genuinely has two
+ * separate roles that may each edit the record at different lifecycle
+ * stages (the vessel holds `nm:create`, not `nm:update`, while drafting/
+ * reporting; the office holds `nm:update` while reviewing) — an array means
+ * "any one of these", so the same registry entry covers both.
  */
 const REGISTRY: Record<
   string,
-  { permission: PermissionKey; pagePath: (id: string) => string | Promise<string> }
+  { permission: PermissionKey | PermissionKey[]; pagePath: (id: string) => string | Promise<string> }
 > = {
   Incident: { permission: "incident:update", pagePath: (id) => `/incidents/${id}` },
   // A SIRE observation has no page of its own — it lives inside its parent
@@ -38,6 +44,52 @@ const REGISTRY: Record<
       return `/sire/${obs?.inspectionId ?? ""}`;
     },
   },
+  NonConformity: { permission: "ncr:update", pagePath: (id) => `/non-conformities/${id}` },
+  PscDeficiency: {
+    permission: "psc:update",
+    pagePath: async (deficiencyId) => {
+      const def = await prisma.pscDeficiency.findUnique({
+        where: { id: deficiencyId },
+        select: { inspectionId: true },
+      });
+      return `/psc/${def?.inspectionId ?? ""}`;
+    },
+  },
+  InternalAuditFinding: {
+    permission: "iaudit:update",
+    pagePath: async (findingId) => {
+      const finding = await prisma.internalAuditFinding.findUnique({
+        where: { id: findingId },
+        select: { auditId: true },
+      });
+      return `/internal-audits/${finding?.auditId ?? ""}`;
+    },
+  },
+  ExternalAuditFinding: {
+    permission: "eaudit:update",
+    pagePath: async (findingId) => {
+      const finding = await prisma.externalAuditFinding.findUnique({
+        where: { id: findingId },
+        select: { auditId: true },
+      });
+      return `/external-audits/${finding?.auditId ?? ""}`;
+    },
+  },
+  RiskAssessment: { permission: "risk:update", pagePath: (id) => `/risk/${id}` },
+  Defect: { permission: "defect:update", pagePath: (id) => `/defects/${id}` },
+  NearMiss: { permission: ["nm:create", "nm:update"], pagePath: (id) => `/near-miss/${id}` },
+  CommitteeMeeting: { permission: "meeting:update", pagePath: (id) => `/meetings/${id}` },
+  EmergencyDrill: { permission: "drill:update", pagePath: (id) => `/drills/${id}` },
+  CdiObservation: {
+    permission: "cdi:update",
+    pagePath: async (observationId) => {
+      const obs = await prisma.cdiObservation.findUnique({
+        where: { id: observationId },
+        select: { inspectionId: true },
+      });
+      return `/cdi/${obs?.inspectionId ?? ""}`;
+    },
+  },
 };
 
 function registryFor(entityType: string) {
@@ -48,6 +100,12 @@ function registryFor(entityType: string) {
   return entry;
 }
 
+function hasAny(user: { permissions: Set<PermissionKey> }, permission: PermissionKey | PermissionKey[]): boolean {
+  return Array.isArray(permission)
+    ? permission.some((p) => user.permissions.has(p))
+    : user.permissions.has(permission);
+}
+
 export async function uploadAttachmentAction(
   _prev: ActionResult,
   formData: FormData,
@@ -55,7 +113,12 @@ export async function uploadAttachmentAction(
   const entityType = String(formData.get("entityType") ?? "");
   const entityId = String(formData.get("entityId") ?? "");
   const { permission, pagePath } = registryFor(entityType);
-  const user = await requirePermission(permission);
+  const user = Array.isArray(permission)
+    ? await requireUser()
+    : await requirePermission(permission);
+  if (!hasAny(user, permission)) {
+    throw new Error("FORBIDDEN");
+  }
 
   const file = formData.get("file");
   if (!(file instanceof File) || file.size === 0) {
@@ -108,7 +171,7 @@ export async function deleteAttachmentAction(formData: FormData): Promise<Action
   if (!existing) return fail("Attachment not found");
 
   const { permission, pagePath } = registryFor(existing.entityType);
-  if (!user.permissions.has(permission)) {
+  if (!hasAny(user, permission)) {
     return fail("You don't have permission to delete this attachment");
   }
 

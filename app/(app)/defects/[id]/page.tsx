@@ -7,14 +7,10 @@ import { PageHeader } from "@/components/ui/page-header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { formatDate, humanize, severityTone } from "@/lib/utils";
+import { defectStatusTone } from "@/features/defects/ui";
+import { listAttachments } from "@/features/attachments/queries";
+import { AttachmentList } from "@/components/attachments/attachment-list";
 import { DefectStatusForm } from "./defect-status-form";
-
-function statusTone(s: string) {
-  if (s === "RECTIFIED") return "success";
-  if (s === "DEFERRED") return "accent";
-  if (s === "MONITORING") return "warning";
-  return "danger";
-}
 
 export default async function DefectDetailPage({
   params,
@@ -28,6 +24,7 @@ export default async function DefectDetailPage({
 
   const editable = can(user, "defect:update");
   const canDelete = can(user, "defect:delete");
+  const attachments = await listAttachments(user.companyId, "Defect", defect.id);
 
   const meta = [
     { label: "Vessel", value: defect.vessel?.name ?? "—" },
@@ -48,7 +45,7 @@ export default async function DefectDetailPage({
         actions={
           <div className="flex items-center gap-2">
             <Badge tone={severityTone(defect.severity)}>{humanize(defect.severity)}</Badge>
-            <Badge tone={statusTone(defect.status)}>{humanize(defect.status)}</Badge>
+            <Badge tone={defectStatusTone(defect.status)}>{humanize(defect.status)}</Badge>
           </div>
         }
       />
@@ -67,7 +64,7 @@ export default async function DefectDetailPage({
         <CardContent><p className="whitespace-pre-wrap text-sm">{defect.description}</p></CardContent>
       </Card>
 
-      <Card>
+      <Card className="mb-6">
         <CardHeader><CardTitle>Status &amp; rectification</CardTitle></CardHeader>
         <CardContent>
           <DefectStatusForm
@@ -76,6 +73,24 @@ export default async function DefectDetailPage({
             actionTaken={defect.actionTaken ?? ""}
             editable={editable}
             canDelete={canDelete}
+          />
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader><CardTitle>Attachments</CardTitle></CardHeader>
+        <CardContent>
+          <AttachmentList
+            entityType="Defect"
+            entityId={defect.id}
+            editable={editable}
+            attachments={attachments.map((a) => ({
+              id: a.id,
+              fileName: a.fileName,
+              mimeType: a.mimeType,
+              sizeBytes: a.sizeBytes,
+              createdAt: a.createdAt.toISOString(),
+            }))}
           />
         </CardContent>
       </Card>

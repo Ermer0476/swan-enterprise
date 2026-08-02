@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useActionState } from "react";
 import { useFormStatus } from "react-dom";
 import { Plus } from "lucide-react";
@@ -17,6 +17,7 @@ import {
   HOR_CATEGORIES,
   HOR_CATEGORY_LABELS,
 } from "@/features/near-miss/schema";
+import { CAPA_STATUSES } from "@/features/capa/schema";
 import {
   ROOT_CAUSE_CATEGORIES,
   ROOT_CAUSE_LABELS,
@@ -26,13 +27,29 @@ import {
 import { humanize } from "@/lib/utils";
 import { Card, CardContent } from "@/components/ui/card";
 import { AutoGrowInput, Input, Label, Select } from "@/components/ui/input";
+import { VesselField } from "@/components/ui/vessel-field";
 import { Button } from "@/components/ui/button";
 
-function SubmitButton() {
+function ReportSubmitButton({ blocked }: { blocked: boolean }) {
   const { pending } = useFormStatus();
   return (
-    <Button type="submit" disabled={pending}>
+    <Button
+      type="submit"
+      name="intent"
+      value="report"
+      disabled={pending || blocked}
+      title={blocked ? "Close every corrective action in the All CAPA Tracker before reporting to the office" : undefined}
+    >
       {pending ? "Reporting…" : "Report near miss"}
+    </Button>
+  );
+}
+
+function DraftSubmitButton() {
+  const { pending } = useFormStatus();
+  return (
+    <Button type="submit" name="intent" value="draft" variant="outline" disabled={pending}>
+      {pending ? "Saving…" : "Save as Draft"}
     </Button>
   );
 }
@@ -40,25 +57,146 @@ function SubmitButton() {
 export function NewNearMissForm({
   vessels,
   positions,
+  isShipboard,
+  ownVesselId,
+  ownVesselName,
 }: {
   vessels: { id: string; name: string }[];
   positions: readonly string[];
+  isShipboard: boolean;
+  ownVesselId: string | null;
+  ownVesselName: string | null;
 }) {
+  const formRef = useRef<HTMLFormElement>(null);
+  // The browser resets every field in the <form> the moment a form action
+  // resolves — even on a rejected (fail()) result, since that's still a
+  // normal, non-throwing return as far as the browser/React are concerned.
+  // We capture exactly what was submitted here so a failed validation only
+  // has to point at what's missing, not force the reporter to retype
+  // everything else from scratch.
+  const lastSubmittedFormData = useRef<FormData | null>(null);
+  const pendingHorCategoryRestore = useRef<string | null>(null);
+
+  async function guardedCreateNearMissAction(
+    prev: ActionResult,
+    formData: FormData,
+  ): Promise<ActionResult> {
+    lastSubmittedFormData.current = formData;
+    return createNearMissAction(prev, formData);
+  }
+
   const [state, formAction] = useActionState<ActionResult, FormData>(
-    createNearMissAction,
+    guardedCreateNearMissAction,
     { ok: false, error: null },
   );
   const [rootCause, setRootCause] = useState("");
   const [rootCauseSub, setRootCauseSub] = useState("");
   const rootCauseSubOptions =
     rootCause && (ROOT_CAUSE_SUBCATEGORIES as Record<string, readonly string[]>)[rootCause];
-  const [capaRowCount, setCapaRowCount] = useState(1);
   const [isHor, setIsHor] = useState(false);
+
+  type CapaRowState = { action: string; responsible: string; targetDate: string; status: string; closedDate: string };
+  const blankCapaRow = (): CapaRowState => ({ action: "", responsible: "", targetDate: "", status: "OPEN", closedDate: "" });
+  const [capaRows, setCapaRows] = useState<CapaRowState[]>([blankCapaRow()]);
+
+  // Runs after every rejected submission — repairs the fields the browser
+  // just wiped (plain inputs directly on the DOM; root cause/HOR/CAPA rows
+  // via their own React state) using exactly what the reporter had typed.
+  useEffect(() => {
+    if (state.ok || !state.error) return;
+    const fd = lastSubmittedFormData.current;
+    const form = formRef.current;
+    if (!fd || !form) return;
+
+    const restore = (name: string) => {
+      const el = form.elements.namedItem(name) as
+        | HTMLInputElement
+        | HTMLSelectElement
+        | HTMLTextAreaElement
+        | null;
+      if (!el) return;
+      el.value = String(fd.get(name) ?? "");
+      // AutoGrowInput only re-measures its height on an "input" event; a
+      // direct .value write doesn't fire one, so it'd render collapsed.
+      el.dispatchEvent(new Event("input", { bubbles: true }));
+    };
+    ["title", "reporterName", "reporterPosition", "occurredAt", "location",
+      "description", "immediateAction", "potentialConsequence", "potentialSeverity",
+    ].forEach(restore);
+
+    const stopAuthorityEl = form.elements.namedItem("stopAuthorityExercised") as HTMLInputElement | null;
+    if (stopAuthorityEl) stopAuthorityEl.checked = fd.get("stopAuthorityExercised") === "on";
+
+    const kindIsHor = fd.get("kind") === "HOR";
+    setIsHor(kindIsHor);
+    // If the checkbox was already checked, the Category field is already
+    // mounted — restore it directly. Only defer to the follow-up effect
+    // when isHor itself is about to flip false→true (field not mounted yet).
+    const horCategoryEl = form.elements.namedItem("horCategory") as HTMLSelectElement | null;
+    if (kindIsHor && horCategoryEl) {
+      horCategoryEl.value = String(fd.get("horCategory") ?? "");
+      pendingHorCategoryRestore.current = null;
+    } else {
+      pendingHorCategoryRestore.current = kindIsHor ? String(fd.get("horCategory") ?? "") : null;
+    }
+
+    setRootCause(String(fd.get("rootCauseCategory") ?? ""));
+    setRootCauseSub(String(fd.get("rootCauseSubCategory") ?? ""));
+
+    const caAction = fd.getAll("caAction").map(String);
+    if (caAction.length > 0) {
+      const caResponsible = fd.getAll("caResponsible").map(String);
+      const caTargetDate = fd.getAll("caTargetDate").map(String);
+      const caStatus = fd.getAll("caStatus").map(String);
+      const caClosedDate = fd.getAll("caClosedDate").map(String);
+      setCapaRows(
+        caAction.map((action, i) => ({
+          action,
+          responsible: caResponsible[i] ?? "",
+          targetDate: caTargetDate[i] ?? "",
+          status: caStatus[i] || "OPEN",
+          closedDate: caClosedDate[i] ?? "",
+        })),
+      );
+    }
+  }, [state]);
+
+  // The Category field only exists in the DOM once isHor is true, so it has
+  // to be restored on the render right after that flag flips back on.
+  useEffect(() => {
+    if (!isHor || pendingHorCategoryRestore.current === null) return;
+    const el = formRef.current?.elements.namedItem("horCategory") as HTMLSelectElement | null;
+    if (el) el.value = pendingHorCategoryRestore.current;
+    pendingHorCategoryRestore.current = null;
+  }, [isHor]);
+  function setCapaField(i: number, field: keyof CapaRowState, value: string) {
+    setCapaRows((prev) => prev.map((row, idx) => (idx === i ? { ...row, [field]: value } : row)));
+  }
+  // Auto-capture today's date the moment an item is marked Closed — same
+  // behavior as the shared CapaSummaryTable used on every detail page —
+  // relying on someone to separately remember to also type the date is
+  // exactly how "Closed with no Closed Out Date" gaps slip through.
+  function setCapaStatus(i: number, status: string) {
+    setCapaRows((prev) =>
+      prev.map((row, idx) =>
+        idx === i
+          ? { ...row, status, closedDate: status === "CLOSED" && !row.closedDate ? new Date().toISOString().slice(0, 10) : row.closedDate }
+          : row,
+      ),
+    );
+  }
+  // "Report near miss" is blocked until every corrective action actually
+  // authored (non-blank Action text) is Closed — otherwise the office would
+  // see it as submitted while the vessel still has open follow-up work.
+  // Only meaningful for shipboard, since only shipboard gets the Status
+  // column / Save-as-Draft path in the first place.
+  const allCapaClosed = capaRows.every((r) => !r.action.trim() || r.status === "CLOSED");
+  const reportBlocked = isShipboard && !allCapaClosed;
 
   return (
     <Card>
       <CardContent className="pt-5">
-        <form action={formAction} className="space-y-4">
+        <form ref={formRef} action={formAction} className="space-y-4">
           <div className="space-y-1.5">
             <Label htmlFor="title">Title</Label>
             <AutoGrowInput id="title" name="title" placeholder="Brief summary" required />
@@ -110,15 +248,12 @@ export function NewNearMissForm({
           </div>
 
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-            <div className="space-y-1.5">
-              <Label htmlFor="vesselId">Vessel</Label>
-              <Select id="vesselId" name="vesselId" defaultValue="">
-                <option value="">— Shore / N/A —</option>
-                {vessels.map((v) => (
-                  <option key={v.id} value={v.id}>{v.name}</option>
-                ))}
-              </Select>
-            </div>
+            <VesselField
+              vessels={vessels}
+              isShipboard={isShipboard}
+              ownVesselId={ownVesselId}
+              ownVesselName={ownVesselName}
+            />
             <div className="space-y-1.5">
               <Label htmlFor="occurredAt">Occurred on</Label>
               <Input id="occurredAt" name="occurredAt" type="date" required />
@@ -208,12 +343,12 @@ export function NewNearMissForm({
               detail page (same CAPA tracker, entity-agnostic). */}
           <div className="space-y-2">
             <Label>Corrective Action Plan</Label>
-            <div className="overflow-hidden rounded-md border border-border">
+            <div className="overflow-x-auto rounded-md border border-border">
               <table className="w-full table-fixed text-sm">
                 <colgroup>
                   <col />
                   <col className="w-24" />
-                  <col className="w-36" />
+                  <col className="w-32" />
                 </colgroup>
                 <thead className="bg-muted/40 text-left text-xs uppercase tracking-wide text-muted-foreground">
                   <tr>
@@ -223,16 +358,31 @@ export function NewNearMissForm({
                   </tr>
                 </thead>
                 <tbody>
-                  {Array.from({ length: capaRowCount }).map((_, i) => (
+                  {capaRows.map((row, i) => (
                     <tr key={i} className="border-t border-border">
                       <td className="px-3 py-2 align-top">
-                        <AutoGrowInput name="caAction" placeholder="Describe the action…" />
+                        <AutoGrowInput
+                          name="caAction"
+                          placeholder="Describe the action…"
+                          value={row.action}
+                          onChange={(e) => setCapaField(i, "action", e.target.value)}
+                        />
                       </td>
                       <td className="px-3 py-2 align-top">
-                        <Input name="caResponsible" placeholder="C/M" />
+                        <Input
+                          name="caResponsible"
+                          placeholder="C/M"
+                          value={row.responsible}
+                          onChange={(e) => setCapaField(i, "responsible", e.target.value)}
+                        />
                       </td>
                       <td className="px-3 py-2 align-top">
-                        <Input name="caTargetDate" type="date" />
+                        <Input
+                          name="caTargetDate"
+                          type="date"
+                          value={row.targetDate}
+                          onChange={(e) => setCapaField(i, "targetDate", e.target.value)}
+                        />
                       </td>
                     </tr>
                   ))}
@@ -243,17 +393,86 @@ export function NewNearMissForm({
               type="button"
               variant="outline"
               size="sm"
-              onClick={() => setCapaRowCount((n) => n + 1)}
+              onClick={() => setCapaRows((prev) => [...prev, blankCapaRow()])}
             >
               <Plus className="h-4 w-4" /> Add row
             </Button>
           </div>
 
+          {/* All CAPA Tracker — vessel-only, mirrors the "All CAPA Items"
+              section on the near miss detail page. Lets the Master mark a
+              corrective action already resolved (or in progress) at the time
+              of filing, instead of every row always starting OPEN. */}
+          {isShipboard && (
+            <div className="space-y-2">
+              <Label>All CAPA Tracker</Label>
+              <div className="overflow-x-auto rounded-md border border-border">
+                <table className="w-full table-fixed text-sm">
+                  <colgroup>
+                    <col />
+                    <col className="w-24" />
+                    <col className="w-28" />
+                    <col className="w-32" />
+                    <col className="w-32" />
+                  </colgroup>
+                  <thead className="bg-muted/40 text-left text-xs uppercase tracking-wide text-muted-foreground">
+                    <tr>
+                      <th className="px-3 py-2 font-medium">Action</th>
+                      <th className="px-3 py-2 font-medium">Responsible</th>
+                      <th className="px-3 py-2 font-medium">Target Date</th>
+                      <th className="px-3 py-2 font-medium">Status</th>
+                      <th className="px-3 py-2 font-medium">Closed Date</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {capaRows.map((row, i) => (
+                      <tr key={i} className="border-t border-border">
+                        <td className="px-3 py-2 align-top text-muted-foreground">{row.action || "—"}</td>
+                        <td className="px-3 py-2 align-top text-muted-foreground">{row.responsible || "—"}</td>
+                        <td className="px-3 py-2 align-top text-muted-foreground">{row.targetDate || "—"}</td>
+                        <td className="px-3 py-2 align-top">
+                          <Select
+                            name="caStatus"
+                            value={row.status}
+                            onChange={(e) => setCapaStatus(i, e.target.value)}
+                          >
+                            {CAPA_STATUSES.map((s) => (
+                              <option key={s} value={s}>{humanize(s)}</option>
+                            ))}
+                          </Select>
+                        </td>
+                        <td className="px-3 py-2 align-top">
+                          <Input
+                            name="caClosedDate"
+                            type="date"
+                            value={row.closedDate}
+                            onChange={(e) => setCapaField(i, "closedDate", e.target.value)}
+                          />
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Already resolved a corrective action before filing this report? Set its status to Closed
+                and give the Closed Date here — no need to go back and edit it afterward.
+              </p>
+            </div>
+          )}
+
+          {reportBlocked && (
+            <p className="text-xs text-muted-foreground">
+              Close every corrective action in the All CAPA Tracker before reporting to the office —
+              or Save as Draft to keep working on it.
+            </p>
+          )}
           {state.error && (
             <p className="text-sm text-danger" role="alert">{state.error}</p>
           )}
           <div className="flex items-center gap-2">
-            <SubmitButton />
+            <ReportSubmitButton blocked={reportBlocked} />
+            {isShipboard && <DraftSubmitButton />}
             <Link href="/near-miss">
               <Button type="button" variant="ghost">Cancel</Button>
             </Link>

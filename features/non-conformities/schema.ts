@@ -66,6 +66,16 @@ export const createNcrSchema = z.object({
   personInCharge: z.enum(PERSON_IN_CHARGE_OPTIONS),
 });
 
+// Office's written reply on this NCR — same app-wide "shore feedback on a
+// vessel/office-raised report" field as Near Miss / Committee Meetings (see
+// COMMENTS_STANDARDIZATION_REPORT.md). NCR has no ship/office permission
+// split elsewhere in this module, so this is gated by ncr:update like
+// everything else here, not a separate office-only permission.
+export const shoreRemarksSchema = z.object({
+  ncrId: z.string().uuid(),
+  shoreRemarks: z.string().trim().max(10000).optional().or(z.literal("")),
+});
+
 // Root cause classification — same shared taxonomy Incident/Near Miss use
 // (lib/root-cause.ts). Corrective actions themselves are recorded in the
 // shared CapaAction tracker (entityType "NonConformity"), not here.

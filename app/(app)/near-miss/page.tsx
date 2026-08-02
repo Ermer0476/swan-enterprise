@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Plus, ShieldAlert } from "lucide-react";
 import { requirePermission, can } from "@/lib/rbac";
 import { listNearMisses } from "@/features/near-miss/queries";
-import { NM_STATUSES, SEVERITIES } from "@/features/near-miss/schema";
+import { NM_STATUSES, SEVERITIES, nearMissStatusLabel, nearMissStatusTone } from "@/features/near-miss/schema";
 import { PageHeader } from "@/components/ui/page-header";
 import { Card } from "@/components/ui/card";
 import { Input, Select } from "@/components/ui/input";
@@ -18,11 +18,15 @@ export default async function NearMissPage({
 }) {
   const user = await requirePermission("nm:read");
   const sp = await searchParams;
-  const rows = await listNearMisses(user.companyId, {
-    search: sp.q || undefined,
-    status: (sp.status as NearMissStatus) || undefined,
-    potentialSeverity: (sp.sev as Severity) || undefined,
-  });
+  const rows = await listNearMisses(
+    user.companyId,
+    {
+      search: sp.q || undefined,
+      status: (sp.status as NearMissStatus) || undefined,
+      potentialSeverity: (sp.sev as Severity) || undefined,
+    },
+    user.department === "SHIPBOARD",
+  );
   const canCreate = can(user, "nm:create");
 
   return (
@@ -47,7 +51,7 @@ export default async function NearMissPage({
         </div>
         <Select name="status" defaultValue={sp.status ?? ""} className="w-44">
           <option value="">All statuses</option>
-          {NM_STATUSES.map((s) => (
+          {NM_STATUSES.filter((s) => s !== "DRAFT" || user.department === "SHIPBOARD").map((s) => (
             <option key={s} value={s}>{humanize(s)}</option>
           ))}
         </Select>
@@ -83,6 +87,8 @@ export default async function NearMissPage({
                 potentialSeverity: r.potentialSeverity,
                 occurredAt: r.occurredAt.toISOString(),
                 status: r.status,
+                statusLabel: nearMissStatusLabel(r.status, user.department),
+                statusTone: nearMissStatusTone(r.status),
               }))}
             />
           </div>

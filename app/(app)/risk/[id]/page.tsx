@@ -8,18 +8,15 @@ import { PageHeader } from "@/components/ui/page-header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { formatDate, humanize } from "@/lib/utils";
+import { riskAssessmentStatusTone } from "@/features/risk/ui";
+import { listAttachments } from "@/features/attachments/queries";
+import { AttachmentList } from "@/components/attachments/attachment-list";
 import { RiskActions } from "./risk-actions";
 
 function riskTone(level: string) {
   if (level === "HIGH") return "danger";
   if (level === "MEDIUM") return "warning";
   return "success";
-}
-
-function statusTone(s: string) {
-  if (s === "CLOSED") return "success";
-  if (s === "SUPERSEDED") return "danger";
-  return "warning";
 }
 
 export default async function RiskAssessmentDetailPage({
@@ -32,9 +29,11 @@ export default async function RiskAssessmentDetailPage({
   const ra = await getRiskAssessment(user.companyId, id);
   if (!ra) notFound();
 
+  const editable = can(user, "risk:update") && ra.status === "ACTIVE";
   const canClose = can(user, "risk:close");
   const canDelete = can(user, "risk:delete");
   const level = computeRiskLevel(ra.likelihood, ra.severity);
+  const attachments = await listAttachments(user.companyId, "RiskAssessment", ra.id);
 
   const meta = [
     { label: "Vessel", value: ra.vessel?.name ?? "Shore" },
@@ -56,7 +55,7 @@ export default async function RiskAssessmentDetailPage({
         actions={
           <div className="flex items-center gap-2">
             <Badge tone={riskTone(level)}>{humanize(level)} risk</Badge>
-            <Badge tone={statusTone(ra.status)}>{humanize(ra.status)}</Badge>
+            <Badge tone={riskAssessmentStatusTone(ra.status)}>{humanize(ra.status)}</Badge>
           </div>
         }
       />
@@ -83,6 +82,24 @@ export default async function RiskAssessmentDetailPage({
       <Card className="mb-6">
         <CardHeader><CardTitle>Additional controls required</CardTitle></CardHeader>
         <CardContent><p className="whitespace-pre-wrap text-sm">{ra.additionalControls || "—"}</p></CardContent>
+      </Card>
+
+      <Card className="mb-6">
+        <CardHeader><CardTitle>Attachments</CardTitle></CardHeader>
+        <CardContent>
+          <AttachmentList
+            entityType="RiskAssessment"
+            entityId={ra.id}
+            editable={editable}
+            attachments={attachments.map((a) => ({
+              id: a.id,
+              fileName: a.fileName,
+              mimeType: a.mimeType,
+              sizeBytes: a.sizeBytes,
+              createdAt: a.createdAt.toISOString(),
+            }))}
+          />
+        </CardContent>
       </Card>
 
       <Card>

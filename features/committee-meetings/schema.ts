@@ -1,4 +1,15 @@
 import { z } from "zod";
+import { LIFECYCLE_TONE } from "@/lib/status";
+
+export const MEETING_STATUSES = ["DRAFT", "REPORTED", "CLOSED"] as const;
+
+/** App-wide OPEN/UNDER_REVIEW/CLOSED color standard — DRAFT (still being
+ * edited by the vessel) is OPEN; REPORTED (awaiting the office) is UNDER_REVIEW. */
+export function meetingStatusTone(status: string): "success" | "warning" | "neutral" {
+  if (status === "CLOSED") return LIFECYCLE_TONE.CLOSED;
+  if (status === "DRAFT") return LIFECYCLE_TONE.OPEN;
+  return LIFECYCLE_TONE.UNDER_REVIEW; // REPORTED — awaiting the office's review/close
+}
 
 export const COMMITTEE_TYPES = [
   "SAFETY",
@@ -73,13 +84,15 @@ const optionalText = (max: number) => z.string().trim().max(max).optional().or(z
 // Time/Event rows) — every array is index-paired: agendaLabel[i] is the row
 // whose committeeType is agendaCommitteeType[i], etc. agendaId is only used
 // on update (empty string = new row to create, e.g. a follow-up Others topic).
-const agendaArrays = {
+// Split ship vs office arrays since the two sides never edit the same field —
+// the vessel authors committeeType/code/label/details, the office only ever
+// replies in shoreComments.
+const shipAgendaArrays = {
   agendaId: z.array(z.string()).default([]),
   agendaCommitteeType: z.array(z.enum(COMMITTEE_TYPES)).default([]),
   agendaCode: z.array(z.string()).default([]),
   agendaLabel: z.array(z.string()).default([]),
   agendaDetails: z.array(z.string()).default([]),
-  agendaShoreComments: z.array(z.string()).default([]),
 };
 
 export const createCommitteeMeetingSchema = z.object({
@@ -96,12 +109,18 @@ export const createCommitteeMeetingSchema = z.object({
   inAttendance: optionalText(3000),
   forAcknowledgement: optionalText(2000),
   vesselRemarks: optionalText(5000),
-  ...agendaArrays,
+  ...shipAgendaArrays,
 });
 
-export const updateCommitteeMeetingSchema = createCommitteeMeetingSchema.extend({
+/** Vessel-only, full edit of its own meeting — only ever allowed while status = DRAFT. */
+export const updateDraftMeetingSchema = createCommitteeMeetingSchema.extend({
+  meetingId: z.string().uuid(),
+});
+
+/** Office-only — the overall reply plus a per-agenda-item reply; only ever allowed while status = REPORTED. */
+export const officeReviewMeetingSchema = z.object({
   meetingId: z.string().uuid(),
   shoreRemarks: optionalText(5000),
-  published: z.enum(["true", "false"]).default("false"),
-  approved: z.enum(["true", "false"]).default("false"),
+  agendaId: z.array(z.string()).default([]),
+  agendaShoreComments: z.array(z.string()).default([]),
 });

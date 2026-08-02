@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input, Select } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { formatDate, humanize } from "@/lib/utils";
+import { lifecycleStatusTone } from "@/lib/status";
 import type { FindingStatus, DrillType } from "@/lib/generated/prisma";
 
 export default async function DrillsPage({
@@ -88,7 +89,7 @@ export default async function DrillsPage({
                     <td className="px-4 py-2.5 text-muted-foreground">{formatDate(r.drillDate)}</td>
                     <td className="px-4 py-2.5 text-muted-foreground">{r.conductedBy ?? "—"}</td>
                     <td className="px-4 py-2.5">
-                      <Badge tone={r.status === "CLOSED" ? "success" : "warning"}>{humanize(r.status)}</Badge>
+                      <Badge tone={lifecycleStatusTone(r.status)}>{humanize(r.status)}</Badge>
                     </td>
                   </tr>
                 ))}

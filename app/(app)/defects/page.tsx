@@ -9,14 +9,8 @@ import { Badge } from "@/components/ui/badge";
 import { Input, Select } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { formatDate, humanize, severityTone } from "@/lib/utils";
+import { defectStatusTone } from "@/features/defects/ui";
 import type { DefectStatus, DefectSeverity } from "@/lib/generated/prisma";
-
-function statusTone(s: string) {
-  if (s === "RECTIFIED") return "success";
-  if (s === "DEFERRED") return "accent";
-  if (s === "MONITORING") return "warning";
-  return "danger"; // OPEN
-}
 
 export default async function DefectsPage({
   searchParams,
@@ -95,7 +89,7 @@ export default async function DefectsPage({
                     <td className="px-4 py-2.5 text-muted-foreground">{r.vessel?.name ?? "—"}</td>
                     <td className="px-4 py-2.5"><Badge tone={severityTone(r.severity)}>{humanize(r.severity)}</Badge></td>
                     <td className="px-4 py-2.5 text-muted-foreground">{formatDate(r.dateRaised)}</td>
-                    <td className="px-4 py-2.5"><Badge tone={statusTone(r.status)}>{humanize(r.status)}</Badge></td>
+                    <td className="px-4 py-2.5"><Badge tone={defectStatusTone(r.status)}>{humanize(r.status)}</Badge></td>
                   </tr>
                 ))}
               </tbody>

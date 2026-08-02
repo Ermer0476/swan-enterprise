@@ -8,13 +8,21 @@ export default async function NewNearMissPage() {
   const user = await requirePermission("nm:create");
   const vessels = await listVesselOptions(user.companyId);
   const positions = positionsFor(user.department);
+  const isShipboard = user.department === "SHIPBOARD";
+  const ownVesselName = vessels.find((v) => v.id === user.vesselId)?.name ?? null;
   return (
     <div className="mx-auto max-w-7xl">
       <PageHeader
         title="Report Near Miss/HOR"
         description="No one was hurt — but capture what could have happened, or what unsafe act/condition you observed, so it never does."
       />
-      <NewNearMissForm vessels={vessels} positions={positions} />
+      <NewNearMissForm
+        vessels={vessels}
+        positions={positions}
+        isShipboard={isShipboard}
+        ownVesselId={user.vesselId}
+        ownVesselName={ownVesselName}
+      />
     </div>
   );
 }

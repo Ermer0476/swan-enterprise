@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useActionState } from "react";
 import { useFormStatus } from "react-dom";
 import { Plus } from "lucide-react";
@@ -18,6 +18,7 @@ import {
 } from "@/features/incidents/schema";
 import { Card, CardContent } from "@/components/ui/card";
 import { AutoGrowInput, Input, Label, Select } from "@/components/ui/input";
+import { VesselField } from "@/components/ui/vessel-field";
 import { Button } from "@/components/ui/button";
 
 function SubmitButton() {
@@ -32,12 +33,35 @@ function SubmitButton() {
 export function NewIncidentForm({
   vessels,
   positions,
+  isShipboard,
+  ownVesselId,
+  ownVesselName,
 }: {
   vessels: { id: string; name: string }[];
   positions: readonly string[];
+  isShipboard: boolean;
+  ownVesselId: string | null;
+  ownVesselName: string | null;
 }) {
+  const formRef = useRef<HTMLFormElement>(null);
+  // The browser resets every field in the <form> the moment a form action
+  // resolves — even on a rejected (fail()) result. Capture what was
+  // submitted so a failed validation only has to point at what's missing,
+  // not force the reporter to retype everything else. Same pattern as
+  // near-miss/new/new-near-miss-form.tsx.
+  const lastSubmittedFormData = useRef<FormData | null>(null);
+  const pendingSubCategoryRestore = useRef<Record<string, string>>({});
+
+  async function guardedCreateIncidentAction(
+    prev: ActionResult,
+    formData: FormData,
+  ): Promise<ActionResult> {
+    lastSubmittedFormData.current = formData;
+    return createIncidentAction(prev, formData);
+  }
+
   const [state, formAction] = useActionState<ActionResult, FormData>(
-    createIncidentAction,
+    guardedCreateIncidentAction,
     { ok: false, error: null },
   );
 
@@ -53,10 +77,73 @@ export function NewIncidentForm({
     });
   }
 
+  // Runs after every rejected submission — repairs the fields the browser
+  // just wiped (plain inputs directly on the DOM; type checkboxes and their
+  // sub-category selects via React state) using exactly what was typed.
+  useEffect(() => {
+    if (state.ok || !state.error) return;
+    const fd = lastSubmittedFormData.current;
+    const form = formRef.current;
+    if (!fd || !form) return;
+
+    const restore = (name: string) => {
+      const el = form.elements.namedItem(name) as
+        | HTMLInputElement
+        | HTMLSelectElement
+        | HTMLTextAreaElement
+        | null;
+      if (!el) return;
+      el.value = String(fd.get(name) ?? "");
+      // AutoGrowInput only re-measures its height on an "input" event; a
+      // direct .value write doesn't fire one, so it'd render collapsed.
+      el.dispatchEvent(new Event("input", { bubbles: true }));
+    };
+    ["title", "reporterName", "reporterPosition", "occurredAt", "location",
+      "description", "immediateAction",
+    ].forEach(restore);
+
+    const restoredTypes = new Set(fd.getAll("types").map(String)) as Set<IncidentTypeValue>;
+    setCheckedTypes(restoredTypes);
+
+    // Sub-category selects only exist in the DOM once their parent type is
+    // checked, so stash the values and apply them in the effect below once
+    // checkedTypes flips and the selects actually mount.
+    const subPending: Record<string, string> = {};
+    restoredTypes.forEach((t) => {
+      const val = fd.get(`sub_${t}`);
+      if (val) subPending[t] = String(val);
+    });
+    pendingSubCategoryRestore.current = subPending;
+
+    const sofTimes = fd.getAll("sofTime").map(String);
+    const sofEvents = fd.getAll("sofEvent").map(String);
+    form.querySelectorAll<HTMLInputElement>('[name="sofTime"]').forEach((el, i) => {
+      el.value = sofTimes[i] ?? "";
+    });
+    form.querySelectorAll<HTMLInputElement>('[name="sofEvent"]').forEach((el, i) => {
+      el.value = sofEvents[i] ?? "";
+      el.dispatchEvent(new Event("input", { bubbles: true }));
+    });
+  }, [state]);
+
+  // Sub-category selects mount only for checked types, so restore their
+  // values on the render right after checkedTypes flips them into the DOM.
+  useEffect(() => {
+    const pending = pendingSubCategoryRestore.current;
+    if (Object.keys(pending).length === 0) return;
+    const form = formRef.current;
+    if (!form) return;
+    for (const [t, val] of Object.entries(pending)) {
+      const el = form.elements.namedItem(`sub_${t}`) as HTMLSelectElement | null;
+      if (el) el.value = val;
+    }
+    pendingSubCategoryRestore.current = {};
+  }, [checkedTypes]);
+
   return (
     <Card>
       <CardContent className="pt-5">
-        <form action={formAction} className="space-y-6">
+        <form ref={formRef} action={formAction} className="space-y-6">
           {/* Basics */}
           <div className="space-y-1.5">
             <Label htmlFor="title">Title</Label>
@@ -123,13 +210,12 @@ export function NewIncidentForm({
               <Label htmlFor="occurredAt">Occurred at</Label>
               <Input id="occurredAt" name="occurredAt" type="date" required />
             </div>
-            <div className="space-y-1.5">
-              <Label htmlFor="vesselId">Vessel</Label>
-              <Select id="vesselId" name="vesselId" defaultValue="">
-                <option value="">— Shore / N/A —</option>
-                {vessels.map((v) => <option key={v.id} value={v.id}>{v.name}</option>)}
-              </Select>
-            </div>
+            <VesselField
+              vessels={vessels}
+              isShipboard={isShipboard}
+              ownVesselId={ownVesselId}
+              ownVesselName={ownVesselName}
+            />
           </div>
 
           <div className="space-y-1.5">

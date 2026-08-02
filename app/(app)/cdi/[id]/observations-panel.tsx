@@ -12,6 +12,8 @@ import {
 import { AutoGrowInput, Label, Select } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { AttachmentList, type AttachmentView } from "@/components/attachments/attachment-list";
+import { lifecycleStatusTone } from "@/lib/status";
 
 export type ObservationView = {
   id: string;
@@ -19,6 +21,7 @@ export type ObservationView = {
   observation: string;
   response: string | null;
   status: "OPEN" | "CLOSED";
+  attachments: AttachmentView[];
 };
 
 function AddButton() {
@@ -61,7 +64,7 @@ function ObservationRow({ obs, editable }: { obs: ObservationView; editable: boo
         <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
             {obs.questionRef && <span className="font-mono">Q {obs.questionRef}</span>}
-            <Badge tone={obs.status === "CLOSED" ? "success" : "warning"}>
+            <Badge tone={lifecycleStatusTone(obs.status)}>
               {obs.status === "CLOSED" ? "Closed" : "Open"}
             </Badge>
           </div>
@@ -90,6 +93,17 @@ function ObservationRow({ obs, editable }: { obs: ObservationView; editable: boo
       ) : (
         obs.response && <p className="text-sm text-muted-foreground">Response: {obs.response}</p>
       )}
+
+      <div className="space-y-1.5 border-t border-border pt-2">
+        <Label className="text-xs">Attachments</Label>
+        <AttachmentList
+          entityType="CdiObservation"
+          entityId={obs.id}
+          attachments={obs.attachments}
+          editable={editable}
+        />
+      </div>
+
       {error && <p className="text-sm text-danger">{error}</p>}
     </li>
   );

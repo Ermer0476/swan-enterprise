@@ -31,13 +31,30 @@ export async function listInternalAudits(
 }
 
 export async function getInternalAudit(companyId: string, id: string) {
-  return prisma.internalAudit.findFirst({
+  const audit = await prisma.internalAudit.findFirst({
     where: { id, companyId, deletedAt: null },
     include: {
       vessel: { select: { name: true } },
       findings: { where: { deletedAt: null }, orderBy: { createdAt: "asc" } },
     },
   });
+  if (!audit) return null;
+
+  const findingIds = audit.findings.map((f) => f.id);
+  const attachments = findingIds.length
+    ? await prisma.attachment.findMany({
+        where: { companyId, entityType: "InternalAuditFinding", entityId: { in: findingIds }, deletedAt: null },
+        orderBy: { createdAt: "desc" },
+      })
+    : [];
+
+  return {
+    ...audit,
+    findings: audit.findings.map((f) => ({
+      ...f,
+      attachments: attachments.filter((a) => a.entityId === f.id),
+    })),
+  };
 }
 
 export async function listVesselOptions(companyId: string) {

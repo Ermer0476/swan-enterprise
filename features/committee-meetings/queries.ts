@@ -6,9 +6,10 @@ export type MeetingFilters = { search?: string; vesselId?: string };
 
 /**
  * Shipboard accounts (one account per vessel) see every meeting for their own
- * ship, draft or approved. Everyone else (office) only ever sees meetings the
- * vessel's Master has marked Approved — an unapproved meeting is still a
- * work-in-progress draft and hasn't "arrived" at the office yet.
+ * ship, draft or reported. Everyone else (office) only ever sees meetings
+ * that have been Reported (or Closed) — a Draft hasn't "arrived" at the
+ * office yet (mirrors Near Miss's DRAFT gate). AND'd separately so an office
+ * filter can never be used to bypass the draft gate.
  */
 export async function listCommitteeMeetings(user: SessionUser, filters: MeetingFilters = {}) {
   const isShipboard = user.department === "SHIPBOARD";
@@ -16,9 +17,12 @@ export async function listCommitteeMeetings(user: SessionUser, filters: MeetingF
     where: {
       companyId: user.companyId,
       deletedAt: null,
-      ...(isShipboard
-        ? { vesselId: user.vesselId ?? "__no-vessel-assigned__" }
-        : { vesselId: filters.vesselId || undefined, approved: true }),
+      AND: [
+        isShipboard
+          ? { vesselId: user.vesselId ?? "__no-vessel-assigned__" }
+          : { vesselId: filters.vesselId || undefined },
+        isShipboard ? {} : { status: { not: "DRAFT" } },
+      ],
       ...(filters.search
         ? {
             OR: [
@@ -43,7 +47,9 @@ export async function getCommitteeMeeting(user: SessionUser, id: string) {
       id,
       companyId: user.companyId,
       deletedAt: null,
-      ...(isShipboard ? { vesselId: user.vesselId ?? "__no-vessel-assigned__" } : { approved: true }),
+      ...(isShipboard
+        ? { vesselId: user.vesselId ?? "__no-vessel-assigned__" }
+        : { status: { not: "DRAFT" } }),
     },
     include: {
       vessel: { select: { name: true } },
