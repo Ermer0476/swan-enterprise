@@ -86,18 +86,40 @@ no code changes. Any future module binds to the engine the same way (pick an
 5. Add the nav entry in `components/shell/nav.ts` (drop `soon: true`).
 6. `npm run db:push && npm run typecheck`.
 
+## Phase 1 modules (implemented)
+
+All of the following exist end-to-end (schema + `features/*` + pages + nav),
+following the SMS Manual reference pattern above:
+
+- **Vessels** — fleet master data + particulars
+- **SMS Manual** — the reference module (revisions + approval workflow)
+- **Incidents** — classification, CAPA, root cause, Statement of Facts
+- **Near Miss / HOR** — merged module (`kind` field distinguishes them)
+- **Non-Conformities (NCR)**
+- **SIRE / PSC / CDI Inspections** — observations/deficiencies, evidence attachments; SIRE also supports importing observations from a Draft Response `.docx` (see below)
+- **Internal / External Audits** — findings, shared audit components
+- **Committee Meetings**, **Emergency Drills**
+- **Documents** (general controlled-document register, distinct from SMS Manual)
+- **Circulars** — Flag/Class/Insurance/Company source facet + category facet, sidebar flyout by source, distribution/acknowledgement tracking, required attachments, in-app PDF viewer
+- **Risk Assessments**, **Defect List**
+
+Every module reuses the same shared CAPA tracker, root-cause taxonomy
+(`lib/root-cause.ts`), and attachment framework below rather than rolling its
+own.
+
 ## Shared services (status)
 
-| Service         | Status                                             |
-| --------------- | -------------------------------------------------- |
-| Auth            | ✅ implemented (+ middleware gate)                 |
-| RBAC            | ✅ implemented                                     |
-| Audit trail     | ✅ implemented                                     |
-| Workflow engine | ✅ implemented — SMS bound; admin-configurable     |
-| Attachments     | 🟡 schema ready (DigitalOcean Spaces integration)  |
-| Comments        | 🟡 schema ready                                    |
-| Notifications   | 🟡 schema ready                                    |
-| Global search   | 🟡 UI shell in topbar                              |
-| AI assistant    | ⬜ planned                                         |
-| Offline sync    | ⬜ planned (hybrid office-cloud / ship-local)      |
-```
+| Service              | Status                                                     |
+| --------------------- | ----------------------------------------------------------- |
+| Auth                  | ✅ implemented (+ middleware gate)                          |
+| RBAC                  | ✅ implemented                                              |
+| Audit trail            | ✅ implemented                                              |
+| Workflow engine        | ✅ implemented — SMS bound; admin-configurable               |
+| Attachments            | ✅ implemented — local disk storage (`features/attachments`), entity-agnostic registry pattern (register a new module's `entityType` in `features/attachments/actions.ts`), in-app PDF viewer via `pdfjs-dist` (no forced download), list-page quick-view without opening the record |
+| Comments               | ✅ implemented — per-module threads (e.g. SIRE observations) |
+| CAPA tracker           | ✅ implemented — shared corrective/preventive action tracker reused across Incidents, Near Miss, SIRE/PSC/CDI, Audits |
+| Document import/parse  | ✅ implemented for SIRE — uploads a Draft Response `.docx`, parses via `mammoth` + `features/sire/document-parser.ts`, shows an editable review screen before anything saves |
+| Notifications          | 🟡 schema ready                                              |
+| Global search          | 🟡 UI shell in topbar                                        |
+| AI assistant           | ⬜ planned                                                   |
+| Offline sync           | ⬜ planned (hybrid office-cloud / ship-local)                |
