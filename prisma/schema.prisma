@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════════════════
-//  SWAN Enterprise — Prisma schema (SQLite, local dev)
+//  SWAN Enterprise — Prisma schema (PostgreSQL 15, local dev)
 //
 //  Conventions (enforced across every business table):
 //    • id         String  @id @default(uuid())         — UUID primary key
@@ -20,7 +20,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
