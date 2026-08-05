@@ -228,10 +228,43 @@ export type Circular = $Result.DefaultSelection<Prisma.$CircularPayload>
  */
 export type CircularAcknowledgement = $Result.DefaultSelection<Prisma.$CircularAcknowledgementPayload>
 /**
- * Model RiskAssessment
+ * Model RiskAssessmentDocument
+ * *
+ *  * Entity type key used to bind Risk Assessment documents to the workflow engine.
+ */
+export type RiskAssessmentDocument = $Result.DefaultSelection<Prisma.$RiskAssessmentDocumentPayload>
+/**
+ * Model RiskAssessmentRevision
  * 
  */
-export type RiskAssessment = $Result.DefaultSelection<Prisma.$RiskAssessmentPayload>
+export type RiskAssessmentRevision = $Result.DefaultSelection<Prisma.$RiskAssessmentRevisionPayload>
+/**
+ * Model RiskHazardRow
+ * *
+ *  * One hazard line in the RA's hazard table — mirrors the real RC-012 form's
+ *  * row shape exactly (Unwanted Consequence / Possible Causes / S / L / RF /
+ *  * Existing Controls / Additional Controls / Residual S,L,RF / Responsible).
+ *  * Per company policy (SSP-13 Sec. 5.7), residual Severity is always the same
+ *  * as initial Severity — only Likelihood is re-rated after controls — so only
+ *  * `resLikelihood` is stored; residual severity/RF are derived in app code.
+ */
+export type RiskHazardRow = $Result.DefaultSelection<Prisma.$RiskHazardRowPayload>
+/**
+ * Model RiskAssessmentExecution
+ * *
+ *  * A crew "permit" — one execution of an approved RA against a specific job.
+ *  * `revisionId` is a frozen pointer (never re-follows the master's current
+ *  * revision), so audits can always answer "what RA was actually shown".
+ */
+export type RiskAssessmentExecution = $Result.DefaultSelection<Prisma.$RiskAssessmentExecutionPayload>
+/**
+ * Model RiskAssessmentRevisionRequest
+ * *
+ *  * Crew-raised proposal to change a Risk Assessment. Office decides; approval
+ *  * auto-spawns a new draft revision pre-filled with the request context. Crew
+ *  * never edits the master directly.
+ */
+export type RiskAssessmentRevisionRequest = $Result.DefaultSelection<Prisma.$RiskAssessmentRevisionRequestPayload>
 /**
  * Model Defect
  * 
@@ -620,22 +653,48 @@ export const CircularCategory: {
 export type CircularCategory = (typeof CircularCategory)[keyof typeof CircularCategory]
 
 
-export const RiskRating: {
-  LOW: 'LOW',
-  MEDIUM: 'MEDIUM',
-  HIGH: 'HIGH'
+export const ReviewTrigger: {
+  ANNUAL_REVIEW_DUE: 'ANNUAL_REVIEW_DUE',
+  REVIEW_PERIOD_EXPIRED: 'REVIEW_PERIOD_EXPIRED',
+  REVISION_REQUESTED_BY_VESSEL: 'REVISION_REQUESTED_BY_VESSEL',
+  INCIDENT_INVESTIGATION_RECOMMENDATION: 'INCIDENT_INVESTIGATION_RECOMMENDATION',
+  NEAR_MISS_RECOMMENDATION: 'NEAR_MISS_RECOMMENDATION',
+  HAZARD_OBSERVATION_RECOMMENDATION: 'HAZARD_OBSERVATION_RECOMMENDATION',
+  SIRE_OBSERVATION: 'SIRE_OBSERVATION',
+  PSC_DEFICIENCY: 'PSC_DEFICIENCY',
+  INTERNAL_AUDIT_FINDING: 'INTERNAL_AUDIT_FINDING',
+  EXTERNAL_AUDIT_FINDING: 'EXTERNAL_AUDIT_FINDING',
+  SMS_PROCEDURE_REVISED: 'SMS_PROCEDURE_REVISED',
+  MANAGEMENT_REQUEST: 'MANAGEMENT_REQUEST',
+  REGULATORY_CHANGE: 'REGULATORY_CHANGE'
 };
 
-export type RiskRating = (typeof RiskRating)[keyof typeof RiskRating]
+export type ReviewTrigger = (typeof ReviewTrigger)[keyof typeof ReviewTrigger]
 
 
-export const RiskAssessmentStatus: {
-  ACTIVE: 'ACTIVE',
-  SUPERSEDED: 'SUPERSEDED',
-  CLOSED: 'CLOSED'
+export const RaExecutionCondition: {
+  UNCHANGED: 'UNCHANGED',
+  CHANGED: 'CHANGED'
 };
 
-export type RiskAssessmentStatus = (typeof RiskAssessmentStatus)[keyof typeof RiskAssessmentStatus]
+export type RaExecutionCondition = (typeof RaExecutionCondition)[keyof typeof RaExecutionCondition]
+
+
+export const RaRevisionRequestStatus: {
+  PENDING: 'PENDING',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED'
+};
+
+export type RaRevisionRequestStatus = (typeof RaRevisionRequestStatus)[keyof typeof RaRevisionRequestStatus]
+
+
+export const RaApprovalLevel: {
+  LOCAL: 'LOCAL',
+  COMPANY_MANDATORY: 'COMPANY_MANDATORY'
+};
+
+export type RaApprovalLevel = (typeof RaApprovalLevel)[keyof typeof RaApprovalLevel]
 
 
 export const DefectSeverity: {
@@ -794,13 +853,21 @@ export type CircularCategory = $Enums.CircularCategory
 
 export const CircularCategory: typeof $Enums.CircularCategory
 
-export type RiskRating = $Enums.RiskRating
+export type ReviewTrigger = $Enums.ReviewTrigger
 
-export const RiskRating: typeof $Enums.RiskRating
+export const ReviewTrigger: typeof $Enums.ReviewTrigger
 
-export type RiskAssessmentStatus = $Enums.RiskAssessmentStatus
+export type RaExecutionCondition = $Enums.RaExecutionCondition
 
-export const RiskAssessmentStatus: typeof $Enums.RiskAssessmentStatus
+export const RaExecutionCondition: typeof $Enums.RaExecutionCondition
+
+export type RaRevisionRequestStatus = $Enums.RaRevisionRequestStatus
+
+export const RaRevisionRequestStatus: typeof $Enums.RaRevisionRequestStatus
+
+export type RaApprovalLevel = $Enums.RaApprovalLevel
+
+export const RaApprovalLevel: typeof $Enums.RaApprovalLevel
 
 export type DefectSeverity = $Enums.DefectSeverity
 
@@ -1329,14 +1396,54 @@ export class PrismaClient<
   get circularAcknowledgement(): Prisma.CircularAcknowledgementDelegate<ExtArgs, ClientOptions>;
 
   /**
-   * `prisma.riskAssessment`: Exposes CRUD operations for the **RiskAssessment** model.
+   * `prisma.riskAssessmentDocument`: Exposes CRUD operations for the **RiskAssessmentDocument** model.
     * Example usage:
     * ```ts
-    * // Fetch zero or more RiskAssessments
-    * const riskAssessments = await prisma.riskAssessment.findMany()
+    * // Fetch zero or more RiskAssessmentDocuments
+    * const riskAssessmentDocuments = await prisma.riskAssessmentDocument.findMany()
     * ```
     */
-  get riskAssessment(): Prisma.RiskAssessmentDelegate<ExtArgs, ClientOptions>;
+  get riskAssessmentDocument(): Prisma.RiskAssessmentDocumentDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.riskAssessmentRevision`: Exposes CRUD operations for the **RiskAssessmentRevision** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more RiskAssessmentRevisions
+    * const riskAssessmentRevisions = await prisma.riskAssessmentRevision.findMany()
+    * ```
+    */
+  get riskAssessmentRevision(): Prisma.RiskAssessmentRevisionDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.riskHazardRow`: Exposes CRUD operations for the **RiskHazardRow** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more RiskHazardRows
+    * const riskHazardRows = await prisma.riskHazardRow.findMany()
+    * ```
+    */
+  get riskHazardRow(): Prisma.RiskHazardRowDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.riskAssessmentExecution`: Exposes CRUD operations for the **RiskAssessmentExecution** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more RiskAssessmentExecutions
+    * const riskAssessmentExecutions = await prisma.riskAssessmentExecution.findMany()
+    * ```
+    */
+  get riskAssessmentExecution(): Prisma.RiskAssessmentExecutionDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.riskAssessmentRevisionRequest`: Exposes CRUD operations for the **RiskAssessmentRevisionRequest** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more RiskAssessmentRevisionRequests
+    * const riskAssessmentRevisionRequests = await prisma.riskAssessmentRevisionRequest.findMany()
+    * ```
+    */
+  get riskAssessmentRevisionRequest(): Prisma.RiskAssessmentRevisionRequestDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.defect`: Exposes CRUD operations for the **Defect** model.
@@ -1828,7 +1935,11 @@ export namespace Prisma {
     ControlledDocument: 'ControlledDocument',
     Circular: 'Circular',
     CircularAcknowledgement: 'CircularAcknowledgement',
-    RiskAssessment: 'RiskAssessment',
+    RiskAssessmentDocument: 'RiskAssessmentDocument',
+    RiskAssessmentRevision: 'RiskAssessmentRevision',
+    RiskHazardRow: 'RiskHazardRow',
+    RiskAssessmentExecution: 'RiskAssessmentExecution',
+    RiskAssessmentRevisionRequest: 'RiskAssessmentRevisionRequest',
     Defect: 'Defect'
   };
 
@@ -1848,7 +1959,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "company" | "user" | "role" | "permission" | "rolePermission" | "userRole" | "vessel" | "auditLog" | "attachment" | "comment" | "capaAction" | "notification" | "workflowDefinition" | "workflowStep" | "workflowInstance" | "workflowAction" | "smsDocument" | "smsRevision" | "incident" | "incidentSofEntry" | "incidentTypeEntry" | "nearMiss" | "nonConformity" | "sireInspection" | "sireObservation" | "sireObservationComment" | "pscInspection" | "pscDeficiency" | "cdiInspection" | "cdiObservation" | "internalAudit" | "internalAuditFinding" | "externalAudit" | "externalAuditFinding" | "committeeMeeting" | "committeeMeetingAgenda" | "emergencyDrill" | "controlledDocument" | "circular" | "circularAcknowledgement" | "riskAssessment" | "defect"
+      modelProps: "company" | "user" | "role" | "permission" | "rolePermission" | "userRole" | "vessel" | "auditLog" | "attachment" | "comment" | "capaAction" | "notification" | "workflowDefinition" | "workflowStep" | "workflowInstance" | "workflowAction" | "smsDocument" | "smsRevision" | "incident" | "incidentSofEntry" | "incidentTypeEntry" | "nearMiss" | "nonConformity" | "sireInspection" | "sireObservation" | "sireObservationComment" | "pscInspection" | "pscDeficiency" | "cdiInspection" | "cdiObservation" | "internalAudit" | "internalAuditFinding" | "externalAudit" | "externalAuditFinding" | "committeeMeeting" | "committeeMeetingAgenda" | "emergencyDrill" | "controlledDocument" | "circular" | "circularAcknowledgement" | "riskAssessmentDocument" | "riskAssessmentRevision" | "riskHazardRow" | "riskAssessmentExecution" | "riskAssessmentRevisionRequest" | "defect"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -4812,77 +4923,373 @@ export namespace Prisma {
           }
         }
       }
-      RiskAssessment: {
-        payload: Prisma.$RiskAssessmentPayload<ExtArgs>
-        fields: Prisma.RiskAssessmentFieldRefs
+      RiskAssessmentDocument: {
+        payload: Prisma.$RiskAssessmentDocumentPayload<ExtArgs>
+        fields: Prisma.RiskAssessmentDocumentFieldRefs
         operations: {
           findUnique: {
-            args: Prisma.RiskAssessmentFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$RiskAssessmentPayload> | null
+            args: Prisma.RiskAssessmentDocumentFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RiskAssessmentDocumentPayload> | null
           }
           findUniqueOrThrow: {
-            args: Prisma.RiskAssessmentFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$RiskAssessmentPayload>
+            args: Prisma.RiskAssessmentDocumentFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RiskAssessmentDocumentPayload>
           }
           findFirst: {
-            args: Prisma.RiskAssessmentFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$RiskAssessmentPayload> | null
+            args: Prisma.RiskAssessmentDocumentFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RiskAssessmentDocumentPayload> | null
           }
           findFirstOrThrow: {
-            args: Prisma.RiskAssessmentFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$RiskAssessmentPayload>
+            args: Prisma.RiskAssessmentDocumentFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RiskAssessmentDocumentPayload>
           }
           findMany: {
-            args: Prisma.RiskAssessmentFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$RiskAssessmentPayload>[]
+            args: Prisma.RiskAssessmentDocumentFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RiskAssessmentDocumentPayload>[]
           }
           create: {
-            args: Prisma.RiskAssessmentCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$RiskAssessmentPayload>
+            args: Prisma.RiskAssessmentDocumentCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RiskAssessmentDocumentPayload>
           }
           createMany: {
-            args: Prisma.RiskAssessmentCreateManyArgs<ExtArgs>
+            args: Prisma.RiskAssessmentDocumentCreateManyArgs<ExtArgs>
             result: BatchPayload
           }
           createManyAndReturn: {
-            args: Prisma.RiskAssessmentCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$RiskAssessmentPayload>[]
+            args: Prisma.RiskAssessmentDocumentCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RiskAssessmentDocumentPayload>[]
           }
           delete: {
-            args: Prisma.RiskAssessmentDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$RiskAssessmentPayload>
+            args: Prisma.RiskAssessmentDocumentDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RiskAssessmentDocumentPayload>
           }
           update: {
-            args: Prisma.RiskAssessmentUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$RiskAssessmentPayload>
+            args: Prisma.RiskAssessmentDocumentUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RiskAssessmentDocumentPayload>
           }
           deleteMany: {
-            args: Prisma.RiskAssessmentDeleteManyArgs<ExtArgs>
+            args: Prisma.RiskAssessmentDocumentDeleteManyArgs<ExtArgs>
             result: BatchPayload
           }
           updateMany: {
-            args: Prisma.RiskAssessmentUpdateManyArgs<ExtArgs>
+            args: Prisma.RiskAssessmentDocumentUpdateManyArgs<ExtArgs>
             result: BatchPayload
           }
           updateManyAndReturn: {
-            args: Prisma.RiskAssessmentUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$RiskAssessmentPayload>[]
+            args: Prisma.RiskAssessmentDocumentUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RiskAssessmentDocumentPayload>[]
           }
           upsert: {
-            args: Prisma.RiskAssessmentUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$RiskAssessmentPayload>
+            args: Prisma.RiskAssessmentDocumentUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RiskAssessmentDocumentPayload>
           }
           aggregate: {
-            args: Prisma.RiskAssessmentAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateRiskAssessment>
+            args: Prisma.RiskAssessmentDocumentAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateRiskAssessmentDocument>
           }
           groupBy: {
-            args: Prisma.RiskAssessmentGroupByArgs<ExtArgs>
-            result: $Utils.Optional<RiskAssessmentGroupByOutputType>[]
+            args: Prisma.RiskAssessmentDocumentGroupByArgs<ExtArgs>
+            result: $Utils.Optional<RiskAssessmentDocumentGroupByOutputType>[]
           }
           count: {
-            args: Prisma.RiskAssessmentCountArgs<ExtArgs>
-            result: $Utils.Optional<RiskAssessmentCountAggregateOutputType> | number
+            args: Prisma.RiskAssessmentDocumentCountArgs<ExtArgs>
+            result: $Utils.Optional<RiskAssessmentDocumentCountAggregateOutputType> | number
+          }
+        }
+      }
+      RiskAssessmentRevision: {
+        payload: Prisma.$RiskAssessmentRevisionPayload<ExtArgs>
+        fields: Prisma.RiskAssessmentRevisionFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.RiskAssessmentRevisionFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RiskAssessmentRevisionPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.RiskAssessmentRevisionFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RiskAssessmentRevisionPayload>
+          }
+          findFirst: {
+            args: Prisma.RiskAssessmentRevisionFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RiskAssessmentRevisionPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.RiskAssessmentRevisionFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RiskAssessmentRevisionPayload>
+          }
+          findMany: {
+            args: Prisma.RiskAssessmentRevisionFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RiskAssessmentRevisionPayload>[]
+          }
+          create: {
+            args: Prisma.RiskAssessmentRevisionCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RiskAssessmentRevisionPayload>
+          }
+          createMany: {
+            args: Prisma.RiskAssessmentRevisionCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.RiskAssessmentRevisionCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RiskAssessmentRevisionPayload>[]
+          }
+          delete: {
+            args: Prisma.RiskAssessmentRevisionDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RiskAssessmentRevisionPayload>
+          }
+          update: {
+            args: Prisma.RiskAssessmentRevisionUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RiskAssessmentRevisionPayload>
+          }
+          deleteMany: {
+            args: Prisma.RiskAssessmentRevisionDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.RiskAssessmentRevisionUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.RiskAssessmentRevisionUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RiskAssessmentRevisionPayload>[]
+          }
+          upsert: {
+            args: Prisma.RiskAssessmentRevisionUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RiskAssessmentRevisionPayload>
+          }
+          aggregate: {
+            args: Prisma.RiskAssessmentRevisionAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateRiskAssessmentRevision>
+          }
+          groupBy: {
+            args: Prisma.RiskAssessmentRevisionGroupByArgs<ExtArgs>
+            result: $Utils.Optional<RiskAssessmentRevisionGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.RiskAssessmentRevisionCountArgs<ExtArgs>
+            result: $Utils.Optional<RiskAssessmentRevisionCountAggregateOutputType> | number
+          }
+        }
+      }
+      RiskHazardRow: {
+        payload: Prisma.$RiskHazardRowPayload<ExtArgs>
+        fields: Prisma.RiskHazardRowFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.RiskHazardRowFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RiskHazardRowPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.RiskHazardRowFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RiskHazardRowPayload>
+          }
+          findFirst: {
+            args: Prisma.RiskHazardRowFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RiskHazardRowPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.RiskHazardRowFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RiskHazardRowPayload>
+          }
+          findMany: {
+            args: Prisma.RiskHazardRowFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RiskHazardRowPayload>[]
+          }
+          create: {
+            args: Prisma.RiskHazardRowCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RiskHazardRowPayload>
+          }
+          createMany: {
+            args: Prisma.RiskHazardRowCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.RiskHazardRowCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RiskHazardRowPayload>[]
+          }
+          delete: {
+            args: Prisma.RiskHazardRowDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RiskHazardRowPayload>
+          }
+          update: {
+            args: Prisma.RiskHazardRowUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RiskHazardRowPayload>
+          }
+          deleteMany: {
+            args: Prisma.RiskHazardRowDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.RiskHazardRowUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.RiskHazardRowUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RiskHazardRowPayload>[]
+          }
+          upsert: {
+            args: Prisma.RiskHazardRowUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RiskHazardRowPayload>
+          }
+          aggregate: {
+            args: Prisma.RiskHazardRowAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateRiskHazardRow>
+          }
+          groupBy: {
+            args: Prisma.RiskHazardRowGroupByArgs<ExtArgs>
+            result: $Utils.Optional<RiskHazardRowGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.RiskHazardRowCountArgs<ExtArgs>
+            result: $Utils.Optional<RiskHazardRowCountAggregateOutputType> | number
+          }
+        }
+      }
+      RiskAssessmentExecution: {
+        payload: Prisma.$RiskAssessmentExecutionPayload<ExtArgs>
+        fields: Prisma.RiskAssessmentExecutionFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.RiskAssessmentExecutionFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RiskAssessmentExecutionPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.RiskAssessmentExecutionFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RiskAssessmentExecutionPayload>
+          }
+          findFirst: {
+            args: Prisma.RiskAssessmentExecutionFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RiskAssessmentExecutionPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.RiskAssessmentExecutionFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RiskAssessmentExecutionPayload>
+          }
+          findMany: {
+            args: Prisma.RiskAssessmentExecutionFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RiskAssessmentExecutionPayload>[]
+          }
+          create: {
+            args: Prisma.RiskAssessmentExecutionCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RiskAssessmentExecutionPayload>
+          }
+          createMany: {
+            args: Prisma.RiskAssessmentExecutionCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.RiskAssessmentExecutionCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RiskAssessmentExecutionPayload>[]
+          }
+          delete: {
+            args: Prisma.RiskAssessmentExecutionDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RiskAssessmentExecutionPayload>
+          }
+          update: {
+            args: Prisma.RiskAssessmentExecutionUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RiskAssessmentExecutionPayload>
+          }
+          deleteMany: {
+            args: Prisma.RiskAssessmentExecutionDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.RiskAssessmentExecutionUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.RiskAssessmentExecutionUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RiskAssessmentExecutionPayload>[]
+          }
+          upsert: {
+            args: Prisma.RiskAssessmentExecutionUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RiskAssessmentExecutionPayload>
+          }
+          aggregate: {
+            args: Prisma.RiskAssessmentExecutionAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateRiskAssessmentExecution>
+          }
+          groupBy: {
+            args: Prisma.RiskAssessmentExecutionGroupByArgs<ExtArgs>
+            result: $Utils.Optional<RiskAssessmentExecutionGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.RiskAssessmentExecutionCountArgs<ExtArgs>
+            result: $Utils.Optional<RiskAssessmentExecutionCountAggregateOutputType> | number
+          }
+        }
+      }
+      RiskAssessmentRevisionRequest: {
+        payload: Prisma.$RiskAssessmentRevisionRequestPayload<ExtArgs>
+        fields: Prisma.RiskAssessmentRevisionRequestFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.RiskAssessmentRevisionRequestFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RiskAssessmentRevisionRequestPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.RiskAssessmentRevisionRequestFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RiskAssessmentRevisionRequestPayload>
+          }
+          findFirst: {
+            args: Prisma.RiskAssessmentRevisionRequestFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RiskAssessmentRevisionRequestPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.RiskAssessmentRevisionRequestFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RiskAssessmentRevisionRequestPayload>
+          }
+          findMany: {
+            args: Prisma.RiskAssessmentRevisionRequestFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RiskAssessmentRevisionRequestPayload>[]
+          }
+          create: {
+            args: Prisma.RiskAssessmentRevisionRequestCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RiskAssessmentRevisionRequestPayload>
+          }
+          createMany: {
+            args: Prisma.RiskAssessmentRevisionRequestCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.RiskAssessmentRevisionRequestCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RiskAssessmentRevisionRequestPayload>[]
+          }
+          delete: {
+            args: Prisma.RiskAssessmentRevisionRequestDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RiskAssessmentRevisionRequestPayload>
+          }
+          update: {
+            args: Prisma.RiskAssessmentRevisionRequestUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RiskAssessmentRevisionRequestPayload>
+          }
+          deleteMany: {
+            args: Prisma.RiskAssessmentRevisionRequestDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.RiskAssessmentRevisionRequestUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.RiskAssessmentRevisionRequestUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RiskAssessmentRevisionRequestPayload>[]
+          }
+          upsert: {
+            args: Prisma.RiskAssessmentRevisionRequestUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RiskAssessmentRevisionRequestPayload>
+          }
+          aggregate: {
+            args: Prisma.RiskAssessmentRevisionRequestAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateRiskAssessmentRevisionRequest>
+          }
+          groupBy: {
+            args: Prisma.RiskAssessmentRevisionRequestGroupByArgs<ExtArgs>
+            result: $Utils.Optional<RiskAssessmentRevisionRequestGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.RiskAssessmentRevisionRequestCountArgs<ExtArgs>
+            result: $Utils.Optional<RiskAssessmentRevisionRequestCountAggregateOutputType> | number
           }
         }
       }
@@ -5096,7 +5503,11 @@ export namespace Prisma {
     controlledDocument?: ControlledDocumentOmit
     circular?: CircularOmit
     circularAcknowledgement?: CircularAcknowledgementOmit
-    riskAssessment?: RiskAssessmentOmit
+    riskAssessmentDocument?: RiskAssessmentDocumentOmit
+    riskAssessmentRevision?: RiskAssessmentRevisionOmit
+    riskHazardRow?: RiskHazardRowOmit
+    riskAssessmentExecution?: RiskAssessmentExecutionOmit
+    riskAssessmentRevisionRequest?: RiskAssessmentRevisionRequestOmit
     defect?: DefectOmit
   }
 
@@ -5195,7 +5606,7 @@ export namespace Prisma {
     emergencyDrills: number
     controlledDocuments: number
     circulars: number
-    riskAssessments: number
+    riskAssessmentDocuments: number
     defects: number
   }
 
@@ -5217,7 +5628,7 @@ export namespace Prisma {
     emergencyDrills?: boolean | CompanyCountOutputTypeCountEmergencyDrillsArgs
     controlledDocuments?: boolean | CompanyCountOutputTypeCountControlledDocumentsArgs
     circulars?: boolean | CompanyCountOutputTypeCountCircularsArgs
-    riskAssessments?: boolean | CompanyCountOutputTypeCountRiskAssessmentsArgs
+    riskAssessmentDocuments?: boolean | CompanyCountOutputTypeCountRiskAssessmentDocumentsArgs
     defects?: boolean | CompanyCountOutputTypeCountDefectsArgs
   }
 
@@ -5354,8 +5765,8 @@ export namespace Prisma {
   /**
    * CompanyCountOutputType without action
    */
-  export type CompanyCountOutputTypeCountRiskAssessmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: RiskAssessmentWhereInput
+  export type CompanyCountOutputTypeCountRiskAssessmentDocumentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: RiskAssessmentDocumentWhereInput
   }
 
   /**
@@ -5558,7 +5969,9 @@ export namespace Prisma {
     emergencyDrills: number
     controlledDocuments: number
     circulars: number
-    riskAssessments: number
+    riskAssessmentDocuments: number
+    riskAssessmentExecutions: number
+    riskAssessmentRevisionRequests: number
     defects: number
     users: number
   }
@@ -5577,7 +5990,9 @@ export namespace Prisma {
     emergencyDrills?: boolean | VesselCountOutputTypeCountEmergencyDrillsArgs
     controlledDocuments?: boolean | VesselCountOutputTypeCountControlledDocumentsArgs
     circulars?: boolean | VesselCountOutputTypeCountCircularsArgs
-    riskAssessments?: boolean | VesselCountOutputTypeCountRiskAssessmentsArgs
+    riskAssessmentDocuments?: boolean | VesselCountOutputTypeCountRiskAssessmentDocumentsArgs
+    riskAssessmentExecutions?: boolean | VesselCountOutputTypeCountRiskAssessmentExecutionsArgs
+    riskAssessmentRevisionRequests?: boolean | VesselCountOutputTypeCountRiskAssessmentRevisionRequestsArgs
     defects?: boolean | VesselCountOutputTypeCountDefectsArgs
     users?: boolean | VesselCountOutputTypeCountUsersArgs
   }
@@ -5687,8 +6102,22 @@ export namespace Prisma {
   /**
    * VesselCountOutputType without action
    */
-  export type VesselCountOutputTypeCountRiskAssessmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: RiskAssessmentWhereInput
+  export type VesselCountOutputTypeCountRiskAssessmentDocumentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: RiskAssessmentDocumentWhereInput
+  }
+
+  /**
+   * VesselCountOutputType without action
+   */
+  export type VesselCountOutputTypeCountRiskAssessmentExecutionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: RiskAssessmentExecutionWhereInput
+  }
+
+  /**
+   * VesselCountOutputType without action
+   */
+  export type VesselCountOutputTypeCountRiskAssessmentRevisionRequestsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: RiskAssessmentRevisionRequestWhereInput
   }
 
   /**
@@ -6128,6 +6557,95 @@ export namespace Prisma {
 
 
   /**
+   * Count Type RiskAssessmentDocumentCountOutputType
+   */
+
+  export type RiskAssessmentDocumentCountOutputType = {
+    revisions: number
+    executions: number
+    revisionRequests: number
+  }
+
+  export type RiskAssessmentDocumentCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    revisions?: boolean | RiskAssessmentDocumentCountOutputTypeCountRevisionsArgs
+    executions?: boolean | RiskAssessmentDocumentCountOutputTypeCountExecutionsArgs
+    revisionRequests?: boolean | RiskAssessmentDocumentCountOutputTypeCountRevisionRequestsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * RiskAssessmentDocumentCountOutputType without action
+   */
+  export type RiskAssessmentDocumentCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RiskAssessmentDocumentCountOutputType
+     */
+    select?: RiskAssessmentDocumentCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * RiskAssessmentDocumentCountOutputType without action
+   */
+  export type RiskAssessmentDocumentCountOutputTypeCountRevisionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: RiskAssessmentRevisionWhereInput
+  }
+
+  /**
+   * RiskAssessmentDocumentCountOutputType without action
+   */
+  export type RiskAssessmentDocumentCountOutputTypeCountExecutionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: RiskAssessmentExecutionWhereInput
+  }
+
+  /**
+   * RiskAssessmentDocumentCountOutputType without action
+   */
+  export type RiskAssessmentDocumentCountOutputTypeCountRevisionRequestsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: RiskAssessmentRevisionRequestWhereInput
+  }
+
+
+  /**
+   * Count Type RiskAssessmentRevisionCountOutputType
+   */
+
+  export type RiskAssessmentRevisionCountOutputType = {
+    executions: number
+    hazardRows: number
+  }
+
+  export type RiskAssessmentRevisionCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    executions?: boolean | RiskAssessmentRevisionCountOutputTypeCountExecutionsArgs
+    hazardRows?: boolean | RiskAssessmentRevisionCountOutputTypeCountHazardRowsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * RiskAssessmentRevisionCountOutputType without action
+   */
+  export type RiskAssessmentRevisionCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RiskAssessmentRevisionCountOutputType
+     */
+    select?: RiskAssessmentRevisionCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * RiskAssessmentRevisionCountOutputType without action
+   */
+  export type RiskAssessmentRevisionCountOutputTypeCountExecutionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: RiskAssessmentExecutionWhereInput
+  }
+
+  /**
+   * RiskAssessmentRevisionCountOutputType without action
+   */
+  export type RiskAssessmentRevisionCountOutputTypeCountHazardRowsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: RiskHazardRowWhereInput
+  }
+
+
+  /**
    * Models
    */
 
@@ -6312,7 +6830,7 @@ export namespace Prisma {
     emergencyDrills?: boolean | Company$emergencyDrillsArgs<ExtArgs>
     controlledDocuments?: boolean | Company$controlledDocumentsArgs<ExtArgs>
     circulars?: boolean | Company$circularsArgs<ExtArgs>
-    riskAssessments?: boolean | Company$riskAssessmentsArgs<ExtArgs>
+    riskAssessmentDocuments?: boolean | Company$riskAssessmentDocumentsArgs<ExtArgs>
     defects?: boolean | Company$defectsArgs<ExtArgs>
     _count?: boolean | CompanyCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["company"]>
@@ -6360,7 +6878,7 @@ export namespace Prisma {
     emergencyDrills?: boolean | Company$emergencyDrillsArgs<ExtArgs>
     controlledDocuments?: boolean | Company$controlledDocumentsArgs<ExtArgs>
     circulars?: boolean | Company$circularsArgs<ExtArgs>
-    riskAssessments?: boolean | Company$riskAssessmentsArgs<ExtArgs>
+    riskAssessmentDocuments?: boolean | Company$riskAssessmentDocumentsArgs<ExtArgs>
     defects?: boolean | Company$defectsArgs<ExtArgs>
     _count?: boolean | CompanyCountOutputTypeDefaultArgs<ExtArgs>
   }
@@ -6387,7 +6905,7 @@ export namespace Prisma {
       emergencyDrills: Prisma.$EmergencyDrillPayload<ExtArgs>[]
       controlledDocuments: Prisma.$ControlledDocumentPayload<ExtArgs>[]
       circulars: Prisma.$CircularPayload<ExtArgs>[]
-      riskAssessments: Prisma.$RiskAssessmentPayload<ExtArgs>[]
+      riskAssessmentDocuments: Prisma.$RiskAssessmentDocumentPayload<ExtArgs>[]
       defects: Prisma.$DefectPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -6807,7 +7325,7 @@ export namespace Prisma {
     emergencyDrills<T extends Company$emergencyDrillsArgs<ExtArgs> = {}>(args?: Subset<T, Company$emergencyDrillsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$EmergencyDrillPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     controlledDocuments<T extends Company$controlledDocumentsArgs<ExtArgs> = {}>(args?: Subset<T, Company$controlledDocumentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ControlledDocumentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     circulars<T extends Company$circularsArgs<ExtArgs> = {}>(args?: Subset<T, Company$circularsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CircularPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    riskAssessments<T extends Company$riskAssessmentsArgs<ExtArgs> = {}>(args?: Subset<T, Company$riskAssessmentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RiskAssessmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    riskAssessmentDocuments<T extends Company$riskAssessmentDocumentsArgs<ExtArgs> = {}>(args?: Subset<T, Company$riskAssessmentDocumentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RiskAssessmentDocumentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     defects<T extends Company$defectsArgs<ExtArgs> = {}>(args?: Subset<T, Company$defectsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DefectPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -7639,27 +8157,27 @@ export namespace Prisma {
   }
 
   /**
-   * Company.riskAssessments
+   * Company.riskAssessmentDocuments
    */
-  export type Company$riskAssessmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type Company$riskAssessmentDocumentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the RiskAssessment
+     * Select specific fields to fetch from the RiskAssessmentDocument
      */
-    select?: RiskAssessmentSelect<ExtArgs> | null
+    select?: RiskAssessmentDocumentSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the RiskAssessment
+     * Omit specific fields from the RiskAssessmentDocument
      */
-    omit?: RiskAssessmentOmit<ExtArgs> | null
+    omit?: RiskAssessmentDocumentOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: RiskAssessmentInclude<ExtArgs> | null
-    where?: RiskAssessmentWhereInput
-    orderBy?: RiskAssessmentOrderByWithRelationInput | RiskAssessmentOrderByWithRelationInput[]
-    cursor?: RiskAssessmentWhereUniqueInput
+    include?: RiskAssessmentDocumentInclude<ExtArgs> | null
+    where?: RiskAssessmentDocumentWhereInput
+    orderBy?: RiskAssessmentDocumentOrderByWithRelationInput | RiskAssessmentDocumentOrderByWithRelationInput[]
+    cursor?: RiskAssessmentDocumentWhereUniqueInput
     take?: number
     skip?: number
-    distinct?: RiskAssessmentScalarFieldEnum | RiskAssessmentScalarFieldEnum[]
+    distinct?: RiskAssessmentDocumentScalarFieldEnum | RiskAssessmentDocumentScalarFieldEnum[]
   }
 
   /**
@@ -13458,6 +13976,10 @@ export namespace Prisma {
     loa: number | null
     breadth: number | null
     depth: number | null
+    capacityCbm: number | null
+    netTonnage: number | null
+    deadweight: number | null
+    yearWithSwan: number | null
   }
 
   export type VesselSumAggregateOutputType = {
@@ -13466,6 +13988,10 @@ export namespace Prisma {
     loa: number | null
     breadth: number | null
     depth: number | null
+    capacityCbm: number | null
+    netTonnage: number | null
+    deadweight: number | null
+    yearWithSwan: number | null
   }
 
   export type VesselMinAggregateOutputType = {
@@ -13486,6 +14012,18 @@ export namespace Prisma {
     breadth: number | null
     depth: number | null
     status: $Enums.VesselStatus | null
+    capacityCbm: number | null
+    netTonnage: number | null
+    deadweight: number | null
+    tradeArea: string | null
+    registeredOwner: string | null
+    headOwner: string | null
+    charterer: string | null
+    yearWithSwan: number | null
+    lastDryDock: Date | null
+    dryDockPlace: string | null
+    nextDryDockDue: Date | null
+    archivedAt: Date | null
     createdAt: Date | null
     updatedAt: Date | null
     createdBy: string | null
@@ -13512,6 +14050,18 @@ export namespace Prisma {
     breadth: number | null
     depth: number | null
     status: $Enums.VesselStatus | null
+    capacityCbm: number | null
+    netTonnage: number | null
+    deadweight: number | null
+    tradeArea: string | null
+    registeredOwner: string | null
+    headOwner: string | null
+    charterer: string | null
+    yearWithSwan: number | null
+    lastDryDock: Date | null
+    dryDockPlace: string | null
+    nextDryDockDue: Date | null
+    archivedAt: Date | null
     createdAt: Date | null
     updatedAt: Date | null
     createdBy: string | null
@@ -13538,6 +14088,18 @@ export namespace Prisma {
     breadth: number
     depth: number
     status: number
+    capacityCbm: number
+    netTonnage: number
+    deadweight: number
+    tradeArea: number
+    registeredOwner: number
+    headOwner: number
+    charterer: number
+    yearWithSwan: number
+    lastDryDock: number
+    dryDockPlace: number
+    nextDryDockDue: number
+    archivedAt: number
     createdAt: number
     updatedAt: number
     createdBy: number
@@ -13554,6 +14116,10 @@ export namespace Prisma {
     loa?: true
     breadth?: true
     depth?: true
+    capacityCbm?: true
+    netTonnage?: true
+    deadweight?: true
+    yearWithSwan?: true
   }
 
   export type VesselSumAggregateInputType = {
@@ -13562,6 +14128,10 @@ export namespace Prisma {
     loa?: true
     breadth?: true
     depth?: true
+    capacityCbm?: true
+    netTonnage?: true
+    deadweight?: true
+    yearWithSwan?: true
   }
 
   export type VesselMinAggregateInputType = {
@@ -13582,6 +14152,18 @@ export namespace Prisma {
     breadth?: true
     depth?: true
     status?: true
+    capacityCbm?: true
+    netTonnage?: true
+    deadweight?: true
+    tradeArea?: true
+    registeredOwner?: true
+    headOwner?: true
+    charterer?: true
+    yearWithSwan?: true
+    lastDryDock?: true
+    dryDockPlace?: true
+    nextDryDockDue?: true
+    archivedAt?: true
     createdAt?: true
     updatedAt?: true
     createdBy?: true
@@ -13608,6 +14190,18 @@ export namespace Prisma {
     breadth?: true
     depth?: true
     status?: true
+    capacityCbm?: true
+    netTonnage?: true
+    deadweight?: true
+    tradeArea?: true
+    registeredOwner?: true
+    headOwner?: true
+    charterer?: true
+    yearWithSwan?: true
+    lastDryDock?: true
+    dryDockPlace?: true
+    nextDryDockDue?: true
+    archivedAt?: true
     createdAt?: true
     updatedAt?: true
     createdBy?: true
@@ -13634,6 +14228,18 @@ export namespace Prisma {
     breadth?: true
     depth?: true
     status?: true
+    capacityCbm?: true
+    netTonnage?: true
+    deadweight?: true
+    tradeArea?: true
+    registeredOwner?: true
+    headOwner?: true
+    charterer?: true
+    yearWithSwan?: true
+    lastDryDock?: true
+    dryDockPlace?: true
+    nextDryDockDue?: true
+    archivedAt?: true
     createdAt?: true
     updatedAt?: true
     createdBy?: true
@@ -13734,7 +14340,7 @@ export namespace Prisma {
     companyId: string
     name: string
     code: string | null
-    imo: string
+    imo: string | null
     officialNumber: string | null
     callSign: string | null
     mmsi: string | null
@@ -13747,6 +14353,18 @@ export namespace Prisma {
     breadth: number | null
     depth: number | null
     status: $Enums.VesselStatus
+    capacityCbm: number | null
+    netTonnage: number | null
+    deadweight: number | null
+    tradeArea: string | null
+    registeredOwner: string | null
+    headOwner: string | null
+    charterer: string | null
+    yearWithSwan: number | null
+    lastDryDock: Date | null
+    dryDockPlace: string | null
+    nextDryDockDue: Date | null
+    archivedAt: Date | null
     createdAt: Date
     updatedAt: Date
     createdBy: string | null
@@ -13792,6 +14410,18 @@ export namespace Prisma {
     breadth?: boolean
     depth?: boolean
     status?: boolean
+    capacityCbm?: boolean
+    netTonnage?: boolean
+    deadweight?: boolean
+    tradeArea?: boolean
+    registeredOwner?: boolean
+    headOwner?: boolean
+    charterer?: boolean
+    yearWithSwan?: boolean
+    lastDryDock?: boolean
+    dryDockPlace?: boolean
+    nextDryDockDue?: boolean
+    archivedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     createdBy?: boolean
@@ -13812,7 +14442,9 @@ export namespace Prisma {
     emergencyDrills?: boolean | Vessel$emergencyDrillsArgs<ExtArgs>
     controlledDocuments?: boolean | Vessel$controlledDocumentsArgs<ExtArgs>
     circulars?: boolean | Vessel$circularsArgs<ExtArgs>
-    riskAssessments?: boolean | Vessel$riskAssessmentsArgs<ExtArgs>
+    riskAssessmentDocuments?: boolean | Vessel$riskAssessmentDocumentsArgs<ExtArgs>
+    riskAssessmentExecutions?: boolean | Vessel$riskAssessmentExecutionsArgs<ExtArgs>
+    riskAssessmentRevisionRequests?: boolean | Vessel$riskAssessmentRevisionRequestsArgs<ExtArgs>
     defects?: boolean | Vessel$defectsArgs<ExtArgs>
     users?: boolean | Vessel$usersArgs<ExtArgs>
     _count?: boolean | VesselCountOutputTypeDefaultArgs<ExtArgs>
@@ -13836,6 +14468,18 @@ export namespace Prisma {
     breadth?: boolean
     depth?: boolean
     status?: boolean
+    capacityCbm?: boolean
+    netTonnage?: boolean
+    deadweight?: boolean
+    tradeArea?: boolean
+    registeredOwner?: boolean
+    headOwner?: boolean
+    charterer?: boolean
+    yearWithSwan?: boolean
+    lastDryDock?: boolean
+    dryDockPlace?: boolean
+    nextDryDockDue?: boolean
+    archivedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     createdBy?: boolean
@@ -13863,6 +14507,18 @@ export namespace Prisma {
     breadth?: boolean
     depth?: boolean
     status?: boolean
+    capacityCbm?: boolean
+    netTonnage?: boolean
+    deadweight?: boolean
+    tradeArea?: boolean
+    registeredOwner?: boolean
+    headOwner?: boolean
+    charterer?: boolean
+    yearWithSwan?: boolean
+    lastDryDock?: boolean
+    dryDockPlace?: boolean
+    nextDryDockDue?: boolean
+    archivedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     createdBy?: boolean
@@ -13890,6 +14546,18 @@ export namespace Prisma {
     breadth?: boolean
     depth?: boolean
     status?: boolean
+    capacityCbm?: boolean
+    netTonnage?: boolean
+    deadweight?: boolean
+    tradeArea?: boolean
+    registeredOwner?: boolean
+    headOwner?: boolean
+    charterer?: boolean
+    yearWithSwan?: boolean
+    lastDryDock?: boolean
+    dryDockPlace?: boolean
+    nextDryDockDue?: boolean
+    archivedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     createdBy?: boolean
@@ -13898,7 +14566,7 @@ export namespace Prisma {
     deletedBy?: boolean
   }
 
-  export type VesselOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "companyId" | "name" | "code" | "imo" | "officialNumber" | "callSign" | "mmsi" | "flag" | "type" | "classificationSociety" | "yearBuilt" | "grossTonnage" | "loa" | "breadth" | "depth" | "status" | "createdAt" | "updatedAt" | "createdBy" | "updatedBy" | "deletedAt" | "deletedBy", ExtArgs["result"]["vessel"]>
+  export type VesselOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "companyId" | "name" | "code" | "imo" | "officialNumber" | "callSign" | "mmsi" | "flag" | "type" | "classificationSociety" | "yearBuilt" | "grossTonnage" | "loa" | "breadth" | "depth" | "status" | "capacityCbm" | "netTonnage" | "deadweight" | "tradeArea" | "registeredOwner" | "headOwner" | "charterer" | "yearWithSwan" | "lastDryDock" | "dryDockPlace" | "nextDryDockDue" | "archivedAt" | "createdAt" | "updatedAt" | "createdBy" | "updatedBy" | "deletedAt" | "deletedBy", ExtArgs["result"]["vessel"]>
   export type VesselInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     company?: boolean | CompanyDefaultArgs<ExtArgs>
     smsDocuments?: boolean | Vessel$smsDocumentsArgs<ExtArgs>
@@ -13914,7 +14582,9 @@ export namespace Prisma {
     emergencyDrills?: boolean | Vessel$emergencyDrillsArgs<ExtArgs>
     controlledDocuments?: boolean | Vessel$controlledDocumentsArgs<ExtArgs>
     circulars?: boolean | Vessel$circularsArgs<ExtArgs>
-    riskAssessments?: boolean | Vessel$riskAssessmentsArgs<ExtArgs>
+    riskAssessmentDocuments?: boolean | Vessel$riskAssessmentDocumentsArgs<ExtArgs>
+    riskAssessmentExecutions?: boolean | Vessel$riskAssessmentExecutionsArgs<ExtArgs>
+    riskAssessmentRevisionRequests?: boolean | Vessel$riskAssessmentRevisionRequestsArgs<ExtArgs>
     defects?: boolean | Vessel$defectsArgs<ExtArgs>
     users?: boolean | Vessel$usersArgs<ExtArgs>
     _count?: boolean | VesselCountOutputTypeDefaultArgs<ExtArgs>
@@ -13943,7 +14613,9 @@ export namespace Prisma {
       emergencyDrills: Prisma.$EmergencyDrillPayload<ExtArgs>[]
       controlledDocuments: Prisma.$ControlledDocumentPayload<ExtArgs>[]
       circulars: Prisma.$CircularPayload<ExtArgs>[]
-      riskAssessments: Prisma.$RiskAssessmentPayload<ExtArgs>[]
+      riskAssessmentDocuments: Prisma.$RiskAssessmentDocumentPayload<ExtArgs>[]
+      riskAssessmentExecutions: Prisma.$RiskAssessmentExecutionPayload<ExtArgs>[]
+      riskAssessmentRevisionRequests: Prisma.$RiskAssessmentRevisionRequestPayload<ExtArgs>[]
       defects: Prisma.$DefectPayload<ExtArgs>[]
       users: Prisma.$UserPayload<ExtArgs>[]
     }
@@ -13952,7 +14624,7 @@ export namespace Prisma {
       companyId: string
       name: string
       code: string | null
-      imo: string
+      imo: string | null
       officialNumber: string | null
       callSign: string | null
       mmsi: string | null
@@ -13965,6 +14637,18 @@ export namespace Prisma {
       breadth: number | null
       depth: number | null
       status: $Enums.VesselStatus
+      capacityCbm: number | null
+      netTonnage: number | null
+      deadweight: number | null
+      tradeArea: string | null
+      registeredOwner: string | null
+      headOwner: string | null
+      charterer: string | null
+      yearWithSwan: number | null
+      lastDryDock: Date | null
+      dryDockPlace: string | null
+      nextDryDockDue: Date | null
+      archivedAt: Date | null
       createdAt: Date
       updatedAt: Date
       createdBy: string | null
@@ -14379,7 +15063,9 @@ export namespace Prisma {
     emergencyDrills<T extends Vessel$emergencyDrillsArgs<ExtArgs> = {}>(args?: Subset<T, Vessel$emergencyDrillsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$EmergencyDrillPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     controlledDocuments<T extends Vessel$controlledDocumentsArgs<ExtArgs> = {}>(args?: Subset<T, Vessel$controlledDocumentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ControlledDocumentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     circulars<T extends Vessel$circularsArgs<ExtArgs> = {}>(args?: Subset<T, Vessel$circularsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CircularPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    riskAssessments<T extends Vessel$riskAssessmentsArgs<ExtArgs> = {}>(args?: Subset<T, Vessel$riskAssessmentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RiskAssessmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    riskAssessmentDocuments<T extends Vessel$riskAssessmentDocumentsArgs<ExtArgs> = {}>(args?: Subset<T, Vessel$riskAssessmentDocumentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RiskAssessmentDocumentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    riskAssessmentExecutions<T extends Vessel$riskAssessmentExecutionsArgs<ExtArgs> = {}>(args?: Subset<T, Vessel$riskAssessmentExecutionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RiskAssessmentExecutionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    riskAssessmentRevisionRequests<T extends Vessel$riskAssessmentRevisionRequestsArgs<ExtArgs> = {}>(args?: Subset<T, Vessel$riskAssessmentRevisionRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RiskAssessmentRevisionRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     defects<T extends Vessel$defectsArgs<ExtArgs> = {}>(args?: Subset<T, Vessel$defectsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DefectPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     users<T extends Vessel$usersArgs<ExtArgs> = {}>(args?: Subset<T, Vessel$usersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
@@ -14428,6 +15114,18 @@ export namespace Prisma {
     readonly breadth: FieldRef<"Vessel", 'Float'>
     readonly depth: FieldRef<"Vessel", 'Float'>
     readonly status: FieldRef<"Vessel", 'VesselStatus'>
+    readonly capacityCbm: FieldRef<"Vessel", 'Float'>
+    readonly netTonnage: FieldRef<"Vessel", 'Float'>
+    readonly deadweight: FieldRef<"Vessel", 'Float'>
+    readonly tradeArea: FieldRef<"Vessel", 'String'>
+    readonly registeredOwner: FieldRef<"Vessel", 'String'>
+    readonly headOwner: FieldRef<"Vessel", 'String'>
+    readonly charterer: FieldRef<"Vessel", 'String'>
+    readonly yearWithSwan: FieldRef<"Vessel", 'Int'>
+    readonly lastDryDock: FieldRef<"Vessel", 'DateTime'>
+    readonly dryDockPlace: FieldRef<"Vessel", 'String'>
+    readonly nextDryDockDue: FieldRef<"Vessel", 'DateTime'>
+    readonly archivedAt: FieldRef<"Vessel", 'DateTime'>
     readonly createdAt: FieldRef<"Vessel", 'DateTime'>
     readonly updatedAt: FieldRef<"Vessel", 'DateTime'>
     readonly createdBy: FieldRef<"Vessel", 'String'>
@@ -15142,27 +15840,75 @@ export namespace Prisma {
   }
 
   /**
-   * Vessel.riskAssessments
+   * Vessel.riskAssessmentDocuments
    */
-  export type Vessel$riskAssessmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type Vessel$riskAssessmentDocumentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the RiskAssessment
+     * Select specific fields to fetch from the RiskAssessmentDocument
      */
-    select?: RiskAssessmentSelect<ExtArgs> | null
+    select?: RiskAssessmentDocumentSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the RiskAssessment
+     * Omit specific fields from the RiskAssessmentDocument
      */
-    omit?: RiskAssessmentOmit<ExtArgs> | null
+    omit?: RiskAssessmentDocumentOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: RiskAssessmentInclude<ExtArgs> | null
-    where?: RiskAssessmentWhereInput
-    orderBy?: RiskAssessmentOrderByWithRelationInput | RiskAssessmentOrderByWithRelationInput[]
-    cursor?: RiskAssessmentWhereUniqueInput
+    include?: RiskAssessmentDocumentInclude<ExtArgs> | null
+    where?: RiskAssessmentDocumentWhereInput
+    orderBy?: RiskAssessmentDocumentOrderByWithRelationInput | RiskAssessmentDocumentOrderByWithRelationInput[]
+    cursor?: RiskAssessmentDocumentWhereUniqueInput
     take?: number
     skip?: number
-    distinct?: RiskAssessmentScalarFieldEnum | RiskAssessmentScalarFieldEnum[]
+    distinct?: RiskAssessmentDocumentScalarFieldEnum | RiskAssessmentDocumentScalarFieldEnum[]
+  }
+
+  /**
+   * Vessel.riskAssessmentExecutions
+   */
+  export type Vessel$riskAssessmentExecutionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RiskAssessmentExecution
+     */
+    select?: RiskAssessmentExecutionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RiskAssessmentExecution
+     */
+    omit?: RiskAssessmentExecutionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RiskAssessmentExecutionInclude<ExtArgs> | null
+    where?: RiskAssessmentExecutionWhereInput
+    orderBy?: RiskAssessmentExecutionOrderByWithRelationInput | RiskAssessmentExecutionOrderByWithRelationInput[]
+    cursor?: RiskAssessmentExecutionWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: RiskAssessmentExecutionScalarFieldEnum | RiskAssessmentExecutionScalarFieldEnum[]
+  }
+
+  /**
+   * Vessel.riskAssessmentRevisionRequests
+   */
+  export type Vessel$riskAssessmentRevisionRequestsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RiskAssessmentRevisionRequest
+     */
+    select?: RiskAssessmentRevisionRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RiskAssessmentRevisionRequest
+     */
+    omit?: RiskAssessmentRevisionRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RiskAssessmentRevisionRequestInclude<ExtArgs> | null
+    where?: RiskAssessmentRevisionRequestWhereInput
+    orderBy?: RiskAssessmentRevisionRequestOrderByWithRelationInput | RiskAssessmentRevisionRequestOrderByWithRelationInput[]
+    cursor?: RiskAssessmentRevisionRequestWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: RiskAssessmentRevisionRequestScalarFieldEnum | RiskAssessmentRevisionRequestScalarFieldEnum[]
   }
 
   /**
@@ -55343,31 +56089,41 @@ export namespace Prisma {
 
 
   /**
-   * Model RiskAssessment
+   * Model RiskAssessmentDocument
    */
 
-  export type AggregateRiskAssessment = {
-    _count: RiskAssessmentCountAggregateOutputType | null
-    _min: RiskAssessmentMinAggregateOutputType | null
-    _max: RiskAssessmentMaxAggregateOutputType | null
+  export type AggregateRiskAssessmentDocument = {
+    _count: RiskAssessmentDocumentCountAggregateOutputType | null
+    _avg: RiskAssessmentDocumentAvgAggregateOutputType | null
+    _sum: RiskAssessmentDocumentSumAggregateOutputType | null
+    _min: RiskAssessmentDocumentMinAggregateOutputType | null
+    _max: RiskAssessmentDocumentMaxAggregateOutputType | null
   }
 
-  export type RiskAssessmentMinAggregateOutputType = {
+  export type RiskAssessmentDocumentAvgAggregateOutputType = {
+    reviewFrequencyMonths: number | null
+  }
+
+  export type RiskAssessmentDocumentSumAggregateOutputType = {
+    reviewFrequencyMonths: number | null
+  }
+
+  export type RiskAssessmentDocumentMinAggregateOutputType = {
     id: string | null
     companyId: string | null
     refNo: string | null
+    title: string | null
+    category: string | null
+    description: string | null
     vesselId: string | null
-    activity: string | null
-    hazards: string | null
-    existingControls: string | null
-    likelihood: $Enums.RiskRating | null
-    severity: $Enums.RiskRating | null
-    additionalControls: string | null
-    assessedBy: string | null
-    assessmentDate: Date | null
-    reviewDate: Date | null
-    status: $Enums.RiskAssessmentStatus | null
-    closedAt: Date | null
+    applicableVesselType: string | null
+    reviewFrequencyMonths: number | null
+    lastReviewDate: Date | null
+    nextReviewDate: Date | null
+    reviewOwnerId: string | null
+    status: $Enums.DocumentStatus | null
+    ownerId: string | null
+    currentRevisionId: string | null
     createdAt: Date | null
     updatedAt: Date | null
     createdBy: string | null
@@ -55376,22 +56132,22 @@ export namespace Prisma {
     deletedBy: string | null
   }
 
-  export type RiskAssessmentMaxAggregateOutputType = {
+  export type RiskAssessmentDocumentMaxAggregateOutputType = {
     id: string | null
     companyId: string | null
     refNo: string | null
+    title: string | null
+    category: string | null
+    description: string | null
     vesselId: string | null
-    activity: string | null
-    hazards: string | null
-    existingControls: string | null
-    likelihood: $Enums.RiskRating | null
-    severity: $Enums.RiskRating | null
-    additionalControls: string | null
-    assessedBy: string | null
-    assessmentDate: Date | null
-    reviewDate: Date | null
-    status: $Enums.RiskAssessmentStatus | null
-    closedAt: Date | null
+    applicableVesselType: string | null
+    reviewFrequencyMonths: number | null
+    lastReviewDate: Date | null
+    nextReviewDate: Date | null
+    reviewOwnerId: string | null
+    status: $Enums.DocumentStatus | null
+    ownerId: string | null
+    currentRevisionId: string | null
     createdAt: Date | null
     updatedAt: Date | null
     createdBy: string | null
@@ -55400,22 +56156,22 @@ export namespace Prisma {
     deletedBy: string | null
   }
 
-  export type RiskAssessmentCountAggregateOutputType = {
+  export type RiskAssessmentDocumentCountAggregateOutputType = {
     id: number
     companyId: number
     refNo: number
+    title: number
+    category: number
+    description: number
     vesselId: number
-    activity: number
-    hazards: number
-    existingControls: number
-    likelihood: number
-    severity: number
-    additionalControls: number
-    assessedBy: number
-    assessmentDate: number
-    reviewDate: number
+    applicableVesselType: number
+    reviewFrequencyMonths: number
+    lastReviewDate: number
+    nextReviewDate: number
+    reviewOwnerId: number
     status: number
-    closedAt: number
+    ownerId: number
+    currentRevisionId: number
     createdAt: number
     updatedAt: number
     createdBy: number
@@ -55426,22 +56182,30 @@ export namespace Prisma {
   }
 
 
-  export type RiskAssessmentMinAggregateInputType = {
+  export type RiskAssessmentDocumentAvgAggregateInputType = {
+    reviewFrequencyMonths?: true
+  }
+
+  export type RiskAssessmentDocumentSumAggregateInputType = {
+    reviewFrequencyMonths?: true
+  }
+
+  export type RiskAssessmentDocumentMinAggregateInputType = {
     id?: true
     companyId?: true
     refNo?: true
+    title?: true
+    category?: true
+    description?: true
     vesselId?: true
-    activity?: true
-    hazards?: true
-    existingControls?: true
-    likelihood?: true
-    severity?: true
-    additionalControls?: true
-    assessedBy?: true
-    assessmentDate?: true
-    reviewDate?: true
+    applicableVesselType?: true
+    reviewFrequencyMonths?: true
+    lastReviewDate?: true
+    nextReviewDate?: true
+    reviewOwnerId?: true
     status?: true
-    closedAt?: true
+    ownerId?: true
+    currentRevisionId?: true
     createdAt?: true
     updatedAt?: true
     createdBy?: true
@@ -55450,22 +56214,22 @@ export namespace Prisma {
     deletedBy?: true
   }
 
-  export type RiskAssessmentMaxAggregateInputType = {
+  export type RiskAssessmentDocumentMaxAggregateInputType = {
     id?: true
     companyId?: true
     refNo?: true
+    title?: true
+    category?: true
+    description?: true
     vesselId?: true
-    activity?: true
-    hazards?: true
-    existingControls?: true
-    likelihood?: true
-    severity?: true
-    additionalControls?: true
-    assessedBy?: true
-    assessmentDate?: true
-    reviewDate?: true
+    applicableVesselType?: true
+    reviewFrequencyMonths?: true
+    lastReviewDate?: true
+    nextReviewDate?: true
+    reviewOwnerId?: true
     status?: true
-    closedAt?: true
+    ownerId?: true
+    currentRevisionId?: true
     createdAt?: true
     updatedAt?: true
     createdBy?: true
@@ -55474,22 +56238,22 @@ export namespace Prisma {
     deletedBy?: true
   }
 
-  export type RiskAssessmentCountAggregateInputType = {
+  export type RiskAssessmentDocumentCountAggregateInputType = {
     id?: true
     companyId?: true
     refNo?: true
+    title?: true
+    category?: true
+    description?: true
     vesselId?: true
-    activity?: true
-    hazards?: true
-    existingControls?: true
-    likelihood?: true
-    severity?: true
-    additionalControls?: true
-    assessedBy?: true
-    assessmentDate?: true
-    reviewDate?: true
+    applicableVesselType?: true
+    reviewFrequencyMonths?: true
+    lastReviewDate?: true
+    nextReviewDate?: true
+    reviewOwnerId?: true
     status?: true
-    closedAt?: true
+    ownerId?: true
+    currentRevisionId?: true
     createdAt?: true
     updatedAt?: true
     createdBy?: true
@@ -55499,135 +56263,151 @@ export namespace Prisma {
     _all?: true
   }
 
-  export type RiskAssessmentAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type RiskAssessmentDocumentAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Filter which RiskAssessment to aggregate.
+     * Filter which RiskAssessmentDocument to aggregate.
      */
-    where?: RiskAssessmentWhereInput
+    where?: RiskAssessmentDocumentWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of RiskAssessments to fetch.
+     * Determine the order of RiskAssessmentDocuments to fetch.
      */
-    orderBy?: RiskAssessmentOrderByWithRelationInput | RiskAssessmentOrderByWithRelationInput[]
+    orderBy?: RiskAssessmentDocumentOrderByWithRelationInput | RiskAssessmentDocumentOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
      * Sets the start position
      */
-    cursor?: RiskAssessmentWhereUniqueInput
+    cursor?: RiskAssessmentDocumentWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` RiskAssessments from the position of the cursor.
+     * Take `±n` RiskAssessmentDocuments from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` RiskAssessments.
+     * Skip the first `n` RiskAssessmentDocuments.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
-     * Count returned RiskAssessments
+     * Count returned RiskAssessmentDocuments
     **/
-    _count?: true | RiskAssessmentCountAggregateInputType
+    _count?: true | RiskAssessmentDocumentCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: RiskAssessmentDocumentAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: RiskAssessmentDocumentSumAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to find the minimum value
     **/
-    _min?: RiskAssessmentMinAggregateInputType
+    _min?: RiskAssessmentDocumentMinAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to find the maximum value
     **/
-    _max?: RiskAssessmentMaxAggregateInputType
+    _max?: RiskAssessmentDocumentMaxAggregateInputType
   }
 
-  export type GetRiskAssessmentAggregateType<T extends RiskAssessmentAggregateArgs> = {
-        [P in keyof T & keyof AggregateRiskAssessment]: P extends '_count' | 'count'
+  export type GetRiskAssessmentDocumentAggregateType<T extends RiskAssessmentDocumentAggregateArgs> = {
+        [P in keyof T & keyof AggregateRiskAssessmentDocument]: P extends '_count' | 'count'
       ? T[P] extends true
         ? number
-        : GetScalarType<T[P], AggregateRiskAssessment[P]>
-      : GetScalarType<T[P], AggregateRiskAssessment[P]>
+        : GetScalarType<T[P], AggregateRiskAssessmentDocument[P]>
+      : GetScalarType<T[P], AggregateRiskAssessmentDocument[P]>
   }
 
 
 
 
-  export type RiskAssessmentGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: RiskAssessmentWhereInput
-    orderBy?: RiskAssessmentOrderByWithAggregationInput | RiskAssessmentOrderByWithAggregationInput[]
-    by: RiskAssessmentScalarFieldEnum[] | RiskAssessmentScalarFieldEnum
-    having?: RiskAssessmentScalarWhereWithAggregatesInput
+  export type RiskAssessmentDocumentGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: RiskAssessmentDocumentWhereInput
+    orderBy?: RiskAssessmentDocumentOrderByWithAggregationInput | RiskAssessmentDocumentOrderByWithAggregationInput[]
+    by: RiskAssessmentDocumentScalarFieldEnum[] | RiskAssessmentDocumentScalarFieldEnum
+    having?: RiskAssessmentDocumentScalarWhereWithAggregatesInput
     take?: number
     skip?: number
-    _count?: RiskAssessmentCountAggregateInputType | true
-    _min?: RiskAssessmentMinAggregateInputType
-    _max?: RiskAssessmentMaxAggregateInputType
+    _count?: RiskAssessmentDocumentCountAggregateInputType | true
+    _avg?: RiskAssessmentDocumentAvgAggregateInputType
+    _sum?: RiskAssessmentDocumentSumAggregateInputType
+    _min?: RiskAssessmentDocumentMinAggregateInputType
+    _max?: RiskAssessmentDocumentMaxAggregateInputType
   }
 
-  export type RiskAssessmentGroupByOutputType = {
+  export type RiskAssessmentDocumentGroupByOutputType = {
     id: string
     companyId: string
     refNo: string
+    title: string
+    category: string
+    description: string | null
     vesselId: string | null
-    activity: string
-    hazards: string
-    existingControls: string | null
-    likelihood: $Enums.RiskRating
-    severity: $Enums.RiskRating
-    additionalControls: string | null
-    assessedBy: string | null
-    assessmentDate: Date
-    reviewDate: Date | null
-    status: $Enums.RiskAssessmentStatus
-    closedAt: Date | null
+    applicableVesselType: string | null
+    reviewFrequencyMonths: number
+    lastReviewDate: Date | null
+    nextReviewDate: Date | null
+    reviewOwnerId: string | null
+    status: $Enums.DocumentStatus
+    ownerId: string | null
+    currentRevisionId: string | null
     createdAt: Date
     updatedAt: Date
     createdBy: string | null
     updatedBy: string | null
     deletedAt: Date | null
     deletedBy: string | null
-    _count: RiskAssessmentCountAggregateOutputType | null
-    _min: RiskAssessmentMinAggregateOutputType | null
-    _max: RiskAssessmentMaxAggregateOutputType | null
+    _count: RiskAssessmentDocumentCountAggregateOutputType | null
+    _avg: RiskAssessmentDocumentAvgAggregateOutputType | null
+    _sum: RiskAssessmentDocumentSumAggregateOutputType | null
+    _min: RiskAssessmentDocumentMinAggregateOutputType | null
+    _max: RiskAssessmentDocumentMaxAggregateOutputType | null
   }
 
-  type GetRiskAssessmentGroupByPayload<T extends RiskAssessmentGroupByArgs> = Prisma.PrismaPromise<
+  type GetRiskAssessmentDocumentGroupByPayload<T extends RiskAssessmentDocumentGroupByArgs> = Prisma.PrismaPromise<
     Array<
-      PickEnumerable<RiskAssessmentGroupByOutputType, T['by']> &
+      PickEnumerable<RiskAssessmentDocumentGroupByOutputType, T['by']> &
         {
-          [P in ((keyof T) & (keyof RiskAssessmentGroupByOutputType))]: P extends '_count'
+          [P in ((keyof T) & (keyof RiskAssessmentDocumentGroupByOutputType))]: P extends '_count'
             ? T[P] extends boolean
               ? number
-              : GetScalarType<T[P], RiskAssessmentGroupByOutputType[P]>
-            : GetScalarType<T[P], RiskAssessmentGroupByOutputType[P]>
+              : GetScalarType<T[P], RiskAssessmentDocumentGroupByOutputType[P]>
+            : GetScalarType<T[P], RiskAssessmentDocumentGroupByOutputType[P]>
         }
       >
     >
 
 
-  export type RiskAssessmentSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+  export type RiskAssessmentDocumentSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     companyId?: boolean
     refNo?: boolean
+    title?: boolean
+    category?: boolean
+    description?: boolean
     vesselId?: boolean
-    activity?: boolean
-    hazards?: boolean
-    existingControls?: boolean
-    likelihood?: boolean
-    severity?: boolean
-    additionalControls?: boolean
-    assessedBy?: boolean
-    assessmentDate?: boolean
-    reviewDate?: boolean
+    applicableVesselType?: boolean
+    reviewFrequencyMonths?: boolean
+    lastReviewDate?: boolean
+    nextReviewDate?: boolean
+    reviewOwnerId?: boolean
     status?: boolean
-    closedAt?: boolean
+    ownerId?: boolean
+    currentRevisionId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     createdBy?: boolean
@@ -55635,25 +56415,30 @@ export namespace Prisma {
     deletedAt?: boolean
     deletedBy?: boolean
     company?: boolean | CompanyDefaultArgs<ExtArgs>
-    vessel?: boolean | RiskAssessment$vesselArgs<ExtArgs>
-  }, ExtArgs["result"]["riskAssessment"]>
+    vessel?: boolean | RiskAssessmentDocument$vesselArgs<ExtArgs>
+    currentRevision?: boolean | RiskAssessmentDocument$currentRevisionArgs<ExtArgs>
+    revisions?: boolean | RiskAssessmentDocument$revisionsArgs<ExtArgs>
+    executions?: boolean | RiskAssessmentDocument$executionsArgs<ExtArgs>
+    revisionRequests?: boolean | RiskAssessmentDocument$revisionRequestsArgs<ExtArgs>
+    _count?: boolean | RiskAssessmentDocumentCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["riskAssessmentDocument"]>
 
-  export type RiskAssessmentSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+  export type RiskAssessmentDocumentSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     companyId?: boolean
     refNo?: boolean
+    title?: boolean
+    category?: boolean
+    description?: boolean
     vesselId?: boolean
-    activity?: boolean
-    hazards?: boolean
-    existingControls?: boolean
-    likelihood?: boolean
-    severity?: boolean
-    additionalControls?: boolean
-    assessedBy?: boolean
-    assessmentDate?: boolean
-    reviewDate?: boolean
+    applicableVesselType?: boolean
+    reviewFrequencyMonths?: boolean
+    lastReviewDate?: boolean
+    nextReviewDate?: boolean
+    reviewOwnerId?: boolean
     status?: boolean
-    closedAt?: boolean
+    ownerId?: boolean
+    currentRevisionId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     createdBy?: boolean
@@ -55661,25 +56446,26 @@ export namespace Prisma {
     deletedAt?: boolean
     deletedBy?: boolean
     company?: boolean | CompanyDefaultArgs<ExtArgs>
-    vessel?: boolean | RiskAssessment$vesselArgs<ExtArgs>
-  }, ExtArgs["result"]["riskAssessment"]>
+    vessel?: boolean | RiskAssessmentDocument$vesselArgs<ExtArgs>
+    currentRevision?: boolean | RiskAssessmentDocument$currentRevisionArgs<ExtArgs>
+  }, ExtArgs["result"]["riskAssessmentDocument"]>
 
-  export type RiskAssessmentSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+  export type RiskAssessmentDocumentSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     companyId?: boolean
     refNo?: boolean
+    title?: boolean
+    category?: boolean
+    description?: boolean
     vesselId?: boolean
-    activity?: boolean
-    hazards?: boolean
-    existingControls?: boolean
-    likelihood?: boolean
-    severity?: boolean
-    additionalControls?: boolean
-    assessedBy?: boolean
-    assessmentDate?: boolean
-    reviewDate?: boolean
+    applicableVesselType?: boolean
+    reviewFrequencyMonths?: boolean
+    lastReviewDate?: boolean
+    nextReviewDate?: boolean
+    reviewOwnerId?: boolean
     status?: boolean
-    closedAt?: boolean
+    ownerId?: boolean
+    currentRevisionId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     createdBy?: boolean
@@ -55687,25 +56473,26 @@ export namespace Prisma {
     deletedAt?: boolean
     deletedBy?: boolean
     company?: boolean | CompanyDefaultArgs<ExtArgs>
-    vessel?: boolean | RiskAssessment$vesselArgs<ExtArgs>
-  }, ExtArgs["result"]["riskAssessment"]>
+    vessel?: boolean | RiskAssessmentDocument$vesselArgs<ExtArgs>
+    currentRevision?: boolean | RiskAssessmentDocument$currentRevisionArgs<ExtArgs>
+  }, ExtArgs["result"]["riskAssessmentDocument"]>
 
-  export type RiskAssessmentSelectScalar = {
+  export type RiskAssessmentDocumentSelectScalar = {
     id?: boolean
     companyId?: boolean
     refNo?: boolean
+    title?: boolean
+    category?: boolean
+    description?: boolean
     vesselId?: boolean
-    activity?: boolean
-    hazards?: boolean
-    existingControls?: boolean
-    likelihood?: boolean
-    severity?: boolean
-    additionalControls?: boolean
-    assessedBy?: boolean
-    assessmentDate?: boolean
-    reviewDate?: boolean
+    applicableVesselType?: boolean
+    reviewFrequencyMonths?: boolean
+    lastReviewDate?: boolean
+    nextReviewDate?: boolean
+    reviewOwnerId?: boolean
     status?: boolean
-    closedAt?: boolean
+    ownerId?: boolean
+    currentRevisionId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     createdBy?: boolean
@@ -55714,178 +56501,189 @@ export namespace Prisma {
     deletedBy?: boolean
   }
 
-  export type RiskAssessmentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "companyId" | "refNo" | "vesselId" | "activity" | "hazards" | "existingControls" | "likelihood" | "severity" | "additionalControls" | "assessedBy" | "assessmentDate" | "reviewDate" | "status" | "closedAt" | "createdAt" | "updatedAt" | "createdBy" | "updatedBy" | "deletedAt" | "deletedBy", ExtArgs["result"]["riskAssessment"]>
-  export type RiskAssessmentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type RiskAssessmentDocumentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "companyId" | "refNo" | "title" | "category" | "description" | "vesselId" | "applicableVesselType" | "reviewFrequencyMonths" | "lastReviewDate" | "nextReviewDate" | "reviewOwnerId" | "status" | "ownerId" | "currentRevisionId" | "createdAt" | "updatedAt" | "createdBy" | "updatedBy" | "deletedAt" | "deletedBy", ExtArgs["result"]["riskAssessmentDocument"]>
+  export type RiskAssessmentDocumentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     company?: boolean | CompanyDefaultArgs<ExtArgs>
-    vessel?: boolean | RiskAssessment$vesselArgs<ExtArgs>
+    vessel?: boolean | RiskAssessmentDocument$vesselArgs<ExtArgs>
+    currentRevision?: boolean | RiskAssessmentDocument$currentRevisionArgs<ExtArgs>
+    revisions?: boolean | RiskAssessmentDocument$revisionsArgs<ExtArgs>
+    executions?: boolean | RiskAssessmentDocument$executionsArgs<ExtArgs>
+    revisionRequests?: boolean | RiskAssessmentDocument$revisionRequestsArgs<ExtArgs>
+    _count?: boolean | RiskAssessmentDocumentCountOutputTypeDefaultArgs<ExtArgs>
   }
-  export type RiskAssessmentIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type RiskAssessmentDocumentIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     company?: boolean | CompanyDefaultArgs<ExtArgs>
-    vessel?: boolean | RiskAssessment$vesselArgs<ExtArgs>
+    vessel?: boolean | RiskAssessmentDocument$vesselArgs<ExtArgs>
+    currentRevision?: boolean | RiskAssessmentDocument$currentRevisionArgs<ExtArgs>
   }
-  export type RiskAssessmentIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type RiskAssessmentDocumentIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     company?: boolean | CompanyDefaultArgs<ExtArgs>
-    vessel?: boolean | RiskAssessment$vesselArgs<ExtArgs>
+    vessel?: boolean | RiskAssessmentDocument$vesselArgs<ExtArgs>
+    currentRevision?: boolean | RiskAssessmentDocument$currentRevisionArgs<ExtArgs>
   }
 
-  export type $RiskAssessmentPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "RiskAssessment"
+  export type $RiskAssessmentDocumentPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "RiskAssessmentDocument"
     objects: {
       company: Prisma.$CompanyPayload<ExtArgs>
       vessel: Prisma.$VesselPayload<ExtArgs> | null
+      currentRevision: Prisma.$RiskAssessmentRevisionPayload<ExtArgs> | null
+      revisions: Prisma.$RiskAssessmentRevisionPayload<ExtArgs>[]
+      executions: Prisma.$RiskAssessmentExecutionPayload<ExtArgs>[]
+      revisionRequests: Prisma.$RiskAssessmentRevisionRequestPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       companyId: string
       refNo: string
+      title: string
+      category: string
+      description: string | null
       vesselId: string | null
-      activity: string
-      hazards: string
-      existingControls: string | null
-      likelihood: $Enums.RiskRating
-      severity: $Enums.RiskRating
-      additionalControls: string | null
-      assessedBy: string | null
-      assessmentDate: Date
-      reviewDate: Date | null
-      status: $Enums.RiskAssessmentStatus
-      closedAt: Date | null
+      applicableVesselType: string | null
+      reviewFrequencyMonths: number
+      lastReviewDate: Date | null
+      nextReviewDate: Date | null
+      reviewOwnerId: string | null
+      status: $Enums.DocumentStatus
+      ownerId: string | null
+      currentRevisionId: string | null
       createdAt: Date
       updatedAt: Date
       createdBy: string | null
       updatedBy: string | null
       deletedAt: Date | null
       deletedBy: string | null
-    }, ExtArgs["result"]["riskAssessment"]>
+    }, ExtArgs["result"]["riskAssessmentDocument"]>
     composites: {}
   }
 
-  type RiskAssessmentGetPayload<S extends boolean | null | undefined | RiskAssessmentDefaultArgs> = $Result.GetResult<Prisma.$RiskAssessmentPayload, S>
+  type RiskAssessmentDocumentGetPayload<S extends boolean | null | undefined | RiskAssessmentDocumentDefaultArgs> = $Result.GetResult<Prisma.$RiskAssessmentDocumentPayload, S>
 
-  type RiskAssessmentCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<RiskAssessmentFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-      select?: RiskAssessmentCountAggregateInputType | true
+  type RiskAssessmentDocumentCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<RiskAssessmentDocumentFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: RiskAssessmentDocumentCountAggregateInputType | true
     }
 
-  export interface RiskAssessmentDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['RiskAssessment'], meta: { name: 'RiskAssessment' } }
+  export interface RiskAssessmentDocumentDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['RiskAssessmentDocument'], meta: { name: 'RiskAssessmentDocument' } }
     /**
-     * Find zero or one RiskAssessment that matches the filter.
-     * @param {RiskAssessmentFindUniqueArgs} args - Arguments to find a RiskAssessment
+     * Find zero or one RiskAssessmentDocument that matches the filter.
+     * @param {RiskAssessmentDocumentFindUniqueArgs} args - Arguments to find a RiskAssessmentDocument
      * @example
-     * // Get one RiskAssessment
-     * const riskAssessment = await prisma.riskAssessment.findUnique({
+     * // Get one RiskAssessmentDocument
+     * const riskAssessmentDocument = await prisma.riskAssessmentDocument.findUnique({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findUnique<T extends RiskAssessmentFindUniqueArgs>(args: SelectSubset<T, RiskAssessmentFindUniqueArgs<ExtArgs>>): Prisma__RiskAssessmentClient<$Result.GetResult<Prisma.$RiskAssessmentPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    findUnique<T extends RiskAssessmentDocumentFindUniqueArgs>(args: SelectSubset<T, RiskAssessmentDocumentFindUniqueArgs<ExtArgs>>): Prisma__RiskAssessmentDocumentClient<$Result.GetResult<Prisma.$RiskAssessmentDocumentPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find one RiskAssessment that matches the filter or throw an error with `error.code='P2025'`
+     * Find one RiskAssessmentDocument that matches the filter or throw an error with `error.code='P2025'`
      * if no matches were found.
-     * @param {RiskAssessmentFindUniqueOrThrowArgs} args - Arguments to find a RiskAssessment
+     * @param {RiskAssessmentDocumentFindUniqueOrThrowArgs} args - Arguments to find a RiskAssessmentDocument
      * @example
-     * // Get one RiskAssessment
-     * const riskAssessment = await prisma.riskAssessment.findUniqueOrThrow({
+     * // Get one RiskAssessmentDocument
+     * const riskAssessmentDocument = await prisma.riskAssessmentDocument.findUniqueOrThrow({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findUniqueOrThrow<T extends RiskAssessmentFindUniqueOrThrowArgs>(args: SelectSubset<T, RiskAssessmentFindUniqueOrThrowArgs<ExtArgs>>): Prisma__RiskAssessmentClient<$Result.GetResult<Prisma.$RiskAssessmentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    findUniqueOrThrow<T extends RiskAssessmentDocumentFindUniqueOrThrowArgs>(args: SelectSubset<T, RiskAssessmentDocumentFindUniqueOrThrowArgs<ExtArgs>>): Prisma__RiskAssessmentDocumentClient<$Result.GetResult<Prisma.$RiskAssessmentDocumentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find the first RiskAssessment that matches the filter.
+     * Find the first RiskAssessmentDocument that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {RiskAssessmentFindFirstArgs} args - Arguments to find a RiskAssessment
+     * @param {RiskAssessmentDocumentFindFirstArgs} args - Arguments to find a RiskAssessmentDocument
      * @example
-     * // Get one RiskAssessment
-     * const riskAssessment = await prisma.riskAssessment.findFirst({
+     * // Get one RiskAssessmentDocument
+     * const riskAssessmentDocument = await prisma.riskAssessmentDocument.findFirst({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findFirst<T extends RiskAssessmentFindFirstArgs>(args?: SelectSubset<T, RiskAssessmentFindFirstArgs<ExtArgs>>): Prisma__RiskAssessmentClient<$Result.GetResult<Prisma.$RiskAssessmentPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    findFirst<T extends RiskAssessmentDocumentFindFirstArgs>(args?: SelectSubset<T, RiskAssessmentDocumentFindFirstArgs<ExtArgs>>): Prisma__RiskAssessmentDocumentClient<$Result.GetResult<Prisma.$RiskAssessmentDocumentPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find the first RiskAssessment that matches the filter or
+     * Find the first RiskAssessmentDocument that matches the filter or
      * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {RiskAssessmentFindFirstOrThrowArgs} args - Arguments to find a RiskAssessment
+     * @param {RiskAssessmentDocumentFindFirstOrThrowArgs} args - Arguments to find a RiskAssessmentDocument
      * @example
-     * // Get one RiskAssessment
-     * const riskAssessment = await prisma.riskAssessment.findFirstOrThrow({
+     * // Get one RiskAssessmentDocument
+     * const riskAssessmentDocument = await prisma.riskAssessmentDocument.findFirstOrThrow({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findFirstOrThrow<T extends RiskAssessmentFindFirstOrThrowArgs>(args?: SelectSubset<T, RiskAssessmentFindFirstOrThrowArgs<ExtArgs>>): Prisma__RiskAssessmentClient<$Result.GetResult<Prisma.$RiskAssessmentPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    findFirstOrThrow<T extends RiskAssessmentDocumentFindFirstOrThrowArgs>(args?: SelectSubset<T, RiskAssessmentDocumentFindFirstOrThrowArgs<ExtArgs>>): Prisma__RiskAssessmentDocumentClient<$Result.GetResult<Prisma.$RiskAssessmentDocumentPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find zero or more RiskAssessments that matches the filter.
+     * Find zero or more RiskAssessmentDocuments that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {RiskAssessmentFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @param {RiskAssessmentDocumentFindManyArgs} args - Arguments to filter and select certain fields only.
      * @example
-     * // Get all RiskAssessments
-     * const riskAssessments = await prisma.riskAssessment.findMany()
+     * // Get all RiskAssessmentDocuments
+     * const riskAssessmentDocuments = await prisma.riskAssessmentDocument.findMany()
      * 
-     * // Get first 10 RiskAssessments
-     * const riskAssessments = await prisma.riskAssessment.findMany({ take: 10 })
+     * // Get first 10 RiskAssessmentDocuments
+     * const riskAssessmentDocuments = await prisma.riskAssessmentDocument.findMany({ take: 10 })
      * 
      * // Only select the `id`
-     * const riskAssessmentWithIdOnly = await prisma.riskAssessment.findMany({ select: { id: true } })
+     * const riskAssessmentDocumentWithIdOnly = await prisma.riskAssessmentDocument.findMany({ select: { id: true } })
      * 
      */
-    findMany<T extends RiskAssessmentFindManyArgs>(args?: SelectSubset<T, RiskAssessmentFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RiskAssessmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+    findMany<T extends RiskAssessmentDocumentFindManyArgs>(args?: SelectSubset<T, RiskAssessmentDocumentFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RiskAssessmentDocumentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
 
     /**
-     * Create a RiskAssessment.
-     * @param {RiskAssessmentCreateArgs} args - Arguments to create a RiskAssessment.
+     * Create a RiskAssessmentDocument.
+     * @param {RiskAssessmentDocumentCreateArgs} args - Arguments to create a RiskAssessmentDocument.
      * @example
-     * // Create one RiskAssessment
-     * const RiskAssessment = await prisma.riskAssessment.create({
+     * // Create one RiskAssessmentDocument
+     * const RiskAssessmentDocument = await prisma.riskAssessmentDocument.create({
      *   data: {
-     *     // ... data to create a RiskAssessment
+     *     // ... data to create a RiskAssessmentDocument
      *   }
      * })
      * 
      */
-    create<T extends RiskAssessmentCreateArgs>(args: SelectSubset<T, RiskAssessmentCreateArgs<ExtArgs>>): Prisma__RiskAssessmentClient<$Result.GetResult<Prisma.$RiskAssessmentPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    create<T extends RiskAssessmentDocumentCreateArgs>(args: SelectSubset<T, RiskAssessmentDocumentCreateArgs<ExtArgs>>): Prisma__RiskAssessmentDocumentClient<$Result.GetResult<Prisma.$RiskAssessmentDocumentPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Create many RiskAssessments.
-     * @param {RiskAssessmentCreateManyArgs} args - Arguments to create many RiskAssessments.
+     * Create many RiskAssessmentDocuments.
+     * @param {RiskAssessmentDocumentCreateManyArgs} args - Arguments to create many RiskAssessmentDocuments.
      * @example
-     * // Create many RiskAssessments
-     * const riskAssessment = await prisma.riskAssessment.createMany({
+     * // Create many RiskAssessmentDocuments
+     * const riskAssessmentDocument = await prisma.riskAssessmentDocument.createMany({
      *   data: [
      *     // ... provide data here
      *   ]
      * })
      *     
      */
-    createMany<T extends RiskAssessmentCreateManyArgs>(args?: SelectSubset<T, RiskAssessmentCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+    createMany<T extends RiskAssessmentDocumentCreateManyArgs>(args?: SelectSubset<T, RiskAssessmentDocumentCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Create many RiskAssessments and returns the data saved in the database.
-     * @param {RiskAssessmentCreateManyAndReturnArgs} args - Arguments to create many RiskAssessments.
+     * Create many RiskAssessmentDocuments and returns the data saved in the database.
+     * @param {RiskAssessmentDocumentCreateManyAndReturnArgs} args - Arguments to create many RiskAssessmentDocuments.
      * @example
-     * // Create many RiskAssessments
-     * const riskAssessment = await prisma.riskAssessment.createManyAndReturn({
+     * // Create many RiskAssessmentDocuments
+     * const riskAssessmentDocument = await prisma.riskAssessmentDocument.createManyAndReturn({
      *   data: [
      *     // ... provide data here
      *   ]
      * })
      * 
-     * // Create many RiskAssessments and only return the `id`
-     * const riskAssessmentWithIdOnly = await prisma.riskAssessment.createManyAndReturn({
+     * // Create many RiskAssessmentDocuments and only return the `id`
+     * const riskAssessmentDocumentWithIdOnly = await prisma.riskAssessmentDocument.createManyAndReturn({
      *   select: { id: true },
      *   data: [
      *     // ... provide data here
@@ -55895,28 +56693,28 @@ export namespace Prisma {
      * Read more here: https://pris.ly/d/null-undefined
      * 
      */
-    createManyAndReturn<T extends RiskAssessmentCreateManyAndReturnArgs>(args?: SelectSubset<T, RiskAssessmentCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RiskAssessmentPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+    createManyAndReturn<T extends RiskAssessmentDocumentCreateManyAndReturnArgs>(args?: SelectSubset<T, RiskAssessmentDocumentCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RiskAssessmentDocumentPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
 
     /**
-     * Delete a RiskAssessment.
-     * @param {RiskAssessmentDeleteArgs} args - Arguments to delete one RiskAssessment.
+     * Delete a RiskAssessmentDocument.
+     * @param {RiskAssessmentDocumentDeleteArgs} args - Arguments to delete one RiskAssessmentDocument.
      * @example
-     * // Delete one RiskAssessment
-     * const RiskAssessment = await prisma.riskAssessment.delete({
+     * // Delete one RiskAssessmentDocument
+     * const RiskAssessmentDocument = await prisma.riskAssessmentDocument.delete({
      *   where: {
-     *     // ... filter to delete one RiskAssessment
+     *     // ... filter to delete one RiskAssessmentDocument
      *   }
      * })
      * 
      */
-    delete<T extends RiskAssessmentDeleteArgs>(args: SelectSubset<T, RiskAssessmentDeleteArgs<ExtArgs>>): Prisma__RiskAssessmentClient<$Result.GetResult<Prisma.$RiskAssessmentPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    delete<T extends RiskAssessmentDocumentDeleteArgs>(args: SelectSubset<T, RiskAssessmentDocumentDeleteArgs<ExtArgs>>): Prisma__RiskAssessmentDocumentClient<$Result.GetResult<Prisma.$RiskAssessmentDocumentPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Update one RiskAssessment.
-     * @param {RiskAssessmentUpdateArgs} args - Arguments to update one RiskAssessment.
+     * Update one RiskAssessmentDocument.
+     * @param {RiskAssessmentDocumentUpdateArgs} args - Arguments to update one RiskAssessmentDocument.
      * @example
-     * // Update one RiskAssessment
-     * const riskAssessment = await prisma.riskAssessment.update({
+     * // Update one RiskAssessmentDocument
+     * const riskAssessmentDocument = await prisma.riskAssessmentDocument.update({
      *   where: {
      *     // ... provide filter here
      *   },
@@ -55926,30 +56724,30 @@ export namespace Prisma {
      * })
      * 
      */
-    update<T extends RiskAssessmentUpdateArgs>(args: SelectSubset<T, RiskAssessmentUpdateArgs<ExtArgs>>): Prisma__RiskAssessmentClient<$Result.GetResult<Prisma.$RiskAssessmentPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    update<T extends RiskAssessmentDocumentUpdateArgs>(args: SelectSubset<T, RiskAssessmentDocumentUpdateArgs<ExtArgs>>): Prisma__RiskAssessmentDocumentClient<$Result.GetResult<Prisma.$RiskAssessmentDocumentPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Delete zero or more RiskAssessments.
-     * @param {RiskAssessmentDeleteManyArgs} args - Arguments to filter RiskAssessments to delete.
+     * Delete zero or more RiskAssessmentDocuments.
+     * @param {RiskAssessmentDocumentDeleteManyArgs} args - Arguments to filter RiskAssessmentDocuments to delete.
      * @example
-     * // Delete a few RiskAssessments
-     * const { count } = await prisma.riskAssessment.deleteMany({
+     * // Delete a few RiskAssessmentDocuments
+     * const { count } = await prisma.riskAssessmentDocument.deleteMany({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      * 
      */
-    deleteMany<T extends RiskAssessmentDeleteManyArgs>(args?: SelectSubset<T, RiskAssessmentDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+    deleteMany<T extends RiskAssessmentDocumentDeleteManyArgs>(args?: SelectSubset<T, RiskAssessmentDocumentDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Update zero or more RiskAssessments.
+     * Update zero or more RiskAssessmentDocuments.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {RiskAssessmentUpdateManyArgs} args - Arguments to update one or more rows.
+     * @param {RiskAssessmentDocumentUpdateManyArgs} args - Arguments to update one or more rows.
      * @example
-     * // Update many RiskAssessments
-     * const riskAssessment = await prisma.riskAssessment.updateMany({
+     * // Update many RiskAssessmentDocuments
+     * const riskAssessmentDocument = await prisma.riskAssessmentDocument.updateMany({
      *   where: {
      *     // ... provide filter here
      *   },
@@ -55959,14 +56757,14 @@ export namespace Prisma {
      * })
      * 
      */
-    updateMany<T extends RiskAssessmentUpdateManyArgs>(args: SelectSubset<T, RiskAssessmentUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+    updateMany<T extends RiskAssessmentDocumentUpdateManyArgs>(args: SelectSubset<T, RiskAssessmentDocumentUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Update zero or more RiskAssessments and returns the data updated in the database.
-     * @param {RiskAssessmentUpdateManyAndReturnArgs} args - Arguments to update many RiskAssessments.
+     * Update zero or more RiskAssessmentDocuments and returns the data updated in the database.
+     * @param {RiskAssessmentDocumentUpdateManyAndReturnArgs} args - Arguments to update many RiskAssessmentDocuments.
      * @example
-     * // Update many RiskAssessments
-     * const riskAssessment = await prisma.riskAssessment.updateManyAndReturn({
+     * // Update many RiskAssessmentDocuments
+     * const riskAssessmentDocument = await prisma.riskAssessmentDocument.updateManyAndReturn({
      *   where: {
      *     // ... provide filter here
      *   },
@@ -55975,8 +56773,8 @@ export namespace Prisma {
      *   ]
      * })
      * 
-     * // Update zero or more RiskAssessments and only return the `id`
-     * const riskAssessmentWithIdOnly = await prisma.riskAssessment.updateManyAndReturn({
+     * // Update zero or more RiskAssessmentDocuments and only return the `id`
+     * const riskAssessmentDocumentWithIdOnly = await prisma.riskAssessmentDocument.updateManyAndReturn({
      *   select: { id: true },
      *   where: {
      *     // ... provide filter here
@@ -55989,56 +56787,56 @@ export namespace Prisma {
      * Read more here: https://pris.ly/d/null-undefined
      * 
      */
-    updateManyAndReturn<T extends RiskAssessmentUpdateManyAndReturnArgs>(args: SelectSubset<T, RiskAssessmentUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RiskAssessmentPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+    updateManyAndReturn<T extends RiskAssessmentDocumentUpdateManyAndReturnArgs>(args: SelectSubset<T, RiskAssessmentDocumentUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RiskAssessmentDocumentPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
     /**
-     * Create or update one RiskAssessment.
-     * @param {RiskAssessmentUpsertArgs} args - Arguments to update or create a RiskAssessment.
+     * Create or update one RiskAssessmentDocument.
+     * @param {RiskAssessmentDocumentUpsertArgs} args - Arguments to update or create a RiskAssessmentDocument.
      * @example
-     * // Update or create a RiskAssessment
-     * const riskAssessment = await prisma.riskAssessment.upsert({
+     * // Update or create a RiskAssessmentDocument
+     * const riskAssessmentDocument = await prisma.riskAssessmentDocument.upsert({
      *   create: {
-     *     // ... data to create a RiskAssessment
+     *     // ... data to create a RiskAssessmentDocument
      *   },
      *   update: {
      *     // ... in case it already exists, update
      *   },
      *   where: {
-     *     // ... the filter for the RiskAssessment we want to update
+     *     // ... the filter for the RiskAssessmentDocument we want to update
      *   }
      * })
      */
-    upsert<T extends RiskAssessmentUpsertArgs>(args: SelectSubset<T, RiskAssessmentUpsertArgs<ExtArgs>>): Prisma__RiskAssessmentClient<$Result.GetResult<Prisma.$RiskAssessmentPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    upsert<T extends RiskAssessmentDocumentUpsertArgs>(args: SelectSubset<T, RiskAssessmentDocumentUpsertArgs<ExtArgs>>): Prisma__RiskAssessmentDocumentClient<$Result.GetResult<Prisma.$RiskAssessmentDocumentPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
 
     /**
-     * Count the number of RiskAssessments.
+     * Count the number of RiskAssessmentDocuments.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {RiskAssessmentCountArgs} args - Arguments to filter RiskAssessments to count.
+     * @param {RiskAssessmentDocumentCountArgs} args - Arguments to filter RiskAssessmentDocuments to count.
      * @example
-     * // Count the number of RiskAssessments
-     * const count = await prisma.riskAssessment.count({
+     * // Count the number of RiskAssessmentDocuments
+     * const count = await prisma.riskAssessmentDocument.count({
      *   where: {
-     *     // ... the filter for the RiskAssessments we want to count
+     *     // ... the filter for the RiskAssessmentDocuments we want to count
      *   }
      * })
     **/
-    count<T extends RiskAssessmentCountArgs>(
-      args?: Subset<T, RiskAssessmentCountArgs>,
+    count<T extends RiskAssessmentDocumentCountArgs>(
+      args?: Subset<T, RiskAssessmentDocumentCountArgs>,
     ): Prisma.PrismaPromise<
       T extends $Utils.Record<'select', any>
         ? T['select'] extends true
           ? number
-          : GetScalarType<T['select'], RiskAssessmentCountAggregateOutputType>
+          : GetScalarType<T['select'], RiskAssessmentDocumentCountAggregateOutputType>
         : number
     >
 
     /**
-     * Allows you to perform aggregations operations on a RiskAssessment.
+     * Allows you to perform aggregations operations on a RiskAssessmentDocument.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {RiskAssessmentAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @param {RiskAssessmentDocumentAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
      * @example
      * // Ordered by age ascending
      * // Where email contains prisma.io
@@ -56058,13 +56856,13 @@ export namespace Prisma {
      *   take: 10,
      * })
     **/
-    aggregate<T extends RiskAssessmentAggregateArgs>(args: Subset<T, RiskAssessmentAggregateArgs>): Prisma.PrismaPromise<GetRiskAssessmentAggregateType<T>>
+    aggregate<T extends RiskAssessmentDocumentAggregateArgs>(args: Subset<T, RiskAssessmentDocumentAggregateArgs>): Prisma.PrismaPromise<GetRiskAssessmentDocumentAggregateType<T>>
 
     /**
-     * Group by RiskAssessment.
+     * Group by RiskAssessmentDocument.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {RiskAssessmentGroupByArgs} args - Group by arguments.
+     * @param {RiskAssessmentDocumentGroupByArgs} args - Group by arguments.
      * @example
      * // Group by city, order by createdAt, get count
      * const result = await prisma.user.groupBy({
@@ -56079,14 +56877,14 @@ export namespace Prisma {
      * 
     **/
     groupBy<
-      T extends RiskAssessmentGroupByArgs,
+      T extends RiskAssessmentDocumentGroupByArgs,
       HasSelectOrTake extends Or<
         Extends<'skip', Keys<T>>,
         Extends<'take', Keys<T>>
       >,
       OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: RiskAssessmentGroupByArgs['orderBy'] }
-        : { orderBy?: RiskAssessmentGroupByArgs['orderBy'] },
+        ? { orderBy: RiskAssessmentDocumentGroupByArgs['orderBy'] }
+        : { orderBy?: RiskAssessmentDocumentGroupByArgs['orderBy'] },
       OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
       ByFields extends MaybeTupleToUnion<T['by']>,
       ByValid extends Has<ByFields, OrderFields>,
@@ -56135,23 +56933,27 @@ export namespace Prisma {
             ? never
             : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
         }[OrderFields]
-    >(args: SubsetIntersection<T, RiskAssessmentGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetRiskAssessmentGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+    >(args: SubsetIntersection<T, RiskAssessmentDocumentGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetRiskAssessmentDocumentGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
   /**
-   * Fields of the RiskAssessment model
+   * Fields of the RiskAssessmentDocument model
    */
-  readonly fields: RiskAssessmentFieldRefs;
+  readonly fields: RiskAssessmentDocumentFieldRefs;
   }
 
   /**
-   * The delegate class that acts as a "Promise-like" for RiskAssessment.
+   * The delegate class that acts as a "Promise-like" for RiskAssessmentDocument.
    * Why is this prefixed with `Prisma__`?
    * Because we want to prevent naming conflicts as mentioned in
    * https://github.com/prisma/prisma-client-js/issues/707
    */
-  export interface Prisma__RiskAssessmentClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+  export interface Prisma__RiskAssessmentDocumentClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     company<T extends CompanyDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CompanyDefaultArgs<ExtArgs>>): Prisma__CompanyClient<$Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    vessel<T extends RiskAssessment$vesselArgs<ExtArgs> = {}>(args?: Subset<T, RiskAssessment$vesselArgs<ExtArgs>>): Prisma__VesselClient<$Result.GetResult<Prisma.$VesselPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    vessel<T extends RiskAssessmentDocument$vesselArgs<ExtArgs> = {}>(args?: Subset<T, RiskAssessmentDocument$vesselArgs<ExtArgs>>): Prisma__VesselClient<$Result.GetResult<Prisma.$VesselPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    currentRevision<T extends RiskAssessmentDocument$currentRevisionArgs<ExtArgs> = {}>(args?: Subset<T, RiskAssessmentDocument$currentRevisionArgs<ExtArgs>>): Prisma__RiskAssessmentRevisionClient<$Result.GetResult<Prisma.$RiskAssessmentRevisionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    revisions<T extends RiskAssessmentDocument$revisionsArgs<ExtArgs> = {}>(args?: Subset<T, RiskAssessmentDocument$revisionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RiskAssessmentRevisionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    executions<T extends RiskAssessmentDocument$executionsArgs<ExtArgs> = {}>(args?: Subset<T, RiskAssessmentDocument$executionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RiskAssessmentExecutionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    revisionRequests<T extends RiskAssessmentDocument$revisionRequestsArgs<ExtArgs> = {}>(args?: Subset<T, RiskAssessmentDocument$revisionRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RiskAssessmentRevisionRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -56178,429 +56980,429 @@ export namespace Prisma {
 
 
   /**
-   * Fields of the RiskAssessment model
+   * Fields of the RiskAssessmentDocument model
    */
-  interface RiskAssessmentFieldRefs {
-    readonly id: FieldRef<"RiskAssessment", 'String'>
-    readonly companyId: FieldRef<"RiskAssessment", 'String'>
-    readonly refNo: FieldRef<"RiskAssessment", 'String'>
-    readonly vesselId: FieldRef<"RiskAssessment", 'String'>
-    readonly activity: FieldRef<"RiskAssessment", 'String'>
-    readonly hazards: FieldRef<"RiskAssessment", 'String'>
-    readonly existingControls: FieldRef<"RiskAssessment", 'String'>
-    readonly likelihood: FieldRef<"RiskAssessment", 'RiskRating'>
-    readonly severity: FieldRef<"RiskAssessment", 'RiskRating'>
-    readonly additionalControls: FieldRef<"RiskAssessment", 'String'>
-    readonly assessedBy: FieldRef<"RiskAssessment", 'String'>
-    readonly assessmentDate: FieldRef<"RiskAssessment", 'DateTime'>
-    readonly reviewDate: FieldRef<"RiskAssessment", 'DateTime'>
-    readonly status: FieldRef<"RiskAssessment", 'RiskAssessmentStatus'>
-    readonly closedAt: FieldRef<"RiskAssessment", 'DateTime'>
-    readonly createdAt: FieldRef<"RiskAssessment", 'DateTime'>
-    readonly updatedAt: FieldRef<"RiskAssessment", 'DateTime'>
-    readonly createdBy: FieldRef<"RiskAssessment", 'String'>
-    readonly updatedBy: FieldRef<"RiskAssessment", 'String'>
-    readonly deletedAt: FieldRef<"RiskAssessment", 'DateTime'>
-    readonly deletedBy: FieldRef<"RiskAssessment", 'String'>
+  interface RiskAssessmentDocumentFieldRefs {
+    readonly id: FieldRef<"RiskAssessmentDocument", 'String'>
+    readonly companyId: FieldRef<"RiskAssessmentDocument", 'String'>
+    readonly refNo: FieldRef<"RiskAssessmentDocument", 'String'>
+    readonly title: FieldRef<"RiskAssessmentDocument", 'String'>
+    readonly category: FieldRef<"RiskAssessmentDocument", 'String'>
+    readonly description: FieldRef<"RiskAssessmentDocument", 'String'>
+    readonly vesselId: FieldRef<"RiskAssessmentDocument", 'String'>
+    readonly applicableVesselType: FieldRef<"RiskAssessmentDocument", 'String'>
+    readonly reviewFrequencyMonths: FieldRef<"RiskAssessmentDocument", 'Int'>
+    readonly lastReviewDate: FieldRef<"RiskAssessmentDocument", 'DateTime'>
+    readonly nextReviewDate: FieldRef<"RiskAssessmentDocument", 'DateTime'>
+    readonly reviewOwnerId: FieldRef<"RiskAssessmentDocument", 'String'>
+    readonly status: FieldRef<"RiskAssessmentDocument", 'DocumentStatus'>
+    readonly ownerId: FieldRef<"RiskAssessmentDocument", 'String'>
+    readonly currentRevisionId: FieldRef<"RiskAssessmentDocument", 'String'>
+    readonly createdAt: FieldRef<"RiskAssessmentDocument", 'DateTime'>
+    readonly updatedAt: FieldRef<"RiskAssessmentDocument", 'DateTime'>
+    readonly createdBy: FieldRef<"RiskAssessmentDocument", 'String'>
+    readonly updatedBy: FieldRef<"RiskAssessmentDocument", 'String'>
+    readonly deletedAt: FieldRef<"RiskAssessmentDocument", 'DateTime'>
+    readonly deletedBy: FieldRef<"RiskAssessmentDocument", 'String'>
   }
     
 
   // Custom InputTypes
   /**
-   * RiskAssessment findUnique
+   * RiskAssessmentDocument findUnique
    */
-  export type RiskAssessmentFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type RiskAssessmentDocumentFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the RiskAssessment
+     * Select specific fields to fetch from the RiskAssessmentDocument
      */
-    select?: RiskAssessmentSelect<ExtArgs> | null
+    select?: RiskAssessmentDocumentSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the RiskAssessment
+     * Omit specific fields from the RiskAssessmentDocument
      */
-    omit?: RiskAssessmentOmit<ExtArgs> | null
+    omit?: RiskAssessmentDocumentOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: RiskAssessmentInclude<ExtArgs> | null
+    include?: RiskAssessmentDocumentInclude<ExtArgs> | null
     /**
-     * Filter, which RiskAssessment to fetch.
+     * Filter, which RiskAssessmentDocument to fetch.
      */
-    where: RiskAssessmentWhereUniqueInput
+    where: RiskAssessmentDocumentWhereUniqueInput
   }
 
   /**
-   * RiskAssessment findUniqueOrThrow
+   * RiskAssessmentDocument findUniqueOrThrow
    */
-  export type RiskAssessmentFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type RiskAssessmentDocumentFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the RiskAssessment
+     * Select specific fields to fetch from the RiskAssessmentDocument
      */
-    select?: RiskAssessmentSelect<ExtArgs> | null
+    select?: RiskAssessmentDocumentSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the RiskAssessment
+     * Omit specific fields from the RiskAssessmentDocument
      */
-    omit?: RiskAssessmentOmit<ExtArgs> | null
+    omit?: RiskAssessmentDocumentOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: RiskAssessmentInclude<ExtArgs> | null
+    include?: RiskAssessmentDocumentInclude<ExtArgs> | null
     /**
-     * Filter, which RiskAssessment to fetch.
+     * Filter, which RiskAssessmentDocument to fetch.
      */
-    where: RiskAssessmentWhereUniqueInput
+    where: RiskAssessmentDocumentWhereUniqueInput
   }
 
   /**
-   * RiskAssessment findFirst
+   * RiskAssessmentDocument findFirst
    */
-  export type RiskAssessmentFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type RiskAssessmentDocumentFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the RiskAssessment
+     * Select specific fields to fetch from the RiskAssessmentDocument
      */
-    select?: RiskAssessmentSelect<ExtArgs> | null
+    select?: RiskAssessmentDocumentSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the RiskAssessment
+     * Omit specific fields from the RiskAssessmentDocument
      */
-    omit?: RiskAssessmentOmit<ExtArgs> | null
+    omit?: RiskAssessmentDocumentOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: RiskAssessmentInclude<ExtArgs> | null
+    include?: RiskAssessmentDocumentInclude<ExtArgs> | null
     /**
-     * Filter, which RiskAssessment to fetch.
+     * Filter, which RiskAssessmentDocument to fetch.
      */
-    where?: RiskAssessmentWhereInput
+    where?: RiskAssessmentDocumentWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of RiskAssessments to fetch.
+     * Determine the order of RiskAssessmentDocuments to fetch.
      */
-    orderBy?: RiskAssessmentOrderByWithRelationInput | RiskAssessmentOrderByWithRelationInput[]
+    orderBy?: RiskAssessmentDocumentOrderByWithRelationInput | RiskAssessmentDocumentOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
-     * Sets the position for searching for RiskAssessments.
+     * Sets the position for searching for RiskAssessmentDocuments.
      */
-    cursor?: RiskAssessmentWhereUniqueInput
+    cursor?: RiskAssessmentDocumentWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` RiskAssessments from the position of the cursor.
+     * Take `±n` RiskAssessmentDocuments from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` RiskAssessments.
+     * Skip the first `n` RiskAssessmentDocuments.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
      * 
-     * Filter by unique combinations of RiskAssessments.
+     * Filter by unique combinations of RiskAssessmentDocuments.
      */
-    distinct?: RiskAssessmentScalarFieldEnum | RiskAssessmentScalarFieldEnum[]
+    distinct?: RiskAssessmentDocumentScalarFieldEnum | RiskAssessmentDocumentScalarFieldEnum[]
   }
 
   /**
-   * RiskAssessment findFirstOrThrow
+   * RiskAssessmentDocument findFirstOrThrow
    */
-  export type RiskAssessmentFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type RiskAssessmentDocumentFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the RiskAssessment
+     * Select specific fields to fetch from the RiskAssessmentDocument
      */
-    select?: RiskAssessmentSelect<ExtArgs> | null
+    select?: RiskAssessmentDocumentSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the RiskAssessment
+     * Omit specific fields from the RiskAssessmentDocument
      */
-    omit?: RiskAssessmentOmit<ExtArgs> | null
+    omit?: RiskAssessmentDocumentOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: RiskAssessmentInclude<ExtArgs> | null
+    include?: RiskAssessmentDocumentInclude<ExtArgs> | null
     /**
-     * Filter, which RiskAssessment to fetch.
+     * Filter, which RiskAssessmentDocument to fetch.
      */
-    where?: RiskAssessmentWhereInput
+    where?: RiskAssessmentDocumentWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of RiskAssessments to fetch.
+     * Determine the order of RiskAssessmentDocuments to fetch.
      */
-    orderBy?: RiskAssessmentOrderByWithRelationInput | RiskAssessmentOrderByWithRelationInput[]
+    orderBy?: RiskAssessmentDocumentOrderByWithRelationInput | RiskAssessmentDocumentOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
-     * Sets the position for searching for RiskAssessments.
+     * Sets the position for searching for RiskAssessmentDocuments.
      */
-    cursor?: RiskAssessmentWhereUniqueInput
+    cursor?: RiskAssessmentDocumentWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` RiskAssessments from the position of the cursor.
+     * Take `±n` RiskAssessmentDocuments from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` RiskAssessments.
+     * Skip the first `n` RiskAssessmentDocuments.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
      * 
-     * Filter by unique combinations of RiskAssessments.
+     * Filter by unique combinations of RiskAssessmentDocuments.
      */
-    distinct?: RiskAssessmentScalarFieldEnum | RiskAssessmentScalarFieldEnum[]
+    distinct?: RiskAssessmentDocumentScalarFieldEnum | RiskAssessmentDocumentScalarFieldEnum[]
   }
 
   /**
-   * RiskAssessment findMany
+   * RiskAssessmentDocument findMany
    */
-  export type RiskAssessmentFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type RiskAssessmentDocumentFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the RiskAssessment
+     * Select specific fields to fetch from the RiskAssessmentDocument
      */
-    select?: RiskAssessmentSelect<ExtArgs> | null
+    select?: RiskAssessmentDocumentSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the RiskAssessment
+     * Omit specific fields from the RiskAssessmentDocument
      */
-    omit?: RiskAssessmentOmit<ExtArgs> | null
+    omit?: RiskAssessmentDocumentOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: RiskAssessmentInclude<ExtArgs> | null
+    include?: RiskAssessmentDocumentInclude<ExtArgs> | null
     /**
-     * Filter, which RiskAssessments to fetch.
+     * Filter, which RiskAssessmentDocuments to fetch.
      */
-    where?: RiskAssessmentWhereInput
+    where?: RiskAssessmentDocumentWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of RiskAssessments to fetch.
+     * Determine the order of RiskAssessmentDocuments to fetch.
      */
-    orderBy?: RiskAssessmentOrderByWithRelationInput | RiskAssessmentOrderByWithRelationInput[]
+    orderBy?: RiskAssessmentDocumentOrderByWithRelationInput | RiskAssessmentDocumentOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
-     * Sets the position for listing RiskAssessments.
+     * Sets the position for listing RiskAssessmentDocuments.
      */
-    cursor?: RiskAssessmentWhereUniqueInput
+    cursor?: RiskAssessmentDocumentWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` RiskAssessments from the position of the cursor.
+     * Take `±n` RiskAssessmentDocuments from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` RiskAssessments.
+     * Skip the first `n` RiskAssessmentDocuments.
      */
     skip?: number
-    distinct?: RiskAssessmentScalarFieldEnum | RiskAssessmentScalarFieldEnum[]
+    distinct?: RiskAssessmentDocumentScalarFieldEnum | RiskAssessmentDocumentScalarFieldEnum[]
   }
 
   /**
-   * RiskAssessment create
+   * RiskAssessmentDocument create
    */
-  export type RiskAssessmentCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type RiskAssessmentDocumentCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the RiskAssessment
+     * Select specific fields to fetch from the RiskAssessmentDocument
      */
-    select?: RiskAssessmentSelect<ExtArgs> | null
+    select?: RiskAssessmentDocumentSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the RiskAssessment
+     * Omit specific fields from the RiskAssessmentDocument
      */
-    omit?: RiskAssessmentOmit<ExtArgs> | null
+    omit?: RiskAssessmentDocumentOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: RiskAssessmentInclude<ExtArgs> | null
+    include?: RiskAssessmentDocumentInclude<ExtArgs> | null
     /**
-     * The data needed to create a RiskAssessment.
+     * The data needed to create a RiskAssessmentDocument.
      */
-    data: XOR<RiskAssessmentCreateInput, RiskAssessmentUncheckedCreateInput>
+    data: XOR<RiskAssessmentDocumentCreateInput, RiskAssessmentDocumentUncheckedCreateInput>
   }
 
   /**
-   * RiskAssessment createMany
+   * RiskAssessmentDocument createMany
    */
-  export type RiskAssessmentCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type RiskAssessmentDocumentCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * The data used to create many RiskAssessments.
+     * The data used to create many RiskAssessmentDocuments.
      */
-    data: RiskAssessmentCreateManyInput | RiskAssessmentCreateManyInput[]
+    data: RiskAssessmentDocumentCreateManyInput | RiskAssessmentDocumentCreateManyInput[]
     skipDuplicates?: boolean
   }
 
   /**
-   * RiskAssessment createManyAndReturn
+   * RiskAssessmentDocument createManyAndReturn
    */
-  export type RiskAssessmentCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type RiskAssessmentDocumentCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the RiskAssessment
+     * Select specific fields to fetch from the RiskAssessmentDocument
      */
-    select?: RiskAssessmentSelectCreateManyAndReturn<ExtArgs> | null
+    select?: RiskAssessmentDocumentSelectCreateManyAndReturn<ExtArgs> | null
     /**
-     * Omit specific fields from the RiskAssessment
+     * Omit specific fields from the RiskAssessmentDocument
      */
-    omit?: RiskAssessmentOmit<ExtArgs> | null
+    omit?: RiskAssessmentDocumentOmit<ExtArgs> | null
     /**
-     * The data used to create many RiskAssessments.
+     * The data used to create many RiskAssessmentDocuments.
      */
-    data: RiskAssessmentCreateManyInput | RiskAssessmentCreateManyInput[]
+    data: RiskAssessmentDocumentCreateManyInput | RiskAssessmentDocumentCreateManyInput[]
     skipDuplicates?: boolean
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: RiskAssessmentIncludeCreateManyAndReturn<ExtArgs> | null
+    include?: RiskAssessmentDocumentIncludeCreateManyAndReturn<ExtArgs> | null
   }
 
   /**
-   * RiskAssessment update
+   * RiskAssessmentDocument update
    */
-  export type RiskAssessmentUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type RiskAssessmentDocumentUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the RiskAssessment
+     * Select specific fields to fetch from the RiskAssessmentDocument
      */
-    select?: RiskAssessmentSelect<ExtArgs> | null
+    select?: RiskAssessmentDocumentSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the RiskAssessment
+     * Omit specific fields from the RiskAssessmentDocument
      */
-    omit?: RiskAssessmentOmit<ExtArgs> | null
+    omit?: RiskAssessmentDocumentOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: RiskAssessmentInclude<ExtArgs> | null
+    include?: RiskAssessmentDocumentInclude<ExtArgs> | null
     /**
-     * The data needed to update a RiskAssessment.
+     * The data needed to update a RiskAssessmentDocument.
      */
-    data: XOR<RiskAssessmentUpdateInput, RiskAssessmentUncheckedUpdateInput>
+    data: XOR<RiskAssessmentDocumentUpdateInput, RiskAssessmentDocumentUncheckedUpdateInput>
     /**
-     * Choose, which RiskAssessment to update.
+     * Choose, which RiskAssessmentDocument to update.
      */
-    where: RiskAssessmentWhereUniqueInput
+    where: RiskAssessmentDocumentWhereUniqueInput
   }
 
   /**
-   * RiskAssessment updateMany
+   * RiskAssessmentDocument updateMany
    */
-  export type RiskAssessmentUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type RiskAssessmentDocumentUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * The data used to update RiskAssessments.
+     * The data used to update RiskAssessmentDocuments.
      */
-    data: XOR<RiskAssessmentUpdateManyMutationInput, RiskAssessmentUncheckedUpdateManyInput>
+    data: XOR<RiskAssessmentDocumentUpdateManyMutationInput, RiskAssessmentDocumentUncheckedUpdateManyInput>
     /**
-     * Filter which RiskAssessments to update
+     * Filter which RiskAssessmentDocuments to update
      */
-    where?: RiskAssessmentWhereInput
+    where?: RiskAssessmentDocumentWhereInput
     /**
-     * Limit how many RiskAssessments to update.
+     * Limit how many RiskAssessmentDocuments to update.
      */
     limit?: number
   }
 
   /**
-   * RiskAssessment updateManyAndReturn
+   * RiskAssessmentDocument updateManyAndReturn
    */
-  export type RiskAssessmentUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type RiskAssessmentDocumentUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the RiskAssessment
+     * Select specific fields to fetch from the RiskAssessmentDocument
      */
-    select?: RiskAssessmentSelectUpdateManyAndReturn<ExtArgs> | null
+    select?: RiskAssessmentDocumentSelectUpdateManyAndReturn<ExtArgs> | null
     /**
-     * Omit specific fields from the RiskAssessment
+     * Omit specific fields from the RiskAssessmentDocument
      */
-    omit?: RiskAssessmentOmit<ExtArgs> | null
+    omit?: RiskAssessmentDocumentOmit<ExtArgs> | null
     /**
-     * The data used to update RiskAssessments.
+     * The data used to update RiskAssessmentDocuments.
      */
-    data: XOR<RiskAssessmentUpdateManyMutationInput, RiskAssessmentUncheckedUpdateManyInput>
+    data: XOR<RiskAssessmentDocumentUpdateManyMutationInput, RiskAssessmentDocumentUncheckedUpdateManyInput>
     /**
-     * Filter which RiskAssessments to update
+     * Filter which RiskAssessmentDocuments to update
      */
-    where?: RiskAssessmentWhereInput
+    where?: RiskAssessmentDocumentWhereInput
     /**
-     * Limit how many RiskAssessments to update.
+     * Limit how many RiskAssessmentDocuments to update.
      */
     limit?: number
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: RiskAssessmentIncludeUpdateManyAndReturn<ExtArgs> | null
+    include?: RiskAssessmentDocumentIncludeUpdateManyAndReturn<ExtArgs> | null
   }
 
   /**
-   * RiskAssessment upsert
+   * RiskAssessmentDocument upsert
    */
-  export type RiskAssessmentUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type RiskAssessmentDocumentUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the RiskAssessment
+     * Select specific fields to fetch from the RiskAssessmentDocument
      */
-    select?: RiskAssessmentSelect<ExtArgs> | null
+    select?: RiskAssessmentDocumentSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the RiskAssessment
+     * Omit specific fields from the RiskAssessmentDocument
      */
-    omit?: RiskAssessmentOmit<ExtArgs> | null
+    omit?: RiskAssessmentDocumentOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: RiskAssessmentInclude<ExtArgs> | null
+    include?: RiskAssessmentDocumentInclude<ExtArgs> | null
     /**
-     * The filter to search for the RiskAssessment to update in case it exists.
+     * The filter to search for the RiskAssessmentDocument to update in case it exists.
      */
-    where: RiskAssessmentWhereUniqueInput
+    where: RiskAssessmentDocumentWhereUniqueInput
     /**
-     * In case the RiskAssessment found by the `where` argument doesn't exist, create a new RiskAssessment with this data.
+     * In case the RiskAssessmentDocument found by the `where` argument doesn't exist, create a new RiskAssessmentDocument with this data.
      */
-    create: XOR<RiskAssessmentCreateInput, RiskAssessmentUncheckedCreateInput>
+    create: XOR<RiskAssessmentDocumentCreateInput, RiskAssessmentDocumentUncheckedCreateInput>
     /**
-     * In case the RiskAssessment was found with the provided `where` argument, update it with this data.
+     * In case the RiskAssessmentDocument was found with the provided `where` argument, update it with this data.
      */
-    update: XOR<RiskAssessmentUpdateInput, RiskAssessmentUncheckedUpdateInput>
+    update: XOR<RiskAssessmentDocumentUpdateInput, RiskAssessmentDocumentUncheckedUpdateInput>
   }
 
   /**
-   * RiskAssessment delete
+   * RiskAssessmentDocument delete
    */
-  export type RiskAssessmentDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type RiskAssessmentDocumentDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the RiskAssessment
+     * Select specific fields to fetch from the RiskAssessmentDocument
      */
-    select?: RiskAssessmentSelect<ExtArgs> | null
+    select?: RiskAssessmentDocumentSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the RiskAssessment
+     * Omit specific fields from the RiskAssessmentDocument
      */
-    omit?: RiskAssessmentOmit<ExtArgs> | null
+    omit?: RiskAssessmentDocumentOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: RiskAssessmentInclude<ExtArgs> | null
+    include?: RiskAssessmentDocumentInclude<ExtArgs> | null
     /**
-     * Filter which RiskAssessment to delete.
+     * Filter which RiskAssessmentDocument to delete.
      */
-    where: RiskAssessmentWhereUniqueInput
+    where: RiskAssessmentDocumentWhereUniqueInput
   }
 
   /**
-   * RiskAssessment deleteMany
+   * RiskAssessmentDocument deleteMany
    */
-  export type RiskAssessmentDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type RiskAssessmentDocumentDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Filter which RiskAssessments to delete
+     * Filter which RiskAssessmentDocuments to delete
      */
-    where?: RiskAssessmentWhereInput
+    where?: RiskAssessmentDocumentWhereInput
     /**
-     * Limit how many RiskAssessments to delete.
+     * Limit how many RiskAssessmentDocuments to delete.
      */
     limit?: number
   }
 
   /**
-   * RiskAssessment.vessel
+   * RiskAssessmentDocument.vessel
    */
-  export type RiskAssessment$vesselArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type RiskAssessmentDocument$vesselArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Vessel
      */
@@ -56617,21 +57419,5081 @@ export namespace Prisma {
   }
 
   /**
-   * RiskAssessment without action
+   * RiskAssessmentDocument.currentRevision
    */
-  export type RiskAssessmentDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type RiskAssessmentDocument$currentRevisionArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the RiskAssessment
+     * Select specific fields to fetch from the RiskAssessmentRevision
      */
-    select?: RiskAssessmentSelect<ExtArgs> | null
+    select?: RiskAssessmentRevisionSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the RiskAssessment
+     * Omit specific fields from the RiskAssessmentRevision
      */
-    omit?: RiskAssessmentOmit<ExtArgs> | null
+    omit?: RiskAssessmentRevisionOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: RiskAssessmentInclude<ExtArgs> | null
+    include?: RiskAssessmentRevisionInclude<ExtArgs> | null
+    where?: RiskAssessmentRevisionWhereInput
+  }
+
+  /**
+   * RiskAssessmentDocument.revisions
+   */
+  export type RiskAssessmentDocument$revisionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RiskAssessmentRevision
+     */
+    select?: RiskAssessmentRevisionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RiskAssessmentRevision
+     */
+    omit?: RiskAssessmentRevisionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RiskAssessmentRevisionInclude<ExtArgs> | null
+    where?: RiskAssessmentRevisionWhereInput
+    orderBy?: RiskAssessmentRevisionOrderByWithRelationInput | RiskAssessmentRevisionOrderByWithRelationInput[]
+    cursor?: RiskAssessmentRevisionWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: RiskAssessmentRevisionScalarFieldEnum | RiskAssessmentRevisionScalarFieldEnum[]
+  }
+
+  /**
+   * RiskAssessmentDocument.executions
+   */
+  export type RiskAssessmentDocument$executionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RiskAssessmentExecution
+     */
+    select?: RiskAssessmentExecutionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RiskAssessmentExecution
+     */
+    omit?: RiskAssessmentExecutionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RiskAssessmentExecutionInclude<ExtArgs> | null
+    where?: RiskAssessmentExecutionWhereInput
+    orderBy?: RiskAssessmentExecutionOrderByWithRelationInput | RiskAssessmentExecutionOrderByWithRelationInput[]
+    cursor?: RiskAssessmentExecutionWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: RiskAssessmentExecutionScalarFieldEnum | RiskAssessmentExecutionScalarFieldEnum[]
+  }
+
+  /**
+   * RiskAssessmentDocument.revisionRequests
+   */
+  export type RiskAssessmentDocument$revisionRequestsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RiskAssessmentRevisionRequest
+     */
+    select?: RiskAssessmentRevisionRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RiskAssessmentRevisionRequest
+     */
+    omit?: RiskAssessmentRevisionRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RiskAssessmentRevisionRequestInclude<ExtArgs> | null
+    where?: RiskAssessmentRevisionRequestWhereInput
+    orderBy?: RiskAssessmentRevisionRequestOrderByWithRelationInput | RiskAssessmentRevisionRequestOrderByWithRelationInput[]
+    cursor?: RiskAssessmentRevisionRequestWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: RiskAssessmentRevisionRequestScalarFieldEnum | RiskAssessmentRevisionRequestScalarFieldEnum[]
+  }
+
+  /**
+   * RiskAssessmentDocument without action
+   */
+  export type RiskAssessmentDocumentDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RiskAssessmentDocument
+     */
+    select?: RiskAssessmentDocumentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RiskAssessmentDocument
+     */
+    omit?: RiskAssessmentDocumentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RiskAssessmentDocumentInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model RiskAssessmentRevision
+   */
+
+  export type AggregateRiskAssessmentRevision = {
+    _count: RiskAssessmentRevisionCountAggregateOutputType | null
+    _avg: RiskAssessmentRevisionAvgAggregateOutputType | null
+    _sum: RiskAssessmentRevisionSumAggregateOutputType | null
+    _min: RiskAssessmentRevisionMinAggregateOutputType | null
+    _max: RiskAssessmentRevisionMaxAggregateOutputType | null
+  }
+
+  export type RiskAssessmentRevisionAvgAggregateOutputType = {
+    revisionNo: number | null
+  }
+
+  export type RiskAssessmentRevisionSumAggregateOutputType = {
+    revisionNo: number | null
+  }
+
+  export type RiskAssessmentRevisionMinAggregateOutputType = {
+    id: string | null
+    companyId: string | null
+    documentId: string | null
+    revisionNo: number | null
+    changeSummary: string | null
+    reviewTrigger: $Enums.ReviewTrigger | null
+    smsProcedureRefs: string | null
+    riskMatrixRef: string | null
+    checklistsRequired: string | null
+    approvalLevel: $Enums.RaApprovalLevel | null
+    status: $Enums.DocumentStatus | null
+    effectiveDate: Date | null
+    approvedBy: string | null
+    approvedAt: Date | null
+    createdAt: Date | null
+    createdBy: string | null
+  }
+
+  export type RiskAssessmentRevisionMaxAggregateOutputType = {
+    id: string | null
+    companyId: string | null
+    documentId: string | null
+    revisionNo: number | null
+    changeSummary: string | null
+    reviewTrigger: $Enums.ReviewTrigger | null
+    smsProcedureRefs: string | null
+    riskMatrixRef: string | null
+    checklistsRequired: string | null
+    approvalLevel: $Enums.RaApprovalLevel | null
+    status: $Enums.DocumentStatus | null
+    effectiveDate: Date | null
+    approvedBy: string | null
+    approvedAt: Date | null
+    createdAt: Date | null
+    createdBy: string | null
+  }
+
+  export type RiskAssessmentRevisionCountAggregateOutputType = {
+    id: number
+    companyId: number
+    documentId: number
+    revisionNo: number
+    changeSummary: number
+    reviewTrigger: number
+    smsProcedureRefs: number
+    riskMatrixRef: number
+    checklistsRequired: number
+    approvalLevel: number
+    status: number
+    effectiveDate: number
+    approvedBy: number
+    approvedAt: number
+    createdAt: number
+    createdBy: number
+    _all: number
+  }
+
+
+  export type RiskAssessmentRevisionAvgAggregateInputType = {
+    revisionNo?: true
+  }
+
+  export type RiskAssessmentRevisionSumAggregateInputType = {
+    revisionNo?: true
+  }
+
+  export type RiskAssessmentRevisionMinAggregateInputType = {
+    id?: true
+    companyId?: true
+    documentId?: true
+    revisionNo?: true
+    changeSummary?: true
+    reviewTrigger?: true
+    smsProcedureRefs?: true
+    riskMatrixRef?: true
+    checklistsRequired?: true
+    approvalLevel?: true
+    status?: true
+    effectiveDate?: true
+    approvedBy?: true
+    approvedAt?: true
+    createdAt?: true
+    createdBy?: true
+  }
+
+  export type RiskAssessmentRevisionMaxAggregateInputType = {
+    id?: true
+    companyId?: true
+    documentId?: true
+    revisionNo?: true
+    changeSummary?: true
+    reviewTrigger?: true
+    smsProcedureRefs?: true
+    riskMatrixRef?: true
+    checklistsRequired?: true
+    approvalLevel?: true
+    status?: true
+    effectiveDate?: true
+    approvedBy?: true
+    approvedAt?: true
+    createdAt?: true
+    createdBy?: true
+  }
+
+  export type RiskAssessmentRevisionCountAggregateInputType = {
+    id?: true
+    companyId?: true
+    documentId?: true
+    revisionNo?: true
+    changeSummary?: true
+    reviewTrigger?: true
+    smsProcedureRefs?: true
+    riskMatrixRef?: true
+    checklistsRequired?: true
+    approvalLevel?: true
+    status?: true
+    effectiveDate?: true
+    approvedBy?: true
+    approvedAt?: true
+    createdAt?: true
+    createdBy?: true
+    _all?: true
+  }
+
+  export type RiskAssessmentRevisionAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which RiskAssessmentRevision to aggregate.
+     */
+    where?: RiskAssessmentRevisionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of RiskAssessmentRevisions to fetch.
+     */
+    orderBy?: RiskAssessmentRevisionOrderByWithRelationInput | RiskAssessmentRevisionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: RiskAssessmentRevisionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` RiskAssessmentRevisions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` RiskAssessmentRevisions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned RiskAssessmentRevisions
+    **/
+    _count?: true | RiskAssessmentRevisionCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: RiskAssessmentRevisionAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: RiskAssessmentRevisionSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: RiskAssessmentRevisionMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: RiskAssessmentRevisionMaxAggregateInputType
+  }
+
+  export type GetRiskAssessmentRevisionAggregateType<T extends RiskAssessmentRevisionAggregateArgs> = {
+        [P in keyof T & keyof AggregateRiskAssessmentRevision]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateRiskAssessmentRevision[P]>
+      : GetScalarType<T[P], AggregateRiskAssessmentRevision[P]>
+  }
+
+
+
+
+  export type RiskAssessmentRevisionGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: RiskAssessmentRevisionWhereInput
+    orderBy?: RiskAssessmentRevisionOrderByWithAggregationInput | RiskAssessmentRevisionOrderByWithAggregationInput[]
+    by: RiskAssessmentRevisionScalarFieldEnum[] | RiskAssessmentRevisionScalarFieldEnum
+    having?: RiskAssessmentRevisionScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: RiskAssessmentRevisionCountAggregateInputType | true
+    _avg?: RiskAssessmentRevisionAvgAggregateInputType
+    _sum?: RiskAssessmentRevisionSumAggregateInputType
+    _min?: RiskAssessmentRevisionMinAggregateInputType
+    _max?: RiskAssessmentRevisionMaxAggregateInputType
+  }
+
+  export type RiskAssessmentRevisionGroupByOutputType = {
+    id: string
+    companyId: string
+    documentId: string
+    revisionNo: number
+    changeSummary: string | null
+    reviewTrigger: $Enums.ReviewTrigger | null
+    smsProcedureRefs: string | null
+    riskMatrixRef: string | null
+    checklistsRequired: string | null
+    approvalLevel: $Enums.RaApprovalLevel
+    status: $Enums.DocumentStatus
+    effectiveDate: Date | null
+    approvedBy: string | null
+    approvedAt: Date | null
+    createdAt: Date
+    createdBy: string | null
+    _count: RiskAssessmentRevisionCountAggregateOutputType | null
+    _avg: RiskAssessmentRevisionAvgAggregateOutputType | null
+    _sum: RiskAssessmentRevisionSumAggregateOutputType | null
+    _min: RiskAssessmentRevisionMinAggregateOutputType | null
+    _max: RiskAssessmentRevisionMaxAggregateOutputType | null
+  }
+
+  type GetRiskAssessmentRevisionGroupByPayload<T extends RiskAssessmentRevisionGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<RiskAssessmentRevisionGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof RiskAssessmentRevisionGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], RiskAssessmentRevisionGroupByOutputType[P]>
+            : GetScalarType<T[P], RiskAssessmentRevisionGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type RiskAssessmentRevisionSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    companyId?: boolean
+    documentId?: boolean
+    revisionNo?: boolean
+    changeSummary?: boolean
+    reviewTrigger?: boolean
+    smsProcedureRefs?: boolean
+    riskMatrixRef?: boolean
+    checklistsRequired?: boolean
+    approvalLevel?: boolean
+    status?: boolean
+    effectiveDate?: boolean
+    approvedBy?: boolean
+    approvedAt?: boolean
+    createdAt?: boolean
+    createdBy?: boolean
+    document?: boolean | RiskAssessmentDocumentDefaultArgs<ExtArgs>
+    currentOf?: boolean | RiskAssessmentRevision$currentOfArgs<ExtArgs>
+    executions?: boolean | RiskAssessmentRevision$executionsArgs<ExtArgs>
+    hazardRows?: boolean | RiskAssessmentRevision$hazardRowsArgs<ExtArgs>
+    _count?: boolean | RiskAssessmentRevisionCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["riskAssessmentRevision"]>
+
+  export type RiskAssessmentRevisionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    companyId?: boolean
+    documentId?: boolean
+    revisionNo?: boolean
+    changeSummary?: boolean
+    reviewTrigger?: boolean
+    smsProcedureRefs?: boolean
+    riskMatrixRef?: boolean
+    checklistsRequired?: boolean
+    approvalLevel?: boolean
+    status?: boolean
+    effectiveDate?: boolean
+    approvedBy?: boolean
+    approvedAt?: boolean
+    createdAt?: boolean
+    createdBy?: boolean
+    document?: boolean | RiskAssessmentDocumentDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["riskAssessmentRevision"]>
+
+  export type RiskAssessmentRevisionSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    companyId?: boolean
+    documentId?: boolean
+    revisionNo?: boolean
+    changeSummary?: boolean
+    reviewTrigger?: boolean
+    smsProcedureRefs?: boolean
+    riskMatrixRef?: boolean
+    checklistsRequired?: boolean
+    approvalLevel?: boolean
+    status?: boolean
+    effectiveDate?: boolean
+    approvedBy?: boolean
+    approvedAt?: boolean
+    createdAt?: boolean
+    createdBy?: boolean
+    document?: boolean | RiskAssessmentDocumentDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["riskAssessmentRevision"]>
+
+  export type RiskAssessmentRevisionSelectScalar = {
+    id?: boolean
+    companyId?: boolean
+    documentId?: boolean
+    revisionNo?: boolean
+    changeSummary?: boolean
+    reviewTrigger?: boolean
+    smsProcedureRefs?: boolean
+    riskMatrixRef?: boolean
+    checklistsRequired?: boolean
+    approvalLevel?: boolean
+    status?: boolean
+    effectiveDate?: boolean
+    approvedBy?: boolean
+    approvedAt?: boolean
+    createdAt?: boolean
+    createdBy?: boolean
+  }
+
+  export type RiskAssessmentRevisionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "companyId" | "documentId" | "revisionNo" | "changeSummary" | "reviewTrigger" | "smsProcedureRefs" | "riskMatrixRef" | "checklistsRequired" | "approvalLevel" | "status" | "effectiveDate" | "approvedBy" | "approvedAt" | "createdAt" | "createdBy", ExtArgs["result"]["riskAssessmentRevision"]>
+  export type RiskAssessmentRevisionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    document?: boolean | RiskAssessmentDocumentDefaultArgs<ExtArgs>
+    currentOf?: boolean | RiskAssessmentRevision$currentOfArgs<ExtArgs>
+    executions?: boolean | RiskAssessmentRevision$executionsArgs<ExtArgs>
+    hazardRows?: boolean | RiskAssessmentRevision$hazardRowsArgs<ExtArgs>
+    _count?: boolean | RiskAssessmentRevisionCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type RiskAssessmentRevisionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    document?: boolean | RiskAssessmentDocumentDefaultArgs<ExtArgs>
+  }
+  export type RiskAssessmentRevisionIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    document?: boolean | RiskAssessmentDocumentDefaultArgs<ExtArgs>
+  }
+
+  export type $RiskAssessmentRevisionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "RiskAssessmentRevision"
+    objects: {
+      document: Prisma.$RiskAssessmentDocumentPayload<ExtArgs>
+      currentOf: Prisma.$RiskAssessmentDocumentPayload<ExtArgs> | null
+      executions: Prisma.$RiskAssessmentExecutionPayload<ExtArgs>[]
+      hazardRows: Prisma.$RiskHazardRowPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      companyId: string
+      documentId: string
+      revisionNo: number
+      changeSummary: string | null
+      reviewTrigger: $Enums.ReviewTrigger | null
+      smsProcedureRefs: string | null
+      riskMatrixRef: string | null
+      checklistsRequired: string | null
+      approvalLevel: $Enums.RaApprovalLevel
+      status: $Enums.DocumentStatus
+      effectiveDate: Date | null
+      approvedBy: string | null
+      approvedAt: Date | null
+      createdAt: Date
+      createdBy: string | null
+    }, ExtArgs["result"]["riskAssessmentRevision"]>
+    composites: {}
+  }
+
+  type RiskAssessmentRevisionGetPayload<S extends boolean | null | undefined | RiskAssessmentRevisionDefaultArgs> = $Result.GetResult<Prisma.$RiskAssessmentRevisionPayload, S>
+
+  type RiskAssessmentRevisionCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<RiskAssessmentRevisionFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: RiskAssessmentRevisionCountAggregateInputType | true
+    }
+
+  export interface RiskAssessmentRevisionDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['RiskAssessmentRevision'], meta: { name: 'RiskAssessmentRevision' } }
+    /**
+     * Find zero or one RiskAssessmentRevision that matches the filter.
+     * @param {RiskAssessmentRevisionFindUniqueArgs} args - Arguments to find a RiskAssessmentRevision
+     * @example
+     * // Get one RiskAssessmentRevision
+     * const riskAssessmentRevision = await prisma.riskAssessmentRevision.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends RiskAssessmentRevisionFindUniqueArgs>(args: SelectSubset<T, RiskAssessmentRevisionFindUniqueArgs<ExtArgs>>): Prisma__RiskAssessmentRevisionClient<$Result.GetResult<Prisma.$RiskAssessmentRevisionPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one RiskAssessmentRevision that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {RiskAssessmentRevisionFindUniqueOrThrowArgs} args - Arguments to find a RiskAssessmentRevision
+     * @example
+     * // Get one RiskAssessmentRevision
+     * const riskAssessmentRevision = await prisma.riskAssessmentRevision.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends RiskAssessmentRevisionFindUniqueOrThrowArgs>(args: SelectSubset<T, RiskAssessmentRevisionFindUniqueOrThrowArgs<ExtArgs>>): Prisma__RiskAssessmentRevisionClient<$Result.GetResult<Prisma.$RiskAssessmentRevisionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first RiskAssessmentRevision that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RiskAssessmentRevisionFindFirstArgs} args - Arguments to find a RiskAssessmentRevision
+     * @example
+     * // Get one RiskAssessmentRevision
+     * const riskAssessmentRevision = await prisma.riskAssessmentRevision.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends RiskAssessmentRevisionFindFirstArgs>(args?: SelectSubset<T, RiskAssessmentRevisionFindFirstArgs<ExtArgs>>): Prisma__RiskAssessmentRevisionClient<$Result.GetResult<Prisma.$RiskAssessmentRevisionPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first RiskAssessmentRevision that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RiskAssessmentRevisionFindFirstOrThrowArgs} args - Arguments to find a RiskAssessmentRevision
+     * @example
+     * // Get one RiskAssessmentRevision
+     * const riskAssessmentRevision = await prisma.riskAssessmentRevision.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends RiskAssessmentRevisionFindFirstOrThrowArgs>(args?: SelectSubset<T, RiskAssessmentRevisionFindFirstOrThrowArgs<ExtArgs>>): Prisma__RiskAssessmentRevisionClient<$Result.GetResult<Prisma.$RiskAssessmentRevisionPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more RiskAssessmentRevisions that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RiskAssessmentRevisionFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all RiskAssessmentRevisions
+     * const riskAssessmentRevisions = await prisma.riskAssessmentRevision.findMany()
+     * 
+     * // Get first 10 RiskAssessmentRevisions
+     * const riskAssessmentRevisions = await prisma.riskAssessmentRevision.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const riskAssessmentRevisionWithIdOnly = await prisma.riskAssessmentRevision.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends RiskAssessmentRevisionFindManyArgs>(args?: SelectSubset<T, RiskAssessmentRevisionFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RiskAssessmentRevisionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a RiskAssessmentRevision.
+     * @param {RiskAssessmentRevisionCreateArgs} args - Arguments to create a RiskAssessmentRevision.
+     * @example
+     * // Create one RiskAssessmentRevision
+     * const RiskAssessmentRevision = await prisma.riskAssessmentRevision.create({
+     *   data: {
+     *     // ... data to create a RiskAssessmentRevision
+     *   }
+     * })
+     * 
+     */
+    create<T extends RiskAssessmentRevisionCreateArgs>(args: SelectSubset<T, RiskAssessmentRevisionCreateArgs<ExtArgs>>): Prisma__RiskAssessmentRevisionClient<$Result.GetResult<Prisma.$RiskAssessmentRevisionPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many RiskAssessmentRevisions.
+     * @param {RiskAssessmentRevisionCreateManyArgs} args - Arguments to create many RiskAssessmentRevisions.
+     * @example
+     * // Create many RiskAssessmentRevisions
+     * const riskAssessmentRevision = await prisma.riskAssessmentRevision.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends RiskAssessmentRevisionCreateManyArgs>(args?: SelectSubset<T, RiskAssessmentRevisionCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many RiskAssessmentRevisions and returns the data saved in the database.
+     * @param {RiskAssessmentRevisionCreateManyAndReturnArgs} args - Arguments to create many RiskAssessmentRevisions.
+     * @example
+     * // Create many RiskAssessmentRevisions
+     * const riskAssessmentRevision = await prisma.riskAssessmentRevision.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many RiskAssessmentRevisions and only return the `id`
+     * const riskAssessmentRevisionWithIdOnly = await prisma.riskAssessmentRevision.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends RiskAssessmentRevisionCreateManyAndReturnArgs>(args?: SelectSubset<T, RiskAssessmentRevisionCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RiskAssessmentRevisionPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a RiskAssessmentRevision.
+     * @param {RiskAssessmentRevisionDeleteArgs} args - Arguments to delete one RiskAssessmentRevision.
+     * @example
+     * // Delete one RiskAssessmentRevision
+     * const RiskAssessmentRevision = await prisma.riskAssessmentRevision.delete({
+     *   where: {
+     *     // ... filter to delete one RiskAssessmentRevision
+     *   }
+     * })
+     * 
+     */
+    delete<T extends RiskAssessmentRevisionDeleteArgs>(args: SelectSubset<T, RiskAssessmentRevisionDeleteArgs<ExtArgs>>): Prisma__RiskAssessmentRevisionClient<$Result.GetResult<Prisma.$RiskAssessmentRevisionPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one RiskAssessmentRevision.
+     * @param {RiskAssessmentRevisionUpdateArgs} args - Arguments to update one RiskAssessmentRevision.
+     * @example
+     * // Update one RiskAssessmentRevision
+     * const riskAssessmentRevision = await prisma.riskAssessmentRevision.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends RiskAssessmentRevisionUpdateArgs>(args: SelectSubset<T, RiskAssessmentRevisionUpdateArgs<ExtArgs>>): Prisma__RiskAssessmentRevisionClient<$Result.GetResult<Prisma.$RiskAssessmentRevisionPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more RiskAssessmentRevisions.
+     * @param {RiskAssessmentRevisionDeleteManyArgs} args - Arguments to filter RiskAssessmentRevisions to delete.
+     * @example
+     * // Delete a few RiskAssessmentRevisions
+     * const { count } = await prisma.riskAssessmentRevision.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends RiskAssessmentRevisionDeleteManyArgs>(args?: SelectSubset<T, RiskAssessmentRevisionDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more RiskAssessmentRevisions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RiskAssessmentRevisionUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many RiskAssessmentRevisions
+     * const riskAssessmentRevision = await prisma.riskAssessmentRevision.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends RiskAssessmentRevisionUpdateManyArgs>(args: SelectSubset<T, RiskAssessmentRevisionUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more RiskAssessmentRevisions and returns the data updated in the database.
+     * @param {RiskAssessmentRevisionUpdateManyAndReturnArgs} args - Arguments to update many RiskAssessmentRevisions.
+     * @example
+     * // Update many RiskAssessmentRevisions
+     * const riskAssessmentRevision = await prisma.riskAssessmentRevision.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more RiskAssessmentRevisions and only return the `id`
+     * const riskAssessmentRevisionWithIdOnly = await prisma.riskAssessmentRevision.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends RiskAssessmentRevisionUpdateManyAndReturnArgs>(args: SelectSubset<T, RiskAssessmentRevisionUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RiskAssessmentRevisionPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one RiskAssessmentRevision.
+     * @param {RiskAssessmentRevisionUpsertArgs} args - Arguments to update or create a RiskAssessmentRevision.
+     * @example
+     * // Update or create a RiskAssessmentRevision
+     * const riskAssessmentRevision = await prisma.riskAssessmentRevision.upsert({
+     *   create: {
+     *     // ... data to create a RiskAssessmentRevision
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the RiskAssessmentRevision we want to update
+     *   }
+     * })
+     */
+    upsert<T extends RiskAssessmentRevisionUpsertArgs>(args: SelectSubset<T, RiskAssessmentRevisionUpsertArgs<ExtArgs>>): Prisma__RiskAssessmentRevisionClient<$Result.GetResult<Prisma.$RiskAssessmentRevisionPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of RiskAssessmentRevisions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RiskAssessmentRevisionCountArgs} args - Arguments to filter RiskAssessmentRevisions to count.
+     * @example
+     * // Count the number of RiskAssessmentRevisions
+     * const count = await prisma.riskAssessmentRevision.count({
+     *   where: {
+     *     // ... the filter for the RiskAssessmentRevisions we want to count
+     *   }
+     * })
+    **/
+    count<T extends RiskAssessmentRevisionCountArgs>(
+      args?: Subset<T, RiskAssessmentRevisionCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], RiskAssessmentRevisionCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a RiskAssessmentRevision.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RiskAssessmentRevisionAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends RiskAssessmentRevisionAggregateArgs>(args: Subset<T, RiskAssessmentRevisionAggregateArgs>): Prisma.PrismaPromise<GetRiskAssessmentRevisionAggregateType<T>>
+
+    /**
+     * Group by RiskAssessmentRevision.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RiskAssessmentRevisionGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends RiskAssessmentRevisionGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: RiskAssessmentRevisionGroupByArgs['orderBy'] }
+        : { orderBy?: RiskAssessmentRevisionGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, RiskAssessmentRevisionGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetRiskAssessmentRevisionGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the RiskAssessmentRevision model
+   */
+  readonly fields: RiskAssessmentRevisionFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for RiskAssessmentRevision.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__RiskAssessmentRevisionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    document<T extends RiskAssessmentDocumentDefaultArgs<ExtArgs> = {}>(args?: Subset<T, RiskAssessmentDocumentDefaultArgs<ExtArgs>>): Prisma__RiskAssessmentDocumentClient<$Result.GetResult<Prisma.$RiskAssessmentDocumentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    currentOf<T extends RiskAssessmentRevision$currentOfArgs<ExtArgs> = {}>(args?: Subset<T, RiskAssessmentRevision$currentOfArgs<ExtArgs>>): Prisma__RiskAssessmentDocumentClient<$Result.GetResult<Prisma.$RiskAssessmentDocumentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    executions<T extends RiskAssessmentRevision$executionsArgs<ExtArgs> = {}>(args?: Subset<T, RiskAssessmentRevision$executionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RiskAssessmentExecutionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    hazardRows<T extends RiskAssessmentRevision$hazardRowsArgs<ExtArgs> = {}>(args?: Subset<T, RiskAssessmentRevision$hazardRowsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RiskHazardRowPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the RiskAssessmentRevision model
+   */
+  interface RiskAssessmentRevisionFieldRefs {
+    readonly id: FieldRef<"RiskAssessmentRevision", 'String'>
+    readonly companyId: FieldRef<"RiskAssessmentRevision", 'String'>
+    readonly documentId: FieldRef<"RiskAssessmentRevision", 'String'>
+    readonly revisionNo: FieldRef<"RiskAssessmentRevision", 'Int'>
+    readonly changeSummary: FieldRef<"RiskAssessmentRevision", 'String'>
+    readonly reviewTrigger: FieldRef<"RiskAssessmentRevision", 'ReviewTrigger'>
+    readonly smsProcedureRefs: FieldRef<"RiskAssessmentRevision", 'String'>
+    readonly riskMatrixRef: FieldRef<"RiskAssessmentRevision", 'String'>
+    readonly checklistsRequired: FieldRef<"RiskAssessmentRevision", 'String'>
+    readonly approvalLevel: FieldRef<"RiskAssessmentRevision", 'RaApprovalLevel'>
+    readonly status: FieldRef<"RiskAssessmentRevision", 'DocumentStatus'>
+    readonly effectiveDate: FieldRef<"RiskAssessmentRevision", 'DateTime'>
+    readonly approvedBy: FieldRef<"RiskAssessmentRevision", 'String'>
+    readonly approvedAt: FieldRef<"RiskAssessmentRevision", 'DateTime'>
+    readonly createdAt: FieldRef<"RiskAssessmentRevision", 'DateTime'>
+    readonly createdBy: FieldRef<"RiskAssessmentRevision", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * RiskAssessmentRevision findUnique
+   */
+  export type RiskAssessmentRevisionFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RiskAssessmentRevision
+     */
+    select?: RiskAssessmentRevisionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RiskAssessmentRevision
+     */
+    omit?: RiskAssessmentRevisionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RiskAssessmentRevisionInclude<ExtArgs> | null
+    /**
+     * Filter, which RiskAssessmentRevision to fetch.
+     */
+    where: RiskAssessmentRevisionWhereUniqueInput
+  }
+
+  /**
+   * RiskAssessmentRevision findUniqueOrThrow
+   */
+  export type RiskAssessmentRevisionFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RiskAssessmentRevision
+     */
+    select?: RiskAssessmentRevisionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RiskAssessmentRevision
+     */
+    omit?: RiskAssessmentRevisionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RiskAssessmentRevisionInclude<ExtArgs> | null
+    /**
+     * Filter, which RiskAssessmentRevision to fetch.
+     */
+    where: RiskAssessmentRevisionWhereUniqueInput
+  }
+
+  /**
+   * RiskAssessmentRevision findFirst
+   */
+  export type RiskAssessmentRevisionFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RiskAssessmentRevision
+     */
+    select?: RiskAssessmentRevisionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RiskAssessmentRevision
+     */
+    omit?: RiskAssessmentRevisionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RiskAssessmentRevisionInclude<ExtArgs> | null
+    /**
+     * Filter, which RiskAssessmentRevision to fetch.
+     */
+    where?: RiskAssessmentRevisionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of RiskAssessmentRevisions to fetch.
+     */
+    orderBy?: RiskAssessmentRevisionOrderByWithRelationInput | RiskAssessmentRevisionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for RiskAssessmentRevisions.
+     */
+    cursor?: RiskAssessmentRevisionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` RiskAssessmentRevisions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` RiskAssessmentRevisions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of RiskAssessmentRevisions.
+     */
+    distinct?: RiskAssessmentRevisionScalarFieldEnum | RiskAssessmentRevisionScalarFieldEnum[]
+  }
+
+  /**
+   * RiskAssessmentRevision findFirstOrThrow
+   */
+  export type RiskAssessmentRevisionFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RiskAssessmentRevision
+     */
+    select?: RiskAssessmentRevisionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RiskAssessmentRevision
+     */
+    omit?: RiskAssessmentRevisionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RiskAssessmentRevisionInclude<ExtArgs> | null
+    /**
+     * Filter, which RiskAssessmentRevision to fetch.
+     */
+    where?: RiskAssessmentRevisionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of RiskAssessmentRevisions to fetch.
+     */
+    orderBy?: RiskAssessmentRevisionOrderByWithRelationInput | RiskAssessmentRevisionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for RiskAssessmentRevisions.
+     */
+    cursor?: RiskAssessmentRevisionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` RiskAssessmentRevisions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` RiskAssessmentRevisions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of RiskAssessmentRevisions.
+     */
+    distinct?: RiskAssessmentRevisionScalarFieldEnum | RiskAssessmentRevisionScalarFieldEnum[]
+  }
+
+  /**
+   * RiskAssessmentRevision findMany
+   */
+  export type RiskAssessmentRevisionFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RiskAssessmentRevision
+     */
+    select?: RiskAssessmentRevisionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RiskAssessmentRevision
+     */
+    omit?: RiskAssessmentRevisionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RiskAssessmentRevisionInclude<ExtArgs> | null
+    /**
+     * Filter, which RiskAssessmentRevisions to fetch.
+     */
+    where?: RiskAssessmentRevisionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of RiskAssessmentRevisions to fetch.
+     */
+    orderBy?: RiskAssessmentRevisionOrderByWithRelationInput | RiskAssessmentRevisionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing RiskAssessmentRevisions.
+     */
+    cursor?: RiskAssessmentRevisionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` RiskAssessmentRevisions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` RiskAssessmentRevisions.
+     */
+    skip?: number
+    distinct?: RiskAssessmentRevisionScalarFieldEnum | RiskAssessmentRevisionScalarFieldEnum[]
+  }
+
+  /**
+   * RiskAssessmentRevision create
+   */
+  export type RiskAssessmentRevisionCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RiskAssessmentRevision
+     */
+    select?: RiskAssessmentRevisionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RiskAssessmentRevision
+     */
+    omit?: RiskAssessmentRevisionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RiskAssessmentRevisionInclude<ExtArgs> | null
+    /**
+     * The data needed to create a RiskAssessmentRevision.
+     */
+    data: XOR<RiskAssessmentRevisionCreateInput, RiskAssessmentRevisionUncheckedCreateInput>
+  }
+
+  /**
+   * RiskAssessmentRevision createMany
+   */
+  export type RiskAssessmentRevisionCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many RiskAssessmentRevisions.
+     */
+    data: RiskAssessmentRevisionCreateManyInput | RiskAssessmentRevisionCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * RiskAssessmentRevision createManyAndReturn
+   */
+  export type RiskAssessmentRevisionCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RiskAssessmentRevision
+     */
+    select?: RiskAssessmentRevisionSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the RiskAssessmentRevision
+     */
+    omit?: RiskAssessmentRevisionOmit<ExtArgs> | null
+    /**
+     * The data used to create many RiskAssessmentRevisions.
+     */
+    data: RiskAssessmentRevisionCreateManyInput | RiskAssessmentRevisionCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RiskAssessmentRevisionIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * RiskAssessmentRevision update
+   */
+  export type RiskAssessmentRevisionUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RiskAssessmentRevision
+     */
+    select?: RiskAssessmentRevisionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RiskAssessmentRevision
+     */
+    omit?: RiskAssessmentRevisionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RiskAssessmentRevisionInclude<ExtArgs> | null
+    /**
+     * The data needed to update a RiskAssessmentRevision.
+     */
+    data: XOR<RiskAssessmentRevisionUpdateInput, RiskAssessmentRevisionUncheckedUpdateInput>
+    /**
+     * Choose, which RiskAssessmentRevision to update.
+     */
+    where: RiskAssessmentRevisionWhereUniqueInput
+  }
+
+  /**
+   * RiskAssessmentRevision updateMany
+   */
+  export type RiskAssessmentRevisionUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update RiskAssessmentRevisions.
+     */
+    data: XOR<RiskAssessmentRevisionUpdateManyMutationInput, RiskAssessmentRevisionUncheckedUpdateManyInput>
+    /**
+     * Filter which RiskAssessmentRevisions to update
+     */
+    where?: RiskAssessmentRevisionWhereInput
+    /**
+     * Limit how many RiskAssessmentRevisions to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * RiskAssessmentRevision updateManyAndReturn
+   */
+  export type RiskAssessmentRevisionUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RiskAssessmentRevision
+     */
+    select?: RiskAssessmentRevisionSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the RiskAssessmentRevision
+     */
+    omit?: RiskAssessmentRevisionOmit<ExtArgs> | null
+    /**
+     * The data used to update RiskAssessmentRevisions.
+     */
+    data: XOR<RiskAssessmentRevisionUpdateManyMutationInput, RiskAssessmentRevisionUncheckedUpdateManyInput>
+    /**
+     * Filter which RiskAssessmentRevisions to update
+     */
+    where?: RiskAssessmentRevisionWhereInput
+    /**
+     * Limit how many RiskAssessmentRevisions to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RiskAssessmentRevisionIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * RiskAssessmentRevision upsert
+   */
+  export type RiskAssessmentRevisionUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RiskAssessmentRevision
+     */
+    select?: RiskAssessmentRevisionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RiskAssessmentRevision
+     */
+    omit?: RiskAssessmentRevisionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RiskAssessmentRevisionInclude<ExtArgs> | null
+    /**
+     * The filter to search for the RiskAssessmentRevision to update in case it exists.
+     */
+    where: RiskAssessmentRevisionWhereUniqueInput
+    /**
+     * In case the RiskAssessmentRevision found by the `where` argument doesn't exist, create a new RiskAssessmentRevision with this data.
+     */
+    create: XOR<RiskAssessmentRevisionCreateInput, RiskAssessmentRevisionUncheckedCreateInput>
+    /**
+     * In case the RiskAssessmentRevision was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<RiskAssessmentRevisionUpdateInput, RiskAssessmentRevisionUncheckedUpdateInput>
+  }
+
+  /**
+   * RiskAssessmentRevision delete
+   */
+  export type RiskAssessmentRevisionDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RiskAssessmentRevision
+     */
+    select?: RiskAssessmentRevisionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RiskAssessmentRevision
+     */
+    omit?: RiskAssessmentRevisionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RiskAssessmentRevisionInclude<ExtArgs> | null
+    /**
+     * Filter which RiskAssessmentRevision to delete.
+     */
+    where: RiskAssessmentRevisionWhereUniqueInput
+  }
+
+  /**
+   * RiskAssessmentRevision deleteMany
+   */
+  export type RiskAssessmentRevisionDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which RiskAssessmentRevisions to delete
+     */
+    where?: RiskAssessmentRevisionWhereInput
+    /**
+     * Limit how many RiskAssessmentRevisions to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * RiskAssessmentRevision.currentOf
+   */
+  export type RiskAssessmentRevision$currentOfArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RiskAssessmentDocument
+     */
+    select?: RiskAssessmentDocumentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RiskAssessmentDocument
+     */
+    omit?: RiskAssessmentDocumentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RiskAssessmentDocumentInclude<ExtArgs> | null
+    where?: RiskAssessmentDocumentWhereInput
+  }
+
+  /**
+   * RiskAssessmentRevision.executions
+   */
+  export type RiskAssessmentRevision$executionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RiskAssessmentExecution
+     */
+    select?: RiskAssessmentExecutionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RiskAssessmentExecution
+     */
+    omit?: RiskAssessmentExecutionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RiskAssessmentExecutionInclude<ExtArgs> | null
+    where?: RiskAssessmentExecutionWhereInput
+    orderBy?: RiskAssessmentExecutionOrderByWithRelationInput | RiskAssessmentExecutionOrderByWithRelationInput[]
+    cursor?: RiskAssessmentExecutionWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: RiskAssessmentExecutionScalarFieldEnum | RiskAssessmentExecutionScalarFieldEnum[]
+  }
+
+  /**
+   * RiskAssessmentRevision.hazardRows
+   */
+  export type RiskAssessmentRevision$hazardRowsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RiskHazardRow
+     */
+    select?: RiskHazardRowSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RiskHazardRow
+     */
+    omit?: RiskHazardRowOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RiskHazardRowInclude<ExtArgs> | null
+    where?: RiskHazardRowWhereInput
+    orderBy?: RiskHazardRowOrderByWithRelationInput | RiskHazardRowOrderByWithRelationInput[]
+    cursor?: RiskHazardRowWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: RiskHazardRowScalarFieldEnum | RiskHazardRowScalarFieldEnum[]
+  }
+
+  /**
+   * RiskAssessmentRevision without action
+   */
+  export type RiskAssessmentRevisionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RiskAssessmentRevision
+     */
+    select?: RiskAssessmentRevisionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RiskAssessmentRevision
+     */
+    omit?: RiskAssessmentRevisionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RiskAssessmentRevisionInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model RiskHazardRow
+   */
+
+  export type AggregateRiskHazardRow = {
+    _count: RiskHazardRowCountAggregateOutputType | null
+    _avg: RiskHazardRowAvgAggregateOutputType | null
+    _sum: RiskHazardRowSumAggregateOutputType | null
+    _min: RiskHazardRowMinAggregateOutputType | null
+    _max: RiskHazardRowMaxAggregateOutputType | null
+  }
+
+  export type RiskHazardRowAvgAggregateOutputType = {
+    rowNo: number | null
+    severity: number | null
+    likelihood: number | null
+    resLikelihood: number | null
+  }
+
+  export type RiskHazardRowSumAggregateOutputType = {
+    rowNo: number | null
+    severity: number | null
+    likelihood: number | null
+    resLikelihood: number | null
+  }
+
+  export type RiskHazardRowMinAggregateOutputType = {
+    id: string | null
+    companyId: string | null
+    revisionId: string | null
+    rowNo: number | null
+    phase: string | null
+    consequence: string | null
+    causes: string | null
+    severity: number | null
+    likelihood: number | null
+    existingControls: string | null
+    additionalControls: string | null
+    resLikelihood: number | null
+    responsible: string | null
+    isNew: boolean | null
+    ratingChangeNote: string | null
+    createdAt: Date | null
+    createdBy: string | null
+  }
+
+  export type RiskHazardRowMaxAggregateOutputType = {
+    id: string | null
+    companyId: string | null
+    revisionId: string | null
+    rowNo: number | null
+    phase: string | null
+    consequence: string | null
+    causes: string | null
+    severity: number | null
+    likelihood: number | null
+    existingControls: string | null
+    additionalControls: string | null
+    resLikelihood: number | null
+    responsible: string | null
+    isNew: boolean | null
+    ratingChangeNote: string | null
+    createdAt: Date | null
+    createdBy: string | null
+  }
+
+  export type RiskHazardRowCountAggregateOutputType = {
+    id: number
+    companyId: number
+    revisionId: number
+    rowNo: number
+    phase: number
+    consequence: number
+    causes: number
+    severity: number
+    likelihood: number
+    existingControls: number
+    additionalControls: number
+    resLikelihood: number
+    responsible: number
+    isNew: number
+    ratingChangeNote: number
+    createdAt: number
+    createdBy: number
+    _all: number
+  }
+
+
+  export type RiskHazardRowAvgAggregateInputType = {
+    rowNo?: true
+    severity?: true
+    likelihood?: true
+    resLikelihood?: true
+  }
+
+  export type RiskHazardRowSumAggregateInputType = {
+    rowNo?: true
+    severity?: true
+    likelihood?: true
+    resLikelihood?: true
+  }
+
+  export type RiskHazardRowMinAggregateInputType = {
+    id?: true
+    companyId?: true
+    revisionId?: true
+    rowNo?: true
+    phase?: true
+    consequence?: true
+    causes?: true
+    severity?: true
+    likelihood?: true
+    existingControls?: true
+    additionalControls?: true
+    resLikelihood?: true
+    responsible?: true
+    isNew?: true
+    ratingChangeNote?: true
+    createdAt?: true
+    createdBy?: true
+  }
+
+  export type RiskHazardRowMaxAggregateInputType = {
+    id?: true
+    companyId?: true
+    revisionId?: true
+    rowNo?: true
+    phase?: true
+    consequence?: true
+    causes?: true
+    severity?: true
+    likelihood?: true
+    existingControls?: true
+    additionalControls?: true
+    resLikelihood?: true
+    responsible?: true
+    isNew?: true
+    ratingChangeNote?: true
+    createdAt?: true
+    createdBy?: true
+  }
+
+  export type RiskHazardRowCountAggregateInputType = {
+    id?: true
+    companyId?: true
+    revisionId?: true
+    rowNo?: true
+    phase?: true
+    consequence?: true
+    causes?: true
+    severity?: true
+    likelihood?: true
+    existingControls?: true
+    additionalControls?: true
+    resLikelihood?: true
+    responsible?: true
+    isNew?: true
+    ratingChangeNote?: true
+    createdAt?: true
+    createdBy?: true
+    _all?: true
+  }
+
+  export type RiskHazardRowAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which RiskHazardRow to aggregate.
+     */
+    where?: RiskHazardRowWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of RiskHazardRows to fetch.
+     */
+    orderBy?: RiskHazardRowOrderByWithRelationInput | RiskHazardRowOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: RiskHazardRowWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` RiskHazardRows from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` RiskHazardRows.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned RiskHazardRows
+    **/
+    _count?: true | RiskHazardRowCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: RiskHazardRowAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: RiskHazardRowSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: RiskHazardRowMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: RiskHazardRowMaxAggregateInputType
+  }
+
+  export type GetRiskHazardRowAggregateType<T extends RiskHazardRowAggregateArgs> = {
+        [P in keyof T & keyof AggregateRiskHazardRow]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateRiskHazardRow[P]>
+      : GetScalarType<T[P], AggregateRiskHazardRow[P]>
+  }
+
+
+
+
+  export type RiskHazardRowGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: RiskHazardRowWhereInput
+    orderBy?: RiskHazardRowOrderByWithAggregationInput | RiskHazardRowOrderByWithAggregationInput[]
+    by: RiskHazardRowScalarFieldEnum[] | RiskHazardRowScalarFieldEnum
+    having?: RiskHazardRowScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: RiskHazardRowCountAggregateInputType | true
+    _avg?: RiskHazardRowAvgAggregateInputType
+    _sum?: RiskHazardRowSumAggregateInputType
+    _min?: RiskHazardRowMinAggregateInputType
+    _max?: RiskHazardRowMaxAggregateInputType
+  }
+
+  export type RiskHazardRowGroupByOutputType = {
+    id: string
+    companyId: string
+    revisionId: string
+    rowNo: number
+    phase: string | null
+    consequence: string
+    causes: string
+    severity: number
+    likelihood: number
+    existingControls: string
+    additionalControls: string | null
+    resLikelihood: number | null
+    responsible: string | null
+    isNew: boolean
+    ratingChangeNote: string | null
+    createdAt: Date
+    createdBy: string | null
+    _count: RiskHazardRowCountAggregateOutputType | null
+    _avg: RiskHazardRowAvgAggregateOutputType | null
+    _sum: RiskHazardRowSumAggregateOutputType | null
+    _min: RiskHazardRowMinAggregateOutputType | null
+    _max: RiskHazardRowMaxAggregateOutputType | null
+  }
+
+  type GetRiskHazardRowGroupByPayload<T extends RiskHazardRowGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<RiskHazardRowGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof RiskHazardRowGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], RiskHazardRowGroupByOutputType[P]>
+            : GetScalarType<T[P], RiskHazardRowGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type RiskHazardRowSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    companyId?: boolean
+    revisionId?: boolean
+    rowNo?: boolean
+    phase?: boolean
+    consequence?: boolean
+    causes?: boolean
+    severity?: boolean
+    likelihood?: boolean
+    existingControls?: boolean
+    additionalControls?: boolean
+    resLikelihood?: boolean
+    responsible?: boolean
+    isNew?: boolean
+    ratingChangeNote?: boolean
+    createdAt?: boolean
+    createdBy?: boolean
+    revision?: boolean | RiskAssessmentRevisionDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["riskHazardRow"]>
+
+  export type RiskHazardRowSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    companyId?: boolean
+    revisionId?: boolean
+    rowNo?: boolean
+    phase?: boolean
+    consequence?: boolean
+    causes?: boolean
+    severity?: boolean
+    likelihood?: boolean
+    existingControls?: boolean
+    additionalControls?: boolean
+    resLikelihood?: boolean
+    responsible?: boolean
+    isNew?: boolean
+    ratingChangeNote?: boolean
+    createdAt?: boolean
+    createdBy?: boolean
+    revision?: boolean | RiskAssessmentRevisionDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["riskHazardRow"]>
+
+  export type RiskHazardRowSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    companyId?: boolean
+    revisionId?: boolean
+    rowNo?: boolean
+    phase?: boolean
+    consequence?: boolean
+    causes?: boolean
+    severity?: boolean
+    likelihood?: boolean
+    existingControls?: boolean
+    additionalControls?: boolean
+    resLikelihood?: boolean
+    responsible?: boolean
+    isNew?: boolean
+    ratingChangeNote?: boolean
+    createdAt?: boolean
+    createdBy?: boolean
+    revision?: boolean | RiskAssessmentRevisionDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["riskHazardRow"]>
+
+  export type RiskHazardRowSelectScalar = {
+    id?: boolean
+    companyId?: boolean
+    revisionId?: boolean
+    rowNo?: boolean
+    phase?: boolean
+    consequence?: boolean
+    causes?: boolean
+    severity?: boolean
+    likelihood?: boolean
+    existingControls?: boolean
+    additionalControls?: boolean
+    resLikelihood?: boolean
+    responsible?: boolean
+    isNew?: boolean
+    ratingChangeNote?: boolean
+    createdAt?: boolean
+    createdBy?: boolean
+  }
+
+  export type RiskHazardRowOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "companyId" | "revisionId" | "rowNo" | "phase" | "consequence" | "causes" | "severity" | "likelihood" | "existingControls" | "additionalControls" | "resLikelihood" | "responsible" | "isNew" | "ratingChangeNote" | "createdAt" | "createdBy", ExtArgs["result"]["riskHazardRow"]>
+  export type RiskHazardRowInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    revision?: boolean | RiskAssessmentRevisionDefaultArgs<ExtArgs>
+  }
+  export type RiskHazardRowIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    revision?: boolean | RiskAssessmentRevisionDefaultArgs<ExtArgs>
+  }
+  export type RiskHazardRowIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    revision?: boolean | RiskAssessmentRevisionDefaultArgs<ExtArgs>
+  }
+
+  export type $RiskHazardRowPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "RiskHazardRow"
+    objects: {
+      revision: Prisma.$RiskAssessmentRevisionPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      companyId: string
+      revisionId: string
+      rowNo: number
+      phase: string | null
+      consequence: string
+      causes: string
+      severity: number
+      likelihood: number
+      existingControls: string
+      additionalControls: string | null
+      resLikelihood: number | null
+      responsible: string | null
+      isNew: boolean
+      ratingChangeNote: string | null
+      createdAt: Date
+      createdBy: string | null
+    }, ExtArgs["result"]["riskHazardRow"]>
+    composites: {}
+  }
+
+  type RiskHazardRowGetPayload<S extends boolean | null | undefined | RiskHazardRowDefaultArgs> = $Result.GetResult<Prisma.$RiskHazardRowPayload, S>
+
+  type RiskHazardRowCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<RiskHazardRowFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: RiskHazardRowCountAggregateInputType | true
+    }
+
+  export interface RiskHazardRowDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['RiskHazardRow'], meta: { name: 'RiskHazardRow' } }
+    /**
+     * Find zero or one RiskHazardRow that matches the filter.
+     * @param {RiskHazardRowFindUniqueArgs} args - Arguments to find a RiskHazardRow
+     * @example
+     * // Get one RiskHazardRow
+     * const riskHazardRow = await prisma.riskHazardRow.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends RiskHazardRowFindUniqueArgs>(args: SelectSubset<T, RiskHazardRowFindUniqueArgs<ExtArgs>>): Prisma__RiskHazardRowClient<$Result.GetResult<Prisma.$RiskHazardRowPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one RiskHazardRow that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {RiskHazardRowFindUniqueOrThrowArgs} args - Arguments to find a RiskHazardRow
+     * @example
+     * // Get one RiskHazardRow
+     * const riskHazardRow = await prisma.riskHazardRow.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends RiskHazardRowFindUniqueOrThrowArgs>(args: SelectSubset<T, RiskHazardRowFindUniqueOrThrowArgs<ExtArgs>>): Prisma__RiskHazardRowClient<$Result.GetResult<Prisma.$RiskHazardRowPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first RiskHazardRow that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RiskHazardRowFindFirstArgs} args - Arguments to find a RiskHazardRow
+     * @example
+     * // Get one RiskHazardRow
+     * const riskHazardRow = await prisma.riskHazardRow.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends RiskHazardRowFindFirstArgs>(args?: SelectSubset<T, RiskHazardRowFindFirstArgs<ExtArgs>>): Prisma__RiskHazardRowClient<$Result.GetResult<Prisma.$RiskHazardRowPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first RiskHazardRow that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RiskHazardRowFindFirstOrThrowArgs} args - Arguments to find a RiskHazardRow
+     * @example
+     * // Get one RiskHazardRow
+     * const riskHazardRow = await prisma.riskHazardRow.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends RiskHazardRowFindFirstOrThrowArgs>(args?: SelectSubset<T, RiskHazardRowFindFirstOrThrowArgs<ExtArgs>>): Prisma__RiskHazardRowClient<$Result.GetResult<Prisma.$RiskHazardRowPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more RiskHazardRows that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RiskHazardRowFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all RiskHazardRows
+     * const riskHazardRows = await prisma.riskHazardRow.findMany()
+     * 
+     * // Get first 10 RiskHazardRows
+     * const riskHazardRows = await prisma.riskHazardRow.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const riskHazardRowWithIdOnly = await prisma.riskHazardRow.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends RiskHazardRowFindManyArgs>(args?: SelectSubset<T, RiskHazardRowFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RiskHazardRowPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a RiskHazardRow.
+     * @param {RiskHazardRowCreateArgs} args - Arguments to create a RiskHazardRow.
+     * @example
+     * // Create one RiskHazardRow
+     * const RiskHazardRow = await prisma.riskHazardRow.create({
+     *   data: {
+     *     // ... data to create a RiskHazardRow
+     *   }
+     * })
+     * 
+     */
+    create<T extends RiskHazardRowCreateArgs>(args: SelectSubset<T, RiskHazardRowCreateArgs<ExtArgs>>): Prisma__RiskHazardRowClient<$Result.GetResult<Prisma.$RiskHazardRowPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many RiskHazardRows.
+     * @param {RiskHazardRowCreateManyArgs} args - Arguments to create many RiskHazardRows.
+     * @example
+     * // Create many RiskHazardRows
+     * const riskHazardRow = await prisma.riskHazardRow.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends RiskHazardRowCreateManyArgs>(args?: SelectSubset<T, RiskHazardRowCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many RiskHazardRows and returns the data saved in the database.
+     * @param {RiskHazardRowCreateManyAndReturnArgs} args - Arguments to create many RiskHazardRows.
+     * @example
+     * // Create many RiskHazardRows
+     * const riskHazardRow = await prisma.riskHazardRow.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many RiskHazardRows and only return the `id`
+     * const riskHazardRowWithIdOnly = await prisma.riskHazardRow.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends RiskHazardRowCreateManyAndReturnArgs>(args?: SelectSubset<T, RiskHazardRowCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RiskHazardRowPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a RiskHazardRow.
+     * @param {RiskHazardRowDeleteArgs} args - Arguments to delete one RiskHazardRow.
+     * @example
+     * // Delete one RiskHazardRow
+     * const RiskHazardRow = await prisma.riskHazardRow.delete({
+     *   where: {
+     *     // ... filter to delete one RiskHazardRow
+     *   }
+     * })
+     * 
+     */
+    delete<T extends RiskHazardRowDeleteArgs>(args: SelectSubset<T, RiskHazardRowDeleteArgs<ExtArgs>>): Prisma__RiskHazardRowClient<$Result.GetResult<Prisma.$RiskHazardRowPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one RiskHazardRow.
+     * @param {RiskHazardRowUpdateArgs} args - Arguments to update one RiskHazardRow.
+     * @example
+     * // Update one RiskHazardRow
+     * const riskHazardRow = await prisma.riskHazardRow.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends RiskHazardRowUpdateArgs>(args: SelectSubset<T, RiskHazardRowUpdateArgs<ExtArgs>>): Prisma__RiskHazardRowClient<$Result.GetResult<Prisma.$RiskHazardRowPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more RiskHazardRows.
+     * @param {RiskHazardRowDeleteManyArgs} args - Arguments to filter RiskHazardRows to delete.
+     * @example
+     * // Delete a few RiskHazardRows
+     * const { count } = await prisma.riskHazardRow.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends RiskHazardRowDeleteManyArgs>(args?: SelectSubset<T, RiskHazardRowDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more RiskHazardRows.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RiskHazardRowUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many RiskHazardRows
+     * const riskHazardRow = await prisma.riskHazardRow.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends RiskHazardRowUpdateManyArgs>(args: SelectSubset<T, RiskHazardRowUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more RiskHazardRows and returns the data updated in the database.
+     * @param {RiskHazardRowUpdateManyAndReturnArgs} args - Arguments to update many RiskHazardRows.
+     * @example
+     * // Update many RiskHazardRows
+     * const riskHazardRow = await prisma.riskHazardRow.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more RiskHazardRows and only return the `id`
+     * const riskHazardRowWithIdOnly = await prisma.riskHazardRow.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends RiskHazardRowUpdateManyAndReturnArgs>(args: SelectSubset<T, RiskHazardRowUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RiskHazardRowPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one RiskHazardRow.
+     * @param {RiskHazardRowUpsertArgs} args - Arguments to update or create a RiskHazardRow.
+     * @example
+     * // Update or create a RiskHazardRow
+     * const riskHazardRow = await prisma.riskHazardRow.upsert({
+     *   create: {
+     *     // ... data to create a RiskHazardRow
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the RiskHazardRow we want to update
+     *   }
+     * })
+     */
+    upsert<T extends RiskHazardRowUpsertArgs>(args: SelectSubset<T, RiskHazardRowUpsertArgs<ExtArgs>>): Prisma__RiskHazardRowClient<$Result.GetResult<Prisma.$RiskHazardRowPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of RiskHazardRows.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RiskHazardRowCountArgs} args - Arguments to filter RiskHazardRows to count.
+     * @example
+     * // Count the number of RiskHazardRows
+     * const count = await prisma.riskHazardRow.count({
+     *   where: {
+     *     // ... the filter for the RiskHazardRows we want to count
+     *   }
+     * })
+    **/
+    count<T extends RiskHazardRowCountArgs>(
+      args?: Subset<T, RiskHazardRowCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], RiskHazardRowCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a RiskHazardRow.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RiskHazardRowAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends RiskHazardRowAggregateArgs>(args: Subset<T, RiskHazardRowAggregateArgs>): Prisma.PrismaPromise<GetRiskHazardRowAggregateType<T>>
+
+    /**
+     * Group by RiskHazardRow.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RiskHazardRowGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends RiskHazardRowGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: RiskHazardRowGroupByArgs['orderBy'] }
+        : { orderBy?: RiskHazardRowGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, RiskHazardRowGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetRiskHazardRowGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the RiskHazardRow model
+   */
+  readonly fields: RiskHazardRowFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for RiskHazardRow.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__RiskHazardRowClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    revision<T extends RiskAssessmentRevisionDefaultArgs<ExtArgs> = {}>(args?: Subset<T, RiskAssessmentRevisionDefaultArgs<ExtArgs>>): Prisma__RiskAssessmentRevisionClient<$Result.GetResult<Prisma.$RiskAssessmentRevisionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the RiskHazardRow model
+   */
+  interface RiskHazardRowFieldRefs {
+    readonly id: FieldRef<"RiskHazardRow", 'String'>
+    readonly companyId: FieldRef<"RiskHazardRow", 'String'>
+    readonly revisionId: FieldRef<"RiskHazardRow", 'String'>
+    readonly rowNo: FieldRef<"RiskHazardRow", 'Int'>
+    readonly phase: FieldRef<"RiskHazardRow", 'String'>
+    readonly consequence: FieldRef<"RiskHazardRow", 'String'>
+    readonly causes: FieldRef<"RiskHazardRow", 'String'>
+    readonly severity: FieldRef<"RiskHazardRow", 'Int'>
+    readonly likelihood: FieldRef<"RiskHazardRow", 'Int'>
+    readonly existingControls: FieldRef<"RiskHazardRow", 'String'>
+    readonly additionalControls: FieldRef<"RiskHazardRow", 'String'>
+    readonly resLikelihood: FieldRef<"RiskHazardRow", 'Int'>
+    readonly responsible: FieldRef<"RiskHazardRow", 'String'>
+    readonly isNew: FieldRef<"RiskHazardRow", 'Boolean'>
+    readonly ratingChangeNote: FieldRef<"RiskHazardRow", 'String'>
+    readonly createdAt: FieldRef<"RiskHazardRow", 'DateTime'>
+    readonly createdBy: FieldRef<"RiskHazardRow", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * RiskHazardRow findUnique
+   */
+  export type RiskHazardRowFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RiskHazardRow
+     */
+    select?: RiskHazardRowSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RiskHazardRow
+     */
+    omit?: RiskHazardRowOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RiskHazardRowInclude<ExtArgs> | null
+    /**
+     * Filter, which RiskHazardRow to fetch.
+     */
+    where: RiskHazardRowWhereUniqueInput
+  }
+
+  /**
+   * RiskHazardRow findUniqueOrThrow
+   */
+  export type RiskHazardRowFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RiskHazardRow
+     */
+    select?: RiskHazardRowSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RiskHazardRow
+     */
+    omit?: RiskHazardRowOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RiskHazardRowInclude<ExtArgs> | null
+    /**
+     * Filter, which RiskHazardRow to fetch.
+     */
+    where: RiskHazardRowWhereUniqueInput
+  }
+
+  /**
+   * RiskHazardRow findFirst
+   */
+  export type RiskHazardRowFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RiskHazardRow
+     */
+    select?: RiskHazardRowSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RiskHazardRow
+     */
+    omit?: RiskHazardRowOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RiskHazardRowInclude<ExtArgs> | null
+    /**
+     * Filter, which RiskHazardRow to fetch.
+     */
+    where?: RiskHazardRowWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of RiskHazardRows to fetch.
+     */
+    orderBy?: RiskHazardRowOrderByWithRelationInput | RiskHazardRowOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for RiskHazardRows.
+     */
+    cursor?: RiskHazardRowWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` RiskHazardRows from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` RiskHazardRows.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of RiskHazardRows.
+     */
+    distinct?: RiskHazardRowScalarFieldEnum | RiskHazardRowScalarFieldEnum[]
+  }
+
+  /**
+   * RiskHazardRow findFirstOrThrow
+   */
+  export type RiskHazardRowFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RiskHazardRow
+     */
+    select?: RiskHazardRowSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RiskHazardRow
+     */
+    omit?: RiskHazardRowOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RiskHazardRowInclude<ExtArgs> | null
+    /**
+     * Filter, which RiskHazardRow to fetch.
+     */
+    where?: RiskHazardRowWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of RiskHazardRows to fetch.
+     */
+    orderBy?: RiskHazardRowOrderByWithRelationInput | RiskHazardRowOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for RiskHazardRows.
+     */
+    cursor?: RiskHazardRowWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` RiskHazardRows from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` RiskHazardRows.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of RiskHazardRows.
+     */
+    distinct?: RiskHazardRowScalarFieldEnum | RiskHazardRowScalarFieldEnum[]
+  }
+
+  /**
+   * RiskHazardRow findMany
+   */
+  export type RiskHazardRowFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RiskHazardRow
+     */
+    select?: RiskHazardRowSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RiskHazardRow
+     */
+    omit?: RiskHazardRowOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RiskHazardRowInclude<ExtArgs> | null
+    /**
+     * Filter, which RiskHazardRows to fetch.
+     */
+    where?: RiskHazardRowWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of RiskHazardRows to fetch.
+     */
+    orderBy?: RiskHazardRowOrderByWithRelationInput | RiskHazardRowOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing RiskHazardRows.
+     */
+    cursor?: RiskHazardRowWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` RiskHazardRows from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` RiskHazardRows.
+     */
+    skip?: number
+    distinct?: RiskHazardRowScalarFieldEnum | RiskHazardRowScalarFieldEnum[]
+  }
+
+  /**
+   * RiskHazardRow create
+   */
+  export type RiskHazardRowCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RiskHazardRow
+     */
+    select?: RiskHazardRowSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RiskHazardRow
+     */
+    omit?: RiskHazardRowOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RiskHazardRowInclude<ExtArgs> | null
+    /**
+     * The data needed to create a RiskHazardRow.
+     */
+    data: XOR<RiskHazardRowCreateInput, RiskHazardRowUncheckedCreateInput>
+  }
+
+  /**
+   * RiskHazardRow createMany
+   */
+  export type RiskHazardRowCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many RiskHazardRows.
+     */
+    data: RiskHazardRowCreateManyInput | RiskHazardRowCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * RiskHazardRow createManyAndReturn
+   */
+  export type RiskHazardRowCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RiskHazardRow
+     */
+    select?: RiskHazardRowSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the RiskHazardRow
+     */
+    omit?: RiskHazardRowOmit<ExtArgs> | null
+    /**
+     * The data used to create many RiskHazardRows.
+     */
+    data: RiskHazardRowCreateManyInput | RiskHazardRowCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RiskHazardRowIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * RiskHazardRow update
+   */
+  export type RiskHazardRowUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RiskHazardRow
+     */
+    select?: RiskHazardRowSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RiskHazardRow
+     */
+    omit?: RiskHazardRowOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RiskHazardRowInclude<ExtArgs> | null
+    /**
+     * The data needed to update a RiskHazardRow.
+     */
+    data: XOR<RiskHazardRowUpdateInput, RiskHazardRowUncheckedUpdateInput>
+    /**
+     * Choose, which RiskHazardRow to update.
+     */
+    where: RiskHazardRowWhereUniqueInput
+  }
+
+  /**
+   * RiskHazardRow updateMany
+   */
+  export type RiskHazardRowUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update RiskHazardRows.
+     */
+    data: XOR<RiskHazardRowUpdateManyMutationInput, RiskHazardRowUncheckedUpdateManyInput>
+    /**
+     * Filter which RiskHazardRows to update
+     */
+    where?: RiskHazardRowWhereInput
+    /**
+     * Limit how many RiskHazardRows to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * RiskHazardRow updateManyAndReturn
+   */
+  export type RiskHazardRowUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RiskHazardRow
+     */
+    select?: RiskHazardRowSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the RiskHazardRow
+     */
+    omit?: RiskHazardRowOmit<ExtArgs> | null
+    /**
+     * The data used to update RiskHazardRows.
+     */
+    data: XOR<RiskHazardRowUpdateManyMutationInput, RiskHazardRowUncheckedUpdateManyInput>
+    /**
+     * Filter which RiskHazardRows to update
+     */
+    where?: RiskHazardRowWhereInput
+    /**
+     * Limit how many RiskHazardRows to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RiskHazardRowIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * RiskHazardRow upsert
+   */
+  export type RiskHazardRowUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RiskHazardRow
+     */
+    select?: RiskHazardRowSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RiskHazardRow
+     */
+    omit?: RiskHazardRowOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RiskHazardRowInclude<ExtArgs> | null
+    /**
+     * The filter to search for the RiskHazardRow to update in case it exists.
+     */
+    where: RiskHazardRowWhereUniqueInput
+    /**
+     * In case the RiskHazardRow found by the `where` argument doesn't exist, create a new RiskHazardRow with this data.
+     */
+    create: XOR<RiskHazardRowCreateInput, RiskHazardRowUncheckedCreateInput>
+    /**
+     * In case the RiskHazardRow was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<RiskHazardRowUpdateInput, RiskHazardRowUncheckedUpdateInput>
+  }
+
+  /**
+   * RiskHazardRow delete
+   */
+  export type RiskHazardRowDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RiskHazardRow
+     */
+    select?: RiskHazardRowSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RiskHazardRow
+     */
+    omit?: RiskHazardRowOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RiskHazardRowInclude<ExtArgs> | null
+    /**
+     * Filter which RiskHazardRow to delete.
+     */
+    where: RiskHazardRowWhereUniqueInput
+  }
+
+  /**
+   * RiskHazardRow deleteMany
+   */
+  export type RiskHazardRowDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which RiskHazardRows to delete
+     */
+    where?: RiskHazardRowWhereInput
+    /**
+     * Limit how many RiskHazardRows to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * RiskHazardRow without action
+   */
+  export type RiskHazardRowDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RiskHazardRow
+     */
+    select?: RiskHazardRowSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RiskHazardRow
+     */
+    omit?: RiskHazardRowOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RiskHazardRowInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model RiskAssessmentExecution
+   */
+
+  export type AggregateRiskAssessmentExecution = {
+    _count: RiskAssessmentExecutionCountAggregateOutputType | null
+    _min: RiskAssessmentExecutionMinAggregateOutputType | null
+    _max: RiskAssessmentExecutionMaxAggregateOutputType | null
+  }
+
+  export type RiskAssessmentExecutionMinAggregateOutputType = {
+    id: string | null
+    companyId: string | null
+    documentId: string | null
+    revisionId: string | null
+    vesselId: string | null
+    jobName: string | null
+    conditionStatus: $Enums.RaExecutionCondition | null
+    changedConditionsNote: string | null
+    temporaryHazards: string | null
+    temporaryControls: string | null
+    performedById: string | null
+    toolboxSignedAt: Date | null
+    toolboxAttendees: string | null
+    executedAt: Date | null
+    createdAt: Date | null
+    createdBy: string | null
+  }
+
+  export type RiskAssessmentExecutionMaxAggregateOutputType = {
+    id: string | null
+    companyId: string | null
+    documentId: string | null
+    revisionId: string | null
+    vesselId: string | null
+    jobName: string | null
+    conditionStatus: $Enums.RaExecutionCondition | null
+    changedConditionsNote: string | null
+    temporaryHazards: string | null
+    temporaryControls: string | null
+    performedById: string | null
+    toolboxSignedAt: Date | null
+    toolboxAttendees: string | null
+    executedAt: Date | null
+    createdAt: Date | null
+    createdBy: string | null
+  }
+
+  export type RiskAssessmentExecutionCountAggregateOutputType = {
+    id: number
+    companyId: number
+    documentId: number
+    revisionId: number
+    vesselId: number
+    jobName: number
+    conditionStatus: number
+    changedConditionsNote: number
+    temporaryHazards: number
+    temporaryControls: number
+    performedById: number
+    toolboxSignedAt: number
+    toolboxAttendees: number
+    executedAt: number
+    createdAt: number
+    createdBy: number
+    _all: number
+  }
+
+
+  export type RiskAssessmentExecutionMinAggregateInputType = {
+    id?: true
+    companyId?: true
+    documentId?: true
+    revisionId?: true
+    vesselId?: true
+    jobName?: true
+    conditionStatus?: true
+    changedConditionsNote?: true
+    temporaryHazards?: true
+    temporaryControls?: true
+    performedById?: true
+    toolboxSignedAt?: true
+    toolboxAttendees?: true
+    executedAt?: true
+    createdAt?: true
+    createdBy?: true
+  }
+
+  export type RiskAssessmentExecutionMaxAggregateInputType = {
+    id?: true
+    companyId?: true
+    documentId?: true
+    revisionId?: true
+    vesselId?: true
+    jobName?: true
+    conditionStatus?: true
+    changedConditionsNote?: true
+    temporaryHazards?: true
+    temporaryControls?: true
+    performedById?: true
+    toolboxSignedAt?: true
+    toolboxAttendees?: true
+    executedAt?: true
+    createdAt?: true
+    createdBy?: true
+  }
+
+  export type RiskAssessmentExecutionCountAggregateInputType = {
+    id?: true
+    companyId?: true
+    documentId?: true
+    revisionId?: true
+    vesselId?: true
+    jobName?: true
+    conditionStatus?: true
+    changedConditionsNote?: true
+    temporaryHazards?: true
+    temporaryControls?: true
+    performedById?: true
+    toolboxSignedAt?: true
+    toolboxAttendees?: true
+    executedAt?: true
+    createdAt?: true
+    createdBy?: true
+    _all?: true
+  }
+
+  export type RiskAssessmentExecutionAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which RiskAssessmentExecution to aggregate.
+     */
+    where?: RiskAssessmentExecutionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of RiskAssessmentExecutions to fetch.
+     */
+    orderBy?: RiskAssessmentExecutionOrderByWithRelationInput | RiskAssessmentExecutionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: RiskAssessmentExecutionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` RiskAssessmentExecutions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` RiskAssessmentExecutions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned RiskAssessmentExecutions
+    **/
+    _count?: true | RiskAssessmentExecutionCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: RiskAssessmentExecutionMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: RiskAssessmentExecutionMaxAggregateInputType
+  }
+
+  export type GetRiskAssessmentExecutionAggregateType<T extends RiskAssessmentExecutionAggregateArgs> = {
+        [P in keyof T & keyof AggregateRiskAssessmentExecution]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateRiskAssessmentExecution[P]>
+      : GetScalarType<T[P], AggregateRiskAssessmentExecution[P]>
+  }
+
+
+
+
+  export type RiskAssessmentExecutionGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: RiskAssessmentExecutionWhereInput
+    orderBy?: RiskAssessmentExecutionOrderByWithAggregationInput | RiskAssessmentExecutionOrderByWithAggregationInput[]
+    by: RiskAssessmentExecutionScalarFieldEnum[] | RiskAssessmentExecutionScalarFieldEnum
+    having?: RiskAssessmentExecutionScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: RiskAssessmentExecutionCountAggregateInputType | true
+    _min?: RiskAssessmentExecutionMinAggregateInputType
+    _max?: RiskAssessmentExecutionMaxAggregateInputType
+  }
+
+  export type RiskAssessmentExecutionGroupByOutputType = {
+    id: string
+    companyId: string
+    documentId: string
+    revisionId: string
+    vesselId: string
+    jobName: string
+    conditionStatus: $Enums.RaExecutionCondition
+    changedConditionsNote: string | null
+    temporaryHazards: string | null
+    temporaryControls: string | null
+    performedById: string | null
+    toolboxSignedAt: Date | null
+    toolboxAttendees: string | null
+    executedAt: Date
+    createdAt: Date
+    createdBy: string | null
+    _count: RiskAssessmentExecutionCountAggregateOutputType | null
+    _min: RiskAssessmentExecutionMinAggregateOutputType | null
+    _max: RiskAssessmentExecutionMaxAggregateOutputType | null
+  }
+
+  type GetRiskAssessmentExecutionGroupByPayload<T extends RiskAssessmentExecutionGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<RiskAssessmentExecutionGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof RiskAssessmentExecutionGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], RiskAssessmentExecutionGroupByOutputType[P]>
+            : GetScalarType<T[P], RiskAssessmentExecutionGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type RiskAssessmentExecutionSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    companyId?: boolean
+    documentId?: boolean
+    revisionId?: boolean
+    vesselId?: boolean
+    jobName?: boolean
+    conditionStatus?: boolean
+    changedConditionsNote?: boolean
+    temporaryHazards?: boolean
+    temporaryControls?: boolean
+    performedById?: boolean
+    toolboxSignedAt?: boolean
+    toolboxAttendees?: boolean
+    executedAt?: boolean
+    createdAt?: boolean
+    createdBy?: boolean
+    document?: boolean | RiskAssessmentDocumentDefaultArgs<ExtArgs>
+    revision?: boolean | RiskAssessmentRevisionDefaultArgs<ExtArgs>
+    vessel?: boolean | VesselDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["riskAssessmentExecution"]>
+
+  export type RiskAssessmentExecutionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    companyId?: boolean
+    documentId?: boolean
+    revisionId?: boolean
+    vesselId?: boolean
+    jobName?: boolean
+    conditionStatus?: boolean
+    changedConditionsNote?: boolean
+    temporaryHazards?: boolean
+    temporaryControls?: boolean
+    performedById?: boolean
+    toolboxSignedAt?: boolean
+    toolboxAttendees?: boolean
+    executedAt?: boolean
+    createdAt?: boolean
+    createdBy?: boolean
+    document?: boolean | RiskAssessmentDocumentDefaultArgs<ExtArgs>
+    revision?: boolean | RiskAssessmentRevisionDefaultArgs<ExtArgs>
+    vessel?: boolean | VesselDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["riskAssessmentExecution"]>
+
+  export type RiskAssessmentExecutionSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    companyId?: boolean
+    documentId?: boolean
+    revisionId?: boolean
+    vesselId?: boolean
+    jobName?: boolean
+    conditionStatus?: boolean
+    changedConditionsNote?: boolean
+    temporaryHazards?: boolean
+    temporaryControls?: boolean
+    performedById?: boolean
+    toolboxSignedAt?: boolean
+    toolboxAttendees?: boolean
+    executedAt?: boolean
+    createdAt?: boolean
+    createdBy?: boolean
+    document?: boolean | RiskAssessmentDocumentDefaultArgs<ExtArgs>
+    revision?: boolean | RiskAssessmentRevisionDefaultArgs<ExtArgs>
+    vessel?: boolean | VesselDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["riskAssessmentExecution"]>
+
+  export type RiskAssessmentExecutionSelectScalar = {
+    id?: boolean
+    companyId?: boolean
+    documentId?: boolean
+    revisionId?: boolean
+    vesselId?: boolean
+    jobName?: boolean
+    conditionStatus?: boolean
+    changedConditionsNote?: boolean
+    temporaryHazards?: boolean
+    temporaryControls?: boolean
+    performedById?: boolean
+    toolboxSignedAt?: boolean
+    toolboxAttendees?: boolean
+    executedAt?: boolean
+    createdAt?: boolean
+    createdBy?: boolean
+  }
+
+  export type RiskAssessmentExecutionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "companyId" | "documentId" | "revisionId" | "vesselId" | "jobName" | "conditionStatus" | "changedConditionsNote" | "temporaryHazards" | "temporaryControls" | "performedById" | "toolboxSignedAt" | "toolboxAttendees" | "executedAt" | "createdAt" | "createdBy", ExtArgs["result"]["riskAssessmentExecution"]>
+  export type RiskAssessmentExecutionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    document?: boolean | RiskAssessmentDocumentDefaultArgs<ExtArgs>
+    revision?: boolean | RiskAssessmentRevisionDefaultArgs<ExtArgs>
+    vessel?: boolean | VesselDefaultArgs<ExtArgs>
+  }
+  export type RiskAssessmentExecutionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    document?: boolean | RiskAssessmentDocumentDefaultArgs<ExtArgs>
+    revision?: boolean | RiskAssessmentRevisionDefaultArgs<ExtArgs>
+    vessel?: boolean | VesselDefaultArgs<ExtArgs>
+  }
+  export type RiskAssessmentExecutionIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    document?: boolean | RiskAssessmentDocumentDefaultArgs<ExtArgs>
+    revision?: boolean | RiskAssessmentRevisionDefaultArgs<ExtArgs>
+    vessel?: boolean | VesselDefaultArgs<ExtArgs>
+  }
+
+  export type $RiskAssessmentExecutionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "RiskAssessmentExecution"
+    objects: {
+      document: Prisma.$RiskAssessmentDocumentPayload<ExtArgs>
+      revision: Prisma.$RiskAssessmentRevisionPayload<ExtArgs>
+      vessel: Prisma.$VesselPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      companyId: string
+      documentId: string
+      revisionId: string
+      vesselId: string
+      jobName: string
+      conditionStatus: $Enums.RaExecutionCondition
+      changedConditionsNote: string | null
+      temporaryHazards: string | null
+      temporaryControls: string | null
+      performedById: string | null
+      toolboxSignedAt: Date | null
+      toolboxAttendees: string | null
+      executedAt: Date
+      createdAt: Date
+      createdBy: string | null
+    }, ExtArgs["result"]["riskAssessmentExecution"]>
+    composites: {}
+  }
+
+  type RiskAssessmentExecutionGetPayload<S extends boolean | null | undefined | RiskAssessmentExecutionDefaultArgs> = $Result.GetResult<Prisma.$RiskAssessmentExecutionPayload, S>
+
+  type RiskAssessmentExecutionCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<RiskAssessmentExecutionFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: RiskAssessmentExecutionCountAggregateInputType | true
+    }
+
+  export interface RiskAssessmentExecutionDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['RiskAssessmentExecution'], meta: { name: 'RiskAssessmentExecution' } }
+    /**
+     * Find zero or one RiskAssessmentExecution that matches the filter.
+     * @param {RiskAssessmentExecutionFindUniqueArgs} args - Arguments to find a RiskAssessmentExecution
+     * @example
+     * // Get one RiskAssessmentExecution
+     * const riskAssessmentExecution = await prisma.riskAssessmentExecution.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends RiskAssessmentExecutionFindUniqueArgs>(args: SelectSubset<T, RiskAssessmentExecutionFindUniqueArgs<ExtArgs>>): Prisma__RiskAssessmentExecutionClient<$Result.GetResult<Prisma.$RiskAssessmentExecutionPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one RiskAssessmentExecution that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {RiskAssessmentExecutionFindUniqueOrThrowArgs} args - Arguments to find a RiskAssessmentExecution
+     * @example
+     * // Get one RiskAssessmentExecution
+     * const riskAssessmentExecution = await prisma.riskAssessmentExecution.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends RiskAssessmentExecutionFindUniqueOrThrowArgs>(args: SelectSubset<T, RiskAssessmentExecutionFindUniqueOrThrowArgs<ExtArgs>>): Prisma__RiskAssessmentExecutionClient<$Result.GetResult<Prisma.$RiskAssessmentExecutionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first RiskAssessmentExecution that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RiskAssessmentExecutionFindFirstArgs} args - Arguments to find a RiskAssessmentExecution
+     * @example
+     * // Get one RiskAssessmentExecution
+     * const riskAssessmentExecution = await prisma.riskAssessmentExecution.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends RiskAssessmentExecutionFindFirstArgs>(args?: SelectSubset<T, RiskAssessmentExecutionFindFirstArgs<ExtArgs>>): Prisma__RiskAssessmentExecutionClient<$Result.GetResult<Prisma.$RiskAssessmentExecutionPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first RiskAssessmentExecution that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RiskAssessmentExecutionFindFirstOrThrowArgs} args - Arguments to find a RiskAssessmentExecution
+     * @example
+     * // Get one RiskAssessmentExecution
+     * const riskAssessmentExecution = await prisma.riskAssessmentExecution.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends RiskAssessmentExecutionFindFirstOrThrowArgs>(args?: SelectSubset<T, RiskAssessmentExecutionFindFirstOrThrowArgs<ExtArgs>>): Prisma__RiskAssessmentExecutionClient<$Result.GetResult<Prisma.$RiskAssessmentExecutionPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more RiskAssessmentExecutions that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RiskAssessmentExecutionFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all RiskAssessmentExecutions
+     * const riskAssessmentExecutions = await prisma.riskAssessmentExecution.findMany()
+     * 
+     * // Get first 10 RiskAssessmentExecutions
+     * const riskAssessmentExecutions = await prisma.riskAssessmentExecution.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const riskAssessmentExecutionWithIdOnly = await prisma.riskAssessmentExecution.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends RiskAssessmentExecutionFindManyArgs>(args?: SelectSubset<T, RiskAssessmentExecutionFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RiskAssessmentExecutionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a RiskAssessmentExecution.
+     * @param {RiskAssessmentExecutionCreateArgs} args - Arguments to create a RiskAssessmentExecution.
+     * @example
+     * // Create one RiskAssessmentExecution
+     * const RiskAssessmentExecution = await prisma.riskAssessmentExecution.create({
+     *   data: {
+     *     // ... data to create a RiskAssessmentExecution
+     *   }
+     * })
+     * 
+     */
+    create<T extends RiskAssessmentExecutionCreateArgs>(args: SelectSubset<T, RiskAssessmentExecutionCreateArgs<ExtArgs>>): Prisma__RiskAssessmentExecutionClient<$Result.GetResult<Prisma.$RiskAssessmentExecutionPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many RiskAssessmentExecutions.
+     * @param {RiskAssessmentExecutionCreateManyArgs} args - Arguments to create many RiskAssessmentExecutions.
+     * @example
+     * // Create many RiskAssessmentExecutions
+     * const riskAssessmentExecution = await prisma.riskAssessmentExecution.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends RiskAssessmentExecutionCreateManyArgs>(args?: SelectSubset<T, RiskAssessmentExecutionCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many RiskAssessmentExecutions and returns the data saved in the database.
+     * @param {RiskAssessmentExecutionCreateManyAndReturnArgs} args - Arguments to create many RiskAssessmentExecutions.
+     * @example
+     * // Create many RiskAssessmentExecutions
+     * const riskAssessmentExecution = await prisma.riskAssessmentExecution.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many RiskAssessmentExecutions and only return the `id`
+     * const riskAssessmentExecutionWithIdOnly = await prisma.riskAssessmentExecution.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends RiskAssessmentExecutionCreateManyAndReturnArgs>(args?: SelectSubset<T, RiskAssessmentExecutionCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RiskAssessmentExecutionPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a RiskAssessmentExecution.
+     * @param {RiskAssessmentExecutionDeleteArgs} args - Arguments to delete one RiskAssessmentExecution.
+     * @example
+     * // Delete one RiskAssessmentExecution
+     * const RiskAssessmentExecution = await prisma.riskAssessmentExecution.delete({
+     *   where: {
+     *     // ... filter to delete one RiskAssessmentExecution
+     *   }
+     * })
+     * 
+     */
+    delete<T extends RiskAssessmentExecutionDeleteArgs>(args: SelectSubset<T, RiskAssessmentExecutionDeleteArgs<ExtArgs>>): Prisma__RiskAssessmentExecutionClient<$Result.GetResult<Prisma.$RiskAssessmentExecutionPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one RiskAssessmentExecution.
+     * @param {RiskAssessmentExecutionUpdateArgs} args - Arguments to update one RiskAssessmentExecution.
+     * @example
+     * // Update one RiskAssessmentExecution
+     * const riskAssessmentExecution = await prisma.riskAssessmentExecution.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends RiskAssessmentExecutionUpdateArgs>(args: SelectSubset<T, RiskAssessmentExecutionUpdateArgs<ExtArgs>>): Prisma__RiskAssessmentExecutionClient<$Result.GetResult<Prisma.$RiskAssessmentExecutionPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more RiskAssessmentExecutions.
+     * @param {RiskAssessmentExecutionDeleteManyArgs} args - Arguments to filter RiskAssessmentExecutions to delete.
+     * @example
+     * // Delete a few RiskAssessmentExecutions
+     * const { count } = await prisma.riskAssessmentExecution.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends RiskAssessmentExecutionDeleteManyArgs>(args?: SelectSubset<T, RiskAssessmentExecutionDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more RiskAssessmentExecutions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RiskAssessmentExecutionUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many RiskAssessmentExecutions
+     * const riskAssessmentExecution = await prisma.riskAssessmentExecution.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends RiskAssessmentExecutionUpdateManyArgs>(args: SelectSubset<T, RiskAssessmentExecutionUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more RiskAssessmentExecutions and returns the data updated in the database.
+     * @param {RiskAssessmentExecutionUpdateManyAndReturnArgs} args - Arguments to update many RiskAssessmentExecutions.
+     * @example
+     * // Update many RiskAssessmentExecutions
+     * const riskAssessmentExecution = await prisma.riskAssessmentExecution.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more RiskAssessmentExecutions and only return the `id`
+     * const riskAssessmentExecutionWithIdOnly = await prisma.riskAssessmentExecution.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends RiskAssessmentExecutionUpdateManyAndReturnArgs>(args: SelectSubset<T, RiskAssessmentExecutionUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RiskAssessmentExecutionPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one RiskAssessmentExecution.
+     * @param {RiskAssessmentExecutionUpsertArgs} args - Arguments to update or create a RiskAssessmentExecution.
+     * @example
+     * // Update or create a RiskAssessmentExecution
+     * const riskAssessmentExecution = await prisma.riskAssessmentExecution.upsert({
+     *   create: {
+     *     // ... data to create a RiskAssessmentExecution
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the RiskAssessmentExecution we want to update
+     *   }
+     * })
+     */
+    upsert<T extends RiskAssessmentExecutionUpsertArgs>(args: SelectSubset<T, RiskAssessmentExecutionUpsertArgs<ExtArgs>>): Prisma__RiskAssessmentExecutionClient<$Result.GetResult<Prisma.$RiskAssessmentExecutionPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of RiskAssessmentExecutions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RiskAssessmentExecutionCountArgs} args - Arguments to filter RiskAssessmentExecutions to count.
+     * @example
+     * // Count the number of RiskAssessmentExecutions
+     * const count = await prisma.riskAssessmentExecution.count({
+     *   where: {
+     *     // ... the filter for the RiskAssessmentExecutions we want to count
+     *   }
+     * })
+    **/
+    count<T extends RiskAssessmentExecutionCountArgs>(
+      args?: Subset<T, RiskAssessmentExecutionCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], RiskAssessmentExecutionCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a RiskAssessmentExecution.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RiskAssessmentExecutionAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends RiskAssessmentExecutionAggregateArgs>(args: Subset<T, RiskAssessmentExecutionAggregateArgs>): Prisma.PrismaPromise<GetRiskAssessmentExecutionAggregateType<T>>
+
+    /**
+     * Group by RiskAssessmentExecution.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RiskAssessmentExecutionGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends RiskAssessmentExecutionGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: RiskAssessmentExecutionGroupByArgs['orderBy'] }
+        : { orderBy?: RiskAssessmentExecutionGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, RiskAssessmentExecutionGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetRiskAssessmentExecutionGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the RiskAssessmentExecution model
+   */
+  readonly fields: RiskAssessmentExecutionFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for RiskAssessmentExecution.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__RiskAssessmentExecutionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    document<T extends RiskAssessmentDocumentDefaultArgs<ExtArgs> = {}>(args?: Subset<T, RiskAssessmentDocumentDefaultArgs<ExtArgs>>): Prisma__RiskAssessmentDocumentClient<$Result.GetResult<Prisma.$RiskAssessmentDocumentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    revision<T extends RiskAssessmentRevisionDefaultArgs<ExtArgs> = {}>(args?: Subset<T, RiskAssessmentRevisionDefaultArgs<ExtArgs>>): Prisma__RiskAssessmentRevisionClient<$Result.GetResult<Prisma.$RiskAssessmentRevisionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    vessel<T extends VesselDefaultArgs<ExtArgs> = {}>(args?: Subset<T, VesselDefaultArgs<ExtArgs>>): Prisma__VesselClient<$Result.GetResult<Prisma.$VesselPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the RiskAssessmentExecution model
+   */
+  interface RiskAssessmentExecutionFieldRefs {
+    readonly id: FieldRef<"RiskAssessmentExecution", 'String'>
+    readonly companyId: FieldRef<"RiskAssessmentExecution", 'String'>
+    readonly documentId: FieldRef<"RiskAssessmentExecution", 'String'>
+    readonly revisionId: FieldRef<"RiskAssessmentExecution", 'String'>
+    readonly vesselId: FieldRef<"RiskAssessmentExecution", 'String'>
+    readonly jobName: FieldRef<"RiskAssessmentExecution", 'String'>
+    readonly conditionStatus: FieldRef<"RiskAssessmentExecution", 'RaExecutionCondition'>
+    readonly changedConditionsNote: FieldRef<"RiskAssessmentExecution", 'String'>
+    readonly temporaryHazards: FieldRef<"RiskAssessmentExecution", 'String'>
+    readonly temporaryControls: FieldRef<"RiskAssessmentExecution", 'String'>
+    readonly performedById: FieldRef<"RiskAssessmentExecution", 'String'>
+    readonly toolboxSignedAt: FieldRef<"RiskAssessmentExecution", 'DateTime'>
+    readonly toolboxAttendees: FieldRef<"RiskAssessmentExecution", 'String'>
+    readonly executedAt: FieldRef<"RiskAssessmentExecution", 'DateTime'>
+    readonly createdAt: FieldRef<"RiskAssessmentExecution", 'DateTime'>
+    readonly createdBy: FieldRef<"RiskAssessmentExecution", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * RiskAssessmentExecution findUnique
+   */
+  export type RiskAssessmentExecutionFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RiskAssessmentExecution
+     */
+    select?: RiskAssessmentExecutionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RiskAssessmentExecution
+     */
+    omit?: RiskAssessmentExecutionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RiskAssessmentExecutionInclude<ExtArgs> | null
+    /**
+     * Filter, which RiskAssessmentExecution to fetch.
+     */
+    where: RiskAssessmentExecutionWhereUniqueInput
+  }
+
+  /**
+   * RiskAssessmentExecution findUniqueOrThrow
+   */
+  export type RiskAssessmentExecutionFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RiskAssessmentExecution
+     */
+    select?: RiskAssessmentExecutionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RiskAssessmentExecution
+     */
+    omit?: RiskAssessmentExecutionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RiskAssessmentExecutionInclude<ExtArgs> | null
+    /**
+     * Filter, which RiskAssessmentExecution to fetch.
+     */
+    where: RiskAssessmentExecutionWhereUniqueInput
+  }
+
+  /**
+   * RiskAssessmentExecution findFirst
+   */
+  export type RiskAssessmentExecutionFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RiskAssessmentExecution
+     */
+    select?: RiskAssessmentExecutionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RiskAssessmentExecution
+     */
+    omit?: RiskAssessmentExecutionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RiskAssessmentExecutionInclude<ExtArgs> | null
+    /**
+     * Filter, which RiskAssessmentExecution to fetch.
+     */
+    where?: RiskAssessmentExecutionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of RiskAssessmentExecutions to fetch.
+     */
+    orderBy?: RiskAssessmentExecutionOrderByWithRelationInput | RiskAssessmentExecutionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for RiskAssessmentExecutions.
+     */
+    cursor?: RiskAssessmentExecutionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` RiskAssessmentExecutions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` RiskAssessmentExecutions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of RiskAssessmentExecutions.
+     */
+    distinct?: RiskAssessmentExecutionScalarFieldEnum | RiskAssessmentExecutionScalarFieldEnum[]
+  }
+
+  /**
+   * RiskAssessmentExecution findFirstOrThrow
+   */
+  export type RiskAssessmentExecutionFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RiskAssessmentExecution
+     */
+    select?: RiskAssessmentExecutionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RiskAssessmentExecution
+     */
+    omit?: RiskAssessmentExecutionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RiskAssessmentExecutionInclude<ExtArgs> | null
+    /**
+     * Filter, which RiskAssessmentExecution to fetch.
+     */
+    where?: RiskAssessmentExecutionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of RiskAssessmentExecutions to fetch.
+     */
+    orderBy?: RiskAssessmentExecutionOrderByWithRelationInput | RiskAssessmentExecutionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for RiskAssessmentExecutions.
+     */
+    cursor?: RiskAssessmentExecutionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` RiskAssessmentExecutions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` RiskAssessmentExecutions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of RiskAssessmentExecutions.
+     */
+    distinct?: RiskAssessmentExecutionScalarFieldEnum | RiskAssessmentExecutionScalarFieldEnum[]
+  }
+
+  /**
+   * RiskAssessmentExecution findMany
+   */
+  export type RiskAssessmentExecutionFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RiskAssessmentExecution
+     */
+    select?: RiskAssessmentExecutionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RiskAssessmentExecution
+     */
+    omit?: RiskAssessmentExecutionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RiskAssessmentExecutionInclude<ExtArgs> | null
+    /**
+     * Filter, which RiskAssessmentExecutions to fetch.
+     */
+    where?: RiskAssessmentExecutionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of RiskAssessmentExecutions to fetch.
+     */
+    orderBy?: RiskAssessmentExecutionOrderByWithRelationInput | RiskAssessmentExecutionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing RiskAssessmentExecutions.
+     */
+    cursor?: RiskAssessmentExecutionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` RiskAssessmentExecutions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` RiskAssessmentExecutions.
+     */
+    skip?: number
+    distinct?: RiskAssessmentExecutionScalarFieldEnum | RiskAssessmentExecutionScalarFieldEnum[]
+  }
+
+  /**
+   * RiskAssessmentExecution create
+   */
+  export type RiskAssessmentExecutionCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RiskAssessmentExecution
+     */
+    select?: RiskAssessmentExecutionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RiskAssessmentExecution
+     */
+    omit?: RiskAssessmentExecutionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RiskAssessmentExecutionInclude<ExtArgs> | null
+    /**
+     * The data needed to create a RiskAssessmentExecution.
+     */
+    data: XOR<RiskAssessmentExecutionCreateInput, RiskAssessmentExecutionUncheckedCreateInput>
+  }
+
+  /**
+   * RiskAssessmentExecution createMany
+   */
+  export type RiskAssessmentExecutionCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many RiskAssessmentExecutions.
+     */
+    data: RiskAssessmentExecutionCreateManyInput | RiskAssessmentExecutionCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * RiskAssessmentExecution createManyAndReturn
+   */
+  export type RiskAssessmentExecutionCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RiskAssessmentExecution
+     */
+    select?: RiskAssessmentExecutionSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the RiskAssessmentExecution
+     */
+    omit?: RiskAssessmentExecutionOmit<ExtArgs> | null
+    /**
+     * The data used to create many RiskAssessmentExecutions.
+     */
+    data: RiskAssessmentExecutionCreateManyInput | RiskAssessmentExecutionCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RiskAssessmentExecutionIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * RiskAssessmentExecution update
+   */
+  export type RiskAssessmentExecutionUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RiskAssessmentExecution
+     */
+    select?: RiskAssessmentExecutionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RiskAssessmentExecution
+     */
+    omit?: RiskAssessmentExecutionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RiskAssessmentExecutionInclude<ExtArgs> | null
+    /**
+     * The data needed to update a RiskAssessmentExecution.
+     */
+    data: XOR<RiskAssessmentExecutionUpdateInput, RiskAssessmentExecutionUncheckedUpdateInput>
+    /**
+     * Choose, which RiskAssessmentExecution to update.
+     */
+    where: RiskAssessmentExecutionWhereUniqueInput
+  }
+
+  /**
+   * RiskAssessmentExecution updateMany
+   */
+  export type RiskAssessmentExecutionUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update RiskAssessmentExecutions.
+     */
+    data: XOR<RiskAssessmentExecutionUpdateManyMutationInput, RiskAssessmentExecutionUncheckedUpdateManyInput>
+    /**
+     * Filter which RiskAssessmentExecutions to update
+     */
+    where?: RiskAssessmentExecutionWhereInput
+    /**
+     * Limit how many RiskAssessmentExecutions to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * RiskAssessmentExecution updateManyAndReturn
+   */
+  export type RiskAssessmentExecutionUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RiskAssessmentExecution
+     */
+    select?: RiskAssessmentExecutionSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the RiskAssessmentExecution
+     */
+    omit?: RiskAssessmentExecutionOmit<ExtArgs> | null
+    /**
+     * The data used to update RiskAssessmentExecutions.
+     */
+    data: XOR<RiskAssessmentExecutionUpdateManyMutationInput, RiskAssessmentExecutionUncheckedUpdateManyInput>
+    /**
+     * Filter which RiskAssessmentExecutions to update
+     */
+    where?: RiskAssessmentExecutionWhereInput
+    /**
+     * Limit how many RiskAssessmentExecutions to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RiskAssessmentExecutionIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * RiskAssessmentExecution upsert
+   */
+  export type RiskAssessmentExecutionUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RiskAssessmentExecution
+     */
+    select?: RiskAssessmentExecutionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RiskAssessmentExecution
+     */
+    omit?: RiskAssessmentExecutionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RiskAssessmentExecutionInclude<ExtArgs> | null
+    /**
+     * The filter to search for the RiskAssessmentExecution to update in case it exists.
+     */
+    where: RiskAssessmentExecutionWhereUniqueInput
+    /**
+     * In case the RiskAssessmentExecution found by the `where` argument doesn't exist, create a new RiskAssessmentExecution with this data.
+     */
+    create: XOR<RiskAssessmentExecutionCreateInput, RiskAssessmentExecutionUncheckedCreateInput>
+    /**
+     * In case the RiskAssessmentExecution was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<RiskAssessmentExecutionUpdateInput, RiskAssessmentExecutionUncheckedUpdateInput>
+  }
+
+  /**
+   * RiskAssessmentExecution delete
+   */
+  export type RiskAssessmentExecutionDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RiskAssessmentExecution
+     */
+    select?: RiskAssessmentExecutionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RiskAssessmentExecution
+     */
+    omit?: RiskAssessmentExecutionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RiskAssessmentExecutionInclude<ExtArgs> | null
+    /**
+     * Filter which RiskAssessmentExecution to delete.
+     */
+    where: RiskAssessmentExecutionWhereUniqueInput
+  }
+
+  /**
+   * RiskAssessmentExecution deleteMany
+   */
+  export type RiskAssessmentExecutionDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which RiskAssessmentExecutions to delete
+     */
+    where?: RiskAssessmentExecutionWhereInput
+    /**
+     * Limit how many RiskAssessmentExecutions to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * RiskAssessmentExecution without action
+   */
+  export type RiskAssessmentExecutionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RiskAssessmentExecution
+     */
+    select?: RiskAssessmentExecutionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RiskAssessmentExecution
+     */
+    omit?: RiskAssessmentExecutionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RiskAssessmentExecutionInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model RiskAssessmentRevisionRequest
+   */
+
+  export type AggregateRiskAssessmentRevisionRequest = {
+    _count: RiskAssessmentRevisionRequestCountAggregateOutputType | null
+    _min: RiskAssessmentRevisionRequestMinAggregateOutputType | null
+    _max: RiskAssessmentRevisionRequestMaxAggregateOutputType | null
+  }
+
+  export type RiskAssessmentRevisionRequestMinAggregateOutputType = {
+    id: string | null
+    companyId: string | null
+    documentId: string | null
+    requestedById: string | null
+    vesselId: string | null
+    reason: string | null
+    reviewTrigger: $Enums.ReviewTrigger | null
+    status: $Enums.RaRevisionRequestStatus | null
+    decidedById: string | null
+    decidedAt: Date | null
+    decisionNote: string | null
+    createdAt: Date | null
+  }
+
+  export type RiskAssessmentRevisionRequestMaxAggregateOutputType = {
+    id: string | null
+    companyId: string | null
+    documentId: string | null
+    requestedById: string | null
+    vesselId: string | null
+    reason: string | null
+    reviewTrigger: $Enums.ReviewTrigger | null
+    status: $Enums.RaRevisionRequestStatus | null
+    decidedById: string | null
+    decidedAt: Date | null
+    decisionNote: string | null
+    createdAt: Date | null
+  }
+
+  export type RiskAssessmentRevisionRequestCountAggregateOutputType = {
+    id: number
+    companyId: number
+    documentId: number
+    requestedById: number
+    vesselId: number
+    reason: number
+    reviewTrigger: number
+    status: number
+    decidedById: number
+    decidedAt: number
+    decisionNote: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type RiskAssessmentRevisionRequestMinAggregateInputType = {
+    id?: true
+    companyId?: true
+    documentId?: true
+    requestedById?: true
+    vesselId?: true
+    reason?: true
+    reviewTrigger?: true
+    status?: true
+    decidedById?: true
+    decidedAt?: true
+    decisionNote?: true
+    createdAt?: true
+  }
+
+  export type RiskAssessmentRevisionRequestMaxAggregateInputType = {
+    id?: true
+    companyId?: true
+    documentId?: true
+    requestedById?: true
+    vesselId?: true
+    reason?: true
+    reviewTrigger?: true
+    status?: true
+    decidedById?: true
+    decidedAt?: true
+    decisionNote?: true
+    createdAt?: true
+  }
+
+  export type RiskAssessmentRevisionRequestCountAggregateInputType = {
+    id?: true
+    companyId?: true
+    documentId?: true
+    requestedById?: true
+    vesselId?: true
+    reason?: true
+    reviewTrigger?: true
+    status?: true
+    decidedById?: true
+    decidedAt?: true
+    decisionNote?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type RiskAssessmentRevisionRequestAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which RiskAssessmentRevisionRequest to aggregate.
+     */
+    where?: RiskAssessmentRevisionRequestWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of RiskAssessmentRevisionRequests to fetch.
+     */
+    orderBy?: RiskAssessmentRevisionRequestOrderByWithRelationInput | RiskAssessmentRevisionRequestOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: RiskAssessmentRevisionRequestWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` RiskAssessmentRevisionRequests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` RiskAssessmentRevisionRequests.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned RiskAssessmentRevisionRequests
+    **/
+    _count?: true | RiskAssessmentRevisionRequestCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: RiskAssessmentRevisionRequestMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: RiskAssessmentRevisionRequestMaxAggregateInputType
+  }
+
+  export type GetRiskAssessmentRevisionRequestAggregateType<T extends RiskAssessmentRevisionRequestAggregateArgs> = {
+        [P in keyof T & keyof AggregateRiskAssessmentRevisionRequest]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateRiskAssessmentRevisionRequest[P]>
+      : GetScalarType<T[P], AggregateRiskAssessmentRevisionRequest[P]>
+  }
+
+
+
+
+  export type RiskAssessmentRevisionRequestGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: RiskAssessmentRevisionRequestWhereInput
+    orderBy?: RiskAssessmentRevisionRequestOrderByWithAggregationInput | RiskAssessmentRevisionRequestOrderByWithAggregationInput[]
+    by: RiskAssessmentRevisionRequestScalarFieldEnum[] | RiskAssessmentRevisionRequestScalarFieldEnum
+    having?: RiskAssessmentRevisionRequestScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: RiskAssessmentRevisionRequestCountAggregateInputType | true
+    _min?: RiskAssessmentRevisionRequestMinAggregateInputType
+    _max?: RiskAssessmentRevisionRequestMaxAggregateInputType
+  }
+
+  export type RiskAssessmentRevisionRequestGroupByOutputType = {
+    id: string
+    companyId: string
+    documentId: string
+    requestedById: string | null
+    vesselId: string | null
+    reason: string
+    reviewTrigger: $Enums.ReviewTrigger
+    status: $Enums.RaRevisionRequestStatus
+    decidedById: string | null
+    decidedAt: Date | null
+    decisionNote: string | null
+    createdAt: Date
+    _count: RiskAssessmentRevisionRequestCountAggregateOutputType | null
+    _min: RiskAssessmentRevisionRequestMinAggregateOutputType | null
+    _max: RiskAssessmentRevisionRequestMaxAggregateOutputType | null
+  }
+
+  type GetRiskAssessmentRevisionRequestGroupByPayload<T extends RiskAssessmentRevisionRequestGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<RiskAssessmentRevisionRequestGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof RiskAssessmentRevisionRequestGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], RiskAssessmentRevisionRequestGroupByOutputType[P]>
+            : GetScalarType<T[P], RiskAssessmentRevisionRequestGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type RiskAssessmentRevisionRequestSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    companyId?: boolean
+    documentId?: boolean
+    requestedById?: boolean
+    vesselId?: boolean
+    reason?: boolean
+    reviewTrigger?: boolean
+    status?: boolean
+    decidedById?: boolean
+    decidedAt?: boolean
+    decisionNote?: boolean
+    createdAt?: boolean
+    document?: boolean | RiskAssessmentDocumentDefaultArgs<ExtArgs>
+    vessel?: boolean | RiskAssessmentRevisionRequest$vesselArgs<ExtArgs>
+  }, ExtArgs["result"]["riskAssessmentRevisionRequest"]>
+
+  export type RiskAssessmentRevisionRequestSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    companyId?: boolean
+    documentId?: boolean
+    requestedById?: boolean
+    vesselId?: boolean
+    reason?: boolean
+    reviewTrigger?: boolean
+    status?: boolean
+    decidedById?: boolean
+    decidedAt?: boolean
+    decisionNote?: boolean
+    createdAt?: boolean
+    document?: boolean | RiskAssessmentDocumentDefaultArgs<ExtArgs>
+    vessel?: boolean | RiskAssessmentRevisionRequest$vesselArgs<ExtArgs>
+  }, ExtArgs["result"]["riskAssessmentRevisionRequest"]>
+
+  export type RiskAssessmentRevisionRequestSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    companyId?: boolean
+    documentId?: boolean
+    requestedById?: boolean
+    vesselId?: boolean
+    reason?: boolean
+    reviewTrigger?: boolean
+    status?: boolean
+    decidedById?: boolean
+    decidedAt?: boolean
+    decisionNote?: boolean
+    createdAt?: boolean
+    document?: boolean | RiskAssessmentDocumentDefaultArgs<ExtArgs>
+    vessel?: boolean | RiskAssessmentRevisionRequest$vesselArgs<ExtArgs>
+  }, ExtArgs["result"]["riskAssessmentRevisionRequest"]>
+
+  export type RiskAssessmentRevisionRequestSelectScalar = {
+    id?: boolean
+    companyId?: boolean
+    documentId?: boolean
+    requestedById?: boolean
+    vesselId?: boolean
+    reason?: boolean
+    reviewTrigger?: boolean
+    status?: boolean
+    decidedById?: boolean
+    decidedAt?: boolean
+    decisionNote?: boolean
+    createdAt?: boolean
+  }
+
+  export type RiskAssessmentRevisionRequestOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "companyId" | "documentId" | "requestedById" | "vesselId" | "reason" | "reviewTrigger" | "status" | "decidedById" | "decidedAt" | "decisionNote" | "createdAt", ExtArgs["result"]["riskAssessmentRevisionRequest"]>
+  export type RiskAssessmentRevisionRequestInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    document?: boolean | RiskAssessmentDocumentDefaultArgs<ExtArgs>
+    vessel?: boolean | RiskAssessmentRevisionRequest$vesselArgs<ExtArgs>
+  }
+  export type RiskAssessmentRevisionRequestIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    document?: boolean | RiskAssessmentDocumentDefaultArgs<ExtArgs>
+    vessel?: boolean | RiskAssessmentRevisionRequest$vesselArgs<ExtArgs>
+  }
+  export type RiskAssessmentRevisionRequestIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    document?: boolean | RiskAssessmentDocumentDefaultArgs<ExtArgs>
+    vessel?: boolean | RiskAssessmentRevisionRequest$vesselArgs<ExtArgs>
+  }
+
+  export type $RiskAssessmentRevisionRequestPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "RiskAssessmentRevisionRequest"
+    objects: {
+      document: Prisma.$RiskAssessmentDocumentPayload<ExtArgs>
+      vessel: Prisma.$VesselPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      companyId: string
+      documentId: string
+      requestedById: string | null
+      vesselId: string | null
+      reason: string
+      reviewTrigger: $Enums.ReviewTrigger
+      status: $Enums.RaRevisionRequestStatus
+      decidedById: string | null
+      decidedAt: Date | null
+      decisionNote: string | null
+      createdAt: Date
+    }, ExtArgs["result"]["riskAssessmentRevisionRequest"]>
+    composites: {}
+  }
+
+  type RiskAssessmentRevisionRequestGetPayload<S extends boolean | null | undefined | RiskAssessmentRevisionRequestDefaultArgs> = $Result.GetResult<Prisma.$RiskAssessmentRevisionRequestPayload, S>
+
+  type RiskAssessmentRevisionRequestCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<RiskAssessmentRevisionRequestFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: RiskAssessmentRevisionRequestCountAggregateInputType | true
+    }
+
+  export interface RiskAssessmentRevisionRequestDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['RiskAssessmentRevisionRequest'], meta: { name: 'RiskAssessmentRevisionRequest' } }
+    /**
+     * Find zero or one RiskAssessmentRevisionRequest that matches the filter.
+     * @param {RiskAssessmentRevisionRequestFindUniqueArgs} args - Arguments to find a RiskAssessmentRevisionRequest
+     * @example
+     * // Get one RiskAssessmentRevisionRequest
+     * const riskAssessmentRevisionRequest = await prisma.riskAssessmentRevisionRequest.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends RiskAssessmentRevisionRequestFindUniqueArgs>(args: SelectSubset<T, RiskAssessmentRevisionRequestFindUniqueArgs<ExtArgs>>): Prisma__RiskAssessmentRevisionRequestClient<$Result.GetResult<Prisma.$RiskAssessmentRevisionRequestPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one RiskAssessmentRevisionRequest that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {RiskAssessmentRevisionRequestFindUniqueOrThrowArgs} args - Arguments to find a RiskAssessmentRevisionRequest
+     * @example
+     * // Get one RiskAssessmentRevisionRequest
+     * const riskAssessmentRevisionRequest = await prisma.riskAssessmentRevisionRequest.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends RiskAssessmentRevisionRequestFindUniqueOrThrowArgs>(args: SelectSubset<T, RiskAssessmentRevisionRequestFindUniqueOrThrowArgs<ExtArgs>>): Prisma__RiskAssessmentRevisionRequestClient<$Result.GetResult<Prisma.$RiskAssessmentRevisionRequestPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first RiskAssessmentRevisionRequest that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RiskAssessmentRevisionRequestFindFirstArgs} args - Arguments to find a RiskAssessmentRevisionRequest
+     * @example
+     * // Get one RiskAssessmentRevisionRequest
+     * const riskAssessmentRevisionRequest = await prisma.riskAssessmentRevisionRequest.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends RiskAssessmentRevisionRequestFindFirstArgs>(args?: SelectSubset<T, RiskAssessmentRevisionRequestFindFirstArgs<ExtArgs>>): Prisma__RiskAssessmentRevisionRequestClient<$Result.GetResult<Prisma.$RiskAssessmentRevisionRequestPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first RiskAssessmentRevisionRequest that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RiskAssessmentRevisionRequestFindFirstOrThrowArgs} args - Arguments to find a RiskAssessmentRevisionRequest
+     * @example
+     * // Get one RiskAssessmentRevisionRequest
+     * const riskAssessmentRevisionRequest = await prisma.riskAssessmentRevisionRequest.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends RiskAssessmentRevisionRequestFindFirstOrThrowArgs>(args?: SelectSubset<T, RiskAssessmentRevisionRequestFindFirstOrThrowArgs<ExtArgs>>): Prisma__RiskAssessmentRevisionRequestClient<$Result.GetResult<Prisma.$RiskAssessmentRevisionRequestPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more RiskAssessmentRevisionRequests that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RiskAssessmentRevisionRequestFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all RiskAssessmentRevisionRequests
+     * const riskAssessmentRevisionRequests = await prisma.riskAssessmentRevisionRequest.findMany()
+     * 
+     * // Get first 10 RiskAssessmentRevisionRequests
+     * const riskAssessmentRevisionRequests = await prisma.riskAssessmentRevisionRequest.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const riskAssessmentRevisionRequestWithIdOnly = await prisma.riskAssessmentRevisionRequest.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends RiskAssessmentRevisionRequestFindManyArgs>(args?: SelectSubset<T, RiskAssessmentRevisionRequestFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RiskAssessmentRevisionRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a RiskAssessmentRevisionRequest.
+     * @param {RiskAssessmentRevisionRequestCreateArgs} args - Arguments to create a RiskAssessmentRevisionRequest.
+     * @example
+     * // Create one RiskAssessmentRevisionRequest
+     * const RiskAssessmentRevisionRequest = await prisma.riskAssessmentRevisionRequest.create({
+     *   data: {
+     *     // ... data to create a RiskAssessmentRevisionRequest
+     *   }
+     * })
+     * 
+     */
+    create<T extends RiskAssessmentRevisionRequestCreateArgs>(args: SelectSubset<T, RiskAssessmentRevisionRequestCreateArgs<ExtArgs>>): Prisma__RiskAssessmentRevisionRequestClient<$Result.GetResult<Prisma.$RiskAssessmentRevisionRequestPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many RiskAssessmentRevisionRequests.
+     * @param {RiskAssessmentRevisionRequestCreateManyArgs} args - Arguments to create many RiskAssessmentRevisionRequests.
+     * @example
+     * // Create many RiskAssessmentRevisionRequests
+     * const riskAssessmentRevisionRequest = await prisma.riskAssessmentRevisionRequest.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends RiskAssessmentRevisionRequestCreateManyArgs>(args?: SelectSubset<T, RiskAssessmentRevisionRequestCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many RiskAssessmentRevisionRequests and returns the data saved in the database.
+     * @param {RiskAssessmentRevisionRequestCreateManyAndReturnArgs} args - Arguments to create many RiskAssessmentRevisionRequests.
+     * @example
+     * // Create many RiskAssessmentRevisionRequests
+     * const riskAssessmentRevisionRequest = await prisma.riskAssessmentRevisionRequest.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many RiskAssessmentRevisionRequests and only return the `id`
+     * const riskAssessmentRevisionRequestWithIdOnly = await prisma.riskAssessmentRevisionRequest.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends RiskAssessmentRevisionRequestCreateManyAndReturnArgs>(args?: SelectSubset<T, RiskAssessmentRevisionRequestCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RiskAssessmentRevisionRequestPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a RiskAssessmentRevisionRequest.
+     * @param {RiskAssessmentRevisionRequestDeleteArgs} args - Arguments to delete one RiskAssessmentRevisionRequest.
+     * @example
+     * // Delete one RiskAssessmentRevisionRequest
+     * const RiskAssessmentRevisionRequest = await prisma.riskAssessmentRevisionRequest.delete({
+     *   where: {
+     *     // ... filter to delete one RiskAssessmentRevisionRequest
+     *   }
+     * })
+     * 
+     */
+    delete<T extends RiskAssessmentRevisionRequestDeleteArgs>(args: SelectSubset<T, RiskAssessmentRevisionRequestDeleteArgs<ExtArgs>>): Prisma__RiskAssessmentRevisionRequestClient<$Result.GetResult<Prisma.$RiskAssessmentRevisionRequestPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one RiskAssessmentRevisionRequest.
+     * @param {RiskAssessmentRevisionRequestUpdateArgs} args - Arguments to update one RiskAssessmentRevisionRequest.
+     * @example
+     * // Update one RiskAssessmentRevisionRequest
+     * const riskAssessmentRevisionRequest = await prisma.riskAssessmentRevisionRequest.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends RiskAssessmentRevisionRequestUpdateArgs>(args: SelectSubset<T, RiskAssessmentRevisionRequestUpdateArgs<ExtArgs>>): Prisma__RiskAssessmentRevisionRequestClient<$Result.GetResult<Prisma.$RiskAssessmentRevisionRequestPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more RiskAssessmentRevisionRequests.
+     * @param {RiskAssessmentRevisionRequestDeleteManyArgs} args - Arguments to filter RiskAssessmentRevisionRequests to delete.
+     * @example
+     * // Delete a few RiskAssessmentRevisionRequests
+     * const { count } = await prisma.riskAssessmentRevisionRequest.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends RiskAssessmentRevisionRequestDeleteManyArgs>(args?: SelectSubset<T, RiskAssessmentRevisionRequestDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more RiskAssessmentRevisionRequests.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RiskAssessmentRevisionRequestUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many RiskAssessmentRevisionRequests
+     * const riskAssessmentRevisionRequest = await prisma.riskAssessmentRevisionRequest.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends RiskAssessmentRevisionRequestUpdateManyArgs>(args: SelectSubset<T, RiskAssessmentRevisionRequestUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more RiskAssessmentRevisionRequests and returns the data updated in the database.
+     * @param {RiskAssessmentRevisionRequestUpdateManyAndReturnArgs} args - Arguments to update many RiskAssessmentRevisionRequests.
+     * @example
+     * // Update many RiskAssessmentRevisionRequests
+     * const riskAssessmentRevisionRequest = await prisma.riskAssessmentRevisionRequest.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more RiskAssessmentRevisionRequests and only return the `id`
+     * const riskAssessmentRevisionRequestWithIdOnly = await prisma.riskAssessmentRevisionRequest.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends RiskAssessmentRevisionRequestUpdateManyAndReturnArgs>(args: SelectSubset<T, RiskAssessmentRevisionRequestUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RiskAssessmentRevisionRequestPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one RiskAssessmentRevisionRequest.
+     * @param {RiskAssessmentRevisionRequestUpsertArgs} args - Arguments to update or create a RiskAssessmentRevisionRequest.
+     * @example
+     * // Update or create a RiskAssessmentRevisionRequest
+     * const riskAssessmentRevisionRequest = await prisma.riskAssessmentRevisionRequest.upsert({
+     *   create: {
+     *     // ... data to create a RiskAssessmentRevisionRequest
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the RiskAssessmentRevisionRequest we want to update
+     *   }
+     * })
+     */
+    upsert<T extends RiskAssessmentRevisionRequestUpsertArgs>(args: SelectSubset<T, RiskAssessmentRevisionRequestUpsertArgs<ExtArgs>>): Prisma__RiskAssessmentRevisionRequestClient<$Result.GetResult<Prisma.$RiskAssessmentRevisionRequestPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of RiskAssessmentRevisionRequests.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RiskAssessmentRevisionRequestCountArgs} args - Arguments to filter RiskAssessmentRevisionRequests to count.
+     * @example
+     * // Count the number of RiskAssessmentRevisionRequests
+     * const count = await prisma.riskAssessmentRevisionRequest.count({
+     *   where: {
+     *     // ... the filter for the RiskAssessmentRevisionRequests we want to count
+     *   }
+     * })
+    **/
+    count<T extends RiskAssessmentRevisionRequestCountArgs>(
+      args?: Subset<T, RiskAssessmentRevisionRequestCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], RiskAssessmentRevisionRequestCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a RiskAssessmentRevisionRequest.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RiskAssessmentRevisionRequestAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends RiskAssessmentRevisionRequestAggregateArgs>(args: Subset<T, RiskAssessmentRevisionRequestAggregateArgs>): Prisma.PrismaPromise<GetRiskAssessmentRevisionRequestAggregateType<T>>
+
+    /**
+     * Group by RiskAssessmentRevisionRequest.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RiskAssessmentRevisionRequestGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends RiskAssessmentRevisionRequestGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: RiskAssessmentRevisionRequestGroupByArgs['orderBy'] }
+        : { orderBy?: RiskAssessmentRevisionRequestGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, RiskAssessmentRevisionRequestGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetRiskAssessmentRevisionRequestGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the RiskAssessmentRevisionRequest model
+   */
+  readonly fields: RiskAssessmentRevisionRequestFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for RiskAssessmentRevisionRequest.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__RiskAssessmentRevisionRequestClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    document<T extends RiskAssessmentDocumentDefaultArgs<ExtArgs> = {}>(args?: Subset<T, RiskAssessmentDocumentDefaultArgs<ExtArgs>>): Prisma__RiskAssessmentDocumentClient<$Result.GetResult<Prisma.$RiskAssessmentDocumentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    vessel<T extends RiskAssessmentRevisionRequest$vesselArgs<ExtArgs> = {}>(args?: Subset<T, RiskAssessmentRevisionRequest$vesselArgs<ExtArgs>>): Prisma__VesselClient<$Result.GetResult<Prisma.$VesselPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the RiskAssessmentRevisionRequest model
+   */
+  interface RiskAssessmentRevisionRequestFieldRefs {
+    readonly id: FieldRef<"RiskAssessmentRevisionRequest", 'String'>
+    readonly companyId: FieldRef<"RiskAssessmentRevisionRequest", 'String'>
+    readonly documentId: FieldRef<"RiskAssessmentRevisionRequest", 'String'>
+    readonly requestedById: FieldRef<"RiskAssessmentRevisionRequest", 'String'>
+    readonly vesselId: FieldRef<"RiskAssessmentRevisionRequest", 'String'>
+    readonly reason: FieldRef<"RiskAssessmentRevisionRequest", 'String'>
+    readonly reviewTrigger: FieldRef<"RiskAssessmentRevisionRequest", 'ReviewTrigger'>
+    readonly status: FieldRef<"RiskAssessmentRevisionRequest", 'RaRevisionRequestStatus'>
+    readonly decidedById: FieldRef<"RiskAssessmentRevisionRequest", 'String'>
+    readonly decidedAt: FieldRef<"RiskAssessmentRevisionRequest", 'DateTime'>
+    readonly decisionNote: FieldRef<"RiskAssessmentRevisionRequest", 'String'>
+    readonly createdAt: FieldRef<"RiskAssessmentRevisionRequest", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * RiskAssessmentRevisionRequest findUnique
+   */
+  export type RiskAssessmentRevisionRequestFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RiskAssessmentRevisionRequest
+     */
+    select?: RiskAssessmentRevisionRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RiskAssessmentRevisionRequest
+     */
+    omit?: RiskAssessmentRevisionRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RiskAssessmentRevisionRequestInclude<ExtArgs> | null
+    /**
+     * Filter, which RiskAssessmentRevisionRequest to fetch.
+     */
+    where: RiskAssessmentRevisionRequestWhereUniqueInput
+  }
+
+  /**
+   * RiskAssessmentRevisionRequest findUniqueOrThrow
+   */
+  export type RiskAssessmentRevisionRequestFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RiskAssessmentRevisionRequest
+     */
+    select?: RiskAssessmentRevisionRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RiskAssessmentRevisionRequest
+     */
+    omit?: RiskAssessmentRevisionRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RiskAssessmentRevisionRequestInclude<ExtArgs> | null
+    /**
+     * Filter, which RiskAssessmentRevisionRequest to fetch.
+     */
+    where: RiskAssessmentRevisionRequestWhereUniqueInput
+  }
+
+  /**
+   * RiskAssessmentRevisionRequest findFirst
+   */
+  export type RiskAssessmentRevisionRequestFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RiskAssessmentRevisionRequest
+     */
+    select?: RiskAssessmentRevisionRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RiskAssessmentRevisionRequest
+     */
+    omit?: RiskAssessmentRevisionRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RiskAssessmentRevisionRequestInclude<ExtArgs> | null
+    /**
+     * Filter, which RiskAssessmentRevisionRequest to fetch.
+     */
+    where?: RiskAssessmentRevisionRequestWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of RiskAssessmentRevisionRequests to fetch.
+     */
+    orderBy?: RiskAssessmentRevisionRequestOrderByWithRelationInput | RiskAssessmentRevisionRequestOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for RiskAssessmentRevisionRequests.
+     */
+    cursor?: RiskAssessmentRevisionRequestWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` RiskAssessmentRevisionRequests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` RiskAssessmentRevisionRequests.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of RiskAssessmentRevisionRequests.
+     */
+    distinct?: RiskAssessmentRevisionRequestScalarFieldEnum | RiskAssessmentRevisionRequestScalarFieldEnum[]
+  }
+
+  /**
+   * RiskAssessmentRevisionRequest findFirstOrThrow
+   */
+  export type RiskAssessmentRevisionRequestFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RiskAssessmentRevisionRequest
+     */
+    select?: RiskAssessmentRevisionRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RiskAssessmentRevisionRequest
+     */
+    omit?: RiskAssessmentRevisionRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RiskAssessmentRevisionRequestInclude<ExtArgs> | null
+    /**
+     * Filter, which RiskAssessmentRevisionRequest to fetch.
+     */
+    where?: RiskAssessmentRevisionRequestWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of RiskAssessmentRevisionRequests to fetch.
+     */
+    orderBy?: RiskAssessmentRevisionRequestOrderByWithRelationInput | RiskAssessmentRevisionRequestOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for RiskAssessmentRevisionRequests.
+     */
+    cursor?: RiskAssessmentRevisionRequestWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` RiskAssessmentRevisionRequests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` RiskAssessmentRevisionRequests.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of RiskAssessmentRevisionRequests.
+     */
+    distinct?: RiskAssessmentRevisionRequestScalarFieldEnum | RiskAssessmentRevisionRequestScalarFieldEnum[]
+  }
+
+  /**
+   * RiskAssessmentRevisionRequest findMany
+   */
+  export type RiskAssessmentRevisionRequestFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RiskAssessmentRevisionRequest
+     */
+    select?: RiskAssessmentRevisionRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RiskAssessmentRevisionRequest
+     */
+    omit?: RiskAssessmentRevisionRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RiskAssessmentRevisionRequestInclude<ExtArgs> | null
+    /**
+     * Filter, which RiskAssessmentRevisionRequests to fetch.
+     */
+    where?: RiskAssessmentRevisionRequestWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of RiskAssessmentRevisionRequests to fetch.
+     */
+    orderBy?: RiskAssessmentRevisionRequestOrderByWithRelationInput | RiskAssessmentRevisionRequestOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing RiskAssessmentRevisionRequests.
+     */
+    cursor?: RiskAssessmentRevisionRequestWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` RiskAssessmentRevisionRequests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` RiskAssessmentRevisionRequests.
+     */
+    skip?: number
+    distinct?: RiskAssessmentRevisionRequestScalarFieldEnum | RiskAssessmentRevisionRequestScalarFieldEnum[]
+  }
+
+  /**
+   * RiskAssessmentRevisionRequest create
+   */
+  export type RiskAssessmentRevisionRequestCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RiskAssessmentRevisionRequest
+     */
+    select?: RiskAssessmentRevisionRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RiskAssessmentRevisionRequest
+     */
+    omit?: RiskAssessmentRevisionRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RiskAssessmentRevisionRequestInclude<ExtArgs> | null
+    /**
+     * The data needed to create a RiskAssessmentRevisionRequest.
+     */
+    data: XOR<RiskAssessmentRevisionRequestCreateInput, RiskAssessmentRevisionRequestUncheckedCreateInput>
+  }
+
+  /**
+   * RiskAssessmentRevisionRequest createMany
+   */
+  export type RiskAssessmentRevisionRequestCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many RiskAssessmentRevisionRequests.
+     */
+    data: RiskAssessmentRevisionRequestCreateManyInput | RiskAssessmentRevisionRequestCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * RiskAssessmentRevisionRequest createManyAndReturn
+   */
+  export type RiskAssessmentRevisionRequestCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RiskAssessmentRevisionRequest
+     */
+    select?: RiskAssessmentRevisionRequestSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the RiskAssessmentRevisionRequest
+     */
+    omit?: RiskAssessmentRevisionRequestOmit<ExtArgs> | null
+    /**
+     * The data used to create many RiskAssessmentRevisionRequests.
+     */
+    data: RiskAssessmentRevisionRequestCreateManyInput | RiskAssessmentRevisionRequestCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RiskAssessmentRevisionRequestIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * RiskAssessmentRevisionRequest update
+   */
+  export type RiskAssessmentRevisionRequestUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RiskAssessmentRevisionRequest
+     */
+    select?: RiskAssessmentRevisionRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RiskAssessmentRevisionRequest
+     */
+    omit?: RiskAssessmentRevisionRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RiskAssessmentRevisionRequestInclude<ExtArgs> | null
+    /**
+     * The data needed to update a RiskAssessmentRevisionRequest.
+     */
+    data: XOR<RiskAssessmentRevisionRequestUpdateInput, RiskAssessmentRevisionRequestUncheckedUpdateInput>
+    /**
+     * Choose, which RiskAssessmentRevisionRequest to update.
+     */
+    where: RiskAssessmentRevisionRequestWhereUniqueInput
+  }
+
+  /**
+   * RiskAssessmentRevisionRequest updateMany
+   */
+  export type RiskAssessmentRevisionRequestUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update RiskAssessmentRevisionRequests.
+     */
+    data: XOR<RiskAssessmentRevisionRequestUpdateManyMutationInput, RiskAssessmentRevisionRequestUncheckedUpdateManyInput>
+    /**
+     * Filter which RiskAssessmentRevisionRequests to update
+     */
+    where?: RiskAssessmentRevisionRequestWhereInput
+    /**
+     * Limit how many RiskAssessmentRevisionRequests to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * RiskAssessmentRevisionRequest updateManyAndReturn
+   */
+  export type RiskAssessmentRevisionRequestUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RiskAssessmentRevisionRequest
+     */
+    select?: RiskAssessmentRevisionRequestSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the RiskAssessmentRevisionRequest
+     */
+    omit?: RiskAssessmentRevisionRequestOmit<ExtArgs> | null
+    /**
+     * The data used to update RiskAssessmentRevisionRequests.
+     */
+    data: XOR<RiskAssessmentRevisionRequestUpdateManyMutationInput, RiskAssessmentRevisionRequestUncheckedUpdateManyInput>
+    /**
+     * Filter which RiskAssessmentRevisionRequests to update
+     */
+    where?: RiskAssessmentRevisionRequestWhereInput
+    /**
+     * Limit how many RiskAssessmentRevisionRequests to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RiskAssessmentRevisionRequestIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * RiskAssessmentRevisionRequest upsert
+   */
+  export type RiskAssessmentRevisionRequestUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RiskAssessmentRevisionRequest
+     */
+    select?: RiskAssessmentRevisionRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RiskAssessmentRevisionRequest
+     */
+    omit?: RiskAssessmentRevisionRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RiskAssessmentRevisionRequestInclude<ExtArgs> | null
+    /**
+     * The filter to search for the RiskAssessmentRevisionRequest to update in case it exists.
+     */
+    where: RiskAssessmentRevisionRequestWhereUniqueInput
+    /**
+     * In case the RiskAssessmentRevisionRequest found by the `where` argument doesn't exist, create a new RiskAssessmentRevisionRequest with this data.
+     */
+    create: XOR<RiskAssessmentRevisionRequestCreateInput, RiskAssessmentRevisionRequestUncheckedCreateInput>
+    /**
+     * In case the RiskAssessmentRevisionRequest was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<RiskAssessmentRevisionRequestUpdateInput, RiskAssessmentRevisionRequestUncheckedUpdateInput>
+  }
+
+  /**
+   * RiskAssessmentRevisionRequest delete
+   */
+  export type RiskAssessmentRevisionRequestDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RiskAssessmentRevisionRequest
+     */
+    select?: RiskAssessmentRevisionRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RiskAssessmentRevisionRequest
+     */
+    omit?: RiskAssessmentRevisionRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RiskAssessmentRevisionRequestInclude<ExtArgs> | null
+    /**
+     * Filter which RiskAssessmentRevisionRequest to delete.
+     */
+    where: RiskAssessmentRevisionRequestWhereUniqueInput
+  }
+
+  /**
+   * RiskAssessmentRevisionRequest deleteMany
+   */
+  export type RiskAssessmentRevisionRequestDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which RiskAssessmentRevisionRequests to delete
+     */
+    where?: RiskAssessmentRevisionRequestWhereInput
+    /**
+     * Limit how many RiskAssessmentRevisionRequests to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * RiskAssessmentRevisionRequest.vessel
+   */
+  export type RiskAssessmentRevisionRequest$vesselArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Vessel
+     */
+    select?: VesselSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Vessel
+     */
+    omit?: VesselOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VesselInclude<ExtArgs> | null
+    where?: VesselWhereInput
+  }
+
+  /**
+   * RiskAssessmentRevisionRequest without action
+   */
+  export type RiskAssessmentRevisionRequestDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RiskAssessmentRevisionRequest
+     */
+    select?: RiskAssessmentRevisionRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RiskAssessmentRevisionRequest
+     */
+    omit?: RiskAssessmentRevisionRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RiskAssessmentRevisionRequestInclude<ExtArgs> | null
   }
 
 
@@ -57987,6 +63849,18 @@ export namespace Prisma {
     breadth: 'breadth',
     depth: 'depth',
     status: 'status',
+    capacityCbm: 'capacityCbm',
+    netTonnage: 'netTonnage',
+    deadweight: 'deadweight',
+    tradeArea: 'tradeArea',
+    registeredOwner: 'registeredOwner',
+    headOwner: 'headOwner',
+    charterer: 'charterer',
+    yearWithSwan: 'yearWithSwan',
+    lastDryDock: 'lastDryDock',
+    dryDockPlace: 'dryDockPlace',
+    nextDryDockDue: 'nextDryDockDue',
+    archivedAt: 'archivedAt',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
     createdBy: 'createdBy',
@@ -58680,22 +64554,22 @@ export namespace Prisma {
   export type CircularAcknowledgementScalarFieldEnum = (typeof CircularAcknowledgementScalarFieldEnum)[keyof typeof CircularAcknowledgementScalarFieldEnum]
 
 
-  export const RiskAssessmentScalarFieldEnum: {
+  export const RiskAssessmentDocumentScalarFieldEnum: {
     id: 'id',
     companyId: 'companyId',
     refNo: 'refNo',
+    title: 'title',
+    category: 'category',
+    description: 'description',
     vesselId: 'vesselId',
-    activity: 'activity',
-    hazards: 'hazards',
-    existingControls: 'existingControls',
-    likelihood: 'likelihood',
-    severity: 'severity',
-    additionalControls: 'additionalControls',
-    assessedBy: 'assessedBy',
-    assessmentDate: 'assessmentDate',
-    reviewDate: 'reviewDate',
+    applicableVesselType: 'applicableVesselType',
+    reviewFrequencyMonths: 'reviewFrequencyMonths',
+    lastReviewDate: 'lastReviewDate',
+    nextReviewDate: 'nextReviewDate',
+    reviewOwnerId: 'reviewOwnerId',
     status: 'status',
-    closedAt: 'closedAt',
+    ownerId: 'ownerId',
+    currentRevisionId: 'currentRevisionId',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
     createdBy: 'createdBy',
@@ -58704,7 +64578,92 @@ export namespace Prisma {
     deletedBy: 'deletedBy'
   };
 
-  export type RiskAssessmentScalarFieldEnum = (typeof RiskAssessmentScalarFieldEnum)[keyof typeof RiskAssessmentScalarFieldEnum]
+  export type RiskAssessmentDocumentScalarFieldEnum = (typeof RiskAssessmentDocumentScalarFieldEnum)[keyof typeof RiskAssessmentDocumentScalarFieldEnum]
+
+
+  export const RiskAssessmentRevisionScalarFieldEnum: {
+    id: 'id',
+    companyId: 'companyId',
+    documentId: 'documentId',
+    revisionNo: 'revisionNo',
+    changeSummary: 'changeSummary',
+    reviewTrigger: 'reviewTrigger',
+    smsProcedureRefs: 'smsProcedureRefs',
+    riskMatrixRef: 'riskMatrixRef',
+    checklistsRequired: 'checklistsRequired',
+    approvalLevel: 'approvalLevel',
+    status: 'status',
+    effectiveDate: 'effectiveDate',
+    approvedBy: 'approvedBy',
+    approvedAt: 'approvedAt',
+    createdAt: 'createdAt',
+    createdBy: 'createdBy'
+  };
+
+  export type RiskAssessmentRevisionScalarFieldEnum = (typeof RiskAssessmentRevisionScalarFieldEnum)[keyof typeof RiskAssessmentRevisionScalarFieldEnum]
+
+
+  export const RiskHazardRowScalarFieldEnum: {
+    id: 'id',
+    companyId: 'companyId',
+    revisionId: 'revisionId',
+    rowNo: 'rowNo',
+    phase: 'phase',
+    consequence: 'consequence',
+    causes: 'causes',
+    severity: 'severity',
+    likelihood: 'likelihood',
+    existingControls: 'existingControls',
+    additionalControls: 'additionalControls',
+    resLikelihood: 'resLikelihood',
+    responsible: 'responsible',
+    isNew: 'isNew',
+    ratingChangeNote: 'ratingChangeNote',
+    createdAt: 'createdAt',
+    createdBy: 'createdBy'
+  };
+
+  export type RiskHazardRowScalarFieldEnum = (typeof RiskHazardRowScalarFieldEnum)[keyof typeof RiskHazardRowScalarFieldEnum]
+
+
+  export const RiskAssessmentExecutionScalarFieldEnum: {
+    id: 'id',
+    companyId: 'companyId',
+    documentId: 'documentId',
+    revisionId: 'revisionId',
+    vesselId: 'vesselId',
+    jobName: 'jobName',
+    conditionStatus: 'conditionStatus',
+    changedConditionsNote: 'changedConditionsNote',
+    temporaryHazards: 'temporaryHazards',
+    temporaryControls: 'temporaryControls',
+    performedById: 'performedById',
+    toolboxSignedAt: 'toolboxSignedAt',
+    toolboxAttendees: 'toolboxAttendees',
+    executedAt: 'executedAt',
+    createdAt: 'createdAt',
+    createdBy: 'createdBy'
+  };
+
+  export type RiskAssessmentExecutionScalarFieldEnum = (typeof RiskAssessmentExecutionScalarFieldEnum)[keyof typeof RiskAssessmentExecutionScalarFieldEnum]
+
+
+  export const RiskAssessmentRevisionRequestScalarFieldEnum: {
+    id: 'id',
+    companyId: 'companyId',
+    documentId: 'documentId',
+    requestedById: 'requestedById',
+    vesselId: 'vesselId',
+    reason: 'reason',
+    reviewTrigger: 'reviewTrigger',
+    status: 'status',
+    decidedById: 'decidedById',
+    decidedAt: 'decidedAt',
+    decisionNote: 'decisionNote',
+    createdAt: 'createdAt'
+  };
+
+  export type RiskAssessmentRevisionRequestScalarFieldEnum = (typeof RiskAssessmentRevisionRequestScalarFieldEnum)[keyof typeof RiskAssessmentRevisionRequestScalarFieldEnum]
 
 
   export const DefectScalarFieldEnum: {
@@ -59332,30 +65291,58 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'RiskRating'
+   * Reference to a field of type 'ReviewTrigger'
    */
-  export type EnumRiskRatingFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RiskRating'>
+  export type EnumReviewTriggerFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ReviewTrigger'>
     
 
 
   /**
-   * Reference to a field of type 'RiskRating[]'
+   * Reference to a field of type 'ReviewTrigger[]'
    */
-  export type ListEnumRiskRatingFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RiskRating[]'>
+  export type ListEnumReviewTriggerFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ReviewTrigger[]'>
     
 
 
   /**
-   * Reference to a field of type 'RiskAssessmentStatus'
+   * Reference to a field of type 'RaApprovalLevel'
    */
-  export type EnumRiskAssessmentStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RiskAssessmentStatus'>
+  export type EnumRaApprovalLevelFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RaApprovalLevel'>
     
 
 
   /**
-   * Reference to a field of type 'RiskAssessmentStatus[]'
+   * Reference to a field of type 'RaApprovalLevel[]'
    */
-  export type ListEnumRiskAssessmentStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RiskAssessmentStatus[]'>
+  export type ListEnumRaApprovalLevelFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RaApprovalLevel[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'RaExecutionCondition'
+   */
+  export type EnumRaExecutionConditionFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RaExecutionCondition'>
+    
+
+
+  /**
+   * Reference to a field of type 'RaExecutionCondition[]'
+   */
+  export type ListEnumRaExecutionConditionFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RaExecutionCondition[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'RaRevisionRequestStatus'
+   */
+  export type EnumRaRevisionRequestStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RaRevisionRequestStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'RaRevisionRequestStatus[]'
+   */
+  export type ListEnumRaRevisionRequestStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RaRevisionRequestStatus[]'>
     
 
 
@@ -59416,7 +65403,7 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillListRelationFilter
     controlledDocuments?: ControlledDocumentListRelationFilter
     circulars?: CircularListRelationFilter
-    riskAssessments?: RiskAssessmentListRelationFilter
+    riskAssessmentDocuments?: RiskAssessmentDocumentListRelationFilter
     defects?: DefectListRelationFilter
   }
 
@@ -59443,7 +65430,7 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillOrderByRelationAggregateInput
     controlledDocuments?: ControlledDocumentOrderByRelationAggregateInput
     circulars?: CircularOrderByRelationAggregateInput
-    riskAssessments?: RiskAssessmentOrderByRelationAggregateInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentOrderByRelationAggregateInput
     defects?: DefectOrderByRelationAggregateInput
   }
 
@@ -59473,7 +65460,7 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillListRelationFilter
     controlledDocuments?: ControlledDocumentListRelationFilter
     circulars?: CircularListRelationFilter
-    riskAssessments?: RiskAssessmentListRelationFilter
+    riskAssessmentDocuments?: RiskAssessmentDocumentListRelationFilter
     defects?: DefectListRelationFilter
   }, "id" | "code">
 
@@ -59857,7 +65844,7 @@ export namespace Prisma {
     companyId?: StringFilter<"Vessel"> | string
     name?: StringFilter<"Vessel"> | string
     code?: StringNullableFilter<"Vessel"> | string | null
-    imo?: StringFilter<"Vessel"> | string
+    imo?: StringNullableFilter<"Vessel"> | string | null
     officialNumber?: StringNullableFilter<"Vessel"> | string | null
     callSign?: StringNullableFilter<"Vessel"> | string | null
     mmsi?: StringNullableFilter<"Vessel"> | string | null
@@ -59870,6 +65857,18 @@ export namespace Prisma {
     breadth?: FloatNullableFilter<"Vessel"> | number | null
     depth?: FloatNullableFilter<"Vessel"> | number | null
     status?: EnumVesselStatusFilter<"Vessel"> | $Enums.VesselStatus
+    capacityCbm?: FloatNullableFilter<"Vessel"> | number | null
+    netTonnage?: FloatNullableFilter<"Vessel"> | number | null
+    deadweight?: FloatNullableFilter<"Vessel"> | number | null
+    tradeArea?: StringNullableFilter<"Vessel"> | string | null
+    registeredOwner?: StringNullableFilter<"Vessel"> | string | null
+    headOwner?: StringNullableFilter<"Vessel"> | string | null
+    charterer?: StringNullableFilter<"Vessel"> | string | null
+    yearWithSwan?: IntNullableFilter<"Vessel"> | number | null
+    lastDryDock?: DateTimeNullableFilter<"Vessel"> | Date | string | null
+    dryDockPlace?: StringNullableFilter<"Vessel"> | string | null
+    nextDryDockDue?: DateTimeNullableFilter<"Vessel"> | Date | string | null
+    archivedAt?: DateTimeNullableFilter<"Vessel"> | Date | string | null
     createdAt?: DateTimeFilter<"Vessel"> | Date | string
     updatedAt?: DateTimeFilter<"Vessel"> | Date | string
     createdBy?: StringNullableFilter<"Vessel"> | string | null
@@ -59890,7 +65889,9 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillListRelationFilter
     controlledDocuments?: ControlledDocumentListRelationFilter
     circulars?: CircularListRelationFilter
-    riskAssessments?: RiskAssessmentListRelationFilter
+    riskAssessmentDocuments?: RiskAssessmentDocumentListRelationFilter
+    riskAssessmentExecutions?: RiskAssessmentExecutionListRelationFilter
+    riskAssessmentRevisionRequests?: RiskAssessmentRevisionRequestListRelationFilter
     defects?: DefectListRelationFilter
     users?: UserListRelationFilter
   }
@@ -59900,7 +65901,7 @@ export namespace Prisma {
     companyId?: SortOrder
     name?: SortOrder
     code?: SortOrderInput | SortOrder
-    imo?: SortOrder
+    imo?: SortOrderInput | SortOrder
     officialNumber?: SortOrderInput | SortOrder
     callSign?: SortOrderInput | SortOrder
     mmsi?: SortOrderInput | SortOrder
@@ -59913,6 +65914,18 @@ export namespace Prisma {
     breadth?: SortOrderInput | SortOrder
     depth?: SortOrderInput | SortOrder
     status?: SortOrder
+    capacityCbm?: SortOrderInput | SortOrder
+    netTonnage?: SortOrderInput | SortOrder
+    deadweight?: SortOrderInput | SortOrder
+    tradeArea?: SortOrderInput | SortOrder
+    registeredOwner?: SortOrderInput | SortOrder
+    headOwner?: SortOrderInput | SortOrder
+    charterer?: SortOrderInput | SortOrder
+    yearWithSwan?: SortOrderInput | SortOrder
+    lastDryDock?: SortOrderInput | SortOrder
+    dryDockPlace?: SortOrderInput | SortOrder
+    nextDryDockDue?: SortOrderInput | SortOrder
+    archivedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     createdBy?: SortOrderInput | SortOrder
@@ -59933,7 +65946,9 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillOrderByRelationAggregateInput
     controlledDocuments?: ControlledDocumentOrderByRelationAggregateInput
     circulars?: CircularOrderByRelationAggregateInput
-    riskAssessments?: RiskAssessmentOrderByRelationAggregateInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentOrderByRelationAggregateInput
+    riskAssessmentExecutions?: RiskAssessmentExecutionOrderByRelationAggregateInput
+    riskAssessmentRevisionRequests?: RiskAssessmentRevisionRequestOrderByRelationAggregateInput
     defects?: DefectOrderByRelationAggregateInput
     users?: UserOrderByRelationAggregateInput
   }
@@ -59960,6 +65975,18 @@ export namespace Prisma {
     breadth?: FloatNullableFilter<"Vessel"> | number | null
     depth?: FloatNullableFilter<"Vessel"> | number | null
     status?: EnumVesselStatusFilter<"Vessel"> | $Enums.VesselStatus
+    capacityCbm?: FloatNullableFilter<"Vessel"> | number | null
+    netTonnage?: FloatNullableFilter<"Vessel"> | number | null
+    deadweight?: FloatNullableFilter<"Vessel"> | number | null
+    tradeArea?: StringNullableFilter<"Vessel"> | string | null
+    registeredOwner?: StringNullableFilter<"Vessel"> | string | null
+    headOwner?: StringNullableFilter<"Vessel"> | string | null
+    charterer?: StringNullableFilter<"Vessel"> | string | null
+    yearWithSwan?: IntNullableFilter<"Vessel"> | number | null
+    lastDryDock?: DateTimeNullableFilter<"Vessel"> | Date | string | null
+    dryDockPlace?: StringNullableFilter<"Vessel"> | string | null
+    nextDryDockDue?: DateTimeNullableFilter<"Vessel"> | Date | string | null
+    archivedAt?: DateTimeNullableFilter<"Vessel"> | Date | string | null
     createdAt?: DateTimeFilter<"Vessel"> | Date | string
     updatedAt?: DateTimeFilter<"Vessel"> | Date | string
     createdBy?: StringNullableFilter<"Vessel"> | string | null
@@ -59980,7 +66007,9 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillListRelationFilter
     controlledDocuments?: ControlledDocumentListRelationFilter
     circulars?: CircularListRelationFilter
-    riskAssessments?: RiskAssessmentListRelationFilter
+    riskAssessmentDocuments?: RiskAssessmentDocumentListRelationFilter
+    riskAssessmentExecutions?: RiskAssessmentExecutionListRelationFilter
+    riskAssessmentRevisionRequests?: RiskAssessmentRevisionRequestListRelationFilter
     defects?: DefectListRelationFilter
     users?: UserListRelationFilter
   }, "id" | "imo" | "companyId_code">
@@ -59990,7 +66019,7 @@ export namespace Prisma {
     companyId?: SortOrder
     name?: SortOrder
     code?: SortOrderInput | SortOrder
-    imo?: SortOrder
+    imo?: SortOrderInput | SortOrder
     officialNumber?: SortOrderInput | SortOrder
     callSign?: SortOrderInput | SortOrder
     mmsi?: SortOrderInput | SortOrder
@@ -60003,6 +66032,18 @@ export namespace Prisma {
     breadth?: SortOrderInput | SortOrder
     depth?: SortOrderInput | SortOrder
     status?: SortOrder
+    capacityCbm?: SortOrderInput | SortOrder
+    netTonnage?: SortOrderInput | SortOrder
+    deadweight?: SortOrderInput | SortOrder
+    tradeArea?: SortOrderInput | SortOrder
+    registeredOwner?: SortOrderInput | SortOrder
+    headOwner?: SortOrderInput | SortOrder
+    charterer?: SortOrderInput | SortOrder
+    yearWithSwan?: SortOrderInput | SortOrder
+    lastDryDock?: SortOrderInput | SortOrder
+    dryDockPlace?: SortOrderInput | SortOrder
+    nextDryDockDue?: SortOrderInput | SortOrder
+    archivedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     createdBy?: SortOrderInput | SortOrder
@@ -60024,7 +66065,7 @@ export namespace Prisma {
     companyId?: StringWithAggregatesFilter<"Vessel"> | string
     name?: StringWithAggregatesFilter<"Vessel"> | string
     code?: StringNullableWithAggregatesFilter<"Vessel"> | string | null
-    imo?: StringWithAggregatesFilter<"Vessel"> | string
+    imo?: StringNullableWithAggregatesFilter<"Vessel"> | string | null
     officialNumber?: StringNullableWithAggregatesFilter<"Vessel"> | string | null
     callSign?: StringNullableWithAggregatesFilter<"Vessel"> | string | null
     mmsi?: StringNullableWithAggregatesFilter<"Vessel"> | string | null
@@ -60037,6 +66078,18 @@ export namespace Prisma {
     breadth?: FloatNullableWithAggregatesFilter<"Vessel"> | number | null
     depth?: FloatNullableWithAggregatesFilter<"Vessel"> | number | null
     status?: EnumVesselStatusWithAggregatesFilter<"Vessel"> | $Enums.VesselStatus
+    capacityCbm?: FloatNullableWithAggregatesFilter<"Vessel"> | number | null
+    netTonnage?: FloatNullableWithAggregatesFilter<"Vessel"> | number | null
+    deadweight?: FloatNullableWithAggregatesFilter<"Vessel"> | number | null
+    tradeArea?: StringNullableWithAggregatesFilter<"Vessel"> | string | null
+    registeredOwner?: StringNullableWithAggregatesFilter<"Vessel"> | string | null
+    headOwner?: StringNullableWithAggregatesFilter<"Vessel"> | string | null
+    charterer?: StringNullableWithAggregatesFilter<"Vessel"> | string | null
+    yearWithSwan?: IntNullableWithAggregatesFilter<"Vessel"> | number | null
+    lastDryDock?: DateTimeNullableWithAggregatesFilter<"Vessel"> | Date | string | null
+    dryDockPlace?: StringNullableWithAggregatesFilter<"Vessel"> | string | null
+    nextDryDockDue?: DateTimeNullableWithAggregatesFilter<"Vessel"> | Date | string | null
+    archivedAt?: DateTimeNullableWithAggregatesFilter<"Vessel"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Vessel"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Vessel"> | Date | string
     createdBy?: StringNullableWithAggregatesFilter<"Vessel"> | string | null
@@ -63590,51 +69643,55 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter<"CircularAcknowledgement"> | Date | string
   }
 
-  export type RiskAssessmentWhereInput = {
-    AND?: RiskAssessmentWhereInput | RiskAssessmentWhereInput[]
-    OR?: RiskAssessmentWhereInput[]
-    NOT?: RiskAssessmentWhereInput | RiskAssessmentWhereInput[]
-    id?: StringFilter<"RiskAssessment"> | string
-    companyId?: StringFilter<"RiskAssessment"> | string
-    refNo?: StringFilter<"RiskAssessment"> | string
-    vesselId?: StringNullableFilter<"RiskAssessment"> | string | null
-    activity?: StringFilter<"RiskAssessment"> | string
-    hazards?: StringFilter<"RiskAssessment"> | string
-    existingControls?: StringNullableFilter<"RiskAssessment"> | string | null
-    likelihood?: EnumRiskRatingFilter<"RiskAssessment"> | $Enums.RiskRating
-    severity?: EnumRiskRatingFilter<"RiskAssessment"> | $Enums.RiskRating
-    additionalControls?: StringNullableFilter<"RiskAssessment"> | string | null
-    assessedBy?: StringNullableFilter<"RiskAssessment"> | string | null
-    assessmentDate?: DateTimeFilter<"RiskAssessment"> | Date | string
-    reviewDate?: DateTimeNullableFilter<"RiskAssessment"> | Date | string | null
-    status?: EnumRiskAssessmentStatusFilter<"RiskAssessment"> | $Enums.RiskAssessmentStatus
-    closedAt?: DateTimeNullableFilter<"RiskAssessment"> | Date | string | null
-    createdAt?: DateTimeFilter<"RiskAssessment"> | Date | string
-    updatedAt?: DateTimeFilter<"RiskAssessment"> | Date | string
-    createdBy?: StringNullableFilter<"RiskAssessment"> | string | null
-    updatedBy?: StringNullableFilter<"RiskAssessment"> | string | null
-    deletedAt?: DateTimeNullableFilter<"RiskAssessment"> | Date | string | null
-    deletedBy?: StringNullableFilter<"RiskAssessment"> | string | null
+  export type RiskAssessmentDocumentWhereInput = {
+    AND?: RiskAssessmentDocumentWhereInput | RiskAssessmentDocumentWhereInput[]
+    OR?: RiskAssessmentDocumentWhereInput[]
+    NOT?: RiskAssessmentDocumentWhereInput | RiskAssessmentDocumentWhereInput[]
+    id?: StringFilter<"RiskAssessmentDocument"> | string
+    companyId?: StringFilter<"RiskAssessmentDocument"> | string
+    refNo?: StringFilter<"RiskAssessmentDocument"> | string
+    title?: StringFilter<"RiskAssessmentDocument"> | string
+    category?: StringFilter<"RiskAssessmentDocument"> | string
+    description?: StringNullableFilter<"RiskAssessmentDocument"> | string | null
+    vesselId?: StringNullableFilter<"RiskAssessmentDocument"> | string | null
+    applicableVesselType?: StringNullableFilter<"RiskAssessmentDocument"> | string | null
+    reviewFrequencyMonths?: IntFilter<"RiskAssessmentDocument"> | number
+    lastReviewDate?: DateTimeNullableFilter<"RiskAssessmentDocument"> | Date | string | null
+    nextReviewDate?: DateTimeNullableFilter<"RiskAssessmentDocument"> | Date | string | null
+    reviewOwnerId?: StringNullableFilter<"RiskAssessmentDocument"> | string | null
+    status?: EnumDocumentStatusFilter<"RiskAssessmentDocument"> | $Enums.DocumentStatus
+    ownerId?: StringNullableFilter<"RiskAssessmentDocument"> | string | null
+    currentRevisionId?: StringNullableFilter<"RiskAssessmentDocument"> | string | null
+    createdAt?: DateTimeFilter<"RiskAssessmentDocument"> | Date | string
+    updatedAt?: DateTimeFilter<"RiskAssessmentDocument"> | Date | string
+    createdBy?: StringNullableFilter<"RiskAssessmentDocument"> | string | null
+    updatedBy?: StringNullableFilter<"RiskAssessmentDocument"> | string | null
+    deletedAt?: DateTimeNullableFilter<"RiskAssessmentDocument"> | Date | string | null
+    deletedBy?: StringNullableFilter<"RiskAssessmentDocument"> | string | null
     company?: XOR<CompanyScalarRelationFilter, CompanyWhereInput>
     vessel?: XOR<VesselNullableScalarRelationFilter, VesselWhereInput> | null
+    currentRevision?: XOR<RiskAssessmentRevisionNullableScalarRelationFilter, RiskAssessmentRevisionWhereInput> | null
+    revisions?: RiskAssessmentRevisionListRelationFilter
+    executions?: RiskAssessmentExecutionListRelationFilter
+    revisionRequests?: RiskAssessmentRevisionRequestListRelationFilter
   }
 
-  export type RiskAssessmentOrderByWithRelationInput = {
+  export type RiskAssessmentDocumentOrderByWithRelationInput = {
     id?: SortOrder
     companyId?: SortOrder
     refNo?: SortOrder
+    title?: SortOrder
+    category?: SortOrder
+    description?: SortOrderInput | SortOrder
     vesselId?: SortOrderInput | SortOrder
-    activity?: SortOrder
-    hazards?: SortOrder
-    existingControls?: SortOrderInput | SortOrder
-    likelihood?: SortOrder
-    severity?: SortOrder
-    additionalControls?: SortOrderInput | SortOrder
-    assessedBy?: SortOrderInput | SortOrder
-    assessmentDate?: SortOrder
-    reviewDate?: SortOrderInput | SortOrder
+    applicableVesselType?: SortOrderInput | SortOrder
+    reviewFrequencyMonths?: SortOrder
+    lastReviewDate?: SortOrderInput | SortOrder
+    nextReviewDate?: SortOrderInput | SortOrder
+    reviewOwnerId?: SortOrderInput | SortOrder
     status?: SortOrder
-    closedAt?: SortOrderInput | SortOrder
+    ownerId?: SortOrderInput | SortOrder
+    currentRevisionId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     createdBy?: SortOrderInput | SortOrder
@@ -63643,90 +69700,548 @@ export namespace Prisma {
     deletedBy?: SortOrderInput | SortOrder
     company?: CompanyOrderByWithRelationInput
     vessel?: VesselOrderByWithRelationInput
+    currentRevision?: RiskAssessmentRevisionOrderByWithRelationInput
+    revisions?: RiskAssessmentRevisionOrderByRelationAggregateInput
+    executions?: RiskAssessmentExecutionOrderByRelationAggregateInput
+    revisionRequests?: RiskAssessmentRevisionRequestOrderByRelationAggregateInput
   }
 
-  export type RiskAssessmentWhereUniqueInput = Prisma.AtLeast<{
+  export type RiskAssessmentDocumentWhereUniqueInput = Prisma.AtLeast<{
     id?: string
-    companyId_refNo?: RiskAssessmentCompanyIdRefNoCompoundUniqueInput
-    AND?: RiskAssessmentWhereInput | RiskAssessmentWhereInput[]
-    OR?: RiskAssessmentWhereInput[]
-    NOT?: RiskAssessmentWhereInput | RiskAssessmentWhereInput[]
-    companyId?: StringFilter<"RiskAssessment"> | string
-    refNo?: StringFilter<"RiskAssessment"> | string
-    vesselId?: StringNullableFilter<"RiskAssessment"> | string | null
-    activity?: StringFilter<"RiskAssessment"> | string
-    hazards?: StringFilter<"RiskAssessment"> | string
-    existingControls?: StringNullableFilter<"RiskAssessment"> | string | null
-    likelihood?: EnumRiskRatingFilter<"RiskAssessment"> | $Enums.RiskRating
-    severity?: EnumRiskRatingFilter<"RiskAssessment"> | $Enums.RiskRating
-    additionalControls?: StringNullableFilter<"RiskAssessment"> | string | null
-    assessedBy?: StringNullableFilter<"RiskAssessment"> | string | null
-    assessmentDate?: DateTimeFilter<"RiskAssessment"> | Date | string
-    reviewDate?: DateTimeNullableFilter<"RiskAssessment"> | Date | string | null
-    status?: EnumRiskAssessmentStatusFilter<"RiskAssessment"> | $Enums.RiskAssessmentStatus
-    closedAt?: DateTimeNullableFilter<"RiskAssessment"> | Date | string | null
-    createdAt?: DateTimeFilter<"RiskAssessment"> | Date | string
-    updatedAt?: DateTimeFilter<"RiskAssessment"> | Date | string
-    createdBy?: StringNullableFilter<"RiskAssessment"> | string | null
-    updatedBy?: StringNullableFilter<"RiskAssessment"> | string | null
-    deletedAt?: DateTimeNullableFilter<"RiskAssessment"> | Date | string | null
-    deletedBy?: StringNullableFilter<"RiskAssessment"> | string | null
+    currentRevisionId?: string
+    companyId_refNo?: RiskAssessmentDocumentCompanyIdRefNoCompoundUniqueInput
+    AND?: RiskAssessmentDocumentWhereInput | RiskAssessmentDocumentWhereInput[]
+    OR?: RiskAssessmentDocumentWhereInput[]
+    NOT?: RiskAssessmentDocumentWhereInput | RiskAssessmentDocumentWhereInput[]
+    companyId?: StringFilter<"RiskAssessmentDocument"> | string
+    refNo?: StringFilter<"RiskAssessmentDocument"> | string
+    title?: StringFilter<"RiskAssessmentDocument"> | string
+    category?: StringFilter<"RiskAssessmentDocument"> | string
+    description?: StringNullableFilter<"RiskAssessmentDocument"> | string | null
+    vesselId?: StringNullableFilter<"RiskAssessmentDocument"> | string | null
+    applicableVesselType?: StringNullableFilter<"RiskAssessmentDocument"> | string | null
+    reviewFrequencyMonths?: IntFilter<"RiskAssessmentDocument"> | number
+    lastReviewDate?: DateTimeNullableFilter<"RiskAssessmentDocument"> | Date | string | null
+    nextReviewDate?: DateTimeNullableFilter<"RiskAssessmentDocument"> | Date | string | null
+    reviewOwnerId?: StringNullableFilter<"RiskAssessmentDocument"> | string | null
+    status?: EnumDocumentStatusFilter<"RiskAssessmentDocument"> | $Enums.DocumentStatus
+    ownerId?: StringNullableFilter<"RiskAssessmentDocument"> | string | null
+    createdAt?: DateTimeFilter<"RiskAssessmentDocument"> | Date | string
+    updatedAt?: DateTimeFilter<"RiskAssessmentDocument"> | Date | string
+    createdBy?: StringNullableFilter<"RiskAssessmentDocument"> | string | null
+    updatedBy?: StringNullableFilter<"RiskAssessmentDocument"> | string | null
+    deletedAt?: DateTimeNullableFilter<"RiskAssessmentDocument"> | Date | string | null
+    deletedBy?: StringNullableFilter<"RiskAssessmentDocument"> | string | null
     company?: XOR<CompanyScalarRelationFilter, CompanyWhereInput>
     vessel?: XOR<VesselNullableScalarRelationFilter, VesselWhereInput> | null
-  }, "id" | "companyId_refNo">
+    currentRevision?: XOR<RiskAssessmentRevisionNullableScalarRelationFilter, RiskAssessmentRevisionWhereInput> | null
+    revisions?: RiskAssessmentRevisionListRelationFilter
+    executions?: RiskAssessmentExecutionListRelationFilter
+    revisionRequests?: RiskAssessmentRevisionRequestListRelationFilter
+  }, "id" | "currentRevisionId" | "companyId_refNo">
 
-  export type RiskAssessmentOrderByWithAggregationInput = {
+  export type RiskAssessmentDocumentOrderByWithAggregationInput = {
     id?: SortOrder
     companyId?: SortOrder
     refNo?: SortOrder
+    title?: SortOrder
+    category?: SortOrder
+    description?: SortOrderInput | SortOrder
     vesselId?: SortOrderInput | SortOrder
-    activity?: SortOrder
-    hazards?: SortOrder
-    existingControls?: SortOrderInput | SortOrder
-    likelihood?: SortOrder
-    severity?: SortOrder
-    additionalControls?: SortOrderInput | SortOrder
-    assessedBy?: SortOrderInput | SortOrder
-    assessmentDate?: SortOrder
-    reviewDate?: SortOrderInput | SortOrder
+    applicableVesselType?: SortOrderInput | SortOrder
+    reviewFrequencyMonths?: SortOrder
+    lastReviewDate?: SortOrderInput | SortOrder
+    nextReviewDate?: SortOrderInput | SortOrder
+    reviewOwnerId?: SortOrderInput | SortOrder
     status?: SortOrder
-    closedAt?: SortOrderInput | SortOrder
+    ownerId?: SortOrderInput | SortOrder
+    currentRevisionId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     createdBy?: SortOrderInput | SortOrder
     updatedBy?: SortOrderInput | SortOrder
     deletedAt?: SortOrderInput | SortOrder
     deletedBy?: SortOrderInput | SortOrder
-    _count?: RiskAssessmentCountOrderByAggregateInput
-    _max?: RiskAssessmentMaxOrderByAggregateInput
-    _min?: RiskAssessmentMinOrderByAggregateInput
+    _count?: RiskAssessmentDocumentCountOrderByAggregateInput
+    _avg?: RiskAssessmentDocumentAvgOrderByAggregateInput
+    _max?: RiskAssessmentDocumentMaxOrderByAggregateInput
+    _min?: RiskAssessmentDocumentMinOrderByAggregateInput
+    _sum?: RiskAssessmentDocumentSumOrderByAggregateInput
   }
 
-  export type RiskAssessmentScalarWhereWithAggregatesInput = {
-    AND?: RiskAssessmentScalarWhereWithAggregatesInput | RiskAssessmentScalarWhereWithAggregatesInput[]
-    OR?: RiskAssessmentScalarWhereWithAggregatesInput[]
-    NOT?: RiskAssessmentScalarWhereWithAggregatesInput | RiskAssessmentScalarWhereWithAggregatesInput[]
-    id?: StringWithAggregatesFilter<"RiskAssessment"> | string
-    companyId?: StringWithAggregatesFilter<"RiskAssessment"> | string
-    refNo?: StringWithAggregatesFilter<"RiskAssessment"> | string
-    vesselId?: StringNullableWithAggregatesFilter<"RiskAssessment"> | string | null
-    activity?: StringWithAggregatesFilter<"RiskAssessment"> | string
-    hazards?: StringWithAggregatesFilter<"RiskAssessment"> | string
-    existingControls?: StringNullableWithAggregatesFilter<"RiskAssessment"> | string | null
-    likelihood?: EnumRiskRatingWithAggregatesFilter<"RiskAssessment"> | $Enums.RiskRating
-    severity?: EnumRiskRatingWithAggregatesFilter<"RiskAssessment"> | $Enums.RiskRating
-    additionalControls?: StringNullableWithAggregatesFilter<"RiskAssessment"> | string | null
-    assessedBy?: StringNullableWithAggregatesFilter<"RiskAssessment"> | string | null
-    assessmentDate?: DateTimeWithAggregatesFilter<"RiskAssessment"> | Date | string
-    reviewDate?: DateTimeNullableWithAggregatesFilter<"RiskAssessment"> | Date | string | null
-    status?: EnumRiskAssessmentStatusWithAggregatesFilter<"RiskAssessment"> | $Enums.RiskAssessmentStatus
-    closedAt?: DateTimeNullableWithAggregatesFilter<"RiskAssessment"> | Date | string | null
-    createdAt?: DateTimeWithAggregatesFilter<"RiskAssessment"> | Date | string
-    updatedAt?: DateTimeWithAggregatesFilter<"RiskAssessment"> | Date | string
-    createdBy?: StringNullableWithAggregatesFilter<"RiskAssessment"> | string | null
-    updatedBy?: StringNullableWithAggregatesFilter<"RiskAssessment"> | string | null
-    deletedAt?: DateTimeNullableWithAggregatesFilter<"RiskAssessment"> | Date | string | null
-    deletedBy?: StringNullableWithAggregatesFilter<"RiskAssessment"> | string | null
+  export type RiskAssessmentDocumentScalarWhereWithAggregatesInput = {
+    AND?: RiskAssessmentDocumentScalarWhereWithAggregatesInput | RiskAssessmentDocumentScalarWhereWithAggregatesInput[]
+    OR?: RiskAssessmentDocumentScalarWhereWithAggregatesInput[]
+    NOT?: RiskAssessmentDocumentScalarWhereWithAggregatesInput | RiskAssessmentDocumentScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"RiskAssessmentDocument"> | string
+    companyId?: StringWithAggregatesFilter<"RiskAssessmentDocument"> | string
+    refNo?: StringWithAggregatesFilter<"RiskAssessmentDocument"> | string
+    title?: StringWithAggregatesFilter<"RiskAssessmentDocument"> | string
+    category?: StringWithAggregatesFilter<"RiskAssessmentDocument"> | string
+    description?: StringNullableWithAggregatesFilter<"RiskAssessmentDocument"> | string | null
+    vesselId?: StringNullableWithAggregatesFilter<"RiskAssessmentDocument"> | string | null
+    applicableVesselType?: StringNullableWithAggregatesFilter<"RiskAssessmentDocument"> | string | null
+    reviewFrequencyMonths?: IntWithAggregatesFilter<"RiskAssessmentDocument"> | number
+    lastReviewDate?: DateTimeNullableWithAggregatesFilter<"RiskAssessmentDocument"> | Date | string | null
+    nextReviewDate?: DateTimeNullableWithAggregatesFilter<"RiskAssessmentDocument"> | Date | string | null
+    reviewOwnerId?: StringNullableWithAggregatesFilter<"RiskAssessmentDocument"> | string | null
+    status?: EnumDocumentStatusWithAggregatesFilter<"RiskAssessmentDocument"> | $Enums.DocumentStatus
+    ownerId?: StringNullableWithAggregatesFilter<"RiskAssessmentDocument"> | string | null
+    currentRevisionId?: StringNullableWithAggregatesFilter<"RiskAssessmentDocument"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"RiskAssessmentDocument"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"RiskAssessmentDocument"> | Date | string
+    createdBy?: StringNullableWithAggregatesFilter<"RiskAssessmentDocument"> | string | null
+    updatedBy?: StringNullableWithAggregatesFilter<"RiskAssessmentDocument"> | string | null
+    deletedAt?: DateTimeNullableWithAggregatesFilter<"RiskAssessmentDocument"> | Date | string | null
+    deletedBy?: StringNullableWithAggregatesFilter<"RiskAssessmentDocument"> | string | null
+  }
+
+  export type RiskAssessmentRevisionWhereInput = {
+    AND?: RiskAssessmentRevisionWhereInput | RiskAssessmentRevisionWhereInput[]
+    OR?: RiskAssessmentRevisionWhereInput[]
+    NOT?: RiskAssessmentRevisionWhereInput | RiskAssessmentRevisionWhereInput[]
+    id?: StringFilter<"RiskAssessmentRevision"> | string
+    companyId?: StringFilter<"RiskAssessmentRevision"> | string
+    documentId?: StringFilter<"RiskAssessmentRevision"> | string
+    revisionNo?: IntFilter<"RiskAssessmentRevision"> | number
+    changeSummary?: StringNullableFilter<"RiskAssessmentRevision"> | string | null
+    reviewTrigger?: EnumReviewTriggerNullableFilter<"RiskAssessmentRevision"> | $Enums.ReviewTrigger | null
+    smsProcedureRefs?: StringNullableFilter<"RiskAssessmentRevision"> | string | null
+    riskMatrixRef?: StringNullableFilter<"RiskAssessmentRevision"> | string | null
+    checklistsRequired?: StringNullableFilter<"RiskAssessmentRevision"> | string | null
+    approvalLevel?: EnumRaApprovalLevelFilter<"RiskAssessmentRevision"> | $Enums.RaApprovalLevel
+    status?: EnumDocumentStatusFilter<"RiskAssessmentRevision"> | $Enums.DocumentStatus
+    effectiveDate?: DateTimeNullableFilter<"RiskAssessmentRevision"> | Date | string | null
+    approvedBy?: StringNullableFilter<"RiskAssessmentRevision"> | string | null
+    approvedAt?: DateTimeNullableFilter<"RiskAssessmentRevision"> | Date | string | null
+    createdAt?: DateTimeFilter<"RiskAssessmentRevision"> | Date | string
+    createdBy?: StringNullableFilter<"RiskAssessmentRevision"> | string | null
+    document?: XOR<RiskAssessmentDocumentScalarRelationFilter, RiskAssessmentDocumentWhereInput>
+    currentOf?: XOR<RiskAssessmentDocumentNullableScalarRelationFilter, RiskAssessmentDocumentWhereInput> | null
+    executions?: RiskAssessmentExecutionListRelationFilter
+    hazardRows?: RiskHazardRowListRelationFilter
+  }
+
+  export type RiskAssessmentRevisionOrderByWithRelationInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    documentId?: SortOrder
+    revisionNo?: SortOrder
+    changeSummary?: SortOrderInput | SortOrder
+    reviewTrigger?: SortOrderInput | SortOrder
+    smsProcedureRefs?: SortOrderInput | SortOrder
+    riskMatrixRef?: SortOrderInput | SortOrder
+    checklistsRequired?: SortOrderInput | SortOrder
+    approvalLevel?: SortOrder
+    status?: SortOrder
+    effectiveDate?: SortOrderInput | SortOrder
+    approvedBy?: SortOrderInput | SortOrder
+    approvedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    createdBy?: SortOrderInput | SortOrder
+    document?: RiskAssessmentDocumentOrderByWithRelationInput
+    currentOf?: RiskAssessmentDocumentOrderByWithRelationInput
+    executions?: RiskAssessmentExecutionOrderByRelationAggregateInput
+    hazardRows?: RiskHazardRowOrderByRelationAggregateInput
+  }
+
+  export type RiskAssessmentRevisionWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    documentId_revisionNo?: RiskAssessmentRevisionDocumentIdRevisionNoCompoundUniqueInput
+    AND?: RiskAssessmentRevisionWhereInput | RiskAssessmentRevisionWhereInput[]
+    OR?: RiskAssessmentRevisionWhereInput[]
+    NOT?: RiskAssessmentRevisionWhereInput | RiskAssessmentRevisionWhereInput[]
+    companyId?: StringFilter<"RiskAssessmentRevision"> | string
+    documentId?: StringFilter<"RiskAssessmentRevision"> | string
+    revisionNo?: IntFilter<"RiskAssessmentRevision"> | number
+    changeSummary?: StringNullableFilter<"RiskAssessmentRevision"> | string | null
+    reviewTrigger?: EnumReviewTriggerNullableFilter<"RiskAssessmentRevision"> | $Enums.ReviewTrigger | null
+    smsProcedureRefs?: StringNullableFilter<"RiskAssessmentRevision"> | string | null
+    riskMatrixRef?: StringNullableFilter<"RiskAssessmentRevision"> | string | null
+    checklistsRequired?: StringNullableFilter<"RiskAssessmentRevision"> | string | null
+    approvalLevel?: EnumRaApprovalLevelFilter<"RiskAssessmentRevision"> | $Enums.RaApprovalLevel
+    status?: EnumDocumentStatusFilter<"RiskAssessmentRevision"> | $Enums.DocumentStatus
+    effectiveDate?: DateTimeNullableFilter<"RiskAssessmentRevision"> | Date | string | null
+    approvedBy?: StringNullableFilter<"RiskAssessmentRevision"> | string | null
+    approvedAt?: DateTimeNullableFilter<"RiskAssessmentRevision"> | Date | string | null
+    createdAt?: DateTimeFilter<"RiskAssessmentRevision"> | Date | string
+    createdBy?: StringNullableFilter<"RiskAssessmentRevision"> | string | null
+    document?: XOR<RiskAssessmentDocumentScalarRelationFilter, RiskAssessmentDocumentWhereInput>
+    currentOf?: XOR<RiskAssessmentDocumentNullableScalarRelationFilter, RiskAssessmentDocumentWhereInput> | null
+    executions?: RiskAssessmentExecutionListRelationFilter
+    hazardRows?: RiskHazardRowListRelationFilter
+  }, "id" | "documentId_revisionNo">
+
+  export type RiskAssessmentRevisionOrderByWithAggregationInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    documentId?: SortOrder
+    revisionNo?: SortOrder
+    changeSummary?: SortOrderInput | SortOrder
+    reviewTrigger?: SortOrderInput | SortOrder
+    smsProcedureRefs?: SortOrderInput | SortOrder
+    riskMatrixRef?: SortOrderInput | SortOrder
+    checklistsRequired?: SortOrderInput | SortOrder
+    approvalLevel?: SortOrder
+    status?: SortOrder
+    effectiveDate?: SortOrderInput | SortOrder
+    approvedBy?: SortOrderInput | SortOrder
+    approvedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    createdBy?: SortOrderInput | SortOrder
+    _count?: RiskAssessmentRevisionCountOrderByAggregateInput
+    _avg?: RiskAssessmentRevisionAvgOrderByAggregateInput
+    _max?: RiskAssessmentRevisionMaxOrderByAggregateInput
+    _min?: RiskAssessmentRevisionMinOrderByAggregateInput
+    _sum?: RiskAssessmentRevisionSumOrderByAggregateInput
+  }
+
+  export type RiskAssessmentRevisionScalarWhereWithAggregatesInput = {
+    AND?: RiskAssessmentRevisionScalarWhereWithAggregatesInput | RiskAssessmentRevisionScalarWhereWithAggregatesInput[]
+    OR?: RiskAssessmentRevisionScalarWhereWithAggregatesInput[]
+    NOT?: RiskAssessmentRevisionScalarWhereWithAggregatesInput | RiskAssessmentRevisionScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"RiskAssessmentRevision"> | string
+    companyId?: StringWithAggregatesFilter<"RiskAssessmentRevision"> | string
+    documentId?: StringWithAggregatesFilter<"RiskAssessmentRevision"> | string
+    revisionNo?: IntWithAggregatesFilter<"RiskAssessmentRevision"> | number
+    changeSummary?: StringNullableWithAggregatesFilter<"RiskAssessmentRevision"> | string | null
+    reviewTrigger?: EnumReviewTriggerNullableWithAggregatesFilter<"RiskAssessmentRevision"> | $Enums.ReviewTrigger | null
+    smsProcedureRefs?: StringNullableWithAggregatesFilter<"RiskAssessmentRevision"> | string | null
+    riskMatrixRef?: StringNullableWithAggregatesFilter<"RiskAssessmentRevision"> | string | null
+    checklistsRequired?: StringNullableWithAggregatesFilter<"RiskAssessmentRevision"> | string | null
+    approvalLevel?: EnumRaApprovalLevelWithAggregatesFilter<"RiskAssessmentRevision"> | $Enums.RaApprovalLevel
+    status?: EnumDocumentStatusWithAggregatesFilter<"RiskAssessmentRevision"> | $Enums.DocumentStatus
+    effectiveDate?: DateTimeNullableWithAggregatesFilter<"RiskAssessmentRevision"> | Date | string | null
+    approvedBy?: StringNullableWithAggregatesFilter<"RiskAssessmentRevision"> | string | null
+    approvedAt?: DateTimeNullableWithAggregatesFilter<"RiskAssessmentRevision"> | Date | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"RiskAssessmentRevision"> | Date | string
+    createdBy?: StringNullableWithAggregatesFilter<"RiskAssessmentRevision"> | string | null
+  }
+
+  export type RiskHazardRowWhereInput = {
+    AND?: RiskHazardRowWhereInput | RiskHazardRowWhereInput[]
+    OR?: RiskHazardRowWhereInput[]
+    NOT?: RiskHazardRowWhereInput | RiskHazardRowWhereInput[]
+    id?: StringFilter<"RiskHazardRow"> | string
+    companyId?: StringFilter<"RiskHazardRow"> | string
+    revisionId?: StringFilter<"RiskHazardRow"> | string
+    rowNo?: IntFilter<"RiskHazardRow"> | number
+    phase?: StringNullableFilter<"RiskHazardRow"> | string | null
+    consequence?: StringFilter<"RiskHazardRow"> | string
+    causes?: StringFilter<"RiskHazardRow"> | string
+    severity?: IntFilter<"RiskHazardRow"> | number
+    likelihood?: IntFilter<"RiskHazardRow"> | number
+    existingControls?: StringFilter<"RiskHazardRow"> | string
+    additionalControls?: StringNullableFilter<"RiskHazardRow"> | string | null
+    resLikelihood?: IntNullableFilter<"RiskHazardRow"> | number | null
+    responsible?: StringNullableFilter<"RiskHazardRow"> | string | null
+    isNew?: BoolFilter<"RiskHazardRow"> | boolean
+    ratingChangeNote?: StringNullableFilter<"RiskHazardRow"> | string | null
+    createdAt?: DateTimeFilter<"RiskHazardRow"> | Date | string
+    createdBy?: StringNullableFilter<"RiskHazardRow"> | string | null
+    revision?: XOR<RiskAssessmentRevisionScalarRelationFilter, RiskAssessmentRevisionWhereInput>
+  }
+
+  export type RiskHazardRowOrderByWithRelationInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    revisionId?: SortOrder
+    rowNo?: SortOrder
+    phase?: SortOrderInput | SortOrder
+    consequence?: SortOrder
+    causes?: SortOrder
+    severity?: SortOrder
+    likelihood?: SortOrder
+    existingControls?: SortOrder
+    additionalControls?: SortOrderInput | SortOrder
+    resLikelihood?: SortOrderInput | SortOrder
+    responsible?: SortOrderInput | SortOrder
+    isNew?: SortOrder
+    ratingChangeNote?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    createdBy?: SortOrderInput | SortOrder
+    revision?: RiskAssessmentRevisionOrderByWithRelationInput
+  }
+
+  export type RiskHazardRowWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: RiskHazardRowWhereInput | RiskHazardRowWhereInput[]
+    OR?: RiskHazardRowWhereInput[]
+    NOT?: RiskHazardRowWhereInput | RiskHazardRowWhereInput[]
+    companyId?: StringFilter<"RiskHazardRow"> | string
+    revisionId?: StringFilter<"RiskHazardRow"> | string
+    rowNo?: IntFilter<"RiskHazardRow"> | number
+    phase?: StringNullableFilter<"RiskHazardRow"> | string | null
+    consequence?: StringFilter<"RiskHazardRow"> | string
+    causes?: StringFilter<"RiskHazardRow"> | string
+    severity?: IntFilter<"RiskHazardRow"> | number
+    likelihood?: IntFilter<"RiskHazardRow"> | number
+    existingControls?: StringFilter<"RiskHazardRow"> | string
+    additionalControls?: StringNullableFilter<"RiskHazardRow"> | string | null
+    resLikelihood?: IntNullableFilter<"RiskHazardRow"> | number | null
+    responsible?: StringNullableFilter<"RiskHazardRow"> | string | null
+    isNew?: BoolFilter<"RiskHazardRow"> | boolean
+    ratingChangeNote?: StringNullableFilter<"RiskHazardRow"> | string | null
+    createdAt?: DateTimeFilter<"RiskHazardRow"> | Date | string
+    createdBy?: StringNullableFilter<"RiskHazardRow"> | string | null
+    revision?: XOR<RiskAssessmentRevisionScalarRelationFilter, RiskAssessmentRevisionWhereInput>
+  }, "id">
+
+  export type RiskHazardRowOrderByWithAggregationInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    revisionId?: SortOrder
+    rowNo?: SortOrder
+    phase?: SortOrderInput | SortOrder
+    consequence?: SortOrder
+    causes?: SortOrder
+    severity?: SortOrder
+    likelihood?: SortOrder
+    existingControls?: SortOrder
+    additionalControls?: SortOrderInput | SortOrder
+    resLikelihood?: SortOrderInput | SortOrder
+    responsible?: SortOrderInput | SortOrder
+    isNew?: SortOrder
+    ratingChangeNote?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    createdBy?: SortOrderInput | SortOrder
+    _count?: RiskHazardRowCountOrderByAggregateInput
+    _avg?: RiskHazardRowAvgOrderByAggregateInput
+    _max?: RiskHazardRowMaxOrderByAggregateInput
+    _min?: RiskHazardRowMinOrderByAggregateInput
+    _sum?: RiskHazardRowSumOrderByAggregateInput
+  }
+
+  export type RiskHazardRowScalarWhereWithAggregatesInput = {
+    AND?: RiskHazardRowScalarWhereWithAggregatesInput | RiskHazardRowScalarWhereWithAggregatesInput[]
+    OR?: RiskHazardRowScalarWhereWithAggregatesInput[]
+    NOT?: RiskHazardRowScalarWhereWithAggregatesInput | RiskHazardRowScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"RiskHazardRow"> | string
+    companyId?: StringWithAggregatesFilter<"RiskHazardRow"> | string
+    revisionId?: StringWithAggregatesFilter<"RiskHazardRow"> | string
+    rowNo?: IntWithAggregatesFilter<"RiskHazardRow"> | number
+    phase?: StringNullableWithAggregatesFilter<"RiskHazardRow"> | string | null
+    consequence?: StringWithAggregatesFilter<"RiskHazardRow"> | string
+    causes?: StringWithAggregatesFilter<"RiskHazardRow"> | string
+    severity?: IntWithAggregatesFilter<"RiskHazardRow"> | number
+    likelihood?: IntWithAggregatesFilter<"RiskHazardRow"> | number
+    existingControls?: StringWithAggregatesFilter<"RiskHazardRow"> | string
+    additionalControls?: StringNullableWithAggregatesFilter<"RiskHazardRow"> | string | null
+    resLikelihood?: IntNullableWithAggregatesFilter<"RiskHazardRow"> | number | null
+    responsible?: StringNullableWithAggregatesFilter<"RiskHazardRow"> | string | null
+    isNew?: BoolWithAggregatesFilter<"RiskHazardRow"> | boolean
+    ratingChangeNote?: StringNullableWithAggregatesFilter<"RiskHazardRow"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"RiskHazardRow"> | Date | string
+    createdBy?: StringNullableWithAggregatesFilter<"RiskHazardRow"> | string | null
+  }
+
+  export type RiskAssessmentExecutionWhereInput = {
+    AND?: RiskAssessmentExecutionWhereInput | RiskAssessmentExecutionWhereInput[]
+    OR?: RiskAssessmentExecutionWhereInput[]
+    NOT?: RiskAssessmentExecutionWhereInput | RiskAssessmentExecutionWhereInput[]
+    id?: StringFilter<"RiskAssessmentExecution"> | string
+    companyId?: StringFilter<"RiskAssessmentExecution"> | string
+    documentId?: StringFilter<"RiskAssessmentExecution"> | string
+    revisionId?: StringFilter<"RiskAssessmentExecution"> | string
+    vesselId?: StringFilter<"RiskAssessmentExecution"> | string
+    jobName?: StringFilter<"RiskAssessmentExecution"> | string
+    conditionStatus?: EnumRaExecutionConditionFilter<"RiskAssessmentExecution"> | $Enums.RaExecutionCondition
+    changedConditionsNote?: StringNullableFilter<"RiskAssessmentExecution"> | string | null
+    temporaryHazards?: StringNullableFilter<"RiskAssessmentExecution"> | string | null
+    temporaryControls?: StringNullableFilter<"RiskAssessmentExecution"> | string | null
+    performedById?: StringNullableFilter<"RiskAssessmentExecution"> | string | null
+    toolboxSignedAt?: DateTimeNullableFilter<"RiskAssessmentExecution"> | Date | string | null
+    toolboxAttendees?: StringNullableFilter<"RiskAssessmentExecution"> | string | null
+    executedAt?: DateTimeFilter<"RiskAssessmentExecution"> | Date | string
+    createdAt?: DateTimeFilter<"RiskAssessmentExecution"> | Date | string
+    createdBy?: StringNullableFilter<"RiskAssessmentExecution"> | string | null
+    document?: XOR<RiskAssessmentDocumentScalarRelationFilter, RiskAssessmentDocumentWhereInput>
+    revision?: XOR<RiskAssessmentRevisionScalarRelationFilter, RiskAssessmentRevisionWhereInput>
+    vessel?: XOR<VesselScalarRelationFilter, VesselWhereInput>
+  }
+
+  export type RiskAssessmentExecutionOrderByWithRelationInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    documentId?: SortOrder
+    revisionId?: SortOrder
+    vesselId?: SortOrder
+    jobName?: SortOrder
+    conditionStatus?: SortOrder
+    changedConditionsNote?: SortOrderInput | SortOrder
+    temporaryHazards?: SortOrderInput | SortOrder
+    temporaryControls?: SortOrderInput | SortOrder
+    performedById?: SortOrderInput | SortOrder
+    toolboxSignedAt?: SortOrderInput | SortOrder
+    toolboxAttendees?: SortOrderInput | SortOrder
+    executedAt?: SortOrder
+    createdAt?: SortOrder
+    createdBy?: SortOrderInput | SortOrder
+    document?: RiskAssessmentDocumentOrderByWithRelationInput
+    revision?: RiskAssessmentRevisionOrderByWithRelationInput
+    vessel?: VesselOrderByWithRelationInput
+  }
+
+  export type RiskAssessmentExecutionWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: RiskAssessmentExecutionWhereInput | RiskAssessmentExecutionWhereInput[]
+    OR?: RiskAssessmentExecutionWhereInput[]
+    NOT?: RiskAssessmentExecutionWhereInput | RiskAssessmentExecutionWhereInput[]
+    companyId?: StringFilter<"RiskAssessmentExecution"> | string
+    documentId?: StringFilter<"RiskAssessmentExecution"> | string
+    revisionId?: StringFilter<"RiskAssessmentExecution"> | string
+    vesselId?: StringFilter<"RiskAssessmentExecution"> | string
+    jobName?: StringFilter<"RiskAssessmentExecution"> | string
+    conditionStatus?: EnumRaExecutionConditionFilter<"RiskAssessmentExecution"> | $Enums.RaExecutionCondition
+    changedConditionsNote?: StringNullableFilter<"RiskAssessmentExecution"> | string | null
+    temporaryHazards?: StringNullableFilter<"RiskAssessmentExecution"> | string | null
+    temporaryControls?: StringNullableFilter<"RiskAssessmentExecution"> | string | null
+    performedById?: StringNullableFilter<"RiskAssessmentExecution"> | string | null
+    toolboxSignedAt?: DateTimeNullableFilter<"RiskAssessmentExecution"> | Date | string | null
+    toolboxAttendees?: StringNullableFilter<"RiskAssessmentExecution"> | string | null
+    executedAt?: DateTimeFilter<"RiskAssessmentExecution"> | Date | string
+    createdAt?: DateTimeFilter<"RiskAssessmentExecution"> | Date | string
+    createdBy?: StringNullableFilter<"RiskAssessmentExecution"> | string | null
+    document?: XOR<RiskAssessmentDocumentScalarRelationFilter, RiskAssessmentDocumentWhereInput>
+    revision?: XOR<RiskAssessmentRevisionScalarRelationFilter, RiskAssessmentRevisionWhereInput>
+    vessel?: XOR<VesselScalarRelationFilter, VesselWhereInput>
+  }, "id">
+
+  export type RiskAssessmentExecutionOrderByWithAggregationInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    documentId?: SortOrder
+    revisionId?: SortOrder
+    vesselId?: SortOrder
+    jobName?: SortOrder
+    conditionStatus?: SortOrder
+    changedConditionsNote?: SortOrderInput | SortOrder
+    temporaryHazards?: SortOrderInput | SortOrder
+    temporaryControls?: SortOrderInput | SortOrder
+    performedById?: SortOrderInput | SortOrder
+    toolboxSignedAt?: SortOrderInput | SortOrder
+    toolboxAttendees?: SortOrderInput | SortOrder
+    executedAt?: SortOrder
+    createdAt?: SortOrder
+    createdBy?: SortOrderInput | SortOrder
+    _count?: RiskAssessmentExecutionCountOrderByAggregateInput
+    _max?: RiskAssessmentExecutionMaxOrderByAggregateInput
+    _min?: RiskAssessmentExecutionMinOrderByAggregateInput
+  }
+
+  export type RiskAssessmentExecutionScalarWhereWithAggregatesInput = {
+    AND?: RiskAssessmentExecutionScalarWhereWithAggregatesInput | RiskAssessmentExecutionScalarWhereWithAggregatesInput[]
+    OR?: RiskAssessmentExecutionScalarWhereWithAggregatesInput[]
+    NOT?: RiskAssessmentExecutionScalarWhereWithAggregatesInput | RiskAssessmentExecutionScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"RiskAssessmentExecution"> | string
+    companyId?: StringWithAggregatesFilter<"RiskAssessmentExecution"> | string
+    documentId?: StringWithAggregatesFilter<"RiskAssessmentExecution"> | string
+    revisionId?: StringWithAggregatesFilter<"RiskAssessmentExecution"> | string
+    vesselId?: StringWithAggregatesFilter<"RiskAssessmentExecution"> | string
+    jobName?: StringWithAggregatesFilter<"RiskAssessmentExecution"> | string
+    conditionStatus?: EnumRaExecutionConditionWithAggregatesFilter<"RiskAssessmentExecution"> | $Enums.RaExecutionCondition
+    changedConditionsNote?: StringNullableWithAggregatesFilter<"RiskAssessmentExecution"> | string | null
+    temporaryHazards?: StringNullableWithAggregatesFilter<"RiskAssessmentExecution"> | string | null
+    temporaryControls?: StringNullableWithAggregatesFilter<"RiskAssessmentExecution"> | string | null
+    performedById?: StringNullableWithAggregatesFilter<"RiskAssessmentExecution"> | string | null
+    toolboxSignedAt?: DateTimeNullableWithAggregatesFilter<"RiskAssessmentExecution"> | Date | string | null
+    toolboxAttendees?: StringNullableWithAggregatesFilter<"RiskAssessmentExecution"> | string | null
+    executedAt?: DateTimeWithAggregatesFilter<"RiskAssessmentExecution"> | Date | string
+    createdAt?: DateTimeWithAggregatesFilter<"RiskAssessmentExecution"> | Date | string
+    createdBy?: StringNullableWithAggregatesFilter<"RiskAssessmentExecution"> | string | null
+  }
+
+  export type RiskAssessmentRevisionRequestWhereInput = {
+    AND?: RiskAssessmentRevisionRequestWhereInput | RiskAssessmentRevisionRequestWhereInput[]
+    OR?: RiskAssessmentRevisionRequestWhereInput[]
+    NOT?: RiskAssessmentRevisionRequestWhereInput | RiskAssessmentRevisionRequestWhereInput[]
+    id?: StringFilter<"RiskAssessmentRevisionRequest"> | string
+    companyId?: StringFilter<"RiskAssessmentRevisionRequest"> | string
+    documentId?: StringFilter<"RiskAssessmentRevisionRequest"> | string
+    requestedById?: StringNullableFilter<"RiskAssessmentRevisionRequest"> | string | null
+    vesselId?: StringNullableFilter<"RiskAssessmentRevisionRequest"> | string | null
+    reason?: StringFilter<"RiskAssessmentRevisionRequest"> | string
+    reviewTrigger?: EnumReviewTriggerFilter<"RiskAssessmentRevisionRequest"> | $Enums.ReviewTrigger
+    status?: EnumRaRevisionRequestStatusFilter<"RiskAssessmentRevisionRequest"> | $Enums.RaRevisionRequestStatus
+    decidedById?: StringNullableFilter<"RiskAssessmentRevisionRequest"> | string | null
+    decidedAt?: DateTimeNullableFilter<"RiskAssessmentRevisionRequest"> | Date | string | null
+    decisionNote?: StringNullableFilter<"RiskAssessmentRevisionRequest"> | string | null
+    createdAt?: DateTimeFilter<"RiskAssessmentRevisionRequest"> | Date | string
+    document?: XOR<RiskAssessmentDocumentScalarRelationFilter, RiskAssessmentDocumentWhereInput>
+    vessel?: XOR<VesselNullableScalarRelationFilter, VesselWhereInput> | null
+  }
+
+  export type RiskAssessmentRevisionRequestOrderByWithRelationInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    documentId?: SortOrder
+    requestedById?: SortOrderInput | SortOrder
+    vesselId?: SortOrderInput | SortOrder
+    reason?: SortOrder
+    reviewTrigger?: SortOrder
+    status?: SortOrder
+    decidedById?: SortOrderInput | SortOrder
+    decidedAt?: SortOrderInput | SortOrder
+    decisionNote?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    document?: RiskAssessmentDocumentOrderByWithRelationInput
+    vessel?: VesselOrderByWithRelationInput
+  }
+
+  export type RiskAssessmentRevisionRequestWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: RiskAssessmentRevisionRequestWhereInput | RiskAssessmentRevisionRequestWhereInput[]
+    OR?: RiskAssessmentRevisionRequestWhereInput[]
+    NOT?: RiskAssessmentRevisionRequestWhereInput | RiskAssessmentRevisionRequestWhereInput[]
+    companyId?: StringFilter<"RiskAssessmentRevisionRequest"> | string
+    documentId?: StringFilter<"RiskAssessmentRevisionRequest"> | string
+    requestedById?: StringNullableFilter<"RiskAssessmentRevisionRequest"> | string | null
+    vesselId?: StringNullableFilter<"RiskAssessmentRevisionRequest"> | string | null
+    reason?: StringFilter<"RiskAssessmentRevisionRequest"> | string
+    reviewTrigger?: EnumReviewTriggerFilter<"RiskAssessmentRevisionRequest"> | $Enums.ReviewTrigger
+    status?: EnumRaRevisionRequestStatusFilter<"RiskAssessmentRevisionRequest"> | $Enums.RaRevisionRequestStatus
+    decidedById?: StringNullableFilter<"RiskAssessmentRevisionRequest"> | string | null
+    decidedAt?: DateTimeNullableFilter<"RiskAssessmentRevisionRequest"> | Date | string | null
+    decisionNote?: StringNullableFilter<"RiskAssessmentRevisionRequest"> | string | null
+    createdAt?: DateTimeFilter<"RiskAssessmentRevisionRequest"> | Date | string
+    document?: XOR<RiskAssessmentDocumentScalarRelationFilter, RiskAssessmentDocumentWhereInput>
+    vessel?: XOR<VesselNullableScalarRelationFilter, VesselWhereInput> | null
+  }, "id">
+
+  export type RiskAssessmentRevisionRequestOrderByWithAggregationInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    documentId?: SortOrder
+    requestedById?: SortOrderInput | SortOrder
+    vesselId?: SortOrderInput | SortOrder
+    reason?: SortOrder
+    reviewTrigger?: SortOrder
+    status?: SortOrder
+    decidedById?: SortOrderInput | SortOrder
+    decidedAt?: SortOrderInput | SortOrder
+    decisionNote?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    _count?: RiskAssessmentRevisionRequestCountOrderByAggregateInput
+    _max?: RiskAssessmentRevisionRequestMaxOrderByAggregateInput
+    _min?: RiskAssessmentRevisionRequestMinOrderByAggregateInput
+  }
+
+  export type RiskAssessmentRevisionRequestScalarWhereWithAggregatesInput = {
+    AND?: RiskAssessmentRevisionRequestScalarWhereWithAggregatesInput | RiskAssessmentRevisionRequestScalarWhereWithAggregatesInput[]
+    OR?: RiskAssessmentRevisionRequestScalarWhereWithAggregatesInput[]
+    NOT?: RiskAssessmentRevisionRequestScalarWhereWithAggregatesInput | RiskAssessmentRevisionRequestScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"RiskAssessmentRevisionRequest"> | string
+    companyId?: StringWithAggregatesFilter<"RiskAssessmentRevisionRequest"> | string
+    documentId?: StringWithAggregatesFilter<"RiskAssessmentRevisionRequest"> | string
+    requestedById?: StringNullableWithAggregatesFilter<"RiskAssessmentRevisionRequest"> | string | null
+    vesselId?: StringNullableWithAggregatesFilter<"RiskAssessmentRevisionRequest"> | string | null
+    reason?: StringWithAggregatesFilter<"RiskAssessmentRevisionRequest"> | string
+    reviewTrigger?: EnumReviewTriggerWithAggregatesFilter<"RiskAssessmentRevisionRequest"> | $Enums.ReviewTrigger
+    status?: EnumRaRevisionRequestStatusWithAggregatesFilter<"RiskAssessmentRevisionRequest"> | $Enums.RaRevisionRequestStatus
+    decidedById?: StringNullableWithAggregatesFilter<"RiskAssessmentRevisionRequest"> | string | null
+    decidedAt?: DateTimeNullableWithAggregatesFilter<"RiskAssessmentRevisionRequest"> | Date | string | null
+    decisionNote?: StringNullableWithAggregatesFilter<"RiskAssessmentRevisionRequest"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"RiskAssessmentRevisionRequest"> | Date | string
   }
 
   export type DefectWhereInput = {
@@ -63881,7 +70396,7 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillCreateNestedManyWithoutCompanyInput
     controlledDocuments?: ControlledDocumentCreateNestedManyWithoutCompanyInput
     circulars?: CircularCreateNestedManyWithoutCompanyInput
-    riskAssessments?: RiskAssessmentCreateNestedManyWithoutCompanyInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentCreateNestedManyWithoutCompanyInput
     defects?: DefectCreateNestedManyWithoutCompanyInput
   }
 
@@ -63908,7 +70423,7 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutCompanyInput
     controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutCompanyInput
     circulars?: CircularUncheckedCreateNestedManyWithoutCompanyInput
-    riskAssessments?: RiskAssessmentUncheckedCreateNestedManyWithoutCompanyInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedCreateNestedManyWithoutCompanyInput
     defects?: DefectUncheckedCreateNestedManyWithoutCompanyInput
   }
 
@@ -63935,7 +70450,7 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillUpdateManyWithoutCompanyNestedInput
     controlledDocuments?: ControlledDocumentUpdateManyWithoutCompanyNestedInput
     circulars?: CircularUpdateManyWithoutCompanyNestedInput
-    riskAssessments?: RiskAssessmentUpdateManyWithoutCompanyNestedInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUpdateManyWithoutCompanyNestedInput
     defects?: DefectUpdateManyWithoutCompanyNestedInput
   }
 
@@ -63962,7 +70477,7 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutCompanyNestedInput
     controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutCompanyNestedInput
     circulars?: CircularUncheckedUpdateManyWithoutCompanyNestedInput
-    riskAssessments?: RiskAssessmentUncheckedUpdateManyWithoutCompanyNestedInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedUpdateManyWithoutCompanyNestedInput
     defects?: DefectUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
@@ -64359,7 +70874,7 @@ export namespace Prisma {
     id?: string
     name: string
     code?: string | null
-    imo: string
+    imo?: string | null
     officialNumber?: string | null
     callSign?: string | null
     mmsi?: string | null
@@ -64372,6 +70887,18 @@ export namespace Prisma {
     breadth?: number | null
     depth?: number | null
     status?: $Enums.VesselStatus
+    capacityCbm?: number | null
+    netTonnage?: number | null
+    deadweight?: number | null
+    tradeArea?: string | null
+    registeredOwner?: string | null
+    headOwner?: string | null
+    charterer?: string | null
+    yearWithSwan?: number | null
+    lastDryDock?: Date | string | null
+    dryDockPlace?: string | null
+    nextDryDockDue?: Date | string | null
+    archivedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -64392,7 +70919,9 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillCreateNestedManyWithoutVesselInput
     controlledDocuments?: ControlledDocumentCreateNestedManyWithoutVesselInput
     circulars?: CircularCreateNestedManyWithoutVesselInput
-    riskAssessments?: RiskAssessmentCreateNestedManyWithoutVesselInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentCreateNestedManyWithoutVesselInput
+    riskAssessmentExecutions?: RiskAssessmentExecutionCreateNestedManyWithoutVesselInput
+    riskAssessmentRevisionRequests?: RiskAssessmentRevisionRequestCreateNestedManyWithoutVesselInput
     defects?: DefectCreateNestedManyWithoutVesselInput
     users?: UserCreateNestedManyWithoutVesselInput
   }
@@ -64402,7 +70931,7 @@ export namespace Prisma {
     companyId: string
     name: string
     code?: string | null
-    imo: string
+    imo?: string | null
     officialNumber?: string | null
     callSign?: string | null
     mmsi?: string | null
@@ -64415,6 +70944,18 @@ export namespace Prisma {
     breadth?: number | null
     depth?: number | null
     status?: $Enums.VesselStatus
+    capacityCbm?: number | null
+    netTonnage?: number | null
+    deadweight?: number | null
+    tradeArea?: string | null
+    registeredOwner?: string | null
+    headOwner?: string | null
+    charterer?: string | null
+    yearWithSwan?: number | null
+    lastDryDock?: Date | string | null
+    dryDockPlace?: string | null
+    nextDryDockDue?: Date | string | null
+    archivedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -64434,7 +70975,9 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutVesselInput
     controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutVesselInput
     circulars?: CircularUncheckedCreateNestedManyWithoutVesselInput
-    riskAssessments?: RiskAssessmentUncheckedCreateNestedManyWithoutVesselInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedCreateNestedManyWithoutVesselInput
+    riskAssessmentExecutions?: RiskAssessmentExecutionUncheckedCreateNestedManyWithoutVesselInput
+    riskAssessmentRevisionRequests?: RiskAssessmentRevisionRequestUncheckedCreateNestedManyWithoutVesselInput
     defects?: DefectUncheckedCreateNestedManyWithoutVesselInput
     users?: UserUncheckedCreateNestedManyWithoutVesselInput
   }
@@ -64443,7 +70986,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     code?: NullableStringFieldUpdateOperationsInput | string | null
-    imo?: StringFieldUpdateOperationsInput | string
+    imo?: NullableStringFieldUpdateOperationsInput | string | null
     officialNumber?: NullableStringFieldUpdateOperationsInput | string | null
     callSign?: NullableStringFieldUpdateOperationsInput | string | null
     mmsi?: NullableStringFieldUpdateOperationsInput | string | null
@@ -64456,6 +70999,18 @@ export namespace Prisma {
     breadth?: NullableFloatFieldUpdateOperationsInput | number | null
     depth?: NullableFloatFieldUpdateOperationsInput | number | null
     status?: EnumVesselStatusFieldUpdateOperationsInput | $Enums.VesselStatus
+    capacityCbm?: NullableFloatFieldUpdateOperationsInput | number | null
+    netTonnage?: NullableFloatFieldUpdateOperationsInput | number | null
+    deadweight?: NullableFloatFieldUpdateOperationsInput | number | null
+    tradeArea?: NullableStringFieldUpdateOperationsInput | string | null
+    registeredOwner?: NullableStringFieldUpdateOperationsInput | string | null
+    headOwner?: NullableStringFieldUpdateOperationsInput | string | null
+    charterer?: NullableStringFieldUpdateOperationsInput | string | null
+    yearWithSwan?: NullableIntFieldUpdateOperationsInput | number | null
+    lastDryDock?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dryDockPlace?: NullableStringFieldUpdateOperationsInput | string | null
+    nextDryDockDue?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -64476,7 +71031,9 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillUpdateManyWithoutVesselNestedInput
     controlledDocuments?: ControlledDocumentUpdateManyWithoutVesselNestedInput
     circulars?: CircularUpdateManyWithoutVesselNestedInput
-    riskAssessments?: RiskAssessmentUpdateManyWithoutVesselNestedInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUpdateManyWithoutVesselNestedInput
+    riskAssessmentExecutions?: RiskAssessmentExecutionUpdateManyWithoutVesselNestedInput
+    riskAssessmentRevisionRequests?: RiskAssessmentRevisionRequestUpdateManyWithoutVesselNestedInput
     defects?: DefectUpdateManyWithoutVesselNestedInput
     users?: UserUpdateManyWithoutVesselNestedInput
   }
@@ -64486,7 +71043,7 @@ export namespace Prisma {
     companyId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     code?: NullableStringFieldUpdateOperationsInput | string | null
-    imo?: StringFieldUpdateOperationsInput | string
+    imo?: NullableStringFieldUpdateOperationsInput | string | null
     officialNumber?: NullableStringFieldUpdateOperationsInput | string | null
     callSign?: NullableStringFieldUpdateOperationsInput | string | null
     mmsi?: NullableStringFieldUpdateOperationsInput | string | null
@@ -64499,6 +71056,18 @@ export namespace Prisma {
     breadth?: NullableFloatFieldUpdateOperationsInput | number | null
     depth?: NullableFloatFieldUpdateOperationsInput | number | null
     status?: EnumVesselStatusFieldUpdateOperationsInput | $Enums.VesselStatus
+    capacityCbm?: NullableFloatFieldUpdateOperationsInput | number | null
+    netTonnage?: NullableFloatFieldUpdateOperationsInput | number | null
+    deadweight?: NullableFloatFieldUpdateOperationsInput | number | null
+    tradeArea?: NullableStringFieldUpdateOperationsInput | string | null
+    registeredOwner?: NullableStringFieldUpdateOperationsInput | string | null
+    headOwner?: NullableStringFieldUpdateOperationsInput | string | null
+    charterer?: NullableStringFieldUpdateOperationsInput | string | null
+    yearWithSwan?: NullableIntFieldUpdateOperationsInput | number | null
+    lastDryDock?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dryDockPlace?: NullableStringFieldUpdateOperationsInput | string | null
+    nextDryDockDue?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -64518,7 +71087,9 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutVesselNestedInput
     controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutVesselNestedInput
     circulars?: CircularUncheckedUpdateManyWithoutVesselNestedInput
-    riskAssessments?: RiskAssessmentUncheckedUpdateManyWithoutVesselNestedInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedUpdateManyWithoutVesselNestedInput
+    riskAssessmentExecutions?: RiskAssessmentExecutionUncheckedUpdateManyWithoutVesselNestedInput
+    riskAssessmentRevisionRequests?: RiskAssessmentRevisionRequestUncheckedUpdateManyWithoutVesselNestedInput
     defects?: DefectUncheckedUpdateManyWithoutVesselNestedInput
     users?: UserUncheckedUpdateManyWithoutVesselNestedInput
   }
@@ -64528,7 +71099,7 @@ export namespace Prisma {
     companyId: string
     name: string
     code?: string | null
-    imo: string
+    imo?: string | null
     officialNumber?: string | null
     callSign?: string | null
     mmsi?: string | null
@@ -64541,6 +71112,18 @@ export namespace Prisma {
     breadth?: number | null
     depth?: number | null
     status?: $Enums.VesselStatus
+    capacityCbm?: number | null
+    netTonnage?: number | null
+    deadweight?: number | null
+    tradeArea?: string | null
+    registeredOwner?: string | null
+    headOwner?: string | null
+    charterer?: string | null
+    yearWithSwan?: number | null
+    lastDryDock?: Date | string | null
+    dryDockPlace?: string | null
+    nextDryDockDue?: Date | string | null
+    archivedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -64553,7 +71136,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     code?: NullableStringFieldUpdateOperationsInput | string | null
-    imo?: StringFieldUpdateOperationsInput | string
+    imo?: NullableStringFieldUpdateOperationsInput | string | null
     officialNumber?: NullableStringFieldUpdateOperationsInput | string | null
     callSign?: NullableStringFieldUpdateOperationsInput | string | null
     mmsi?: NullableStringFieldUpdateOperationsInput | string | null
@@ -64566,6 +71149,18 @@ export namespace Prisma {
     breadth?: NullableFloatFieldUpdateOperationsInput | number | null
     depth?: NullableFloatFieldUpdateOperationsInput | number | null
     status?: EnumVesselStatusFieldUpdateOperationsInput | $Enums.VesselStatus
+    capacityCbm?: NullableFloatFieldUpdateOperationsInput | number | null
+    netTonnage?: NullableFloatFieldUpdateOperationsInput | number | null
+    deadweight?: NullableFloatFieldUpdateOperationsInput | number | null
+    tradeArea?: NullableStringFieldUpdateOperationsInput | string | null
+    registeredOwner?: NullableStringFieldUpdateOperationsInput | string | null
+    headOwner?: NullableStringFieldUpdateOperationsInput | string | null
+    charterer?: NullableStringFieldUpdateOperationsInput | string | null
+    yearWithSwan?: NullableIntFieldUpdateOperationsInput | number | null
+    lastDryDock?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dryDockPlace?: NullableStringFieldUpdateOperationsInput | string | null
+    nextDryDockDue?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -64579,7 +71174,7 @@ export namespace Prisma {
     companyId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     code?: NullableStringFieldUpdateOperationsInput | string | null
-    imo?: StringFieldUpdateOperationsInput | string
+    imo?: NullableStringFieldUpdateOperationsInput | string | null
     officialNumber?: NullableStringFieldUpdateOperationsInput | string | null
     callSign?: NullableStringFieldUpdateOperationsInput | string | null
     mmsi?: NullableStringFieldUpdateOperationsInput | string | null
@@ -64592,6 +71187,18 @@ export namespace Prisma {
     breadth?: NullableFloatFieldUpdateOperationsInput | number | null
     depth?: NullableFloatFieldUpdateOperationsInput | number | null
     status?: EnumVesselStatusFieldUpdateOperationsInput | $Enums.VesselStatus
+    capacityCbm?: NullableFloatFieldUpdateOperationsInput | number | null
+    netTonnage?: NullableFloatFieldUpdateOperationsInput | number | null
+    deadweight?: NullableFloatFieldUpdateOperationsInput | number | null
+    tradeArea?: NullableStringFieldUpdateOperationsInput | string | null
+    registeredOwner?: NullableStringFieldUpdateOperationsInput | string | null
+    headOwner?: NullableStringFieldUpdateOperationsInput | string | null
+    charterer?: NullableStringFieldUpdateOperationsInput | string | null
+    yearWithSwan?: NullableIntFieldUpdateOperationsInput | number | null
+    lastDryDock?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dryDockPlace?: NullableStringFieldUpdateOperationsInput | string | null
+    nextDryDockDue?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -68694,118 +75301,130 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type RiskAssessmentCreateInput = {
+  export type RiskAssessmentDocumentCreateInput = {
     id?: string
     refNo: string
-    activity: string
-    hazards: string
-    existingControls?: string | null
-    likelihood: $Enums.RiskRating
-    severity: $Enums.RiskRating
-    additionalControls?: string | null
-    assessedBy?: string | null
-    assessmentDate: Date | string
-    reviewDate?: Date | string | null
-    status?: $Enums.RiskAssessmentStatus
-    closedAt?: Date | string | null
+    title: string
+    category: string
+    description?: string | null
+    applicableVesselType?: string | null
+    reviewFrequencyMonths?: number
+    lastReviewDate?: Date | string | null
+    nextReviewDate?: Date | string | null
+    reviewOwnerId?: string | null
+    status?: $Enums.DocumentStatus
+    ownerId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
     updatedBy?: string | null
     deletedAt?: Date | string | null
     deletedBy?: string | null
-    company: CompanyCreateNestedOneWithoutRiskAssessmentsInput
-    vessel?: VesselCreateNestedOneWithoutRiskAssessmentsInput
+    company: CompanyCreateNestedOneWithoutRiskAssessmentDocumentsInput
+    vessel?: VesselCreateNestedOneWithoutRiskAssessmentDocumentsInput
+    currentRevision?: RiskAssessmentRevisionCreateNestedOneWithoutCurrentOfInput
+    revisions?: RiskAssessmentRevisionCreateNestedManyWithoutDocumentInput
+    executions?: RiskAssessmentExecutionCreateNestedManyWithoutDocumentInput
+    revisionRequests?: RiskAssessmentRevisionRequestCreateNestedManyWithoutDocumentInput
   }
 
-  export type RiskAssessmentUncheckedCreateInput = {
-    id?: string
-    companyId: string
-    refNo: string
-    vesselId?: string | null
-    activity: string
-    hazards: string
-    existingControls?: string | null
-    likelihood: $Enums.RiskRating
-    severity: $Enums.RiskRating
-    additionalControls?: string | null
-    assessedBy?: string | null
-    assessmentDate: Date | string
-    reviewDate?: Date | string | null
-    status?: $Enums.RiskAssessmentStatus
-    closedAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    createdBy?: string | null
-    updatedBy?: string | null
-    deletedAt?: Date | string | null
-    deletedBy?: string | null
-  }
-
-  export type RiskAssessmentUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    refNo?: StringFieldUpdateOperationsInput | string
-    activity?: StringFieldUpdateOperationsInput | string
-    hazards?: StringFieldUpdateOperationsInput | string
-    existingControls?: NullableStringFieldUpdateOperationsInput | string | null
-    likelihood?: EnumRiskRatingFieldUpdateOperationsInput | $Enums.RiskRating
-    severity?: EnumRiskRatingFieldUpdateOperationsInput | $Enums.RiskRating
-    additionalControls?: NullableStringFieldUpdateOperationsInput | string | null
-    assessedBy?: NullableStringFieldUpdateOperationsInput | string | null
-    assessmentDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    reviewDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    status?: EnumRiskAssessmentStatusFieldUpdateOperationsInput | $Enums.RiskAssessmentStatus
-    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
-    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
-    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
-    company?: CompanyUpdateOneRequiredWithoutRiskAssessmentsNestedInput
-    vessel?: VesselUpdateOneWithoutRiskAssessmentsNestedInput
-  }
-
-  export type RiskAssessmentUncheckedUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    companyId?: StringFieldUpdateOperationsInput | string
-    refNo?: StringFieldUpdateOperationsInput | string
-    vesselId?: NullableStringFieldUpdateOperationsInput | string | null
-    activity?: StringFieldUpdateOperationsInput | string
-    hazards?: StringFieldUpdateOperationsInput | string
-    existingControls?: NullableStringFieldUpdateOperationsInput | string | null
-    likelihood?: EnumRiskRatingFieldUpdateOperationsInput | $Enums.RiskRating
-    severity?: EnumRiskRatingFieldUpdateOperationsInput | $Enums.RiskRating
-    additionalControls?: NullableStringFieldUpdateOperationsInput | string | null
-    assessedBy?: NullableStringFieldUpdateOperationsInput | string | null
-    assessmentDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    reviewDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    status?: EnumRiskAssessmentStatusFieldUpdateOperationsInput | $Enums.RiskAssessmentStatus
-    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
-    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
-    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
-  }
-
-  export type RiskAssessmentCreateManyInput = {
+  export type RiskAssessmentDocumentUncheckedCreateInput = {
     id?: string
     companyId: string
     refNo: string
+    title: string
+    category: string
+    description?: string | null
     vesselId?: string | null
-    activity: string
-    hazards: string
-    existingControls?: string | null
-    likelihood: $Enums.RiskRating
-    severity: $Enums.RiskRating
-    additionalControls?: string | null
-    assessedBy?: string | null
-    assessmentDate: Date | string
-    reviewDate?: Date | string | null
-    status?: $Enums.RiskAssessmentStatus
-    closedAt?: Date | string | null
+    applicableVesselType?: string | null
+    reviewFrequencyMonths?: number
+    lastReviewDate?: Date | string | null
+    nextReviewDate?: Date | string | null
+    reviewOwnerId?: string | null
+    status?: $Enums.DocumentStatus
+    ownerId?: string | null
+    currentRevisionId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    revisions?: RiskAssessmentRevisionUncheckedCreateNestedManyWithoutDocumentInput
+    executions?: RiskAssessmentExecutionUncheckedCreateNestedManyWithoutDocumentInput
+    revisionRequests?: RiskAssessmentRevisionRequestUncheckedCreateNestedManyWithoutDocumentInput
+  }
+
+  export type RiskAssessmentDocumentUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    refNo?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    applicableVesselType?: NullableStringFieldUpdateOperationsInput | string | null
+    reviewFrequencyMonths?: IntFieldUpdateOperationsInput | number
+    lastReviewDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    nextReviewDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reviewOwnerId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumDocumentStatusFieldUpdateOperationsInput | $Enums.DocumentStatus
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    company?: CompanyUpdateOneRequiredWithoutRiskAssessmentDocumentsNestedInput
+    vessel?: VesselUpdateOneWithoutRiskAssessmentDocumentsNestedInput
+    currentRevision?: RiskAssessmentRevisionUpdateOneWithoutCurrentOfNestedInput
+    revisions?: RiskAssessmentRevisionUpdateManyWithoutDocumentNestedInput
+    executions?: RiskAssessmentExecutionUpdateManyWithoutDocumentNestedInput
+    revisionRequests?: RiskAssessmentRevisionRequestUpdateManyWithoutDocumentNestedInput
+  }
+
+  export type RiskAssessmentDocumentUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    refNo?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    vesselId?: NullableStringFieldUpdateOperationsInput | string | null
+    applicableVesselType?: NullableStringFieldUpdateOperationsInput | string | null
+    reviewFrequencyMonths?: IntFieldUpdateOperationsInput | number
+    lastReviewDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    nextReviewDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reviewOwnerId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumDocumentStatusFieldUpdateOperationsInput | $Enums.DocumentStatus
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    currentRevisionId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    revisions?: RiskAssessmentRevisionUncheckedUpdateManyWithoutDocumentNestedInput
+    executions?: RiskAssessmentExecutionUncheckedUpdateManyWithoutDocumentNestedInput
+    revisionRequests?: RiskAssessmentRevisionRequestUncheckedUpdateManyWithoutDocumentNestedInput
+  }
+
+  export type RiskAssessmentDocumentCreateManyInput = {
+    id?: string
+    companyId: string
+    refNo: string
+    title: string
+    category: string
+    description?: string | null
+    vesselId?: string | null
+    applicableVesselType?: string | null
+    reviewFrequencyMonths?: number
+    lastReviewDate?: Date | string | null
+    nextReviewDate?: Date | string | null
+    reviewOwnerId?: string | null
+    status?: $Enums.DocumentStatus
+    ownerId?: string | null
+    currentRevisionId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -68814,20 +75433,19 @@ export namespace Prisma {
     deletedBy?: string | null
   }
 
-  export type RiskAssessmentUpdateManyMutationInput = {
+  export type RiskAssessmentDocumentUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     refNo?: StringFieldUpdateOperationsInput | string
-    activity?: StringFieldUpdateOperationsInput | string
-    hazards?: StringFieldUpdateOperationsInput | string
-    existingControls?: NullableStringFieldUpdateOperationsInput | string | null
-    likelihood?: EnumRiskRatingFieldUpdateOperationsInput | $Enums.RiskRating
-    severity?: EnumRiskRatingFieldUpdateOperationsInput | $Enums.RiskRating
-    additionalControls?: NullableStringFieldUpdateOperationsInput | string | null
-    assessedBy?: NullableStringFieldUpdateOperationsInput | string | null
-    assessmentDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    reviewDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    status?: EnumRiskAssessmentStatusFieldUpdateOperationsInput | $Enums.RiskAssessmentStatus
-    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    title?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    applicableVesselType?: NullableStringFieldUpdateOperationsInput | string | null
+    reviewFrequencyMonths?: IntFieldUpdateOperationsInput | number
+    lastReviewDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    nextReviewDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reviewOwnerId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumDocumentStatusFieldUpdateOperationsInput | $Enums.DocumentStatus
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -68836,28 +75454,544 @@ export namespace Prisma {
     deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
-  export type RiskAssessmentUncheckedUpdateManyInput = {
+  export type RiskAssessmentDocumentUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     companyId?: StringFieldUpdateOperationsInput | string
     refNo?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     vesselId?: NullableStringFieldUpdateOperationsInput | string | null
-    activity?: StringFieldUpdateOperationsInput | string
-    hazards?: StringFieldUpdateOperationsInput | string
-    existingControls?: NullableStringFieldUpdateOperationsInput | string | null
-    likelihood?: EnumRiskRatingFieldUpdateOperationsInput | $Enums.RiskRating
-    severity?: EnumRiskRatingFieldUpdateOperationsInput | $Enums.RiskRating
-    additionalControls?: NullableStringFieldUpdateOperationsInput | string | null
-    assessedBy?: NullableStringFieldUpdateOperationsInput | string | null
-    assessmentDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    reviewDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    status?: EnumRiskAssessmentStatusFieldUpdateOperationsInput | $Enums.RiskAssessmentStatus
-    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    applicableVesselType?: NullableStringFieldUpdateOperationsInput | string | null
+    reviewFrequencyMonths?: IntFieldUpdateOperationsInput | number
+    lastReviewDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    nextReviewDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reviewOwnerId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumDocumentStatusFieldUpdateOperationsInput | $Enums.DocumentStatus
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    currentRevisionId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
     updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type RiskAssessmentRevisionCreateInput = {
+    id?: string
+    companyId: string
+    revisionNo: number
+    changeSummary?: string | null
+    reviewTrigger?: $Enums.ReviewTrigger | null
+    smsProcedureRefs?: string | null
+    riskMatrixRef?: string | null
+    checklistsRequired?: string | null
+    approvalLevel?: $Enums.RaApprovalLevel
+    status?: $Enums.DocumentStatus
+    effectiveDate?: Date | string | null
+    approvedBy?: string | null
+    approvedAt?: Date | string | null
+    createdAt?: Date | string
+    createdBy?: string | null
+    document: RiskAssessmentDocumentCreateNestedOneWithoutRevisionsInput
+    currentOf?: RiskAssessmentDocumentCreateNestedOneWithoutCurrentRevisionInput
+    executions?: RiskAssessmentExecutionCreateNestedManyWithoutRevisionInput
+    hazardRows?: RiskHazardRowCreateNestedManyWithoutRevisionInput
+  }
+
+  export type RiskAssessmentRevisionUncheckedCreateInput = {
+    id?: string
+    companyId: string
+    documentId: string
+    revisionNo: number
+    changeSummary?: string | null
+    reviewTrigger?: $Enums.ReviewTrigger | null
+    smsProcedureRefs?: string | null
+    riskMatrixRef?: string | null
+    checklistsRequired?: string | null
+    approvalLevel?: $Enums.RaApprovalLevel
+    status?: $Enums.DocumentStatus
+    effectiveDate?: Date | string | null
+    approvedBy?: string | null
+    approvedAt?: Date | string | null
+    createdAt?: Date | string
+    createdBy?: string | null
+    currentOf?: RiskAssessmentDocumentUncheckedCreateNestedOneWithoutCurrentRevisionInput
+    executions?: RiskAssessmentExecutionUncheckedCreateNestedManyWithoutRevisionInput
+    hazardRows?: RiskHazardRowUncheckedCreateNestedManyWithoutRevisionInput
+  }
+
+  export type RiskAssessmentRevisionUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    revisionNo?: IntFieldUpdateOperationsInput | number
+    changeSummary?: NullableStringFieldUpdateOperationsInput | string | null
+    reviewTrigger?: NullableEnumReviewTriggerFieldUpdateOperationsInput | $Enums.ReviewTrigger | null
+    smsProcedureRefs?: NullableStringFieldUpdateOperationsInput | string | null
+    riskMatrixRef?: NullableStringFieldUpdateOperationsInput | string | null
+    checklistsRequired?: NullableStringFieldUpdateOperationsInput | string | null
+    approvalLevel?: EnumRaApprovalLevelFieldUpdateOperationsInput | $Enums.RaApprovalLevel
+    status?: EnumDocumentStatusFieldUpdateOperationsInput | $Enums.DocumentStatus
+    effectiveDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approvedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    approvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    document?: RiskAssessmentDocumentUpdateOneRequiredWithoutRevisionsNestedInput
+    currentOf?: RiskAssessmentDocumentUpdateOneWithoutCurrentRevisionNestedInput
+    executions?: RiskAssessmentExecutionUpdateManyWithoutRevisionNestedInput
+    hazardRows?: RiskHazardRowUpdateManyWithoutRevisionNestedInput
+  }
+
+  export type RiskAssessmentRevisionUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    documentId?: StringFieldUpdateOperationsInput | string
+    revisionNo?: IntFieldUpdateOperationsInput | number
+    changeSummary?: NullableStringFieldUpdateOperationsInput | string | null
+    reviewTrigger?: NullableEnumReviewTriggerFieldUpdateOperationsInput | $Enums.ReviewTrigger | null
+    smsProcedureRefs?: NullableStringFieldUpdateOperationsInput | string | null
+    riskMatrixRef?: NullableStringFieldUpdateOperationsInput | string | null
+    checklistsRequired?: NullableStringFieldUpdateOperationsInput | string | null
+    approvalLevel?: EnumRaApprovalLevelFieldUpdateOperationsInput | $Enums.RaApprovalLevel
+    status?: EnumDocumentStatusFieldUpdateOperationsInput | $Enums.DocumentStatus
+    effectiveDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approvedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    approvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    currentOf?: RiskAssessmentDocumentUncheckedUpdateOneWithoutCurrentRevisionNestedInput
+    executions?: RiskAssessmentExecutionUncheckedUpdateManyWithoutRevisionNestedInput
+    hazardRows?: RiskHazardRowUncheckedUpdateManyWithoutRevisionNestedInput
+  }
+
+  export type RiskAssessmentRevisionCreateManyInput = {
+    id?: string
+    companyId: string
+    documentId: string
+    revisionNo: number
+    changeSummary?: string | null
+    reviewTrigger?: $Enums.ReviewTrigger | null
+    smsProcedureRefs?: string | null
+    riskMatrixRef?: string | null
+    checklistsRequired?: string | null
+    approvalLevel?: $Enums.RaApprovalLevel
+    status?: $Enums.DocumentStatus
+    effectiveDate?: Date | string | null
+    approvedBy?: string | null
+    approvedAt?: Date | string | null
+    createdAt?: Date | string
+    createdBy?: string | null
+  }
+
+  export type RiskAssessmentRevisionUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    revisionNo?: IntFieldUpdateOperationsInput | number
+    changeSummary?: NullableStringFieldUpdateOperationsInput | string | null
+    reviewTrigger?: NullableEnumReviewTriggerFieldUpdateOperationsInput | $Enums.ReviewTrigger | null
+    smsProcedureRefs?: NullableStringFieldUpdateOperationsInput | string | null
+    riskMatrixRef?: NullableStringFieldUpdateOperationsInput | string | null
+    checklistsRequired?: NullableStringFieldUpdateOperationsInput | string | null
+    approvalLevel?: EnumRaApprovalLevelFieldUpdateOperationsInput | $Enums.RaApprovalLevel
+    status?: EnumDocumentStatusFieldUpdateOperationsInput | $Enums.DocumentStatus
+    effectiveDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approvedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    approvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type RiskAssessmentRevisionUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    documentId?: StringFieldUpdateOperationsInput | string
+    revisionNo?: IntFieldUpdateOperationsInput | number
+    changeSummary?: NullableStringFieldUpdateOperationsInput | string | null
+    reviewTrigger?: NullableEnumReviewTriggerFieldUpdateOperationsInput | $Enums.ReviewTrigger | null
+    smsProcedureRefs?: NullableStringFieldUpdateOperationsInput | string | null
+    riskMatrixRef?: NullableStringFieldUpdateOperationsInput | string | null
+    checklistsRequired?: NullableStringFieldUpdateOperationsInput | string | null
+    approvalLevel?: EnumRaApprovalLevelFieldUpdateOperationsInput | $Enums.RaApprovalLevel
+    status?: EnumDocumentStatusFieldUpdateOperationsInput | $Enums.DocumentStatus
+    effectiveDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approvedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    approvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type RiskHazardRowCreateInput = {
+    id?: string
+    companyId: string
+    rowNo: number
+    phase?: string | null
+    consequence: string
+    causes: string
+    severity: number
+    likelihood: number
+    existingControls: string
+    additionalControls?: string | null
+    resLikelihood?: number | null
+    responsible?: string | null
+    isNew?: boolean
+    ratingChangeNote?: string | null
+    createdAt?: Date | string
+    createdBy?: string | null
+    revision: RiskAssessmentRevisionCreateNestedOneWithoutHazardRowsInput
+  }
+
+  export type RiskHazardRowUncheckedCreateInput = {
+    id?: string
+    companyId: string
+    revisionId: string
+    rowNo: number
+    phase?: string | null
+    consequence: string
+    causes: string
+    severity: number
+    likelihood: number
+    existingControls: string
+    additionalControls?: string | null
+    resLikelihood?: number | null
+    responsible?: string | null
+    isNew?: boolean
+    ratingChangeNote?: string | null
+    createdAt?: Date | string
+    createdBy?: string | null
+  }
+
+  export type RiskHazardRowUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    rowNo?: IntFieldUpdateOperationsInput | number
+    phase?: NullableStringFieldUpdateOperationsInput | string | null
+    consequence?: StringFieldUpdateOperationsInput | string
+    causes?: StringFieldUpdateOperationsInput | string
+    severity?: IntFieldUpdateOperationsInput | number
+    likelihood?: IntFieldUpdateOperationsInput | number
+    existingControls?: StringFieldUpdateOperationsInput | string
+    additionalControls?: NullableStringFieldUpdateOperationsInput | string | null
+    resLikelihood?: NullableIntFieldUpdateOperationsInput | number | null
+    responsible?: NullableStringFieldUpdateOperationsInput | string | null
+    isNew?: BoolFieldUpdateOperationsInput | boolean
+    ratingChangeNote?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    revision?: RiskAssessmentRevisionUpdateOneRequiredWithoutHazardRowsNestedInput
+  }
+
+  export type RiskHazardRowUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    revisionId?: StringFieldUpdateOperationsInput | string
+    rowNo?: IntFieldUpdateOperationsInput | number
+    phase?: NullableStringFieldUpdateOperationsInput | string | null
+    consequence?: StringFieldUpdateOperationsInput | string
+    causes?: StringFieldUpdateOperationsInput | string
+    severity?: IntFieldUpdateOperationsInput | number
+    likelihood?: IntFieldUpdateOperationsInput | number
+    existingControls?: StringFieldUpdateOperationsInput | string
+    additionalControls?: NullableStringFieldUpdateOperationsInput | string | null
+    resLikelihood?: NullableIntFieldUpdateOperationsInput | number | null
+    responsible?: NullableStringFieldUpdateOperationsInput | string | null
+    isNew?: BoolFieldUpdateOperationsInput | boolean
+    ratingChangeNote?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type RiskHazardRowCreateManyInput = {
+    id?: string
+    companyId: string
+    revisionId: string
+    rowNo: number
+    phase?: string | null
+    consequence: string
+    causes: string
+    severity: number
+    likelihood: number
+    existingControls: string
+    additionalControls?: string | null
+    resLikelihood?: number | null
+    responsible?: string | null
+    isNew?: boolean
+    ratingChangeNote?: string | null
+    createdAt?: Date | string
+    createdBy?: string | null
+  }
+
+  export type RiskHazardRowUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    rowNo?: IntFieldUpdateOperationsInput | number
+    phase?: NullableStringFieldUpdateOperationsInput | string | null
+    consequence?: StringFieldUpdateOperationsInput | string
+    causes?: StringFieldUpdateOperationsInput | string
+    severity?: IntFieldUpdateOperationsInput | number
+    likelihood?: IntFieldUpdateOperationsInput | number
+    existingControls?: StringFieldUpdateOperationsInput | string
+    additionalControls?: NullableStringFieldUpdateOperationsInput | string | null
+    resLikelihood?: NullableIntFieldUpdateOperationsInput | number | null
+    responsible?: NullableStringFieldUpdateOperationsInput | string | null
+    isNew?: BoolFieldUpdateOperationsInput | boolean
+    ratingChangeNote?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type RiskHazardRowUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    revisionId?: StringFieldUpdateOperationsInput | string
+    rowNo?: IntFieldUpdateOperationsInput | number
+    phase?: NullableStringFieldUpdateOperationsInput | string | null
+    consequence?: StringFieldUpdateOperationsInput | string
+    causes?: StringFieldUpdateOperationsInput | string
+    severity?: IntFieldUpdateOperationsInput | number
+    likelihood?: IntFieldUpdateOperationsInput | number
+    existingControls?: StringFieldUpdateOperationsInput | string
+    additionalControls?: NullableStringFieldUpdateOperationsInput | string | null
+    resLikelihood?: NullableIntFieldUpdateOperationsInput | number | null
+    responsible?: NullableStringFieldUpdateOperationsInput | string | null
+    isNew?: BoolFieldUpdateOperationsInput | boolean
+    ratingChangeNote?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type RiskAssessmentExecutionCreateInput = {
+    id?: string
+    companyId: string
+    jobName: string
+    conditionStatus?: $Enums.RaExecutionCondition
+    changedConditionsNote?: string | null
+    temporaryHazards?: string | null
+    temporaryControls?: string | null
+    performedById?: string | null
+    toolboxSignedAt?: Date | string | null
+    toolboxAttendees?: string | null
+    executedAt?: Date | string
+    createdAt?: Date | string
+    createdBy?: string | null
+    document: RiskAssessmentDocumentCreateNestedOneWithoutExecutionsInput
+    revision: RiskAssessmentRevisionCreateNestedOneWithoutExecutionsInput
+    vessel: VesselCreateNestedOneWithoutRiskAssessmentExecutionsInput
+  }
+
+  export type RiskAssessmentExecutionUncheckedCreateInput = {
+    id?: string
+    companyId: string
+    documentId: string
+    revisionId: string
+    vesselId: string
+    jobName: string
+    conditionStatus?: $Enums.RaExecutionCondition
+    changedConditionsNote?: string | null
+    temporaryHazards?: string | null
+    temporaryControls?: string | null
+    performedById?: string | null
+    toolboxSignedAt?: Date | string | null
+    toolboxAttendees?: string | null
+    executedAt?: Date | string
+    createdAt?: Date | string
+    createdBy?: string | null
+  }
+
+  export type RiskAssessmentExecutionUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    jobName?: StringFieldUpdateOperationsInput | string
+    conditionStatus?: EnumRaExecutionConditionFieldUpdateOperationsInput | $Enums.RaExecutionCondition
+    changedConditionsNote?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryHazards?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryControls?: NullableStringFieldUpdateOperationsInput | string | null
+    performedById?: NullableStringFieldUpdateOperationsInput | string | null
+    toolboxSignedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    toolboxAttendees?: NullableStringFieldUpdateOperationsInput | string | null
+    executedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    document?: RiskAssessmentDocumentUpdateOneRequiredWithoutExecutionsNestedInput
+    revision?: RiskAssessmentRevisionUpdateOneRequiredWithoutExecutionsNestedInput
+    vessel?: VesselUpdateOneRequiredWithoutRiskAssessmentExecutionsNestedInput
+  }
+
+  export type RiskAssessmentExecutionUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    documentId?: StringFieldUpdateOperationsInput | string
+    revisionId?: StringFieldUpdateOperationsInput | string
+    vesselId?: StringFieldUpdateOperationsInput | string
+    jobName?: StringFieldUpdateOperationsInput | string
+    conditionStatus?: EnumRaExecutionConditionFieldUpdateOperationsInput | $Enums.RaExecutionCondition
+    changedConditionsNote?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryHazards?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryControls?: NullableStringFieldUpdateOperationsInput | string | null
+    performedById?: NullableStringFieldUpdateOperationsInput | string | null
+    toolboxSignedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    toolboxAttendees?: NullableStringFieldUpdateOperationsInput | string | null
+    executedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type RiskAssessmentExecutionCreateManyInput = {
+    id?: string
+    companyId: string
+    documentId: string
+    revisionId: string
+    vesselId: string
+    jobName: string
+    conditionStatus?: $Enums.RaExecutionCondition
+    changedConditionsNote?: string | null
+    temporaryHazards?: string | null
+    temporaryControls?: string | null
+    performedById?: string | null
+    toolboxSignedAt?: Date | string | null
+    toolboxAttendees?: string | null
+    executedAt?: Date | string
+    createdAt?: Date | string
+    createdBy?: string | null
+  }
+
+  export type RiskAssessmentExecutionUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    jobName?: StringFieldUpdateOperationsInput | string
+    conditionStatus?: EnumRaExecutionConditionFieldUpdateOperationsInput | $Enums.RaExecutionCondition
+    changedConditionsNote?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryHazards?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryControls?: NullableStringFieldUpdateOperationsInput | string | null
+    performedById?: NullableStringFieldUpdateOperationsInput | string | null
+    toolboxSignedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    toolboxAttendees?: NullableStringFieldUpdateOperationsInput | string | null
+    executedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type RiskAssessmentExecutionUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    documentId?: StringFieldUpdateOperationsInput | string
+    revisionId?: StringFieldUpdateOperationsInput | string
+    vesselId?: StringFieldUpdateOperationsInput | string
+    jobName?: StringFieldUpdateOperationsInput | string
+    conditionStatus?: EnumRaExecutionConditionFieldUpdateOperationsInput | $Enums.RaExecutionCondition
+    changedConditionsNote?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryHazards?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryControls?: NullableStringFieldUpdateOperationsInput | string | null
+    performedById?: NullableStringFieldUpdateOperationsInput | string | null
+    toolboxSignedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    toolboxAttendees?: NullableStringFieldUpdateOperationsInput | string | null
+    executedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type RiskAssessmentRevisionRequestCreateInput = {
+    id?: string
+    companyId: string
+    requestedById?: string | null
+    reason: string
+    reviewTrigger?: $Enums.ReviewTrigger
+    status?: $Enums.RaRevisionRequestStatus
+    decidedById?: string | null
+    decidedAt?: Date | string | null
+    decisionNote?: string | null
+    createdAt?: Date | string
+    document: RiskAssessmentDocumentCreateNestedOneWithoutRevisionRequestsInput
+    vessel?: VesselCreateNestedOneWithoutRiskAssessmentRevisionRequestsInput
+  }
+
+  export type RiskAssessmentRevisionRequestUncheckedCreateInput = {
+    id?: string
+    companyId: string
+    documentId: string
+    requestedById?: string | null
+    vesselId?: string | null
+    reason: string
+    reviewTrigger?: $Enums.ReviewTrigger
+    status?: $Enums.RaRevisionRequestStatus
+    decidedById?: string | null
+    decidedAt?: Date | string | null
+    decisionNote?: string | null
+    createdAt?: Date | string
+  }
+
+  export type RiskAssessmentRevisionRequestUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    requestedById?: NullableStringFieldUpdateOperationsInput | string | null
+    reason?: StringFieldUpdateOperationsInput | string
+    reviewTrigger?: EnumReviewTriggerFieldUpdateOperationsInput | $Enums.ReviewTrigger
+    status?: EnumRaRevisionRequestStatusFieldUpdateOperationsInput | $Enums.RaRevisionRequestStatus
+    decidedById?: NullableStringFieldUpdateOperationsInput | string | null
+    decidedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    decisionNote?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    document?: RiskAssessmentDocumentUpdateOneRequiredWithoutRevisionRequestsNestedInput
+    vessel?: VesselUpdateOneWithoutRiskAssessmentRevisionRequestsNestedInput
+  }
+
+  export type RiskAssessmentRevisionRequestUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    documentId?: StringFieldUpdateOperationsInput | string
+    requestedById?: NullableStringFieldUpdateOperationsInput | string | null
+    vesselId?: NullableStringFieldUpdateOperationsInput | string | null
+    reason?: StringFieldUpdateOperationsInput | string
+    reviewTrigger?: EnumReviewTriggerFieldUpdateOperationsInput | $Enums.ReviewTrigger
+    status?: EnumRaRevisionRequestStatusFieldUpdateOperationsInput | $Enums.RaRevisionRequestStatus
+    decidedById?: NullableStringFieldUpdateOperationsInput | string | null
+    decidedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    decisionNote?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type RiskAssessmentRevisionRequestCreateManyInput = {
+    id?: string
+    companyId: string
+    documentId: string
+    requestedById?: string | null
+    vesselId?: string | null
+    reason: string
+    reviewTrigger?: $Enums.ReviewTrigger
+    status?: $Enums.RaRevisionRequestStatus
+    decidedById?: string | null
+    decidedAt?: Date | string | null
+    decisionNote?: string | null
+    createdAt?: Date | string
+  }
+
+  export type RiskAssessmentRevisionRequestUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    requestedById?: NullableStringFieldUpdateOperationsInput | string | null
+    reason?: StringFieldUpdateOperationsInput | string
+    reviewTrigger?: EnumReviewTriggerFieldUpdateOperationsInput | $Enums.ReviewTrigger
+    status?: EnumRaRevisionRequestStatusFieldUpdateOperationsInput | $Enums.RaRevisionRequestStatus
+    decidedById?: NullableStringFieldUpdateOperationsInput | string | null
+    decidedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    decisionNote?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type RiskAssessmentRevisionRequestUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    documentId?: StringFieldUpdateOperationsInput | string
+    requestedById?: NullableStringFieldUpdateOperationsInput | string | null
+    vesselId?: NullableStringFieldUpdateOperationsInput | string | null
+    reason?: StringFieldUpdateOperationsInput | string
+    reviewTrigger?: EnumReviewTriggerFieldUpdateOperationsInput | $Enums.ReviewTrigger
+    status?: EnumRaRevisionRequestStatusFieldUpdateOperationsInput | $Enums.RaRevisionRequestStatus
+    decidedById?: NullableStringFieldUpdateOperationsInput | string | null
+    decidedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    decisionNote?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type DefectCreateInput = {
@@ -69140,10 +76274,10 @@ export namespace Prisma {
     none?: CircularWhereInput
   }
 
-  export type RiskAssessmentListRelationFilter = {
-    every?: RiskAssessmentWhereInput
-    some?: RiskAssessmentWhereInput
-    none?: RiskAssessmentWhereInput
+  export type RiskAssessmentDocumentListRelationFilter = {
+    every?: RiskAssessmentDocumentWhereInput
+    some?: RiskAssessmentDocumentWhereInput
+    none?: RiskAssessmentDocumentWhereInput
   }
 
   export type DefectListRelationFilter = {
@@ -69220,7 +76354,7 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
-  export type RiskAssessmentOrderByRelationAggregateInput = {
+  export type RiskAssessmentDocumentOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -69634,6 +76768,26 @@ export namespace Prisma {
     not?: NestedEnumVesselStatusFilter<$PrismaModel> | $Enums.VesselStatus
   }
 
+  export type RiskAssessmentExecutionListRelationFilter = {
+    every?: RiskAssessmentExecutionWhereInput
+    some?: RiskAssessmentExecutionWhereInput
+    none?: RiskAssessmentExecutionWhereInput
+  }
+
+  export type RiskAssessmentRevisionRequestListRelationFilter = {
+    every?: RiskAssessmentRevisionRequestWhereInput
+    some?: RiskAssessmentRevisionRequestWhereInput
+    none?: RiskAssessmentRevisionRequestWhereInput
+  }
+
+  export type RiskAssessmentExecutionOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type RiskAssessmentRevisionRequestOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type VesselCompanyIdCodeCompoundUniqueInput = {
     companyId: string
     code: string
@@ -69657,6 +76811,18 @@ export namespace Prisma {
     breadth?: SortOrder
     depth?: SortOrder
     status?: SortOrder
+    capacityCbm?: SortOrder
+    netTonnage?: SortOrder
+    deadweight?: SortOrder
+    tradeArea?: SortOrder
+    registeredOwner?: SortOrder
+    headOwner?: SortOrder
+    charterer?: SortOrder
+    yearWithSwan?: SortOrder
+    lastDryDock?: SortOrder
+    dryDockPlace?: SortOrder
+    nextDryDockDue?: SortOrder
+    archivedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     createdBy?: SortOrder
@@ -69671,6 +76837,10 @@ export namespace Prisma {
     loa?: SortOrder
     breadth?: SortOrder
     depth?: SortOrder
+    capacityCbm?: SortOrder
+    netTonnage?: SortOrder
+    deadweight?: SortOrder
+    yearWithSwan?: SortOrder
   }
 
   export type VesselMaxOrderByAggregateInput = {
@@ -69691,6 +76861,18 @@ export namespace Prisma {
     breadth?: SortOrder
     depth?: SortOrder
     status?: SortOrder
+    capacityCbm?: SortOrder
+    netTonnage?: SortOrder
+    deadweight?: SortOrder
+    tradeArea?: SortOrder
+    registeredOwner?: SortOrder
+    headOwner?: SortOrder
+    charterer?: SortOrder
+    yearWithSwan?: SortOrder
+    lastDryDock?: SortOrder
+    dryDockPlace?: SortOrder
+    nextDryDockDue?: SortOrder
+    archivedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     createdBy?: SortOrder
@@ -69717,6 +76899,18 @@ export namespace Prisma {
     breadth?: SortOrder
     depth?: SortOrder
     status?: SortOrder
+    capacityCbm?: SortOrder
+    netTonnage?: SortOrder
+    deadweight?: SortOrder
+    tradeArea?: SortOrder
+    registeredOwner?: SortOrder
+    headOwner?: SortOrder
+    charterer?: SortOrder
+    yearWithSwan?: SortOrder
+    lastDryDock?: SortOrder
+    dryDockPlace?: SortOrder
+    nextDryDockDue?: SortOrder
+    archivedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     createdBy?: SortOrder
@@ -69731,6 +76925,10 @@ export namespace Prisma {
     loa?: SortOrder
     breadth?: SortOrder
     depth?: SortOrder
+    capacityCbm?: SortOrder
+    netTonnage?: SortOrder
+    deadweight?: SortOrder
+    yearWithSwan?: SortOrder
   }
 
   export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -72552,41 +79750,42 @@ export namespace Prisma {
     createdAt?: SortOrder
   }
 
-  export type EnumRiskRatingFilter<$PrismaModel = never> = {
-    equals?: $Enums.RiskRating | EnumRiskRatingFieldRefInput<$PrismaModel>
-    in?: $Enums.RiskRating[] | ListEnumRiskRatingFieldRefInput<$PrismaModel>
-    notIn?: $Enums.RiskRating[] | ListEnumRiskRatingFieldRefInput<$PrismaModel>
-    not?: NestedEnumRiskRatingFilter<$PrismaModel> | $Enums.RiskRating
+  export type RiskAssessmentRevisionNullableScalarRelationFilter = {
+    is?: RiskAssessmentRevisionWhereInput | null
+    isNot?: RiskAssessmentRevisionWhereInput | null
   }
 
-  export type EnumRiskAssessmentStatusFilter<$PrismaModel = never> = {
-    equals?: $Enums.RiskAssessmentStatus | EnumRiskAssessmentStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.RiskAssessmentStatus[] | ListEnumRiskAssessmentStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.RiskAssessmentStatus[] | ListEnumRiskAssessmentStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumRiskAssessmentStatusFilter<$PrismaModel> | $Enums.RiskAssessmentStatus
+  export type RiskAssessmentRevisionListRelationFilter = {
+    every?: RiskAssessmentRevisionWhereInput
+    some?: RiskAssessmentRevisionWhereInput
+    none?: RiskAssessmentRevisionWhereInput
   }
 
-  export type RiskAssessmentCompanyIdRefNoCompoundUniqueInput = {
+  export type RiskAssessmentRevisionOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type RiskAssessmentDocumentCompanyIdRefNoCompoundUniqueInput = {
     companyId: string
     refNo: string
   }
 
-  export type RiskAssessmentCountOrderByAggregateInput = {
+  export type RiskAssessmentDocumentCountOrderByAggregateInput = {
     id?: SortOrder
     companyId?: SortOrder
     refNo?: SortOrder
+    title?: SortOrder
+    category?: SortOrder
+    description?: SortOrder
     vesselId?: SortOrder
-    activity?: SortOrder
-    hazards?: SortOrder
-    existingControls?: SortOrder
-    likelihood?: SortOrder
-    severity?: SortOrder
-    additionalControls?: SortOrder
-    assessedBy?: SortOrder
-    assessmentDate?: SortOrder
-    reviewDate?: SortOrder
+    applicableVesselType?: SortOrder
+    reviewFrequencyMonths?: SortOrder
+    lastReviewDate?: SortOrder
+    nextReviewDate?: SortOrder
+    reviewOwnerId?: SortOrder
     status?: SortOrder
-    closedAt?: SortOrder
+    ownerId?: SortOrder
+    currentRevisionId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     createdBy?: SortOrder
@@ -72595,22 +79794,26 @@ export namespace Prisma {
     deletedBy?: SortOrder
   }
 
-  export type RiskAssessmentMaxOrderByAggregateInput = {
+  export type RiskAssessmentDocumentAvgOrderByAggregateInput = {
+    reviewFrequencyMonths?: SortOrder
+  }
+
+  export type RiskAssessmentDocumentMaxOrderByAggregateInput = {
     id?: SortOrder
     companyId?: SortOrder
     refNo?: SortOrder
+    title?: SortOrder
+    category?: SortOrder
+    description?: SortOrder
     vesselId?: SortOrder
-    activity?: SortOrder
-    hazards?: SortOrder
-    existingControls?: SortOrder
-    likelihood?: SortOrder
-    severity?: SortOrder
-    additionalControls?: SortOrder
-    assessedBy?: SortOrder
-    assessmentDate?: SortOrder
-    reviewDate?: SortOrder
+    applicableVesselType?: SortOrder
+    reviewFrequencyMonths?: SortOrder
+    lastReviewDate?: SortOrder
+    nextReviewDate?: SortOrder
+    reviewOwnerId?: SortOrder
     status?: SortOrder
-    closedAt?: SortOrder
+    ownerId?: SortOrder
+    currentRevisionId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     createdBy?: SortOrder
@@ -72619,22 +79822,22 @@ export namespace Prisma {
     deletedBy?: SortOrder
   }
 
-  export type RiskAssessmentMinOrderByAggregateInput = {
+  export type RiskAssessmentDocumentMinOrderByAggregateInput = {
     id?: SortOrder
     companyId?: SortOrder
     refNo?: SortOrder
+    title?: SortOrder
+    category?: SortOrder
+    description?: SortOrder
     vesselId?: SortOrder
-    activity?: SortOrder
-    hazards?: SortOrder
-    existingControls?: SortOrder
-    likelihood?: SortOrder
-    severity?: SortOrder
-    additionalControls?: SortOrder
-    assessedBy?: SortOrder
-    assessmentDate?: SortOrder
-    reviewDate?: SortOrder
+    applicableVesselType?: SortOrder
+    reviewFrequencyMonths?: SortOrder
+    lastReviewDate?: SortOrder
+    nextReviewDate?: SortOrder
+    reviewOwnerId?: SortOrder
     status?: SortOrder
-    closedAt?: SortOrder
+    ownerId?: SortOrder
+    currentRevisionId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     createdBy?: SortOrder
@@ -72643,24 +79846,364 @@ export namespace Prisma {
     deletedBy?: SortOrder
   }
 
-  export type EnumRiskRatingWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.RiskRating | EnumRiskRatingFieldRefInput<$PrismaModel>
-    in?: $Enums.RiskRating[] | ListEnumRiskRatingFieldRefInput<$PrismaModel>
-    notIn?: $Enums.RiskRating[] | ListEnumRiskRatingFieldRefInput<$PrismaModel>
-    not?: NestedEnumRiskRatingWithAggregatesFilter<$PrismaModel> | $Enums.RiskRating
+  export type RiskAssessmentDocumentSumOrderByAggregateInput = {
+    reviewFrequencyMonths?: SortOrder
+  }
+
+  export type EnumReviewTriggerNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.ReviewTrigger | EnumReviewTriggerFieldRefInput<$PrismaModel> | null
+    in?: $Enums.ReviewTrigger[] | ListEnumReviewTriggerFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.ReviewTrigger[] | ListEnumReviewTriggerFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumReviewTriggerNullableFilter<$PrismaModel> | $Enums.ReviewTrigger | null
+  }
+
+  export type EnumRaApprovalLevelFilter<$PrismaModel = never> = {
+    equals?: $Enums.RaApprovalLevel | EnumRaApprovalLevelFieldRefInput<$PrismaModel>
+    in?: $Enums.RaApprovalLevel[] | ListEnumRaApprovalLevelFieldRefInput<$PrismaModel>
+    notIn?: $Enums.RaApprovalLevel[] | ListEnumRaApprovalLevelFieldRefInput<$PrismaModel>
+    not?: NestedEnumRaApprovalLevelFilter<$PrismaModel> | $Enums.RaApprovalLevel
+  }
+
+  export type RiskAssessmentDocumentScalarRelationFilter = {
+    is?: RiskAssessmentDocumentWhereInput
+    isNot?: RiskAssessmentDocumentWhereInput
+  }
+
+  export type RiskAssessmentDocumentNullableScalarRelationFilter = {
+    is?: RiskAssessmentDocumentWhereInput | null
+    isNot?: RiskAssessmentDocumentWhereInput | null
+  }
+
+  export type RiskHazardRowListRelationFilter = {
+    every?: RiskHazardRowWhereInput
+    some?: RiskHazardRowWhereInput
+    none?: RiskHazardRowWhereInput
+  }
+
+  export type RiskHazardRowOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type RiskAssessmentRevisionDocumentIdRevisionNoCompoundUniqueInput = {
+    documentId: string
+    revisionNo: number
+  }
+
+  export type RiskAssessmentRevisionCountOrderByAggregateInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    documentId?: SortOrder
+    revisionNo?: SortOrder
+    changeSummary?: SortOrder
+    reviewTrigger?: SortOrder
+    smsProcedureRefs?: SortOrder
+    riskMatrixRef?: SortOrder
+    checklistsRequired?: SortOrder
+    approvalLevel?: SortOrder
+    status?: SortOrder
+    effectiveDate?: SortOrder
+    approvedBy?: SortOrder
+    approvedAt?: SortOrder
+    createdAt?: SortOrder
+    createdBy?: SortOrder
+  }
+
+  export type RiskAssessmentRevisionAvgOrderByAggregateInput = {
+    revisionNo?: SortOrder
+  }
+
+  export type RiskAssessmentRevisionMaxOrderByAggregateInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    documentId?: SortOrder
+    revisionNo?: SortOrder
+    changeSummary?: SortOrder
+    reviewTrigger?: SortOrder
+    smsProcedureRefs?: SortOrder
+    riskMatrixRef?: SortOrder
+    checklistsRequired?: SortOrder
+    approvalLevel?: SortOrder
+    status?: SortOrder
+    effectiveDate?: SortOrder
+    approvedBy?: SortOrder
+    approvedAt?: SortOrder
+    createdAt?: SortOrder
+    createdBy?: SortOrder
+  }
+
+  export type RiskAssessmentRevisionMinOrderByAggregateInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    documentId?: SortOrder
+    revisionNo?: SortOrder
+    changeSummary?: SortOrder
+    reviewTrigger?: SortOrder
+    smsProcedureRefs?: SortOrder
+    riskMatrixRef?: SortOrder
+    checklistsRequired?: SortOrder
+    approvalLevel?: SortOrder
+    status?: SortOrder
+    effectiveDate?: SortOrder
+    approvedBy?: SortOrder
+    approvedAt?: SortOrder
+    createdAt?: SortOrder
+    createdBy?: SortOrder
+  }
+
+  export type RiskAssessmentRevisionSumOrderByAggregateInput = {
+    revisionNo?: SortOrder
+  }
+
+  export type EnumReviewTriggerNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ReviewTrigger | EnumReviewTriggerFieldRefInput<$PrismaModel> | null
+    in?: $Enums.ReviewTrigger[] | ListEnumReviewTriggerFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.ReviewTrigger[] | ListEnumReviewTriggerFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumReviewTriggerNullableWithAggregatesFilter<$PrismaModel> | $Enums.ReviewTrigger | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumReviewTriggerNullableFilter<$PrismaModel>
+    _max?: NestedEnumReviewTriggerNullableFilter<$PrismaModel>
+  }
+
+  export type EnumRaApprovalLevelWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.RaApprovalLevel | EnumRaApprovalLevelFieldRefInput<$PrismaModel>
+    in?: $Enums.RaApprovalLevel[] | ListEnumRaApprovalLevelFieldRefInput<$PrismaModel>
+    notIn?: $Enums.RaApprovalLevel[] | ListEnumRaApprovalLevelFieldRefInput<$PrismaModel>
+    not?: NestedEnumRaApprovalLevelWithAggregatesFilter<$PrismaModel> | $Enums.RaApprovalLevel
     _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumRiskRatingFilter<$PrismaModel>
-    _max?: NestedEnumRiskRatingFilter<$PrismaModel>
+    _min?: NestedEnumRaApprovalLevelFilter<$PrismaModel>
+    _max?: NestedEnumRaApprovalLevelFilter<$PrismaModel>
   }
 
-  export type EnumRiskAssessmentStatusWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.RiskAssessmentStatus | EnumRiskAssessmentStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.RiskAssessmentStatus[] | ListEnumRiskAssessmentStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.RiskAssessmentStatus[] | ListEnumRiskAssessmentStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumRiskAssessmentStatusWithAggregatesFilter<$PrismaModel> | $Enums.RiskAssessmentStatus
+  export type RiskAssessmentRevisionScalarRelationFilter = {
+    is?: RiskAssessmentRevisionWhereInput
+    isNot?: RiskAssessmentRevisionWhereInput
+  }
+
+  export type RiskHazardRowCountOrderByAggregateInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    revisionId?: SortOrder
+    rowNo?: SortOrder
+    phase?: SortOrder
+    consequence?: SortOrder
+    causes?: SortOrder
+    severity?: SortOrder
+    likelihood?: SortOrder
+    existingControls?: SortOrder
+    additionalControls?: SortOrder
+    resLikelihood?: SortOrder
+    responsible?: SortOrder
+    isNew?: SortOrder
+    ratingChangeNote?: SortOrder
+    createdAt?: SortOrder
+    createdBy?: SortOrder
+  }
+
+  export type RiskHazardRowAvgOrderByAggregateInput = {
+    rowNo?: SortOrder
+    severity?: SortOrder
+    likelihood?: SortOrder
+    resLikelihood?: SortOrder
+  }
+
+  export type RiskHazardRowMaxOrderByAggregateInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    revisionId?: SortOrder
+    rowNo?: SortOrder
+    phase?: SortOrder
+    consequence?: SortOrder
+    causes?: SortOrder
+    severity?: SortOrder
+    likelihood?: SortOrder
+    existingControls?: SortOrder
+    additionalControls?: SortOrder
+    resLikelihood?: SortOrder
+    responsible?: SortOrder
+    isNew?: SortOrder
+    ratingChangeNote?: SortOrder
+    createdAt?: SortOrder
+    createdBy?: SortOrder
+  }
+
+  export type RiskHazardRowMinOrderByAggregateInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    revisionId?: SortOrder
+    rowNo?: SortOrder
+    phase?: SortOrder
+    consequence?: SortOrder
+    causes?: SortOrder
+    severity?: SortOrder
+    likelihood?: SortOrder
+    existingControls?: SortOrder
+    additionalControls?: SortOrder
+    resLikelihood?: SortOrder
+    responsible?: SortOrder
+    isNew?: SortOrder
+    ratingChangeNote?: SortOrder
+    createdAt?: SortOrder
+    createdBy?: SortOrder
+  }
+
+  export type RiskHazardRowSumOrderByAggregateInput = {
+    rowNo?: SortOrder
+    severity?: SortOrder
+    likelihood?: SortOrder
+    resLikelihood?: SortOrder
+  }
+
+  export type EnumRaExecutionConditionFilter<$PrismaModel = never> = {
+    equals?: $Enums.RaExecutionCondition | EnumRaExecutionConditionFieldRefInput<$PrismaModel>
+    in?: $Enums.RaExecutionCondition[] | ListEnumRaExecutionConditionFieldRefInput<$PrismaModel>
+    notIn?: $Enums.RaExecutionCondition[] | ListEnumRaExecutionConditionFieldRefInput<$PrismaModel>
+    not?: NestedEnumRaExecutionConditionFilter<$PrismaModel> | $Enums.RaExecutionCondition
+  }
+
+  export type RiskAssessmentExecutionCountOrderByAggregateInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    documentId?: SortOrder
+    revisionId?: SortOrder
+    vesselId?: SortOrder
+    jobName?: SortOrder
+    conditionStatus?: SortOrder
+    changedConditionsNote?: SortOrder
+    temporaryHazards?: SortOrder
+    temporaryControls?: SortOrder
+    performedById?: SortOrder
+    toolboxSignedAt?: SortOrder
+    toolboxAttendees?: SortOrder
+    executedAt?: SortOrder
+    createdAt?: SortOrder
+    createdBy?: SortOrder
+  }
+
+  export type RiskAssessmentExecutionMaxOrderByAggregateInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    documentId?: SortOrder
+    revisionId?: SortOrder
+    vesselId?: SortOrder
+    jobName?: SortOrder
+    conditionStatus?: SortOrder
+    changedConditionsNote?: SortOrder
+    temporaryHazards?: SortOrder
+    temporaryControls?: SortOrder
+    performedById?: SortOrder
+    toolboxSignedAt?: SortOrder
+    toolboxAttendees?: SortOrder
+    executedAt?: SortOrder
+    createdAt?: SortOrder
+    createdBy?: SortOrder
+  }
+
+  export type RiskAssessmentExecutionMinOrderByAggregateInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    documentId?: SortOrder
+    revisionId?: SortOrder
+    vesselId?: SortOrder
+    jobName?: SortOrder
+    conditionStatus?: SortOrder
+    changedConditionsNote?: SortOrder
+    temporaryHazards?: SortOrder
+    temporaryControls?: SortOrder
+    performedById?: SortOrder
+    toolboxSignedAt?: SortOrder
+    toolboxAttendees?: SortOrder
+    executedAt?: SortOrder
+    createdAt?: SortOrder
+    createdBy?: SortOrder
+  }
+
+  export type EnumRaExecutionConditionWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.RaExecutionCondition | EnumRaExecutionConditionFieldRefInput<$PrismaModel>
+    in?: $Enums.RaExecutionCondition[] | ListEnumRaExecutionConditionFieldRefInput<$PrismaModel>
+    notIn?: $Enums.RaExecutionCondition[] | ListEnumRaExecutionConditionFieldRefInput<$PrismaModel>
+    not?: NestedEnumRaExecutionConditionWithAggregatesFilter<$PrismaModel> | $Enums.RaExecutionCondition
     _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumRiskAssessmentStatusFilter<$PrismaModel>
-    _max?: NestedEnumRiskAssessmentStatusFilter<$PrismaModel>
+    _min?: NestedEnumRaExecutionConditionFilter<$PrismaModel>
+    _max?: NestedEnumRaExecutionConditionFilter<$PrismaModel>
+  }
+
+  export type EnumReviewTriggerFilter<$PrismaModel = never> = {
+    equals?: $Enums.ReviewTrigger | EnumReviewTriggerFieldRefInput<$PrismaModel>
+    in?: $Enums.ReviewTrigger[] | ListEnumReviewTriggerFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ReviewTrigger[] | ListEnumReviewTriggerFieldRefInput<$PrismaModel>
+    not?: NestedEnumReviewTriggerFilter<$PrismaModel> | $Enums.ReviewTrigger
+  }
+
+  export type EnumRaRevisionRequestStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.RaRevisionRequestStatus | EnumRaRevisionRequestStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.RaRevisionRequestStatus[] | ListEnumRaRevisionRequestStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.RaRevisionRequestStatus[] | ListEnumRaRevisionRequestStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumRaRevisionRequestStatusFilter<$PrismaModel> | $Enums.RaRevisionRequestStatus
+  }
+
+  export type RiskAssessmentRevisionRequestCountOrderByAggregateInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    documentId?: SortOrder
+    requestedById?: SortOrder
+    vesselId?: SortOrder
+    reason?: SortOrder
+    reviewTrigger?: SortOrder
+    status?: SortOrder
+    decidedById?: SortOrder
+    decidedAt?: SortOrder
+    decisionNote?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type RiskAssessmentRevisionRequestMaxOrderByAggregateInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    documentId?: SortOrder
+    requestedById?: SortOrder
+    vesselId?: SortOrder
+    reason?: SortOrder
+    reviewTrigger?: SortOrder
+    status?: SortOrder
+    decidedById?: SortOrder
+    decidedAt?: SortOrder
+    decisionNote?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type RiskAssessmentRevisionRequestMinOrderByAggregateInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    documentId?: SortOrder
+    requestedById?: SortOrder
+    vesselId?: SortOrder
+    reason?: SortOrder
+    reviewTrigger?: SortOrder
+    status?: SortOrder
+    decidedById?: SortOrder
+    decidedAt?: SortOrder
+    decisionNote?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type EnumReviewTriggerWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ReviewTrigger | EnumReviewTriggerFieldRefInput<$PrismaModel>
+    in?: $Enums.ReviewTrigger[] | ListEnumReviewTriggerFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ReviewTrigger[] | ListEnumReviewTriggerFieldRefInput<$PrismaModel>
+    not?: NestedEnumReviewTriggerWithAggregatesFilter<$PrismaModel> | $Enums.ReviewTrigger
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumReviewTriggerFilter<$PrismaModel>
+    _max?: NestedEnumReviewTriggerFilter<$PrismaModel>
+  }
+
+  export type EnumRaRevisionRequestStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.RaRevisionRequestStatus | EnumRaRevisionRequestStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.RaRevisionRequestStatus[] | ListEnumRaRevisionRequestStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.RaRevisionRequestStatus[] | ListEnumRaRevisionRequestStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumRaRevisionRequestStatusWithAggregatesFilter<$PrismaModel> | $Enums.RaRevisionRequestStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumRaRevisionRequestStatusFilter<$PrismaModel>
+    _max?: NestedEnumRaRevisionRequestStatusFilter<$PrismaModel>
   }
 
   export type EnumDefectSeverityFilter<$PrismaModel = never> = {
@@ -72887,11 +80430,11 @@ export namespace Prisma {
     connect?: CircularWhereUniqueInput | CircularWhereUniqueInput[]
   }
 
-  export type RiskAssessmentCreateNestedManyWithoutCompanyInput = {
-    create?: XOR<RiskAssessmentCreateWithoutCompanyInput, RiskAssessmentUncheckedCreateWithoutCompanyInput> | RiskAssessmentCreateWithoutCompanyInput[] | RiskAssessmentUncheckedCreateWithoutCompanyInput[]
-    connectOrCreate?: RiskAssessmentCreateOrConnectWithoutCompanyInput | RiskAssessmentCreateOrConnectWithoutCompanyInput[]
-    createMany?: RiskAssessmentCreateManyCompanyInputEnvelope
-    connect?: RiskAssessmentWhereUniqueInput | RiskAssessmentWhereUniqueInput[]
+  export type RiskAssessmentDocumentCreateNestedManyWithoutCompanyInput = {
+    create?: XOR<RiskAssessmentDocumentCreateWithoutCompanyInput, RiskAssessmentDocumentUncheckedCreateWithoutCompanyInput> | RiskAssessmentDocumentCreateWithoutCompanyInput[] | RiskAssessmentDocumentUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: RiskAssessmentDocumentCreateOrConnectWithoutCompanyInput | RiskAssessmentDocumentCreateOrConnectWithoutCompanyInput[]
+    createMany?: RiskAssessmentDocumentCreateManyCompanyInputEnvelope
+    connect?: RiskAssessmentDocumentWhereUniqueInput | RiskAssessmentDocumentWhereUniqueInput[]
   }
 
   export type DefectCreateNestedManyWithoutCompanyInput = {
@@ -73020,11 +80563,11 @@ export namespace Prisma {
     connect?: CircularWhereUniqueInput | CircularWhereUniqueInput[]
   }
 
-  export type RiskAssessmentUncheckedCreateNestedManyWithoutCompanyInput = {
-    create?: XOR<RiskAssessmentCreateWithoutCompanyInput, RiskAssessmentUncheckedCreateWithoutCompanyInput> | RiskAssessmentCreateWithoutCompanyInput[] | RiskAssessmentUncheckedCreateWithoutCompanyInput[]
-    connectOrCreate?: RiskAssessmentCreateOrConnectWithoutCompanyInput | RiskAssessmentCreateOrConnectWithoutCompanyInput[]
-    createMany?: RiskAssessmentCreateManyCompanyInputEnvelope
-    connect?: RiskAssessmentWhereUniqueInput | RiskAssessmentWhereUniqueInput[]
+  export type RiskAssessmentDocumentUncheckedCreateNestedManyWithoutCompanyInput = {
+    create?: XOR<RiskAssessmentDocumentCreateWithoutCompanyInput, RiskAssessmentDocumentUncheckedCreateWithoutCompanyInput> | RiskAssessmentDocumentCreateWithoutCompanyInput[] | RiskAssessmentDocumentUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: RiskAssessmentDocumentCreateOrConnectWithoutCompanyInput | RiskAssessmentDocumentCreateOrConnectWithoutCompanyInput[]
+    createMany?: RiskAssessmentDocumentCreateManyCompanyInputEnvelope
+    connect?: RiskAssessmentDocumentWhereUniqueInput | RiskAssessmentDocumentWhereUniqueInput[]
   }
 
   export type DefectUncheckedCreateNestedManyWithoutCompanyInput = {
@@ -73280,18 +80823,18 @@ export namespace Prisma {
     deleteMany?: CircularScalarWhereInput | CircularScalarWhereInput[]
   }
 
-  export type RiskAssessmentUpdateManyWithoutCompanyNestedInput = {
-    create?: XOR<RiskAssessmentCreateWithoutCompanyInput, RiskAssessmentUncheckedCreateWithoutCompanyInput> | RiskAssessmentCreateWithoutCompanyInput[] | RiskAssessmentUncheckedCreateWithoutCompanyInput[]
-    connectOrCreate?: RiskAssessmentCreateOrConnectWithoutCompanyInput | RiskAssessmentCreateOrConnectWithoutCompanyInput[]
-    upsert?: RiskAssessmentUpsertWithWhereUniqueWithoutCompanyInput | RiskAssessmentUpsertWithWhereUniqueWithoutCompanyInput[]
-    createMany?: RiskAssessmentCreateManyCompanyInputEnvelope
-    set?: RiskAssessmentWhereUniqueInput | RiskAssessmentWhereUniqueInput[]
-    disconnect?: RiskAssessmentWhereUniqueInput | RiskAssessmentWhereUniqueInput[]
-    delete?: RiskAssessmentWhereUniqueInput | RiskAssessmentWhereUniqueInput[]
-    connect?: RiskAssessmentWhereUniqueInput | RiskAssessmentWhereUniqueInput[]
-    update?: RiskAssessmentUpdateWithWhereUniqueWithoutCompanyInput | RiskAssessmentUpdateWithWhereUniqueWithoutCompanyInput[]
-    updateMany?: RiskAssessmentUpdateManyWithWhereWithoutCompanyInput | RiskAssessmentUpdateManyWithWhereWithoutCompanyInput[]
-    deleteMany?: RiskAssessmentScalarWhereInput | RiskAssessmentScalarWhereInput[]
+  export type RiskAssessmentDocumentUpdateManyWithoutCompanyNestedInput = {
+    create?: XOR<RiskAssessmentDocumentCreateWithoutCompanyInput, RiskAssessmentDocumentUncheckedCreateWithoutCompanyInput> | RiskAssessmentDocumentCreateWithoutCompanyInput[] | RiskAssessmentDocumentUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: RiskAssessmentDocumentCreateOrConnectWithoutCompanyInput | RiskAssessmentDocumentCreateOrConnectWithoutCompanyInput[]
+    upsert?: RiskAssessmentDocumentUpsertWithWhereUniqueWithoutCompanyInput | RiskAssessmentDocumentUpsertWithWhereUniqueWithoutCompanyInput[]
+    createMany?: RiskAssessmentDocumentCreateManyCompanyInputEnvelope
+    set?: RiskAssessmentDocumentWhereUniqueInput | RiskAssessmentDocumentWhereUniqueInput[]
+    disconnect?: RiskAssessmentDocumentWhereUniqueInput | RiskAssessmentDocumentWhereUniqueInput[]
+    delete?: RiskAssessmentDocumentWhereUniqueInput | RiskAssessmentDocumentWhereUniqueInput[]
+    connect?: RiskAssessmentDocumentWhereUniqueInput | RiskAssessmentDocumentWhereUniqueInput[]
+    update?: RiskAssessmentDocumentUpdateWithWhereUniqueWithoutCompanyInput | RiskAssessmentDocumentUpdateWithWhereUniqueWithoutCompanyInput[]
+    updateMany?: RiskAssessmentDocumentUpdateManyWithWhereWithoutCompanyInput | RiskAssessmentDocumentUpdateManyWithWhereWithoutCompanyInput[]
+    deleteMany?: RiskAssessmentDocumentScalarWhereInput | RiskAssessmentDocumentScalarWhereInput[]
   }
 
   export type DefectUpdateManyWithoutCompanyNestedInput = {
@@ -73546,18 +81089,18 @@ export namespace Prisma {
     deleteMany?: CircularScalarWhereInput | CircularScalarWhereInput[]
   }
 
-  export type RiskAssessmentUncheckedUpdateManyWithoutCompanyNestedInput = {
-    create?: XOR<RiskAssessmentCreateWithoutCompanyInput, RiskAssessmentUncheckedCreateWithoutCompanyInput> | RiskAssessmentCreateWithoutCompanyInput[] | RiskAssessmentUncheckedCreateWithoutCompanyInput[]
-    connectOrCreate?: RiskAssessmentCreateOrConnectWithoutCompanyInput | RiskAssessmentCreateOrConnectWithoutCompanyInput[]
-    upsert?: RiskAssessmentUpsertWithWhereUniqueWithoutCompanyInput | RiskAssessmentUpsertWithWhereUniqueWithoutCompanyInput[]
-    createMany?: RiskAssessmentCreateManyCompanyInputEnvelope
-    set?: RiskAssessmentWhereUniqueInput | RiskAssessmentWhereUniqueInput[]
-    disconnect?: RiskAssessmentWhereUniqueInput | RiskAssessmentWhereUniqueInput[]
-    delete?: RiskAssessmentWhereUniqueInput | RiskAssessmentWhereUniqueInput[]
-    connect?: RiskAssessmentWhereUniqueInput | RiskAssessmentWhereUniqueInput[]
-    update?: RiskAssessmentUpdateWithWhereUniqueWithoutCompanyInput | RiskAssessmentUpdateWithWhereUniqueWithoutCompanyInput[]
-    updateMany?: RiskAssessmentUpdateManyWithWhereWithoutCompanyInput | RiskAssessmentUpdateManyWithWhereWithoutCompanyInput[]
-    deleteMany?: RiskAssessmentScalarWhereInput | RiskAssessmentScalarWhereInput[]
+  export type RiskAssessmentDocumentUncheckedUpdateManyWithoutCompanyNestedInput = {
+    create?: XOR<RiskAssessmentDocumentCreateWithoutCompanyInput, RiskAssessmentDocumentUncheckedCreateWithoutCompanyInput> | RiskAssessmentDocumentCreateWithoutCompanyInput[] | RiskAssessmentDocumentUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: RiskAssessmentDocumentCreateOrConnectWithoutCompanyInput | RiskAssessmentDocumentCreateOrConnectWithoutCompanyInput[]
+    upsert?: RiskAssessmentDocumentUpsertWithWhereUniqueWithoutCompanyInput | RiskAssessmentDocumentUpsertWithWhereUniqueWithoutCompanyInput[]
+    createMany?: RiskAssessmentDocumentCreateManyCompanyInputEnvelope
+    set?: RiskAssessmentDocumentWhereUniqueInput | RiskAssessmentDocumentWhereUniqueInput[]
+    disconnect?: RiskAssessmentDocumentWhereUniqueInput | RiskAssessmentDocumentWhereUniqueInput[]
+    delete?: RiskAssessmentDocumentWhereUniqueInput | RiskAssessmentDocumentWhereUniqueInput[]
+    connect?: RiskAssessmentDocumentWhereUniqueInput | RiskAssessmentDocumentWhereUniqueInput[]
+    update?: RiskAssessmentDocumentUpdateWithWhereUniqueWithoutCompanyInput | RiskAssessmentDocumentUpdateWithWhereUniqueWithoutCompanyInput[]
+    updateMany?: RiskAssessmentDocumentUpdateManyWithWhereWithoutCompanyInput | RiskAssessmentDocumentUpdateManyWithWhereWithoutCompanyInput[]
+    deleteMany?: RiskAssessmentDocumentScalarWhereInput | RiskAssessmentDocumentScalarWhereInput[]
   }
 
   export type DefectUncheckedUpdateManyWithoutCompanyNestedInput = {
@@ -74291,11 +81834,25 @@ export namespace Prisma {
     connect?: CircularWhereUniqueInput | CircularWhereUniqueInput[]
   }
 
-  export type RiskAssessmentCreateNestedManyWithoutVesselInput = {
-    create?: XOR<RiskAssessmentCreateWithoutVesselInput, RiskAssessmentUncheckedCreateWithoutVesselInput> | RiskAssessmentCreateWithoutVesselInput[] | RiskAssessmentUncheckedCreateWithoutVesselInput[]
-    connectOrCreate?: RiskAssessmentCreateOrConnectWithoutVesselInput | RiskAssessmentCreateOrConnectWithoutVesselInput[]
-    createMany?: RiskAssessmentCreateManyVesselInputEnvelope
-    connect?: RiskAssessmentWhereUniqueInput | RiskAssessmentWhereUniqueInput[]
+  export type RiskAssessmentDocumentCreateNestedManyWithoutVesselInput = {
+    create?: XOR<RiskAssessmentDocumentCreateWithoutVesselInput, RiskAssessmentDocumentUncheckedCreateWithoutVesselInput> | RiskAssessmentDocumentCreateWithoutVesselInput[] | RiskAssessmentDocumentUncheckedCreateWithoutVesselInput[]
+    connectOrCreate?: RiskAssessmentDocumentCreateOrConnectWithoutVesselInput | RiskAssessmentDocumentCreateOrConnectWithoutVesselInput[]
+    createMany?: RiskAssessmentDocumentCreateManyVesselInputEnvelope
+    connect?: RiskAssessmentDocumentWhereUniqueInput | RiskAssessmentDocumentWhereUniqueInput[]
+  }
+
+  export type RiskAssessmentExecutionCreateNestedManyWithoutVesselInput = {
+    create?: XOR<RiskAssessmentExecutionCreateWithoutVesselInput, RiskAssessmentExecutionUncheckedCreateWithoutVesselInput> | RiskAssessmentExecutionCreateWithoutVesselInput[] | RiskAssessmentExecutionUncheckedCreateWithoutVesselInput[]
+    connectOrCreate?: RiskAssessmentExecutionCreateOrConnectWithoutVesselInput | RiskAssessmentExecutionCreateOrConnectWithoutVesselInput[]
+    createMany?: RiskAssessmentExecutionCreateManyVesselInputEnvelope
+    connect?: RiskAssessmentExecutionWhereUniqueInput | RiskAssessmentExecutionWhereUniqueInput[]
+  }
+
+  export type RiskAssessmentRevisionRequestCreateNestedManyWithoutVesselInput = {
+    create?: XOR<RiskAssessmentRevisionRequestCreateWithoutVesselInput, RiskAssessmentRevisionRequestUncheckedCreateWithoutVesselInput> | RiskAssessmentRevisionRequestCreateWithoutVesselInput[] | RiskAssessmentRevisionRequestUncheckedCreateWithoutVesselInput[]
+    connectOrCreate?: RiskAssessmentRevisionRequestCreateOrConnectWithoutVesselInput | RiskAssessmentRevisionRequestCreateOrConnectWithoutVesselInput[]
+    createMany?: RiskAssessmentRevisionRequestCreateManyVesselInputEnvelope
+    connect?: RiskAssessmentRevisionRequestWhereUniqueInput | RiskAssessmentRevisionRequestWhereUniqueInput[]
   }
 
   export type DefectCreateNestedManyWithoutVesselInput = {
@@ -74403,11 +81960,25 @@ export namespace Prisma {
     connect?: CircularWhereUniqueInput | CircularWhereUniqueInput[]
   }
 
-  export type RiskAssessmentUncheckedCreateNestedManyWithoutVesselInput = {
-    create?: XOR<RiskAssessmentCreateWithoutVesselInput, RiskAssessmentUncheckedCreateWithoutVesselInput> | RiskAssessmentCreateWithoutVesselInput[] | RiskAssessmentUncheckedCreateWithoutVesselInput[]
-    connectOrCreate?: RiskAssessmentCreateOrConnectWithoutVesselInput | RiskAssessmentCreateOrConnectWithoutVesselInput[]
-    createMany?: RiskAssessmentCreateManyVesselInputEnvelope
-    connect?: RiskAssessmentWhereUniqueInput | RiskAssessmentWhereUniqueInput[]
+  export type RiskAssessmentDocumentUncheckedCreateNestedManyWithoutVesselInput = {
+    create?: XOR<RiskAssessmentDocumentCreateWithoutVesselInput, RiskAssessmentDocumentUncheckedCreateWithoutVesselInput> | RiskAssessmentDocumentCreateWithoutVesselInput[] | RiskAssessmentDocumentUncheckedCreateWithoutVesselInput[]
+    connectOrCreate?: RiskAssessmentDocumentCreateOrConnectWithoutVesselInput | RiskAssessmentDocumentCreateOrConnectWithoutVesselInput[]
+    createMany?: RiskAssessmentDocumentCreateManyVesselInputEnvelope
+    connect?: RiskAssessmentDocumentWhereUniqueInput | RiskAssessmentDocumentWhereUniqueInput[]
+  }
+
+  export type RiskAssessmentExecutionUncheckedCreateNestedManyWithoutVesselInput = {
+    create?: XOR<RiskAssessmentExecutionCreateWithoutVesselInput, RiskAssessmentExecutionUncheckedCreateWithoutVesselInput> | RiskAssessmentExecutionCreateWithoutVesselInput[] | RiskAssessmentExecutionUncheckedCreateWithoutVesselInput[]
+    connectOrCreate?: RiskAssessmentExecutionCreateOrConnectWithoutVesselInput | RiskAssessmentExecutionCreateOrConnectWithoutVesselInput[]
+    createMany?: RiskAssessmentExecutionCreateManyVesselInputEnvelope
+    connect?: RiskAssessmentExecutionWhereUniqueInput | RiskAssessmentExecutionWhereUniqueInput[]
+  }
+
+  export type RiskAssessmentRevisionRequestUncheckedCreateNestedManyWithoutVesselInput = {
+    create?: XOR<RiskAssessmentRevisionRequestCreateWithoutVesselInput, RiskAssessmentRevisionRequestUncheckedCreateWithoutVesselInput> | RiskAssessmentRevisionRequestCreateWithoutVesselInput[] | RiskAssessmentRevisionRequestUncheckedCreateWithoutVesselInput[]
+    connectOrCreate?: RiskAssessmentRevisionRequestCreateOrConnectWithoutVesselInput | RiskAssessmentRevisionRequestCreateOrConnectWithoutVesselInput[]
+    createMany?: RiskAssessmentRevisionRequestCreateManyVesselInputEnvelope
+    connect?: RiskAssessmentRevisionRequestWhereUniqueInput | RiskAssessmentRevisionRequestWhereUniqueInput[]
   }
 
   export type DefectUncheckedCreateNestedManyWithoutVesselInput = {
@@ -74634,18 +82205,46 @@ export namespace Prisma {
     deleteMany?: CircularScalarWhereInput | CircularScalarWhereInput[]
   }
 
-  export type RiskAssessmentUpdateManyWithoutVesselNestedInput = {
-    create?: XOR<RiskAssessmentCreateWithoutVesselInput, RiskAssessmentUncheckedCreateWithoutVesselInput> | RiskAssessmentCreateWithoutVesselInput[] | RiskAssessmentUncheckedCreateWithoutVesselInput[]
-    connectOrCreate?: RiskAssessmentCreateOrConnectWithoutVesselInput | RiskAssessmentCreateOrConnectWithoutVesselInput[]
-    upsert?: RiskAssessmentUpsertWithWhereUniqueWithoutVesselInput | RiskAssessmentUpsertWithWhereUniqueWithoutVesselInput[]
-    createMany?: RiskAssessmentCreateManyVesselInputEnvelope
-    set?: RiskAssessmentWhereUniqueInput | RiskAssessmentWhereUniqueInput[]
-    disconnect?: RiskAssessmentWhereUniqueInput | RiskAssessmentWhereUniqueInput[]
-    delete?: RiskAssessmentWhereUniqueInput | RiskAssessmentWhereUniqueInput[]
-    connect?: RiskAssessmentWhereUniqueInput | RiskAssessmentWhereUniqueInput[]
-    update?: RiskAssessmentUpdateWithWhereUniqueWithoutVesselInput | RiskAssessmentUpdateWithWhereUniqueWithoutVesselInput[]
-    updateMany?: RiskAssessmentUpdateManyWithWhereWithoutVesselInput | RiskAssessmentUpdateManyWithWhereWithoutVesselInput[]
-    deleteMany?: RiskAssessmentScalarWhereInput | RiskAssessmentScalarWhereInput[]
+  export type RiskAssessmentDocumentUpdateManyWithoutVesselNestedInput = {
+    create?: XOR<RiskAssessmentDocumentCreateWithoutVesselInput, RiskAssessmentDocumentUncheckedCreateWithoutVesselInput> | RiskAssessmentDocumentCreateWithoutVesselInput[] | RiskAssessmentDocumentUncheckedCreateWithoutVesselInput[]
+    connectOrCreate?: RiskAssessmentDocumentCreateOrConnectWithoutVesselInput | RiskAssessmentDocumentCreateOrConnectWithoutVesselInput[]
+    upsert?: RiskAssessmentDocumentUpsertWithWhereUniqueWithoutVesselInput | RiskAssessmentDocumentUpsertWithWhereUniqueWithoutVesselInput[]
+    createMany?: RiskAssessmentDocumentCreateManyVesselInputEnvelope
+    set?: RiskAssessmentDocumentWhereUniqueInput | RiskAssessmentDocumentWhereUniqueInput[]
+    disconnect?: RiskAssessmentDocumentWhereUniqueInput | RiskAssessmentDocumentWhereUniqueInput[]
+    delete?: RiskAssessmentDocumentWhereUniqueInput | RiskAssessmentDocumentWhereUniqueInput[]
+    connect?: RiskAssessmentDocumentWhereUniqueInput | RiskAssessmentDocumentWhereUniqueInput[]
+    update?: RiskAssessmentDocumentUpdateWithWhereUniqueWithoutVesselInput | RiskAssessmentDocumentUpdateWithWhereUniqueWithoutVesselInput[]
+    updateMany?: RiskAssessmentDocumentUpdateManyWithWhereWithoutVesselInput | RiskAssessmentDocumentUpdateManyWithWhereWithoutVesselInput[]
+    deleteMany?: RiskAssessmentDocumentScalarWhereInput | RiskAssessmentDocumentScalarWhereInput[]
+  }
+
+  export type RiskAssessmentExecutionUpdateManyWithoutVesselNestedInput = {
+    create?: XOR<RiskAssessmentExecutionCreateWithoutVesselInput, RiskAssessmentExecutionUncheckedCreateWithoutVesselInput> | RiskAssessmentExecutionCreateWithoutVesselInput[] | RiskAssessmentExecutionUncheckedCreateWithoutVesselInput[]
+    connectOrCreate?: RiskAssessmentExecutionCreateOrConnectWithoutVesselInput | RiskAssessmentExecutionCreateOrConnectWithoutVesselInput[]
+    upsert?: RiskAssessmentExecutionUpsertWithWhereUniqueWithoutVesselInput | RiskAssessmentExecutionUpsertWithWhereUniqueWithoutVesselInput[]
+    createMany?: RiskAssessmentExecutionCreateManyVesselInputEnvelope
+    set?: RiskAssessmentExecutionWhereUniqueInput | RiskAssessmentExecutionWhereUniqueInput[]
+    disconnect?: RiskAssessmentExecutionWhereUniqueInput | RiskAssessmentExecutionWhereUniqueInput[]
+    delete?: RiskAssessmentExecutionWhereUniqueInput | RiskAssessmentExecutionWhereUniqueInput[]
+    connect?: RiskAssessmentExecutionWhereUniqueInput | RiskAssessmentExecutionWhereUniqueInput[]
+    update?: RiskAssessmentExecutionUpdateWithWhereUniqueWithoutVesselInput | RiskAssessmentExecutionUpdateWithWhereUniqueWithoutVesselInput[]
+    updateMany?: RiskAssessmentExecutionUpdateManyWithWhereWithoutVesselInput | RiskAssessmentExecutionUpdateManyWithWhereWithoutVesselInput[]
+    deleteMany?: RiskAssessmentExecutionScalarWhereInput | RiskAssessmentExecutionScalarWhereInput[]
+  }
+
+  export type RiskAssessmentRevisionRequestUpdateManyWithoutVesselNestedInput = {
+    create?: XOR<RiskAssessmentRevisionRequestCreateWithoutVesselInput, RiskAssessmentRevisionRequestUncheckedCreateWithoutVesselInput> | RiskAssessmentRevisionRequestCreateWithoutVesselInput[] | RiskAssessmentRevisionRequestUncheckedCreateWithoutVesselInput[]
+    connectOrCreate?: RiskAssessmentRevisionRequestCreateOrConnectWithoutVesselInput | RiskAssessmentRevisionRequestCreateOrConnectWithoutVesselInput[]
+    upsert?: RiskAssessmentRevisionRequestUpsertWithWhereUniqueWithoutVesselInput | RiskAssessmentRevisionRequestUpsertWithWhereUniqueWithoutVesselInput[]
+    createMany?: RiskAssessmentRevisionRequestCreateManyVesselInputEnvelope
+    set?: RiskAssessmentRevisionRequestWhereUniqueInput | RiskAssessmentRevisionRequestWhereUniqueInput[]
+    disconnect?: RiskAssessmentRevisionRequestWhereUniqueInput | RiskAssessmentRevisionRequestWhereUniqueInput[]
+    delete?: RiskAssessmentRevisionRequestWhereUniqueInput | RiskAssessmentRevisionRequestWhereUniqueInput[]
+    connect?: RiskAssessmentRevisionRequestWhereUniqueInput | RiskAssessmentRevisionRequestWhereUniqueInput[]
+    update?: RiskAssessmentRevisionRequestUpdateWithWhereUniqueWithoutVesselInput | RiskAssessmentRevisionRequestUpdateWithWhereUniqueWithoutVesselInput[]
+    updateMany?: RiskAssessmentRevisionRequestUpdateManyWithWhereWithoutVesselInput | RiskAssessmentRevisionRequestUpdateManyWithWhereWithoutVesselInput[]
+    deleteMany?: RiskAssessmentRevisionRequestScalarWhereInput | RiskAssessmentRevisionRequestScalarWhereInput[]
   }
 
   export type DefectUpdateManyWithoutVesselNestedInput = {
@@ -74858,18 +82457,46 @@ export namespace Prisma {
     deleteMany?: CircularScalarWhereInput | CircularScalarWhereInput[]
   }
 
-  export type RiskAssessmentUncheckedUpdateManyWithoutVesselNestedInput = {
-    create?: XOR<RiskAssessmentCreateWithoutVesselInput, RiskAssessmentUncheckedCreateWithoutVesselInput> | RiskAssessmentCreateWithoutVesselInput[] | RiskAssessmentUncheckedCreateWithoutVesselInput[]
-    connectOrCreate?: RiskAssessmentCreateOrConnectWithoutVesselInput | RiskAssessmentCreateOrConnectWithoutVesselInput[]
-    upsert?: RiskAssessmentUpsertWithWhereUniqueWithoutVesselInput | RiskAssessmentUpsertWithWhereUniqueWithoutVesselInput[]
-    createMany?: RiskAssessmentCreateManyVesselInputEnvelope
-    set?: RiskAssessmentWhereUniqueInput | RiskAssessmentWhereUniqueInput[]
-    disconnect?: RiskAssessmentWhereUniqueInput | RiskAssessmentWhereUniqueInput[]
-    delete?: RiskAssessmentWhereUniqueInput | RiskAssessmentWhereUniqueInput[]
-    connect?: RiskAssessmentWhereUniqueInput | RiskAssessmentWhereUniqueInput[]
-    update?: RiskAssessmentUpdateWithWhereUniqueWithoutVesselInput | RiskAssessmentUpdateWithWhereUniqueWithoutVesselInput[]
-    updateMany?: RiskAssessmentUpdateManyWithWhereWithoutVesselInput | RiskAssessmentUpdateManyWithWhereWithoutVesselInput[]
-    deleteMany?: RiskAssessmentScalarWhereInput | RiskAssessmentScalarWhereInput[]
+  export type RiskAssessmentDocumentUncheckedUpdateManyWithoutVesselNestedInput = {
+    create?: XOR<RiskAssessmentDocumentCreateWithoutVesselInput, RiskAssessmentDocumentUncheckedCreateWithoutVesselInput> | RiskAssessmentDocumentCreateWithoutVesselInput[] | RiskAssessmentDocumentUncheckedCreateWithoutVesselInput[]
+    connectOrCreate?: RiskAssessmentDocumentCreateOrConnectWithoutVesselInput | RiskAssessmentDocumentCreateOrConnectWithoutVesselInput[]
+    upsert?: RiskAssessmentDocumentUpsertWithWhereUniqueWithoutVesselInput | RiskAssessmentDocumentUpsertWithWhereUniqueWithoutVesselInput[]
+    createMany?: RiskAssessmentDocumentCreateManyVesselInputEnvelope
+    set?: RiskAssessmentDocumentWhereUniqueInput | RiskAssessmentDocumentWhereUniqueInput[]
+    disconnect?: RiskAssessmentDocumentWhereUniqueInput | RiskAssessmentDocumentWhereUniqueInput[]
+    delete?: RiskAssessmentDocumentWhereUniqueInput | RiskAssessmentDocumentWhereUniqueInput[]
+    connect?: RiskAssessmentDocumentWhereUniqueInput | RiskAssessmentDocumentWhereUniqueInput[]
+    update?: RiskAssessmentDocumentUpdateWithWhereUniqueWithoutVesselInput | RiskAssessmentDocumentUpdateWithWhereUniqueWithoutVesselInput[]
+    updateMany?: RiskAssessmentDocumentUpdateManyWithWhereWithoutVesselInput | RiskAssessmentDocumentUpdateManyWithWhereWithoutVesselInput[]
+    deleteMany?: RiskAssessmentDocumentScalarWhereInput | RiskAssessmentDocumentScalarWhereInput[]
+  }
+
+  export type RiskAssessmentExecutionUncheckedUpdateManyWithoutVesselNestedInput = {
+    create?: XOR<RiskAssessmentExecutionCreateWithoutVesselInput, RiskAssessmentExecutionUncheckedCreateWithoutVesselInput> | RiskAssessmentExecutionCreateWithoutVesselInput[] | RiskAssessmentExecutionUncheckedCreateWithoutVesselInput[]
+    connectOrCreate?: RiskAssessmentExecutionCreateOrConnectWithoutVesselInput | RiskAssessmentExecutionCreateOrConnectWithoutVesselInput[]
+    upsert?: RiskAssessmentExecutionUpsertWithWhereUniqueWithoutVesselInput | RiskAssessmentExecutionUpsertWithWhereUniqueWithoutVesselInput[]
+    createMany?: RiskAssessmentExecutionCreateManyVesselInputEnvelope
+    set?: RiskAssessmentExecutionWhereUniqueInput | RiskAssessmentExecutionWhereUniqueInput[]
+    disconnect?: RiskAssessmentExecutionWhereUniqueInput | RiskAssessmentExecutionWhereUniqueInput[]
+    delete?: RiskAssessmentExecutionWhereUniqueInput | RiskAssessmentExecutionWhereUniqueInput[]
+    connect?: RiskAssessmentExecutionWhereUniqueInput | RiskAssessmentExecutionWhereUniqueInput[]
+    update?: RiskAssessmentExecutionUpdateWithWhereUniqueWithoutVesselInput | RiskAssessmentExecutionUpdateWithWhereUniqueWithoutVesselInput[]
+    updateMany?: RiskAssessmentExecutionUpdateManyWithWhereWithoutVesselInput | RiskAssessmentExecutionUpdateManyWithWhereWithoutVesselInput[]
+    deleteMany?: RiskAssessmentExecutionScalarWhereInput | RiskAssessmentExecutionScalarWhereInput[]
+  }
+
+  export type RiskAssessmentRevisionRequestUncheckedUpdateManyWithoutVesselNestedInput = {
+    create?: XOR<RiskAssessmentRevisionRequestCreateWithoutVesselInput, RiskAssessmentRevisionRequestUncheckedCreateWithoutVesselInput> | RiskAssessmentRevisionRequestCreateWithoutVesselInput[] | RiskAssessmentRevisionRequestUncheckedCreateWithoutVesselInput[]
+    connectOrCreate?: RiskAssessmentRevisionRequestCreateOrConnectWithoutVesselInput | RiskAssessmentRevisionRequestCreateOrConnectWithoutVesselInput[]
+    upsert?: RiskAssessmentRevisionRequestUpsertWithWhereUniqueWithoutVesselInput | RiskAssessmentRevisionRequestUpsertWithWhereUniqueWithoutVesselInput[]
+    createMany?: RiskAssessmentRevisionRequestCreateManyVesselInputEnvelope
+    set?: RiskAssessmentRevisionRequestWhereUniqueInput | RiskAssessmentRevisionRequestWhereUniqueInput[]
+    disconnect?: RiskAssessmentRevisionRequestWhereUniqueInput | RiskAssessmentRevisionRequestWhereUniqueInput[]
+    delete?: RiskAssessmentRevisionRequestWhereUniqueInput | RiskAssessmentRevisionRequestWhereUniqueInput[]
+    connect?: RiskAssessmentRevisionRequestWhereUniqueInput | RiskAssessmentRevisionRequestWhereUniqueInput[]
+    update?: RiskAssessmentRevisionRequestUpdateWithWhereUniqueWithoutVesselInput | RiskAssessmentRevisionRequestUpdateWithWhereUniqueWithoutVesselInput[]
+    updateMany?: RiskAssessmentRevisionRequestUpdateManyWithWhereWithoutVesselInput | RiskAssessmentRevisionRequestUpdateManyWithWhereWithoutVesselInput[]
+    deleteMany?: RiskAssessmentRevisionRequestScalarWhereInput | RiskAssessmentRevisionRequestScalarWhereInput[]
   }
 
   export type DefectUncheckedUpdateManyWithoutVesselNestedInput = {
@@ -76464,42 +84091,412 @@ export namespace Prisma {
     update?: XOR<XOR<CircularUpdateToOneWithWhereWithoutAcknowledgementsInput, CircularUpdateWithoutAcknowledgementsInput>, CircularUncheckedUpdateWithoutAcknowledgementsInput>
   }
 
-  export type CompanyCreateNestedOneWithoutRiskAssessmentsInput = {
-    create?: XOR<CompanyCreateWithoutRiskAssessmentsInput, CompanyUncheckedCreateWithoutRiskAssessmentsInput>
-    connectOrCreate?: CompanyCreateOrConnectWithoutRiskAssessmentsInput
+  export type CompanyCreateNestedOneWithoutRiskAssessmentDocumentsInput = {
+    create?: XOR<CompanyCreateWithoutRiskAssessmentDocumentsInput, CompanyUncheckedCreateWithoutRiskAssessmentDocumentsInput>
+    connectOrCreate?: CompanyCreateOrConnectWithoutRiskAssessmentDocumentsInput
     connect?: CompanyWhereUniqueInput
   }
 
-  export type VesselCreateNestedOneWithoutRiskAssessmentsInput = {
-    create?: XOR<VesselCreateWithoutRiskAssessmentsInput, VesselUncheckedCreateWithoutRiskAssessmentsInput>
-    connectOrCreate?: VesselCreateOrConnectWithoutRiskAssessmentsInput
+  export type VesselCreateNestedOneWithoutRiskAssessmentDocumentsInput = {
+    create?: XOR<VesselCreateWithoutRiskAssessmentDocumentsInput, VesselUncheckedCreateWithoutRiskAssessmentDocumentsInput>
+    connectOrCreate?: VesselCreateOrConnectWithoutRiskAssessmentDocumentsInput
     connect?: VesselWhereUniqueInput
   }
 
-  export type EnumRiskRatingFieldUpdateOperationsInput = {
-    set?: $Enums.RiskRating
+  export type RiskAssessmentRevisionCreateNestedOneWithoutCurrentOfInput = {
+    create?: XOR<RiskAssessmentRevisionCreateWithoutCurrentOfInput, RiskAssessmentRevisionUncheckedCreateWithoutCurrentOfInput>
+    connectOrCreate?: RiskAssessmentRevisionCreateOrConnectWithoutCurrentOfInput
+    connect?: RiskAssessmentRevisionWhereUniqueInput
   }
 
-  export type EnumRiskAssessmentStatusFieldUpdateOperationsInput = {
-    set?: $Enums.RiskAssessmentStatus
+  export type RiskAssessmentRevisionCreateNestedManyWithoutDocumentInput = {
+    create?: XOR<RiskAssessmentRevisionCreateWithoutDocumentInput, RiskAssessmentRevisionUncheckedCreateWithoutDocumentInput> | RiskAssessmentRevisionCreateWithoutDocumentInput[] | RiskAssessmentRevisionUncheckedCreateWithoutDocumentInput[]
+    connectOrCreate?: RiskAssessmentRevisionCreateOrConnectWithoutDocumentInput | RiskAssessmentRevisionCreateOrConnectWithoutDocumentInput[]
+    createMany?: RiskAssessmentRevisionCreateManyDocumentInputEnvelope
+    connect?: RiskAssessmentRevisionWhereUniqueInput | RiskAssessmentRevisionWhereUniqueInput[]
   }
 
-  export type CompanyUpdateOneRequiredWithoutRiskAssessmentsNestedInput = {
-    create?: XOR<CompanyCreateWithoutRiskAssessmentsInput, CompanyUncheckedCreateWithoutRiskAssessmentsInput>
-    connectOrCreate?: CompanyCreateOrConnectWithoutRiskAssessmentsInput
-    upsert?: CompanyUpsertWithoutRiskAssessmentsInput
+  export type RiskAssessmentExecutionCreateNestedManyWithoutDocumentInput = {
+    create?: XOR<RiskAssessmentExecutionCreateWithoutDocumentInput, RiskAssessmentExecutionUncheckedCreateWithoutDocumentInput> | RiskAssessmentExecutionCreateWithoutDocumentInput[] | RiskAssessmentExecutionUncheckedCreateWithoutDocumentInput[]
+    connectOrCreate?: RiskAssessmentExecutionCreateOrConnectWithoutDocumentInput | RiskAssessmentExecutionCreateOrConnectWithoutDocumentInput[]
+    createMany?: RiskAssessmentExecutionCreateManyDocumentInputEnvelope
+    connect?: RiskAssessmentExecutionWhereUniqueInput | RiskAssessmentExecutionWhereUniqueInput[]
+  }
+
+  export type RiskAssessmentRevisionRequestCreateNestedManyWithoutDocumentInput = {
+    create?: XOR<RiskAssessmentRevisionRequestCreateWithoutDocumentInput, RiskAssessmentRevisionRequestUncheckedCreateWithoutDocumentInput> | RiskAssessmentRevisionRequestCreateWithoutDocumentInput[] | RiskAssessmentRevisionRequestUncheckedCreateWithoutDocumentInput[]
+    connectOrCreate?: RiskAssessmentRevisionRequestCreateOrConnectWithoutDocumentInput | RiskAssessmentRevisionRequestCreateOrConnectWithoutDocumentInput[]
+    createMany?: RiskAssessmentRevisionRequestCreateManyDocumentInputEnvelope
+    connect?: RiskAssessmentRevisionRequestWhereUniqueInput | RiskAssessmentRevisionRequestWhereUniqueInput[]
+  }
+
+  export type RiskAssessmentRevisionUncheckedCreateNestedManyWithoutDocumentInput = {
+    create?: XOR<RiskAssessmentRevisionCreateWithoutDocumentInput, RiskAssessmentRevisionUncheckedCreateWithoutDocumentInput> | RiskAssessmentRevisionCreateWithoutDocumentInput[] | RiskAssessmentRevisionUncheckedCreateWithoutDocumentInput[]
+    connectOrCreate?: RiskAssessmentRevisionCreateOrConnectWithoutDocumentInput | RiskAssessmentRevisionCreateOrConnectWithoutDocumentInput[]
+    createMany?: RiskAssessmentRevisionCreateManyDocumentInputEnvelope
+    connect?: RiskAssessmentRevisionWhereUniqueInput | RiskAssessmentRevisionWhereUniqueInput[]
+  }
+
+  export type RiskAssessmentExecutionUncheckedCreateNestedManyWithoutDocumentInput = {
+    create?: XOR<RiskAssessmentExecutionCreateWithoutDocumentInput, RiskAssessmentExecutionUncheckedCreateWithoutDocumentInput> | RiskAssessmentExecutionCreateWithoutDocumentInput[] | RiskAssessmentExecutionUncheckedCreateWithoutDocumentInput[]
+    connectOrCreate?: RiskAssessmentExecutionCreateOrConnectWithoutDocumentInput | RiskAssessmentExecutionCreateOrConnectWithoutDocumentInput[]
+    createMany?: RiskAssessmentExecutionCreateManyDocumentInputEnvelope
+    connect?: RiskAssessmentExecutionWhereUniqueInput | RiskAssessmentExecutionWhereUniqueInput[]
+  }
+
+  export type RiskAssessmentRevisionRequestUncheckedCreateNestedManyWithoutDocumentInput = {
+    create?: XOR<RiskAssessmentRevisionRequestCreateWithoutDocumentInput, RiskAssessmentRevisionRequestUncheckedCreateWithoutDocumentInput> | RiskAssessmentRevisionRequestCreateWithoutDocumentInput[] | RiskAssessmentRevisionRequestUncheckedCreateWithoutDocumentInput[]
+    connectOrCreate?: RiskAssessmentRevisionRequestCreateOrConnectWithoutDocumentInput | RiskAssessmentRevisionRequestCreateOrConnectWithoutDocumentInput[]
+    createMany?: RiskAssessmentRevisionRequestCreateManyDocumentInputEnvelope
+    connect?: RiskAssessmentRevisionRequestWhereUniqueInput | RiskAssessmentRevisionRequestWhereUniqueInput[]
+  }
+
+  export type CompanyUpdateOneRequiredWithoutRiskAssessmentDocumentsNestedInput = {
+    create?: XOR<CompanyCreateWithoutRiskAssessmentDocumentsInput, CompanyUncheckedCreateWithoutRiskAssessmentDocumentsInput>
+    connectOrCreate?: CompanyCreateOrConnectWithoutRiskAssessmentDocumentsInput
+    upsert?: CompanyUpsertWithoutRiskAssessmentDocumentsInput
     connect?: CompanyWhereUniqueInput
-    update?: XOR<XOR<CompanyUpdateToOneWithWhereWithoutRiskAssessmentsInput, CompanyUpdateWithoutRiskAssessmentsInput>, CompanyUncheckedUpdateWithoutRiskAssessmentsInput>
+    update?: XOR<XOR<CompanyUpdateToOneWithWhereWithoutRiskAssessmentDocumentsInput, CompanyUpdateWithoutRiskAssessmentDocumentsInput>, CompanyUncheckedUpdateWithoutRiskAssessmentDocumentsInput>
   }
 
-  export type VesselUpdateOneWithoutRiskAssessmentsNestedInput = {
-    create?: XOR<VesselCreateWithoutRiskAssessmentsInput, VesselUncheckedCreateWithoutRiskAssessmentsInput>
-    connectOrCreate?: VesselCreateOrConnectWithoutRiskAssessmentsInput
-    upsert?: VesselUpsertWithoutRiskAssessmentsInput
+  export type VesselUpdateOneWithoutRiskAssessmentDocumentsNestedInput = {
+    create?: XOR<VesselCreateWithoutRiskAssessmentDocumentsInput, VesselUncheckedCreateWithoutRiskAssessmentDocumentsInput>
+    connectOrCreate?: VesselCreateOrConnectWithoutRiskAssessmentDocumentsInput
+    upsert?: VesselUpsertWithoutRiskAssessmentDocumentsInput
     disconnect?: VesselWhereInput | boolean
     delete?: VesselWhereInput | boolean
     connect?: VesselWhereUniqueInput
-    update?: XOR<XOR<VesselUpdateToOneWithWhereWithoutRiskAssessmentsInput, VesselUpdateWithoutRiskAssessmentsInput>, VesselUncheckedUpdateWithoutRiskAssessmentsInput>
+    update?: XOR<XOR<VesselUpdateToOneWithWhereWithoutRiskAssessmentDocumentsInput, VesselUpdateWithoutRiskAssessmentDocumentsInput>, VesselUncheckedUpdateWithoutRiskAssessmentDocumentsInput>
+  }
+
+  export type RiskAssessmentRevisionUpdateOneWithoutCurrentOfNestedInput = {
+    create?: XOR<RiskAssessmentRevisionCreateWithoutCurrentOfInput, RiskAssessmentRevisionUncheckedCreateWithoutCurrentOfInput>
+    connectOrCreate?: RiskAssessmentRevisionCreateOrConnectWithoutCurrentOfInput
+    upsert?: RiskAssessmentRevisionUpsertWithoutCurrentOfInput
+    disconnect?: RiskAssessmentRevisionWhereInput | boolean
+    delete?: RiskAssessmentRevisionWhereInput | boolean
+    connect?: RiskAssessmentRevisionWhereUniqueInput
+    update?: XOR<XOR<RiskAssessmentRevisionUpdateToOneWithWhereWithoutCurrentOfInput, RiskAssessmentRevisionUpdateWithoutCurrentOfInput>, RiskAssessmentRevisionUncheckedUpdateWithoutCurrentOfInput>
+  }
+
+  export type RiskAssessmentRevisionUpdateManyWithoutDocumentNestedInput = {
+    create?: XOR<RiskAssessmentRevisionCreateWithoutDocumentInput, RiskAssessmentRevisionUncheckedCreateWithoutDocumentInput> | RiskAssessmentRevisionCreateWithoutDocumentInput[] | RiskAssessmentRevisionUncheckedCreateWithoutDocumentInput[]
+    connectOrCreate?: RiskAssessmentRevisionCreateOrConnectWithoutDocumentInput | RiskAssessmentRevisionCreateOrConnectWithoutDocumentInput[]
+    upsert?: RiskAssessmentRevisionUpsertWithWhereUniqueWithoutDocumentInput | RiskAssessmentRevisionUpsertWithWhereUniqueWithoutDocumentInput[]
+    createMany?: RiskAssessmentRevisionCreateManyDocumentInputEnvelope
+    set?: RiskAssessmentRevisionWhereUniqueInput | RiskAssessmentRevisionWhereUniqueInput[]
+    disconnect?: RiskAssessmentRevisionWhereUniqueInput | RiskAssessmentRevisionWhereUniqueInput[]
+    delete?: RiskAssessmentRevisionWhereUniqueInput | RiskAssessmentRevisionWhereUniqueInput[]
+    connect?: RiskAssessmentRevisionWhereUniqueInput | RiskAssessmentRevisionWhereUniqueInput[]
+    update?: RiskAssessmentRevisionUpdateWithWhereUniqueWithoutDocumentInput | RiskAssessmentRevisionUpdateWithWhereUniqueWithoutDocumentInput[]
+    updateMany?: RiskAssessmentRevisionUpdateManyWithWhereWithoutDocumentInput | RiskAssessmentRevisionUpdateManyWithWhereWithoutDocumentInput[]
+    deleteMany?: RiskAssessmentRevisionScalarWhereInput | RiskAssessmentRevisionScalarWhereInput[]
+  }
+
+  export type RiskAssessmentExecutionUpdateManyWithoutDocumentNestedInput = {
+    create?: XOR<RiskAssessmentExecutionCreateWithoutDocumentInput, RiskAssessmentExecutionUncheckedCreateWithoutDocumentInput> | RiskAssessmentExecutionCreateWithoutDocumentInput[] | RiskAssessmentExecutionUncheckedCreateWithoutDocumentInput[]
+    connectOrCreate?: RiskAssessmentExecutionCreateOrConnectWithoutDocumentInput | RiskAssessmentExecutionCreateOrConnectWithoutDocumentInput[]
+    upsert?: RiskAssessmentExecutionUpsertWithWhereUniqueWithoutDocumentInput | RiskAssessmentExecutionUpsertWithWhereUniqueWithoutDocumentInput[]
+    createMany?: RiskAssessmentExecutionCreateManyDocumentInputEnvelope
+    set?: RiskAssessmentExecutionWhereUniqueInput | RiskAssessmentExecutionWhereUniqueInput[]
+    disconnect?: RiskAssessmentExecutionWhereUniqueInput | RiskAssessmentExecutionWhereUniqueInput[]
+    delete?: RiskAssessmentExecutionWhereUniqueInput | RiskAssessmentExecutionWhereUniqueInput[]
+    connect?: RiskAssessmentExecutionWhereUniqueInput | RiskAssessmentExecutionWhereUniqueInput[]
+    update?: RiskAssessmentExecutionUpdateWithWhereUniqueWithoutDocumentInput | RiskAssessmentExecutionUpdateWithWhereUniqueWithoutDocumentInput[]
+    updateMany?: RiskAssessmentExecutionUpdateManyWithWhereWithoutDocumentInput | RiskAssessmentExecutionUpdateManyWithWhereWithoutDocumentInput[]
+    deleteMany?: RiskAssessmentExecutionScalarWhereInput | RiskAssessmentExecutionScalarWhereInput[]
+  }
+
+  export type RiskAssessmentRevisionRequestUpdateManyWithoutDocumentNestedInput = {
+    create?: XOR<RiskAssessmentRevisionRequestCreateWithoutDocumentInput, RiskAssessmentRevisionRequestUncheckedCreateWithoutDocumentInput> | RiskAssessmentRevisionRequestCreateWithoutDocumentInput[] | RiskAssessmentRevisionRequestUncheckedCreateWithoutDocumentInput[]
+    connectOrCreate?: RiskAssessmentRevisionRequestCreateOrConnectWithoutDocumentInput | RiskAssessmentRevisionRequestCreateOrConnectWithoutDocumentInput[]
+    upsert?: RiskAssessmentRevisionRequestUpsertWithWhereUniqueWithoutDocumentInput | RiskAssessmentRevisionRequestUpsertWithWhereUniqueWithoutDocumentInput[]
+    createMany?: RiskAssessmentRevisionRequestCreateManyDocumentInputEnvelope
+    set?: RiskAssessmentRevisionRequestWhereUniqueInput | RiskAssessmentRevisionRequestWhereUniqueInput[]
+    disconnect?: RiskAssessmentRevisionRequestWhereUniqueInput | RiskAssessmentRevisionRequestWhereUniqueInput[]
+    delete?: RiskAssessmentRevisionRequestWhereUniqueInput | RiskAssessmentRevisionRequestWhereUniqueInput[]
+    connect?: RiskAssessmentRevisionRequestWhereUniqueInput | RiskAssessmentRevisionRequestWhereUniqueInput[]
+    update?: RiskAssessmentRevisionRequestUpdateWithWhereUniqueWithoutDocumentInput | RiskAssessmentRevisionRequestUpdateWithWhereUniqueWithoutDocumentInput[]
+    updateMany?: RiskAssessmentRevisionRequestUpdateManyWithWhereWithoutDocumentInput | RiskAssessmentRevisionRequestUpdateManyWithWhereWithoutDocumentInput[]
+    deleteMany?: RiskAssessmentRevisionRequestScalarWhereInput | RiskAssessmentRevisionRequestScalarWhereInput[]
+  }
+
+  export type RiskAssessmentRevisionUncheckedUpdateManyWithoutDocumentNestedInput = {
+    create?: XOR<RiskAssessmentRevisionCreateWithoutDocumentInput, RiskAssessmentRevisionUncheckedCreateWithoutDocumentInput> | RiskAssessmentRevisionCreateWithoutDocumentInput[] | RiskAssessmentRevisionUncheckedCreateWithoutDocumentInput[]
+    connectOrCreate?: RiskAssessmentRevisionCreateOrConnectWithoutDocumentInput | RiskAssessmentRevisionCreateOrConnectWithoutDocumentInput[]
+    upsert?: RiskAssessmentRevisionUpsertWithWhereUniqueWithoutDocumentInput | RiskAssessmentRevisionUpsertWithWhereUniqueWithoutDocumentInput[]
+    createMany?: RiskAssessmentRevisionCreateManyDocumentInputEnvelope
+    set?: RiskAssessmentRevisionWhereUniqueInput | RiskAssessmentRevisionWhereUniqueInput[]
+    disconnect?: RiskAssessmentRevisionWhereUniqueInput | RiskAssessmentRevisionWhereUniqueInput[]
+    delete?: RiskAssessmentRevisionWhereUniqueInput | RiskAssessmentRevisionWhereUniqueInput[]
+    connect?: RiskAssessmentRevisionWhereUniqueInput | RiskAssessmentRevisionWhereUniqueInput[]
+    update?: RiskAssessmentRevisionUpdateWithWhereUniqueWithoutDocumentInput | RiskAssessmentRevisionUpdateWithWhereUniqueWithoutDocumentInput[]
+    updateMany?: RiskAssessmentRevisionUpdateManyWithWhereWithoutDocumentInput | RiskAssessmentRevisionUpdateManyWithWhereWithoutDocumentInput[]
+    deleteMany?: RiskAssessmentRevisionScalarWhereInput | RiskAssessmentRevisionScalarWhereInput[]
+  }
+
+  export type RiskAssessmentExecutionUncheckedUpdateManyWithoutDocumentNestedInput = {
+    create?: XOR<RiskAssessmentExecutionCreateWithoutDocumentInput, RiskAssessmentExecutionUncheckedCreateWithoutDocumentInput> | RiskAssessmentExecutionCreateWithoutDocumentInput[] | RiskAssessmentExecutionUncheckedCreateWithoutDocumentInput[]
+    connectOrCreate?: RiskAssessmentExecutionCreateOrConnectWithoutDocumentInput | RiskAssessmentExecutionCreateOrConnectWithoutDocumentInput[]
+    upsert?: RiskAssessmentExecutionUpsertWithWhereUniqueWithoutDocumentInput | RiskAssessmentExecutionUpsertWithWhereUniqueWithoutDocumentInput[]
+    createMany?: RiskAssessmentExecutionCreateManyDocumentInputEnvelope
+    set?: RiskAssessmentExecutionWhereUniqueInput | RiskAssessmentExecutionWhereUniqueInput[]
+    disconnect?: RiskAssessmentExecutionWhereUniqueInput | RiskAssessmentExecutionWhereUniqueInput[]
+    delete?: RiskAssessmentExecutionWhereUniqueInput | RiskAssessmentExecutionWhereUniqueInput[]
+    connect?: RiskAssessmentExecutionWhereUniqueInput | RiskAssessmentExecutionWhereUniqueInput[]
+    update?: RiskAssessmentExecutionUpdateWithWhereUniqueWithoutDocumentInput | RiskAssessmentExecutionUpdateWithWhereUniqueWithoutDocumentInput[]
+    updateMany?: RiskAssessmentExecutionUpdateManyWithWhereWithoutDocumentInput | RiskAssessmentExecutionUpdateManyWithWhereWithoutDocumentInput[]
+    deleteMany?: RiskAssessmentExecutionScalarWhereInput | RiskAssessmentExecutionScalarWhereInput[]
+  }
+
+  export type RiskAssessmentRevisionRequestUncheckedUpdateManyWithoutDocumentNestedInput = {
+    create?: XOR<RiskAssessmentRevisionRequestCreateWithoutDocumentInput, RiskAssessmentRevisionRequestUncheckedCreateWithoutDocumentInput> | RiskAssessmentRevisionRequestCreateWithoutDocumentInput[] | RiskAssessmentRevisionRequestUncheckedCreateWithoutDocumentInput[]
+    connectOrCreate?: RiskAssessmentRevisionRequestCreateOrConnectWithoutDocumentInput | RiskAssessmentRevisionRequestCreateOrConnectWithoutDocumentInput[]
+    upsert?: RiskAssessmentRevisionRequestUpsertWithWhereUniqueWithoutDocumentInput | RiskAssessmentRevisionRequestUpsertWithWhereUniqueWithoutDocumentInput[]
+    createMany?: RiskAssessmentRevisionRequestCreateManyDocumentInputEnvelope
+    set?: RiskAssessmentRevisionRequestWhereUniqueInput | RiskAssessmentRevisionRequestWhereUniqueInput[]
+    disconnect?: RiskAssessmentRevisionRequestWhereUniqueInput | RiskAssessmentRevisionRequestWhereUniqueInput[]
+    delete?: RiskAssessmentRevisionRequestWhereUniqueInput | RiskAssessmentRevisionRequestWhereUniqueInput[]
+    connect?: RiskAssessmentRevisionRequestWhereUniqueInput | RiskAssessmentRevisionRequestWhereUniqueInput[]
+    update?: RiskAssessmentRevisionRequestUpdateWithWhereUniqueWithoutDocumentInput | RiskAssessmentRevisionRequestUpdateWithWhereUniqueWithoutDocumentInput[]
+    updateMany?: RiskAssessmentRevisionRequestUpdateManyWithWhereWithoutDocumentInput | RiskAssessmentRevisionRequestUpdateManyWithWhereWithoutDocumentInput[]
+    deleteMany?: RiskAssessmentRevisionRequestScalarWhereInput | RiskAssessmentRevisionRequestScalarWhereInput[]
+  }
+
+  export type RiskAssessmentDocumentCreateNestedOneWithoutRevisionsInput = {
+    create?: XOR<RiskAssessmentDocumentCreateWithoutRevisionsInput, RiskAssessmentDocumentUncheckedCreateWithoutRevisionsInput>
+    connectOrCreate?: RiskAssessmentDocumentCreateOrConnectWithoutRevisionsInput
+    connect?: RiskAssessmentDocumentWhereUniqueInput
+  }
+
+  export type RiskAssessmentDocumentCreateNestedOneWithoutCurrentRevisionInput = {
+    create?: XOR<RiskAssessmentDocumentCreateWithoutCurrentRevisionInput, RiskAssessmentDocumentUncheckedCreateWithoutCurrentRevisionInput>
+    connectOrCreate?: RiskAssessmentDocumentCreateOrConnectWithoutCurrentRevisionInput
+    connect?: RiskAssessmentDocumentWhereUniqueInput
+  }
+
+  export type RiskAssessmentExecutionCreateNestedManyWithoutRevisionInput = {
+    create?: XOR<RiskAssessmentExecutionCreateWithoutRevisionInput, RiskAssessmentExecutionUncheckedCreateWithoutRevisionInput> | RiskAssessmentExecutionCreateWithoutRevisionInput[] | RiskAssessmentExecutionUncheckedCreateWithoutRevisionInput[]
+    connectOrCreate?: RiskAssessmentExecutionCreateOrConnectWithoutRevisionInput | RiskAssessmentExecutionCreateOrConnectWithoutRevisionInput[]
+    createMany?: RiskAssessmentExecutionCreateManyRevisionInputEnvelope
+    connect?: RiskAssessmentExecutionWhereUniqueInput | RiskAssessmentExecutionWhereUniqueInput[]
+  }
+
+  export type RiskHazardRowCreateNestedManyWithoutRevisionInput = {
+    create?: XOR<RiskHazardRowCreateWithoutRevisionInput, RiskHazardRowUncheckedCreateWithoutRevisionInput> | RiskHazardRowCreateWithoutRevisionInput[] | RiskHazardRowUncheckedCreateWithoutRevisionInput[]
+    connectOrCreate?: RiskHazardRowCreateOrConnectWithoutRevisionInput | RiskHazardRowCreateOrConnectWithoutRevisionInput[]
+    createMany?: RiskHazardRowCreateManyRevisionInputEnvelope
+    connect?: RiskHazardRowWhereUniqueInput | RiskHazardRowWhereUniqueInput[]
+  }
+
+  export type RiskAssessmentDocumentUncheckedCreateNestedOneWithoutCurrentRevisionInput = {
+    create?: XOR<RiskAssessmentDocumentCreateWithoutCurrentRevisionInput, RiskAssessmentDocumentUncheckedCreateWithoutCurrentRevisionInput>
+    connectOrCreate?: RiskAssessmentDocumentCreateOrConnectWithoutCurrentRevisionInput
+    connect?: RiskAssessmentDocumentWhereUniqueInput
+  }
+
+  export type RiskAssessmentExecutionUncheckedCreateNestedManyWithoutRevisionInput = {
+    create?: XOR<RiskAssessmentExecutionCreateWithoutRevisionInput, RiskAssessmentExecutionUncheckedCreateWithoutRevisionInput> | RiskAssessmentExecutionCreateWithoutRevisionInput[] | RiskAssessmentExecutionUncheckedCreateWithoutRevisionInput[]
+    connectOrCreate?: RiskAssessmentExecutionCreateOrConnectWithoutRevisionInput | RiskAssessmentExecutionCreateOrConnectWithoutRevisionInput[]
+    createMany?: RiskAssessmentExecutionCreateManyRevisionInputEnvelope
+    connect?: RiskAssessmentExecutionWhereUniqueInput | RiskAssessmentExecutionWhereUniqueInput[]
+  }
+
+  export type RiskHazardRowUncheckedCreateNestedManyWithoutRevisionInput = {
+    create?: XOR<RiskHazardRowCreateWithoutRevisionInput, RiskHazardRowUncheckedCreateWithoutRevisionInput> | RiskHazardRowCreateWithoutRevisionInput[] | RiskHazardRowUncheckedCreateWithoutRevisionInput[]
+    connectOrCreate?: RiskHazardRowCreateOrConnectWithoutRevisionInput | RiskHazardRowCreateOrConnectWithoutRevisionInput[]
+    createMany?: RiskHazardRowCreateManyRevisionInputEnvelope
+    connect?: RiskHazardRowWhereUniqueInput | RiskHazardRowWhereUniqueInput[]
+  }
+
+  export type NullableEnumReviewTriggerFieldUpdateOperationsInput = {
+    set?: $Enums.ReviewTrigger | null
+  }
+
+  export type EnumRaApprovalLevelFieldUpdateOperationsInput = {
+    set?: $Enums.RaApprovalLevel
+  }
+
+  export type RiskAssessmentDocumentUpdateOneRequiredWithoutRevisionsNestedInput = {
+    create?: XOR<RiskAssessmentDocumentCreateWithoutRevisionsInput, RiskAssessmentDocumentUncheckedCreateWithoutRevisionsInput>
+    connectOrCreate?: RiskAssessmentDocumentCreateOrConnectWithoutRevisionsInput
+    upsert?: RiskAssessmentDocumentUpsertWithoutRevisionsInput
+    connect?: RiskAssessmentDocumentWhereUniqueInput
+    update?: XOR<XOR<RiskAssessmentDocumentUpdateToOneWithWhereWithoutRevisionsInput, RiskAssessmentDocumentUpdateWithoutRevisionsInput>, RiskAssessmentDocumentUncheckedUpdateWithoutRevisionsInput>
+  }
+
+  export type RiskAssessmentDocumentUpdateOneWithoutCurrentRevisionNestedInput = {
+    create?: XOR<RiskAssessmentDocumentCreateWithoutCurrentRevisionInput, RiskAssessmentDocumentUncheckedCreateWithoutCurrentRevisionInput>
+    connectOrCreate?: RiskAssessmentDocumentCreateOrConnectWithoutCurrentRevisionInput
+    upsert?: RiskAssessmentDocumentUpsertWithoutCurrentRevisionInput
+    disconnect?: RiskAssessmentDocumentWhereInput | boolean
+    delete?: RiskAssessmentDocumentWhereInput | boolean
+    connect?: RiskAssessmentDocumentWhereUniqueInput
+    update?: XOR<XOR<RiskAssessmentDocumentUpdateToOneWithWhereWithoutCurrentRevisionInput, RiskAssessmentDocumentUpdateWithoutCurrentRevisionInput>, RiskAssessmentDocumentUncheckedUpdateWithoutCurrentRevisionInput>
+  }
+
+  export type RiskAssessmentExecutionUpdateManyWithoutRevisionNestedInput = {
+    create?: XOR<RiskAssessmentExecutionCreateWithoutRevisionInput, RiskAssessmentExecutionUncheckedCreateWithoutRevisionInput> | RiskAssessmentExecutionCreateWithoutRevisionInput[] | RiskAssessmentExecutionUncheckedCreateWithoutRevisionInput[]
+    connectOrCreate?: RiskAssessmentExecutionCreateOrConnectWithoutRevisionInput | RiskAssessmentExecutionCreateOrConnectWithoutRevisionInput[]
+    upsert?: RiskAssessmentExecutionUpsertWithWhereUniqueWithoutRevisionInput | RiskAssessmentExecutionUpsertWithWhereUniqueWithoutRevisionInput[]
+    createMany?: RiskAssessmentExecutionCreateManyRevisionInputEnvelope
+    set?: RiskAssessmentExecutionWhereUniqueInput | RiskAssessmentExecutionWhereUniqueInput[]
+    disconnect?: RiskAssessmentExecutionWhereUniqueInput | RiskAssessmentExecutionWhereUniqueInput[]
+    delete?: RiskAssessmentExecutionWhereUniqueInput | RiskAssessmentExecutionWhereUniqueInput[]
+    connect?: RiskAssessmentExecutionWhereUniqueInput | RiskAssessmentExecutionWhereUniqueInput[]
+    update?: RiskAssessmentExecutionUpdateWithWhereUniqueWithoutRevisionInput | RiskAssessmentExecutionUpdateWithWhereUniqueWithoutRevisionInput[]
+    updateMany?: RiskAssessmentExecutionUpdateManyWithWhereWithoutRevisionInput | RiskAssessmentExecutionUpdateManyWithWhereWithoutRevisionInput[]
+    deleteMany?: RiskAssessmentExecutionScalarWhereInput | RiskAssessmentExecutionScalarWhereInput[]
+  }
+
+  export type RiskHazardRowUpdateManyWithoutRevisionNestedInput = {
+    create?: XOR<RiskHazardRowCreateWithoutRevisionInput, RiskHazardRowUncheckedCreateWithoutRevisionInput> | RiskHazardRowCreateWithoutRevisionInput[] | RiskHazardRowUncheckedCreateWithoutRevisionInput[]
+    connectOrCreate?: RiskHazardRowCreateOrConnectWithoutRevisionInput | RiskHazardRowCreateOrConnectWithoutRevisionInput[]
+    upsert?: RiskHazardRowUpsertWithWhereUniqueWithoutRevisionInput | RiskHazardRowUpsertWithWhereUniqueWithoutRevisionInput[]
+    createMany?: RiskHazardRowCreateManyRevisionInputEnvelope
+    set?: RiskHazardRowWhereUniqueInput | RiskHazardRowWhereUniqueInput[]
+    disconnect?: RiskHazardRowWhereUniqueInput | RiskHazardRowWhereUniqueInput[]
+    delete?: RiskHazardRowWhereUniqueInput | RiskHazardRowWhereUniqueInput[]
+    connect?: RiskHazardRowWhereUniqueInput | RiskHazardRowWhereUniqueInput[]
+    update?: RiskHazardRowUpdateWithWhereUniqueWithoutRevisionInput | RiskHazardRowUpdateWithWhereUniqueWithoutRevisionInput[]
+    updateMany?: RiskHazardRowUpdateManyWithWhereWithoutRevisionInput | RiskHazardRowUpdateManyWithWhereWithoutRevisionInput[]
+    deleteMany?: RiskHazardRowScalarWhereInput | RiskHazardRowScalarWhereInput[]
+  }
+
+  export type RiskAssessmentDocumentUncheckedUpdateOneWithoutCurrentRevisionNestedInput = {
+    create?: XOR<RiskAssessmentDocumentCreateWithoutCurrentRevisionInput, RiskAssessmentDocumentUncheckedCreateWithoutCurrentRevisionInput>
+    connectOrCreate?: RiskAssessmentDocumentCreateOrConnectWithoutCurrentRevisionInput
+    upsert?: RiskAssessmentDocumentUpsertWithoutCurrentRevisionInput
+    disconnect?: RiskAssessmentDocumentWhereInput | boolean
+    delete?: RiskAssessmentDocumentWhereInput | boolean
+    connect?: RiskAssessmentDocumentWhereUniqueInput
+    update?: XOR<XOR<RiskAssessmentDocumentUpdateToOneWithWhereWithoutCurrentRevisionInput, RiskAssessmentDocumentUpdateWithoutCurrentRevisionInput>, RiskAssessmentDocumentUncheckedUpdateWithoutCurrentRevisionInput>
+  }
+
+  export type RiskAssessmentExecutionUncheckedUpdateManyWithoutRevisionNestedInput = {
+    create?: XOR<RiskAssessmentExecutionCreateWithoutRevisionInput, RiskAssessmentExecutionUncheckedCreateWithoutRevisionInput> | RiskAssessmentExecutionCreateWithoutRevisionInput[] | RiskAssessmentExecutionUncheckedCreateWithoutRevisionInput[]
+    connectOrCreate?: RiskAssessmentExecutionCreateOrConnectWithoutRevisionInput | RiskAssessmentExecutionCreateOrConnectWithoutRevisionInput[]
+    upsert?: RiskAssessmentExecutionUpsertWithWhereUniqueWithoutRevisionInput | RiskAssessmentExecutionUpsertWithWhereUniqueWithoutRevisionInput[]
+    createMany?: RiskAssessmentExecutionCreateManyRevisionInputEnvelope
+    set?: RiskAssessmentExecutionWhereUniqueInput | RiskAssessmentExecutionWhereUniqueInput[]
+    disconnect?: RiskAssessmentExecutionWhereUniqueInput | RiskAssessmentExecutionWhereUniqueInput[]
+    delete?: RiskAssessmentExecutionWhereUniqueInput | RiskAssessmentExecutionWhereUniqueInput[]
+    connect?: RiskAssessmentExecutionWhereUniqueInput | RiskAssessmentExecutionWhereUniqueInput[]
+    update?: RiskAssessmentExecutionUpdateWithWhereUniqueWithoutRevisionInput | RiskAssessmentExecutionUpdateWithWhereUniqueWithoutRevisionInput[]
+    updateMany?: RiskAssessmentExecutionUpdateManyWithWhereWithoutRevisionInput | RiskAssessmentExecutionUpdateManyWithWhereWithoutRevisionInput[]
+    deleteMany?: RiskAssessmentExecutionScalarWhereInput | RiskAssessmentExecutionScalarWhereInput[]
+  }
+
+  export type RiskHazardRowUncheckedUpdateManyWithoutRevisionNestedInput = {
+    create?: XOR<RiskHazardRowCreateWithoutRevisionInput, RiskHazardRowUncheckedCreateWithoutRevisionInput> | RiskHazardRowCreateWithoutRevisionInput[] | RiskHazardRowUncheckedCreateWithoutRevisionInput[]
+    connectOrCreate?: RiskHazardRowCreateOrConnectWithoutRevisionInput | RiskHazardRowCreateOrConnectWithoutRevisionInput[]
+    upsert?: RiskHazardRowUpsertWithWhereUniqueWithoutRevisionInput | RiskHazardRowUpsertWithWhereUniqueWithoutRevisionInput[]
+    createMany?: RiskHazardRowCreateManyRevisionInputEnvelope
+    set?: RiskHazardRowWhereUniqueInput | RiskHazardRowWhereUniqueInput[]
+    disconnect?: RiskHazardRowWhereUniqueInput | RiskHazardRowWhereUniqueInput[]
+    delete?: RiskHazardRowWhereUniqueInput | RiskHazardRowWhereUniqueInput[]
+    connect?: RiskHazardRowWhereUniqueInput | RiskHazardRowWhereUniqueInput[]
+    update?: RiskHazardRowUpdateWithWhereUniqueWithoutRevisionInput | RiskHazardRowUpdateWithWhereUniqueWithoutRevisionInput[]
+    updateMany?: RiskHazardRowUpdateManyWithWhereWithoutRevisionInput | RiskHazardRowUpdateManyWithWhereWithoutRevisionInput[]
+    deleteMany?: RiskHazardRowScalarWhereInput | RiskHazardRowScalarWhereInput[]
+  }
+
+  export type RiskAssessmentRevisionCreateNestedOneWithoutHazardRowsInput = {
+    create?: XOR<RiskAssessmentRevisionCreateWithoutHazardRowsInput, RiskAssessmentRevisionUncheckedCreateWithoutHazardRowsInput>
+    connectOrCreate?: RiskAssessmentRevisionCreateOrConnectWithoutHazardRowsInput
+    connect?: RiskAssessmentRevisionWhereUniqueInput
+  }
+
+  export type RiskAssessmentRevisionUpdateOneRequiredWithoutHazardRowsNestedInput = {
+    create?: XOR<RiskAssessmentRevisionCreateWithoutHazardRowsInput, RiskAssessmentRevisionUncheckedCreateWithoutHazardRowsInput>
+    connectOrCreate?: RiskAssessmentRevisionCreateOrConnectWithoutHazardRowsInput
+    upsert?: RiskAssessmentRevisionUpsertWithoutHazardRowsInput
+    connect?: RiskAssessmentRevisionWhereUniqueInput
+    update?: XOR<XOR<RiskAssessmentRevisionUpdateToOneWithWhereWithoutHazardRowsInput, RiskAssessmentRevisionUpdateWithoutHazardRowsInput>, RiskAssessmentRevisionUncheckedUpdateWithoutHazardRowsInput>
+  }
+
+  export type RiskAssessmentDocumentCreateNestedOneWithoutExecutionsInput = {
+    create?: XOR<RiskAssessmentDocumentCreateWithoutExecutionsInput, RiskAssessmentDocumentUncheckedCreateWithoutExecutionsInput>
+    connectOrCreate?: RiskAssessmentDocumentCreateOrConnectWithoutExecutionsInput
+    connect?: RiskAssessmentDocumentWhereUniqueInput
+  }
+
+  export type RiskAssessmentRevisionCreateNestedOneWithoutExecutionsInput = {
+    create?: XOR<RiskAssessmentRevisionCreateWithoutExecutionsInput, RiskAssessmentRevisionUncheckedCreateWithoutExecutionsInput>
+    connectOrCreate?: RiskAssessmentRevisionCreateOrConnectWithoutExecutionsInput
+    connect?: RiskAssessmentRevisionWhereUniqueInput
+  }
+
+  export type VesselCreateNestedOneWithoutRiskAssessmentExecutionsInput = {
+    create?: XOR<VesselCreateWithoutRiskAssessmentExecutionsInput, VesselUncheckedCreateWithoutRiskAssessmentExecutionsInput>
+    connectOrCreate?: VesselCreateOrConnectWithoutRiskAssessmentExecutionsInput
+    connect?: VesselWhereUniqueInput
+  }
+
+  export type EnumRaExecutionConditionFieldUpdateOperationsInput = {
+    set?: $Enums.RaExecutionCondition
+  }
+
+  export type RiskAssessmentDocumentUpdateOneRequiredWithoutExecutionsNestedInput = {
+    create?: XOR<RiskAssessmentDocumentCreateWithoutExecutionsInput, RiskAssessmentDocumentUncheckedCreateWithoutExecutionsInput>
+    connectOrCreate?: RiskAssessmentDocumentCreateOrConnectWithoutExecutionsInput
+    upsert?: RiskAssessmentDocumentUpsertWithoutExecutionsInput
+    connect?: RiskAssessmentDocumentWhereUniqueInput
+    update?: XOR<XOR<RiskAssessmentDocumentUpdateToOneWithWhereWithoutExecutionsInput, RiskAssessmentDocumentUpdateWithoutExecutionsInput>, RiskAssessmentDocumentUncheckedUpdateWithoutExecutionsInput>
+  }
+
+  export type RiskAssessmentRevisionUpdateOneRequiredWithoutExecutionsNestedInput = {
+    create?: XOR<RiskAssessmentRevisionCreateWithoutExecutionsInput, RiskAssessmentRevisionUncheckedCreateWithoutExecutionsInput>
+    connectOrCreate?: RiskAssessmentRevisionCreateOrConnectWithoutExecutionsInput
+    upsert?: RiskAssessmentRevisionUpsertWithoutExecutionsInput
+    connect?: RiskAssessmentRevisionWhereUniqueInput
+    update?: XOR<XOR<RiskAssessmentRevisionUpdateToOneWithWhereWithoutExecutionsInput, RiskAssessmentRevisionUpdateWithoutExecutionsInput>, RiskAssessmentRevisionUncheckedUpdateWithoutExecutionsInput>
+  }
+
+  export type VesselUpdateOneRequiredWithoutRiskAssessmentExecutionsNestedInput = {
+    create?: XOR<VesselCreateWithoutRiskAssessmentExecutionsInput, VesselUncheckedCreateWithoutRiskAssessmentExecutionsInput>
+    connectOrCreate?: VesselCreateOrConnectWithoutRiskAssessmentExecutionsInput
+    upsert?: VesselUpsertWithoutRiskAssessmentExecutionsInput
+    connect?: VesselWhereUniqueInput
+    update?: XOR<XOR<VesselUpdateToOneWithWhereWithoutRiskAssessmentExecutionsInput, VesselUpdateWithoutRiskAssessmentExecutionsInput>, VesselUncheckedUpdateWithoutRiskAssessmentExecutionsInput>
+  }
+
+  export type RiskAssessmentDocumentCreateNestedOneWithoutRevisionRequestsInput = {
+    create?: XOR<RiskAssessmentDocumentCreateWithoutRevisionRequestsInput, RiskAssessmentDocumentUncheckedCreateWithoutRevisionRequestsInput>
+    connectOrCreate?: RiskAssessmentDocumentCreateOrConnectWithoutRevisionRequestsInput
+    connect?: RiskAssessmentDocumentWhereUniqueInput
+  }
+
+  export type VesselCreateNestedOneWithoutRiskAssessmentRevisionRequestsInput = {
+    create?: XOR<VesselCreateWithoutRiskAssessmentRevisionRequestsInput, VesselUncheckedCreateWithoutRiskAssessmentRevisionRequestsInput>
+    connectOrCreate?: VesselCreateOrConnectWithoutRiskAssessmentRevisionRequestsInput
+    connect?: VesselWhereUniqueInput
+  }
+
+  export type EnumReviewTriggerFieldUpdateOperationsInput = {
+    set?: $Enums.ReviewTrigger
+  }
+
+  export type EnumRaRevisionRequestStatusFieldUpdateOperationsInput = {
+    set?: $Enums.RaRevisionRequestStatus
+  }
+
+  export type RiskAssessmentDocumentUpdateOneRequiredWithoutRevisionRequestsNestedInput = {
+    create?: XOR<RiskAssessmentDocumentCreateWithoutRevisionRequestsInput, RiskAssessmentDocumentUncheckedCreateWithoutRevisionRequestsInput>
+    connectOrCreate?: RiskAssessmentDocumentCreateOrConnectWithoutRevisionRequestsInput
+    upsert?: RiskAssessmentDocumentUpsertWithoutRevisionRequestsInput
+    connect?: RiskAssessmentDocumentWhereUniqueInput
+    update?: XOR<XOR<RiskAssessmentDocumentUpdateToOneWithWhereWithoutRevisionRequestsInput, RiskAssessmentDocumentUpdateWithoutRevisionRequestsInput>, RiskAssessmentDocumentUncheckedUpdateWithoutRevisionRequestsInput>
+  }
+
+  export type VesselUpdateOneWithoutRiskAssessmentRevisionRequestsNestedInput = {
+    create?: XOR<VesselCreateWithoutRiskAssessmentRevisionRequestsInput, VesselUncheckedCreateWithoutRiskAssessmentRevisionRequestsInput>
+    connectOrCreate?: VesselCreateOrConnectWithoutRiskAssessmentRevisionRequestsInput
+    upsert?: VesselUpsertWithoutRiskAssessmentRevisionRequestsInput
+    disconnect?: VesselWhereInput | boolean
+    delete?: VesselWhereInput | boolean
+    connect?: VesselWhereUniqueInput
+    update?: XOR<XOR<VesselUpdateToOneWithWhereWithoutRiskAssessmentRevisionRequestsInput, VesselUpdateWithoutRiskAssessmentRevisionRequestsInput>, VesselUncheckedUpdateWithoutRiskAssessmentRevisionRequestsInput>
   }
 
   export type CompanyCreateNestedOneWithoutDefectsInput = {
@@ -77407,38 +85404,89 @@ export namespace Prisma {
     _max?: NestedEnumCircularCategoryFilter<$PrismaModel>
   }
 
-  export type NestedEnumRiskRatingFilter<$PrismaModel = never> = {
-    equals?: $Enums.RiskRating | EnumRiskRatingFieldRefInput<$PrismaModel>
-    in?: $Enums.RiskRating[] | ListEnumRiskRatingFieldRefInput<$PrismaModel>
-    notIn?: $Enums.RiskRating[] | ListEnumRiskRatingFieldRefInput<$PrismaModel>
-    not?: NestedEnumRiskRatingFilter<$PrismaModel> | $Enums.RiskRating
+  export type NestedEnumReviewTriggerNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.ReviewTrigger | EnumReviewTriggerFieldRefInput<$PrismaModel> | null
+    in?: $Enums.ReviewTrigger[] | ListEnumReviewTriggerFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.ReviewTrigger[] | ListEnumReviewTriggerFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumReviewTriggerNullableFilter<$PrismaModel> | $Enums.ReviewTrigger | null
   }
 
-  export type NestedEnumRiskAssessmentStatusFilter<$PrismaModel = never> = {
-    equals?: $Enums.RiskAssessmentStatus | EnumRiskAssessmentStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.RiskAssessmentStatus[] | ListEnumRiskAssessmentStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.RiskAssessmentStatus[] | ListEnumRiskAssessmentStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumRiskAssessmentStatusFilter<$PrismaModel> | $Enums.RiskAssessmentStatus
+  export type NestedEnumRaApprovalLevelFilter<$PrismaModel = never> = {
+    equals?: $Enums.RaApprovalLevel | EnumRaApprovalLevelFieldRefInput<$PrismaModel>
+    in?: $Enums.RaApprovalLevel[] | ListEnumRaApprovalLevelFieldRefInput<$PrismaModel>
+    notIn?: $Enums.RaApprovalLevel[] | ListEnumRaApprovalLevelFieldRefInput<$PrismaModel>
+    not?: NestedEnumRaApprovalLevelFilter<$PrismaModel> | $Enums.RaApprovalLevel
   }
 
-  export type NestedEnumRiskRatingWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.RiskRating | EnumRiskRatingFieldRefInput<$PrismaModel>
-    in?: $Enums.RiskRating[] | ListEnumRiskRatingFieldRefInput<$PrismaModel>
-    notIn?: $Enums.RiskRating[] | ListEnumRiskRatingFieldRefInput<$PrismaModel>
-    not?: NestedEnumRiskRatingWithAggregatesFilter<$PrismaModel> | $Enums.RiskRating
+  export type NestedEnumReviewTriggerNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ReviewTrigger | EnumReviewTriggerFieldRefInput<$PrismaModel> | null
+    in?: $Enums.ReviewTrigger[] | ListEnumReviewTriggerFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.ReviewTrigger[] | ListEnumReviewTriggerFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumReviewTriggerNullableWithAggregatesFilter<$PrismaModel> | $Enums.ReviewTrigger | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumReviewTriggerNullableFilter<$PrismaModel>
+    _max?: NestedEnumReviewTriggerNullableFilter<$PrismaModel>
+  }
+
+  export type NestedEnumRaApprovalLevelWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.RaApprovalLevel | EnumRaApprovalLevelFieldRefInput<$PrismaModel>
+    in?: $Enums.RaApprovalLevel[] | ListEnumRaApprovalLevelFieldRefInput<$PrismaModel>
+    notIn?: $Enums.RaApprovalLevel[] | ListEnumRaApprovalLevelFieldRefInput<$PrismaModel>
+    not?: NestedEnumRaApprovalLevelWithAggregatesFilter<$PrismaModel> | $Enums.RaApprovalLevel
     _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumRiskRatingFilter<$PrismaModel>
-    _max?: NestedEnumRiskRatingFilter<$PrismaModel>
+    _min?: NestedEnumRaApprovalLevelFilter<$PrismaModel>
+    _max?: NestedEnumRaApprovalLevelFilter<$PrismaModel>
   }
 
-  export type NestedEnumRiskAssessmentStatusWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.RiskAssessmentStatus | EnumRiskAssessmentStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.RiskAssessmentStatus[] | ListEnumRiskAssessmentStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.RiskAssessmentStatus[] | ListEnumRiskAssessmentStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumRiskAssessmentStatusWithAggregatesFilter<$PrismaModel> | $Enums.RiskAssessmentStatus
+  export type NestedEnumRaExecutionConditionFilter<$PrismaModel = never> = {
+    equals?: $Enums.RaExecutionCondition | EnumRaExecutionConditionFieldRefInput<$PrismaModel>
+    in?: $Enums.RaExecutionCondition[] | ListEnumRaExecutionConditionFieldRefInput<$PrismaModel>
+    notIn?: $Enums.RaExecutionCondition[] | ListEnumRaExecutionConditionFieldRefInput<$PrismaModel>
+    not?: NestedEnumRaExecutionConditionFilter<$PrismaModel> | $Enums.RaExecutionCondition
+  }
+
+  export type NestedEnumRaExecutionConditionWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.RaExecutionCondition | EnumRaExecutionConditionFieldRefInput<$PrismaModel>
+    in?: $Enums.RaExecutionCondition[] | ListEnumRaExecutionConditionFieldRefInput<$PrismaModel>
+    notIn?: $Enums.RaExecutionCondition[] | ListEnumRaExecutionConditionFieldRefInput<$PrismaModel>
+    not?: NestedEnumRaExecutionConditionWithAggregatesFilter<$PrismaModel> | $Enums.RaExecutionCondition
     _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumRiskAssessmentStatusFilter<$PrismaModel>
-    _max?: NestedEnumRiskAssessmentStatusFilter<$PrismaModel>
+    _min?: NestedEnumRaExecutionConditionFilter<$PrismaModel>
+    _max?: NestedEnumRaExecutionConditionFilter<$PrismaModel>
+  }
+
+  export type NestedEnumReviewTriggerFilter<$PrismaModel = never> = {
+    equals?: $Enums.ReviewTrigger | EnumReviewTriggerFieldRefInput<$PrismaModel>
+    in?: $Enums.ReviewTrigger[] | ListEnumReviewTriggerFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ReviewTrigger[] | ListEnumReviewTriggerFieldRefInput<$PrismaModel>
+    not?: NestedEnumReviewTriggerFilter<$PrismaModel> | $Enums.ReviewTrigger
+  }
+
+  export type NestedEnumRaRevisionRequestStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.RaRevisionRequestStatus | EnumRaRevisionRequestStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.RaRevisionRequestStatus[] | ListEnumRaRevisionRequestStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.RaRevisionRequestStatus[] | ListEnumRaRevisionRequestStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumRaRevisionRequestStatusFilter<$PrismaModel> | $Enums.RaRevisionRequestStatus
+  }
+
+  export type NestedEnumReviewTriggerWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ReviewTrigger | EnumReviewTriggerFieldRefInput<$PrismaModel>
+    in?: $Enums.ReviewTrigger[] | ListEnumReviewTriggerFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ReviewTrigger[] | ListEnumReviewTriggerFieldRefInput<$PrismaModel>
+    not?: NestedEnumReviewTriggerWithAggregatesFilter<$PrismaModel> | $Enums.ReviewTrigger
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumReviewTriggerFilter<$PrismaModel>
+    _max?: NestedEnumReviewTriggerFilter<$PrismaModel>
+  }
+
+  export type NestedEnumRaRevisionRequestStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.RaRevisionRequestStatus | EnumRaRevisionRequestStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.RaRevisionRequestStatus[] | ListEnumRaRevisionRequestStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.RaRevisionRequestStatus[] | ListEnumRaRevisionRequestStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumRaRevisionRequestStatusWithAggregatesFilter<$PrismaModel> | $Enums.RaRevisionRequestStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumRaRevisionRequestStatusFilter<$PrismaModel>
+    _max?: NestedEnumRaRevisionRequestStatusFilter<$PrismaModel>
   }
 
   export type NestedEnumDefectSeverityFilter<$PrismaModel = never> = {
@@ -77575,7 +85623,7 @@ export namespace Prisma {
     id?: string
     name: string
     code?: string | null
-    imo: string
+    imo?: string | null
     officialNumber?: string | null
     callSign?: string | null
     mmsi?: string | null
@@ -77588,6 +85636,18 @@ export namespace Prisma {
     breadth?: number | null
     depth?: number | null
     status?: $Enums.VesselStatus
+    capacityCbm?: number | null
+    netTonnage?: number | null
+    deadweight?: number | null
+    tradeArea?: string | null
+    registeredOwner?: string | null
+    headOwner?: string | null
+    charterer?: string | null
+    yearWithSwan?: number | null
+    lastDryDock?: Date | string | null
+    dryDockPlace?: string | null
+    nextDryDockDue?: Date | string | null
+    archivedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -77607,7 +85667,9 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillCreateNestedManyWithoutVesselInput
     controlledDocuments?: ControlledDocumentCreateNestedManyWithoutVesselInput
     circulars?: CircularCreateNestedManyWithoutVesselInput
-    riskAssessments?: RiskAssessmentCreateNestedManyWithoutVesselInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentCreateNestedManyWithoutVesselInput
+    riskAssessmentExecutions?: RiskAssessmentExecutionCreateNestedManyWithoutVesselInput
+    riskAssessmentRevisionRequests?: RiskAssessmentRevisionRequestCreateNestedManyWithoutVesselInput
     defects?: DefectCreateNestedManyWithoutVesselInput
     users?: UserCreateNestedManyWithoutVesselInput
   }
@@ -77616,7 +85678,7 @@ export namespace Prisma {
     id?: string
     name: string
     code?: string | null
-    imo: string
+    imo?: string | null
     officialNumber?: string | null
     callSign?: string | null
     mmsi?: string | null
@@ -77629,6 +85691,18 @@ export namespace Prisma {
     breadth?: number | null
     depth?: number | null
     status?: $Enums.VesselStatus
+    capacityCbm?: number | null
+    netTonnage?: number | null
+    deadweight?: number | null
+    tradeArea?: string | null
+    registeredOwner?: string | null
+    headOwner?: string | null
+    charterer?: string | null
+    yearWithSwan?: number | null
+    lastDryDock?: Date | string | null
+    dryDockPlace?: string | null
+    nextDryDockDue?: Date | string | null
+    archivedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -77648,7 +85722,9 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutVesselInput
     controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutVesselInput
     circulars?: CircularUncheckedCreateNestedManyWithoutVesselInput
-    riskAssessments?: RiskAssessmentUncheckedCreateNestedManyWithoutVesselInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedCreateNestedManyWithoutVesselInput
+    riskAssessmentExecutions?: RiskAssessmentExecutionUncheckedCreateNestedManyWithoutVesselInput
+    riskAssessmentRevisionRequests?: RiskAssessmentRevisionRequestUncheckedCreateNestedManyWithoutVesselInput
     defects?: DefectUncheckedCreateNestedManyWithoutVesselInput
     users?: UserUncheckedCreateNestedManyWithoutVesselInput
   }
@@ -78437,59 +86513,65 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type RiskAssessmentCreateWithoutCompanyInput = {
+  export type RiskAssessmentDocumentCreateWithoutCompanyInput = {
     id?: string
     refNo: string
-    activity: string
-    hazards: string
-    existingControls?: string | null
-    likelihood: $Enums.RiskRating
-    severity: $Enums.RiskRating
-    additionalControls?: string | null
-    assessedBy?: string | null
-    assessmentDate: Date | string
-    reviewDate?: Date | string | null
-    status?: $Enums.RiskAssessmentStatus
-    closedAt?: Date | string | null
+    title: string
+    category: string
+    description?: string | null
+    applicableVesselType?: string | null
+    reviewFrequencyMonths?: number
+    lastReviewDate?: Date | string | null
+    nextReviewDate?: Date | string | null
+    reviewOwnerId?: string | null
+    status?: $Enums.DocumentStatus
+    ownerId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
     updatedBy?: string | null
     deletedAt?: Date | string | null
     deletedBy?: string | null
-    vessel?: VesselCreateNestedOneWithoutRiskAssessmentsInput
+    vessel?: VesselCreateNestedOneWithoutRiskAssessmentDocumentsInput
+    currentRevision?: RiskAssessmentRevisionCreateNestedOneWithoutCurrentOfInput
+    revisions?: RiskAssessmentRevisionCreateNestedManyWithoutDocumentInput
+    executions?: RiskAssessmentExecutionCreateNestedManyWithoutDocumentInput
+    revisionRequests?: RiskAssessmentRevisionRequestCreateNestedManyWithoutDocumentInput
   }
 
-  export type RiskAssessmentUncheckedCreateWithoutCompanyInput = {
+  export type RiskAssessmentDocumentUncheckedCreateWithoutCompanyInput = {
     id?: string
     refNo: string
+    title: string
+    category: string
+    description?: string | null
     vesselId?: string | null
-    activity: string
-    hazards: string
-    existingControls?: string | null
-    likelihood: $Enums.RiskRating
-    severity: $Enums.RiskRating
-    additionalControls?: string | null
-    assessedBy?: string | null
-    assessmentDate: Date | string
-    reviewDate?: Date | string | null
-    status?: $Enums.RiskAssessmentStatus
-    closedAt?: Date | string | null
+    applicableVesselType?: string | null
+    reviewFrequencyMonths?: number
+    lastReviewDate?: Date | string | null
+    nextReviewDate?: Date | string | null
+    reviewOwnerId?: string | null
+    status?: $Enums.DocumentStatus
+    ownerId?: string | null
+    currentRevisionId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
     updatedBy?: string | null
     deletedAt?: Date | string | null
     deletedBy?: string | null
+    revisions?: RiskAssessmentRevisionUncheckedCreateNestedManyWithoutDocumentInput
+    executions?: RiskAssessmentExecutionUncheckedCreateNestedManyWithoutDocumentInput
+    revisionRequests?: RiskAssessmentRevisionRequestUncheckedCreateNestedManyWithoutDocumentInput
   }
 
-  export type RiskAssessmentCreateOrConnectWithoutCompanyInput = {
-    where: RiskAssessmentWhereUniqueInput
-    create: XOR<RiskAssessmentCreateWithoutCompanyInput, RiskAssessmentUncheckedCreateWithoutCompanyInput>
+  export type RiskAssessmentDocumentCreateOrConnectWithoutCompanyInput = {
+    where: RiskAssessmentDocumentWhereUniqueInput
+    create: XOR<RiskAssessmentDocumentCreateWithoutCompanyInput, RiskAssessmentDocumentUncheckedCreateWithoutCompanyInput>
   }
 
-  export type RiskAssessmentCreateManyCompanyInputEnvelope = {
-    data: RiskAssessmentCreateManyCompanyInput | RiskAssessmentCreateManyCompanyInput[]
+  export type RiskAssessmentDocumentCreateManyCompanyInputEnvelope = {
+    data: RiskAssessmentDocumentCreateManyCompanyInput | RiskAssessmentDocumentCreateManyCompanyInput[]
     skipDuplicates?: boolean
   }
 
@@ -78636,7 +86718,7 @@ export namespace Prisma {
     companyId?: StringFilter<"Vessel"> | string
     name?: StringFilter<"Vessel"> | string
     code?: StringNullableFilter<"Vessel"> | string | null
-    imo?: StringFilter<"Vessel"> | string
+    imo?: StringNullableFilter<"Vessel"> | string | null
     officialNumber?: StringNullableFilter<"Vessel"> | string | null
     callSign?: StringNullableFilter<"Vessel"> | string | null
     mmsi?: StringNullableFilter<"Vessel"> | string | null
@@ -78649,6 +86731,18 @@ export namespace Prisma {
     breadth?: FloatNullableFilter<"Vessel"> | number | null
     depth?: FloatNullableFilter<"Vessel"> | number | null
     status?: EnumVesselStatusFilter<"Vessel"> | $Enums.VesselStatus
+    capacityCbm?: FloatNullableFilter<"Vessel"> | number | null
+    netTonnage?: FloatNullableFilter<"Vessel"> | number | null
+    deadweight?: FloatNullableFilter<"Vessel"> | number | null
+    tradeArea?: StringNullableFilter<"Vessel"> | string | null
+    registeredOwner?: StringNullableFilter<"Vessel"> | string | null
+    headOwner?: StringNullableFilter<"Vessel"> | string | null
+    charterer?: StringNullableFilter<"Vessel"> | string | null
+    yearWithSwan?: IntNullableFilter<"Vessel"> | number | null
+    lastDryDock?: DateTimeNullableFilter<"Vessel"> | Date | string | null
+    dryDockPlace?: StringNullableFilter<"Vessel"> | string | null
+    nextDryDockDue?: DateTimeNullableFilter<"Vessel"> | Date | string | null
+    archivedAt?: DateTimeNullableFilter<"Vessel"> | Date | string | null
     createdAt?: DateTimeFilter<"Vessel"> | Date | string
     updatedAt?: DateTimeFilter<"Vessel"> | Date | string
     createdBy?: StringNullableFilter<"Vessel"> | string | null
@@ -79242,47 +87336,47 @@ export namespace Prisma {
     deletedBy?: StringNullableFilter<"Circular"> | string | null
   }
 
-  export type RiskAssessmentUpsertWithWhereUniqueWithoutCompanyInput = {
-    where: RiskAssessmentWhereUniqueInput
-    update: XOR<RiskAssessmentUpdateWithoutCompanyInput, RiskAssessmentUncheckedUpdateWithoutCompanyInput>
-    create: XOR<RiskAssessmentCreateWithoutCompanyInput, RiskAssessmentUncheckedCreateWithoutCompanyInput>
+  export type RiskAssessmentDocumentUpsertWithWhereUniqueWithoutCompanyInput = {
+    where: RiskAssessmentDocumentWhereUniqueInput
+    update: XOR<RiskAssessmentDocumentUpdateWithoutCompanyInput, RiskAssessmentDocumentUncheckedUpdateWithoutCompanyInput>
+    create: XOR<RiskAssessmentDocumentCreateWithoutCompanyInput, RiskAssessmentDocumentUncheckedCreateWithoutCompanyInput>
   }
 
-  export type RiskAssessmentUpdateWithWhereUniqueWithoutCompanyInput = {
-    where: RiskAssessmentWhereUniqueInput
-    data: XOR<RiskAssessmentUpdateWithoutCompanyInput, RiskAssessmentUncheckedUpdateWithoutCompanyInput>
+  export type RiskAssessmentDocumentUpdateWithWhereUniqueWithoutCompanyInput = {
+    where: RiskAssessmentDocumentWhereUniqueInput
+    data: XOR<RiskAssessmentDocumentUpdateWithoutCompanyInput, RiskAssessmentDocumentUncheckedUpdateWithoutCompanyInput>
   }
 
-  export type RiskAssessmentUpdateManyWithWhereWithoutCompanyInput = {
-    where: RiskAssessmentScalarWhereInput
-    data: XOR<RiskAssessmentUpdateManyMutationInput, RiskAssessmentUncheckedUpdateManyWithoutCompanyInput>
+  export type RiskAssessmentDocumentUpdateManyWithWhereWithoutCompanyInput = {
+    where: RiskAssessmentDocumentScalarWhereInput
+    data: XOR<RiskAssessmentDocumentUpdateManyMutationInput, RiskAssessmentDocumentUncheckedUpdateManyWithoutCompanyInput>
   }
 
-  export type RiskAssessmentScalarWhereInput = {
-    AND?: RiskAssessmentScalarWhereInput | RiskAssessmentScalarWhereInput[]
-    OR?: RiskAssessmentScalarWhereInput[]
-    NOT?: RiskAssessmentScalarWhereInput | RiskAssessmentScalarWhereInput[]
-    id?: StringFilter<"RiskAssessment"> | string
-    companyId?: StringFilter<"RiskAssessment"> | string
-    refNo?: StringFilter<"RiskAssessment"> | string
-    vesselId?: StringNullableFilter<"RiskAssessment"> | string | null
-    activity?: StringFilter<"RiskAssessment"> | string
-    hazards?: StringFilter<"RiskAssessment"> | string
-    existingControls?: StringNullableFilter<"RiskAssessment"> | string | null
-    likelihood?: EnumRiskRatingFilter<"RiskAssessment"> | $Enums.RiskRating
-    severity?: EnumRiskRatingFilter<"RiskAssessment"> | $Enums.RiskRating
-    additionalControls?: StringNullableFilter<"RiskAssessment"> | string | null
-    assessedBy?: StringNullableFilter<"RiskAssessment"> | string | null
-    assessmentDate?: DateTimeFilter<"RiskAssessment"> | Date | string
-    reviewDate?: DateTimeNullableFilter<"RiskAssessment"> | Date | string | null
-    status?: EnumRiskAssessmentStatusFilter<"RiskAssessment"> | $Enums.RiskAssessmentStatus
-    closedAt?: DateTimeNullableFilter<"RiskAssessment"> | Date | string | null
-    createdAt?: DateTimeFilter<"RiskAssessment"> | Date | string
-    updatedAt?: DateTimeFilter<"RiskAssessment"> | Date | string
-    createdBy?: StringNullableFilter<"RiskAssessment"> | string | null
-    updatedBy?: StringNullableFilter<"RiskAssessment"> | string | null
-    deletedAt?: DateTimeNullableFilter<"RiskAssessment"> | Date | string | null
-    deletedBy?: StringNullableFilter<"RiskAssessment"> | string | null
+  export type RiskAssessmentDocumentScalarWhereInput = {
+    AND?: RiskAssessmentDocumentScalarWhereInput | RiskAssessmentDocumentScalarWhereInput[]
+    OR?: RiskAssessmentDocumentScalarWhereInput[]
+    NOT?: RiskAssessmentDocumentScalarWhereInput | RiskAssessmentDocumentScalarWhereInput[]
+    id?: StringFilter<"RiskAssessmentDocument"> | string
+    companyId?: StringFilter<"RiskAssessmentDocument"> | string
+    refNo?: StringFilter<"RiskAssessmentDocument"> | string
+    title?: StringFilter<"RiskAssessmentDocument"> | string
+    category?: StringFilter<"RiskAssessmentDocument"> | string
+    description?: StringNullableFilter<"RiskAssessmentDocument"> | string | null
+    vesselId?: StringNullableFilter<"RiskAssessmentDocument"> | string | null
+    applicableVesselType?: StringNullableFilter<"RiskAssessmentDocument"> | string | null
+    reviewFrequencyMonths?: IntFilter<"RiskAssessmentDocument"> | number
+    lastReviewDate?: DateTimeNullableFilter<"RiskAssessmentDocument"> | Date | string | null
+    nextReviewDate?: DateTimeNullableFilter<"RiskAssessmentDocument"> | Date | string | null
+    reviewOwnerId?: StringNullableFilter<"RiskAssessmentDocument"> | string | null
+    status?: EnumDocumentStatusFilter<"RiskAssessmentDocument"> | $Enums.DocumentStatus
+    ownerId?: StringNullableFilter<"RiskAssessmentDocument"> | string | null
+    currentRevisionId?: StringNullableFilter<"RiskAssessmentDocument"> | string | null
+    createdAt?: DateTimeFilter<"RiskAssessmentDocument"> | Date | string
+    updatedAt?: DateTimeFilter<"RiskAssessmentDocument"> | Date | string
+    createdBy?: StringNullableFilter<"RiskAssessmentDocument"> | string | null
+    updatedBy?: StringNullableFilter<"RiskAssessmentDocument"> | string | null
+    deletedAt?: DateTimeNullableFilter<"RiskAssessmentDocument"> | Date | string | null
+    deletedBy?: StringNullableFilter<"RiskAssessmentDocument"> | string | null
   }
 
   export type DefectUpsertWithWhereUniqueWithoutCompanyInput = {
@@ -79348,7 +87442,7 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillCreateNestedManyWithoutCompanyInput
     controlledDocuments?: ControlledDocumentCreateNestedManyWithoutCompanyInput
     circulars?: CircularCreateNestedManyWithoutCompanyInput
-    riskAssessments?: RiskAssessmentCreateNestedManyWithoutCompanyInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentCreateNestedManyWithoutCompanyInput
     defects?: DefectCreateNestedManyWithoutCompanyInput
   }
 
@@ -79374,7 +87468,7 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutCompanyInput
     controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutCompanyInput
     circulars?: CircularUncheckedCreateNestedManyWithoutCompanyInput
-    riskAssessments?: RiskAssessmentUncheckedCreateNestedManyWithoutCompanyInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedCreateNestedManyWithoutCompanyInput
     defects?: DefectUncheckedCreateNestedManyWithoutCompanyInput
   }
 
@@ -79387,7 +87481,7 @@ export namespace Prisma {
     id?: string
     name: string
     code?: string | null
-    imo: string
+    imo?: string | null
     officialNumber?: string | null
     callSign?: string | null
     mmsi?: string | null
@@ -79400,6 +87494,18 @@ export namespace Prisma {
     breadth?: number | null
     depth?: number | null
     status?: $Enums.VesselStatus
+    capacityCbm?: number | null
+    netTonnage?: number | null
+    deadweight?: number | null
+    tradeArea?: string | null
+    registeredOwner?: string | null
+    headOwner?: string | null
+    charterer?: string | null
+    yearWithSwan?: number | null
+    lastDryDock?: Date | string | null
+    dryDockPlace?: string | null
+    nextDryDockDue?: Date | string | null
+    archivedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -79420,7 +87526,9 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillCreateNestedManyWithoutVesselInput
     controlledDocuments?: ControlledDocumentCreateNestedManyWithoutVesselInput
     circulars?: CircularCreateNestedManyWithoutVesselInput
-    riskAssessments?: RiskAssessmentCreateNestedManyWithoutVesselInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentCreateNestedManyWithoutVesselInput
+    riskAssessmentExecutions?: RiskAssessmentExecutionCreateNestedManyWithoutVesselInput
+    riskAssessmentRevisionRequests?: RiskAssessmentRevisionRequestCreateNestedManyWithoutVesselInput
     defects?: DefectCreateNestedManyWithoutVesselInput
   }
 
@@ -79429,7 +87537,7 @@ export namespace Prisma {
     companyId: string
     name: string
     code?: string | null
-    imo: string
+    imo?: string | null
     officialNumber?: string | null
     callSign?: string | null
     mmsi?: string | null
@@ -79442,6 +87550,18 @@ export namespace Prisma {
     breadth?: number | null
     depth?: number | null
     status?: $Enums.VesselStatus
+    capacityCbm?: number | null
+    netTonnage?: number | null
+    deadweight?: number | null
+    tradeArea?: string | null
+    registeredOwner?: string | null
+    headOwner?: string | null
+    charterer?: string | null
+    yearWithSwan?: number | null
+    lastDryDock?: Date | string | null
+    dryDockPlace?: string | null
+    nextDryDockDue?: Date | string | null
+    archivedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -79461,7 +87581,9 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutVesselInput
     controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutVesselInput
     circulars?: CircularUncheckedCreateNestedManyWithoutVesselInput
-    riskAssessments?: RiskAssessmentUncheckedCreateNestedManyWithoutVesselInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedCreateNestedManyWithoutVesselInput
+    riskAssessmentExecutions?: RiskAssessmentExecutionUncheckedCreateNestedManyWithoutVesselInput
+    riskAssessmentRevisionRequests?: RiskAssessmentRevisionRequestUncheckedCreateNestedManyWithoutVesselInput
     defects?: DefectUncheckedCreateNestedManyWithoutVesselInput
   }
 
@@ -79965,7 +88087,7 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillUpdateManyWithoutCompanyNestedInput
     controlledDocuments?: ControlledDocumentUpdateManyWithoutCompanyNestedInput
     circulars?: CircularUpdateManyWithoutCompanyNestedInput
-    riskAssessments?: RiskAssessmentUpdateManyWithoutCompanyNestedInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUpdateManyWithoutCompanyNestedInput
     defects?: DefectUpdateManyWithoutCompanyNestedInput
   }
 
@@ -79991,7 +88113,7 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutCompanyNestedInput
     controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutCompanyNestedInput
     circulars?: CircularUncheckedUpdateManyWithoutCompanyNestedInput
-    riskAssessments?: RiskAssessmentUncheckedUpdateManyWithoutCompanyNestedInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedUpdateManyWithoutCompanyNestedInput
     defects?: DefectUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
@@ -80010,7 +88132,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     code?: NullableStringFieldUpdateOperationsInput | string | null
-    imo?: StringFieldUpdateOperationsInput | string
+    imo?: NullableStringFieldUpdateOperationsInput | string | null
     officialNumber?: NullableStringFieldUpdateOperationsInput | string | null
     callSign?: NullableStringFieldUpdateOperationsInput | string | null
     mmsi?: NullableStringFieldUpdateOperationsInput | string | null
@@ -80023,6 +88145,18 @@ export namespace Prisma {
     breadth?: NullableFloatFieldUpdateOperationsInput | number | null
     depth?: NullableFloatFieldUpdateOperationsInput | number | null
     status?: EnumVesselStatusFieldUpdateOperationsInput | $Enums.VesselStatus
+    capacityCbm?: NullableFloatFieldUpdateOperationsInput | number | null
+    netTonnage?: NullableFloatFieldUpdateOperationsInput | number | null
+    deadweight?: NullableFloatFieldUpdateOperationsInput | number | null
+    tradeArea?: NullableStringFieldUpdateOperationsInput | string | null
+    registeredOwner?: NullableStringFieldUpdateOperationsInput | string | null
+    headOwner?: NullableStringFieldUpdateOperationsInput | string | null
+    charterer?: NullableStringFieldUpdateOperationsInput | string | null
+    yearWithSwan?: NullableIntFieldUpdateOperationsInput | number | null
+    lastDryDock?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dryDockPlace?: NullableStringFieldUpdateOperationsInput | string | null
+    nextDryDockDue?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -80043,7 +88177,9 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillUpdateManyWithoutVesselNestedInput
     controlledDocuments?: ControlledDocumentUpdateManyWithoutVesselNestedInput
     circulars?: CircularUpdateManyWithoutVesselNestedInput
-    riskAssessments?: RiskAssessmentUpdateManyWithoutVesselNestedInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUpdateManyWithoutVesselNestedInput
+    riskAssessmentExecutions?: RiskAssessmentExecutionUpdateManyWithoutVesselNestedInput
+    riskAssessmentRevisionRequests?: RiskAssessmentRevisionRequestUpdateManyWithoutVesselNestedInput
     defects?: DefectUpdateManyWithoutVesselNestedInput
   }
 
@@ -80052,7 +88188,7 @@ export namespace Prisma {
     companyId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     code?: NullableStringFieldUpdateOperationsInput | string | null
-    imo?: StringFieldUpdateOperationsInput | string
+    imo?: NullableStringFieldUpdateOperationsInput | string | null
     officialNumber?: NullableStringFieldUpdateOperationsInput | string | null
     callSign?: NullableStringFieldUpdateOperationsInput | string | null
     mmsi?: NullableStringFieldUpdateOperationsInput | string | null
@@ -80065,6 +88201,18 @@ export namespace Prisma {
     breadth?: NullableFloatFieldUpdateOperationsInput | number | null
     depth?: NullableFloatFieldUpdateOperationsInput | number | null
     status?: EnumVesselStatusFieldUpdateOperationsInput | $Enums.VesselStatus
+    capacityCbm?: NullableFloatFieldUpdateOperationsInput | number | null
+    netTonnage?: NullableFloatFieldUpdateOperationsInput | number | null
+    deadweight?: NullableFloatFieldUpdateOperationsInput | number | null
+    tradeArea?: NullableStringFieldUpdateOperationsInput | string | null
+    registeredOwner?: NullableStringFieldUpdateOperationsInput | string | null
+    headOwner?: NullableStringFieldUpdateOperationsInput | string | null
+    charterer?: NullableStringFieldUpdateOperationsInput | string | null
+    yearWithSwan?: NullableIntFieldUpdateOperationsInput | number | null
+    lastDryDock?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dryDockPlace?: NullableStringFieldUpdateOperationsInput | string | null
+    nextDryDockDue?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -80084,7 +88232,9 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutVesselNestedInput
     controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutVesselNestedInput
     circulars?: CircularUncheckedUpdateManyWithoutVesselNestedInput
-    riskAssessments?: RiskAssessmentUncheckedUpdateManyWithoutVesselNestedInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedUpdateManyWithoutVesselNestedInput
+    riskAssessmentExecutions?: RiskAssessmentExecutionUncheckedUpdateManyWithoutVesselNestedInput
+    riskAssessmentRevisionRequests?: RiskAssessmentRevisionRequestUncheckedUpdateManyWithoutVesselNestedInput
     defects?: DefectUncheckedUpdateManyWithoutVesselNestedInput
   }
 
@@ -80318,7 +88468,7 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillCreateNestedManyWithoutCompanyInput
     controlledDocuments?: ControlledDocumentCreateNestedManyWithoutCompanyInput
     circulars?: CircularCreateNestedManyWithoutCompanyInput
-    riskAssessments?: RiskAssessmentCreateNestedManyWithoutCompanyInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentCreateNestedManyWithoutCompanyInput
     defects?: DefectCreateNestedManyWithoutCompanyInput
   }
 
@@ -80344,7 +88494,7 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutCompanyInput
     controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutCompanyInput
     circulars?: CircularUncheckedCreateNestedManyWithoutCompanyInput
-    riskAssessments?: RiskAssessmentUncheckedCreateNestedManyWithoutCompanyInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedCreateNestedManyWithoutCompanyInput
     defects?: DefectUncheckedCreateNestedManyWithoutCompanyInput
   }
 
@@ -80422,7 +88572,7 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillUpdateManyWithoutCompanyNestedInput
     controlledDocuments?: ControlledDocumentUpdateManyWithoutCompanyNestedInput
     circulars?: CircularUpdateManyWithoutCompanyNestedInput
-    riskAssessments?: RiskAssessmentUpdateManyWithoutCompanyNestedInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUpdateManyWithoutCompanyNestedInput
     defects?: DefectUpdateManyWithoutCompanyNestedInput
   }
 
@@ -80448,7 +88598,7 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutCompanyNestedInput
     controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutCompanyNestedInput
     circulars?: CircularUncheckedUpdateManyWithoutCompanyNestedInput
-    riskAssessments?: RiskAssessmentUncheckedUpdateManyWithoutCompanyNestedInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedUpdateManyWithoutCompanyNestedInput
     defects?: DefectUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
@@ -80836,7 +88986,7 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillCreateNestedManyWithoutCompanyInput
     controlledDocuments?: ControlledDocumentCreateNestedManyWithoutCompanyInput
     circulars?: CircularCreateNestedManyWithoutCompanyInput
-    riskAssessments?: RiskAssessmentCreateNestedManyWithoutCompanyInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentCreateNestedManyWithoutCompanyInput
     defects?: DefectCreateNestedManyWithoutCompanyInput
   }
 
@@ -80862,7 +89012,7 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutCompanyInput
     controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutCompanyInput
     circulars?: CircularUncheckedCreateNestedManyWithoutCompanyInput
-    riskAssessments?: RiskAssessmentUncheckedCreateNestedManyWithoutCompanyInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedCreateNestedManyWithoutCompanyInput
     defects?: DefectUncheckedCreateNestedManyWithoutCompanyInput
   }
 
@@ -81609,59 +89759,149 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type RiskAssessmentCreateWithoutVesselInput = {
+  export type RiskAssessmentDocumentCreateWithoutVesselInput = {
     id?: string
     refNo: string
-    activity: string
-    hazards: string
-    existingControls?: string | null
-    likelihood: $Enums.RiskRating
-    severity: $Enums.RiskRating
-    additionalControls?: string | null
-    assessedBy?: string | null
-    assessmentDate: Date | string
-    reviewDate?: Date | string | null
-    status?: $Enums.RiskAssessmentStatus
-    closedAt?: Date | string | null
+    title: string
+    category: string
+    description?: string | null
+    applicableVesselType?: string | null
+    reviewFrequencyMonths?: number
+    lastReviewDate?: Date | string | null
+    nextReviewDate?: Date | string | null
+    reviewOwnerId?: string | null
+    status?: $Enums.DocumentStatus
+    ownerId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
     updatedBy?: string | null
     deletedAt?: Date | string | null
     deletedBy?: string | null
-    company: CompanyCreateNestedOneWithoutRiskAssessmentsInput
+    company: CompanyCreateNestedOneWithoutRiskAssessmentDocumentsInput
+    currentRevision?: RiskAssessmentRevisionCreateNestedOneWithoutCurrentOfInput
+    revisions?: RiskAssessmentRevisionCreateNestedManyWithoutDocumentInput
+    executions?: RiskAssessmentExecutionCreateNestedManyWithoutDocumentInput
+    revisionRequests?: RiskAssessmentRevisionRequestCreateNestedManyWithoutDocumentInput
   }
 
-  export type RiskAssessmentUncheckedCreateWithoutVesselInput = {
+  export type RiskAssessmentDocumentUncheckedCreateWithoutVesselInput = {
     id?: string
     companyId: string
     refNo: string
-    activity: string
-    hazards: string
-    existingControls?: string | null
-    likelihood: $Enums.RiskRating
-    severity: $Enums.RiskRating
-    additionalControls?: string | null
-    assessedBy?: string | null
-    assessmentDate: Date | string
-    reviewDate?: Date | string | null
-    status?: $Enums.RiskAssessmentStatus
-    closedAt?: Date | string | null
+    title: string
+    category: string
+    description?: string | null
+    applicableVesselType?: string | null
+    reviewFrequencyMonths?: number
+    lastReviewDate?: Date | string | null
+    nextReviewDate?: Date | string | null
+    reviewOwnerId?: string | null
+    status?: $Enums.DocumentStatus
+    ownerId?: string | null
+    currentRevisionId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
     updatedBy?: string | null
     deletedAt?: Date | string | null
     deletedBy?: string | null
+    revisions?: RiskAssessmentRevisionUncheckedCreateNestedManyWithoutDocumentInput
+    executions?: RiskAssessmentExecutionUncheckedCreateNestedManyWithoutDocumentInput
+    revisionRequests?: RiskAssessmentRevisionRequestUncheckedCreateNestedManyWithoutDocumentInput
   }
 
-  export type RiskAssessmentCreateOrConnectWithoutVesselInput = {
-    where: RiskAssessmentWhereUniqueInput
-    create: XOR<RiskAssessmentCreateWithoutVesselInput, RiskAssessmentUncheckedCreateWithoutVesselInput>
+  export type RiskAssessmentDocumentCreateOrConnectWithoutVesselInput = {
+    where: RiskAssessmentDocumentWhereUniqueInput
+    create: XOR<RiskAssessmentDocumentCreateWithoutVesselInput, RiskAssessmentDocumentUncheckedCreateWithoutVesselInput>
   }
 
-  export type RiskAssessmentCreateManyVesselInputEnvelope = {
-    data: RiskAssessmentCreateManyVesselInput | RiskAssessmentCreateManyVesselInput[]
+  export type RiskAssessmentDocumentCreateManyVesselInputEnvelope = {
+    data: RiskAssessmentDocumentCreateManyVesselInput | RiskAssessmentDocumentCreateManyVesselInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type RiskAssessmentExecutionCreateWithoutVesselInput = {
+    id?: string
+    companyId: string
+    jobName: string
+    conditionStatus?: $Enums.RaExecutionCondition
+    changedConditionsNote?: string | null
+    temporaryHazards?: string | null
+    temporaryControls?: string | null
+    performedById?: string | null
+    toolboxSignedAt?: Date | string | null
+    toolboxAttendees?: string | null
+    executedAt?: Date | string
+    createdAt?: Date | string
+    createdBy?: string | null
+    document: RiskAssessmentDocumentCreateNestedOneWithoutExecutionsInput
+    revision: RiskAssessmentRevisionCreateNestedOneWithoutExecutionsInput
+  }
+
+  export type RiskAssessmentExecutionUncheckedCreateWithoutVesselInput = {
+    id?: string
+    companyId: string
+    documentId: string
+    revisionId: string
+    jobName: string
+    conditionStatus?: $Enums.RaExecutionCondition
+    changedConditionsNote?: string | null
+    temporaryHazards?: string | null
+    temporaryControls?: string | null
+    performedById?: string | null
+    toolboxSignedAt?: Date | string | null
+    toolboxAttendees?: string | null
+    executedAt?: Date | string
+    createdAt?: Date | string
+    createdBy?: string | null
+  }
+
+  export type RiskAssessmentExecutionCreateOrConnectWithoutVesselInput = {
+    where: RiskAssessmentExecutionWhereUniqueInput
+    create: XOR<RiskAssessmentExecutionCreateWithoutVesselInput, RiskAssessmentExecutionUncheckedCreateWithoutVesselInput>
+  }
+
+  export type RiskAssessmentExecutionCreateManyVesselInputEnvelope = {
+    data: RiskAssessmentExecutionCreateManyVesselInput | RiskAssessmentExecutionCreateManyVesselInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type RiskAssessmentRevisionRequestCreateWithoutVesselInput = {
+    id?: string
+    companyId: string
+    requestedById?: string | null
+    reason: string
+    reviewTrigger?: $Enums.ReviewTrigger
+    status?: $Enums.RaRevisionRequestStatus
+    decidedById?: string | null
+    decidedAt?: Date | string | null
+    decisionNote?: string | null
+    createdAt?: Date | string
+    document: RiskAssessmentDocumentCreateNestedOneWithoutRevisionRequestsInput
+  }
+
+  export type RiskAssessmentRevisionRequestUncheckedCreateWithoutVesselInput = {
+    id?: string
+    companyId: string
+    documentId: string
+    requestedById?: string | null
+    reason: string
+    reviewTrigger?: $Enums.ReviewTrigger
+    status?: $Enums.RaRevisionRequestStatus
+    decidedById?: string | null
+    decidedAt?: Date | string | null
+    decisionNote?: string | null
+    createdAt?: Date | string
+  }
+
+  export type RiskAssessmentRevisionRequestCreateOrConnectWithoutVesselInput = {
+    where: RiskAssessmentRevisionRequestWhereUniqueInput
+    create: XOR<RiskAssessmentRevisionRequestCreateWithoutVesselInput, RiskAssessmentRevisionRequestUncheckedCreateWithoutVesselInput>
+  }
+
+  export type RiskAssessmentRevisionRequestCreateManyVesselInputEnvelope = {
+    data: RiskAssessmentRevisionRequestCreateManyVesselInput | RiskAssessmentRevisionRequestCreateManyVesselInput[]
     skipDuplicates?: boolean
   }
 
@@ -81814,7 +90054,7 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillUpdateManyWithoutCompanyNestedInput
     controlledDocuments?: ControlledDocumentUpdateManyWithoutCompanyNestedInput
     circulars?: CircularUpdateManyWithoutCompanyNestedInput
-    riskAssessments?: RiskAssessmentUpdateManyWithoutCompanyNestedInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUpdateManyWithoutCompanyNestedInput
     defects?: DefectUpdateManyWithoutCompanyNestedInput
   }
 
@@ -81840,7 +90080,7 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutCompanyNestedInput
     controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutCompanyNestedInput
     circulars?: CircularUncheckedUpdateManyWithoutCompanyNestedInput
-    riskAssessments?: RiskAssessmentUncheckedUpdateManyWithoutCompanyNestedInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedUpdateManyWithoutCompanyNestedInput
     defects?: DefectUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
@@ -82052,20 +90292,92 @@ export namespace Prisma {
     data: XOR<CircularUpdateManyMutationInput, CircularUncheckedUpdateManyWithoutVesselInput>
   }
 
-  export type RiskAssessmentUpsertWithWhereUniqueWithoutVesselInput = {
-    where: RiskAssessmentWhereUniqueInput
-    update: XOR<RiskAssessmentUpdateWithoutVesselInput, RiskAssessmentUncheckedUpdateWithoutVesselInput>
-    create: XOR<RiskAssessmentCreateWithoutVesselInput, RiskAssessmentUncheckedCreateWithoutVesselInput>
+  export type RiskAssessmentDocumentUpsertWithWhereUniqueWithoutVesselInput = {
+    where: RiskAssessmentDocumentWhereUniqueInput
+    update: XOR<RiskAssessmentDocumentUpdateWithoutVesselInput, RiskAssessmentDocumentUncheckedUpdateWithoutVesselInput>
+    create: XOR<RiskAssessmentDocumentCreateWithoutVesselInput, RiskAssessmentDocumentUncheckedCreateWithoutVesselInput>
   }
 
-  export type RiskAssessmentUpdateWithWhereUniqueWithoutVesselInput = {
-    where: RiskAssessmentWhereUniqueInput
-    data: XOR<RiskAssessmentUpdateWithoutVesselInput, RiskAssessmentUncheckedUpdateWithoutVesselInput>
+  export type RiskAssessmentDocumentUpdateWithWhereUniqueWithoutVesselInput = {
+    where: RiskAssessmentDocumentWhereUniqueInput
+    data: XOR<RiskAssessmentDocumentUpdateWithoutVesselInput, RiskAssessmentDocumentUncheckedUpdateWithoutVesselInput>
   }
 
-  export type RiskAssessmentUpdateManyWithWhereWithoutVesselInput = {
-    where: RiskAssessmentScalarWhereInput
-    data: XOR<RiskAssessmentUpdateManyMutationInput, RiskAssessmentUncheckedUpdateManyWithoutVesselInput>
+  export type RiskAssessmentDocumentUpdateManyWithWhereWithoutVesselInput = {
+    where: RiskAssessmentDocumentScalarWhereInput
+    data: XOR<RiskAssessmentDocumentUpdateManyMutationInput, RiskAssessmentDocumentUncheckedUpdateManyWithoutVesselInput>
+  }
+
+  export type RiskAssessmentExecutionUpsertWithWhereUniqueWithoutVesselInput = {
+    where: RiskAssessmentExecutionWhereUniqueInput
+    update: XOR<RiskAssessmentExecutionUpdateWithoutVesselInput, RiskAssessmentExecutionUncheckedUpdateWithoutVesselInput>
+    create: XOR<RiskAssessmentExecutionCreateWithoutVesselInput, RiskAssessmentExecutionUncheckedCreateWithoutVesselInput>
+  }
+
+  export type RiskAssessmentExecutionUpdateWithWhereUniqueWithoutVesselInput = {
+    where: RiskAssessmentExecutionWhereUniqueInput
+    data: XOR<RiskAssessmentExecutionUpdateWithoutVesselInput, RiskAssessmentExecutionUncheckedUpdateWithoutVesselInput>
+  }
+
+  export type RiskAssessmentExecutionUpdateManyWithWhereWithoutVesselInput = {
+    where: RiskAssessmentExecutionScalarWhereInput
+    data: XOR<RiskAssessmentExecutionUpdateManyMutationInput, RiskAssessmentExecutionUncheckedUpdateManyWithoutVesselInput>
+  }
+
+  export type RiskAssessmentExecutionScalarWhereInput = {
+    AND?: RiskAssessmentExecutionScalarWhereInput | RiskAssessmentExecutionScalarWhereInput[]
+    OR?: RiskAssessmentExecutionScalarWhereInput[]
+    NOT?: RiskAssessmentExecutionScalarWhereInput | RiskAssessmentExecutionScalarWhereInput[]
+    id?: StringFilter<"RiskAssessmentExecution"> | string
+    companyId?: StringFilter<"RiskAssessmentExecution"> | string
+    documentId?: StringFilter<"RiskAssessmentExecution"> | string
+    revisionId?: StringFilter<"RiskAssessmentExecution"> | string
+    vesselId?: StringFilter<"RiskAssessmentExecution"> | string
+    jobName?: StringFilter<"RiskAssessmentExecution"> | string
+    conditionStatus?: EnumRaExecutionConditionFilter<"RiskAssessmentExecution"> | $Enums.RaExecutionCondition
+    changedConditionsNote?: StringNullableFilter<"RiskAssessmentExecution"> | string | null
+    temporaryHazards?: StringNullableFilter<"RiskAssessmentExecution"> | string | null
+    temporaryControls?: StringNullableFilter<"RiskAssessmentExecution"> | string | null
+    performedById?: StringNullableFilter<"RiskAssessmentExecution"> | string | null
+    toolboxSignedAt?: DateTimeNullableFilter<"RiskAssessmentExecution"> | Date | string | null
+    toolboxAttendees?: StringNullableFilter<"RiskAssessmentExecution"> | string | null
+    executedAt?: DateTimeFilter<"RiskAssessmentExecution"> | Date | string
+    createdAt?: DateTimeFilter<"RiskAssessmentExecution"> | Date | string
+    createdBy?: StringNullableFilter<"RiskAssessmentExecution"> | string | null
+  }
+
+  export type RiskAssessmentRevisionRequestUpsertWithWhereUniqueWithoutVesselInput = {
+    where: RiskAssessmentRevisionRequestWhereUniqueInput
+    update: XOR<RiskAssessmentRevisionRequestUpdateWithoutVesselInput, RiskAssessmentRevisionRequestUncheckedUpdateWithoutVesselInput>
+    create: XOR<RiskAssessmentRevisionRequestCreateWithoutVesselInput, RiskAssessmentRevisionRequestUncheckedCreateWithoutVesselInput>
+  }
+
+  export type RiskAssessmentRevisionRequestUpdateWithWhereUniqueWithoutVesselInput = {
+    where: RiskAssessmentRevisionRequestWhereUniqueInput
+    data: XOR<RiskAssessmentRevisionRequestUpdateWithoutVesselInput, RiskAssessmentRevisionRequestUncheckedUpdateWithoutVesselInput>
+  }
+
+  export type RiskAssessmentRevisionRequestUpdateManyWithWhereWithoutVesselInput = {
+    where: RiskAssessmentRevisionRequestScalarWhereInput
+    data: XOR<RiskAssessmentRevisionRequestUpdateManyMutationInput, RiskAssessmentRevisionRequestUncheckedUpdateManyWithoutVesselInput>
+  }
+
+  export type RiskAssessmentRevisionRequestScalarWhereInput = {
+    AND?: RiskAssessmentRevisionRequestScalarWhereInput | RiskAssessmentRevisionRequestScalarWhereInput[]
+    OR?: RiskAssessmentRevisionRequestScalarWhereInput[]
+    NOT?: RiskAssessmentRevisionRequestScalarWhereInput | RiskAssessmentRevisionRequestScalarWhereInput[]
+    id?: StringFilter<"RiskAssessmentRevisionRequest"> | string
+    companyId?: StringFilter<"RiskAssessmentRevisionRequest"> | string
+    documentId?: StringFilter<"RiskAssessmentRevisionRequest"> | string
+    requestedById?: StringNullableFilter<"RiskAssessmentRevisionRequest"> | string | null
+    vesselId?: StringNullableFilter<"RiskAssessmentRevisionRequest"> | string | null
+    reason?: StringFilter<"RiskAssessmentRevisionRequest"> | string
+    reviewTrigger?: EnumReviewTriggerFilter<"RiskAssessmentRevisionRequest"> | $Enums.ReviewTrigger
+    status?: EnumRaRevisionRequestStatusFilter<"RiskAssessmentRevisionRequest"> | $Enums.RaRevisionRequestStatus
+    decidedById?: StringNullableFilter<"RiskAssessmentRevisionRequest"> | string | null
+    decidedAt?: DateTimeNullableFilter<"RiskAssessmentRevisionRequest"> | Date | string | null
+    decisionNote?: StringNullableFilter<"RiskAssessmentRevisionRequest"> | string | null
+    createdAt?: DateTimeFilter<"RiskAssessmentRevisionRequest"> | Date | string
   }
 
   export type DefectUpsertWithWhereUniqueWithoutVesselInput = {
@@ -82246,7 +90558,7 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillCreateNestedManyWithoutCompanyInput
     controlledDocuments?: ControlledDocumentCreateNestedManyWithoutCompanyInput
     circulars?: CircularCreateNestedManyWithoutCompanyInput
-    riskAssessments?: RiskAssessmentCreateNestedManyWithoutCompanyInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentCreateNestedManyWithoutCompanyInput
     defects?: DefectCreateNestedManyWithoutCompanyInput
   }
 
@@ -82272,7 +90584,7 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutCompanyInput
     controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutCompanyInput
     circulars?: CircularUncheckedCreateNestedManyWithoutCompanyInput
-    riskAssessments?: RiskAssessmentUncheckedCreateNestedManyWithoutCompanyInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedCreateNestedManyWithoutCompanyInput
     defects?: DefectUncheckedCreateNestedManyWithoutCompanyInput
   }
 
@@ -82382,7 +90694,7 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillUpdateManyWithoutCompanyNestedInput
     controlledDocuments?: ControlledDocumentUpdateManyWithoutCompanyNestedInput
     circulars?: CircularUpdateManyWithoutCompanyNestedInput
-    riskAssessments?: RiskAssessmentUpdateManyWithoutCompanyNestedInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUpdateManyWithoutCompanyNestedInput
     defects?: DefectUpdateManyWithoutCompanyNestedInput
   }
 
@@ -82408,7 +90720,7 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutCompanyNestedInput
     controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutCompanyNestedInput
     circulars?: CircularUncheckedUpdateManyWithoutCompanyNestedInput
-    riskAssessments?: RiskAssessmentUncheckedUpdateManyWithoutCompanyNestedInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedUpdateManyWithoutCompanyNestedInput
     defects?: DefectUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
@@ -82866,7 +91178,7 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillCreateNestedManyWithoutCompanyInput
     controlledDocuments?: ControlledDocumentCreateNestedManyWithoutCompanyInput
     circulars?: CircularCreateNestedManyWithoutCompanyInput
-    riskAssessments?: RiskAssessmentCreateNestedManyWithoutCompanyInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentCreateNestedManyWithoutCompanyInput
     defects?: DefectCreateNestedManyWithoutCompanyInput
   }
 
@@ -82892,7 +91204,7 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutCompanyInput
     controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutCompanyInput
     circulars?: CircularUncheckedCreateNestedManyWithoutCompanyInput
-    riskAssessments?: RiskAssessmentUncheckedCreateNestedManyWithoutCompanyInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedCreateNestedManyWithoutCompanyInput
     defects?: DefectUncheckedCreateNestedManyWithoutCompanyInput
   }
 
@@ -82964,7 +91276,7 @@ export namespace Prisma {
     id?: string
     name: string
     code?: string | null
-    imo: string
+    imo?: string | null
     officialNumber?: string | null
     callSign?: string | null
     mmsi?: string | null
@@ -82977,6 +91289,18 @@ export namespace Prisma {
     breadth?: number | null
     depth?: number | null
     status?: $Enums.VesselStatus
+    capacityCbm?: number | null
+    netTonnage?: number | null
+    deadweight?: number | null
+    tradeArea?: string | null
+    registeredOwner?: string | null
+    headOwner?: string | null
+    charterer?: string | null
+    yearWithSwan?: number | null
+    lastDryDock?: Date | string | null
+    dryDockPlace?: string | null
+    nextDryDockDue?: Date | string | null
+    archivedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -82996,7 +91320,9 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillCreateNestedManyWithoutVesselInput
     controlledDocuments?: ControlledDocumentCreateNestedManyWithoutVesselInput
     circulars?: CircularCreateNestedManyWithoutVesselInput
-    riskAssessments?: RiskAssessmentCreateNestedManyWithoutVesselInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentCreateNestedManyWithoutVesselInput
+    riskAssessmentExecutions?: RiskAssessmentExecutionCreateNestedManyWithoutVesselInput
+    riskAssessmentRevisionRequests?: RiskAssessmentRevisionRequestCreateNestedManyWithoutVesselInput
     defects?: DefectCreateNestedManyWithoutVesselInput
     users?: UserCreateNestedManyWithoutVesselInput
   }
@@ -83006,7 +91332,7 @@ export namespace Prisma {
     companyId: string
     name: string
     code?: string | null
-    imo: string
+    imo?: string | null
     officialNumber?: string | null
     callSign?: string | null
     mmsi?: string | null
@@ -83019,6 +91345,18 @@ export namespace Prisma {
     breadth?: number | null
     depth?: number | null
     status?: $Enums.VesselStatus
+    capacityCbm?: number | null
+    netTonnage?: number | null
+    deadweight?: number | null
+    tradeArea?: string | null
+    registeredOwner?: string | null
+    headOwner?: string | null
+    charterer?: string | null
+    yearWithSwan?: number | null
+    lastDryDock?: Date | string | null
+    dryDockPlace?: string | null
+    nextDryDockDue?: Date | string | null
+    archivedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -83037,7 +91375,9 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutVesselInput
     controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutVesselInput
     circulars?: CircularUncheckedCreateNestedManyWithoutVesselInput
-    riskAssessments?: RiskAssessmentUncheckedCreateNestedManyWithoutVesselInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedCreateNestedManyWithoutVesselInput
+    riskAssessmentExecutions?: RiskAssessmentExecutionUncheckedCreateNestedManyWithoutVesselInput
+    riskAssessmentRevisionRequests?: RiskAssessmentRevisionRequestUncheckedCreateNestedManyWithoutVesselInput
     defects?: DefectUncheckedCreateNestedManyWithoutVesselInput
     users?: UserUncheckedCreateNestedManyWithoutVesselInput
   }
@@ -83159,7 +91499,7 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillUpdateManyWithoutCompanyNestedInput
     controlledDocuments?: ControlledDocumentUpdateManyWithoutCompanyNestedInput
     circulars?: CircularUpdateManyWithoutCompanyNestedInput
-    riskAssessments?: RiskAssessmentUpdateManyWithoutCompanyNestedInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUpdateManyWithoutCompanyNestedInput
     defects?: DefectUpdateManyWithoutCompanyNestedInput
   }
 
@@ -83185,7 +91525,7 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutCompanyNestedInput
     controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutCompanyNestedInput
     circulars?: CircularUncheckedUpdateManyWithoutCompanyNestedInput
-    riskAssessments?: RiskAssessmentUncheckedUpdateManyWithoutCompanyNestedInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedUpdateManyWithoutCompanyNestedInput
     defects?: DefectUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
@@ -83269,7 +91609,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     code?: NullableStringFieldUpdateOperationsInput | string | null
-    imo?: StringFieldUpdateOperationsInput | string
+    imo?: NullableStringFieldUpdateOperationsInput | string | null
     officialNumber?: NullableStringFieldUpdateOperationsInput | string | null
     callSign?: NullableStringFieldUpdateOperationsInput | string | null
     mmsi?: NullableStringFieldUpdateOperationsInput | string | null
@@ -83282,6 +91622,18 @@ export namespace Prisma {
     breadth?: NullableFloatFieldUpdateOperationsInput | number | null
     depth?: NullableFloatFieldUpdateOperationsInput | number | null
     status?: EnumVesselStatusFieldUpdateOperationsInput | $Enums.VesselStatus
+    capacityCbm?: NullableFloatFieldUpdateOperationsInput | number | null
+    netTonnage?: NullableFloatFieldUpdateOperationsInput | number | null
+    deadweight?: NullableFloatFieldUpdateOperationsInput | number | null
+    tradeArea?: NullableStringFieldUpdateOperationsInput | string | null
+    registeredOwner?: NullableStringFieldUpdateOperationsInput | string | null
+    headOwner?: NullableStringFieldUpdateOperationsInput | string | null
+    charterer?: NullableStringFieldUpdateOperationsInput | string | null
+    yearWithSwan?: NullableIntFieldUpdateOperationsInput | number | null
+    lastDryDock?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dryDockPlace?: NullableStringFieldUpdateOperationsInput | string | null
+    nextDryDockDue?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -83301,7 +91653,9 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillUpdateManyWithoutVesselNestedInput
     controlledDocuments?: ControlledDocumentUpdateManyWithoutVesselNestedInput
     circulars?: CircularUpdateManyWithoutVesselNestedInput
-    riskAssessments?: RiskAssessmentUpdateManyWithoutVesselNestedInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUpdateManyWithoutVesselNestedInput
+    riskAssessmentExecutions?: RiskAssessmentExecutionUpdateManyWithoutVesselNestedInput
+    riskAssessmentRevisionRequests?: RiskAssessmentRevisionRequestUpdateManyWithoutVesselNestedInput
     defects?: DefectUpdateManyWithoutVesselNestedInput
     users?: UserUpdateManyWithoutVesselNestedInput
   }
@@ -83311,7 +91665,7 @@ export namespace Prisma {
     companyId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     code?: NullableStringFieldUpdateOperationsInput | string | null
-    imo?: StringFieldUpdateOperationsInput | string
+    imo?: NullableStringFieldUpdateOperationsInput | string | null
     officialNumber?: NullableStringFieldUpdateOperationsInput | string | null
     callSign?: NullableStringFieldUpdateOperationsInput | string | null
     mmsi?: NullableStringFieldUpdateOperationsInput | string | null
@@ -83324,6 +91678,18 @@ export namespace Prisma {
     breadth?: NullableFloatFieldUpdateOperationsInput | number | null
     depth?: NullableFloatFieldUpdateOperationsInput | number | null
     status?: EnumVesselStatusFieldUpdateOperationsInput | $Enums.VesselStatus
+    capacityCbm?: NullableFloatFieldUpdateOperationsInput | number | null
+    netTonnage?: NullableFloatFieldUpdateOperationsInput | number | null
+    deadweight?: NullableFloatFieldUpdateOperationsInput | number | null
+    tradeArea?: NullableStringFieldUpdateOperationsInput | string | null
+    registeredOwner?: NullableStringFieldUpdateOperationsInput | string | null
+    headOwner?: NullableStringFieldUpdateOperationsInput | string | null
+    charterer?: NullableStringFieldUpdateOperationsInput | string | null
+    yearWithSwan?: NullableIntFieldUpdateOperationsInput | number | null
+    lastDryDock?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dryDockPlace?: NullableStringFieldUpdateOperationsInput | string | null
+    nextDryDockDue?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -83342,7 +91708,9 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutVesselNestedInput
     controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutVesselNestedInput
     circulars?: CircularUncheckedUpdateManyWithoutVesselNestedInput
-    riskAssessments?: RiskAssessmentUncheckedUpdateManyWithoutVesselNestedInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedUpdateManyWithoutVesselNestedInput
+    riskAssessmentExecutions?: RiskAssessmentExecutionUncheckedUpdateManyWithoutVesselNestedInput
+    riskAssessmentRevisionRequests?: RiskAssessmentRevisionRequestUncheckedUpdateManyWithoutVesselNestedInput
     defects?: DefectUncheckedUpdateManyWithoutVesselNestedInput
     users?: UserUncheckedUpdateManyWithoutVesselNestedInput
   }
@@ -83639,7 +92007,7 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillCreateNestedManyWithoutCompanyInput
     controlledDocuments?: ControlledDocumentCreateNestedManyWithoutCompanyInput
     circulars?: CircularCreateNestedManyWithoutCompanyInput
-    riskAssessments?: RiskAssessmentCreateNestedManyWithoutCompanyInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentCreateNestedManyWithoutCompanyInput
     defects?: DefectCreateNestedManyWithoutCompanyInput
   }
 
@@ -83665,7 +92033,7 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutCompanyInput
     controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutCompanyInput
     circulars?: CircularUncheckedCreateNestedManyWithoutCompanyInput
-    riskAssessments?: RiskAssessmentUncheckedCreateNestedManyWithoutCompanyInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedCreateNestedManyWithoutCompanyInput
     defects?: DefectUncheckedCreateNestedManyWithoutCompanyInput
   }
 
@@ -83678,7 +92046,7 @@ export namespace Prisma {
     id?: string
     name: string
     code?: string | null
-    imo: string
+    imo?: string | null
     officialNumber?: string | null
     callSign?: string | null
     mmsi?: string | null
@@ -83691,6 +92059,18 @@ export namespace Prisma {
     breadth?: number | null
     depth?: number | null
     status?: $Enums.VesselStatus
+    capacityCbm?: number | null
+    netTonnage?: number | null
+    deadweight?: number | null
+    tradeArea?: string | null
+    registeredOwner?: string | null
+    headOwner?: string | null
+    charterer?: string | null
+    yearWithSwan?: number | null
+    lastDryDock?: Date | string | null
+    dryDockPlace?: string | null
+    nextDryDockDue?: Date | string | null
+    archivedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -83710,7 +92090,9 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillCreateNestedManyWithoutVesselInput
     controlledDocuments?: ControlledDocumentCreateNestedManyWithoutVesselInput
     circulars?: CircularCreateNestedManyWithoutVesselInput
-    riskAssessments?: RiskAssessmentCreateNestedManyWithoutVesselInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentCreateNestedManyWithoutVesselInput
+    riskAssessmentExecutions?: RiskAssessmentExecutionCreateNestedManyWithoutVesselInput
+    riskAssessmentRevisionRequests?: RiskAssessmentRevisionRequestCreateNestedManyWithoutVesselInput
     defects?: DefectCreateNestedManyWithoutVesselInput
     users?: UserCreateNestedManyWithoutVesselInput
   }
@@ -83720,7 +92102,7 @@ export namespace Prisma {
     companyId: string
     name: string
     code?: string | null
-    imo: string
+    imo?: string | null
     officialNumber?: string | null
     callSign?: string | null
     mmsi?: string | null
@@ -83733,6 +92115,18 @@ export namespace Prisma {
     breadth?: number | null
     depth?: number | null
     status?: $Enums.VesselStatus
+    capacityCbm?: number | null
+    netTonnage?: number | null
+    deadweight?: number | null
+    tradeArea?: string | null
+    registeredOwner?: string | null
+    headOwner?: string | null
+    charterer?: string | null
+    yearWithSwan?: number | null
+    lastDryDock?: Date | string | null
+    dryDockPlace?: string | null
+    nextDryDockDue?: Date | string | null
+    archivedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -83751,7 +92145,9 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutVesselInput
     controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutVesselInput
     circulars?: CircularUncheckedCreateNestedManyWithoutVesselInput
-    riskAssessments?: RiskAssessmentUncheckedCreateNestedManyWithoutVesselInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedCreateNestedManyWithoutVesselInput
+    riskAssessmentExecutions?: RiskAssessmentExecutionUncheckedCreateNestedManyWithoutVesselInput
+    riskAssessmentRevisionRequests?: RiskAssessmentRevisionRequestUncheckedCreateNestedManyWithoutVesselInput
     defects?: DefectUncheckedCreateNestedManyWithoutVesselInput
     users?: UserUncheckedCreateNestedManyWithoutVesselInput
   }
@@ -83905,7 +92301,7 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillUpdateManyWithoutCompanyNestedInput
     controlledDocuments?: ControlledDocumentUpdateManyWithoutCompanyNestedInput
     circulars?: CircularUpdateManyWithoutCompanyNestedInput
-    riskAssessments?: RiskAssessmentUpdateManyWithoutCompanyNestedInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUpdateManyWithoutCompanyNestedInput
     defects?: DefectUpdateManyWithoutCompanyNestedInput
   }
 
@@ -83931,7 +92327,7 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutCompanyNestedInput
     controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutCompanyNestedInput
     circulars?: CircularUncheckedUpdateManyWithoutCompanyNestedInput
-    riskAssessments?: RiskAssessmentUncheckedUpdateManyWithoutCompanyNestedInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedUpdateManyWithoutCompanyNestedInput
     defects?: DefectUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
@@ -83950,7 +92346,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     code?: NullableStringFieldUpdateOperationsInput | string | null
-    imo?: StringFieldUpdateOperationsInput | string
+    imo?: NullableStringFieldUpdateOperationsInput | string | null
     officialNumber?: NullableStringFieldUpdateOperationsInput | string | null
     callSign?: NullableStringFieldUpdateOperationsInput | string | null
     mmsi?: NullableStringFieldUpdateOperationsInput | string | null
@@ -83963,6 +92359,18 @@ export namespace Prisma {
     breadth?: NullableFloatFieldUpdateOperationsInput | number | null
     depth?: NullableFloatFieldUpdateOperationsInput | number | null
     status?: EnumVesselStatusFieldUpdateOperationsInput | $Enums.VesselStatus
+    capacityCbm?: NullableFloatFieldUpdateOperationsInput | number | null
+    netTonnage?: NullableFloatFieldUpdateOperationsInput | number | null
+    deadweight?: NullableFloatFieldUpdateOperationsInput | number | null
+    tradeArea?: NullableStringFieldUpdateOperationsInput | string | null
+    registeredOwner?: NullableStringFieldUpdateOperationsInput | string | null
+    headOwner?: NullableStringFieldUpdateOperationsInput | string | null
+    charterer?: NullableStringFieldUpdateOperationsInput | string | null
+    yearWithSwan?: NullableIntFieldUpdateOperationsInput | number | null
+    lastDryDock?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dryDockPlace?: NullableStringFieldUpdateOperationsInput | string | null
+    nextDryDockDue?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -83982,7 +92390,9 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillUpdateManyWithoutVesselNestedInput
     controlledDocuments?: ControlledDocumentUpdateManyWithoutVesselNestedInput
     circulars?: CircularUpdateManyWithoutVesselNestedInput
-    riskAssessments?: RiskAssessmentUpdateManyWithoutVesselNestedInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUpdateManyWithoutVesselNestedInput
+    riskAssessmentExecutions?: RiskAssessmentExecutionUpdateManyWithoutVesselNestedInput
+    riskAssessmentRevisionRequests?: RiskAssessmentRevisionRequestUpdateManyWithoutVesselNestedInput
     defects?: DefectUpdateManyWithoutVesselNestedInput
     users?: UserUpdateManyWithoutVesselNestedInput
   }
@@ -83992,7 +92402,7 @@ export namespace Prisma {
     companyId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     code?: NullableStringFieldUpdateOperationsInput | string | null
-    imo?: StringFieldUpdateOperationsInput | string
+    imo?: NullableStringFieldUpdateOperationsInput | string | null
     officialNumber?: NullableStringFieldUpdateOperationsInput | string | null
     callSign?: NullableStringFieldUpdateOperationsInput | string | null
     mmsi?: NullableStringFieldUpdateOperationsInput | string | null
@@ -84005,6 +92415,18 @@ export namespace Prisma {
     breadth?: NullableFloatFieldUpdateOperationsInput | number | null
     depth?: NullableFloatFieldUpdateOperationsInput | number | null
     status?: EnumVesselStatusFieldUpdateOperationsInput | $Enums.VesselStatus
+    capacityCbm?: NullableFloatFieldUpdateOperationsInput | number | null
+    netTonnage?: NullableFloatFieldUpdateOperationsInput | number | null
+    deadweight?: NullableFloatFieldUpdateOperationsInput | number | null
+    tradeArea?: NullableStringFieldUpdateOperationsInput | string | null
+    registeredOwner?: NullableStringFieldUpdateOperationsInput | string | null
+    headOwner?: NullableStringFieldUpdateOperationsInput | string | null
+    charterer?: NullableStringFieldUpdateOperationsInput | string | null
+    yearWithSwan?: NullableIntFieldUpdateOperationsInput | number | null
+    lastDryDock?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dryDockPlace?: NullableStringFieldUpdateOperationsInput | string | null
+    nextDryDockDue?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -84023,7 +92445,9 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutVesselNestedInput
     controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutVesselNestedInput
     circulars?: CircularUncheckedUpdateManyWithoutVesselNestedInput
-    riskAssessments?: RiskAssessmentUncheckedUpdateManyWithoutVesselNestedInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedUpdateManyWithoutVesselNestedInput
+    riskAssessmentExecutions?: RiskAssessmentExecutionUncheckedUpdateManyWithoutVesselNestedInput
+    riskAssessmentRevisionRequests?: RiskAssessmentRevisionRequestUncheckedUpdateManyWithoutVesselNestedInput
     defects?: DefectUncheckedUpdateManyWithoutVesselNestedInput
     users?: UserUncheckedUpdateManyWithoutVesselNestedInput
   }
@@ -84459,7 +92883,7 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillCreateNestedManyWithoutCompanyInput
     controlledDocuments?: ControlledDocumentCreateNestedManyWithoutCompanyInput
     circulars?: CircularCreateNestedManyWithoutCompanyInput
-    riskAssessments?: RiskAssessmentCreateNestedManyWithoutCompanyInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentCreateNestedManyWithoutCompanyInput
     defects?: DefectCreateNestedManyWithoutCompanyInput
   }
 
@@ -84485,7 +92909,7 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutCompanyInput
     controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutCompanyInput
     circulars?: CircularUncheckedCreateNestedManyWithoutCompanyInput
-    riskAssessments?: RiskAssessmentUncheckedCreateNestedManyWithoutCompanyInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedCreateNestedManyWithoutCompanyInput
     defects?: DefectUncheckedCreateNestedManyWithoutCompanyInput
   }
 
@@ -84498,7 +92922,7 @@ export namespace Prisma {
     id?: string
     name: string
     code?: string | null
-    imo: string
+    imo?: string | null
     officialNumber?: string | null
     callSign?: string | null
     mmsi?: string | null
@@ -84511,6 +92935,18 @@ export namespace Prisma {
     breadth?: number | null
     depth?: number | null
     status?: $Enums.VesselStatus
+    capacityCbm?: number | null
+    netTonnage?: number | null
+    deadweight?: number | null
+    tradeArea?: string | null
+    registeredOwner?: string | null
+    headOwner?: string | null
+    charterer?: string | null
+    yearWithSwan?: number | null
+    lastDryDock?: Date | string | null
+    dryDockPlace?: string | null
+    nextDryDockDue?: Date | string | null
+    archivedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -84530,7 +92966,9 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillCreateNestedManyWithoutVesselInput
     controlledDocuments?: ControlledDocumentCreateNestedManyWithoutVesselInput
     circulars?: CircularCreateNestedManyWithoutVesselInput
-    riskAssessments?: RiskAssessmentCreateNestedManyWithoutVesselInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentCreateNestedManyWithoutVesselInput
+    riskAssessmentExecutions?: RiskAssessmentExecutionCreateNestedManyWithoutVesselInput
+    riskAssessmentRevisionRequests?: RiskAssessmentRevisionRequestCreateNestedManyWithoutVesselInput
     defects?: DefectCreateNestedManyWithoutVesselInput
     users?: UserCreateNestedManyWithoutVesselInput
   }
@@ -84540,7 +92978,7 @@ export namespace Prisma {
     companyId: string
     name: string
     code?: string | null
-    imo: string
+    imo?: string | null
     officialNumber?: string | null
     callSign?: string | null
     mmsi?: string | null
@@ -84553,6 +92991,18 @@ export namespace Prisma {
     breadth?: number | null
     depth?: number | null
     status?: $Enums.VesselStatus
+    capacityCbm?: number | null
+    netTonnage?: number | null
+    deadweight?: number | null
+    tradeArea?: string | null
+    registeredOwner?: string | null
+    headOwner?: string | null
+    charterer?: string | null
+    yearWithSwan?: number | null
+    lastDryDock?: Date | string | null
+    dryDockPlace?: string | null
+    nextDryDockDue?: Date | string | null
+    archivedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -84571,7 +93021,9 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutVesselInput
     controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutVesselInput
     circulars?: CircularUncheckedCreateNestedManyWithoutVesselInput
-    riskAssessments?: RiskAssessmentUncheckedCreateNestedManyWithoutVesselInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedCreateNestedManyWithoutVesselInput
+    riskAssessmentExecutions?: RiskAssessmentExecutionUncheckedCreateNestedManyWithoutVesselInput
+    riskAssessmentRevisionRequests?: RiskAssessmentRevisionRequestUncheckedCreateNestedManyWithoutVesselInput
     defects?: DefectUncheckedCreateNestedManyWithoutVesselInput
     users?: UserUncheckedCreateNestedManyWithoutVesselInput
   }
@@ -84673,7 +93125,7 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillUpdateManyWithoutCompanyNestedInput
     controlledDocuments?: ControlledDocumentUpdateManyWithoutCompanyNestedInput
     circulars?: CircularUpdateManyWithoutCompanyNestedInput
-    riskAssessments?: RiskAssessmentUpdateManyWithoutCompanyNestedInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUpdateManyWithoutCompanyNestedInput
     defects?: DefectUpdateManyWithoutCompanyNestedInput
   }
 
@@ -84699,7 +93151,7 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutCompanyNestedInput
     controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutCompanyNestedInput
     circulars?: CircularUncheckedUpdateManyWithoutCompanyNestedInput
-    riskAssessments?: RiskAssessmentUncheckedUpdateManyWithoutCompanyNestedInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedUpdateManyWithoutCompanyNestedInput
     defects?: DefectUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
@@ -84718,7 +93170,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     code?: NullableStringFieldUpdateOperationsInput | string | null
-    imo?: StringFieldUpdateOperationsInput | string
+    imo?: NullableStringFieldUpdateOperationsInput | string | null
     officialNumber?: NullableStringFieldUpdateOperationsInput | string | null
     callSign?: NullableStringFieldUpdateOperationsInput | string | null
     mmsi?: NullableStringFieldUpdateOperationsInput | string | null
@@ -84731,6 +93183,18 @@ export namespace Prisma {
     breadth?: NullableFloatFieldUpdateOperationsInput | number | null
     depth?: NullableFloatFieldUpdateOperationsInput | number | null
     status?: EnumVesselStatusFieldUpdateOperationsInput | $Enums.VesselStatus
+    capacityCbm?: NullableFloatFieldUpdateOperationsInput | number | null
+    netTonnage?: NullableFloatFieldUpdateOperationsInput | number | null
+    deadweight?: NullableFloatFieldUpdateOperationsInput | number | null
+    tradeArea?: NullableStringFieldUpdateOperationsInput | string | null
+    registeredOwner?: NullableStringFieldUpdateOperationsInput | string | null
+    headOwner?: NullableStringFieldUpdateOperationsInput | string | null
+    charterer?: NullableStringFieldUpdateOperationsInput | string | null
+    yearWithSwan?: NullableIntFieldUpdateOperationsInput | number | null
+    lastDryDock?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dryDockPlace?: NullableStringFieldUpdateOperationsInput | string | null
+    nextDryDockDue?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -84750,7 +93214,9 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillUpdateManyWithoutVesselNestedInput
     controlledDocuments?: ControlledDocumentUpdateManyWithoutVesselNestedInput
     circulars?: CircularUpdateManyWithoutVesselNestedInput
-    riskAssessments?: RiskAssessmentUpdateManyWithoutVesselNestedInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUpdateManyWithoutVesselNestedInput
+    riskAssessmentExecutions?: RiskAssessmentExecutionUpdateManyWithoutVesselNestedInput
+    riskAssessmentRevisionRequests?: RiskAssessmentRevisionRequestUpdateManyWithoutVesselNestedInput
     defects?: DefectUpdateManyWithoutVesselNestedInput
     users?: UserUpdateManyWithoutVesselNestedInput
   }
@@ -84760,7 +93226,7 @@ export namespace Prisma {
     companyId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     code?: NullableStringFieldUpdateOperationsInput | string | null
-    imo?: StringFieldUpdateOperationsInput | string
+    imo?: NullableStringFieldUpdateOperationsInput | string | null
     officialNumber?: NullableStringFieldUpdateOperationsInput | string | null
     callSign?: NullableStringFieldUpdateOperationsInput | string | null
     mmsi?: NullableStringFieldUpdateOperationsInput | string | null
@@ -84773,6 +93239,18 @@ export namespace Prisma {
     breadth?: NullableFloatFieldUpdateOperationsInput | number | null
     depth?: NullableFloatFieldUpdateOperationsInput | number | null
     status?: EnumVesselStatusFieldUpdateOperationsInput | $Enums.VesselStatus
+    capacityCbm?: NullableFloatFieldUpdateOperationsInput | number | null
+    netTonnage?: NullableFloatFieldUpdateOperationsInput | number | null
+    deadweight?: NullableFloatFieldUpdateOperationsInput | number | null
+    tradeArea?: NullableStringFieldUpdateOperationsInput | string | null
+    registeredOwner?: NullableStringFieldUpdateOperationsInput | string | null
+    headOwner?: NullableStringFieldUpdateOperationsInput | string | null
+    charterer?: NullableStringFieldUpdateOperationsInput | string | null
+    yearWithSwan?: NullableIntFieldUpdateOperationsInput | number | null
+    lastDryDock?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dryDockPlace?: NullableStringFieldUpdateOperationsInput | string | null
+    nextDryDockDue?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -84791,7 +93269,9 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutVesselNestedInput
     controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutVesselNestedInput
     circulars?: CircularUncheckedUpdateManyWithoutVesselNestedInput
-    riskAssessments?: RiskAssessmentUncheckedUpdateManyWithoutVesselNestedInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedUpdateManyWithoutVesselNestedInput
+    riskAssessmentExecutions?: RiskAssessmentExecutionUncheckedUpdateManyWithoutVesselNestedInput
+    riskAssessmentRevisionRequests?: RiskAssessmentRevisionRequestUncheckedUpdateManyWithoutVesselNestedInput
     defects?: DefectUncheckedUpdateManyWithoutVesselNestedInput
     users?: UserUncheckedUpdateManyWithoutVesselNestedInput
   }
@@ -84883,7 +93363,7 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillCreateNestedManyWithoutCompanyInput
     controlledDocuments?: ControlledDocumentCreateNestedManyWithoutCompanyInput
     circulars?: CircularCreateNestedManyWithoutCompanyInput
-    riskAssessments?: RiskAssessmentCreateNestedManyWithoutCompanyInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentCreateNestedManyWithoutCompanyInput
     defects?: DefectCreateNestedManyWithoutCompanyInput
   }
 
@@ -84909,7 +93389,7 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutCompanyInput
     controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutCompanyInput
     circulars?: CircularUncheckedCreateNestedManyWithoutCompanyInput
-    riskAssessments?: RiskAssessmentUncheckedCreateNestedManyWithoutCompanyInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedCreateNestedManyWithoutCompanyInput
     defects?: DefectUncheckedCreateNestedManyWithoutCompanyInput
   }
 
@@ -84922,7 +93402,7 @@ export namespace Prisma {
     id?: string
     name: string
     code?: string | null
-    imo: string
+    imo?: string | null
     officialNumber?: string | null
     callSign?: string | null
     mmsi?: string | null
@@ -84935,6 +93415,18 @@ export namespace Prisma {
     breadth?: number | null
     depth?: number | null
     status?: $Enums.VesselStatus
+    capacityCbm?: number | null
+    netTonnage?: number | null
+    deadweight?: number | null
+    tradeArea?: string | null
+    registeredOwner?: string | null
+    headOwner?: string | null
+    charterer?: string | null
+    yearWithSwan?: number | null
+    lastDryDock?: Date | string | null
+    dryDockPlace?: string | null
+    nextDryDockDue?: Date | string | null
+    archivedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -84954,7 +93446,9 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillCreateNestedManyWithoutVesselInput
     controlledDocuments?: ControlledDocumentCreateNestedManyWithoutVesselInput
     circulars?: CircularCreateNestedManyWithoutVesselInput
-    riskAssessments?: RiskAssessmentCreateNestedManyWithoutVesselInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentCreateNestedManyWithoutVesselInput
+    riskAssessmentExecutions?: RiskAssessmentExecutionCreateNestedManyWithoutVesselInput
+    riskAssessmentRevisionRequests?: RiskAssessmentRevisionRequestCreateNestedManyWithoutVesselInput
     defects?: DefectCreateNestedManyWithoutVesselInput
     users?: UserCreateNestedManyWithoutVesselInput
   }
@@ -84964,7 +93458,7 @@ export namespace Prisma {
     companyId: string
     name: string
     code?: string | null
-    imo: string
+    imo?: string | null
     officialNumber?: string | null
     callSign?: string | null
     mmsi?: string | null
@@ -84977,6 +93471,18 @@ export namespace Prisma {
     breadth?: number | null
     depth?: number | null
     status?: $Enums.VesselStatus
+    capacityCbm?: number | null
+    netTonnage?: number | null
+    deadweight?: number | null
+    tradeArea?: string | null
+    registeredOwner?: string | null
+    headOwner?: string | null
+    charterer?: string | null
+    yearWithSwan?: number | null
+    lastDryDock?: Date | string | null
+    dryDockPlace?: string | null
+    nextDryDockDue?: Date | string | null
+    archivedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -84995,7 +93501,9 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutVesselInput
     controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutVesselInput
     circulars?: CircularUncheckedCreateNestedManyWithoutVesselInput
-    riskAssessments?: RiskAssessmentUncheckedCreateNestedManyWithoutVesselInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedCreateNestedManyWithoutVesselInput
+    riskAssessmentExecutions?: RiskAssessmentExecutionUncheckedCreateNestedManyWithoutVesselInput
+    riskAssessmentRevisionRequests?: RiskAssessmentRevisionRequestUncheckedCreateNestedManyWithoutVesselInput
     defects?: DefectUncheckedCreateNestedManyWithoutVesselInput
     users?: UserUncheckedCreateNestedManyWithoutVesselInput
   }
@@ -85097,7 +93605,7 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillUpdateManyWithoutCompanyNestedInput
     controlledDocuments?: ControlledDocumentUpdateManyWithoutCompanyNestedInput
     circulars?: CircularUpdateManyWithoutCompanyNestedInput
-    riskAssessments?: RiskAssessmentUpdateManyWithoutCompanyNestedInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUpdateManyWithoutCompanyNestedInput
     defects?: DefectUpdateManyWithoutCompanyNestedInput
   }
 
@@ -85123,7 +93631,7 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutCompanyNestedInput
     controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutCompanyNestedInput
     circulars?: CircularUncheckedUpdateManyWithoutCompanyNestedInput
-    riskAssessments?: RiskAssessmentUncheckedUpdateManyWithoutCompanyNestedInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedUpdateManyWithoutCompanyNestedInput
     defects?: DefectUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
@@ -85142,7 +93650,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     code?: NullableStringFieldUpdateOperationsInput | string | null
-    imo?: StringFieldUpdateOperationsInput | string
+    imo?: NullableStringFieldUpdateOperationsInput | string | null
     officialNumber?: NullableStringFieldUpdateOperationsInput | string | null
     callSign?: NullableStringFieldUpdateOperationsInput | string | null
     mmsi?: NullableStringFieldUpdateOperationsInput | string | null
@@ -85155,6 +93663,18 @@ export namespace Prisma {
     breadth?: NullableFloatFieldUpdateOperationsInput | number | null
     depth?: NullableFloatFieldUpdateOperationsInput | number | null
     status?: EnumVesselStatusFieldUpdateOperationsInput | $Enums.VesselStatus
+    capacityCbm?: NullableFloatFieldUpdateOperationsInput | number | null
+    netTonnage?: NullableFloatFieldUpdateOperationsInput | number | null
+    deadweight?: NullableFloatFieldUpdateOperationsInput | number | null
+    tradeArea?: NullableStringFieldUpdateOperationsInput | string | null
+    registeredOwner?: NullableStringFieldUpdateOperationsInput | string | null
+    headOwner?: NullableStringFieldUpdateOperationsInput | string | null
+    charterer?: NullableStringFieldUpdateOperationsInput | string | null
+    yearWithSwan?: NullableIntFieldUpdateOperationsInput | number | null
+    lastDryDock?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dryDockPlace?: NullableStringFieldUpdateOperationsInput | string | null
+    nextDryDockDue?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -85174,7 +93694,9 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillUpdateManyWithoutVesselNestedInput
     controlledDocuments?: ControlledDocumentUpdateManyWithoutVesselNestedInput
     circulars?: CircularUpdateManyWithoutVesselNestedInput
-    riskAssessments?: RiskAssessmentUpdateManyWithoutVesselNestedInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUpdateManyWithoutVesselNestedInput
+    riskAssessmentExecutions?: RiskAssessmentExecutionUpdateManyWithoutVesselNestedInput
+    riskAssessmentRevisionRequests?: RiskAssessmentRevisionRequestUpdateManyWithoutVesselNestedInput
     defects?: DefectUpdateManyWithoutVesselNestedInput
     users?: UserUpdateManyWithoutVesselNestedInput
   }
@@ -85184,7 +93706,7 @@ export namespace Prisma {
     companyId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     code?: NullableStringFieldUpdateOperationsInput | string | null
-    imo?: StringFieldUpdateOperationsInput | string
+    imo?: NullableStringFieldUpdateOperationsInput | string | null
     officialNumber?: NullableStringFieldUpdateOperationsInput | string | null
     callSign?: NullableStringFieldUpdateOperationsInput | string | null
     mmsi?: NullableStringFieldUpdateOperationsInput | string | null
@@ -85197,6 +93719,18 @@ export namespace Prisma {
     breadth?: NullableFloatFieldUpdateOperationsInput | number | null
     depth?: NullableFloatFieldUpdateOperationsInput | number | null
     status?: EnumVesselStatusFieldUpdateOperationsInput | $Enums.VesselStatus
+    capacityCbm?: NullableFloatFieldUpdateOperationsInput | number | null
+    netTonnage?: NullableFloatFieldUpdateOperationsInput | number | null
+    deadweight?: NullableFloatFieldUpdateOperationsInput | number | null
+    tradeArea?: NullableStringFieldUpdateOperationsInput | string | null
+    registeredOwner?: NullableStringFieldUpdateOperationsInput | string | null
+    headOwner?: NullableStringFieldUpdateOperationsInput | string | null
+    charterer?: NullableStringFieldUpdateOperationsInput | string | null
+    yearWithSwan?: NullableIntFieldUpdateOperationsInput | number | null
+    lastDryDock?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dryDockPlace?: NullableStringFieldUpdateOperationsInput | string | null
+    nextDryDockDue?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -85215,7 +93749,9 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutVesselNestedInput
     controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutVesselNestedInput
     circulars?: CircularUncheckedUpdateManyWithoutVesselNestedInput
-    riskAssessments?: RiskAssessmentUncheckedUpdateManyWithoutVesselNestedInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedUpdateManyWithoutVesselNestedInput
+    riskAssessmentExecutions?: RiskAssessmentExecutionUncheckedUpdateManyWithoutVesselNestedInput
+    riskAssessmentRevisionRequests?: RiskAssessmentRevisionRequestUncheckedUpdateManyWithoutVesselNestedInput
     defects?: DefectUncheckedUpdateManyWithoutVesselNestedInput
     users?: UserUncheckedUpdateManyWithoutVesselNestedInput
   }
@@ -85307,7 +93843,7 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillCreateNestedManyWithoutCompanyInput
     controlledDocuments?: ControlledDocumentCreateNestedManyWithoutCompanyInput
     circulars?: CircularCreateNestedManyWithoutCompanyInput
-    riskAssessments?: RiskAssessmentCreateNestedManyWithoutCompanyInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentCreateNestedManyWithoutCompanyInput
     defects?: DefectCreateNestedManyWithoutCompanyInput
   }
 
@@ -85333,7 +93869,7 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutCompanyInput
     controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutCompanyInput
     circulars?: CircularUncheckedCreateNestedManyWithoutCompanyInput
-    riskAssessments?: RiskAssessmentUncheckedCreateNestedManyWithoutCompanyInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedCreateNestedManyWithoutCompanyInput
     defects?: DefectUncheckedCreateNestedManyWithoutCompanyInput
   }
 
@@ -85346,7 +93882,7 @@ export namespace Prisma {
     id?: string
     name: string
     code?: string | null
-    imo: string
+    imo?: string | null
     officialNumber?: string | null
     callSign?: string | null
     mmsi?: string | null
@@ -85359,6 +93895,18 @@ export namespace Prisma {
     breadth?: number | null
     depth?: number | null
     status?: $Enums.VesselStatus
+    capacityCbm?: number | null
+    netTonnage?: number | null
+    deadweight?: number | null
+    tradeArea?: string | null
+    registeredOwner?: string | null
+    headOwner?: string | null
+    charterer?: string | null
+    yearWithSwan?: number | null
+    lastDryDock?: Date | string | null
+    dryDockPlace?: string | null
+    nextDryDockDue?: Date | string | null
+    archivedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -85378,7 +93926,9 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillCreateNestedManyWithoutVesselInput
     controlledDocuments?: ControlledDocumentCreateNestedManyWithoutVesselInput
     circulars?: CircularCreateNestedManyWithoutVesselInput
-    riskAssessments?: RiskAssessmentCreateNestedManyWithoutVesselInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentCreateNestedManyWithoutVesselInput
+    riskAssessmentExecutions?: RiskAssessmentExecutionCreateNestedManyWithoutVesselInput
+    riskAssessmentRevisionRequests?: RiskAssessmentRevisionRequestCreateNestedManyWithoutVesselInput
     defects?: DefectCreateNestedManyWithoutVesselInput
     users?: UserCreateNestedManyWithoutVesselInput
   }
@@ -85388,7 +93938,7 @@ export namespace Prisma {
     companyId: string
     name: string
     code?: string | null
-    imo: string
+    imo?: string | null
     officialNumber?: string | null
     callSign?: string | null
     mmsi?: string | null
@@ -85401,6 +93951,18 @@ export namespace Prisma {
     breadth?: number | null
     depth?: number | null
     status?: $Enums.VesselStatus
+    capacityCbm?: number | null
+    netTonnage?: number | null
+    deadweight?: number | null
+    tradeArea?: string | null
+    registeredOwner?: string | null
+    headOwner?: string | null
+    charterer?: string | null
+    yearWithSwan?: number | null
+    lastDryDock?: Date | string | null
+    dryDockPlace?: string | null
+    nextDryDockDue?: Date | string | null
+    archivedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -85419,7 +93981,9 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutVesselInput
     controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutVesselInput
     circulars?: CircularUncheckedCreateNestedManyWithoutVesselInput
-    riskAssessments?: RiskAssessmentUncheckedCreateNestedManyWithoutVesselInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedCreateNestedManyWithoutVesselInput
+    riskAssessmentExecutions?: RiskAssessmentExecutionUncheckedCreateNestedManyWithoutVesselInput
+    riskAssessmentRevisionRequests?: RiskAssessmentRevisionRequestUncheckedCreateNestedManyWithoutVesselInput
     defects?: DefectUncheckedCreateNestedManyWithoutVesselInput
     users?: UserUncheckedCreateNestedManyWithoutVesselInput
   }
@@ -85524,7 +94088,7 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillUpdateManyWithoutCompanyNestedInput
     controlledDocuments?: ControlledDocumentUpdateManyWithoutCompanyNestedInput
     circulars?: CircularUpdateManyWithoutCompanyNestedInput
-    riskAssessments?: RiskAssessmentUpdateManyWithoutCompanyNestedInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUpdateManyWithoutCompanyNestedInput
     defects?: DefectUpdateManyWithoutCompanyNestedInput
   }
 
@@ -85550,7 +94114,7 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutCompanyNestedInput
     controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutCompanyNestedInput
     circulars?: CircularUncheckedUpdateManyWithoutCompanyNestedInput
-    riskAssessments?: RiskAssessmentUncheckedUpdateManyWithoutCompanyNestedInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedUpdateManyWithoutCompanyNestedInput
     defects?: DefectUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
@@ -85569,7 +94133,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     code?: NullableStringFieldUpdateOperationsInput | string | null
-    imo?: StringFieldUpdateOperationsInput | string
+    imo?: NullableStringFieldUpdateOperationsInput | string | null
     officialNumber?: NullableStringFieldUpdateOperationsInput | string | null
     callSign?: NullableStringFieldUpdateOperationsInput | string | null
     mmsi?: NullableStringFieldUpdateOperationsInput | string | null
@@ -85582,6 +94146,18 @@ export namespace Prisma {
     breadth?: NullableFloatFieldUpdateOperationsInput | number | null
     depth?: NullableFloatFieldUpdateOperationsInput | number | null
     status?: EnumVesselStatusFieldUpdateOperationsInput | $Enums.VesselStatus
+    capacityCbm?: NullableFloatFieldUpdateOperationsInput | number | null
+    netTonnage?: NullableFloatFieldUpdateOperationsInput | number | null
+    deadweight?: NullableFloatFieldUpdateOperationsInput | number | null
+    tradeArea?: NullableStringFieldUpdateOperationsInput | string | null
+    registeredOwner?: NullableStringFieldUpdateOperationsInput | string | null
+    headOwner?: NullableStringFieldUpdateOperationsInput | string | null
+    charterer?: NullableStringFieldUpdateOperationsInput | string | null
+    yearWithSwan?: NullableIntFieldUpdateOperationsInput | number | null
+    lastDryDock?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dryDockPlace?: NullableStringFieldUpdateOperationsInput | string | null
+    nextDryDockDue?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -85601,7 +94177,9 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillUpdateManyWithoutVesselNestedInput
     controlledDocuments?: ControlledDocumentUpdateManyWithoutVesselNestedInput
     circulars?: CircularUpdateManyWithoutVesselNestedInput
-    riskAssessments?: RiskAssessmentUpdateManyWithoutVesselNestedInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUpdateManyWithoutVesselNestedInput
+    riskAssessmentExecutions?: RiskAssessmentExecutionUpdateManyWithoutVesselNestedInput
+    riskAssessmentRevisionRequests?: RiskAssessmentRevisionRequestUpdateManyWithoutVesselNestedInput
     defects?: DefectUpdateManyWithoutVesselNestedInput
     users?: UserUpdateManyWithoutVesselNestedInput
   }
@@ -85611,7 +94189,7 @@ export namespace Prisma {
     companyId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     code?: NullableStringFieldUpdateOperationsInput | string | null
-    imo?: StringFieldUpdateOperationsInput | string
+    imo?: NullableStringFieldUpdateOperationsInput | string | null
     officialNumber?: NullableStringFieldUpdateOperationsInput | string | null
     callSign?: NullableStringFieldUpdateOperationsInput | string | null
     mmsi?: NullableStringFieldUpdateOperationsInput | string | null
@@ -85624,6 +94202,18 @@ export namespace Prisma {
     breadth?: NullableFloatFieldUpdateOperationsInput | number | null
     depth?: NullableFloatFieldUpdateOperationsInput | number | null
     status?: EnumVesselStatusFieldUpdateOperationsInput | $Enums.VesselStatus
+    capacityCbm?: NullableFloatFieldUpdateOperationsInput | number | null
+    netTonnage?: NullableFloatFieldUpdateOperationsInput | number | null
+    deadweight?: NullableFloatFieldUpdateOperationsInput | number | null
+    tradeArea?: NullableStringFieldUpdateOperationsInput | string | null
+    registeredOwner?: NullableStringFieldUpdateOperationsInput | string | null
+    headOwner?: NullableStringFieldUpdateOperationsInput | string | null
+    charterer?: NullableStringFieldUpdateOperationsInput | string | null
+    yearWithSwan?: NullableIntFieldUpdateOperationsInput | number | null
+    lastDryDock?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dryDockPlace?: NullableStringFieldUpdateOperationsInput | string | null
+    nextDryDockDue?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -85642,7 +94232,9 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutVesselNestedInput
     controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutVesselNestedInput
     circulars?: CircularUncheckedUpdateManyWithoutVesselNestedInput
-    riskAssessments?: RiskAssessmentUncheckedUpdateManyWithoutVesselNestedInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedUpdateManyWithoutVesselNestedInput
+    riskAssessmentExecutions?: RiskAssessmentExecutionUncheckedUpdateManyWithoutVesselNestedInput
+    riskAssessmentRevisionRequests?: RiskAssessmentRevisionRequestUncheckedUpdateManyWithoutVesselNestedInput
     defects?: DefectUncheckedUpdateManyWithoutVesselNestedInput
     users?: UserUncheckedUpdateManyWithoutVesselNestedInput
   }
@@ -86327,7 +94919,7 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillCreateNestedManyWithoutCompanyInput
     controlledDocuments?: ControlledDocumentCreateNestedManyWithoutCompanyInput
     circulars?: CircularCreateNestedManyWithoutCompanyInput
-    riskAssessments?: RiskAssessmentCreateNestedManyWithoutCompanyInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentCreateNestedManyWithoutCompanyInput
     defects?: DefectCreateNestedManyWithoutCompanyInput
   }
 
@@ -86353,7 +94945,7 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutCompanyInput
     controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutCompanyInput
     circulars?: CircularUncheckedCreateNestedManyWithoutCompanyInput
-    riskAssessments?: RiskAssessmentUncheckedCreateNestedManyWithoutCompanyInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedCreateNestedManyWithoutCompanyInput
     defects?: DefectUncheckedCreateNestedManyWithoutCompanyInput
   }
 
@@ -86366,7 +94958,7 @@ export namespace Prisma {
     id?: string
     name: string
     code?: string | null
-    imo: string
+    imo?: string | null
     officialNumber?: string | null
     callSign?: string | null
     mmsi?: string | null
@@ -86379,6 +94971,18 @@ export namespace Prisma {
     breadth?: number | null
     depth?: number | null
     status?: $Enums.VesselStatus
+    capacityCbm?: number | null
+    netTonnage?: number | null
+    deadweight?: number | null
+    tradeArea?: string | null
+    registeredOwner?: string | null
+    headOwner?: string | null
+    charterer?: string | null
+    yearWithSwan?: number | null
+    lastDryDock?: Date | string | null
+    dryDockPlace?: string | null
+    nextDryDockDue?: Date | string | null
+    archivedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -86398,7 +95002,9 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillCreateNestedManyWithoutVesselInput
     controlledDocuments?: ControlledDocumentCreateNestedManyWithoutVesselInput
     circulars?: CircularCreateNestedManyWithoutVesselInput
-    riskAssessments?: RiskAssessmentCreateNestedManyWithoutVesselInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentCreateNestedManyWithoutVesselInput
+    riskAssessmentExecutions?: RiskAssessmentExecutionCreateNestedManyWithoutVesselInput
+    riskAssessmentRevisionRequests?: RiskAssessmentRevisionRequestCreateNestedManyWithoutVesselInput
     defects?: DefectCreateNestedManyWithoutVesselInput
     users?: UserCreateNestedManyWithoutVesselInput
   }
@@ -86408,7 +95014,7 @@ export namespace Prisma {
     companyId: string
     name: string
     code?: string | null
-    imo: string
+    imo?: string | null
     officialNumber?: string | null
     callSign?: string | null
     mmsi?: string | null
@@ -86421,6 +95027,18 @@ export namespace Prisma {
     breadth?: number | null
     depth?: number | null
     status?: $Enums.VesselStatus
+    capacityCbm?: number | null
+    netTonnage?: number | null
+    deadweight?: number | null
+    tradeArea?: string | null
+    registeredOwner?: string | null
+    headOwner?: string | null
+    charterer?: string | null
+    yearWithSwan?: number | null
+    lastDryDock?: Date | string | null
+    dryDockPlace?: string | null
+    nextDryDockDue?: Date | string | null
+    archivedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -86439,7 +95057,9 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutVesselInput
     controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutVesselInput
     circulars?: CircularUncheckedCreateNestedManyWithoutVesselInput
-    riskAssessments?: RiskAssessmentUncheckedCreateNestedManyWithoutVesselInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedCreateNestedManyWithoutVesselInput
+    riskAssessmentExecutions?: RiskAssessmentExecutionUncheckedCreateNestedManyWithoutVesselInput
+    riskAssessmentRevisionRequests?: RiskAssessmentRevisionRequestUncheckedCreateNestedManyWithoutVesselInput
     defects?: DefectUncheckedCreateNestedManyWithoutVesselInput
     users?: UserUncheckedCreateNestedManyWithoutVesselInput
   }
@@ -86522,7 +95142,7 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillUpdateManyWithoutCompanyNestedInput
     controlledDocuments?: ControlledDocumentUpdateManyWithoutCompanyNestedInput
     circulars?: CircularUpdateManyWithoutCompanyNestedInput
-    riskAssessments?: RiskAssessmentUpdateManyWithoutCompanyNestedInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUpdateManyWithoutCompanyNestedInput
     defects?: DefectUpdateManyWithoutCompanyNestedInput
   }
 
@@ -86548,7 +95168,7 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutCompanyNestedInput
     controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutCompanyNestedInput
     circulars?: CircularUncheckedUpdateManyWithoutCompanyNestedInput
-    riskAssessments?: RiskAssessmentUncheckedUpdateManyWithoutCompanyNestedInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedUpdateManyWithoutCompanyNestedInput
     defects?: DefectUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
@@ -86567,7 +95187,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     code?: NullableStringFieldUpdateOperationsInput | string | null
-    imo?: StringFieldUpdateOperationsInput | string
+    imo?: NullableStringFieldUpdateOperationsInput | string | null
     officialNumber?: NullableStringFieldUpdateOperationsInput | string | null
     callSign?: NullableStringFieldUpdateOperationsInput | string | null
     mmsi?: NullableStringFieldUpdateOperationsInput | string | null
@@ -86580,6 +95200,18 @@ export namespace Prisma {
     breadth?: NullableFloatFieldUpdateOperationsInput | number | null
     depth?: NullableFloatFieldUpdateOperationsInput | number | null
     status?: EnumVesselStatusFieldUpdateOperationsInput | $Enums.VesselStatus
+    capacityCbm?: NullableFloatFieldUpdateOperationsInput | number | null
+    netTonnage?: NullableFloatFieldUpdateOperationsInput | number | null
+    deadweight?: NullableFloatFieldUpdateOperationsInput | number | null
+    tradeArea?: NullableStringFieldUpdateOperationsInput | string | null
+    registeredOwner?: NullableStringFieldUpdateOperationsInput | string | null
+    headOwner?: NullableStringFieldUpdateOperationsInput | string | null
+    charterer?: NullableStringFieldUpdateOperationsInput | string | null
+    yearWithSwan?: NullableIntFieldUpdateOperationsInput | number | null
+    lastDryDock?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dryDockPlace?: NullableStringFieldUpdateOperationsInput | string | null
+    nextDryDockDue?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -86599,7 +95231,9 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillUpdateManyWithoutVesselNestedInput
     controlledDocuments?: ControlledDocumentUpdateManyWithoutVesselNestedInput
     circulars?: CircularUpdateManyWithoutVesselNestedInput
-    riskAssessments?: RiskAssessmentUpdateManyWithoutVesselNestedInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUpdateManyWithoutVesselNestedInput
+    riskAssessmentExecutions?: RiskAssessmentExecutionUpdateManyWithoutVesselNestedInput
+    riskAssessmentRevisionRequests?: RiskAssessmentRevisionRequestUpdateManyWithoutVesselNestedInput
     defects?: DefectUpdateManyWithoutVesselNestedInput
     users?: UserUpdateManyWithoutVesselNestedInput
   }
@@ -86609,7 +95243,7 @@ export namespace Prisma {
     companyId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     code?: NullableStringFieldUpdateOperationsInput | string | null
-    imo?: StringFieldUpdateOperationsInput | string
+    imo?: NullableStringFieldUpdateOperationsInput | string | null
     officialNumber?: NullableStringFieldUpdateOperationsInput | string | null
     callSign?: NullableStringFieldUpdateOperationsInput | string | null
     mmsi?: NullableStringFieldUpdateOperationsInput | string | null
@@ -86622,6 +95256,18 @@ export namespace Prisma {
     breadth?: NullableFloatFieldUpdateOperationsInput | number | null
     depth?: NullableFloatFieldUpdateOperationsInput | number | null
     status?: EnumVesselStatusFieldUpdateOperationsInput | $Enums.VesselStatus
+    capacityCbm?: NullableFloatFieldUpdateOperationsInput | number | null
+    netTonnage?: NullableFloatFieldUpdateOperationsInput | number | null
+    deadweight?: NullableFloatFieldUpdateOperationsInput | number | null
+    tradeArea?: NullableStringFieldUpdateOperationsInput | string | null
+    registeredOwner?: NullableStringFieldUpdateOperationsInput | string | null
+    headOwner?: NullableStringFieldUpdateOperationsInput | string | null
+    charterer?: NullableStringFieldUpdateOperationsInput | string | null
+    yearWithSwan?: NullableIntFieldUpdateOperationsInput | number | null
+    lastDryDock?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dryDockPlace?: NullableStringFieldUpdateOperationsInput | string | null
+    nextDryDockDue?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -86640,7 +95286,9 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutVesselNestedInput
     controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutVesselNestedInput
     circulars?: CircularUncheckedUpdateManyWithoutVesselNestedInput
-    riskAssessments?: RiskAssessmentUncheckedUpdateManyWithoutVesselNestedInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedUpdateManyWithoutVesselNestedInput
+    riskAssessmentExecutions?: RiskAssessmentExecutionUncheckedUpdateManyWithoutVesselNestedInput
+    riskAssessmentRevisionRequests?: RiskAssessmentRevisionRequestUncheckedUpdateManyWithoutVesselNestedInput
     defects?: DefectUncheckedUpdateManyWithoutVesselNestedInput
     users?: UserUncheckedUpdateManyWithoutVesselNestedInput
   }
@@ -86802,7 +95450,7 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillCreateNestedManyWithoutCompanyInput
     controlledDocuments?: ControlledDocumentCreateNestedManyWithoutCompanyInput
     circulars?: CircularCreateNestedManyWithoutCompanyInput
-    riskAssessments?: RiskAssessmentCreateNestedManyWithoutCompanyInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentCreateNestedManyWithoutCompanyInput
     defects?: DefectCreateNestedManyWithoutCompanyInput
   }
 
@@ -86828,7 +95476,7 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutCompanyInput
     controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutCompanyInput
     circulars?: CircularUncheckedCreateNestedManyWithoutCompanyInput
-    riskAssessments?: RiskAssessmentUncheckedCreateNestedManyWithoutCompanyInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedCreateNestedManyWithoutCompanyInput
     defects?: DefectUncheckedCreateNestedManyWithoutCompanyInput
   }
 
@@ -86841,7 +95489,7 @@ export namespace Prisma {
     id?: string
     name: string
     code?: string | null
-    imo: string
+    imo?: string | null
     officialNumber?: string | null
     callSign?: string | null
     mmsi?: string | null
@@ -86854,6 +95502,18 @@ export namespace Prisma {
     breadth?: number | null
     depth?: number | null
     status?: $Enums.VesselStatus
+    capacityCbm?: number | null
+    netTonnage?: number | null
+    deadweight?: number | null
+    tradeArea?: string | null
+    registeredOwner?: string | null
+    headOwner?: string | null
+    charterer?: string | null
+    yearWithSwan?: number | null
+    lastDryDock?: Date | string | null
+    dryDockPlace?: string | null
+    nextDryDockDue?: Date | string | null
+    archivedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -86873,7 +95533,9 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillCreateNestedManyWithoutVesselInput
     controlledDocuments?: ControlledDocumentCreateNestedManyWithoutVesselInput
     circulars?: CircularCreateNestedManyWithoutVesselInput
-    riskAssessments?: RiskAssessmentCreateNestedManyWithoutVesselInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentCreateNestedManyWithoutVesselInput
+    riskAssessmentExecutions?: RiskAssessmentExecutionCreateNestedManyWithoutVesselInput
+    riskAssessmentRevisionRequests?: RiskAssessmentRevisionRequestCreateNestedManyWithoutVesselInput
     defects?: DefectCreateNestedManyWithoutVesselInput
     users?: UserCreateNestedManyWithoutVesselInput
   }
@@ -86883,7 +95545,7 @@ export namespace Prisma {
     companyId: string
     name: string
     code?: string | null
-    imo: string
+    imo?: string | null
     officialNumber?: string | null
     callSign?: string | null
     mmsi?: string | null
@@ -86896,6 +95558,18 @@ export namespace Prisma {
     breadth?: number | null
     depth?: number | null
     status?: $Enums.VesselStatus
+    capacityCbm?: number | null
+    netTonnage?: number | null
+    deadweight?: number | null
+    tradeArea?: string | null
+    registeredOwner?: string | null
+    headOwner?: string | null
+    charterer?: string | null
+    yearWithSwan?: number | null
+    lastDryDock?: Date | string | null
+    dryDockPlace?: string | null
+    nextDryDockDue?: Date | string | null
+    archivedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -86914,7 +95588,9 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutVesselInput
     controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutVesselInput
     circulars?: CircularUncheckedCreateNestedManyWithoutVesselInput
-    riskAssessments?: RiskAssessmentUncheckedCreateNestedManyWithoutVesselInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedCreateNestedManyWithoutVesselInput
+    riskAssessmentExecutions?: RiskAssessmentExecutionUncheckedCreateNestedManyWithoutVesselInput
+    riskAssessmentRevisionRequests?: RiskAssessmentRevisionRequestUncheckedCreateNestedManyWithoutVesselInput
     defects?: DefectUncheckedCreateNestedManyWithoutVesselInput
     users?: UserUncheckedCreateNestedManyWithoutVesselInput
   }
@@ -86991,7 +95667,7 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillUpdateManyWithoutCompanyNestedInput
     controlledDocuments?: ControlledDocumentUpdateManyWithoutCompanyNestedInput
     circulars?: CircularUpdateManyWithoutCompanyNestedInput
-    riskAssessments?: RiskAssessmentUpdateManyWithoutCompanyNestedInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUpdateManyWithoutCompanyNestedInput
     defects?: DefectUpdateManyWithoutCompanyNestedInput
   }
 
@@ -87017,7 +95693,7 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutCompanyNestedInput
     controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutCompanyNestedInput
     circulars?: CircularUncheckedUpdateManyWithoutCompanyNestedInput
-    riskAssessments?: RiskAssessmentUncheckedUpdateManyWithoutCompanyNestedInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedUpdateManyWithoutCompanyNestedInput
     defects?: DefectUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
@@ -87036,7 +95712,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     code?: NullableStringFieldUpdateOperationsInput | string | null
-    imo?: StringFieldUpdateOperationsInput | string
+    imo?: NullableStringFieldUpdateOperationsInput | string | null
     officialNumber?: NullableStringFieldUpdateOperationsInput | string | null
     callSign?: NullableStringFieldUpdateOperationsInput | string | null
     mmsi?: NullableStringFieldUpdateOperationsInput | string | null
@@ -87049,6 +95725,18 @@ export namespace Prisma {
     breadth?: NullableFloatFieldUpdateOperationsInput | number | null
     depth?: NullableFloatFieldUpdateOperationsInput | number | null
     status?: EnumVesselStatusFieldUpdateOperationsInput | $Enums.VesselStatus
+    capacityCbm?: NullableFloatFieldUpdateOperationsInput | number | null
+    netTonnage?: NullableFloatFieldUpdateOperationsInput | number | null
+    deadweight?: NullableFloatFieldUpdateOperationsInput | number | null
+    tradeArea?: NullableStringFieldUpdateOperationsInput | string | null
+    registeredOwner?: NullableStringFieldUpdateOperationsInput | string | null
+    headOwner?: NullableStringFieldUpdateOperationsInput | string | null
+    charterer?: NullableStringFieldUpdateOperationsInput | string | null
+    yearWithSwan?: NullableIntFieldUpdateOperationsInput | number | null
+    lastDryDock?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dryDockPlace?: NullableStringFieldUpdateOperationsInput | string | null
+    nextDryDockDue?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -87068,7 +95756,9 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillUpdateManyWithoutVesselNestedInput
     controlledDocuments?: ControlledDocumentUpdateManyWithoutVesselNestedInput
     circulars?: CircularUpdateManyWithoutVesselNestedInput
-    riskAssessments?: RiskAssessmentUpdateManyWithoutVesselNestedInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUpdateManyWithoutVesselNestedInput
+    riskAssessmentExecutions?: RiskAssessmentExecutionUpdateManyWithoutVesselNestedInput
+    riskAssessmentRevisionRequests?: RiskAssessmentRevisionRequestUpdateManyWithoutVesselNestedInput
     defects?: DefectUpdateManyWithoutVesselNestedInput
     users?: UserUpdateManyWithoutVesselNestedInput
   }
@@ -87078,7 +95768,7 @@ export namespace Prisma {
     companyId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     code?: NullableStringFieldUpdateOperationsInput | string | null
-    imo?: StringFieldUpdateOperationsInput | string
+    imo?: NullableStringFieldUpdateOperationsInput | string | null
     officialNumber?: NullableStringFieldUpdateOperationsInput | string | null
     callSign?: NullableStringFieldUpdateOperationsInput | string | null
     mmsi?: NullableStringFieldUpdateOperationsInput | string | null
@@ -87091,6 +95781,18 @@ export namespace Prisma {
     breadth?: NullableFloatFieldUpdateOperationsInput | number | null
     depth?: NullableFloatFieldUpdateOperationsInput | number | null
     status?: EnumVesselStatusFieldUpdateOperationsInput | $Enums.VesselStatus
+    capacityCbm?: NullableFloatFieldUpdateOperationsInput | number | null
+    netTonnage?: NullableFloatFieldUpdateOperationsInput | number | null
+    deadweight?: NullableFloatFieldUpdateOperationsInput | number | null
+    tradeArea?: NullableStringFieldUpdateOperationsInput | string | null
+    registeredOwner?: NullableStringFieldUpdateOperationsInput | string | null
+    headOwner?: NullableStringFieldUpdateOperationsInput | string | null
+    charterer?: NullableStringFieldUpdateOperationsInput | string | null
+    yearWithSwan?: NullableIntFieldUpdateOperationsInput | number | null
+    lastDryDock?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dryDockPlace?: NullableStringFieldUpdateOperationsInput | string | null
+    nextDryDockDue?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -87109,7 +95811,9 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutVesselNestedInput
     controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutVesselNestedInput
     circulars?: CircularUncheckedUpdateManyWithoutVesselNestedInput
-    riskAssessments?: RiskAssessmentUncheckedUpdateManyWithoutVesselNestedInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedUpdateManyWithoutVesselNestedInput
+    riskAssessmentExecutions?: RiskAssessmentExecutionUncheckedUpdateManyWithoutVesselNestedInput
+    riskAssessmentRevisionRequests?: RiskAssessmentRevisionRequestUncheckedUpdateManyWithoutVesselNestedInput
     defects?: DefectUncheckedUpdateManyWithoutVesselNestedInput
     users?: UserUncheckedUpdateManyWithoutVesselNestedInput
   }
@@ -87264,7 +95968,7 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillCreateNestedManyWithoutCompanyInput
     controlledDocuments?: ControlledDocumentCreateNestedManyWithoutCompanyInput
     circulars?: CircularCreateNestedManyWithoutCompanyInput
-    riskAssessments?: RiskAssessmentCreateNestedManyWithoutCompanyInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentCreateNestedManyWithoutCompanyInput
     defects?: DefectCreateNestedManyWithoutCompanyInput
   }
 
@@ -87290,7 +95994,7 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutCompanyInput
     controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutCompanyInput
     circulars?: CircularUncheckedCreateNestedManyWithoutCompanyInput
-    riskAssessments?: RiskAssessmentUncheckedCreateNestedManyWithoutCompanyInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedCreateNestedManyWithoutCompanyInput
     defects?: DefectUncheckedCreateNestedManyWithoutCompanyInput
   }
 
@@ -87303,7 +96007,7 @@ export namespace Prisma {
     id?: string
     name: string
     code?: string | null
-    imo: string
+    imo?: string | null
     officialNumber?: string | null
     callSign?: string | null
     mmsi?: string | null
@@ -87316,6 +96020,18 @@ export namespace Prisma {
     breadth?: number | null
     depth?: number | null
     status?: $Enums.VesselStatus
+    capacityCbm?: number | null
+    netTonnage?: number | null
+    deadweight?: number | null
+    tradeArea?: string | null
+    registeredOwner?: string | null
+    headOwner?: string | null
+    charterer?: string | null
+    yearWithSwan?: number | null
+    lastDryDock?: Date | string | null
+    dryDockPlace?: string | null
+    nextDryDockDue?: Date | string | null
+    archivedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -87335,7 +96051,9 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillCreateNestedManyWithoutVesselInput
     controlledDocuments?: ControlledDocumentCreateNestedManyWithoutVesselInput
     circulars?: CircularCreateNestedManyWithoutVesselInput
-    riskAssessments?: RiskAssessmentCreateNestedManyWithoutVesselInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentCreateNestedManyWithoutVesselInput
+    riskAssessmentExecutions?: RiskAssessmentExecutionCreateNestedManyWithoutVesselInput
+    riskAssessmentRevisionRequests?: RiskAssessmentRevisionRequestCreateNestedManyWithoutVesselInput
     defects?: DefectCreateNestedManyWithoutVesselInput
     users?: UserCreateNestedManyWithoutVesselInput
   }
@@ -87345,7 +96063,7 @@ export namespace Prisma {
     companyId: string
     name: string
     code?: string | null
-    imo: string
+    imo?: string | null
     officialNumber?: string | null
     callSign?: string | null
     mmsi?: string | null
@@ -87358,6 +96076,18 @@ export namespace Prisma {
     breadth?: number | null
     depth?: number | null
     status?: $Enums.VesselStatus
+    capacityCbm?: number | null
+    netTonnage?: number | null
+    deadweight?: number | null
+    tradeArea?: string | null
+    registeredOwner?: string | null
+    headOwner?: string | null
+    charterer?: string | null
+    yearWithSwan?: number | null
+    lastDryDock?: Date | string | null
+    dryDockPlace?: string | null
+    nextDryDockDue?: Date | string | null
+    archivedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -87376,7 +96106,9 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutVesselInput
     controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutVesselInput
     circulars?: CircularUncheckedCreateNestedManyWithoutVesselInput
-    riskAssessments?: RiskAssessmentUncheckedCreateNestedManyWithoutVesselInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedCreateNestedManyWithoutVesselInput
+    riskAssessmentExecutions?: RiskAssessmentExecutionUncheckedCreateNestedManyWithoutVesselInput
+    riskAssessmentRevisionRequests?: RiskAssessmentRevisionRequestUncheckedCreateNestedManyWithoutVesselInput
     defects?: DefectUncheckedCreateNestedManyWithoutVesselInput
     users?: UserUncheckedCreateNestedManyWithoutVesselInput
   }
@@ -87457,7 +96189,7 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillUpdateManyWithoutCompanyNestedInput
     controlledDocuments?: ControlledDocumentUpdateManyWithoutCompanyNestedInput
     circulars?: CircularUpdateManyWithoutCompanyNestedInput
-    riskAssessments?: RiskAssessmentUpdateManyWithoutCompanyNestedInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUpdateManyWithoutCompanyNestedInput
     defects?: DefectUpdateManyWithoutCompanyNestedInput
   }
 
@@ -87483,7 +96215,7 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutCompanyNestedInput
     controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutCompanyNestedInput
     circulars?: CircularUncheckedUpdateManyWithoutCompanyNestedInput
-    riskAssessments?: RiskAssessmentUncheckedUpdateManyWithoutCompanyNestedInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedUpdateManyWithoutCompanyNestedInput
     defects?: DefectUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
@@ -87502,7 +96234,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     code?: NullableStringFieldUpdateOperationsInput | string | null
-    imo?: StringFieldUpdateOperationsInput | string
+    imo?: NullableStringFieldUpdateOperationsInput | string | null
     officialNumber?: NullableStringFieldUpdateOperationsInput | string | null
     callSign?: NullableStringFieldUpdateOperationsInput | string | null
     mmsi?: NullableStringFieldUpdateOperationsInput | string | null
@@ -87515,6 +96247,18 @@ export namespace Prisma {
     breadth?: NullableFloatFieldUpdateOperationsInput | number | null
     depth?: NullableFloatFieldUpdateOperationsInput | number | null
     status?: EnumVesselStatusFieldUpdateOperationsInput | $Enums.VesselStatus
+    capacityCbm?: NullableFloatFieldUpdateOperationsInput | number | null
+    netTonnage?: NullableFloatFieldUpdateOperationsInput | number | null
+    deadweight?: NullableFloatFieldUpdateOperationsInput | number | null
+    tradeArea?: NullableStringFieldUpdateOperationsInput | string | null
+    registeredOwner?: NullableStringFieldUpdateOperationsInput | string | null
+    headOwner?: NullableStringFieldUpdateOperationsInput | string | null
+    charterer?: NullableStringFieldUpdateOperationsInput | string | null
+    yearWithSwan?: NullableIntFieldUpdateOperationsInput | number | null
+    lastDryDock?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dryDockPlace?: NullableStringFieldUpdateOperationsInput | string | null
+    nextDryDockDue?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -87534,7 +96278,9 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillUpdateManyWithoutVesselNestedInput
     controlledDocuments?: ControlledDocumentUpdateManyWithoutVesselNestedInput
     circulars?: CircularUpdateManyWithoutVesselNestedInput
-    riskAssessments?: RiskAssessmentUpdateManyWithoutVesselNestedInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUpdateManyWithoutVesselNestedInput
+    riskAssessmentExecutions?: RiskAssessmentExecutionUpdateManyWithoutVesselNestedInput
+    riskAssessmentRevisionRequests?: RiskAssessmentRevisionRequestUpdateManyWithoutVesselNestedInput
     defects?: DefectUpdateManyWithoutVesselNestedInput
     users?: UserUpdateManyWithoutVesselNestedInput
   }
@@ -87544,7 +96290,7 @@ export namespace Prisma {
     companyId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     code?: NullableStringFieldUpdateOperationsInput | string | null
-    imo?: StringFieldUpdateOperationsInput | string
+    imo?: NullableStringFieldUpdateOperationsInput | string | null
     officialNumber?: NullableStringFieldUpdateOperationsInput | string | null
     callSign?: NullableStringFieldUpdateOperationsInput | string | null
     mmsi?: NullableStringFieldUpdateOperationsInput | string | null
@@ -87557,6 +96303,18 @@ export namespace Prisma {
     breadth?: NullableFloatFieldUpdateOperationsInput | number | null
     depth?: NullableFloatFieldUpdateOperationsInput | number | null
     status?: EnumVesselStatusFieldUpdateOperationsInput | $Enums.VesselStatus
+    capacityCbm?: NullableFloatFieldUpdateOperationsInput | number | null
+    netTonnage?: NullableFloatFieldUpdateOperationsInput | number | null
+    deadweight?: NullableFloatFieldUpdateOperationsInput | number | null
+    tradeArea?: NullableStringFieldUpdateOperationsInput | string | null
+    registeredOwner?: NullableStringFieldUpdateOperationsInput | string | null
+    headOwner?: NullableStringFieldUpdateOperationsInput | string | null
+    charterer?: NullableStringFieldUpdateOperationsInput | string | null
+    yearWithSwan?: NullableIntFieldUpdateOperationsInput | number | null
+    lastDryDock?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dryDockPlace?: NullableStringFieldUpdateOperationsInput | string | null
+    nextDryDockDue?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -87575,7 +96333,9 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutVesselNestedInput
     controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutVesselNestedInput
     circulars?: CircularUncheckedUpdateManyWithoutVesselNestedInput
-    riskAssessments?: RiskAssessmentUncheckedUpdateManyWithoutVesselNestedInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedUpdateManyWithoutVesselNestedInput
+    riskAssessmentExecutions?: RiskAssessmentExecutionUncheckedUpdateManyWithoutVesselNestedInput
+    riskAssessmentRevisionRequests?: RiskAssessmentRevisionRequestUncheckedUpdateManyWithoutVesselNestedInput
     defects?: DefectUncheckedUpdateManyWithoutVesselNestedInput
     users?: UserUncheckedUpdateManyWithoutVesselNestedInput
   }
@@ -87736,7 +96496,7 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillCreateNestedManyWithoutCompanyInput
     controlledDocuments?: ControlledDocumentCreateNestedManyWithoutCompanyInput
     circulars?: CircularCreateNestedManyWithoutCompanyInput
-    riskAssessments?: RiskAssessmentCreateNestedManyWithoutCompanyInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentCreateNestedManyWithoutCompanyInput
     defects?: DefectCreateNestedManyWithoutCompanyInput
   }
 
@@ -87762,7 +96522,7 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutCompanyInput
     controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutCompanyInput
     circulars?: CircularUncheckedCreateNestedManyWithoutCompanyInput
-    riskAssessments?: RiskAssessmentUncheckedCreateNestedManyWithoutCompanyInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedCreateNestedManyWithoutCompanyInput
     defects?: DefectUncheckedCreateNestedManyWithoutCompanyInput
   }
 
@@ -87775,7 +96535,7 @@ export namespace Prisma {
     id?: string
     name: string
     code?: string | null
-    imo: string
+    imo?: string | null
     officialNumber?: string | null
     callSign?: string | null
     mmsi?: string | null
@@ -87788,6 +96548,18 @@ export namespace Prisma {
     breadth?: number | null
     depth?: number | null
     status?: $Enums.VesselStatus
+    capacityCbm?: number | null
+    netTonnage?: number | null
+    deadweight?: number | null
+    tradeArea?: string | null
+    registeredOwner?: string | null
+    headOwner?: string | null
+    charterer?: string | null
+    yearWithSwan?: number | null
+    lastDryDock?: Date | string | null
+    dryDockPlace?: string | null
+    nextDryDockDue?: Date | string | null
+    archivedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -87807,7 +96579,9 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillCreateNestedManyWithoutVesselInput
     controlledDocuments?: ControlledDocumentCreateNestedManyWithoutVesselInput
     circulars?: CircularCreateNestedManyWithoutVesselInput
-    riskAssessments?: RiskAssessmentCreateNestedManyWithoutVesselInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentCreateNestedManyWithoutVesselInput
+    riskAssessmentExecutions?: RiskAssessmentExecutionCreateNestedManyWithoutVesselInput
+    riskAssessmentRevisionRequests?: RiskAssessmentRevisionRequestCreateNestedManyWithoutVesselInput
     defects?: DefectCreateNestedManyWithoutVesselInput
     users?: UserCreateNestedManyWithoutVesselInput
   }
@@ -87817,7 +96591,7 @@ export namespace Prisma {
     companyId: string
     name: string
     code?: string | null
-    imo: string
+    imo?: string | null
     officialNumber?: string | null
     callSign?: string | null
     mmsi?: string | null
@@ -87830,6 +96604,18 @@ export namespace Prisma {
     breadth?: number | null
     depth?: number | null
     status?: $Enums.VesselStatus
+    capacityCbm?: number | null
+    netTonnage?: number | null
+    deadweight?: number | null
+    tradeArea?: string | null
+    registeredOwner?: string | null
+    headOwner?: string | null
+    charterer?: string | null
+    yearWithSwan?: number | null
+    lastDryDock?: Date | string | null
+    dryDockPlace?: string | null
+    nextDryDockDue?: Date | string | null
+    archivedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -87848,7 +96634,9 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutVesselInput
     controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutVesselInput
     circulars?: CircularUncheckedCreateNestedManyWithoutVesselInput
-    riskAssessments?: RiskAssessmentUncheckedCreateNestedManyWithoutVesselInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedCreateNestedManyWithoutVesselInput
+    riskAssessmentExecutions?: RiskAssessmentExecutionUncheckedCreateNestedManyWithoutVesselInput
+    riskAssessmentRevisionRequests?: RiskAssessmentRevisionRequestUncheckedCreateNestedManyWithoutVesselInput
     defects?: DefectUncheckedCreateNestedManyWithoutVesselInput
     users?: UserUncheckedCreateNestedManyWithoutVesselInput
   }
@@ -87929,7 +96717,7 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillUpdateManyWithoutCompanyNestedInput
     controlledDocuments?: ControlledDocumentUpdateManyWithoutCompanyNestedInput
     circulars?: CircularUpdateManyWithoutCompanyNestedInput
-    riskAssessments?: RiskAssessmentUpdateManyWithoutCompanyNestedInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUpdateManyWithoutCompanyNestedInput
     defects?: DefectUpdateManyWithoutCompanyNestedInput
   }
 
@@ -87955,7 +96743,7 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutCompanyNestedInput
     controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutCompanyNestedInput
     circulars?: CircularUncheckedUpdateManyWithoutCompanyNestedInput
-    riskAssessments?: RiskAssessmentUncheckedUpdateManyWithoutCompanyNestedInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedUpdateManyWithoutCompanyNestedInput
     defects?: DefectUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
@@ -87974,7 +96762,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     code?: NullableStringFieldUpdateOperationsInput | string | null
-    imo?: StringFieldUpdateOperationsInput | string
+    imo?: NullableStringFieldUpdateOperationsInput | string | null
     officialNumber?: NullableStringFieldUpdateOperationsInput | string | null
     callSign?: NullableStringFieldUpdateOperationsInput | string | null
     mmsi?: NullableStringFieldUpdateOperationsInput | string | null
@@ -87987,6 +96775,18 @@ export namespace Prisma {
     breadth?: NullableFloatFieldUpdateOperationsInput | number | null
     depth?: NullableFloatFieldUpdateOperationsInput | number | null
     status?: EnumVesselStatusFieldUpdateOperationsInput | $Enums.VesselStatus
+    capacityCbm?: NullableFloatFieldUpdateOperationsInput | number | null
+    netTonnage?: NullableFloatFieldUpdateOperationsInput | number | null
+    deadweight?: NullableFloatFieldUpdateOperationsInput | number | null
+    tradeArea?: NullableStringFieldUpdateOperationsInput | string | null
+    registeredOwner?: NullableStringFieldUpdateOperationsInput | string | null
+    headOwner?: NullableStringFieldUpdateOperationsInput | string | null
+    charterer?: NullableStringFieldUpdateOperationsInput | string | null
+    yearWithSwan?: NullableIntFieldUpdateOperationsInput | number | null
+    lastDryDock?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dryDockPlace?: NullableStringFieldUpdateOperationsInput | string | null
+    nextDryDockDue?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -88006,7 +96806,9 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillUpdateManyWithoutVesselNestedInput
     controlledDocuments?: ControlledDocumentUpdateManyWithoutVesselNestedInput
     circulars?: CircularUpdateManyWithoutVesselNestedInput
-    riskAssessments?: RiskAssessmentUpdateManyWithoutVesselNestedInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUpdateManyWithoutVesselNestedInput
+    riskAssessmentExecutions?: RiskAssessmentExecutionUpdateManyWithoutVesselNestedInput
+    riskAssessmentRevisionRequests?: RiskAssessmentRevisionRequestUpdateManyWithoutVesselNestedInput
     defects?: DefectUpdateManyWithoutVesselNestedInput
     users?: UserUpdateManyWithoutVesselNestedInput
   }
@@ -88016,7 +96818,7 @@ export namespace Prisma {
     companyId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     code?: NullableStringFieldUpdateOperationsInput | string | null
-    imo?: StringFieldUpdateOperationsInput | string
+    imo?: NullableStringFieldUpdateOperationsInput | string | null
     officialNumber?: NullableStringFieldUpdateOperationsInput | string | null
     callSign?: NullableStringFieldUpdateOperationsInput | string | null
     mmsi?: NullableStringFieldUpdateOperationsInput | string | null
@@ -88029,6 +96831,18 @@ export namespace Prisma {
     breadth?: NullableFloatFieldUpdateOperationsInput | number | null
     depth?: NullableFloatFieldUpdateOperationsInput | number | null
     status?: EnumVesselStatusFieldUpdateOperationsInput | $Enums.VesselStatus
+    capacityCbm?: NullableFloatFieldUpdateOperationsInput | number | null
+    netTonnage?: NullableFloatFieldUpdateOperationsInput | number | null
+    deadweight?: NullableFloatFieldUpdateOperationsInput | number | null
+    tradeArea?: NullableStringFieldUpdateOperationsInput | string | null
+    registeredOwner?: NullableStringFieldUpdateOperationsInput | string | null
+    headOwner?: NullableStringFieldUpdateOperationsInput | string | null
+    charterer?: NullableStringFieldUpdateOperationsInput | string | null
+    yearWithSwan?: NullableIntFieldUpdateOperationsInput | number | null
+    lastDryDock?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dryDockPlace?: NullableStringFieldUpdateOperationsInput | string | null
+    nextDryDockDue?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -88047,7 +96861,9 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutVesselNestedInput
     controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutVesselNestedInput
     circulars?: CircularUncheckedUpdateManyWithoutVesselNestedInput
-    riskAssessments?: RiskAssessmentUncheckedUpdateManyWithoutVesselNestedInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedUpdateManyWithoutVesselNestedInput
+    riskAssessmentExecutions?: RiskAssessmentExecutionUncheckedUpdateManyWithoutVesselNestedInput
+    riskAssessmentRevisionRequests?: RiskAssessmentRevisionRequestUncheckedUpdateManyWithoutVesselNestedInput
     defects?: DefectUncheckedUpdateManyWithoutVesselNestedInput
     users?: UserUncheckedUpdateManyWithoutVesselNestedInput
   }
@@ -88208,7 +97024,7 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillCreateNestedManyWithoutCompanyInput
     controlledDocuments?: ControlledDocumentCreateNestedManyWithoutCompanyInput
     circulars?: CircularCreateNestedManyWithoutCompanyInput
-    riskAssessments?: RiskAssessmentCreateNestedManyWithoutCompanyInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentCreateNestedManyWithoutCompanyInput
     defects?: DefectCreateNestedManyWithoutCompanyInput
   }
 
@@ -88234,7 +97050,7 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutCompanyInput
     controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutCompanyInput
     circulars?: CircularUncheckedCreateNestedManyWithoutCompanyInput
-    riskAssessments?: RiskAssessmentUncheckedCreateNestedManyWithoutCompanyInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedCreateNestedManyWithoutCompanyInput
     defects?: DefectUncheckedCreateNestedManyWithoutCompanyInput
   }
 
@@ -88247,7 +97063,7 @@ export namespace Prisma {
     id?: string
     name: string
     code?: string | null
-    imo: string
+    imo?: string | null
     officialNumber?: string | null
     callSign?: string | null
     mmsi?: string | null
@@ -88260,6 +97076,18 @@ export namespace Prisma {
     breadth?: number | null
     depth?: number | null
     status?: $Enums.VesselStatus
+    capacityCbm?: number | null
+    netTonnage?: number | null
+    deadweight?: number | null
+    tradeArea?: string | null
+    registeredOwner?: string | null
+    headOwner?: string | null
+    charterer?: string | null
+    yearWithSwan?: number | null
+    lastDryDock?: Date | string | null
+    dryDockPlace?: string | null
+    nextDryDockDue?: Date | string | null
+    archivedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -88279,7 +97107,9 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillCreateNestedManyWithoutVesselInput
     controlledDocuments?: ControlledDocumentCreateNestedManyWithoutVesselInput
     circulars?: CircularCreateNestedManyWithoutVesselInput
-    riskAssessments?: RiskAssessmentCreateNestedManyWithoutVesselInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentCreateNestedManyWithoutVesselInput
+    riskAssessmentExecutions?: RiskAssessmentExecutionCreateNestedManyWithoutVesselInput
+    riskAssessmentRevisionRequests?: RiskAssessmentRevisionRequestCreateNestedManyWithoutVesselInput
     defects?: DefectCreateNestedManyWithoutVesselInput
     users?: UserCreateNestedManyWithoutVesselInput
   }
@@ -88289,7 +97119,7 @@ export namespace Prisma {
     companyId: string
     name: string
     code?: string | null
-    imo: string
+    imo?: string | null
     officialNumber?: string | null
     callSign?: string | null
     mmsi?: string | null
@@ -88302,6 +97132,18 @@ export namespace Prisma {
     breadth?: number | null
     depth?: number | null
     status?: $Enums.VesselStatus
+    capacityCbm?: number | null
+    netTonnage?: number | null
+    deadweight?: number | null
+    tradeArea?: string | null
+    registeredOwner?: string | null
+    headOwner?: string | null
+    charterer?: string | null
+    yearWithSwan?: number | null
+    lastDryDock?: Date | string | null
+    dryDockPlace?: string | null
+    nextDryDockDue?: Date | string | null
+    archivedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -88320,7 +97162,9 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutVesselInput
     controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutVesselInput
     circulars?: CircularUncheckedCreateNestedManyWithoutVesselInput
-    riskAssessments?: RiskAssessmentUncheckedCreateNestedManyWithoutVesselInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedCreateNestedManyWithoutVesselInput
+    riskAssessmentExecutions?: RiskAssessmentExecutionUncheckedCreateNestedManyWithoutVesselInput
+    riskAssessmentRevisionRequests?: RiskAssessmentRevisionRequestUncheckedCreateNestedManyWithoutVesselInput
     defects?: DefectUncheckedCreateNestedManyWithoutVesselInput
     users?: UserUncheckedCreateNestedManyWithoutVesselInput
   }
@@ -88397,7 +97241,7 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillUpdateManyWithoutCompanyNestedInput
     controlledDocuments?: ControlledDocumentUpdateManyWithoutCompanyNestedInput
     circulars?: CircularUpdateManyWithoutCompanyNestedInput
-    riskAssessments?: RiskAssessmentUpdateManyWithoutCompanyNestedInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUpdateManyWithoutCompanyNestedInput
     defects?: DefectUpdateManyWithoutCompanyNestedInput
   }
 
@@ -88423,7 +97267,7 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutCompanyNestedInput
     controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutCompanyNestedInput
     circulars?: CircularUncheckedUpdateManyWithoutCompanyNestedInput
-    riskAssessments?: RiskAssessmentUncheckedUpdateManyWithoutCompanyNestedInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedUpdateManyWithoutCompanyNestedInput
     defects?: DefectUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
@@ -88442,7 +97286,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     code?: NullableStringFieldUpdateOperationsInput | string | null
-    imo?: StringFieldUpdateOperationsInput | string
+    imo?: NullableStringFieldUpdateOperationsInput | string | null
     officialNumber?: NullableStringFieldUpdateOperationsInput | string | null
     callSign?: NullableStringFieldUpdateOperationsInput | string | null
     mmsi?: NullableStringFieldUpdateOperationsInput | string | null
@@ -88455,6 +97299,18 @@ export namespace Prisma {
     breadth?: NullableFloatFieldUpdateOperationsInput | number | null
     depth?: NullableFloatFieldUpdateOperationsInput | number | null
     status?: EnumVesselStatusFieldUpdateOperationsInput | $Enums.VesselStatus
+    capacityCbm?: NullableFloatFieldUpdateOperationsInput | number | null
+    netTonnage?: NullableFloatFieldUpdateOperationsInput | number | null
+    deadweight?: NullableFloatFieldUpdateOperationsInput | number | null
+    tradeArea?: NullableStringFieldUpdateOperationsInput | string | null
+    registeredOwner?: NullableStringFieldUpdateOperationsInput | string | null
+    headOwner?: NullableStringFieldUpdateOperationsInput | string | null
+    charterer?: NullableStringFieldUpdateOperationsInput | string | null
+    yearWithSwan?: NullableIntFieldUpdateOperationsInput | number | null
+    lastDryDock?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dryDockPlace?: NullableStringFieldUpdateOperationsInput | string | null
+    nextDryDockDue?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -88474,7 +97330,9 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillUpdateManyWithoutVesselNestedInput
     controlledDocuments?: ControlledDocumentUpdateManyWithoutVesselNestedInput
     circulars?: CircularUpdateManyWithoutVesselNestedInput
-    riskAssessments?: RiskAssessmentUpdateManyWithoutVesselNestedInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUpdateManyWithoutVesselNestedInput
+    riskAssessmentExecutions?: RiskAssessmentExecutionUpdateManyWithoutVesselNestedInput
+    riskAssessmentRevisionRequests?: RiskAssessmentRevisionRequestUpdateManyWithoutVesselNestedInput
     defects?: DefectUpdateManyWithoutVesselNestedInput
     users?: UserUpdateManyWithoutVesselNestedInput
   }
@@ -88484,7 +97342,7 @@ export namespace Prisma {
     companyId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     code?: NullableStringFieldUpdateOperationsInput | string | null
-    imo?: StringFieldUpdateOperationsInput | string
+    imo?: NullableStringFieldUpdateOperationsInput | string | null
     officialNumber?: NullableStringFieldUpdateOperationsInput | string | null
     callSign?: NullableStringFieldUpdateOperationsInput | string | null
     mmsi?: NullableStringFieldUpdateOperationsInput | string | null
@@ -88497,6 +97355,18 @@ export namespace Prisma {
     breadth?: NullableFloatFieldUpdateOperationsInput | number | null
     depth?: NullableFloatFieldUpdateOperationsInput | number | null
     status?: EnumVesselStatusFieldUpdateOperationsInput | $Enums.VesselStatus
+    capacityCbm?: NullableFloatFieldUpdateOperationsInput | number | null
+    netTonnage?: NullableFloatFieldUpdateOperationsInput | number | null
+    deadweight?: NullableFloatFieldUpdateOperationsInput | number | null
+    tradeArea?: NullableStringFieldUpdateOperationsInput | string | null
+    registeredOwner?: NullableStringFieldUpdateOperationsInput | string | null
+    headOwner?: NullableStringFieldUpdateOperationsInput | string | null
+    charterer?: NullableStringFieldUpdateOperationsInput | string | null
+    yearWithSwan?: NullableIntFieldUpdateOperationsInput | number | null
+    lastDryDock?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dryDockPlace?: NullableStringFieldUpdateOperationsInput | string | null
+    nextDryDockDue?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -88515,7 +97385,9 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutVesselNestedInput
     controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutVesselNestedInput
     circulars?: CircularUncheckedUpdateManyWithoutVesselNestedInput
-    riskAssessments?: RiskAssessmentUncheckedUpdateManyWithoutVesselNestedInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedUpdateManyWithoutVesselNestedInput
+    riskAssessmentExecutions?: RiskAssessmentExecutionUncheckedUpdateManyWithoutVesselNestedInput
+    riskAssessmentRevisionRequests?: RiskAssessmentRevisionRequestUncheckedUpdateManyWithoutVesselNestedInput
     defects?: DefectUncheckedUpdateManyWithoutVesselNestedInput
     users?: UserUncheckedUpdateManyWithoutVesselNestedInput
   }
@@ -88698,7 +97570,7 @@ export namespace Prisma {
     committeeMeetings?: CommitteeMeetingCreateNestedManyWithoutCompanyInput
     controlledDocuments?: ControlledDocumentCreateNestedManyWithoutCompanyInput
     circulars?: CircularCreateNestedManyWithoutCompanyInput
-    riskAssessments?: RiskAssessmentCreateNestedManyWithoutCompanyInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentCreateNestedManyWithoutCompanyInput
     defects?: DefectCreateNestedManyWithoutCompanyInput
   }
 
@@ -88724,7 +97596,7 @@ export namespace Prisma {
     committeeMeetings?: CommitteeMeetingUncheckedCreateNestedManyWithoutCompanyInput
     controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutCompanyInput
     circulars?: CircularUncheckedCreateNestedManyWithoutCompanyInput
-    riskAssessments?: RiskAssessmentUncheckedCreateNestedManyWithoutCompanyInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedCreateNestedManyWithoutCompanyInput
     defects?: DefectUncheckedCreateNestedManyWithoutCompanyInput
   }
 
@@ -88737,7 +97609,7 @@ export namespace Prisma {
     id?: string
     name: string
     code?: string | null
-    imo: string
+    imo?: string | null
     officialNumber?: string | null
     callSign?: string | null
     mmsi?: string | null
@@ -88750,6 +97622,18 @@ export namespace Prisma {
     breadth?: number | null
     depth?: number | null
     status?: $Enums.VesselStatus
+    capacityCbm?: number | null
+    netTonnage?: number | null
+    deadweight?: number | null
+    tradeArea?: string | null
+    registeredOwner?: string | null
+    headOwner?: string | null
+    charterer?: string | null
+    yearWithSwan?: number | null
+    lastDryDock?: Date | string | null
+    dryDockPlace?: string | null
+    nextDryDockDue?: Date | string | null
+    archivedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -88769,7 +97653,9 @@ export namespace Prisma {
     committeeMeetings?: CommitteeMeetingCreateNestedManyWithoutVesselInput
     controlledDocuments?: ControlledDocumentCreateNestedManyWithoutVesselInput
     circulars?: CircularCreateNestedManyWithoutVesselInput
-    riskAssessments?: RiskAssessmentCreateNestedManyWithoutVesselInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentCreateNestedManyWithoutVesselInput
+    riskAssessmentExecutions?: RiskAssessmentExecutionCreateNestedManyWithoutVesselInput
+    riskAssessmentRevisionRequests?: RiskAssessmentRevisionRequestCreateNestedManyWithoutVesselInput
     defects?: DefectCreateNestedManyWithoutVesselInput
     users?: UserCreateNestedManyWithoutVesselInput
   }
@@ -88779,7 +97665,7 @@ export namespace Prisma {
     companyId: string
     name: string
     code?: string | null
-    imo: string
+    imo?: string | null
     officialNumber?: string | null
     callSign?: string | null
     mmsi?: string | null
@@ -88792,6 +97678,18 @@ export namespace Prisma {
     breadth?: number | null
     depth?: number | null
     status?: $Enums.VesselStatus
+    capacityCbm?: number | null
+    netTonnage?: number | null
+    deadweight?: number | null
+    tradeArea?: string | null
+    registeredOwner?: string | null
+    headOwner?: string | null
+    charterer?: string | null
+    yearWithSwan?: number | null
+    lastDryDock?: Date | string | null
+    dryDockPlace?: string | null
+    nextDryDockDue?: Date | string | null
+    archivedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -88810,7 +97708,9 @@ export namespace Prisma {
     committeeMeetings?: CommitteeMeetingUncheckedCreateNestedManyWithoutVesselInput
     controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutVesselInput
     circulars?: CircularUncheckedCreateNestedManyWithoutVesselInput
-    riskAssessments?: RiskAssessmentUncheckedCreateNestedManyWithoutVesselInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedCreateNestedManyWithoutVesselInput
+    riskAssessmentExecutions?: RiskAssessmentExecutionUncheckedCreateNestedManyWithoutVesselInput
+    riskAssessmentRevisionRequests?: RiskAssessmentRevisionRequestUncheckedCreateNestedManyWithoutVesselInput
     defects?: DefectUncheckedCreateNestedManyWithoutVesselInput
     users?: UserUncheckedCreateNestedManyWithoutVesselInput
   }
@@ -88853,7 +97753,7 @@ export namespace Prisma {
     committeeMeetings?: CommitteeMeetingUpdateManyWithoutCompanyNestedInput
     controlledDocuments?: ControlledDocumentUpdateManyWithoutCompanyNestedInput
     circulars?: CircularUpdateManyWithoutCompanyNestedInput
-    riskAssessments?: RiskAssessmentUpdateManyWithoutCompanyNestedInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUpdateManyWithoutCompanyNestedInput
     defects?: DefectUpdateManyWithoutCompanyNestedInput
   }
 
@@ -88879,7 +97779,7 @@ export namespace Prisma {
     committeeMeetings?: CommitteeMeetingUncheckedUpdateManyWithoutCompanyNestedInput
     controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutCompanyNestedInput
     circulars?: CircularUncheckedUpdateManyWithoutCompanyNestedInput
-    riskAssessments?: RiskAssessmentUncheckedUpdateManyWithoutCompanyNestedInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedUpdateManyWithoutCompanyNestedInput
     defects?: DefectUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
@@ -88898,7 +97798,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     code?: NullableStringFieldUpdateOperationsInput | string | null
-    imo?: StringFieldUpdateOperationsInput | string
+    imo?: NullableStringFieldUpdateOperationsInput | string | null
     officialNumber?: NullableStringFieldUpdateOperationsInput | string | null
     callSign?: NullableStringFieldUpdateOperationsInput | string | null
     mmsi?: NullableStringFieldUpdateOperationsInput | string | null
@@ -88911,6 +97811,18 @@ export namespace Prisma {
     breadth?: NullableFloatFieldUpdateOperationsInput | number | null
     depth?: NullableFloatFieldUpdateOperationsInput | number | null
     status?: EnumVesselStatusFieldUpdateOperationsInput | $Enums.VesselStatus
+    capacityCbm?: NullableFloatFieldUpdateOperationsInput | number | null
+    netTonnage?: NullableFloatFieldUpdateOperationsInput | number | null
+    deadweight?: NullableFloatFieldUpdateOperationsInput | number | null
+    tradeArea?: NullableStringFieldUpdateOperationsInput | string | null
+    registeredOwner?: NullableStringFieldUpdateOperationsInput | string | null
+    headOwner?: NullableStringFieldUpdateOperationsInput | string | null
+    charterer?: NullableStringFieldUpdateOperationsInput | string | null
+    yearWithSwan?: NullableIntFieldUpdateOperationsInput | number | null
+    lastDryDock?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dryDockPlace?: NullableStringFieldUpdateOperationsInput | string | null
+    nextDryDockDue?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -88930,7 +97842,9 @@ export namespace Prisma {
     committeeMeetings?: CommitteeMeetingUpdateManyWithoutVesselNestedInput
     controlledDocuments?: ControlledDocumentUpdateManyWithoutVesselNestedInput
     circulars?: CircularUpdateManyWithoutVesselNestedInput
-    riskAssessments?: RiskAssessmentUpdateManyWithoutVesselNestedInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUpdateManyWithoutVesselNestedInput
+    riskAssessmentExecutions?: RiskAssessmentExecutionUpdateManyWithoutVesselNestedInput
+    riskAssessmentRevisionRequests?: RiskAssessmentRevisionRequestUpdateManyWithoutVesselNestedInput
     defects?: DefectUpdateManyWithoutVesselNestedInput
     users?: UserUpdateManyWithoutVesselNestedInput
   }
@@ -88940,7 +97854,7 @@ export namespace Prisma {
     companyId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     code?: NullableStringFieldUpdateOperationsInput | string | null
-    imo?: StringFieldUpdateOperationsInput | string
+    imo?: NullableStringFieldUpdateOperationsInput | string | null
     officialNumber?: NullableStringFieldUpdateOperationsInput | string | null
     callSign?: NullableStringFieldUpdateOperationsInput | string | null
     mmsi?: NullableStringFieldUpdateOperationsInput | string | null
@@ -88953,6 +97867,18 @@ export namespace Prisma {
     breadth?: NullableFloatFieldUpdateOperationsInput | number | null
     depth?: NullableFloatFieldUpdateOperationsInput | number | null
     status?: EnumVesselStatusFieldUpdateOperationsInput | $Enums.VesselStatus
+    capacityCbm?: NullableFloatFieldUpdateOperationsInput | number | null
+    netTonnage?: NullableFloatFieldUpdateOperationsInput | number | null
+    deadweight?: NullableFloatFieldUpdateOperationsInput | number | null
+    tradeArea?: NullableStringFieldUpdateOperationsInput | string | null
+    registeredOwner?: NullableStringFieldUpdateOperationsInput | string | null
+    headOwner?: NullableStringFieldUpdateOperationsInput | string | null
+    charterer?: NullableStringFieldUpdateOperationsInput | string | null
+    yearWithSwan?: NullableIntFieldUpdateOperationsInput | number | null
+    lastDryDock?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dryDockPlace?: NullableStringFieldUpdateOperationsInput | string | null
+    nextDryDockDue?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -88971,7 +97897,9 @@ export namespace Prisma {
     committeeMeetings?: CommitteeMeetingUncheckedUpdateManyWithoutVesselNestedInput
     controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutVesselNestedInput
     circulars?: CircularUncheckedUpdateManyWithoutVesselNestedInput
-    riskAssessments?: RiskAssessmentUncheckedUpdateManyWithoutVesselNestedInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedUpdateManyWithoutVesselNestedInput
+    riskAssessmentExecutions?: RiskAssessmentExecutionUncheckedUpdateManyWithoutVesselNestedInput
+    riskAssessmentRevisionRequests?: RiskAssessmentRevisionRequestUncheckedUpdateManyWithoutVesselNestedInput
     defects?: DefectUncheckedUpdateManyWithoutVesselNestedInput
     users?: UserUncheckedUpdateManyWithoutVesselNestedInput
   }
@@ -88998,7 +97926,7 @@ export namespace Prisma {
     committeeMeetings?: CommitteeMeetingCreateNestedManyWithoutCompanyInput
     emergencyDrills?: EmergencyDrillCreateNestedManyWithoutCompanyInput
     circulars?: CircularCreateNestedManyWithoutCompanyInput
-    riskAssessments?: RiskAssessmentCreateNestedManyWithoutCompanyInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentCreateNestedManyWithoutCompanyInput
     defects?: DefectCreateNestedManyWithoutCompanyInput
   }
 
@@ -89024,7 +97952,7 @@ export namespace Prisma {
     committeeMeetings?: CommitteeMeetingUncheckedCreateNestedManyWithoutCompanyInput
     emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutCompanyInput
     circulars?: CircularUncheckedCreateNestedManyWithoutCompanyInput
-    riskAssessments?: RiskAssessmentUncheckedCreateNestedManyWithoutCompanyInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedCreateNestedManyWithoutCompanyInput
     defects?: DefectUncheckedCreateNestedManyWithoutCompanyInput
   }
 
@@ -89037,7 +97965,7 @@ export namespace Prisma {
     id?: string
     name: string
     code?: string | null
-    imo: string
+    imo?: string | null
     officialNumber?: string | null
     callSign?: string | null
     mmsi?: string | null
@@ -89050,6 +97978,18 @@ export namespace Prisma {
     breadth?: number | null
     depth?: number | null
     status?: $Enums.VesselStatus
+    capacityCbm?: number | null
+    netTonnage?: number | null
+    deadweight?: number | null
+    tradeArea?: string | null
+    registeredOwner?: string | null
+    headOwner?: string | null
+    charterer?: string | null
+    yearWithSwan?: number | null
+    lastDryDock?: Date | string | null
+    dryDockPlace?: string | null
+    nextDryDockDue?: Date | string | null
+    archivedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -89069,7 +98009,9 @@ export namespace Prisma {
     committeeMeetings?: CommitteeMeetingCreateNestedManyWithoutVesselInput
     emergencyDrills?: EmergencyDrillCreateNestedManyWithoutVesselInput
     circulars?: CircularCreateNestedManyWithoutVesselInput
-    riskAssessments?: RiskAssessmentCreateNestedManyWithoutVesselInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentCreateNestedManyWithoutVesselInput
+    riskAssessmentExecutions?: RiskAssessmentExecutionCreateNestedManyWithoutVesselInput
+    riskAssessmentRevisionRequests?: RiskAssessmentRevisionRequestCreateNestedManyWithoutVesselInput
     defects?: DefectCreateNestedManyWithoutVesselInput
     users?: UserCreateNestedManyWithoutVesselInput
   }
@@ -89079,7 +98021,7 @@ export namespace Prisma {
     companyId: string
     name: string
     code?: string | null
-    imo: string
+    imo?: string | null
     officialNumber?: string | null
     callSign?: string | null
     mmsi?: string | null
@@ -89092,6 +98034,18 @@ export namespace Prisma {
     breadth?: number | null
     depth?: number | null
     status?: $Enums.VesselStatus
+    capacityCbm?: number | null
+    netTonnage?: number | null
+    deadweight?: number | null
+    tradeArea?: string | null
+    registeredOwner?: string | null
+    headOwner?: string | null
+    charterer?: string | null
+    yearWithSwan?: number | null
+    lastDryDock?: Date | string | null
+    dryDockPlace?: string | null
+    nextDryDockDue?: Date | string | null
+    archivedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -89110,7 +98064,9 @@ export namespace Prisma {
     committeeMeetings?: CommitteeMeetingUncheckedCreateNestedManyWithoutVesselInput
     emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutVesselInput
     circulars?: CircularUncheckedCreateNestedManyWithoutVesselInput
-    riskAssessments?: RiskAssessmentUncheckedCreateNestedManyWithoutVesselInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedCreateNestedManyWithoutVesselInput
+    riskAssessmentExecutions?: RiskAssessmentExecutionUncheckedCreateNestedManyWithoutVesselInput
+    riskAssessmentRevisionRequests?: RiskAssessmentRevisionRequestUncheckedCreateNestedManyWithoutVesselInput
     defects?: DefectUncheckedCreateNestedManyWithoutVesselInput
     users?: UserUncheckedCreateNestedManyWithoutVesselInput
   }
@@ -89153,7 +98109,7 @@ export namespace Prisma {
     committeeMeetings?: CommitteeMeetingUpdateManyWithoutCompanyNestedInput
     emergencyDrills?: EmergencyDrillUpdateManyWithoutCompanyNestedInput
     circulars?: CircularUpdateManyWithoutCompanyNestedInput
-    riskAssessments?: RiskAssessmentUpdateManyWithoutCompanyNestedInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUpdateManyWithoutCompanyNestedInput
     defects?: DefectUpdateManyWithoutCompanyNestedInput
   }
 
@@ -89179,7 +98135,7 @@ export namespace Prisma {
     committeeMeetings?: CommitteeMeetingUncheckedUpdateManyWithoutCompanyNestedInput
     emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutCompanyNestedInput
     circulars?: CircularUncheckedUpdateManyWithoutCompanyNestedInput
-    riskAssessments?: RiskAssessmentUncheckedUpdateManyWithoutCompanyNestedInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedUpdateManyWithoutCompanyNestedInput
     defects?: DefectUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
@@ -89198,7 +98154,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     code?: NullableStringFieldUpdateOperationsInput | string | null
-    imo?: StringFieldUpdateOperationsInput | string
+    imo?: NullableStringFieldUpdateOperationsInput | string | null
     officialNumber?: NullableStringFieldUpdateOperationsInput | string | null
     callSign?: NullableStringFieldUpdateOperationsInput | string | null
     mmsi?: NullableStringFieldUpdateOperationsInput | string | null
@@ -89211,6 +98167,18 @@ export namespace Prisma {
     breadth?: NullableFloatFieldUpdateOperationsInput | number | null
     depth?: NullableFloatFieldUpdateOperationsInput | number | null
     status?: EnumVesselStatusFieldUpdateOperationsInput | $Enums.VesselStatus
+    capacityCbm?: NullableFloatFieldUpdateOperationsInput | number | null
+    netTonnage?: NullableFloatFieldUpdateOperationsInput | number | null
+    deadweight?: NullableFloatFieldUpdateOperationsInput | number | null
+    tradeArea?: NullableStringFieldUpdateOperationsInput | string | null
+    registeredOwner?: NullableStringFieldUpdateOperationsInput | string | null
+    headOwner?: NullableStringFieldUpdateOperationsInput | string | null
+    charterer?: NullableStringFieldUpdateOperationsInput | string | null
+    yearWithSwan?: NullableIntFieldUpdateOperationsInput | number | null
+    lastDryDock?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dryDockPlace?: NullableStringFieldUpdateOperationsInput | string | null
+    nextDryDockDue?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -89230,7 +98198,9 @@ export namespace Prisma {
     committeeMeetings?: CommitteeMeetingUpdateManyWithoutVesselNestedInput
     emergencyDrills?: EmergencyDrillUpdateManyWithoutVesselNestedInput
     circulars?: CircularUpdateManyWithoutVesselNestedInput
-    riskAssessments?: RiskAssessmentUpdateManyWithoutVesselNestedInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUpdateManyWithoutVesselNestedInput
+    riskAssessmentExecutions?: RiskAssessmentExecutionUpdateManyWithoutVesselNestedInput
+    riskAssessmentRevisionRequests?: RiskAssessmentRevisionRequestUpdateManyWithoutVesselNestedInput
     defects?: DefectUpdateManyWithoutVesselNestedInput
     users?: UserUpdateManyWithoutVesselNestedInput
   }
@@ -89240,7 +98210,7 @@ export namespace Prisma {
     companyId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     code?: NullableStringFieldUpdateOperationsInput | string | null
-    imo?: StringFieldUpdateOperationsInput | string
+    imo?: NullableStringFieldUpdateOperationsInput | string | null
     officialNumber?: NullableStringFieldUpdateOperationsInput | string | null
     callSign?: NullableStringFieldUpdateOperationsInput | string | null
     mmsi?: NullableStringFieldUpdateOperationsInput | string | null
@@ -89253,6 +98223,18 @@ export namespace Prisma {
     breadth?: NullableFloatFieldUpdateOperationsInput | number | null
     depth?: NullableFloatFieldUpdateOperationsInput | number | null
     status?: EnumVesselStatusFieldUpdateOperationsInput | $Enums.VesselStatus
+    capacityCbm?: NullableFloatFieldUpdateOperationsInput | number | null
+    netTonnage?: NullableFloatFieldUpdateOperationsInput | number | null
+    deadweight?: NullableFloatFieldUpdateOperationsInput | number | null
+    tradeArea?: NullableStringFieldUpdateOperationsInput | string | null
+    registeredOwner?: NullableStringFieldUpdateOperationsInput | string | null
+    headOwner?: NullableStringFieldUpdateOperationsInput | string | null
+    charterer?: NullableStringFieldUpdateOperationsInput | string | null
+    yearWithSwan?: NullableIntFieldUpdateOperationsInput | number | null
+    lastDryDock?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dryDockPlace?: NullableStringFieldUpdateOperationsInput | string | null
+    nextDryDockDue?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -89271,7 +98253,9 @@ export namespace Prisma {
     committeeMeetings?: CommitteeMeetingUncheckedUpdateManyWithoutVesselNestedInput
     emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutVesselNestedInput
     circulars?: CircularUncheckedUpdateManyWithoutVesselNestedInput
-    riskAssessments?: RiskAssessmentUncheckedUpdateManyWithoutVesselNestedInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedUpdateManyWithoutVesselNestedInput
+    riskAssessmentExecutions?: RiskAssessmentExecutionUncheckedUpdateManyWithoutVesselNestedInput
+    riskAssessmentRevisionRequests?: RiskAssessmentRevisionRequestUncheckedUpdateManyWithoutVesselNestedInput
     defects?: DefectUncheckedUpdateManyWithoutVesselNestedInput
     users?: UserUncheckedUpdateManyWithoutVesselNestedInput
   }
@@ -89298,7 +98282,7 @@ export namespace Prisma {
     committeeMeetings?: CommitteeMeetingCreateNestedManyWithoutCompanyInput
     emergencyDrills?: EmergencyDrillCreateNestedManyWithoutCompanyInput
     controlledDocuments?: ControlledDocumentCreateNestedManyWithoutCompanyInput
-    riskAssessments?: RiskAssessmentCreateNestedManyWithoutCompanyInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentCreateNestedManyWithoutCompanyInput
     defects?: DefectCreateNestedManyWithoutCompanyInput
   }
 
@@ -89324,7 +98308,7 @@ export namespace Prisma {
     committeeMeetings?: CommitteeMeetingUncheckedCreateNestedManyWithoutCompanyInput
     emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutCompanyInput
     controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutCompanyInput
-    riskAssessments?: RiskAssessmentUncheckedCreateNestedManyWithoutCompanyInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedCreateNestedManyWithoutCompanyInput
     defects?: DefectUncheckedCreateNestedManyWithoutCompanyInput
   }
 
@@ -89337,7 +98321,7 @@ export namespace Prisma {
     id?: string
     name: string
     code?: string | null
-    imo: string
+    imo?: string | null
     officialNumber?: string | null
     callSign?: string | null
     mmsi?: string | null
@@ -89350,6 +98334,18 @@ export namespace Prisma {
     breadth?: number | null
     depth?: number | null
     status?: $Enums.VesselStatus
+    capacityCbm?: number | null
+    netTonnage?: number | null
+    deadweight?: number | null
+    tradeArea?: string | null
+    registeredOwner?: string | null
+    headOwner?: string | null
+    charterer?: string | null
+    yearWithSwan?: number | null
+    lastDryDock?: Date | string | null
+    dryDockPlace?: string | null
+    nextDryDockDue?: Date | string | null
+    archivedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -89369,7 +98365,9 @@ export namespace Prisma {
     committeeMeetings?: CommitteeMeetingCreateNestedManyWithoutVesselInput
     emergencyDrills?: EmergencyDrillCreateNestedManyWithoutVesselInput
     controlledDocuments?: ControlledDocumentCreateNestedManyWithoutVesselInput
-    riskAssessments?: RiskAssessmentCreateNestedManyWithoutVesselInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentCreateNestedManyWithoutVesselInput
+    riskAssessmentExecutions?: RiskAssessmentExecutionCreateNestedManyWithoutVesselInput
+    riskAssessmentRevisionRequests?: RiskAssessmentRevisionRequestCreateNestedManyWithoutVesselInput
     defects?: DefectCreateNestedManyWithoutVesselInput
     users?: UserCreateNestedManyWithoutVesselInput
   }
@@ -89379,7 +98377,7 @@ export namespace Prisma {
     companyId: string
     name: string
     code?: string | null
-    imo: string
+    imo?: string | null
     officialNumber?: string | null
     callSign?: string | null
     mmsi?: string | null
@@ -89392,6 +98390,18 @@ export namespace Prisma {
     breadth?: number | null
     depth?: number | null
     status?: $Enums.VesselStatus
+    capacityCbm?: number | null
+    netTonnage?: number | null
+    deadweight?: number | null
+    tradeArea?: string | null
+    registeredOwner?: string | null
+    headOwner?: string | null
+    charterer?: string | null
+    yearWithSwan?: number | null
+    lastDryDock?: Date | string | null
+    dryDockPlace?: string | null
+    nextDryDockDue?: Date | string | null
+    archivedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -89410,7 +98420,9 @@ export namespace Prisma {
     committeeMeetings?: CommitteeMeetingUncheckedCreateNestedManyWithoutVesselInput
     emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutVesselInput
     controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutVesselInput
-    riskAssessments?: RiskAssessmentUncheckedCreateNestedManyWithoutVesselInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedCreateNestedManyWithoutVesselInput
+    riskAssessmentExecutions?: RiskAssessmentExecutionUncheckedCreateNestedManyWithoutVesselInput
+    riskAssessmentRevisionRequests?: RiskAssessmentRevisionRequestUncheckedCreateNestedManyWithoutVesselInput
     defects?: DefectUncheckedCreateNestedManyWithoutVesselInput
     users?: UserUncheckedCreateNestedManyWithoutVesselInput
   }
@@ -89487,7 +98499,7 @@ export namespace Prisma {
     committeeMeetings?: CommitteeMeetingUpdateManyWithoutCompanyNestedInput
     emergencyDrills?: EmergencyDrillUpdateManyWithoutCompanyNestedInput
     controlledDocuments?: ControlledDocumentUpdateManyWithoutCompanyNestedInput
-    riskAssessments?: RiskAssessmentUpdateManyWithoutCompanyNestedInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUpdateManyWithoutCompanyNestedInput
     defects?: DefectUpdateManyWithoutCompanyNestedInput
   }
 
@@ -89513,7 +98525,7 @@ export namespace Prisma {
     committeeMeetings?: CommitteeMeetingUncheckedUpdateManyWithoutCompanyNestedInput
     emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutCompanyNestedInput
     controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutCompanyNestedInput
-    riskAssessments?: RiskAssessmentUncheckedUpdateManyWithoutCompanyNestedInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedUpdateManyWithoutCompanyNestedInput
     defects?: DefectUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
@@ -89532,7 +98544,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     code?: NullableStringFieldUpdateOperationsInput | string | null
-    imo?: StringFieldUpdateOperationsInput | string
+    imo?: NullableStringFieldUpdateOperationsInput | string | null
     officialNumber?: NullableStringFieldUpdateOperationsInput | string | null
     callSign?: NullableStringFieldUpdateOperationsInput | string | null
     mmsi?: NullableStringFieldUpdateOperationsInput | string | null
@@ -89545,6 +98557,18 @@ export namespace Prisma {
     breadth?: NullableFloatFieldUpdateOperationsInput | number | null
     depth?: NullableFloatFieldUpdateOperationsInput | number | null
     status?: EnumVesselStatusFieldUpdateOperationsInput | $Enums.VesselStatus
+    capacityCbm?: NullableFloatFieldUpdateOperationsInput | number | null
+    netTonnage?: NullableFloatFieldUpdateOperationsInput | number | null
+    deadweight?: NullableFloatFieldUpdateOperationsInput | number | null
+    tradeArea?: NullableStringFieldUpdateOperationsInput | string | null
+    registeredOwner?: NullableStringFieldUpdateOperationsInput | string | null
+    headOwner?: NullableStringFieldUpdateOperationsInput | string | null
+    charterer?: NullableStringFieldUpdateOperationsInput | string | null
+    yearWithSwan?: NullableIntFieldUpdateOperationsInput | number | null
+    lastDryDock?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dryDockPlace?: NullableStringFieldUpdateOperationsInput | string | null
+    nextDryDockDue?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -89564,7 +98588,9 @@ export namespace Prisma {
     committeeMeetings?: CommitteeMeetingUpdateManyWithoutVesselNestedInput
     emergencyDrills?: EmergencyDrillUpdateManyWithoutVesselNestedInput
     controlledDocuments?: ControlledDocumentUpdateManyWithoutVesselNestedInput
-    riskAssessments?: RiskAssessmentUpdateManyWithoutVesselNestedInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUpdateManyWithoutVesselNestedInput
+    riskAssessmentExecutions?: RiskAssessmentExecutionUpdateManyWithoutVesselNestedInput
+    riskAssessmentRevisionRequests?: RiskAssessmentRevisionRequestUpdateManyWithoutVesselNestedInput
     defects?: DefectUpdateManyWithoutVesselNestedInput
     users?: UserUpdateManyWithoutVesselNestedInput
   }
@@ -89574,7 +98600,7 @@ export namespace Prisma {
     companyId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     code?: NullableStringFieldUpdateOperationsInput | string | null
-    imo?: StringFieldUpdateOperationsInput | string
+    imo?: NullableStringFieldUpdateOperationsInput | string | null
     officialNumber?: NullableStringFieldUpdateOperationsInput | string | null
     callSign?: NullableStringFieldUpdateOperationsInput | string | null
     mmsi?: NullableStringFieldUpdateOperationsInput | string | null
@@ -89587,6 +98613,18 @@ export namespace Prisma {
     breadth?: NullableFloatFieldUpdateOperationsInput | number | null
     depth?: NullableFloatFieldUpdateOperationsInput | number | null
     status?: EnumVesselStatusFieldUpdateOperationsInput | $Enums.VesselStatus
+    capacityCbm?: NullableFloatFieldUpdateOperationsInput | number | null
+    netTonnage?: NullableFloatFieldUpdateOperationsInput | number | null
+    deadweight?: NullableFloatFieldUpdateOperationsInput | number | null
+    tradeArea?: NullableStringFieldUpdateOperationsInput | string | null
+    registeredOwner?: NullableStringFieldUpdateOperationsInput | string | null
+    headOwner?: NullableStringFieldUpdateOperationsInput | string | null
+    charterer?: NullableStringFieldUpdateOperationsInput | string | null
+    yearWithSwan?: NullableIntFieldUpdateOperationsInput | number | null
+    lastDryDock?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dryDockPlace?: NullableStringFieldUpdateOperationsInput | string | null
+    nextDryDockDue?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -89605,7 +98643,9 @@ export namespace Prisma {
     committeeMeetings?: CommitteeMeetingUncheckedUpdateManyWithoutVesselNestedInput
     emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutVesselNestedInput
     controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutVesselNestedInput
-    riskAssessments?: RiskAssessmentUncheckedUpdateManyWithoutVesselNestedInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedUpdateManyWithoutVesselNestedInput
+    riskAssessmentExecutions?: RiskAssessmentExecutionUncheckedUpdateManyWithoutVesselNestedInput
+    riskAssessmentRevisionRequests?: RiskAssessmentRevisionRequestUncheckedUpdateManyWithoutVesselNestedInput
     defects?: DefectUncheckedUpdateManyWithoutVesselNestedInput
     users?: UserUncheckedUpdateManyWithoutVesselNestedInput
   }
@@ -89738,7 +98778,7 @@ export namespace Prisma {
     deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
-  export type CompanyCreateWithoutRiskAssessmentsInput = {
+  export type CompanyCreateWithoutRiskAssessmentDocumentsInput = {
     id?: string
     name: string
     code: string
@@ -89764,7 +98804,7 @@ export namespace Prisma {
     defects?: DefectCreateNestedManyWithoutCompanyInput
   }
 
-  export type CompanyUncheckedCreateWithoutRiskAssessmentsInput = {
+  export type CompanyUncheckedCreateWithoutRiskAssessmentDocumentsInput = {
     id?: string
     name: string
     code: string
@@ -89790,16 +98830,16 @@ export namespace Prisma {
     defects?: DefectUncheckedCreateNestedManyWithoutCompanyInput
   }
 
-  export type CompanyCreateOrConnectWithoutRiskAssessmentsInput = {
+  export type CompanyCreateOrConnectWithoutRiskAssessmentDocumentsInput = {
     where: CompanyWhereUniqueInput
-    create: XOR<CompanyCreateWithoutRiskAssessmentsInput, CompanyUncheckedCreateWithoutRiskAssessmentsInput>
+    create: XOR<CompanyCreateWithoutRiskAssessmentDocumentsInput, CompanyUncheckedCreateWithoutRiskAssessmentDocumentsInput>
   }
 
-  export type VesselCreateWithoutRiskAssessmentsInput = {
+  export type VesselCreateWithoutRiskAssessmentDocumentsInput = {
     id?: string
     name: string
     code?: string | null
-    imo: string
+    imo?: string | null
     officialNumber?: string | null
     callSign?: string | null
     mmsi?: string | null
@@ -89812,6 +98852,18 @@ export namespace Prisma {
     breadth?: number | null
     depth?: number | null
     status?: $Enums.VesselStatus
+    capacityCbm?: number | null
+    netTonnage?: number | null
+    deadweight?: number | null
+    tradeArea?: string | null
+    registeredOwner?: string | null
+    headOwner?: string | null
+    charterer?: string | null
+    yearWithSwan?: number | null
+    lastDryDock?: Date | string | null
+    dryDockPlace?: string | null
+    nextDryDockDue?: Date | string | null
+    archivedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -89832,16 +98884,18 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillCreateNestedManyWithoutVesselInput
     controlledDocuments?: ControlledDocumentCreateNestedManyWithoutVesselInput
     circulars?: CircularCreateNestedManyWithoutVesselInput
+    riskAssessmentExecutions?: RiskAssessmentExecutionCreateNestedManyWithoutVesselInput
+    riskAssessmentRevisionRequests?: RiskAssessmentRevisionRequestCreateNestedManyWithoutVesselInput
     defects?: DefectCreateNestedManyWithoutVesselInput
     users?: UserCreateNestedManyWithoutVesselInput
   }
 
-  export type VesselUncheckedCreateWithoutRiskAssessmentsInput = {
+  export type VesselUncheckedCreateWithoutRiskAssessmentDocumentsInput = {
     id?: string
     companyId: string
     name: string
     code?: string | null
-    imo: string
+    imo?: string | null
     officialNumber?: string | null
     callSign?: string | null
     mmsi?: string | null
@@ -89854,6 +98908,18 @@ export namespace Prisma {
     breadth?: number | null
     depth?: number | null
     status?: $Enums.VesselStatus
+    capacityCbm?: number | null
+    netTonnage?: number | null
+    deadweight?: number | null
+    tradeArea?: string | null
+    registeredOwner?: string | null
+    headOwner?: string | null
+    charterer?: string | null
+    yearWithSwan?: number | null
+    lastDryDock?: Date | string | null
+    dryDockPlace?: string | null
+    nextDryDockDue?: Date | string | null
+    archivedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -89873,27 +98939,212 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutVesselInput
     controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutVesselInput
     circulars?: CircularUncheckedCreateNestedManyWithoutVesselInput
+    riskAssessmentExecutions?: RiskAssessmentExecutionUncheckedCreateNestedManyWithoutVesselInput
+    riskAssessmentRevisionRequests?: RiskAssessmentRevisionRequestUncheckedCreateNestedManyWithoutVesselInput
     defects?: DefectUncheckedCreateNestedManyWithoutVesselInput
     users?: UserUncheckedCreateNestedManyWithoutVesselInput
   }
 
-  export type VesselCreateOrConnectWithoutRiskAssessmentsInput = {
+  export type VesselCreateOrConnectWithoutRiskAssessmentDocumentsInput = {
     where: VesselWhereUniqueInput
-    create: XOR<VesselCreateWithoutRiskAssessmentsInput, VesselUncheckedCreateWithoutRiskAssessmentsInput>
+    create: XOR<VesselCreateWithoutRiskAssessmentDocumentsInput, VesselUncheckedCreateWithoutRiskAssessmentDocumentsInput>
   }
 
-  export type CompanyUpsertWithoutRiskAssessmentsInput = {
-    update: XOR<CompanyUpdateWithoutRiskAssessmentsInput, CompanyUncheckedUpdateWithoutRiskAssessmentsInput>
-    create: XOR<CompanyCreateWithoutRiskAssessmentsInput, CompanyUncheckedCreateWithoutRiskAssessmentsInput>
+  export type RiskAssessmentRevisionCreateWithoutCurrentOfInput = {
+    id?: string
+    companyId: string
+    revisionNo: number
+    changeSummary?: string | null
+    reviewTrigger?: $Enums.ReviewTrigger | null
+    smsProcedureRefs?: string | null
+    riskMatrixRef?: string | null
+    checklistsRequired?: string | null
+    approvalLevel?: $Enums.RaApprovalLevel
+    status?: $Enums.DocumentStatus
+    effectiveDate?: Date | string | null
+    approvedBy?: string | null
+    approvedAt?: Date | string | null
+    createdAt?: Date | string
+    createdBy?: string | null
+    document: RiskAssessmentDocumentCreateNestedOneWithoutRevisionsInput
+    executions?: RiskAssessmentExecutionCreateNestedManyWithoutRevisionInput
+    hazardRows?: RiskHazardRowCreateNestedManyWithoutRevisionInput
+  }
+
+  export type RiskAssessmentRevisionUncheckedCreateWithoutCurrentOfInput = {
+    id?: string
+    companyId: string
+    documentId: string
+    revisionNo: number
+    changeSummary?: string | null
+    reviewTrigger?: $Enums.ReviewTrigger | null
+    smsProcedureRefs?: string | null
+    riskMatrixRef?: string | null
+    checklistsRequired?: string | null
+    approvalLevel?: $Enums.RaApprovalLevel
+    status?: $Enums.DocumentStatus
+    effectiveDate?: Date | string | null
+    approvedBy?: string | null
+    approvedAt?: Date | string | null
+    createdAt?: Date | string
+    createdBy?: string | null
+    executions?: RiskAssessmentExecutionUncheckedCreateNestedManyWithoutRevisionInput
+    hazardRows?: RiskHazardRowUncheckedCreateNestedManyWithoutRevisionInput
+  }
+
+  export type RiskAssessmentRevisionCreateOrConnectWithoutCurrentOfInput = {
+    where: RiskAssessmentRevisionWhereUniqueInput
+    create: XOR<RiskAssessmentRevisionCreateWithoutCurrentOfInput, RiskAssessmentRevisionUncheckedCreateWithoutCurrentOfInput>
+  }
+
+  export type RiskAssessmentRevisionCreateWithoutDocumentInput = {
+    id?: string
+    companyId: string
+    revisionNo: number
+    changeSummary?: string | null
+    reviewTrigger?: $Enums.ReviewTrigger | null
+    smsProcedureRefs?: string | null
+    riskMatrixRef?: string | null
+    checklistsRequired?: string | null
+    approvalLevel?: $Enums.RaApprovalLevel
+    status?: $Enums.DocumentStatus
+    effectiveDate?: Date | string | null
+    approvedBy?: string | null
+    approvedAt?: Date | string | null
+    createdAt?: Date | string
+    createdBy?: string | null
+    currentOf?: RiskAssessmentDocumentCreateNestedOneWithoutCurrentRevisionInput
+    executions?: RiskAssessmentExecutionCreateNestedManyWithoutRevisionInput
+    hazardRows?: RiskHazardRowCreateNestedManyWithoutRevisionInput
+  }
+
+  export type RiskAssessmentRevisionUncheckedCreateWithoutDocumentInput = {
+    id?: string
+    companyId: string
+    revisionNo: number
+    changeSummary?: string | null
+    reviewTrigger?: $Enums.ReviewTrigger | null
+    smsProcedureRefs?: string | null
+    riskMatrixRef?: string | null
+    checklistsRequired?: string | null
+    approvalLevel?: $Enums.RaApprovalLevel
+    status?: $Enums.DocumentStatus
+    effectiveDate?: Date | string | null
+    approvedBy?: string | null
+    approvedAt?: Date | string | null
+    createdAt?: Date | string
+    createdBy?: string | null
+    currentOf?: RiskAssessmentDocumentUncheckedCreateNestedOneWithoutCurrentRevisionInput
+    executions?: RiskAssessmentExecutionUncheckedCreateNestedManyWithoutRevisionInput
+    hazardRows?: RiskHazardRowUncheckedCreateNestedManyWithoutRevisionInput
+  }
+
+  export type RiskAssessmentRevisionCreateOrConnectWithoutDocumentInput = {
+    where: RiskAssessmentRevisionWhereUniqueInput
+    create: XOR<RiskAssessmentRevisionCreateWithoutDocumentInput, RiskAssessmentRevisionUncheckedCreateWithoutDocumentInput>
+  }
+
+  export type RiskAssessmentRevisionCreateManyDocumentInputEnvelope = {
+    data: RiskAssessmentRevisionCreateManyDocumentInput | RiskAssessmentRevisionCreateManyDocumentInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type RiskAssessmentExecutionCreateWithoutDocumentInput = {
+    id?: string
+    companyId: string
+    jobName: string
+    conditionStatus?: $Enums.RaExecutionCondition
+    changedConditionsNote?: string | null
+    temporaryHazards?: string | null
+    temporaryControls?: string | null
+    performedById?: string | null
+    toolboxSignedAt?: Date | string | null
+    toolboxAttendees?: string | null
+    executedAt?: Date | string
+    createdAt?: Date | string
+    createdBy?: string | null
+    revision: RiskAssessmentRevisionCreateNestedOneWithoutExecutionsInput
+    vessel: VesselCreateNestedOneWithoutRiskAssessmentExecutionsInput
+  }
+
+  export type RiskAssessmentExecutionUncheckedCreateWithoutDocumentInput = {
+    id?: string
+    companyId: string
+    revisionId: string
+    vesselId: string
+    jobName: string
+    conditionStatus?: $Enums.RaExecutionCondition
+    changedConditionsNote?: string | null
+    temporaryHazards?: string | null
+    temporaryControls?: string | null
+    performedById?: string | null
+    toolboxSignedAt?: Date | string | null
+    toolboxAttendees?: string | null
+    executedAt?: Date | string
+    createdAt?: Date | string
+    createdBy?: string | null
+  }
+
+  export type RiskAssessmentExecutionCreateOrConnectWithoutDocumentInput = {
+    where: RiskAssessmentExecutionWhereUniqueInput
+    create: XOR<RiskAssessmentExecutionCreateWithoutDocumentInput, RiskAssessmentExecutionUncheckedCreateWithoutDocumentInput>
+  }
+
+  export type RiskAssessmentExecutionCreateManyDocumentInputEnvelope = {
+    data: RiskAssessmentExecutionCreateManyDocumentInput | RiskAssessmentExecutionCreateManyDocumentInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type RiskAssessmentRevisionRequestCreateWithoutDocumentInput = {
+    id?: string
+    companyId: string
+    requestedById?: string | null
+    reason: string
+    reviewTrigger?: $Enums.ReviewTrigger
+    status?: $Enums.RaRevisionRequestStatus
+    decidedById?: string | null
+    decidedAt?: Date | string | null
+    decisionNote?: string | null
+    createdAt?: Date | string
+    vessel?: VesselCreateNestedOneWithoutRiskAssessmentRevisionRequestsInput
+  }
+
+  export type RiskAssessmentRevisionRequestUncheckedCreateWithoutDocumentInput = {
+    id?: string
+    companyId: string
+    requestedById?: string | null
+    vesselId?: string | null
+    reason: string
+    reviewTrigger?: $Enums.ReviewTrigger
+    status?: $Enums.RaRevisionRequestStatus
+    decidedById?: string | null
+    decidedAt?: Date | string | null
+    decisionNote?: string | null
+    createdAt?: Date | string
+  }
+
+  export type RiskAssessmentRevisionRequestCreateOrConnectWithoutDocumentInput = {
+    where: RiskAssessmentRevisionRequestWhereUniqueInput
+    create: XOR<RiskAssessmentRevisionRequestCreateWithoutDocumentInput, RiskAssessmentRevisionRequestUncheckedCreateWithoutDocumentInput>
+  }
+
+  export type RiskAssessmentRevisionRequestCreateManyDocumentInputEnvelope = {
+    data: RiskAssessmentRevisionRequestCreateManyDocumentInput | RiskAssessmentRevisionRequestCreateManyDocumentInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type CompanyUpsertWithoutRiskAssessmentDocumentsInput = {
+    update: XOR<CompanyUpdateWithoutRiskAssessmentDocumentsInput, CompanyUncheckedUpdateWithoutRiskAssessmentDocumentsInput>
+    create: XOR<CompanyCreateWithoutRiskAssessmentDocumentsInput, CompanyUncheckedCreateWithoutRiskAssessmentDocumentsInput>
     where?: CompanyWhereInput
   }
 
-  export type CompanyUpdateToOneWithWhereWithoutRiskAssessmentsInput = {
+  export type CompanyUpdateToOneWithWhereWithoutRiskAssessmentDocumentsInput = {
     where?: CompanyWhereInput
-    data: XOR<CompanyUpdateWithoutRiskAssessmentsInput, CompanyUncheckedUpdateWithoutRiskAssessmentsInput>
+    data: XOR<CompanyUpdateWithoutRiskAssessmentDocumentsInput, CompanyUncheckedUpdateWithoutRiskAssessmentDocumentsInput>
   }
 
-  export type CompanyUpdateWithoutRiskAssessmentsInput = {
+  export type CompanyUpdateWithoutRiskAssessmentDocumentsInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     code?: StringFieldUpdateOperationsInput | string
@@ -89919,7 +99170,7 @@ export namespace Prisma {
     defects?: DefectUpdateManyWithoutCompanyNestedInput
   }
 
-  export type CompanyUncheckedUpdateWithoutRiskAssessmentsInput = {
+  export type CompanyUncheckedUpdateWithoutRiskAssessmentDocumentsInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     code?: StringFieldUpdateOperationsInput | string
@@ -89945,22 +99196,22 @@ export namespace Prisma {
     defects?: DefectUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
-  export type VesselUpsertWithoutRiskAssessmentsInput = {
-    update: XOR<VesselUpdateWithoutRiskAssessmentsInput, VesselUncheckedUpdateWithoutRiskAssessmentsInput>
-    create: XOR<VesselCreateWithoutRiskAssessmentsInput, VesselUncheckedCreateWithoutRiskAssessmentsInput>
+  export type VesselUpsertWithoutRiskAssessmentDocumentsInput = {
+    update: XOR<VesselUpdateWithoutRiskAssessmentDocumentsInput, VesselUncheckedUpdateWithoutRiskAssessmentDocumentsInput>
+    create: XOR<VesselCreateWithoutRiskAssessmentDocumentsInput, VesselUncheckedCreateWithoutRiskAssessmentDocumentsInput>
     where?: VesselWhereInput
   }
 
-  export type VesselUpdateToOneWithWhereWithoutRiskAssessmentsInput = {
+  export type VesselUpdateToOneWithWhereWithoutRiskAssessmentDocumentsInput = {
     where?: VesselWhereInput
-    data: XOR<VesselUpdateWithoutRiskAssessmentsInput, VesselUncheckedUpdateWithoutRiskAssessmentsInput>
+    data: XOR<VesselUpdateWithoutRiskAssessmentDocumentsInput, VesselUncheckedUpdateWithoutRiskAssessmentDocumentsInput>
   }
 
-  export type VesselUpdateWithoutRiskAssessmentsInput = {
+  export type VesselUpdateWithoutRiskAssessmentDocumentsInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     code?: NullableStringFieldUpdateOperationsInput | string | null
-    imo?: StringFieldUpdateOperationsInput | string
+    imo?: NullableStringFieldUpdateOperationsInput | string | null
     officialNumber?: NullableStringFieldUpdateOperationsInput | string | null
     callSign?: NullableStringFieldUpdateOperationsInput | string | null
     mmsi?: NullableStringFieldUpdateOperationsInput | string | null
@@ -89973,6 +99224,18 @@ export namespace Prisma {
     breadth?: NullableFloatFieldUpdateOperationsInput | number | null
     depth?: NullableFloatFieldUpdateOperationsInput | number | null
     status?: EnumVesselStatusFieldUpdateOperationsInput | $Enums.VesselStatus
+    capacityCbm?: NullableFloatFieldUpdateOperationsInput | number | null
+    netTonnage?: NullableFloatFieldUpdateOperationsInput | number | null
+    deadweight?: NullableFloatFieldUpdateOperationsInput | number | null
+    tradeArea?: NullableStringFieldUpdateOperationsInput | string | null
+    registeredOwner?: NullableStringFieldUpdateOperationsInput | string | null
+    headOwner?: NullableStringFieldUpdateOperationsInput | string | null
+    charterer?: NullableStringFieldUpdateOperationsInput | string | null
+    yearWithSwan?: NullableIntFieldUpdateOperationsInput | number | null
+    lastDryDock?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dryDockPlace?: NullableStringFieldUpdateOperationsInput | string | null
+    nextDryDockDue?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -89993,16 +99256,18 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillUpdateManyWithoutVesselNestedInput
     controlledDocuments?: ControlledDocumentUpdateManyWithoutVesselNestedInput
     circulars?: CircularUpdateManyWithoutVesselNestedInput
+    riskAssessmentExecutions?: RiskAssessmentExecutionUpdateManyWithoutVesselNestedInput
+    riskAssessmentRevisionRequests?: RiskAssessmentRevisionRequestUpdateManyWithoutVesselNestedInput
     defects?: DefectUpdateManyWithoutVesselNestedInput
     users?: UserUpdateManyWithoutVesselNestedInput
   }
 
-  export type VesselUncheckedUpdateWithoutRiskAssessmentsInput = {
+  export type VesselUncheckedUpdateWithoutRiskAssessmentDocumentsInput = {
     id?: StringFieldUpdateOperationsInput | string
     companyId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     code?: NullableStringFieldUpdateOperationsInput | string | null
-    imo?: StringFieldUpdateOperationsInput | string
+    imo?: NullableStringFieldUpdateOperationsInput | string | null
     officialNumber?: NullableStringFieldUpdateOperationsInput | string | null
     callSign?: NullableStringFieldUpdateOperationsInput | string | null
     mmsi?: NullableStringFieldUpdateOperationsInput | string | null
@@ -90015,6 +99280,18 @@ export namespace Prisma {
     breadth?: NullableFloatFieldUpdateOperationsInput | number | null
     depth?: NullableFloatFieldUpdateOperationsInput | number | null
     status?: EnumVesselStatusFieldUpdateOperationsInput | $Enums.VesselStatus
+    capacityCbm?: NullableFloatFieldUpdateOperationsInput | number | null
+    netTonnage?: NullableFloatFieldUpdateOperationsInput | number | null
+    deadweight?: NullableFloatFieldUpdateOperationsInput | number | null
+    tradeArea?: NullableStringFieldUpdateOperationsInput | string | null
+    registeredOwner?: NullableStringFieldUpdateOperationsInput | string | null
+    headOwner?: NullableStringFieldUpdateOperationsInput | string | null
+    charterer?: NullableStringFieldUpdateOperationsInput | string | null
+    yearWithSwan?: NullableIntFieldUpdateOperationsInput | number | null
+    lastDryDock?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dryDockPlace?: NullableStringFieldUpdateOperationsInput | string | null
+    nextDryDockDue?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -90034,6 +99311,1432 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutVesselNestedInput
     controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutVesselNestedInput
     circulars?: CircularUncheckedUpdateManyWithoutVesselNestedInput
+    riskAssessmentExecutions?: RiskAssessmentExecutionUncheckedUpdateManyWithoutVesselNestedInput
+    riskAssessmentRevisionRequests?: RiskAssessmentRevisionRequestUncheckedUpdateManyWithoutVesselNestedInput
+    defects?: DefectUncheckedUpdateManyWithoutVesselNestedInput
+    users?: UserUncheckedUpdateManyWithoutVesselNestedInput
+  }
+
+  export type RiskAssessmentRevisionUpsertWithoutCurrentOfInput = {
+    update: XOR<RiskAssessmentRevisionUpdateWithoutCurrentOfInput, RiskAssessmentRevisionUncheckedUpdateWithoutCurrentOfInput>
+    create: XOR<RiskAssessmentRevisionCreateWithoutCurrentOfInput, RiskAssessmentRevisionUncheckedCreateWithoutCurrentOfInput>
+    where?: RiskAssessmentRevisionWhereInput
+  }
+
+  export type RiskAssessmentRevisionUpdateToOneWithWhereWithoutCurrentOfInput = {
+    where?: RiskAssessmentRevisionWhereInput
+    data: XOR<RiskAssessmentRevisionUpdateWithoutCurrentOfInput, RiskAssessmentRevisionUncheckedUpdateWithoutCurrentOfInput>
+  }
+
+  export type RiskAssessmentRevisionUpdateWithoutCurrentOfInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    revisionNo?: IntFieldUpdateOperationsInput | number
+    changeSummary?: NullableStringFieldUpdateOperationsInput | string | null
+    reviewTrigger?: NullableEnumReviewTriggerFieldUpdateOperationsInput | $Enums.ReviewTrigger | null
+    smsProcedureRefs?: NullableStringFieldUpdateOperationsInput | string | null
+    riskMatrixRef?: NullableStringFieldUpdateOperationsInput | string | null
+    checklistsRequired?: NullableStringFieldUpdateOperationsInput | string | null
+    approvalLevel?: EnumRaApprovalLevelFieldUpdateOperationsInput | $Enums.RaApprovalLevel
+    status?: EnumDocumentStatusFieldUpdateOperationsInput | $Enums.DocumentStatus
+    effectiveDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approvedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    approvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    document?: RiskAssessmentDocumentUpdateOneRequiredWithoutRevisionsNestedInput
+    executions?: RiskAssessmentExecutionUpdateManyWithoutRevisionNestedInput
+    hazardRows?: RiskHazardRowUpdateManyWithoutRevisionNestedInput
+  }
+
+  export type RiskAssessmentRevisionUncheckedUpdateWithoutCurrentOfInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    documentId?: StringFieldUpdateOperationsInput | string
+    revisionNo?: IntFieldUpdateOperationsInput | number
+    changeSummary?: NullableStringFieldUpdateOperationsInput | string | null
+    reviewTrigger?: NullableEnumReviewTriggerFieldUpdateOperationsInput | $Enums.ReviewTrigger | null
+    smsProcedureRefs?: NullableStringFieldUpdateOperationsInput | string | null
+    riskMatrixRef?: NullableStringFieldUpdateOperationsInput | string | null
+    checklistsRequired?: NullableStringFieldUpdateOperationsInput | string | null
+    approvalLevel?: EnumRaApprovalLevelFieldUpdateOperationsInput | $Enums.RaApprovalLevel
+    status?: EnumDocumentStatusFieldUpdateOperationsInput | $Enums.DocumentStatus
+    effectiveDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approvedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    approvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    executions?: RiskAssessmentExecutionUncheckedUpdateManyWithoutRevisionNestedInput
+    hazardRows?: RiskHazardRowUncheckedUpdateManyWithoutRevisionNestedInput
+  }
+
+  export type RiskAssessmentRevisionUpsertWithWhereUniqueWithoutDocumentInput = {
+    where: RiskAssessmentRevisionWhereUniqueInput
+    update: XOR<RiskAssessmentRevisionUpdateWithoutDocumentInput, RiskAssessmentRevisionUncheckedUpdateWithoutDocumentInput>
+    create: XOR<RiskAssessmentRevisionCreateWithoutDocumentInput, RiskAssessmentRevisionUncheckedCreateWithoutDocumentInput>
+  }
+
+  export type RiskAssessmentRevisionUpdateWithWhereUniqueWithoutDocumentInput = {
+    where: RiskAssessmentRevisionWhereUniqueInput
+    data: XOR<RiskAssessmentRevisionUpdateWithoutDocumentInput, RiskAssessmentRevisionUncheckedUpdateWithoutDocumentInput>
+  }
+
+  export type RiskAssessmentRevisionUpdateManyWithWhereWithoutDocumentInput = {
+    where: RiskAssessmentRevisionScalarWhereInput
+    data: XOR<RiskAssessmentRevisionUpdateManyMutationInput, RiskAssessmentRevisionUncheckedUpdateManyWithoutDocumentInput>
+  }
+
+  export type RiskAssessmentRevisionScalarWhereInput = {
+    AND?: RiskAssessmentRevisionScalarWhereInput | RiskAssessmentRevisionScalarWhereInput[]
+    OR?: RiskAssessmentRevisionScalarWhereInput[]
+    NOT?: RiskAssessmentRevisionScalarWhereInput | RiskAssessmentRevisionScalarWhereInput[]
+    id?: StringFilter<"RiskAssessmentRevision"> | string
+    companyId?: StringFilter<"RiskAssessmentRevision"> | string
+    documentId?: StringFilter<"RiskAssessmentRevision"> | string
+    revisionNo?: IntFilter<"RiskAssessmentRevision"> | number
+    changeSummary?: StringNullableFilter<"RiskAssessmentRevision"> | string | null
+    reviewTrigger?: EnumReviewTriggerNullableFilter<"RiskAssessmentRevision"> | $Enums.ReviewTrigger | null
+    smsProcedureRefs?: StringNullableFilter<"RiskAssessmentRevision"> | string | null
+    riskMatrixRef?: StringNullableFilter<"RiskAssessmentRevision"> | string | null
+    checklistsRequired?: StringNullableFilter<"RiskAssessmentRevision"> | string | null
+    approvalLevel?: EnumRaApprovalLevelFilter<"RiskAssessmentRevision"> | $Enums.RaApprovalLevel
+    status?: EnumDocumentStatusFilter<"RiskAssessmentRevision"> | $Enums.DocumentStatus
+    effectiveDate?: DateTimeNullableFilter<"RiskAssessmentRevision"> | Date | string | null
+    approvedBy?: StringNullableFilter<"RiskAssessmentRevision"> | string | null
+    approvedAt?: DateTimeNullableFilter<"RiskAssessmentRevision"> | Date | string | null
+    createdAt?: DateTimeFilter<"RiskAssessmentRevision"> | Date | string
+    createdBy?: StringNullableFilter<"RiskAssessmentRevision"> | string | null
+  }
+
+  export type RiskAssessmentExecutionUpsertWithWhereUniqueWithoutDocumentInput = {
+    where: RiskAssessmentExecutionWhereUniqueInput
+    update: XOR<RiskAssessmentExecutionUpdateWithoutDocumentInput, RiskAssessmentExecutionUncheckedUpdateWithoutDocumentInput>
+    create: XOR<RiskAssessmentExecutionCreateWithoutDocumentInput, RiskAssessmentExecutionUncheckedCreateWithoutDocumentInput>
+  }
+
+  export type RiskAssessmentExecutionUpdateWithWhereUniqueWithoutDocumentInput = {
+    where: RiskAssessmentExecutionWhereUniqueInput
+    data: XOR<RiskAssessmentExecutionUpdateWithoutDocumentInput, RiskAssessmentExecutionUncheckedUpdateWithoutDocumentInput>
+  }
+
+  export type RiskAssessmentExecutionUpdateManyWithWhereWithoutDocumentInput = {
+    where: RiskAssessmentExecutionScalarWhereInput
+    data: XOR<RiskAssessmentExecutionUpdateManyMutationInput, RiskAssessmentExecutionUncheckedUpdateManyWithoutDocumentInput>
+  }
+
+  export type RiskAssessmentRevisionRequestUpsertWithWhereUniqueWithoutDocumentInput = {
+    where: RiskAssessmentRevisionRequestWhereUniqueInput
+    update: XOR<RiskAssessmentRevisionRequestUpdateWithoutDocumentInput, RiskAssessmentRevisionRequestUncheckedUpdateWithoutDocumentInput>
+    create: XOR<RiskAssessmentRevisionRequestCreateWithoutDocumentInput, RiskAssessmentRevisionRequestUncheckedCreateWithoutDocumentInput>
+  }
+
+  export type RiskAssessmentRevisionRequestUpdateWithWhereUniqueWithoutDocumentInput = {
+    where: RiskAssessmentRevisionRequestWhereUniqueInput
+    data: XOR<RiskAssessmentRevisionRequestUpdateWithoutDocumentInput, RiskAssessmentRevisionRequestUncheckedUpdateWithoutDocumentInput>
+  }
+
+  export type RiskAssessmentRevisionRequestUpdateManyWithWhereWithoutDocumentInput = {
+    where: RiskAssessmentRevisionRequestScalarWhereInput
+    data: XOR<RiskAssessmentRevisionRequestUpdateManyMutationInput, RiskAssessmentRevisionRequestUncheckedUpdateManyWithoutDocumentInput>
+  }
+
+  export type RiskAssessmentDocumentCreateWithoutRevisionsInput = {
+    id?: string
+    refNo: string
+    title: string
+    category: string
+    description?: string | null
+    applicableVesselType?: string | null
+    reviewFrequencyMonths?: number
+    lastReviewDate?: Date | string | null
+    nextReviewDate?: Date | string | null
+    reviewOwnerId?: string | null
+    status?: $Enums.DocumentStatus
+    ownerId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    company: CompanyCreateNestedOneWithoutRiskAssessmentDocumentsInput
+    vessel?: VesselCreateNestedOneWithoutRiskAssessmentDocumentsInput
+    currentRevision?: RiskAssessmentRevisionCreateNestedOneWithoutCurrentOfInput
+    executions?: RiskAssessmentExecutionCreateNestedManyWithoutDocumentInput
+    revisionRequests?: RiskAssessmentRevisionRequestCreateNestedManyWithoutDocumentInput
+  }
+
+  export type RiskAssessmentDocumentUncheckedCreateWithoutRevisionsInput = {
+    id?: string
+    companyId: string
+    refNo: string
+    title: string
+    category: string
+    description?: string | null
+    vesselId?: string | null
+    applicableVesselType?: string | null
+    reviewFrequencyMonths?: number
+    lastReviewDate?: Date | string | null
+    nextReviewDate?: Date | string | null
+    reviewOwnerId?: string | null
+    status?: $Enums.DocumentStatus
+    ownerId?: string | null
+    currentRevisionId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    executions?: RiskAssessmentExecutionUncheckedCreateNestedManyWithoutDocumentInput
+    revisionRequests?: RiskAssessmentRevisionRequestUncheckedCreateNestedManyWithoutDocumentInput
+  }
+
+  export type RiskAssessmentDocumentCreateOrConnectWithoutRevisionsInput = {
+    where: RiskAssessmentDocumentWhereUniqueInput
+    create: XOR<RiskAssessmentDocumentCreateWithoutRevisionsInput, RiskAssessmentDocumentUncheckedCreateWithoutRevisionsInput>
+  }
+
+  export type RiskAssessmentDocumentCreateWithoutCurrentRevisionInput = {
+    id?: string
+    refNo: string
+    title: string
+    category: string
+    description?: string | null
+    applicableVesselType?: string | null
+    reviewFrequencyMonths?: number
+    lastReviewDate?: Date | string | null
+    nextReviewDate?: Date | string | null
+    reviewOwnerId?: string | null
+    status?: $Enums.DocumentStatus
+    ownerId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    company: CompanyCreateNestedOneWithoutRiskAssessmentDocumentsInput
+    vessel?: VesselCreateNestedOneWithoutRiskAssessmentDocumentsInput
+    revisions?: RiskAssessmentRevisionCreateNestedManyWithoutDocumentInput
+    executions?: RiskAssessmentExecutionCreateNestedManyWithoutDocumentInput
+    revisionRequests?: RiskAssessmentRevisionRequestCreateNestedManyWithoutDocumentInput
+  }
+
+  export type RiskAssessmentDocumentUncheckedCreateWithoutCurrentRevisionInput = {
+    id?: string
+    companyId: string
+    refNo: string
+    title: string
+    category: string
+    description?: string | null
+    vesselId?: string | null
+    applicableVesselType?: string | null
+    reviewFrequencyMonths?: number
+    lastReviewDate?: Date | string | null
+    nextReviewDate?: Date | string | null
+    reviewOwnerId?: string | null
+    status?: $Enums.DocumentStatus
+    ownerId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    revisions?: RiskAssessmentRevisionUncheckedCreateNestedManyWithoutDocumentInput
+    executions?: RiskAssessmentExecutionUncheckedCreateNestedManyWithoutDocumentInput
+    revisionRequests?: RiskAssessmentRevisionRequestUncheckedCreateNestedManyWithoutDocumentInput
+  }
+
+  export type RiskAssessmentDocumentCreateOrConnectWithoutCurrentRevisionInput = {
+    where: RiskAssessmentDocumentWhereUniqueInput
+    create: XOR<RiskAssessmentDocumentCreateWithoutCurrentRevisionInput, RiskAssessmentDocumentUncheckedCreateWithoutCurrentRevisionInput>
+  }
+
+  export type RiskAssessmentExecutionCreateWithoutRevisionInput = {
+    id?: string
+    companyId: string
+    jobName: string
+    conditionStatus?: $Enums.RaExecutionCondition
+    changedConditionsNote?: string | null
+    temporaryHazards?: string | null
+    temporaryControls?: string | null
+    performedById?: string | null
+    toolboxSignedAt?: Date | string | null
+    toolboxAttendees?: string | null
+    executedAt?: Date | string
+    createdAt?: Date | string
+    createdBy?: string | null
+    document: RiskAssessmentDocumentCreateNestedOneWithoutExecutionsInput
+    vessel: VesselCreateNestedOneWithoutRiskAssessmentExecutionsInput
+  }
+
+  export type RiskAssessmentExecutionUncheckedCreateWithoutRevisionInput = {
+    id?: string
+    companyId: string
+    documentId: string
+    vesselId: string
+    jobName: string
+    conditionStatus?: $Enums.RaExecutionCondition
+    changedConditionsNote?: string | null
+    temporaryHazards?: string | null
+    temporaryControls?: string | null
+    performedById?: string | null
+    toolboxSignedAt?: Date | string | null
+    toolboxAttendees?: string | null
+    executedAt?: Date | string
+    createdAt?: Date | string
+    createdBy?: string | null
+  }
+
+  export type RiskAssessmentExecutionCreateOrConnectWithoutRevisionInput = {
+    where: RiskAssessmentExecutionWhereUniqueInput
+    create: XOR<RiskAssessmentExecutionCreateWithoutRevisionInput, RiskAssessmentExecutionUncheckedCreateWithoutRevisionInput>
+  }
+
+  export type RiskAssessmentExecutionCreateManyRevisionInputEnvelope = {
+    data: RiskAssessmentExecutionCreateManyRevisionInput | RiskAssessmentExecutionCreateManyRevisionInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type RiskHazardRowCreateWithoutRevisionInput = {
+    id?: string
+    companyId: string
+    rowNo: number
+    phase?: string | null
+    consequence: string
+    causes: string
+    severity: number
+    likelihood: number
+    existingControls: string
+    additionalControls?: string | null
+    resLikelihood?: number | null
+    responsible?: string | null
+    isNew?: boolean
+    ratingChangeNote?: string | null
+    createdAt?: Date | string
+    createdBy?: string | null
+  }
+
+  export type RiskHazardRowUncheckedCreateWithoutRevisionInput = {
+    id?: string
+    companyId: string
+    rowNo: number
+    phase?: string | null
+    consequence: string
+    causes: string
+    severity: number
+    likelihood: number
+    existingControls: string
+    additionalControls?: string | null
+    resLikelihood?: number | null
+    responsible?: string | null
+    isNew?: boolean
+    ratingChangeNote?: string | null
+    createdAt?: Date | string
+    createdBy?: string | null
+  }
+
+  export type RiskHazardRowCreateOrConnectWithoutRevisionInput = {
+    where: RiskHazardRowWhereUniqueInput
+    create: XOR<RiskHazardRowCreateWithoutRevisionInput, RiskHazardRowUncheckedCreateWithoutRevisionInput>
+  }
+
+  export type RiskHazardRowCreateManyRevisionInputEnvelope = {
+    data: RiskHazardRowCreateManyRevisionInput | RiskHazardRowCreateManyRevisionInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type RiskAssessmentDocumentUpsertWithoutRevisionsInput = {
+    update: XOR<RiskAssessmentDocumentUpdateWithoutRevisionsInput, RiskAssessmentDocumentUncheckedUpdateWithoutRevisionsInput>
+    create: XOR<RiskAssessmentDocumentCreateWithoutRevisionsInput, RiskAssessmentDocumentUncheckedCreateWithoutRevisionsInput>
+    where?: RiskAssessmentDocumentWhereInput
+  }
+
+  export type RiskAssessmentDocumentUpdateToOneWithWhereWithoutRevisionsInput = {
+    where?: RiskAssessmentDocumentWhereInput
+    data: XOR<RiskAssessmentDocumentUpdateWithoutRevisionsInput, RiskAssessmentDocumentUncheckedUpdateWithoutRevisionsInput>
+  }
+
+  export type RiskAssessmentDocumentUpdateWithoutRevisionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    refNo?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    applicableVesselType?: NullableStringFieldUpdateOperationsInput | string | null
+    reviewFrequencyMonths?: IntFieldUpdateOperationsInput | number
+    lastReviewDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    nextReviewDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reviewOwnerId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumDocumentStatusFieldUpdateOperationsInput | $Enums.DocumentStatus
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    company?: CompanyUpdateOneRequiredWithoutRiskAssessmentDocumentsNestedInput
+    vessel?: VesselUpdateOneWithoutRiskAssessmentDocumentsNestedInput
+    currentRevision?: RiskAssessmentRevisionUpdateOneWithoutCurrentOfNestedInput
+    executions?: RiskAssessmentExecutionUpdateManyWithoutDocumentNestedInput
+    revisionRequests?: RiskAssessmentRevisionRequestUpdateManyWithoutDocumentNestedInput
+  }
+
+  export type RiskAssessmentDocumentUncheckedUpdateWithoutRevisionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    refNo?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    vesselId?: NullableStringFieldUpdateOperationsInput | string | null
+    applicableVesselType?: NullableStringFieldUpdateOperationsInput | string | null
+    reviewFrequencyMonths?: IntFieldUpdateOperationsInput | number
+    lastReviewDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    nextReviewDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reviewOwnerId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumDocumentStatusFieldUpdateOperationsInput | $Enums.DocumentStatus
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    currentRevisionId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    executions?: RiskAssessmentExecutionUncheckedUpdateManyWithoutDocumentNestedInput
+    revisionRequests?: RiskAssessmentRevisionRequestUncheckedUpdateManyWithoutDocumentNestedInput
+  }
+
+  export type RiskAssessmentDocumentUpsertWithoutCurrentRevisionInput = {
+    update: XOR<RiskAssessmentDocumentUpdateWithoutCurrentRevisionInput, RiskAssessmentDocumentUncheckedUpdateWithoutCurrentRevisionInput>
+    create: XOR<RiskAssessmentDocumentCreateWithoutCurrentRevisionInput, RiskAssessmentDocumentUncheckedCreateWithoutCurrentRevisionInput>
+    where?: RiskAssessmentDocumentWhereInput
+  }
+
+  export type RiskAssessmentDocumentUpdateToOneWithWhereWithoutCurrentRevisionInput = {
+    where?: RiskAssessmentDocumentWhereInput
+    data: XOR<RiskAssessmentDocumentUpdateWithoutCurrentRevisionInput, RiskAssessmentDocumentUncheckedUpdateWithoutCurrentRevisionInput>
+  }
+
+  export type RiskAssessmentDocumentUpdateWithoutCurrentRevisionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    refNo?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    applicableVesselType?: NullableStringFieldUpdateOperationsInput | string | null
+    reviewFrequencyMonths?: IntFieldUpdateOperationsInput | number
+    lastReviewDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    nextReviewDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reviewOwnerId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumDocumentStatusFieldUpdateOperationsInput | $Enums.DocumentStatus
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    company?: CompanyUpdateOneRequiredWithoutRiskAssessmentDocumentsNestedInput
+    vessel?: VesselUpdateOneWithoutRiskAssessmentDocumentsNestedInput
+    revisions?: RiskAssessmentRevisionUpdateManyWithoutDocumentNestedInput
+    executions?: RiskAssessmentExecutionUpdateManyWithoutDocumentNestedInput
+    revisionRequests?: RiskAssessmentRevisionRequestUpdateManyWithoutDocumentNestedInput
+  }
+
+  export type RiskAssessmentDocumentUncheckedUpdateWithoutCurrentRevisionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    refNo?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    vesselId?: NullableStringFieldUpdateOperationsInput | string | null
+    applicableVesselType?: NullableStringFieldUpdateOperationsInput | string | null
+    reviewFrequencyMonths?: IntFieldUpdateOperationsInput | number
+    lastReviewDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    nextReviewDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reviewOwnerId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumDocumentStatusFieldUpdateOperationsInput | $Enums.DocumentStatus
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    revisions?: RiskAssessmentRevisionUncheckedUpdateManyWithoutDocumentNestedInput
+    executions?: RiskAssessmentExecutionUncheckedUpdateManyWithoutDocumentNestedInput
+    revisionRequests?: RiskAssessmentRevisionRequestUncheckedUpdateManyWithoutDocumentNestedInput
+  }
+
+  export type RiskAssessmentExecutionUpsertWithWhereUniqueWithoutRevisionInput = {
+    where: RiskAssessmentExecutionWhereUniqueInput
+    update: XOR<RiskAssessmentExecutionUpdateWithoutRevisionInput, RiskAssessmentExecutionUncheckedUpdateWithoutRevisionInput>
+    create: XOR<RiskAssessmentExecutionCreateWithoutRevisionInput, RiskAssessmentExecutionUncheckedCreateWithoutRevisionInput>
+  }
+
+  export type RiskAssessmentExecutionUpdateWithWhereUniqueWithoutRevisionInput = {
+    where: RiskAssessmentExecutionWhereUniqueInput
+    data: XOR<RiskAssessmentExecutionUpdateWithoutRevisionInput, RiskAssessmentExecutionUncheckedUpdateWithoutRevisionInput>
+  }
+
+  export type RiskAssessmentExecutionUpdateManyWithWhereWithoutRevisionInput = {
+    where: RiskAssessmentExecutionScalarWhereInput
+    data: XOR<RiskAssessmentExecutionUpdateManyMutationInput, RiskAssessmentExecutionUncheckedUpdateManyWithoutRevisionInput>
+  }
+
+  export type RiskHazardRowUpsertWithWhereUniqueWithoutRevisionInput = {
+    where: RiskHazardRowWhereUniqueInput
+    update: XOR<RiskHazardRowUpdateWithoutRevisionInput, RiskHazardRowUncheckedUpdateWithoutRevisionInput>
+    create: XOR<RiskHazardRowCreateWithoutRevisionInput, RiskHazardRowUncheckedCreateWithoutRevisionInput>
+  }
+
+  export type RiskHazardRowUpdateWithWhereUniqueWithoutRevisionInput = {
+    where: RiskHazardRowWhereUniqueInput
+    data: XOR<RiskHazardRowUpdateWithoutRevisionInput, RiskHazardRowUncheckedUpdateWithoutRevisionInput>
+  }
+
+  export type RiskHazardRowUpdateManyWithWhereWithoutRevisionInput = {
+    where: RiskHazardRowScalarWhereInput
+    data: XOR<RiskHazardRowUpdateManyMutationInput, RiskHazardRowUncheckedUpdateManyWithoutRevisionInput>
+  }
+
+  export type RiskHazardRowScalarWhereInput = {
+    AND?: RiskHazardRowScalarWhereInput | RiskHazardRowScalarWhereInput[]
+    OR?: RiskHazardRowScalarWhereInput[]
+    NOT?: RiskHazardRowScalarWhereInput | RiskHazardRowScalarWhereInput[]
+    id?: StringFilter<"RiskHazardRow"> | string
+    companyId?: StringFilter<"RiskHazardRow"> | string
+    revisionId?: StringFilter<"RiskHazardRow"> | string
+    rowNo?: IntFilter<"RiskHazardRow"> | number
+    phase?: StringNullableFilter<"RiskHazardRow"> | string | null
+    consequence?: StringFilter<"RiskHazardRow"> | string
+    causes?: StringFilter<"RiskHazardRow"> | string
+    severity?: IntFilter<"RiskHazardRow"> | number
+    likelihood?: IntFilter<"RiskHazardRow"> | number
+    existingControls?: StringFilter<"RiskHazardRow"> | string
+    additionalControls?: StringNullableFilter<"RiskHazardRow"> | string | null
+    resLikelihood?: IntNullableFilter<"RiskHazardRow"> | number | null
+    responsible?: StringNullableFilter<"RiskHazardRow"> | string | null
+    isNew?: BoolFilter<"RiskHazardRow"> | boolean
+    ratingChangeNote?: StringNullableFilter<"RiskHazardRow"> | string | null
+    createdAt?: DateTimeFilter<"RiskHazardRow"> | Date | string
+    createdBy?: StringNullableFilter<"RiskHazardRow"> | string | null
+  }
+
+  export type RiskAssessmentRevisionCreateWithoutHazardRowsInput = {
+    id?: string
+    companyId: string
+    revisionNo: number
+    changeSummary?: string | null
+    reviewTrigger?: $Enums.ReviewTrigger | null
+    smsProcedureRefs?: string | null
+    riskMatrixRef?: string | null
+    checklistsRequired?: string | null
+    approvalLevel?: $Enums.RaApprovalLevel
+    status?: $Enums.DocumentStatus
+    effectiveDate?: Date | string | null
+    approvedBy?: string | null
+    approvedAt?: Date | string | null
+    createdAt?: Date | string
+    createdBy?: string | null
+    document: RiskAssessmentDocumentCreateNestedOneWithoutRevisionsInput
+    currentOf?: RiskAssessmentDocumentCreateNestedOneWithoutCurrentRevisionInput
+    executions?: RiskAssessmentExecutionCreateNestedManyWithoutRevisionInput
+  }
+
+  export type RiskAssessmentRevisionUncheckedCreateWithoutHazardRowsInput = {
+    id?: string
+    companyId: string
+    documentId: string
+    revisionNo: number
+    changeSummary?: string | null
+    reviewTrigger?: $Enums.ReviewTrigger | null
+    smsProcedureRefs?: string | null
+    riskMatrixRef?: string | null
+    checklistsRequired?: string | null
+    approvalLevel?: $Enums.RaApprovalLevel
+    status?: $Enums.DocumentStatus
+    effectiveDate?: Date | string | null
+    approvedBy?: string | null
+    approvedAt?: Date | string | null
+    createdAt?: Date | string
+    createdBy?: string | null
+    currentOf?: RiskAssessmentDocumentUncheckedCreateNestedOneWithoutCurrentRevisionInput
+    executions?: RiskAssessmentExecutionUncheckedCreateNestedManyWithoutRevisionInput
+  }
+
+  export type RiskAssessmentRevisionCreateOrConnectWithoutHazardRowsInput = {
+    where: RiskAssessmentRevisionWhereUniqueInput
+    create: XOR<RiskAssessmentRevisionCreateWithoutHazardRowsInput, RiskAssessmentRevisionUncheckedCreateWithoutHazardRowsInput>
+  }
+
+  export type RiskAssessmentRevisionUpsertWithoutHazardRowsInput = {
+    update: XOR<RiskAssessmentRevisionUpdateWithoutHazardRowsInput, RiskAssessmentRevisionUncheckedUpdateWithoutHazardRowsInput>
+    create: XOR<RiskAssessmentRevisionCreateWithoutHazardRowsInput, RiskAssessmentRevisionUncheckedCreateWithoutHazardRowsInput>
+    where?: RiskAssessmentRevisionWhereInput
+  }
+
+  export type RiskAssessmentRevisionUpdateToOneWithWhereWithoutHazardRowsInput = {
+    where?: RiskAssessmentRevisionWhereInput
+    data: XOR<RiskAssessmentRevisionUpdateWithoutHazardRowsInput, RiskAssessmentRevisionUncheckedUpdateWithoutHazardRowsInput>
+  }
+
+  export type RiskAssessmentRevisionUpdateWithoutHazardRowsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    revisionNo?: IntFieldUpdateOperationsInput | number
+    changeSummary?: NullableStringFieldUpdateOperationsInput | string | null
+    reviewTrigger?: NullableEnumReviewTriggerFieldUpdateOperationsInput | $Enums.ReviewTrigger | null
+    smsProcedureRefs?: NullableStringFieldUpdateOperationsInput | string | null
+    riskMatrixRef?: NullableStringFieldUpdateOperationsInput | string | null
+    checklistsRequired?: NullableStringFieldUpdateOperationsInput | string | null
+    approvalLevel?: EnumRaApprovalLevelFieldUpdateOperationsInput | $Enums.RaApprovalLevel
+    status?: EnumDocumentStatusFieldUpdateOperationsInput | $Enums.DocumentStatus
+    effectiveDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approvedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    approvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    document?: RiskAssessmentDocumentUpdateOneRequiredWithoutRevisionsNestedInput
+    currentOf?: RiskAssessmentDocumentUpdateOneWithoutCurrentRevisionNestedInput
+    executions?: RiskAssessmentExecutionUpdateManyWithoutRevisionNestedInput
+  }
+
+  export type RiskAssessmentRevisionUncheckedUpdateWithoutHazardRowsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    documentId?: StringFieldUpdateOperationsInput | string
+    revisionNo?: IntFieldUpdateOperationsInput | number
+    changeSummary?: NullableStringFieldUpdateOperationsInput | string | null
+    reviewTrigger?: NullableEnumReviewTriggerFieldUpdateOperationsInput | $Enums.ReviewTrigger | null
+    smsProcedureRefs?: NullableStringFieldUpdateOperationsInput | string | null
+    riskMatrixRef?: NullableStringFieldUpdateOperationsInput | string | null
+    checklistsRequired?: NullableStringFieldUpdateOperationsInput | string | null
+    approvalLevel?: EnumRaApprovalLevelFieldUpdateOperationsInput | $Enums.RaApprovalLevel
+    status?: EnumDocumentStatusFieldUpdateOperationsInput | $Enums.DocumentStatus
+    effectiveDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approvedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    approvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    currentOf?: RiskAssessmentDocumentUncheckedUpdateOneWithoutCurrentRevisionNestedInput
+    executions?: RiskAssessmentExecutionUncheckedUpdateManyWithoutRevisionNestedInput
+  }
+
+  export type RiskAssessmentDocumentCreateWithoutExecutionsInput = {
+    id?: string
+    refNo: string
+    title: string
+    category: string
+    description?: string | null
+    applicableVesselType?: string | null
+    reviewFrequencyMonths?: number
+    lastReviewDate?: Date | string | null
+    nextReviewDate?: Date | string | null
+    reviewOwnerId?: string | null
+    status?: $Enums.DocumentStatus
+    ownerId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    company: CompanyCreateNestedOneWithoutRiskAssessmentDocumentsInput
+    vessel?: VesselCreateNestedOneWithoutRiskAssessmentDocumentsInput
+    currentRevision?: RiskAssessmentRevisionCreateNestedOneWithoutCurrentOfInput
+    revisions?: RiskAssessmentRevisionCreateNestedManyWithoutDocumentInput
+    revisionRequests?: RiskAssessmentRevisionRequestCreateNestedManyWithoutDocumentInput
+  }
+
+  export type RiskAssessmentDocumentUncheckedCreateWithoutExecutionsInput = {
+    id?: string
+    companyId: string
+    refNo: string
+    title: string
+    category: string
+    description?: string | null
+    vesselId?: string | null
+    applicableVesselType?: string | null
+    reviewFrequencyMonths?: number
+    lastReviewDate?: Date | string | null
+    nextReviewDate?: Date | string | null
+    reviewOwnerId?: string | null
+    status?: $Enums.DocumentStatus
+    ownerId?: string | null
+    currentRevisionId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    revisions?: RiskAssessmentRevisionUncheckedCreateNestedManyWithoutDocumentInput
+    revisionRequests?: RiskAssessmentRevisionRequestUncheckedCreateNestedManyWithoutDocumentInput
+  }
+
+  export type RiskAssessmentDocumentCreateOrConnectWithoutExecutionsInput = {
+    where: RiskAssessmentDocumentWhereUniqueInput
+    create: XOR<RiskAssessmentDocumentCreateWithoutExecutionsInput, RiskAssessmentDocumentUncheckedCreateWithoutExecutionsInput>
+  }
+
+  export type RiskAssessmentRevisionCreateWithoutExecutionsInput = {
+    id?: string
+    companyId: string
+    revisionNo: number
+    changeSummary?: string | null
+    reviewTrigger?: $Enums.ReviewTrigger | null
+    smsProcedureRefs?: string | null
+    riskMatrixRef?: string | null
+    checklistsRequired?: string | null
+    approvalLevel?: $Enums.RaApprovalLevel
+    status?: $Enums.DocumentStatus
+    effectiveDate?: Date | string | null
+    approvedBy?: string | null
+    approvedAt?: Date | string | null
+    createdAt?: Date | string
+    createdBy?: string | null
+    document: RiskAssessmentDocumentCreateNestedOneWithoutRevisionsInput
+    currentOf?: RiskAssessmentDocumentCreateNestedOneWithoutCurrentRevisionInput
+    hazardRows?: RiskHazardRowCreateNestedManyWithoutRevisionInput
+  }
+
+  export type RiskAssessmentRevisionUncheckedCreateWithoutExecutionsInput = {
+    id?: string
+    companyId: string
+    documentId: string
+    revisionNo: number
+    changeSummary?: string | null
+    reviewTrigger?: $Enums.ReviewTrigger | null
+    smsProcedureRefs?: string | null
+    riskMatrixRef?: string | null
+    checklistsRequired?: string | null
+    approvalLevel?: $Enums.RaApprovalLevel
+    status?: $Enums.DocumentStatus
+    effectiveDate?: Date | string | null
+    approvedBy?: string | null
+    approvedAt?: Date | string | null
+    createdAt?: Date | string
+    createdBy?: string | null
+    currentOf?: RiskAssessmentDocumentUncheckedCreateNestedOneWithoutCurrentRevisionInput
+    hazardRows?: RiskHazardRowUncheckedCreateNestedManyWithoutRevisionInput
+  }
+
+  export type RiskAssessmentRevisionCreateOrConnectWithoutExecutionsInput = {
+    where: RiskAssessmentRevisionWhereUniqueInput
+    create: XOR<RiskAssessmentRevisionCreateWithoutExecutionsInput, RiskAssessmentRevisionUncheckedCreateWithoutExecutionsInput>
+  }
+
+  export type VesselCreateWithoutRiskAssessmentExecutionsInput = {
+    id?: string
+    name: string
+    code?: string | null
+    imo?: string | null
+    officialNumber?: string | null
+    callSign?: string | null
+    mmsi?: string | null
+    flag?: string | null
+    type?: string
+    classificationSociety?: string | null
+    yearBuilt?: number | null
+    grossTonnage?: number | null
+    loa?: number | null
+    breadth?: number | null
+    depth?: number | null
+    status?: $Enums.VesselStatus
+    capacityCbm?: number | null
+    netTonnage?: number | null
+    deadweight?: number | null
+    tradeArea?: string | null
+    registeredOwner?: string | null
+    headOwner?: string | null
+    charterer?: string | null
+    yearWithSwan?: number | null
+    lastDryDock?: Date | string | null
+    dryDockPlace?: string | null
+    nextDryDockDue?: Date | string | null
+    archivedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    company: CompanyCreateNestedOneWithoutVesselsInput
+    smsDocuments?: SmsDocumentCreateNestedManyWithoutVesselInput
+    incidents?: IncidentCreateNestedManyWithoutVesselInput
+    nearMisses?: NearMissCreateNestedManyWithoutVesselInput
+    nonConformities?: NonConformityCreateNestedManyWithoutVesselInput
+    sireInspections?: SireInspectionCreateNestedManyWithoutVesselInput
+    pscInspections?: PscInspectionCreateNestedManyWithoutVesselInput
+    cdiInspections?: CdiInspectionCreateNestedManyWithoutVesselInput
+    internalAudits?: InternalAuditCreateNestedManyWithoutVesselInput
+    externalAudits?: ExternalAuditCreateNestedManyWithoutVesselInput
+    committeeMeetings?: CommitteeMeetingCreateNestedManyWithoutVesselInput
+    emergencyDrills?: EmergencyDrillCreateNestedManyWithoutVesselInput
+    controlledDocuments?: ControlledDocumentCreateNestedManyWithoutVesselInput
+    circulars?: CircularCreateNestedManyWithoutVesselInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentCreateNestedManyWithoutVesselInput
+    riskAssessmentRevisionRequests?: RiskAssessmentRevisionRequestCreateNestedManyWithoutVesselInput
+    defects?: DefectCreateNestedManyWithoutVesselInput
+    users?: UserCreateNestedManyWithoutVesselInput
+  }
+
+  export type VesselUncheckedCreateWithoutRiskAssessmentExecutionsInput = {
+    id?: string
+    companyId: string
+    name: string
+    code?: string | null
+    imo?: string | null
+    officialNumber?: string | null
+    callSign?: string | null
+    mmsi?: string | null
+    flag?: string | null
+    type?: string
+    classificationSociety?: string | null
+    yearBuilt?: number | null
+    grossTonnage?: number | null
+    loa?: number | null
+    breadth?: number | null
+    depth?: number | null
+    status?: $Enums.VesselStatus
+    capacityCbm?: number | null
+    netTonnage?: number | null
+    deadweight?: number | null
+    tradeArea?: string | null
+    registeredOwner?: string | null
+    headOwner?: string | null
+    charterer?: string | null
+    yearWithSwan?: number | null
+    lastDryDock?: Date | string | null
+    dryDockPlace?: string | null
+    nextDryDockDue?: Date | string | null
+    archivedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    smsDocuments?: SmsDocumentUncheckedCreateNestedManyWithoutVesselInput
+    incidents?: IncidentUncheckedCreateNestedManyWithoutVesselInput
+    nearMisses?: NearMissUncheckedCreateNestedManyWithoutVesselInput
+    nonConformities?: NonConformityUncheckedCreateNestedManyWithoutVesselInput
+    sireInspections?: SireInspectionUncheckedCreateNestedManyWithoutVesselInput
+    pscInspections?: PscInspectionUncheckedCreateNestedManyWithoutVesselInput
+    cdiInspections?: CdiInspectionUncheckedCreateNestedManyWithoutVesselInput
+    internalAudits?: InternalAuditUncheckedCreateNestedManyWithoutVesselInput
+    externalAudits?: ExternalAuditUncheckedCreateNestedManyWithoutVesselInput
+    committeeMeetings?: CommitteeMeetingUncheckedCreateNestedManyWithoutVesselInput
+    emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutVesselInput
+    controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutVesselInput
+    circulars?: CircularUncheckedCreateNestedManyWithoutVesselInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedCreateNestedManyWithoutVesselInput
+    riskAssessmentRevisionRequests?: RiskAssessmentRevisionRequestUncheckedCreateNestedManyWithoutVesselInput
+    defects?: DefectUncheckedCreateNestedManyWithoutVesselInput
+    users?: UserUncheckedCreateNestedManyWithoutVesselInput
+  }
+
+  export type VesselCreateOrConnectWithoutRiskAssessmentExecutionsInput = {
+    where: VesselWhereUniqueInput
+    create: XOR<VesselCreateWithoutRiskAssessmentExecutionsInput, VesselUncheckedCreateWithoutRiskAssessmentExecutionsInput>
+  }
+
+  export type RiskAssessmentDocumentUpsertWithoutExecutionsInput = {
+    update: XOR<RiskAssessmentDocumentUpdateWithoutExecutionsInput, RiskAssessmentDocumentUncheckedUpdateWithoutExecutionsInput>
+    create: XOR<RiskAssessmentDocumentCreateWithoutExecutionsInput, RiskAssessmentDocumentUncheckedCreateWithoutExecutionsInput>
+    where?: RiskAssessmentDocumentWhereInput
+  }
+
+  export type RiskAssessmentDocumentUpdateToOneWithWhereWithoutExecutionsInput = {
+    where?: RiskAssessmentDocumentWhereInput
+    data: XOR<RiskAssessmentDocumentUpdateWithoutExecutionsInput, RiskAssessmentDocumentUncheckedUpdateWithoutExecutionsInput>
+  }
+
+  export type RiskAssessmentDocumentUpdateWithoutExecutionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    refNo?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    applicableVesselType?: NullableStringFieldUpdateOperationsInput | string | null
+    reviewFrequencyMonths?: IntFieldUpdateOperationsInput | number
+    lastReviewDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    nextReviewDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reviewOwnerId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumDocumentStatusFieldUpdateOperationsInput | $Enums.DocumentStatus
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    company?: CompanyUpdateOneRequiredWithoutRiskAssessmentDocumentsNestedInput
+    vessel?: VesselUpdateOneWithoutRiskAssessmentDocumentsNestedInput
+    currentRevision?: RiskAssessmentRevisionUpdateOneWithoutCurrentOfNestedInput
+    revisions?: RiskAssessmentRevisionUpdateManyWithoutDocumentNestedInput
+    revisionRequests?: RiskAssessmentRevisionRequestUpdateManyWithoutDocumentNestedInput
+  }
+
+  export type RiskAssessmentDocumentUncheckedUpdateWithoutExecutionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    refNo?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    vesselId?: NullableStringFieldUpdateOperationsInput | string | null
+    applicableVesselType?: NullableStringFieldUpdateOperationsInput | string | null
+    reviewFrequencyMonths?: IntFieldUpdateOperationsInput | number
+    lastReviewDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    nextReviewDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reviewOwnerId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumDocumentStatusFieldUpdateOperationsInput | $Enums.DocumentStatus
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    currentRevisionId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    revisions?: RiskAssessmentRevisionUncheckedUpdateManyWithoutDocumentNestedInput
+    revisionRequests?: RiskAssessmentRevisionRequestUncheckedUpdateManyWithoutDocumentNestedInput
+  }
+
+  export type RiskAssessmentRevisionUpsertWithoutExecutionsInput = {
+    update: XOR<RiskAssessmentRevisionUpdateWithoutExecutionsInput, RiskAssessmentRevisionUncheckedUpdateWithoutExecutionsInput>
+    create: XOR<RiskAssessmentRevisionCreateWithoutExecutionsInput, RiskAssessmentRevisionUncheckedCreateWithoutExecutionsInput>
+    where?: RiskAssessmentRevisionWhereInput
+  }
+
+  export type RiskAssessmentRevisionUpdateToOneWithWhereWithoutExecutionsInput = {
+    where?: RiskAssessmentRevisionWhereInput
+    data: XOR<RiskAssessmentRevisionUpdateWithoutExecutionsInput, RiskAssessmentRevisionUncheckedUpdateWithoutExecutionsInput>
+  }
+
+  export type RiskAssessmentRevisionUpdateWithoutExecutionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    revisionNo?: IntFieldUpdateOperationsInput | number
+    changeSummary?: NullableStringFieldUpdateOperationsInput | string | null
+    reviewTrigger?: NullableEnumReviewTriggerFieldUpdateOperationsInput | $Enums.ReviewTrigger | null
+    smsProcedureRefs?: NullableStringFieldUpdateOperationsInput | string | null
+    riskMatrixRef?: NullableStringFieldUpdateOperationsInput | string | null
+    checklistsRequired?: NullableStringFieldUpdateOperationsInput | string | null
+    approvalLevel?: EnumRaApprovalLevelFieldUpdateOperationsInput | $Enums.RaApprovalLevel
+    status?: EnumDocumentStatusFieldUpdateOperationsInput | $Enums.DocumentStatus
+    effectiveDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approvedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    approvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    document?: RiskAssessmentDocumentUpdateOneRequiredWithoutRevisionsNestedInput
+    currentOf?: RiskAssessmentDocumentUpdateOneWithoutCurrentRevisionNestedInput
+    hazardRows?: RiskHazardRowUpdateManyWithoutRevisionNestedInput
+  }
+
+  export type RiskAssessmentRevisionUncheckedUpdateWithoutExecutionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    documentId?: StringFieldUpdateOperationsInput | string
+    revisionNo?: IntFieldUpdateOperationsInput | number
+    changeSummary?: NullableStringFieldUpdateOperationsInput | string | null
+    reviewTrigger?: NullableEnumReviewTriggerFieldUpdateOperationsInput | $Enums.ReviewTrigger | null
+    smsProcedureRefs?: NullableStringFieldUpdateOperationsInput | string | null
+    riskMatrixRef?: NullableStringFieldUpdateOperationsInput | string | null
+    checklistsRequired?: NullableStringFieldUpdateOperationsInput | string | null
+    approvalLevel?: EnumRaApprovalLevelFieldUpdateOperationsInput | $Enums.RaApprovalLevel
+    status?: EnumDocumentStatusFieldUpdateOperationsInput | $Enums.DocumentStatus
+    effectiveDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approvedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    approvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    currentOf?: RiskAssessmentDocumentUncheckedUpdateOneWithoutCurrentRevisionNestedInput
+    hazardRows?: RiskHazardRowUncheckedUpdateManyWithoutRevisionNestedInput
+  }
+
+  export type VesselUpsertWithoutRiskAssessmentExecutionsInput = {
+    update: XOR<VesselUpdateWithoutRiskAssessmentExecutionsInput, VesselUncheckedUpdateWithoutRiskAssessmentExecutionsInput>
+    create: XOR<VesselCreateWithoutRiskAssessmentExecutionsInput, VesselUncheckedCreateWithoutRiskAssessmentExecutionsInput>
+    where?: VesselWhereInput
+  }
+
+  export type VesselUpdateToOneWithWhereWithoutRiskAssessmentExecutionsInput = {
+    where?: VesselWhereInput
+    data: XOR<VesselUpdateWithoutRiskAssessmentExecutionsInput, VesselUncheckedUpdateWithoutRiskAssessmentExecutionsInput>
+  }
+
+  export type VesselUpdateWithoutRiskAssessmentExecutionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: NullableStringFieldUpdateOperationsInput | string | null
+    imo?: NullableStringFieldUpdateOperationsInput | string | null
+    officialNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    callSign?: NullableStringFieldUpdateOperationsInput | string | null
+    mmsi?: NullableStringFieldUpdateOperationsInput | string | null
+    flag?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: StringFieldUpdateOperationsInput | string
+    classificationSociety?: NullableStringFieldUpdateOperationsInput | string | null
+    yearBuilt?: NullableIntFieldUpdateOperationsInput | number | null
+    grossTonnage?: NullableFloatFieldUpdateOperationsInput | number | null
+    loa?: NullableFloatFieldUpdateOperationsInput | number | null
+    breadth?: NullableFloatFieldUpdateOperationsInput | number | null
+    depth?: NullableFloatFieldUpdateOperationsInput | number | null
+    status?: EnumVesselStatusFieldUpdateOperationsInput | $Enums.VesselStatus
+    capacityCbm?: NullableFloatFieldUpdateOperationsInput | number | null
+    netTonnage?: NullableFloatFieldUpdateOperationsInput | number | null
+    deadweight?: NullableFloatFieldUpdateOperationsInput | number | null
+    tradeArea?: NullableStringFieldUpdateOperationsInput | string | null
+    registeredOwner?: NullableStringFieldUpdateOperationsInput | string | null
+    headOwner?: NullableStringFieldUpdateOperationsInput | string | null
+    charterer?: NullableStringFieldUpdateOperationsInput | string | null
+    yearWithSwan?: NullableIntFieldUpdateOperationsInput | number | null
+    lastDryDock?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dryDockPlace?: NullableStringFieldUpdateOperationsInput | string | null
+    nextDryDockDue?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    company?: CompanyUpdateOneRequiredWithoutVesselsNestedInput
+    smsDocuments?: SmsDocumentUpdateManyWithoutVesselNestedInput
+    incidents?: IncidentUpdateManyWithoutVesselNestedInput
+    nearMisses?: NearMissUpdateManyWithoutVesselNestedInput
+    nonConformities?: NonConformityUpdateManyWithoutVesselNestedInput
+    sireInspections?: SireInspectionUpdateManyWithoutVesselNestedInput
+    pscInspections?: PscInspectionUpdateManyWithoutVesselNestedInput
+    cdiInspections?: CdiInspectionUpdateManyWithoutVesselNestedInput
+    internalAudits?: InternalAuditUpdateManyWithoutVesselNestedInput
+    externalAudits?: ExternalAuditUpdateManyWithoutVesselNestedInput
+    committeeMeetings?: CommitteeMeetingUpdateManyWithoutVesselNestedInput
+    emergencyDrills?: EmergencyDrillUpdateManyWithoutVesselNestedInput
+    controlledDocuments?: ControlledDocumentUpdateManyWithoutVesselNestedInput
+    circulars?: CircularUpdateManyWithoutVesselNestedInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUpdateManyWithoutVesselNestedInput
+    riskAssessmentRevisionRequests?: RiskAssessmentRevisionRequestUpdateManyWithoutVesselNestedInput
+    defects?: DefectUpdateManyWithoutVesselNestedInput
+    users?: UserUpdateManyWithoutVesselNestedInput
+  }
+
+  export type VesselUncheckedUpdateWithoutRiskAssessmentExecutionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: NullableStringFieldUpdateOperationsInput | string | null
+    imo?: NullableStringFieldUpdateOperationsInput | string | null
+    officialNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    callSign?: NullableStringFieldUpdateOperationsInput | string | null
+    mmsi?: NullableStringFieldUpdateOperationsInput | string | null
+    flag?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: StringFieldUpdateOperationsInput | string
+    classificationSociety?: NullableStringFieldUpdateOperationsInput | string | null
+    yearBuilt?: NullableIntFieldUpdateOperationsInput | number | null
+    grossTonnage?: NullableFloatFieldUpdateOperationsInput | number | null
+    loa?: NullableFloatFieldUpdateOperationsInput | number | null
+    breadth?: NullableFloatFieldUpdateOperationsInput | number | null
+    depth?: NullableFloatFieldUpdateOperationsInput | number | null
+    status?: EnumVesselStatusFieldUpdateOperationsInput | $Enums.VesselStatus
+    capacityCbm?: NullableFloatFieldUpdateOperationsInput | number | null
+    netTonnage?: NullableFloatFieldUpdateOperationsInput | number | null
+    deadweight?: NullableFloatFieldUpdateOperationsInput | number | null
+    tradeArea?: NullableStringFieldUpdateOperationsInput | string | null
+    registeredOwner?: NullableStringFieldUpdateOperationsInput | string | null
+    headOwner?: NullableStringFieldUpdateOperationsInput | string | null
+    charterer?: NullableStringFieldUpdateOperationsInput | string | null
+    yearWithSwan?: NullableIntFieldUpdateOperationsInput | number | null
+    lastDryDock?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dryDockPlace?: NullableStringFieldUpdateOperationsInput | string | null
+    nextDryDockDue?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    smsDocuments?: SmsDocumentUncheckedUpdateManyWithoutVesselNestedInput
+    incidents?: IncidentUncheckedUpdateManyWithoutVesselNestedInput
+    nearMisses?: NearMissUncheckedUpdateManyWithoutVesselNestedInput
+    nonConformities?: NonConformityUncheckedUpdateManyWithoutVesselNestedInput
+    sireInspections?: SireInspectionUncheckedUpdateManyWithoutVesselNestedInput
+    pscInspections?: PscInspectionUncheckedUpdateManyWithoutVesselNestedInput
+    cdiInspections?: CdiInspectionUncheckedUpdateManyWithoutVesselNestedInput
+    internalAudits?: InternalAuditUncheckedUpdateManyWithoutVesselNestedInput
+    externalAudits?: ExternalAuditUncheckedUpdateManyWithoutVesselNestedInput
+    committeeMeetings?: CommitteeMeetingUncheckedUpdateManyWithoutVesselNestedInput
+    emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutVesselNestedInput
+    controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutVesselNestedInput
+    circulars?: CircularUncheckedUpdateManyWithoutVesselNestedInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedUpdateManyWithoutVesselNestedInput
+    riskAssessmentRevisionRequests?: RiskAssessmentRevisionRequestUncheckedUpdateManyWithoutVesselNestedInput
+    defects?: DefectUncheckedUpdateManyWithoutVesselNestedInput
+    users?: UserUncheckedUpdateManyWithoutVesselNestedInput
+  }
+
+  export type RiskAssessmentDocumentCreateWithoutRevisionRequestsInput = {
+    id?: string
+    refNo: string
+    title: string
+    category: string
+    description?: string | null
+    applicableVesselType?: string | null
+    reviewFrequencyMonths?: number
+    lastReviewDate?: Date | string | null
+    nextReviewDate?: Date | string | null
+    reviewOwnerId?: string | null
+    status?: $Enums.DocumentStatus
+    ownerId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    company: CompanyCreateNestedOneWithoutRiskAssessmentDocumentsInput
+    vessel?: VesselCreateNestedOneWithoutRiskAssessmentDocumentsInput
+    currentRevision?: RiskAssessmentRevisionCreateNestedOneWithoutCurrentOfInput
+    revisions?: RiskAssessmentRevisionCreateNestedManyWithoutDocumentInput
+    executions?: RiskAssessmentExecutionCreateNestedManyWithoutDocumentInput
+  }
+
+  export type RiskAssessmentDocumentUncheckedCreateWithoutRevisionRequestsInput = {
+    id?: string
+    companyId: string
+    refNo: string
+    title: string
+    category: string
+    description?: string | null
+    vesselId?: string | null
+    applicableVesselType?: string | null
+    reviewFrequencyMonths?: number
+    lastReviewDate?: Date | string | null
+    nextReviewDate?: Date | string | null
+    reviewOwnerId?: string | null
+    status?: $Enums.DocumentStatus
+    ownerId?: string | null
+    currentRevisionId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    revisions?: RiskAssessmentRevisionUncheckedCreateNestedManyWithoutDocumentInput
+    executions?: RiskAssessmentExecutionUncheckedCreateNestedManyWithoutDocumentInput
+  }
+
+  export type RiskAssessmentDocumentCreateOrConnectWithoutRevisionRequestsInput = {
+    where: RiskAssessmentDocumentWhereUniqueInput
+    create: XOR<RiskAssessmentDocumentCreateWithoutRevisionRequestsInput, RiskAssessmentDocumentUncheckedCreateWithoutRevisionRequestsInput>
+  }
+
+  export type VesselCreateWithoutRiskAssessmentRevisionRequestsInput = {
+    id?: string
+    name: string
+    code?: string | null
+    imo?: string | null
+    officialNumber?: string | null
+    callSign?: string | null
+    mmsi?: string | null
+    flag?: string | null
+    type?: string
+    classificationSociety?: string | null
+    yearBuilt?: number | null
+    grossTonnage?: number | null
+    loa?: number | null
+    breadth?: number | null
+    depth?: number | null
+    status?: $Enums.VesselStatus
+    capacityCbm?: number | null
+    netTonnage?: number | null
+    deadweight?: number | null
+    tradeArea?: string | null
+    registeredOwner?: string | null
+    headOwner?: string | null
+    charterer?: string | null
+    yearWithSwan?: number | null
+    lastDryDock?: Date | string | null
+    dryDockPlace?: string | null
+    nextDryDockDue?: Date | string | null
+    archivedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    company: CompanyCreateNestedOneWithoutVesselsInput
+    smsDocuments?: SmsDocumentCreateNestedManyWithoutVesselInput
+    incidents?: IncidentCreateNestedManyWithoutVesselInput
+    nearMisses?: NearMissCreateNestedManyWithoutVesselInput
+    nonConformities?: NonConformityCreateNestedManyWithoutVesselInput
+    sireInspections?: SireInspectionCreateNestedManyWithoutVesselInput
+    pscInspections?: PscInspectionCreateNestedManyWithoutVesselInput
+    cdiInspections?: CdiInspectionCreateNestedManyWithoutVesselInput
+    internalAudits?: InternalAuditCreateNestedManyWithoutVesselInput
+    externalAudits?: ExternalAuditCreateNestedManyWithoutVesselInput
+    committeeMeetings?: CommitteeMeetingCreateNestedManyWithoutVesselInput
+    emergencyDrills?: EmergencyDrillCreateNestedManyWithoutVesselInput
+    controlledDocuments?: ControlledDocumentCreateNestedManyWithoutVesselInput
+    circulars?: CircularCreateNestedManyWithoutVesselInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentCreateNestedManyWithoutVesselInput
+    riskAssessmentExecutions?: RiskAssessmentExecutionCreateNestedManyWithoutVesselInput
+    defects?: DefectCreateNestedManyWithoutVesselInput
+    users?: UserCreateNestedManyWithoutVesselInput
+  }
+
+  export type VesselUncheckedCreateWithoutRiskAssessmentRevisionRequestsInput = {
+    id?: string
+    companyId: string
+    name: string
+    code?: string | null
+    imo?: string | null
+    officialNumber?: string | null
+    callSign?: string | null
+    mmsi?: string | null
+    flag?: string | null
+    type?: string
+    classificationSociety?: string | null
+    yearBuilt?: number | null
+    grossTonnage?: number | null
+    loa?: number | null
+    breadth?: number | null
+    depth?: number | null
+    status?: $Enums.VesselStatus
+    capacityCbm?: number | null
+    netTonnage?: number | null
+    deadweight?: number | null
+    tradeArea?: string | null
+    registeredOwner?: string | null
+    headOwner?: string | null
+    charterer?: string | null
+    yearWithSwan?: number | null
+    lastDryDock?: Date | string | null
+    dryDockPlace?: string | null
+    nextDryDockDue?: Date | string | null
+    archivedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    smsDocuments?: SmsDocumentUncheckedCreateNestedManyWithoutVesselInput
+    incidents?: IncidentUncheckedCreateNestedManyWithoutVesselInput
+    nearMisses?: NearMissUncheckedCreateNestedManyWithoutVesselInput
+    nonConformities?: NonConformityUncheckedCreateNestedManyWithoutVesselInput
+    sireInspections?: SireInspectionUncheckedCreateNestedManyWithoutVesselInput
+    pscInspections?: PscInspectionUncheckedCreateNestedManyWithoutVesselInput
+    cdiInspections?: CdiInspectionUncheckedCreateNestedManyWithoutVesselInput
+    internalAudits?: InternalAuditUncheckedCreateNestedManyWithoutVesselInput
+    externalAudits?: ExternalAuditUncheckedCreateNestedManyWithoutVesselInput
+    committeeMeetings?: CommitteeMeetingUncheckedCreateNestedManyWithoutVesselInput
+    emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutVesselInput
+    controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutVesselInput
+    circulars?: CircularUncheckedCreateNestedManyWithoutVesselInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedCreateNestedManyWithoutVesselInput
+    riskAssessmentExecutions?: RiskAssessmentExecutionUncheckedCreateNestedManyWithoutVesselInput
+    defects?: DefectUncheckedCreateNestedManyWithoutVesselInput
+    users?: UserUncheckedCreateNestedManyWithoutVesselInput
+  }
+
+  export type VesselCreateOrConnectWithoutRiskAssessmentRevisionRequestsInput = {
+    where: VesselWhereUniqueInput
+    create: XOR<VesselCreateWithoutRiskAssessmentRevisionRequestsInput, VesselUncheckedCreateWithoutRiskAssessmentRevisionRequestsInput>
+  }
+
+  export type RiskAssessmentDocumentUpsertWithoutRevisionRequestsInput = {
+    update: XOR<RiskAssessmentDocumentUpdateWithoutRevisionRequestsInput, RiskAssessmentDocumentUncheckedUpdateWithoutRevisionRequestsInput>
+    create: XOR<RiskAssessmentDocumentCreateWithoutRevisionRequestsInput, RiskAssessmentDocumentUncheckedCreateWithoutRevisionRequestsInput>
+    where?: RiskAssessmentDocumentWhereInput
+  }
+
+  export type RiskAssessmentDocumentUpdateToOneWithWhereWithoutRevisionRequestsInput = {
+    where?: RiskAssessmentDocumentWhereInput
+    data: XOR<RiskAssessmentDocumentUpdateWithoutRevisionRequestsInput, RiskAssessmentDocumentUncheckedUpdateWithoutRevisionRequestsInput>
+  }
+
+  export type RiskAssessmentDocumentUpdateWithoutRevisionRequestsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    refNo?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    applicableVesselType?: NullableStringFieldUpdateOperationsInput | string | null
+    reviewFrequencyMonths?: IntFieldUpdateOperationsInput | number
+    lastReviewDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    nextReviewDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reviewOwnerId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumDocumentStatusFieldUpdateOperationsInput | $Enums.DocumentStatus
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    company?: CompanyUpdateOneRequiredWithoutRiskAssessmentDocumentsNestedInput
+    vessel?: VesselUpdateOneWithoutRiskAssessmentDocumentsNestedInput
+    currentRevision?: RiskAssessmentRevisionUpdateOneWithoutCurrentOfNestedInput
+    revisions?: RiskAssessmentRevisionUpdateManyWithoutDocumentNestedInput
+    executions?: RiskAssessmentExecutionUpdateManyWithoutDocumentNestedInput
+  }
+
+  export type RiskAssessmentDocumentUncheckedUpdateWithoutRevisionRequestsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    refNo?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    vesselId?: NullableStringFieldUpdateOperationsInput | string | null
+    applicableVesselType?: NullableStringFieldUpdateOperationsInput | string | null
+    reviewFrequencyMonths?: IntFieldUpdateOperationsInput | number
+    lastReviewDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    nextReviewDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reviewOwnerId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumDocumentStatusFieldUpdateOperationsInput | $Enums.DocumentStatus
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    currentRevisionId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    revisions?: RiskAssessmentRevisionUncheckedUpdateManyWithoutDocumentNestedInput
+    executions?: RiskAssessmentExecutionUncheckedUpdateManyWithoutDocumentNestedInput
+  }
+
+  export type VesselUpsertWithoutRiskAssessmentRevisionRequestsInput = {
+    update: XOR<VesselUpdateWithoutRiskAssessmentRevisionRequestsInput, VesselUncheckedUpdateWithoutRiskAssessmentRevisionRequestsInput>
+    create: XOR<VesselCreateWithoutRiskAssessmentRevisionRequestsInput, VesselUncheckedCreateWithoutRiskAssessmentRevisionRequestsInput>
+    where?: VesselWhereInput
+  }
+
+  export type VesselUpdateToOneWithWhereWithoutRiskAssessmentRevisionRequestsInput = {
+    where?: VesselWhereInput
+    data: XOR<VesselUpdateWithoutRiskAssessmentRevisionRequestsInput, VesselUncheckedUpdateWithoutRiskAssessmentRevisionRequestsInput>
+  }
+
+  export type VesselUpdateWithoutRiskAssessmentRevisionRequestsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: NullableStringFieldUpdateOperationsInput | string | null
+    imo?: NullableStringFieldUpdateOperationsInput | string | null
+    officialNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    callSign?: NullableStringFieldUpdateOperationsInput | string | null
+    mmsi?: NullableStringFieldUpdateOperationsInput | string | null
+    flag?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: StringFieldUpdateOperationsInput | string
+    classificationSociety?: NullableStringFieldUpdateOperationsInput | string | null
+    yearBuilt?: NullableIntFieldUpdateOperationsInput | number | null
+    grossTonnage?: NullableFloatFieldUpdateOperationsInput | number | null
+    loa?: NullableFloatFieldUpdateOperationsInput | number | null
+    breadth?: NullableFloatFieldUpdateOperationsInput | number | null
+    depth?: NullableFloatFieldUpdateOperationsInput | number | null
+    status?: EnumVesselStatusFieldUpdateOperationsInput | $Enums.VesselStatus
+    capacityCbm?: NullableFloatFieldUpdateOperationsInput | number | null
+    netTonnage?: NullableFloatFieldUpdateOperationsInput | number | null
+    deadweight?: NullableFloatFieldUpdateOperationsInput | number | null
+    tradeArea?: NullableStringFieldUpdateOperationsInput | string | null
+    registeredOwner?: NullableStringFieldUpdateOperationsInput | string | null
+    headOwner?: NullableStringFieldUpdateOperationsInput | string | null
+    charterer?: NullableStringFieldUpdateOperationsInput | string | null
+    yearWithSwan?: NullableIntFieldUpdateOperationsInput | number | null
+    lastDryDock?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dryDockPlace?: NullableStringFieldUpdateOperationsInput | string | null
+    nextDryDockDue?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    company?: CompanyUpdateOneRequiredWithoutVesselsNestedInput
+    smsDocuments?: SmsDocumentUpdateManyWithoutVesselNestedInput
+    incidents?: IncidentUpdateManyWithoutVesselNestedInput
+    nearMisses?: NearMissUpdateManyWithoutVesselNestedInput
+    nonConformities?: NonConformityUpdateManyWithoutVesselNestedInput
+    sireInspections?: SireInspectionUpdateManyWithoutVesselNestedInput
+    pscInspections?: PscInspectionUpdateManyWithoutVesselNestedInput
+    cdiInspections?: CdiInspectionUpdateManyWithoutVesselNestedInput
+    internalAudits?: InternalAuditUpdateManyWithoutVesselNestedInput
+    externalAudits?: ExternalAuditUpdateManyWithoutVesselNestedInput
+    committeeMeetings?: CommitteeMeetingUpdateManyWithoutVesselNestedInput
+    emergencyDrills?: EmergencyDrillUpdateManyWithoutVesselNestedInput
+    controlledDocuments?: ControlledDocumentUpdateManyWithoutVesselNestedInput
+    circulars?: CircularUpdateManyWithoutVesselNestedInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUpdateManyWithoutVesselNestedInput
+    riskAssessmentExecutions?: RiskAssessmentExecutionUpdateManyWithoutVesselNestedInput
+    defects?: DefectUpdateManyWithoutVesselNestedInput
+    users?: UserUpdateManyWithoutVesselNestedInput
+  }
+
+  export type VesselUncheckedUpdateWithoutRiskAssessmentRevisionRequestsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: NullableStringFieldUpdateOperationsInput | string | null
+    imo?: NullableStringFieldUpdateOperationsInput | string | null
+    officialNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    callSign?: NullableStringFieldUpdateOperationsInput | string | null
+    mmsi?: NullableStringFieldUpdateOperationsInput | string | null
+    flag?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: StringFieldUpdateOperationsInput | string
+    classificationSociety?: NullableStringFieldUpdateOperationsInput | string | null
+    yearBuilt?: NullableIntFieldUpdateOperationsInput | number | null
+    grossTonnage?: NullableFloatFieldUpdateOperationsInput | number | null
+    loa?: NullableFloatFieldUpdateOperationsInput | number | null
+    breadth?: NullableFloatFieldUpdateOperationsInput | number | null
+    depth?: NullableFloatFieldUpdateOperationsInput | number | null
+    status?: EnumVesselStatusFieldUpdateOperationsInput | $Enums.VesselStatus
+    capacityCbm?: NullableFloatFieldUpdateOperationsInput | number | null
+    netTonnage?: NullableFloatFieldUpdateOperationsInput | number | null
+    deadweight?: NullableFloatFieldUpdateOperationsInput | number | null
+    tradeArea?: NullableStringFieldUpdateOperationsInput | string | null
+    registeredOwner?: NullableStringFieldUpdateOperationsInput | string | null
+    headOwner?: NullableStringFieldUpdateOperationsInput | string | null
+    charterer?: NullableStringFieldUpdateOperationsInput | string | null
+    yearWithSwan?: NullableIntFieldUpdateOperationsInput | number | null
+    lastDryDock?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dryDockPlace?: NullableStringFieldUpdateOperationsInput | string | null
+    nextDryDockDue?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    smsDocuments?: SmsDocumentUncheckedUpdateManyWithoutVesselNestedInput
+    incidents?: IncidentUncheckedUpdateManyWithoutVesselNestedInput
+    nearMisses?: NearMissUncheckedUpdateManyWithoutVesselNestedInput
+    nonConformities?: NonConformityUncheckedUpdateManyWithoutVesselNestedInput
+    sireInspections?: SireInspectionUncheckedUpdateManyWithoutVesselNestedInput
+    pscInspections?: PscInspectionUncheckedUpdateManyWithoutVesselNestedInput
+    cdiInspections?: CdiInspectionUncheckedUpdateManyWithoutVesselNestedInput
+    internalAudits?: InternalAuditUncheckedUpdateManyWithoutVesselNestedInput
+    externalAudits?: ExternalAuditUncheckedUpdateManyWithoutVesselNestedInput
+    committeeMeetings?: CommitteeMeetingUncheckedUpdateManyWithoutVesselNestedInput
+    emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutVesselNestedInput
+    controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutVesselNestedInput
+    circulars?: CircularUncheckedUpdateManyWithoutVesselNestedInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedUpdateManyWithoutVesselNestedInput
+    riskAssessmentExecutions?: RiskAssessmentExecutionUncheckedUpdateManyWithoutVesselNestedInput
     defects?: DefectUncheckedUpdateManyWithoutVesselNestedInput
     users?: UserUncheckedUpdateManyWithoutVesselNestedInput
   }
@@ -90061,7 +100764,7 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillCreateNestedManyWithoutCompanyInput
     controlledDocuments?: ControlledDocumentCreateNestedManyWithoutCompanyInput
     circulars?: CircularCreateNestedManyWithoutCompanyInput
-    riskAssessments?: RiskAssessmentCreateNestedManyWithoutCompanyInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutDefectsInput = {
@@ -90087,7 +100790,7 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutCompanyInput
     controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutCompanyInput
     circulars?: CircularUncheckedCreateNestedManyWithoutCompanyInput
-    riskAssessments?: RiskAssessmentUncheckedCreateNestedManyWithoutCompanyInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutDefectsInput = {
@@ -90099,7 +100802,7 @@ export namespace Prisma {
     id?: string
     name: string
     code?: string | null
-    imo: string
+    imo?: string | null
     officialNumber?: string | null
     callSign?: string | null
     mmsi?: string | null
@@ -90112,6 +100815,18 @@ export namespace Prisma {
     breadth?: number | null
     depth?: number | null
     status?: $Enums.VesselStatus
+    capacityCbm?: number | null
+    netTonnage?: number | null
+    deadweight?: number | null
+    tradeArea?: string | null
+    registeredOwner?: string | null
+    headOwner?: string | null
+    charterer?: string | null
+    yearWithSwan?: number | null
+    lastDryDock?: Date | string | null
+    dryDockPlace?: string | null
+    nextDryDockDue?: Date | string | null
+    archivedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -90132,7 +100847,9 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillCreateNestedManyWithoutVesselInput
     controlledDocuments?: ControlledDocumentCreateNestedManyWithoutVesselInput
     circulars?: CircularCreateNestedManyWithoutVesselInput
-    riskAssessments?: RiskAssessmentCreateNestedManyWithoutVesselInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentCreateNestedManyWithoutVesselInput
+    riskAssessmentExecutions?: RiskAssessmentExecutionCreateNestedManyWithoutVesselInput
+    riskAssessmentRevisionRequests?: RiskAssessmentRevisionRequestCreateNestedManyWithoutVesselInput
     users?: UserCreateNestedManyWithoutVesselInput
   }
 
@@ -90141,7 +100858,7 @@ export namespace Prisma {
     companyId: string
     name: string
     code?: string | null
-    imo: string
+    imo?: string | null
     officialNumber?: string | null
     callSign?: string | null
     mmsi?: string | null
@@ -90154,6 +100871,18 @@ export namespace Prisma {
     breadth?: number | null
     depth?: number | null
     status?: $Enums.VesselStatus
+    capacityCbm?: number | null
+    netTonnage?: number | null
+    deadweight?: number | null
+    tradeArea?: string | null
+    registeredOwner?: string | null
+    headOwner?: string | null
+    charterer?: string | null
+    yearWithSwan?: number | null
+    lastDryDock?: Date | string | null
+    dryDockPlace?: string | null
+    nextDryDockDue?: Date | string | null
+    archivedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -90173,7 +100902,9 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutVesselInput
     controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutVesselInput
     circulars?: CircularUncheckedCreateNestedManyWithoutVesselInput
-    riskAssessments?: RiskAssessmentUncheckedCreateNestedManyWithoutVesselInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedCreateNestedManyWithoutVesselInput
+    riskAssessmentExecutions?: RiskAssessmentExecutionUncheckedCreateNestedManyWithoutVesselInput
+    riskAssessmentRevisionRequests?: RiskAssessmentRevisionRequestUncheckedCreateNestedManyWithoutVesselInput
     users?: UserUncheckedCreateNestedManyWithoutVesselInput
   }
 
@@ -90216,7 +100947,7 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillUpdateManyWithoutCompanyNestedInput
     controlledDocuments?: ControlledDocumentUpdateManyWithoutCompanyNestedInput
     circulars?: CircularUpdateManyWithoutCompanyNestedInput
-    riskAssessments?: RiskAssessmentUpdateManyWithoutCompanyNestedInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutDefectsInput = {
@@ -90242,7 +100973,7 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutCompanyNestedInput
     controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutCompanyNestedInput
     circulars?: CircularUncheckedUpdateManyWithoutCompanyNestedInput
-    riskAssessments?: RiskAssessmentUncheckedUpdateManyWithoutCompanyNestedInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type VesselUpsertWithoutDefectsInput = {
@@ -90260,7 +100991,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     code?: NullableStringFieldUpdateOperationsInput | string | null
-    imo?: StringFieldUpdateOperationsInput | string
+    imo?: NullableStringFieldUpdateOperationsInput | string | null
     officialNumber?: NullableStringFieldUpdateOperationsInput | string | null
     callSign?: NullableStringFieldUpdateOperationsInput | string | null
     mmsi?: NullableStringFieldUpdateOperationsInput | string | null
@@ -90273,6 +101004,18 @@ export namespace Prisma {
     breadth?: NullableFloatFieldUpdateOperationsInput | number | null
     depth?: NullableFloatFieldUpdateOperationsInput | number | null
     status?: EnumVesselStatusFieldUpdateOperationsInput | $Enums.VesselStatus
+    capacityCbm?: NullableFloatFieldUpdateOperationsInput | number | null
+    netTonnage?: NullableFloatFieldUpdateOperationsInput | number | null
+    deadweight?: NullableFloatFieldUpdateOperationsInput | number | null
+    tradeArea?: NullableStringFieldUpdateOperationsInput | string | null
+    registeredOwner?: NullableStringFieldUpdateOperationsInput | string | null
+    headOwner?: NullableStringFieldUpdateOperationsInput | string | null
+    charterer?: NullableStringFieldUpdateOperationsInput | string | null
+    yearWithSwan?: NullableIntFieldUpdateOperationsInput | number | null
+    lastDryDock?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dryDockPlace?: NullableStringFieldUpdateOperationsInput | string | null
+    nextDryDockDue?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -90293,7 +101036,9 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillUpdateManyWithoutVesselNestedInput
     controlledDocuments?: ControlledDocumentUpdateManyWithoutVesselNestedInput
     circulars?: CircularUpdateManyWithoutVesselNestedInput
-    riskAssessments?: RiskAssessmentUpdateManyWithoutVesselNestedInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUpdateManyWithoutVesselNestedInput
+    riskAssessmentExecutions?: RiskAssessmentExecutionUpdateManyWithoutVesselNestedInput
+    riskAssessmentRevisionRequests?: RiskAssessmentRevisionRequestUpdateManyWithoutVesselNestedInput
     users?: UserUpdateManyWithoutVesselNestedInput
   }
 
@@ -90302,7 +101047,7 @@ export namespace Prisma {
     companyId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     code?: NullableStringFieldUpdateOperationsInput | string | null
-    imo?: StringFieldUpdateOperationsInput | string
+    imo?: NullableStringFieldUpdateOperationsInput | string | null
     officialNumber?: NullableStringFieldUpdateOperationsInput | string | null
     callSign?: NullableStringFieldUpdateOperationsInput | string | null
     mmsi?: NullableStringFieldUpdateOperationsInput | string | null
@@ -90315,6 +101060,18 @@ export namespace Prisma {
     breadth?: NullableFloatFieldUpdateOperationsInput | number | null
     depth?: NullableFloatFieldUpdateOperationsInput | number | null
     status?: EnumVesselStatusFieldUpdateOperationsInput | $Enums.VesselStatus
+    capacityCbm?: NullableFloatFieldUpdateOperationsInput | number | null
+    netTonnage?: NullableFloatFieldUpdateOperationsInput | number | null
+    deadweight?: NullableFloatFieldUpdateOperationsInput | number | null
+    tradeArea?: NullableStringFieldUpdateOperationsInput | string | null
+    registeredOwner?: NullableStringFieldUpdateOperationsInput | string | null
+    headOwner?: NullableStringFieldUpdateOperationsInput | string | null
+    charterer?: NullableStringFieldUpdateOperationsInput | string | null
+    yearWithSwan?: NullableIntFieldUpdateOperationsInput | number | null
+    lastDryDock?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dryDockPlace?: NullableStringFieldUpdateOperationsInput | string | null
+    nextDryDockDue?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -90334,7 +101091,9 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutVesselNestedInput
     controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutVesselNestedInput
     circulars?: CircularUncheckedUpdateManyWithoutVesselNestedInput
-    riskAssessments?: RiskAssessmentUncheckedUpdateManyWithoutVesselNestedInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedUpdateManyWithoutVesselNestedInput
+    riskAssessmentExecutions?: RiskAssessmentExecutionUncheckedUpdateManyWithoutVesselNestedInput
+    riskAssessmentRevisionRequests?: RiskAssessmentRevisionRequestUncheckedUpdateManyWithoutVesselNestedInput
     users?: UserUncheckedUpdateManyWithoutVesselNestedInput
   }
 
@@ -90369,7 +101128,7 @@ export namespace Prisma {
     id?: string
     name: string
     code?: string | null
-    imo: string
+    imo?: string | null
     officialNumber?: string | null
     callSign?: string | null
     mmsi?: string | null
@@ -90382,6 +101141,18 @@ export namespace Prisma {
     breadth?: number | null
     depth?: number | null
     status?: $Enums.VesselStatus
+    capacityCbm?: number | null
+    netTonnage?: number | null
+    deadweight?: number | null
+    tradeArea?: string | null
+    registeredOwner?: string | null
+    headOwner?: string | null
+    charterer?: string | null
+    yearWithSwan?: number | null
+    lastDryDock?: Date | string | null
+    dryDockPlace?: string | null
+    nextDryDockDue?: Date | string | null
+    archivedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -90695,21 +101466,21 @@ export namespace Prisma {
     deletedBy?: string | null
   }
 
-  export type RiskAssessmentCreateManyCompanyInput = {
+  export type RiskAssessmentDocumentCreateManyCompanyInput = {
     id?: string
     refNo: string
+    title: string
+    category: string
+    description?: string | null
     vesselId?: string | null
-    activity: string
-    hazards: string
-    existingControls?: string | null
-    likelihood: $Enums.RiskRating
-    severity: $Enums.RiskRating
-    additionalControls?: string | null
-    assessedBy?: string | null
-    assessmentDate: Date | string
-    reviewDate?: Date | string | null
-    status?: $Enums.RiskAssessmentStatus
-    closedAt?: Date | string | null
+    applicableVesselType?: string | null
+    reviewFrequencyMonths?: number
+    lastReviewDate?: Date | string | null
+    nextReviewDate?: Date | string | null
+    reviewOwnerId?: string | null
+    status?: $Enums.DocumentStatus
+    ownerId?: string | null
+    currentRevisionId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -90846,7 +101617,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     code?: NullableStringFieldUpdateOperationsInput | string | null
-    imo?: StringFieldUpdateOperationsInput | string
+    imo?: NullableStringFieldUpdateOperationsInput | string | null
     officialNumber?: NullableStringFieldUpdateOperationsInput | string | null
     callSign?: NullableStringFieldUpdateOperationsInput | string | null
     mmsi?: NullableStringFieldUpdateOperationsInput | string | null
@@ -90859,6 +101630,18 @@ export namespace Prisma {
     breadth?: NullableFloatFieldUpdateOperationsInput | number | null
     depth?: NullableFloatFieldUpdateOperationsInput | number | null
     status?: EnumVesselStatusFieldUpdateOperationsInput | $Enums.VesselStatus
+    capacityCbm?: NullableFloatFieldUpdateOperationsInput | number | null
+    netTonnage?: NullableFloatFieldUpdateOperationsInput | number | null
+    deadweight?: NullableFloatFieldUpdateOperationsInput | number | null
+    tradeArea?: NullableStringFieldUpdateOperationsInput | string | null
+    registeredOwner?: NullableStringFieldUpdateOperationsInput | string | null
+    headOwner?: NullableStringFieldUpdateOperationsInput | string | null
+    charterer?: NullableStringFieldUpdateOperationsInput | string | null
+    yearWithSwan?: NullableIntFieldUpdateOperationsInput | number | null
+    lastDryDock?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dryDockPlace?: NullableStringFieldUpdateOperationsInput | string | null
+    nextDryDockDue?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -90878,7 +101661,9 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillUpdateManyWithoutVesselNestedInput
     controlledDocuments?: ControlledDocumentUpdateManyWithoutVesselNestedInput
     circulars?: CircularUpdateManyWithoutVesselNestedInput
-    riskAssessments?: RiskAssessmentUpdateManyWithoutVesselNestedInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUpdateManyWithoutVesselNestedInput
+    riskAssessmentExecutions?: RiskAssessmentExecutionUpdateManyWithoutVesselNestedInput
+    riskAssessmentRevisionRequests?: RiskAssessmentRevisionRequestUpdateManyWithoutVesselNestedInput
     defects?: DefectUpdateManyWithoutVesselNestedInput
     users?: UserUpdateManyWithoutVesselNestedInput
   }
@@ -90887,7 +101672,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     code?: NullableStringFieldUpdateOperationsInput | string | null
-    imo?: StringFieldUpdateOperationsInput | string
+    imo?: NullableStringFieldUpdateOperationsInput | string | null
     officialNumber?: NullableStringFieldUpdateOperationsInput | string | null
     callSign?: NullableStringFieldUpdateOperationsInput | string | null
     mmsi?: NullableStringFieldUpdateOperationsInput | string | null
@@ -90900,6 +101685,18 @@ export namespace Prisma {
     breadth?: NullableFloatFieldUpdateOperationsInput | number | null
     depth?: NullableFloatFieldUpdateOperationsInput | number | null
     status?: EnumVesselStatusFieldUpdateOperationsInput | $Enums.VesselStatus
+    capacityCbm?: NullableFloatFieldUpdateOperationsInput | number | null
+    netTonnage?: NullableFloatFieldUpdateOperationsInput | number | null
+    deadweight?: NullableFloatFieldUpdateOperationsInput | number | null
+    tradeArea?: NullableStringFieldUpdateOperationsInput | string | null
+    registeredOwner?: NullableStringFieldUpdateOperationsInput | string | null
+    headOwner?: NullableStringFieldUpdateOperationsInput | string | null
+    charterer?: NullableStringFieldUpdateOperationsInput | string | null
+    yearWithSwan?: NullableIntFieldUpdateOperationsInput | number | null
+    lastDryDock?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dryDockPlace?: NullableStringFieldUpdateOperationsInput | string | null
+    nextDryDockDue?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -90919,7 +101716,9 @@ export namespace Prisma {
     emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutVesselNestedInput
     controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutVesselNestedInput
     circulars?: CircularUncheckedUpdateManyWithoutVesselNestedInput
-    riskAssessments?: RiskAssessmentUncheckedUpdateManyWithoutVesselNestedInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedUpdateManyWithoutVesselNestedInput
+    riskAssessmentExecutions?: RiskAssessmentExecutionUncheckedUpdateManyWithoutVesselNestedInput
+    riskAssessmentRevisionRequests?: RiskAssessmentRevisionRequestUncheckedUpdateManyWithoutVesselNestedInput
     defects?: DefectUncheckedUpdateManyWithoutVesselNestedInput
     users?: UserUncheckedUpdateManyWithoutVesselNestedInput
   }
@@ -90928,7 +101727,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     code?: NullableStringFieldUpdateOperationsInput | string | null
-    imo?: StringFieldUpdateOperationsInput | string
+    imo?: NullableStringFieldUpdateOperationsInput | string | null
     officialNumber?: NullableStringFieldUpdateOperationsInput | string | null
     callSign?: NullableStringFieldUpdateOperationsInput | string | null
     mmsi?: NullableStringFieldUpdateOperationsInput | string | null
@@ -90941,6 +101740,18 @@ export namespace Prisma {
     breadth?: NullableFloatFieldUpdateOperationsInput | number | null
     depth?: NullableFloatFieldUpdateOperationsInput | number | null
     status?: EnumVesselStatusFieldUpdateOperationsInput | $Enums.VesselStatus
+    capacityCbm?: NullableFloatFieldUpdateOperationsInput | number | null
+    netTonnage?: NullableFloatFieldUpdateOperationsInput | number | null
+    deadweight?: NullableFloatFieldUpdateOperationsInput | number | null
+    tradeArea?: NullableStringFieldUpdateOperationsInput | string | null
+    registeredOwner?: NullableStringFieldUpdateOperationsInput | string | null
+    headOwner?: NullableStringFieldUpdateOperationsInput | string | null
+    charterer?: NullableStringFieldUpdateOperationsInput | string | null
+    yearWithSwan?: NullableIntFieldUpdateOperationsInput | number | null
+    lastDryDock?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dryDockPlace?: NullableStringFieldUpdateOperationsInput | string | null
+    nextDryDockDue?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -91888,67 +102699,73 @@ export namespace Prisma {
     deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
-  export type RiskAssessmentUpdateWithoutCompanyInput = {
+  export type RiskAssessmentDocumentUpdateWithoutCompanyInput = {
     id?: StringFieldUpdateOperationsInput | string
     refNo?: StringFieldUpdateOperationsInput | string
-    activity?: StringFieldUpdateOperationsInput | string
-    hazards?: StringFieldUpdateOperationsInput | string
-    existingControls?: NullableStringFieldUpdateOperationsInput | string | null
-    likelihood?: EnumRiskRatingFieldUpdateOperationsInput | $Enums.RiskRating
-    severity?: EnumRiskRatingFieldUpdateOperationsInput | $Enums.RiskRating
-    additionalControls?: NullableStringFieldUpdateOperationsInput | string | null
-    assessedBy?: NullableStringFieldUpdateOperationsInput | string | null
-    assessmentDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    reviewDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    status?: EnumRiskAssessmentStatusFieldUpdateOperationsInput | $Enums.RiskAssessmentStatus
-    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    title?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    applicableVesselType?: NullableStringFieldUpdateOperationsInput | string | null
+    reviewFrequencyMonths?: IntFieldUpdateOperationsInput | number
+    lastReviewDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    nextReviewDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reviewOwnerId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumDocumentStatusFieldUpdateOperationsInput | $Enums.DocumentStatus
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
     updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
-    vessel?: VesselUpdateOneWithoutRiskAssessmentsNestedInput
+    vessel?: VesselUpdateOneWithoutRiskAssessmentDocumentsNestedInput
+    currentRevision?: RiskAssessmentRevisionUpdateOneWithoutCurrentOfNestedInput
+    revisions?: RiskAssessmentRevisionUpdateManyWithoutDocumentNestedInput
+    executions?: RiskAssessmentExecutionUpdateManyWithoutDocumentNestedInput
+    revisionRequests?: RiskAssessmentRevisionRequestUpdateManyWithoutDocumentNestedInput
   }
 
-  export type RiskAssessmentUncheckedUpdateWithoutCompanyInput = {
+  export type RiskAssessmentDocumentUncheckedUpdateWithoutCompanyInput = {
     id?: StringFieldUpdateOperationsInput | string
     refNo?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     vesselId?: NullableStringFieldUpdateOperationsInput | string | null
-    activity?: StringFieldUpdateOperationsInput | string
-    hazards?: StringFieldUpdateOperationsInput | string
-    existingControls?: NullableStringFieldUpdateOperationsInput | string | null
-    likelihood?: EnumRiskRatingFieldUpdateOperationsInput | $Enums.RiskRating
-    severity?: EnumRiskRatingFieldUpdateOperationsInput | $Enums.RiskRating
-    additionalControls?: NullableStringFieldUpdateOperationsInput | string | null
-    assessedBy?: NullableStringFieldUpdateOperationsInput | string | null
-    assessmentDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    reviewDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    status?: EnumRiskAssessmentStatusFieldUpdateOperationsInput | $Enums.RiskAssessmentStatus
-    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    applicableVesselType?: NullableStringFieldUpdateOperationsInput | string | null
+    reviewFrequencyMonths?: IntFieldUpdateOperationsInput | number
+    lastReviewDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    nextReviewDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reviewOwnerId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumDocumentStatusFieldUpdateOperationsInput | $Enums.DocumentStatus
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    currentRevisionId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
     updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    revisions?: RiskAssessmentRevisionUncheckedUpdateManyWithoutDocumentNestedInput
+    executions?: RiskAssessmentExecutionUncheckedUpdateManyWithoutDocumentNestedInput
+    revisionRequests?: RiskAssessmentRevisionRequestUncheckedUpdateManyWithoutDocumentNestedInput
   }
 
-  export type RiskAssessmentUncheckedUpdateManyWithoutCompanyInput = {
+  export type RiskAssessmentDocumentUncheckedUpdateManyWithoutCompanyInput = {
     id?: StringFieldUpdateOperationsInput | string
     refNo?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     vesselId?: NullableStringFieldUpdateOperationsInput | string | null
-    activity?: StringFieldUpdateOperationsInput | string
-    hazards?: StringFieldUpdateOperationsInput | string
-    existingControls?: NullableStringFieldUpdateOperationsInput | string | null
-    likelihood?: EnumRiskRatingFieldUpdateOperationsInput | $Enums.RiskRating
-    severity?: EnumRiskRatingFieldUpdateOperationsInput | $Enums.RiskRating
-    additionalControls?: NullableStringFieldUpdateOperationsInput | string | null
-    assessedBy?: NullableStringFieldUpdateOperationsInput | string | null
-    assessmentDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    reviewDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    status?: EnumRiskAssessmentStatusFieldUpdateOperationsInput | $Enums.RiskAssessmentStatus
-    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    applicableVesselType?: NullableStringFieldUpdateOperationsInput | string | null
+    reviewFrequencyMonths?: IntFieldUpdateOperationsInput | number
+    lastReviewDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    nextReviewDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reviewOwnerId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumDocumentStatusFieldUpdateOperationsInput | $Enums.DocumentStatus
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    currentRevisionId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -93096,27 +103913,59 @@ export namespace Prisma {
     deletedBy?: string | null
   }
 
-  export type RiskAssessmentCreateManyVesselInput = {
+  export type RiskAssessmentDocumentCreateManyVesselInput = {
     id?: string
     companyId: string
     refNo: string
-    activity: string
-    hazards: string
-    existingControls?: string | null
-    likelihood: $Enums.RiskRating
-    severity: $Enums.RiskRating
-    additionalControls?: string | null
-    assessedBy?: string | null
-    assessmentDate: Date | string
-    reviewDate?: Date | string | null
-    status?: $Enums.RiskAssessmentStatus
-    closedAt?: Date | string | null
+    title: string
+    category: string
+    description?: string | null
+    applicableVesselType?: string | null
+    reviewFrequencyMonths?: number
+    lastReviewDate?: Date | string | null
+    nextReviewDate?: Date | string | null
+    reviewOwnerId?: string | null
+    status?: $Enums.DocumentStatus
+    ownerId?: string | null
+    currentRevisionId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
     updatedBy?: string | null
     deletedAt?: Date | string | null
     deletedBy?: string | null
+  }
+
+  export type RiskAssessmentExecutionCreateManyVesselInput = {
+    id?: string
+    companyId: string
+    documentId: string
+    revisionId: string
+    jobName: string
+    conditionStatus?: $Enums.RaExecutionCondition
+    changedConditionsNote?: string | null
+    temporaryHazards?: string | null
+    temporaryControls?: string | null
+    performedById?: string | null
+    toolboxSignedAt?: Date | string | null
+    toolboxAttendees?: string | null
+    executedAt?: Date | string
+    createdAt?: Date | string
+    createdBy?: string | null
+  }
+
+  export type RiskAssessmentRevisionRequestCreateManyVesselInput = {
+    id?: string
+    companyId: string
+    documentId: string
+    requestedById?: string | null
+    reason: string
+    reviewTrigger?: $Enums.ReviewTrigger
+    status?: $Enums.RaRevisionRequestStatus
+    decidedById?: string | null
+    decidedAt?: Date | string | null
+    decisionNote?: string | null
+    createdAt?: Date | string
   }
 
   export type DefectCreateManyVesselInput = {
@@ -94060,44 +104909,73 @@ export namespace Prisma {
     deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
-  export type RiskAssessmentUpdateWithoutVesselInput = {
+  export type RiskAssessmentDocumentUpdateWithoutVesselInput = {
     id?: StringFieldUpdateOperationsInput | string
     refNo?: StringFieldUpdateOperationsInput | string
-    activity?: StringFieldUpdateOperationsInput | string
-    hazards?: StringFieldUpdateOperationsInput | string
-    existingControls?: NullableStringFieldUpdateOperationsInput | string | null
-    likelihood?: EnumRiskRatingFieldUpdateOperationsInput | $Enums.RiskRating
-    severity?: EnumRiskRatingFieldUpdateOperationsInput | $Enums.RiskRating
-    additionalControls?: NullableStringFieldUpdateOperationsInput | string | null
-    assessedBy?: NullableStringFieldUpdateOperationsInput | string | null
-    assessmentDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    reviewDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    status?: EnumRiskAssessmentStatusFieldUpdateOperationsInput | $Enums.RiskAssessmentStatus
-    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    title?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    applicableVesselType?: NullableStringFieldUpdateOperationsInput | string | null
+    reviewFrequencyMonths?: IntFieldUpdateOperationsInput | number
+    lastReviewDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    nextReviewDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reviewOwnerId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumDocumentStatusFieldUpdateOperationsInput | $Enums.DocumentStatus
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
     updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
-    company?: CompanyUpdateOneRequiredWithoutRiskAssessmentsNestedInput
+    company?: CompanyUpdateOneRequiredWithoutRiskAssessmentDocumentsNestedInput
+    currentRevision?: RiskAssessmentRevisionUpdateOneWithoutCurrentOfNestedInput
+    revisions?: RiskAssessmentRevisionUpdateManyWithoutDocumentNestedInput
+    executions?: RiskAssessmentExecutionUpdateManyWithoutDocumentNestedInput
+    revisionRequests?: RiskAssessmentRevisionRequestUpdateManyWithoutDocumentNestedInput
   }
 
-  export type RiskAssessmentUncheckedUpdateWithoutVesselInput = {
+  export type RiskAssessmentDocumentUncheckedUpdateWithoutVesselInput = {
     id?: StringFieldUpdateOperationsInput | string
     companyId?: StringFieldUpdateOperationsInput | string
     refNo?: StringFieldUpdateOperationsInput | string
-    activity?: StringFieldUpdateOperationsInput | string
-    hazards?: StringFieldUpdateOperationsInput | string
-    existingControls?: NullableStringFieldUpdateOperationsInput | string | null
-    likelihood?: EnumRiskRatingFieldUpdateOperationsInput | $Enums.RiskRating
-    severity?: EnumRiskRatingFieldUpdateOperationsInput | $Enums.RiskRating
-    additionalControls?: NullableStringFieldUpdateOperationsInput | string | null
-    assessedBy?: NullableStringFieldUpdateOperationsInput | string | null
-    assessmentDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    reviewDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    status?: EnumRiskAssessmentStatusFieldUpdateOperationsInput | $Enums.RiskAssessmentStatus
-    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    title?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    applicableVesselType?: NullableStringFieldUpdateOperationsInput | string | null
+    reviewFrequencyMonths?: IntFieldUpdateOperationsInput | number
+    lastReviewDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    nextReviewDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reviewOwnerId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumDocumentStatusFieldUpdateOperationsInput | $Enums.DocumentStatus
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    currentRevisionId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    revisions?: RiskAssessmentRevisionUncheckedUpdateManyWithoutDocumentNestedInput
+    executions?: RiskAssessmentExecutionUncheckedUpdateManyWithoutDocumentNestedInput
+    revisionRequests?: RiskAssessmentRevisionRequestUncheckedUpdateManyWithoutDocumentNestedInput
+  }
+
+  export type RiskAssessmentDocumentUncheckedUpdateManyWithoutVesselInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    refNo?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    applicableVesselType?: NullableStringFieldUpdateOperationsInput | string | null
+    reviewFrequencyMonths?: IntFieldUpdateOperationsInput | number
+    lastReviewDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    nextReviewDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reviewOwnerId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumDocumentStatusFieldUpdateOperationsInput | $Enums.DocumentStatus
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    currentRevisionId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -94106,27 +104984,100 @@ export namespace Prisma {
     deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
-  export type RiskAssessmentUncheckedUpdateManyWithoutVesselInput = {
+  export type RiskAssessmentExecutionUpdateWithoutVesselInput = {
     id?: StringFieldUpdateOperationsInput | string
     companyId?: StringFieldUpdateOperationsInput | string
-    refNo?: StringFieldUpdateOperationsInput | string
-    activity?: StringFieldUpdateOperationsInput | string
-    hazards?: StringFieldUpdateOperationsInput | string
-    existingControls?: NullableStringFieldUpdateOperationsInput | string | null
-    likelihood?: EnumRiskRatingFieldUpdateOperationsInput | $Enums.RiskRating
-    severity?: EnumRiskRatingFieldUpdateOperationsInput | $Enums.RiskRating
-    additionalControls?: NullableStringFieldUpdateOperationsInput | string | null
-    assessedBy?: NullableStringFieldUpdateOperationsInput | string | null
-    assessmentDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    reviewDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    status?: EnumRiskAssessmentStatusFieldUpdateOperationsInput | $Enums.RiskAssessmentStatus
-    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    jobName?: StringFieldUpdateOperationsInput | string
+    conditionStatus?: EnumRaExecutionConditionFieldUpdateOperationsInput | $Enums.RaExecutionCondition
+    changedConditionsNote?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryHazards?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryControls?: NullableStringFieldUpdateOperationsInput | string | null
+    performedById?: NullableStringFieldUpdateOperationsInput | string | null
+    toolboxSignedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    toolboxAttendees?: NullableStringFieldUpdateOperationsInput | string | null
+    executedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
-    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
-    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    document?: RiskAssessmentDocumentUpdateOneRequiredWithoutExecutionsNestedInput
+    revision?: RiskAssessmentRevisionUpdateOneRequiredWithoutExecutionsNestedInput
+  }
+
+  export type RiskAssessmentExecutionUncheckedUpdateWithoutVesselInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    documentId?: StringFieldUpdateOperationsInput | string
+    revisionId?: StringFieldUpdateOperationsInput | string
+    jobName?: StringFieldUpdateOperationsInput | string
+    conditionStatus?: EnumRaExecutionConditionFieldUpdateOperationsInput | $Enums.RaExecutionCondition
+    changedConditionsNote?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryHazards?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryControls?: NullableStringFieldUpdateOperationsInput | string | null
+    performedById?: NullableStringFieldUpdateOperationsInput | string | null
+    toolboxSignedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    toolboxAttendees?: NullableStringFieldUpdateOperationsInput | string | null
+    executedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type RiskAssessmentExecutionUncheckedUpdateManyWithoutVesselInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    documentId?: StringFieldUpdateOperationsInput | string
+    revisionId?: StringFieldUpdateOperationsInput | string
+    jobName?: StringFieldUpdateOperationsInput | string
+    conditionStatus?: EnumRaExecutionConditionFieldUpdateOperationsInput | $Enums.RaExecutionCondition
+    changedConditionsNote?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryHazards?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryControls?: NullableStringFieldUpdateOperationsInput | string | null
+    performedById?: NullableStringFieldUpdateOperationsInput | string | null
+    toolboxSignedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    toolboxAttendees?: NullableStringFieldUpdateOperationsInput | string | null
+    executedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type RiskAssessmentRevisionRequestUpdateWithoutVesselInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    requestedById?: NullableStringFieldUpdateOperationsInput | string | null
+    reason?: StringFieldUpdateOperationsInput | string
+    reviewTrigger?: EnumReviewTriggerFieldUpdateOperationsInput | $Enums.ReviewTrigger
+    status?: EnumRaRevisionRequestStatusFieldUpdateOperationsInput | $Enums.RaRevisionRequestStatus
+    decidedById?: NullableStringFieldUpdateOperationsInput | string | null
+    decidedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    decisionNote?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    document?: RiskAssessmentDocumentUpdateOneRequiredWithoutRevisionRequestsNestedInput
+  }
+
+  export type RiskAssessmentRevisionRequestUncheckedUpdateWithoutVesselInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    documentId?: StringFieldUpdateOperationsInput | string
+    requestedById?: NullableStringFieldUpdateOperationsInput | string | null
+    reason?: StringFieldUpdateOperationsInput | string
+    reviewTrigger?: EnumReviewTriggerFieldUpdateOperationsInput | $Enums.ReviewTrigger
+    status?: EnumRaRevisionRequestStatusFieldUpdateOperationsInput | $Enums.RaRevisionRequestStatus
+    decidedById?: NullableStringFieldUpdateOperationsInput | string | null
+    decidedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    decisionNote?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type RiskAssessmentRevisionRequestUncheckedUpdateManyWithoutVesselInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    documentId?: StringFieldUpdateOperationsInput | string
+    requestedById?: NullableStringFieldUpdateOperationsInput | string | null
+    reason?: StringFieldUpdateOperationsInput | string
+    reviewTrigger?: EnumReviewTriggerFieldUpdateOperationsInput | $Enums.ReviewTrigger
+    status?: EnumRaRevisionRequestStatusFieldUpdateOperationsInput | $Enums.RaRevisionRequestStatus
+    decidedById?: NullableStringFieldUpdateOperationsInput | string | null
+    decidedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    decisionNote?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type DefectUpdateWithoutVesselInput = {
@@ -95010,6 +105961,360 @@ export namespace Prisma {
     acknowledgedById?: NullableStringFieldUpdateOperationsInput | string | null
     acknowledgedByName?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type RiskAssessmentRevisionCreateManyDocumentInput = {
+    id?: string
+    companyId: string
+    revisionNo: number
+    changeSummary?: string | null
+    reviewTrigger?: $Enums.ReviewTrigger | null
+    smsProcedureRefs?: string | null
+    riskMatrixRef?: string | null
+    checklistsRequired?: string | null
+    approvalLevel?: $Enums.RaApprovalLevel
+    status?: $Enums.DocumentStatus
+    effectiveDate?: Date | string | null
+    approvedBy?: string | null
+    approvedAt?: Date | string | null
+    createdAt?: Date | string
+    createdBy?: string | null
+  }
+
+  export type RiskAssessmentExecutionCreateManyDocumentInput = {
+    id?: string
+    companyId: string
+    revisionId: string
+    vesselId: string
+    jobName: string
+    conditionStatus?: $Enums.RaExecutionCondition
+    changedConditionsNote?: string | null
+    temporaryHazards?: string | null
+    temporaryControls?: string | null
+    performedById?: string | null
+    toolboxSignedAt?: Date | string | null
+    toolboxAttendees?: string | null
+    executedAt?: Date | string
+    createdAt?: Date | string
+    createdBy?: string | null
+  }
+
+  export type RiskAssessmentRevisionRequestCreateManyDocumentInput = {
+    id?: string
+    companyId: string
+    requestedById?: string | null
+    vesselId?: string | null
+    reason: string
+    reviewTrigger?: $Enums.ReviewTrigger
+    status?: $Enums.RaRevisionRequestStatus
+    decidedById?: string | null
+    decidedAt?: Date | string | null
+    decisionNote?: string | null
+    createdAt?: Date | string
+  }
+
+  export type RiskAssessmentRevisionUpdateWithoutDocumentInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    revisionNo?: IntFieldUpdateOperationsInput | number
+    changeSummary?: NullableStringFieldUpdateOperationsInput | string | null
+    reviewTrigger?: NullableEnumReviewTriggerFieldUpdateOperationsInput | $Enums.ReviewTrigger | null
+    smsProcedureRefs?: NullableStringFieldUpdateOperationsInput | string | null
+    riskMatrixRef?: NullableStringFieldUpdateOperationsInput | string | null
+    checklistsRequired?: NullableStringFieldUpdateOperationsInput | string | null
+    approvalLevel?: EnumRaApprovalLevelFieldUpdateOperationsInput | $Enums.RaApprovalLevel
+    status?: EnumDocumentStatusFieldUpdateOperationsInput | $Enums.DocumentStatus
+    effectiveDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approvedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    approvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    currentOf?: RiskAssessmentDocumentUpdateOneWithoutCurrentRevisionNestedInput
+    executions?: RiskAssessmentExecutionUpdateManyWithoutRevisionNestedInput
+    hazardRows?: RiskHazardRowUpdateManyWithoutRevisionNestedInput
+  }
+
+  export type RiskAssessmentRevisionUncheckedUpdateWithoutDocumentInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    revisionNo?: IntFieldUpdateOperationsInput | number
+    changeSummary?: NullableStringFieldUpdateOperationsInput | string | null
+    reviewTrigger?: NullableEnumReviewTriggerFieldUpdateOperationsInput | $Enums.ReviewTrigger | null
+    smsProcedureRefs?: NullableStringFieldUpdateOperationsInput | string | null
+    riskMatrixRef?: NullableStringFieldUpdateOperationsInput | string | null
+    checklistsRequired?: NullableStringFieldUpdateOperationsInput | string | null
+    approvalLevel?: EnumRaApprovalLevelFieldUpdateOperationsInput | $Enums.RaApprovalLevel
+    status?: EnumDocumentStatusFieldUpdateOperationsInput | $Enums.DocumentStatus
+    effectiveDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approvedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    approvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    currentOf?: RiskAssessmentDocumentUncheckedUpdateOneWithoutCurrentRevisionNestedInput
+    executions?: RiskAssessmentExecutionUncheckedUpdateManyWithoutRevisionNestedInput
+    hazardRows?: RiskHazardRowUncheckedUpdateManyWithoutRevisionNestedInput
+  }
+
+  export type RiskAssessmentRevisionUncheckedUpdateManyWithoutDocumentInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    revisionNo?: IntFieldUpdateOperationsInput | number
+    changeSummary?: NullableStringFieldUpdateOperationsInput | string | null
+    reviewTrigger?: NullableEnumReviewTriggerFieldUpdateOperationsInput | $Enums.ReviewTrigger | null
+    smsProcedureRefs?: NullableStringFieldUpdateOperationsInput | string | null
+    riskMatrixRef?: NullableStringFieldUpdateOperationsInput | string | null
+    checklistsRequired?: NullableStringFieldUpdateOperationsInput | string | null
+    approvalLevel?: EnumRaApprovalLevelFieldUpdateOperationsInput | $Enums.RaApprovalLevel
+    status?: EnumDocumentStatusFieldUpdateOperationsInput | $Enums.DocumentStatus
+    effectiveDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approvedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    approvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type RiskAssessmentExecutionUpdateWithoutDocumentInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    jobName?: StringFieldUpdateOperationsInput | string
+    conditionStatus?: EnumRaExecutionConditionFieldUpdateOperationsInput | $Enums.RaExecutionCondition
+    changedConditionsNote?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryHazards?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryControls?: NullableStringFieldUpdateOperationsInput | string | null
+    performedById?: NullableStringFieldUpdateOperationsInput | string | null
+    toolboxSignedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    toolboxAttendees?: NullableStringFieldUpdateOperationsInput | string | null
+    executedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    revision?: RiskAssessmentRevisionUpdateOneRequiredWithoutExecutionsNestedInput
+    vessel?: VesselUpdateOneRequiredWithoutRiskAssessmentExecutionsNestedInput
+  }
+
+  export type RiskAssessmentExecutionUncheckedUpdateWithoutDocumentInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    revisionId?: StringFieldUpdateOperationsInput | string
+    vesselId?: StringFieldUpdateOperationsInput | string
+    jobName?: StringFieldUpdateOperationsInput | string
+    conditionStatus?: EnumRaExecutionConditionFieldUpdateOperationsInput | $Enums.RaExecutionCondition
+    changedConditionsNote?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryHazards?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryControls?: NullableStringFieldUpdateOperationsInput | string | null
+    performedById?: NullableStringFieldUpdateOperationsInput | string | null
+    toolboxSignedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    toolboxAttendees?: NullableStringFieldUpdateOperationsInput | string | null
+    executedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type RiskAssessmentExecutionUncheckedUpdateManyWithoutDocumentInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    revisionId?: StringFieldUpdateOperationsInput | string
+    vesselId?: StringFieldUpdateOperationsInput | string
+    jobName?: StringFieldUpdateOperationsInput | string
+    conditionStatus?: EnumRaExecutionConditionFieldUpdateOperationsInput | $Enums.RaExecutionCondition
+    changedConditionsNote?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryHazards?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryControls?: NullableStringFieldUpdateOperationsInput | string | null
+    performedById?: NullableStringFieldUpdateOperationsInput | string | null
+    toolboxSignedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    toolboxAttendees?: NullableStringFieldUpdateOperationsInput | string | null
+    executedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type RiskAssessmentRevisionRequestUpdateWithoutDocumentInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    requestedById?: NullableStringFieldUpdateOperationsInput | string | null
+    reason?: StringFieldUpdateOperationsInput | string
+    reviewTrigger?: EnumReviewTriggerFieldUpdateOperationsInput | $Enums.ReviewTrigger
+    status?: EnumRaRevisionRequestStatusFieldUpdateOperationsInput | $Enums.RaRevisionRequestStatus
+    decidedById?: NullableStringFieldUpdateOperationsInput | string | null
+    decidedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    decisionNote?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    vessel?: VesselUpdateOneWithoutRiskAssessmentRevisionRequestsNestedInput
+  }
+
+  export type RiskAssessmentRevisionRequestUncheckedUpdateWithoutDocumentInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    requestedById?: NullableStringFieldUpdateOperationsInput | string | null
+    vesselId?: NullableStringFieldUpdateOperationsInput | string | null
+    reason?: StringFieldUpdateOperationsInput | string
+    reviewTrigger?: EnumReviewTriggerFieldUpdateOperationsInput | $Enums.ReviewTrigger
+    status?: EnumRaRevisionRequestStatusFieldUpdateOperationsInput | $Enums.RaRevisionRequestStatus
+    decidedById?: NullableStringFieldUpdateOperationsInput | string | null
+    decidedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    decisionNote?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type RiskAssessmentRevisionRequestUncheckedUpdateManyWithoutDocumentInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    requestedById?: NullableStringFieldUpdateOperationsInput | string | null
+    vesselId?: NullableStringFieldUpdateOperationsInput | string | null
+    reason?: StringFieldUpdateOperationsInput | string
+    reviewTrigger?: EnumReviewTriggerFieldUpdateOperationsInput | $Enums.ReviewTrigger
+    status?: EnumRaRevisionRequestStatusFieldUpdateOperationsInput | $Enums.RaRevisionRequestStatus
+    decidedById?: NullableStringFieldUpdateOperationsInput | string | null
+    decidedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    decisionNote?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type RiskAssessmentExecutionCreateManyRevisionInput = {
+    id?: string
+    companyId: string
+    documentId: string
+    vesselId: string
+    jobName: string
+    conditionStatus?: $Enums.RaExecutionCondition
+    changedConditionsNote?: string | null
+    temporaryHazards?: string | null
+    temporaryControls?: string | null
+    performedById?: string | null
+    toolboxSignedAt?: Date | string | null
+    toolboxAttendees?: string | null
+    executedAt?: Date | string
+    createdAt?: Date | string
+    createdBy?: string | null
+  }
+
+  export type RiskHazardRowCreateManyRevisionInput = {
+    id?: string
+    companyId: string
+    rowNo: number
+    phase?: string | null
+    consequence: string
+    causes: string
+    severity: number
+    likelihood: number
+    existingControls: string
+    additionalControls?: string | null
+    resLikelihood?: number | null
+    responsible?: string | null
+    isNew?: boolean
+    ratingChangeNote?: string | null
+    createdAt?: Date | string
+    createdBy?: string | null
+  }
+
+  export type RiskAssessmentExecutionUpdateWithoutRevisionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    jobName?: StringFieldUpdateOperationsInput | string
+    conditionStatus?: EnumRaExecutionConditionFieldUpdateOperationsInput | $Enums.RaExecutionCondition
+    changedConditionsNote?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryHazards?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryControls?: NullableStringFieldUpdateOperationsInput | string | null
+    performedById?: NullableStringFieldUpdateOperationsInput | string | null
+    toolboxSignedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    toolboxAttendees?: NullableStringFieldUpdateOperationsInput | string | null
+    executedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    document?: RiskAssessmentDocumentUpdateOneRequiredWithoutExecutionsNestedInput
+    vessel?: VesselUpdateOneRequiredWithoutRiskAssessmentExecutionsNestedInput
+  }
+
+  export type RiskAssessmentExecutionUncheckedUpdateWithoutRevisionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    documentId?: StringFieldUpdateOperationsInput | string
+    vesselId?: StringFieldUpdateOperationsInput | string
+    jobName?: StringFieldUpdateOperationsInput | string
+    conditionStatus?: EnumRaExecutionConditionFieldUpdateOperationsInput | $Enums.RaExecutionCondition
+    changedConditionsNote?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryHazards?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryControls?: NullableStringFieldUpdateOperationsInput | string | null
+    performedById?: NullableStringFieldUpdateOperationsInput | string | null
+    toolboxSignedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    toolboxAttendees?: NullableStringFieldUpdateOperationsInput | string | null
+    executedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type RiskAssessmentExecutionUncheckedUpdateManyWithoutRevisionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    documentId?: StringFieldUpdateOperationsInput | string
+    vesselId?: StringFieldUpdateOperationsInput | string
+    jobName?: StringFieldUpdateOperationsInput | string
+    conditionStatus?: EnumRaExecutionConditionFieldUpdateOperationsInput | $Enums.RaExecutionCondition
+    changedConditionsNote?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryHazards?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryControls?: NullableStringFieldUpdateOperationsInput | string | null
+    performedById?: NullableStringFieldUpdateOperationsInput | string | null
+    toolboxSignedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    toolboxAttendees?: NullableStringFieldUpdateOperationsInput | string | null
+    executedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type RiskHazardRowUpdateWithoutRevisionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    rowNo?: IntFieldUpdateOperationsInput | number
+    phase?: NullableStringFieldUpdateOperationsInput | string | null
+    consequence?: StringFieldUpdateOperationsInput | string
+    causes?: StringFieldUpdateOperationsInput | string
+    severity?: IntFieldUpdateOperationsInput | number
+    likelihood?: IntFieldUpdateOperationsInput | number
+    existingControls?: StringFieldUpdateOperationsInput | string
+    additionalControls?: NullableStringFieldUpdateOperationsInput | string | null
+    resLikelihood?: NullableIntFieldUpdateOperationsInput | number | null
+    responsible?: NullableStringFieldUpdateOperationsInput | string | null
+    isNew?: BoolFieldUpdateOperationsInput | boolean
+    ratingChangeNote?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type RiskHazardRowUncheckedUpdateWithoutRevisionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    rowNo?: IntFieldUpdateOperationsInput | number
+    phase?: NullableStringFieldUpdateOperationsInput | string | null
+    consequence?: StringFieldUpdateOperationsInput | string
+    causes?: StringFieldUpdateOperationsInput | string
+    severity?: IntFieldUpdateOperationsInput | number
+    likelihood?: IntFieldUpdateOperationsInput | number
+    existingControls?: StringFieldUpdateOperationsInput | string
+    additionalControls?: NullableStringFieldUpdateOperationsInput | string | null
+    resLikelihood?: NullableIntFieldUpdateOperationsInput | number | null
+    responsible?: NullableStringFieldUpdateOperationsInput | string | null
+    isNew?: BoolFieldUpdateOperationsInput | boolean
+    ratingChangeNote?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type RiskHazardRowUncheckedUpdateManyWithoutRevisionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    rowNo?: IntFieldUpdateOperationsInput | number
+    phase?: NullableStringFieldUpdateOperationsInput | string | null
+    consequence?: StringFieldUpdateOperationsInput | string
+    causes?: StringFieldUpdateOperationsInput | string
+    severity?: IntFieldUpdateOperationsInput | number
+    likelihood?: IntFieldUpdateOperationsInput | number
+    existingControls?: StringFieldUpdateOperationsInput | string
+    additionalControls?: NullableStringFieldUpdateOperationsInput | string | null
+    resLikelihood?: NullableIntFieldUpdateOperationsInput | number | null
+    responsible?: NullableStringFieldUpdateOperationsInput | string | null
+    isNew?: BoolFieldUpdateOperationsInput | boolean
+    ratingChangeNote?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
 

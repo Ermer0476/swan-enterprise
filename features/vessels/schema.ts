@@ -22,6 +22,7 @@ const optionalYear = z.preprocess(
   blankToUndefined,
   z.coerce.number().int().min(1900).max(2100).optional(),
 );
+const optionalDate = z.preprocess(blankToUndefined, z.coerce.date().optional());
 
 export const vesselSchema = z.object({
   name: z.string().trim().min(2, "Vessel name is required").max(200),
@@ -31,8 +32,12 @@ export const vesselSchema = z.object({
     .string()
     .trim()
     .toUpperCase()
-    .regex(/^[A-Z0-9]{2,6}$/, "Code must be 2-6 letters/numbers"),
-  imo: z.string().trim().regex(/^\d{7}$/, "IMO number must be 7 digits"),
+    .regex(/^[A-Z0-9]{2,6}$/, "Code must be 2-6 letters/numbers")
+    .optional()
+    .or(z.literal("")),
+  // Optional — real-fleet vessels can be added before their IMO is on file
+  // and filled in later, but if given it must be a valid 7-digit number.
+  imo: z.string().trim().regex(/^\d{7}$/, "IMO number must be 7 digits").optional().or(z.literal("")),
   officialNumber: optionalText(50),
   callSign: optionalText(20),
   mmsi: z.string().trim().regex(/^\d{9}$/, "MMSI must be 9 digits").optional().or(z.literal("")),
@@ -45,6 +50,17 @@ export const vesselSchema = z.object({
   breadth: optionalNumber,
   depth: optionalNumber,
   status: z.enum(VESSEL_STATUSES),
+  capacityCbm: optionalNumber,
+  netTonnage: optionalNumber,
+  deadweight: optionalNumber,
+  tradeArea: optionalText(100),
+  registeredOwner: optionalText(200),
+  headOwner: optionalText(200),
+  charterer: optionalText(200),
+  yearWithSwan: optionalYear,
+  lastDryDock: optionalDate,
+  dryDockPlace: optionalText(100),
+  nextDryDockDue: optionalDate,
 });
 
 export type VesselInput = z.infer<typeof vesselSchema>;

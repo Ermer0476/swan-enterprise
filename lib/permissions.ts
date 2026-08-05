@@ -108,12 +108,14 @@ export const PERMISSIONS = {
   "circular:update": "Edit circulars",
   "circular:delete": "Delete circulars",
 
-  // Risk Assessments module
-  "risk:read": "View risk assessments",
-  "risk:create": "Create risk assessments",
-  "risk:update": "Edit risk assessments",
-  "risk:close": "Close/supersede risk assessments",
-  "risk:delete": "Delete risk assessments",
+  // Risk Assessments module (controlled document library)
+  "risk-doc:read": "View risk assessments",
+  "risk-doc:create": "Create risk assessment documents",
+  "risk-doc:update": "Edit draft revisions and submit for approval",
+  "risk-doc:approve": "Approve or reject risk assessment revisions",
+  "risk-doc:archive": "Archive risk assessment documents",
+  "risk-doc:execute": "Execute an approved risk assessment against a job",
+  "risk-doc:request-revision": "Submit a revision request for a risk assessment",
 
   // Defect List module
   "defect:read": "View equipment defects",

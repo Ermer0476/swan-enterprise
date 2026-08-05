@@ -272,25 +272,25 @@ model Company {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  users               User[]
-  roles               Role[]
-  vessels             Vessel[]
-  smsDocuments        SmsDocument[]
-  workflows           WorkflowDefinition[]
-  incidents           Incident[]
-  nearMisses          NearMiss[]
-  nonConformities     NonConformity[]
-  sireInspections     SireInspection[]
-  pscInspections      PscInspection[]
-  cdiInspections      CdiInspection[]
-  internalAudits      InternalAudit[]
-  externalAudits      ExternalAudit[]
-  committeeMeetings   CommitteeMeeting[]
-  emergencyDrills     EmergencyDrill[]
-  controlledDocuments ControlledDocument[]
-  circulars           Circular[]
-  riskAssessments     RiskAssessment[]
-  defects             Defect[]
+  users                   User[]
+  roles                   Role[]
+  vessels                 Vessel[]
+  smsDocuments            SmsDocument[]
+  workflows               WorkflowDefinition[]
+  incidents               Incident[]
+  nearMisses              NearMiss[]
+  nonConformities         NonConformity[]
+  sireInspections         SireInspection[]
+  pscInspections          PscInspection[]
+  cdiInspections          CdiInspection[]
+  internalAudits          InternalAudit[]
+  externalAudits          ExternalAudit[]
+  committeeMeetings       CommitteeMeeting[]
+  emergencyDrills         EmergencyDrill[]
+  controlledDocuments     ControlledDocument[]
+  circulars               Circular[]
+  riskAssessmentDocuments RiskAssessmentDocument[]
+  defects                 Defect[]
 }
 
 model User {
@@ -390,7 +390,10 @@ model Vessel {
   // numbers (SWA-NCR-2026-0001) so each ship keeps its own NC sequence while
   // staying unambiguous once everything lands in the office's central register.
   code                  String?
-  imo                   String       @unique
+  // Optional so real-fleet vessels can be entered before their official IMO
+  // number is on file (e.g. bulk-imported from the fleet register) — fill
+  // it in later once confirmed. Still unique whenever it IS set.
+  imo                   String?      @unique
   officialNumber        String?
   callSign              String?
   mmsi                  String?
@@ -404,6 +407,28 @@ model Vessel {
   depth                 Float? // (m)
   status                VesselStatus @default(ACTIVE)
 
+  // Commercial / fleet-register particulars — merged in from the Swan-GCC
+  // (GM Command Center) fleet list, which tracks these for OPEX/TMSA
+  // purposes. Kept alongside the technical particulars above rather than
+  // replacing them, since IMO/Call Sign/MMSI/Classification Society are
+  // relied on across the QHSE modules (Incident, SIRE, PSC, CDI, etc.).
+  capacityCbm     Float? // Cargo capacity (CBM)
+  netTonnage      Float?
+  deadweight      Float? // DWT
+  tradeArea       String? // e.g. "FE / SEA", "West Africa", "CARIB"
+  registeredOwner String?
+  headOwner       String?
+  charterer       String?
+  yearWithSwan    Int? // Year the vessel joined the Swan fleet
+  lastDryDock     DateTime?
+  dryDockPlace    String?
+  nextDryDockDue  DateTime?
+  // When this vessel left the fleet (sold / no longer managed) — set
+  // automatically when status is changed to SOLD (and cleared if changed
+  // back). Drives the "vessels under management by year" fleet history
+  // chart, which needs an exact exit year, not just the current status.
+  archivedAt      DateTime?
+
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   createdBy String?
@@ -411,22 +436,24 @@ model Vessel {
   deletedAt DateTime?
   deletedBy String?
 
-  smsDocuments        SmsDocument[]
-  incidents           Incident[]
-  nearMisses          NearMiss[]
-  nonConformities     NonConformity[]
-  sireInspections     SireInspection[]
-  pscInspections      PscInspection[]
-  cdiInspections      CdiInspection[]
-  internalAudits      InternalAudit[]
-  externalAudits      ExternalAudit[]
-  committeeMeetings   CommitteeMeeting[]
-  emergencyDrills     EmergencyDrill[]
-  controlledDocuments ControlledDocument[]
-  circulars           Circular[]
-  riskAssessments     RiskAssessment[]
-  defects             Defect[]
-  users               User[]               @relation("UserVessel")
+  smsDocuments                   SmsDocument[]
+  incidents                      Incident[]
+  nearMisses                     NearMiss[]
+  nonConformities                NonConformity[]
+  sireInspections                SireInspection[]
+  pscInspections                 PscInspection[]
+  cdiInspections                 CdiInspection[]
+  internalAudits                 InternalAudit[]
+  externalAudits                 ExternalAudit[]
+  committeeMeetings              CommitteeMeeting[]
+  emergencyDrills                EmergencyDrill[]
+  controlledDocuments            ControlledDocument[]
+  circulars                      Circular[]
+  riskAssessmentDocuments        RiskAssessmentDocument[]        @relation("RaDocumentVessel")
+  riskAssessmentExecutions       RiskAssessmentExecution[]       @relation("RaExecutionVessel")
+  riskAssessmentRevisionRequests RiskAssessmentRevisionRequest[] @relation("RaRevisionRequestVessel")
+  defects                        Defect[]
+  users                          User[]                          @relation("UserVessel")
 
   @@unique([companyId, code])
   @@index([companyId])
@@ -1282,14 +1309,14 @@ model CommitteeMeeting {
   vesselRemarks String? // Master's overall closing remarks
   shoreRemarks  String? // office's overall reply — required before Close
 
-  status     CommitteeMeetingStatus @default(DRAFT)
-  reportedAt DateTime? // set (and refreshed) every time the vessel reports
-  closedAt   DateTime? // set when the office closes it out
+  status             CommitteeMeetingStatus @default(DRAFT)
+  reportedAt         DateTime? // set (and refreshed) every time the vessel reports
+  closedAt           DateTime? // set when the office closes it out
   // True the moment the vessel edits+re-reports a meeting the office has
   // already closed once — cleared when the office closes it again. Lets the
   // office notice "the vessel changed something since I last reviewed this"
   // without losing the shoreRemarks/agenda shoreComments already on file.
-  revisedAfterReview Boolean @default(false)
+  revisedAfterReview Boolean                @default(false)
 
   agendaItems CommitteeMeetingAgenda[]
 
@@ -1450,16 +1477,16 @@ model Circular {
   vesselId String? // null = fleet-wide circular
   vessel   Vessel? @relation(fields: [vesselId], references: [id])
 
-  title     String
-  source    CircularSource
+  title        String
+  source       CircularSource
   // Free text, not an enum — the set of flag states / class societies a
   // fleet deals with grows over time (today: Panama, Singapore, Malaysia,
   // Marshall Islands, Malta for FLAG; NKK, BV for CLASS). Not applicable
   // when source = COMPANY. features/circulars/schema.ts suggests common
   // values per source without locking the field to them.
-  issuingBody String?
-  category    CircularCategory
-  issueDate   DateTime // when the source actually issued it
+  issuingBody  String?
+  category     CircularCategory
+  issueDate    DateTime // when the source actually issued it
   // When the company logged/received it — separate from issueDate because
   // the whole point of this field is catching the "we have no record of
   // when this actually arrived" gap in the old manual process.
@@ -1513,40 +1540,72 @@ model CircularAcknowledgement {
 }
 
 // ─── Phase 1 module: Risk Assessments ─────────────────────────────────────────
+//  Controlled-document library for Risk Assessments (ISM / SIRE 2.0 / TMSA 3
+//  aligned). Mirrors the SmsDocument/SmsRevision pattern: a master document
+//  holds identity + review scheduling, a separate immutable revision table
+//  holds versioned content, and approval runs through the shared workflow
+//  engine. Two additional entities layer on top: RiskAssessmentExecution (the
+//  crew's per-job "permit" — pins to a frozen revisionId, never the mutable
+//  master) and RiskAssessmentRevisionRequest (crew-raised change proposals
+//  that, if approved, spawn a new draft revision).
 
-enum RiskRating {
-  LOW
-  MEDIUM
-  HIGH
+/**
+ * Why a review/revision was triggered — a manual dropdown in Phase 1 (no
+ * automatic cross-module hooks yet; see docs/ARCHITECTURE.md).
+ */
+enum ReviewTrigger {
+  ANNUAL_REVIEW_DUE
+  REVIEW_PERIOD_EXPIRED
+  REVISION_REQUESTED_BY_VESSEL
+  INCIDENT_INVESTIGATION_RECOMMENDATION
+  NEAR_MISS_RECOMMENDATION
+  HAZARD_OBSERVATION_RECOMMENDATION
+  SIRE_OBSERVATION
+  PSC_DEFICIENCY
+  INTERNAL_AUDIT_FINDING
+  EXTERNAL_AUDIT_FINDING
+  SMS_PROCEDURE_REVISED
+  MANAGEMENT_REQUEST
+  REGULATORY_CHANGE
 }
 
-enum RiskAssessmentStatus {
-  ACTIVE
-  SUPERSEDED
-  CLOSED
+enum RaExecutionCondition {
+  UNCHANGED
+  CHANGED
 }
 
-model RiskAssessment {
-  id        String  @id @default(uuid())
-  companyId String
-  company   Company @relation(fields: [companyId], references: [id])
-  refNo     String
+enum RaRevisionRequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
 
-  vesselId String? // null = shore / fleet-wide activity
-  vessel   Vessel? @relation(fields: [vesselId], references: [id])
+/**
+ * Entity type key used to bind Risk Assessment documents to the workflow engine.
+ */
+model RiskAssessmentDocument {
+  id          String  @id @default(uuid())
+  companyId   String
+  company     Company @relation(fields: [companyId], references: [id])
+  refNo       String // RA-2026-0001
+  title       String
+  category    String // e.g. "Deck Operations", "Engine Room", "Cargo Operations"
+  description String?
 
-  activity           String // task / operation being assessed
-  hazards            String
-  existingControls   String?
-  likelihood         RiskRating
-  severity           RiskRating
-  additionalControls String?
-  assessedBy         String?
-  assessmentDate     DateTime
-  reviewDate         DateTime?
+  vesselId             String? // null = fleet-wide
+  vessel               Vessel? @relation("RaDocumentVessel", fields: [vesselId], references: [id])
+  applicableVesselType String? // free-text tag (mirrors Vessel.type); null = all types
 
-  status   RiskAssessmentStatus @default(ACTIVE)
-  closedAt DateTime?
+  reviewFrequencyMonths Int       @default(12)
+  lastReviewDate        DateTime?
+  nextReviewDate        DateTime?
+  reviewOwnerId         String?
+
+  status  DocumentStatus @default(DRAFT)
+  ownerId String?
+
+  currentRevisionId String?                 @unique
+  currentRevision   RiskAssessmentRevision? @relation("RaCurrentRevision", fields: [currentRevisionId], references: [id])
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
@@ -1555,8 +1614,152 @@ model RiskAssessment {
   deletedAt DateTime?
   deletedBy String?
 
+  revisions        RiskAssessmentRevision[]        @relation("RaDocumentRevisions")
+  executions       RiskAssessmentExecution[]
+  revisionRequests RiskAssessmentRevisionRequest[]
+
   @@unique([companyId, refNo])
   @@index([companyId, status])
+  @@index([companyId, nextReviewDate])
+}
+
+/**
+ * Office/Company approval requirement — mirrors the real RC-012 form's
+ * "Approved By" classification (e.g. Hot Work inside the ER workshop needs
+ * only local/SMC sign-off; outside the workshop needs mandatory Company
+ * approval with a lead-time submission). Informational/display-only in this
+ * phase — routing itself still goes through the single admin-configured
+ * workflow chain at Settings → Workflows.
+ */
+enum RaApprovalLevel {
+  LOCAL
+  COMPANY_MANDATORY
+}
+
+model RiskAssessmentRevision {
+  id            String                 @id @default(uuid())
+  companyId     String
+  documentId    String
+  document      RiskAssessmentDocument @relation("RaDocumentRevisions", fields: [documentId], references: [id], onDelete: Cascade)
+  revisionNo    Int
+  changeSummary String?
+  reviewTrigger ReviewTrigger?
+
+  smsProcedureRefs   String? // e.g. "SSP-11 (Rev.4), SSP-13 (Rev.12), SSP-03"
+  riskMatrixRef      String? // e.g. "SSP-13 / Appendix 13 — RF = Severity × Likelihood"
+  checklistsRequired String? // e.g. "CK-003 (Hot Work Permit) — MANDATORY"
+  approvalLevel      RaApprovalLevel @default(LOCAL)
+
+  status        DocumentStatus @default(DRAFT)
+  effectiveDate DateTime?
+  approvedBy    String?
+  approvedAt    DateTime?
+
+  createdAt DateTime @default(now())
+  createdBy String?
+
+  currentOf  RiskAssessmentDocument?   @relation("RaCurrentRevision")
+  executions RiskAssessmentExecution[]
+  hazardRows RiskHazardRow[]
+
+  @@unique([documentId, revisionNo])
+  @@index([companyId, documentId])
+}
+
+/**
+ * One hazard line in the RA's hazard table — mirrors the real RC-012 form's
+ * row shape exactly (Unwanted Consequence / Possible Causes / S / L / RF /
+ * Existing Controls / Additional Controls / Residual S,L,RF / Responsible).
+ * Per company policy (SSP-13 Sec. 5.7), residual Severity is always the same
+ * as initial Severity — only Likelihood is re-rated after controls — so only
+ * `resLikelihood` is stored; residual severity/RF are derived in app code.
+ */
+model RiskHazardRow {
+  id         String                 @id @default(uuid())
+  companyId  String
+  revisionId String
+  revision   RiskAssessmentRevision @relation(fields: [revisionId], references: [id], onDelete: Cascade)
+  rowNo      Int
+
+  phase              String? // e.g. "PHASE 1 — PRE-WORK PREPARATION"
+  consequence        String // Unwanted Consequence, e.g. "Fire / Explosion"
+  causes             String // Possible Causes / Hazard Factors
+  severity           Int // 1-5
+  likelihood         Int // 1-5
+  existingControls   String
+  additionalControls String?
+  resLikelihood      Int? // residual Likelihood after Additional Controls (1-5)
+  responsible        String?
+
+  isNew            Boolean @default(false) // ★ new hazard added in this revision
+  ratingChangeNote String? // e.g. "S corrected 4→3 — rationale..."
+
+  createdAt DateTime @default(now())
+  createdBy String?
+
+  @@index([companyId, revisionId, rowNo])
+}
+
+/**
+ * A crew "permit" — one execution of an approved RA against a specific job.
+ * `revisionId` is a frozen pointer (never re-follows the master's current
+ * revision), so audits can always answer "what RA was actually shown".
+ */
+model RiskAssessmentExecution {
+  id         String                 @id @default(uuid())
+  companyId  String
+  documentId String
+  document   RiskAssessmentDocument @relation(fields: [documentId], references: [id])
+  revisionId String
+  revision   RiskAssessmentRevision @relation(fields: [revisionId], references: [id])
+
+  vesselId String
+  vessel   Vessel @relation("RaExecutionVessel", fields: [vesselId], references: [id])
+  jobName  String // the specific job/task this execution covers
+
+  conditionStatus       RaExecutionCondition @default(UNCHANGED)
+  changedConditionsNote String?
+  temporaryHazards      String? // scoped to this execution only — never mutates the master
+  temporaryControls     String?
+
+  performedById    String?
+  toolboxSignedAt  DateTime?
+  toolboxAttendees String? // free-text list of attendee names/ranks
+
+  executedAt DateTime @default(now())
+  createdAt  DateTime @default(now())
+  createdBy  String?
+
+  @@index([companyId, documentId])
+  @@index([companyId, vesselId])
+}
+
+/**
+ * Crew-raised proposal to change a Risk Assessment. Office decides; approval
+ * auto-spawns a new draft revision pre-filled with the request context. Crew
+ * never edits the master directly.
+ */
+model RiskAssessmentRevisionRequest {
+  id         String                 @id @default(uuid())
+  companyId  String
+  documentId String
+  document   RiskAssessmentDocument @relation(fields: [documentId], references: [id])
+
+  requestedById String?
+  vesselId      String?
+  vessel        Vessel? @relation("RaRevisionRequestVessel", fields: [vesselId], references: [id])
+
+  reason        String
+  reviewTrigger ReviewTrigger @default(REVISION_REQUESTED_BY_VESSEL)
+
+  status       RaRevisionRequestStatus @default(PENDING)
+  decidedById  String?
+  decidedAt    DateTime?
+  decisionNote String?
+
+  createdAt DateTime @default(now())
+
+  @@index([companyId, documentId, status])
 }
 
 // ─── Phase 1 module: Defect List ──────────────────────────────────────────────

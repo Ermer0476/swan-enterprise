@@ -27,6 +27,17 @@ export type VesselFormValues = {
   breadth: string;
   depth: string;
   status: string;
+  capacityCbm: string;
+  netTonnage: string;
+  deadweight: string;
+  tradeArea: string;
+  registeredOwner: string;
+  headOwner: string;
+  charterer: string;
+  yearWithSwan: string;
+  lastDryDock: string;
+  dryDockPlace: string;
+  nextDryDockDue: string;
 };
 
 const EMPTY: VesselFormValues = {
@@ -45,6 +56,17 @@ const EMPTY: VesselFormValues = {
   breadth: "",
   depth: "",
   status: "ACTIVE",
+  capacityCbm: "",
+  netTonnage: "",
+  deadweight: "",
+  tradeArea: "",
+  registeredOwner: "",
+  headOwner: "",
+  charterer: "",
+  yearWithSwan: "",
+  lastDryDock: "",
+  dryDockPlace: "",
+  nextDryDockDue: "",
 };
 
 function SubmitButton({ label, pendingLabel }: { label: string; pendingLabel: string }) {
@@ -86,12 +108,12 @@ export function VesselForm({
         </div>
         <div className="space-y-1.5">
           <Label htmlFor="code">Vessel Code</Label>
-          <Input id="code" name="code" defaultValue={v.code} placeholder="e.g. SWA" maxLength={6} required />
-          <p className="text-xs text-muted-foreground">Prefixed onto this vessel's NCR numbers (e.g. SWA-NCR-2026-0001).</p>
+          <Input id="code" name="code" defaultValue={v.code} placeholder="e.g. SWA" maxLength={6} />
+          <p className="text-xs text-muted-foreground">Prefixed onto this vessel's NCR numbers (e.g. SWA-NCR-2026-0001). Can be filled in later.</p>
         </div>
         <div className="space-y-1.5">
           <Label htmlFor="imo">IMO Number</Label>
-          <Input id="imo" name="imo" defaultValue={v.imo} placeholder="7 digits" required />
+          <Input id="imo" name="imo" defaultValue={v.imo} placeholder="7 digits — can be filled in later" />
         </div>
         <div className="space-y-1.5">
           <Label htmlFor="officialNumber">Official Number</Label>
@@ -145,6 +167,56 @@ export function VesselForm({
           <div className="space-y-1.5">
             <Label htmlFor="depth">Depth (m)</Label>
             <Input id="depth" name="depth" type="number" step="any" defaultValue={v.depth} />
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset className="space-y-2">
+        <legend className="text-sm font-medium">Fleet Register</legend>
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+          <div className="space-y-1.5">
+            <Label htmlFor="capacityCbm">Capacity (CBM)</Label>
+            <Input id="capacityCbm" name="capacityCbm" type="number" step="any" defaultValue={v.capacityCbm} />
+          </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="netTonnage">Net Tonnage</Label>
+            <Input id="netTonnage" name="netTonnage" type="number" step="any" defaultValue={v.netTonnage} />
+          </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="deadweight">Deadweight (DWT)</Label>
+            <Input id="deadweight" name="deadweight" type="number" step="any" defaultValue={v.deadweight} />
+          </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="tradeArea">Trade Area</Label>
+            <AutoGrowInput id="tradeArea" name="tradeArea" defaultValue={v.tradeArea} placeholder="e.g. FE / SEA" />
+          </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="registeredOwner">Registered Owner</Label>
+            <AutoGrowInput id="registeredOwner" name="registeredOwner" defaultValue={v.registeredOwner} />
+          </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="headOwner">Head Owner</Label>
+            <AutoGrowInput id="headOwner" name="headOwner" defaultValue={v.headOwner} />
+          </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="charterer">Charterer</Label>
+            <AutoGrowInput id="charterer" name="charterer" defaultValue={v.charterer} />
+          </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="yearWithSwan">Year Joined Fleet</Label>
+            <Input id="yearWithSwan" name="yearWithSwan" type="number" defaultValue={v.yearWithSwan} />
+          </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="lastDryDock">Last Dry Dock</Label>
+            <Input id="lastDryDock" name="lastDryDock" type="date" defaultValue={v.lastDryDock} />
+          </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="dryDockPlace">Dry Dock Place</Label>
+            <AutoGrowInput id="dryDockPlace" name="dryDockPlace" defaultValue={v.dryDockPlace} />
+          </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="nextDryDockDue">Next Dry Dock Due</Label>
+            <Input id="nextDryDockDue" name="nextDryDockDue" type="date" defaultValue={v.nextDryDockDue} />
           </div>
         </div>
       </fieldset>

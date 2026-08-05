@@ -81,7 +81,7 @@ const REGISTRY: Record<
       return `/external-audits/${finding?.auditId ?? ""}`;
     },
   },
-  RiskAssessment: { permission: "risk:update", pagePath: (id) => `/risk/${id}` },
+  RiskAssessmentDocument: { permission: "risk-doc:update", pagePath: (id) => `/risk/${id}` },
   Defect: { permission: "defect:update", pagePath: (id) => `/defects/${id}` },
   NearMiss: { permission: ["nm:create", "nm:update"], pagePath: (id) => `/near-miss/${id}` },
   CommitteeMeeting: { permission: "meeting:update", pagePath: (id) => `/meetings/${id}` },

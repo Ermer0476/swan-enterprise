@@ -5,6 +5,7 @@ import { requirePermission, can } from "@/lib/rbac";
 import { getVessel } from "@/features/vessels/queries";
 import { updateVesselAction, deleteVesselAction } from "@/features/vessels/actions";
 import { humanize } from "@/features/vessels/schema";
+import { formatDate } from "@/lib/utils";
 import { PageHeader } from "@/components/ui/page-header";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -37,6 +38,17 @@ export default async function VesselDetailPage({
       label: "LOA / Breadth / Depth (m)",
       value: `${vessel.loa ?? "—"} / ${vessel.breadth ?? "—"} / ${vessel.depth ?? "—"}`,
     },
+    { label: "Capacity (CBM)", value: vessel.capacityCbm ?? "—" },
+    { label: "Net Tonnage", value: vessel.netTonnage ?? "—" },
+    { label: "Deadweight (DWT)", value: vessel.deadweight ?? "—" },
+    { label: "Trade Area", value: vessel.tradeArea ?? "—" },
+    { label: "Registered Owner", value: vessel.registeredOwner ?? "—" },
+    { label: "Head Owner", value: vessel.headOwner ?? "—" },
+    { label: "Charterer", value: vessel.charterer ?? "—" },
+    { label: "Year Joined Fleet", value: vessel.yearWithSwan ?? "—" },
+    { label: "Last Dry Dock", value: vessel.lastDryDock ? formatDate(vessel.lastDryDock) : "—" },
+    { label: "Dry Dock Place", value: vessel.dryDockPlace ?? "—" },
+    { label: "Next Dry Dock Due", value: vessel.nextDryDockDue ? formatDate(vessel.nextDryDockDue) : "—" },
   ];
 
   return (
@@ -49,7 +61,7 @@ export default async function VesselDetailPage({
       </Link>
 
       <PageHeader
-        title={`${vessel.name} — IMO ${vessel.imo}`}
+        title={vessel.imo ? `${vessel.name} — IMO ${vessel.imo}` : vessel.name}
         actions={<Badge tone={vessel.status === "ACTIVE" ? "success" : "warning"}>{humanize(vessel.status)}</Badge>}
       />
 
@@ -75,7 +87,7 @@ export default async function VesselDetailPage({
             id: vessel.id,
             name: vessel.name,
             code: vessel.code ?? "",
-            imo: vessel.imo,
+            imo: vessel.imo ?? "",
             officialNumber: vessel.officialNumber ?? "",
             callSign: vessel.callSign ?? "",
             mmsi: vessel.mmsi ?? "",
@@ -88,6 +100,17 @@ export default async function VesselDetailPage({
             breadth: vessel.breadth?.toString() ?? "",
             depth: vessel.depth?.toString() ?? "",
             status: vessel.status,
+            capacityCbm: vessel.capacityCbm?.toString() ?? "",
+            netTonnage: vessel.netTonnage?.toString() ?? "",
+            deadweight: vessel.deadweight?.toString() ?? "",
+            tradeArea: vessel.tradeArea ?? "",
+            registeredOwner: vessel.registeredOwner ?? "",
+            headOwner: vessel.headOwner ?? "",
+            charterer: vessel.charterer ?? "",
+            yearWithSwan: vessel.yearWithSwan?.toString() ?? "",
+            lastDryDock: vessel.lastDryDock ? vessel.lastDryDock.toISOString().slice(0, 10) : "",
+            dryDockPlace: vessel.dryDockPlace ?? "",
+            nextDryDockDue: vessel.nextDryDockDue ? vessel.nextDryDockDue.toISOString().slice(0, 10) : "",
           }}
         />
       )}

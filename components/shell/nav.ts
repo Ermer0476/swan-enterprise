@@ -91,7 +91,7 @@ export const NAV: NavGroup[] = [
           { label: "Archive", href: "/circulars?archive=1", icon: Archive },
         ],
       },
-      { label: "Risk Assessments", href: "/risk", icon: ShieldCheck, permission: "risk:read" },
+      { label: "Risk Assessments", href: "/risk", icon: ShieldCheck, permission: "risk-doc:read" },
       { label: "Defect List", href: "/defects", icon: ListChecks, permission: "defect:read" },
     ],
   },

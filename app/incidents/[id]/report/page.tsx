@@ -133,7 +133,7 @@ export default async function IncidentReportPage({
           </CardHeader>
           <CardContent className="grid grid-cols-2 gap-4 sm:grid-cols-4">
             {[
-              { label: "IMO Number", value: inc.vessel.imo },
+              { label: "IMO Number", value: inc.vessel.imo ?? "—" },
               { label: "Official Number", value: inc.vessel.officialNumber ?? "—" },
               { label: "Call Sign", value: inc.vessel.callSign ?? "—" },
               { label: "MMSI Number", value: inc.vessel.mmsi ?? "—" },

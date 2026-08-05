@@ -1,63 +1,81 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { CheckCircle2, Trash2 } from "lucide-react";
+import { CheckCircle2, Archive } from "lucide-react";
 import {
-  closeRiskAssessmentAction,
-  deleteRiskAssessmentAction,
+  publishRevisionAction,
+  archiveAction,
   type ActionResult,
 } from "@/features/risk/actions";
 import { Button } from "@/components/ui/button";
 
-export function RiskActions({
-  riskId,
-  isActive,
-  canClose,
-  canDelete,
+type Caps = {
+  canPublish: boolean;
+  canArchive: boolean;
+};
+
+/** Office authors and finalizes a Risk Assessment in one step — there's no
+ * separate internal review chain, since the office editing it already is
+ * the approving authority. "Publish" moves the draft revision straight to
+ * APPROVED and makes it the in-force revision. */
+export function RiskDocActions({
+  documentId,
+  status,
+  caps,
 }: {
-  riskId: string;
-  isActive: boolean;
-  canClose: boolean;
-  canDelete: boolean;
+  documentId: string;
+  status: string;
+  caps: Caps;
 }) {
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
 
-  function run(action: (fd: FormData) => Promise<ActionResult>) {
+  function handle(fn: () => Promise<ActionResult>) {
     setError(null);
-    const fd = new FormData();
-    fd.set("riskId", riskId);
     startTransition(async () => {
-      const res = await action(fd);
+      const res = await fn();
       if (!res.ok) setError(res.error);
     });
   }
 
+  function publish() {
+    const fd = new FormData();
+    fd.set("documentId", documentId);
+    handle(() => publishRevisionAction(fd));
+  }
+  function archive() {
+    const fd = new FormData();
+    fd.set("documentId", documentId);
+    handle(() => archiveAction(fd));
+  }
+
+  const showPublish = status === "DRAFT" && caps.canPublish;
+  const showArchive = status !== "ARCHIVED" && caps.canArchive;
+
   return (
     <div className="space-y-3">
       <div className="flex flex-wrap items-center gap-2">
-        {isActive ? (
-          canClose && (
-            <Button onClick={() => run(closeRiskAssessmentAction)} disabled={pending}>
-              <CheckCircle2 className="h-4 w-4" /> Close Assessment
-            </Button>
-          )
-        ) : (
-          <span className="text-sm text-muted-foreground">This assessment is no longer active.</span>
+        {showPublish && (
+          <Button variant="success" onClick={publish} disabled={pending}>
+            <CheckCircle2 className="h-4 w-4" /> Publish
+          </Button>
         )}
-        {canDelete && (
-          <Button
-            variant="outline"
-            onClick={() => {
-              if (confirm("Delete this risk assessment?")) run(deleteRiskAssessmentAction);
-            }}
-            disabled={pending}
-          >
-            <Trash2 className="h-4 w-4" /> Delete
+        {showArchive && (
+          <Button variant="outline" onClick={archive} disabled={pending}>
+            <Archive className="h-4 w-4" /> Archive
           </Button>
         )}
       </div>
-      {error && <p className="text-sm text-danger" role="alert">{error}</p>}
+
+      {!showPublish && !showArchive && (
+        <p className="text-sm text-muted-foreground">No actions available to you for this document.</p>
+      )}
+
+      {error && (
+        <p className="text-sm text-danger" role="alert">
+          {error}
+        </p>
+      )}
     </div>
   );
 }

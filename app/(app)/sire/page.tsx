@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Plus, ClipboardCheck } from "lucide-react";
+import { Plus, ClipboardCheck, BarChart3 } from "lucide-react";
 import { requirePermission, can } from "@/lib/rbac";
 import { listSire } from "@/features/sire/queries";
 import { INSPECTION_STATUSES } from "@/features/sire/schema";
@@ -32,9 +32,14 @@ export default async function SirePage({
         description="OCIMF tanker vetting inspections and their observation close-out."
         actions={
           canCreate ? (
-            <Link href="/sire/new">
-              <Button><Plus className="h-4 w-4" /> Record Inspection</Button>
-            </Link>
+            <div className="flex items-center gap-2">
+              <Link href="/sire/kpi">
+                <Button variant="outline"><BarChart3 className="h-4 w-4" /> SIRE KPIs</Button>
+              </Link>
+              <Link href="/sire/new">
+                <Button><Plus className="h-4 w-4" /> Record Inspection</Button>
+              </Link>
+            </div>
           ) : undefined
         }
       />
