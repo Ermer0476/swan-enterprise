@@ -78,7 +78,11 @@ export async function addObservationAction(
   const parsed = addObservationSchema.safeParse({
     inspectionId: formData.get("inspectionId"),
     questionRef: formData.get("questionRef"),
+    category: formData.get("category"),
     observation: formData.get("observation"),
+    rootCauseCategory: formData.get("rootCauseCategory"),
+    rootCauseSubCategory: formData.get("rootCauseSubCategory"),
+    rootCause: formData.get("rootCause"),
   });
   if (!parsed.success) {
     return fail(parsed.error.issues[0]?.message ?? "Invalid input");
@@ -96,7 +100,11 @@ export async function addObservationAction(
       companyId: user.companyId,
       inspectionId: insp.id,
       questionRef: d.questionRef || null,
+      category: d.category,
       observation: d.observation,
+      rootCauseCategory: d.rootCauseCategory,
+      rootCauseSubCategory: d.rootCauseSubCategory || null,
+      rootCause: d.rootCause || null,
       status: "OPEN",
       createdBy: user.id,
     },
@@ -128,8 +136,12 @@ export async function updateObservationAction(
     observationId: formData.get("observationId"),
     response: formData.get("response"),
     status: formData.get("status"),
+    category: formData.get("category"),
+    rootCauseCategory: formData.get("rootCauseCategory"),
+    rootCauseSubCategory: formData.get("rootCauseSubCategory"),
+    rootCause: formData.get("rootCause"),
   });
-  if (!parsed.success) return fail("Invalid input");
+  if (!parsed.success) return fail(parsed.error.issues[0]?.message ?? "Invalid input");
   const d = parsed.data;
 
   const obs = await prisma.cdiObservation.findFirst({
@@ -139,7 +151,14 @@ export async function updateObservationAction(
 
   await prisma.cdiObservation.update({
     where: { id: obs.id },
-    data: { response: d.response || null, status: d.status },
+    data: {
+      response: d.response || null,
+      status: d.status,
+      category: d.category,
+      rootCauseCategory: d.rootCauseCategory,
+      rootCauseSubCategory: d.rootCauseSubCategory || null,
+      rootCause: d.rootCause || null,
+    },
   });
 
   revalidatePath(`/cdi/${obs.inspectionId}`);

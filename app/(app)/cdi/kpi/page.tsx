@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { requirePermission } from "@/lib/rbac";
-import { sireAnalytics, resolveSirePeriod } from "@/features/sire/queries";
+import { cdiAnalytics, resolveCdiPeriod } from "@/features/cdi/queries";
 import { ROOT_CAUSE_LABELS, ROOT_CAUSE_SUBCATEGORY_LABELS, type RootCauseCategoryValue } from "@/lib/root-cause";
 import { PageHeader } from "@/components/ui/page-header";
 import { Card, CardContent } from "@/components/ui/card";
@@ -12,12 +12,12 @@ import { BarChart, StackedBarChart, paletteColor, type BarDatum, type StackedDat
 import { DonutChart, type DonutDatum } from "@/components/ui/donut-chart";
 import { KpiTabs } from "@/components/ui/kpi-tabs";
 
-export default async function SireKpiPage({
+export default async function CdiKpiPage({
   searchParams,
 }: {
   searchParams: Promise<Record<string, string | undefined>>;
 }) {
-  const user = await requirePermission("sire:create");
+  const user = await requirePermission("cdi:create");
   const sp = await searchParams;
 
   // No year selected = All Time (quarter is meaningless without a year, so
@@ -25,8 +25,8 @@ export default async function SireKpiPage({
   const year = sp.year ? Number(sp.year) : undefined;
   const quarter = sp.quarter ? Number(sp.quarter) : undefined;
 
-  const range = resolveSirePeriod(year, quarter);
-  const data = await sireAnalytics(user.companyId, range);
+  const range = resolveCdiPeriod(year, quarter);
+  const data = await cdiAnalytics(user.companyId, range);
 
   const categoryData: BarDatum[] = Object.entries(data.byCategory)
     .map(([key, value], i) => ({ label: humanize(key), value, color: paletteColor(i) }))
@@ -59,32 +59,32 @@ export default async function SireKpiPage({
     })
     .filter((c) => c.subs.length > 0);
 
-  const oilMajors = Array.from(
-    new Set(Object.values(data.byVesselOilMajor).flatMap((byOilMajor) => Object.keys(byOilMajor))),
+  const inspectors = Array.from(
+    new Set(Object.values(data.byVesselInspector).flatMap((byInspector) => Object.keys(byInspector))),
   );
-  const oilMajorColor = new Map(oilMajors.map((name, i) => [name, paletteColor(i)]));
-  const vesselData: StackedDatum[] = Object.entries(data.byVesselOilMajor)
-    .map(([vesselName, byOilMajor]) => ({
+  const inspectorColor = new Map(inspectors.map((name, i) => [name, paletteColor(i)]));
+  const vesselData: StackedDatum[] = Object.entries(data.byVesselInspector)
+    .map(([vesselName, byInspector]) => ({
       label: vesselName,
-      segments: Object.entries(byOilMajor).map(([oilMajor, value]) => ({
-        key: oilMajor,
+      segments: Object.entries(byInspector).map(([inspector, value]) => ({
+        key: inspector,
         value,
-        color: oilMajorColor.get(oilMajor)!,
+        color: inspectorColor.get(inspector)!,
       })),
     }))
     .sort(
       (a, b) =>
         b.segments.reduce((s, x) => s + x.value, 0) - a.segments.reduce((s, x) => s + x.value, 0),
     );
-  const vesselLegend: LegendEntry[] = oilMajors.map((name) => ({ key: name, color: oilMajorColor.get(name)! }));
+  const vesselLegend: LegendEntry[] = inspectors.map((name) => ({ key: name, color: inspectorColor.get(name)! }));
 
   return (
     <>
-      <Link href="/sire" className="mb-3 inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground">
-        <ArrowLeft className="h-4 w-4" /> Back to SIRE Inspections
+      <Link href="/cdi" className="mb-3 inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground">
+        <ArrowLeft className="h-4 w-4" /> Back to CDI Inspections
       </Link>
       <PageHeader
-        title="SIRE KPIs"
+        title="CDI KPIs"
         description="Fleet-wide observation trends — office use only."
       />
 
@@ -163,7 +163,7 @@ export default async function SireKpiPage({
           },
           {
             key: "vessel",
-            label: "By Vessel (Oil Major)",
+            label: "By Vessel (Inspector)",
             content: <StackedBarChart data={vesselData} legend={vesselLegend} />,
           },
         ]}

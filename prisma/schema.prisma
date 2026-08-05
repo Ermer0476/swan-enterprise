@@ -1132,6 +1132,13 @@ model CdiObservation {
   response     String?
   status       FindingStatus @default(OPEN)
 
+  // Same classification taxonomy as SIRE observations, so both modules feed
+  // the same KPI analytics (by category / root cause / vessel).
+  category             SireObservationCategory?
+  rootCauseCategory    RootCauseCategory?
+  rootCauseSubCategory String? // one flat sub-cause per category — see lib/root-cause.ts
+  rootCause            String? // free-text root cause description
+
   createdAt DateTime  @default(now())
   createdBy String?
   deletedAt DateTime?

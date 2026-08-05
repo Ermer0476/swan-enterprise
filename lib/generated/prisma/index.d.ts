@@ -42715,6 +42715,10 @@ export namespace Prisma {
     observation: string | null
     response: string | null
     status: $Enums.FindingStatus | null
+    category: $Enums.SireObservationCategory | null
+    rootCauseCategory: $Enums.RootCauseCategory | null
+    rootCauseSubCategory: string | null
+    rootCause: string | null
     createdAt: Date | null
     createdBy: string | null
     deletedAt: Date | null
@@ -42728,6 +42732,10 @@ export namespace Prisma {
     observation: string | null
     response: string | null
     status: $Enums.FindingStatus | null
+    category: $Enums.SireObservationCategory | null
+    rootCauseCategory: $Enums.RootCauseCategory | null
+    rootCauseSubCategory: string | null
+    rootCause: string | null
     createdAt: Date | null
     createdBy: string | null
     deletedAt: Date | null
@@ -42741,6 +42749,10 @@ export namespace Prisma {
     observation: number
     response: number
     status: number
+    category: number
+    rootCauseCategory: number
+    rootCauseSubCategory: number
+    rootCause: number
     createdAt: number
     createdBy: number
     deletedAt: number
@@ -42756,6 +42768,10 @@ export namespace Prisma {
     observation?: true
     response?: true
     status?: true
+    category?: true
+    rootCauseCategory?: true
+    rootCauseSubCategory?: true
+    rootCause?: true
     createdAt?: true
     createdBy?: true
     deletedAt?: true
@@ -42769,6 +42785,10 @@ export namespace Prisma {
     observation?: true
     response?: true
     status?: true
+    category?: true
+    rootCauseCategory?: true
+    rootCauseSubCategory?: true
+    rootCause?: true
     createdAt?: true
     createdBy?: true
     deletedAt?: true
@@ -42782,6 +42802,10 @@ export namespace Prisma {
     observation?: true
     response?: true
     status?: true
+    category?: true
+    rootCauseCategory?: true
+    rootCauseSubCategory?: true
+    rootCause?: true
     createdAt?: true
     createdBy?: true
     deletedAt?: true
@@ -42868,6 +42892,10 @@ export namespace Prisma {
     observation: string
     response: string | null
     status: $Enums.FindingStatus
+    category: $Enums.SireObservationCategory | null
+    rootCauseCategory: $Enums.RootCauseCategory | null
+    rootCauseSubCategory: string | null
+    rootCause: string | null
     createdAt: Date
     createdBy: string | null
     deletedAt: Date | null
@@ -42898,6 +42926,10 @@ export namespace Prisma {
     observation?: boolean
     response?: boolean
     status?: boolean
+    category?: boolean
+    rootCauseCategory?: boolean
+    rootCauseSubCategory?: boolean
+    rootCause?: boolean
     createdAt?: boolean
     createdBy?: boolean
     deletedAt?: boolean
@@ -42912,6 +42944,10 @@ export namespace Prisma {
     observation?: boolean
     response?: boolean
     status?: boolean
+    category?: boolean
+    rootCauseCategory?: boolean
+    rootCauseSubCategory?: boolean
+    rootCause?: boolean
     createdAt?: boolean
     createdBy?: boolean
     deletedAt?: boolean
@@ -42926,6 +42962,10 @@ export namespace Prisma {
     observation?: boolean
     response?: boolean
     status?: boolean
+    category?: boolean
+    rootCauseCategory?: boolean
+    rootCauseSubCategory?: boolean
+    rootCause?: boolean
     createdAt?: boolean
     createdBy?: boolean
     deletedAt?: boolean
@@ -42940,12 +42980,16 @@ export namespace Prisma {
     observation?: boolean
     response?: boolean
     status?: boolean
+    category?: boolean
+    rootCauseCategory?: boolean
+    rootCauseSubCategory?: boolean
+    rootCause?: boolean
     createdAt?: boolean
     createdBy?: boolean
     deletedAt?: boolean
   }
 
-  export type CdiObservationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "companyId" | "inspectionId" | "questionRef" | "observation" | "response" | "status" | "createdAt" | "createdBy" | "deletedAt", ExtArgs["result"]["cdiObservation"]>
+  export type CdiObservationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "companyId" | "inspectionId" | "questionRef" | "observation" | "response" | "status" | "category" | "rootCauseCategory" | "rootCauseSubCategory" | "rootCause" | "createdAt" | "createdBy" | "deletedAt", ExtArgs["result"]["cdiObservation"]>
   export type CdiObservationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     inspection?: boolean | CdiInspectionDefaultArgs<ExtArgs>
   }
@@ -42969,6 +43013,10 @@ export namespace Prisma {
       observation: string
       response: string | null
       status: $Enums.FindingStatus
+      category: $Enums.SireObservationCategory | null
+      rootCauseCategory: $Enums.RootCauseCategory | null
+      rootCauseSubCategory: string | null
+      rootCause: string | null
       createdAt: Date
       createdBy: string | null
       deletedAt: Date | null
@@ -43403,6 +43451,10 @@ export namespace Prisma {
     readonly observation: FieldRef<"CdiObservation", 'String'>
     readonly response: FieldRef<"CdiObservation", 'String'>
     readonly status: FieldRef<"CdiObservation", 'FindingStatus'>
+    readonly category: FieldRef<"CdiObservation", 'SireObservationCategory'>
+    readonly rootCauseCategory: FieldRef<"CdiObservation", 'RootCauseCategory'>
+    readonly rootCauseSubCategory: FieldRef<"CdiObservation", 'String'>
+    readonly rootCause: FieldRef<"CdiObservation", 'String'>
     readonly createdAt: FieldRef<"CdiObservation", 'DateTime'>
     readonly createdBy: FieldRef<"CdiObservation", 'String'>
     readonly deletedAt: FieldRef<"CdiObservation", 'DateTime'>
@@ -64329,6 +64381,10 @@ export namespace Prisma {
     observation: 'observation',
     response: 'response',
     status: 'status',
+    category: 'category',
+    rootCauseCategory: 'rootCauseCategory',
+    rootCauseSubCategory: 'rootCauseSubCategory',
+    rootCause: 'rootCause',
     createdAt: 'createdAt',
     createdBy: 'createdBy',
     deletedAt: 'deletedAt'
@@ -68450,6 +68506,10 @@ export namespace Prisma {
     observation?: StringFilter<"CdiObservation"> | string
     response?: StringNullableFilter<"CdiObservation"> | string | null
     status?: EnumFindingStatusFilter<"CdiObservation"> | $Enums.FindingStatus
+    category?: EnumSireObservationCategoryNullableFilter<"CdiObservation"> | $Enums.SireObservationCategory | null
+    rootCauseCategory?: EnumRootCauseCategoryNullableFilter<"CdiObservation"> | $Enums.RootCauseCategory | null
+    rootCauseSubCategory?: StringNullableFilter<"CdiObservation"> | string | null
+    rootCause?: StringNullableFilter<"CdiObservation"> | string | null
     createdAt?: DateTimeFilter<"CdiObservation"> | Date | string
     createdBy?: StringNullableFilter<"CdiObservation"> | string | null
     deletedAt?: DateTimeNullableFilter<"CdiObservation"> | Date | string | null
@@ -68464,6 +68524,10 @@ export namespace Prisma {
     observation?: SortOrder
     response?: SortOrderInput | SortOrder
     status?: SortOrder
+    category?: SortOrderInput | SortOrder
+    rootCauseCategory?: SortOrderInput | SortOrder
+    rootCauseSubCategory?: SortOrderInput | SortOrder
+    rootCause?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     createdBy?: SortOrderInput | SortOrder
     deletedAt?: SortOrderInput | SortOrder
@@ -68481,6 +68545,10 @@ export namespace Prisma {
     observation?: StringFilter<"CdiObservation"> | string
     response?: StringNullableFilter<"CdiObservation"> | string | null
     status?: EnumFindingStatusFilter<"CdiObservation"> | $Enums.FindingStatus
+    category?: EnumSireObservationCategoryNullableFilter<"CdiObservation"> | $Enums.SireObservationCategory | null
+    rootCauseCategory?: EnumRootCauseCategoryNullableFilter<"CdiObservation"> | $Enums.RootCauseCategory | null
+    rootCauseSubCategory?: StringNullableFilter<"CdiObservation"> | string | null
+    rootCause?: StringNullableFilter<"CdiObservation"> | string | null
     createdAt?: DateTimeFilter<"CdiObservation"> | Date | string
     createdBy?: StringNullableFilter<"CdiObservation"> | string | null
     deletedAt?: DateTimeNullableFilter<"CdiObservation"> | Date | string | null
@@ -68495,6 +68563,10 @@ export namespace Prisma {
     observation?: SortOrder
     response?: SortOrderInput | SortOrder
     status?: SortOrder
+    category?: SortOrderInput | SortOrder
+    rootCauseCategory?: SortOrderInput | SortOrder
+    rootCauseSubCategory?: SortOrderInput | SortOrder
+    rootCause?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     createdBy?: SortOrderInput | SortOrder
     deletedAt?: SortOrderInput | SortOrder
@@ -68514,6 +68586,10 @@ export namespace Prisma {
     observation?: StringWithAggregatesFilter<"CdiObservation"> | string
     response?: StringNullableWithAggregatesFilter<"CdiObservation"> | string | null
     status?: EnumFindingStatusWithAggregatesFilter<"CdiObservation"> | $Enums.FindingStatus
+    category?: EnumSireObservationCategoryNullableWithAggregatesFilter<"CdiObservation"> | $Enums.SireObservationCategory | null
+    rootCauseCategory?: EnumRootCauseCategoryNullableWithAggregatesFilter<"CdiObservation"> | $Enums.RootCauseCategory | null
+    rootCauseSubCategory?: StringNullableWithAggregatesFilter<"CdiObservation"> | string | null
+    rootCause?: StringNullableWithAggregatesFilter<"CdiObservation"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"CdiObservation"> | Date | string
     createdBy?: StringNullableWithAggregatesFilter<"CdiObservation"> | string | null
     deletedAt?: DateTimeNullableWithAggregatesFilter<"CdiObservation"> | Date | string | null
@@ -73909,6 +73985,10 @@ export namespace Prisma {
     observation: string
     response?: string | null
     status?: $Enums.FindingStatus
+    category?: $Enums.SireObservationCategory | null
+    rootCauseCategory?: $Enums.RootCauseCategory | null
+    rootCauseSubCategory?: string | null
+    rootCause?: string | null
     createdAt?: Date | string
     createdBy?: string | null
     deletedAt?: Date | string | null
@@ -73923,6 +74003,10 @@ export namespace Prisma {
     observation: string
     response?: string | null
     status?: $Enums.FindingStatus
+    category?: $Enums.SireObservationCategory | null
+    rootCauseCategory?: $Enums.RootCauseCategory | null
+    rootCauseSubCategory?: string | null
+    rootCause?: string | null
     createdAt?: Date | string
     createdBy?: string | null
     deletedAt?: Date | string | null
@@ -73935,6 +74019,10 @@ export namespace Prisma {
     observation?: StringFieldUpdateOperationsInput | string
     response?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumFindingStatusFieldUpdateOperationsInput | $Enums.FindingStatus
+    category?: NullableEnumSireObservationCategoryFieldUpdateOperationsInput | $Enums.SireObservationCategory | null
+    rootCauseCategory?: NullableEnumRootCauseCategoryFieldUpdateOperationsInput | $Enums.RootCauseCategory | null
+    rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
+    rootCause?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -73949,6 +74037,10 @@ export namespace Prisma {
     observation?: StringFieldUpdateOperationsInput | string
     response?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumFindingStatusFieldUpdateOperationsInput | $Enums.FindingStatus
+    category?: NullableEnumSireObservationCategoryFieldUpdateOperationsInput | $Enums.SireObservationCategory | null
+    rootCauseCategory?: NullableEnumRootCauseCategoryFieldUpdateOperationsInput | $Enums.RootCauseCategory | null
+    rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
+    rootCause?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -73962,6 +74054,10 @@ export namespace Prisma {
     observation: string
     response?: string | null
     status?: $Enums.FindingStatus
+    category?: $Enums.SireObservationCategory | null
+    rootCauseCategory?: $Enums.RootCauseCategory | null
+    rootCauseSubCategory?: string | null
+    rootCause?: string | null
     createdAt?: Date | string
     createdBy?: string | null
     deletedAt?: Date | string | null
@@ -73974,6 +74070,10 @@ export namespace Prisma {
     observation?: StringFieldUpdateOperationsInput | string
     response?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumFindingStatusFieldUpdateOperationsInput | $Enums.FindingStatus
+    category?: NullableEnumSireObservationCategoryFieldUpdateOperationsInput | $Enums.SireObservationCategory | null
+    rootCauseCategory?: NullableEnumRootCauseCategoryFieldUpdateOperationsInput | $Enums.RootCauseCategory | null
+    rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
+    rootCause?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -73987,6 +74087,10 @@ export namespace Prisma {
     observation?: StringFieldUpdateOperationsInput | string
     response?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumFindingStatusFieldUpdateOperationsInput | $Enums.FindingStatus
+    category?: NullableEnumSireObservationCategoryFieldUpdateOperationsInput | $Enums.SireObservationCategory | null
+    rootCauseCategory?: NullableEnumRootCauseCategoryFieldUpdateOperationsInput | $Enums.RootCauseCategory | null
+    rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
+    rootCause?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -78903,6 +79007,10 @@ export namespace Prisma {
     observation?: SortOrder
     response?: SortOrder
     status?: SortOrder
+    category?: SortOrder
+    rootCauseCategory?: SortOrder
+    rootCauseSubCategory?: SortOrder
+    rootCause?: SortOrder
     createdAt?: SortOrder
     createdBy?: SortOrder
     deletedAt?: SortOrder
@@ -78916,6 +79024,10 @@ export namespace Prisma {
     observation?: SortOrder
     response?: SortOrder
     status?: SortOrder
+    category?: SortOrder
+    rootCauseCategory?: SortOrder
+    rootCauseSubCategory?: SortOrder
+    rootCause?: SortOrder
     createdAt?: SortOrder
     createdBy?: SortOrder
     deletedAt?: SortOrder
@@ -78929,6 +79041,10 @@ export namespace Prisma {
     observation?: SortOrder
     response?: SortOrder
     status?: SortOrder
+    category?: SortOrder
+    rootCauseCategory?: SortOrder
+    rootCauseSubCategory?: SortOrder
+    rootCause?: SortOrder
     createdAt?: SortOrder
     createdBy?: SortOrder
     deletedAt?: SortOrder
@@ -95607,6 +95723,10 @@ export namespace Prisma {
     observation: string
     response?: string | null
     status?: $Enums.FindingStatus
+    category?: $Enums.SireObservationCategory | null
+    rootCauseCategory?: $Enums.RootCauseCategory | null
+    rootCauseSubCategory?: string | null
+    rootCause?: string | null
     createdAt?: Date | string
     createdBy?: string | null
     deletedAt?: Date | string | null
@@ -95619,6 +95739,10 @@ export namespace Prisma {
     observation: string
     response?: string | null
     status?: $Enums.FindingStatus
+    category?: $Enums.SireObservationCategory | null
+    rootCauseCategory?: $Enums.RootCauseCategory | null
+    rootCauseSubCategory?: string | null
+    rootCause?: string | null
     createdAt?: Date | string
     createdBy?: string | null
     deletedAt?: Date | string | null
@@ -95845,6 +95969,10 @@ export namespace Prisma {
     observation?: StringFilter<"CdiObservation"> | string
     response?: StringNullableFilter<"CdiObservation"> | string | null
     status?: EnumFindingStatusFilter<"CdiObservation"> | $Enums.FindingStatus
+    category?: EnumSireObservationCategoryNullableFilter<"CdiObservation"> | $Enums.SireObservationCategory | null
+    rootCauseCategory?: EnumRootCauseCategoryNullableFilter<"CdiObservation"> | $Enums.RootCauseCategory | null
+    rootCauseSubCategory?: StringNullableFilter<"CdiObservation"> | string | null
+    rootCause?: StringNullableFilter<"CdiObservation"> | string | null
     createdAt?: DateTimeFilter<"CdiObservation"> | Date | string
     createdBy?: StringNullableFilter<"CdiObservation"> | string | null
     deletedAt?: DateTimeNullableFilter<"CdiObservation"> | Date | string | null
@@ -105714,6 +105842,10 @@ export namespace Prisma {
     observation: string
     response?: string | null
     status?: $Enums.FindingStatus
+    category?: $Enums.SireObservationCategory | null
+    rootCauseCategory?: $Enums.RootCauseCategory | null
+    rootCauseSubCategory?: string | null
+    rootCause?: string | null
     createdAt?: Date | string
     createdBy?: string | null
     deletedAt?: Date | string | null
@@ -105726,6 +105858,10 @@ export namespace Prisma {
     observation?: StringFieldUpdateOperationsInput | string
     response?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumFindingStatusFieldUpdateOperationsInput | $Enums.FindingStatus
+    category?: NullableEnumSireObservationCategoryFieldUpdateOperationsInput | $Enums.SireObservationCategory | null
+    rootCauseCategory?: NullableEnumRootCauseCategoryFieldUpdateOperationsInput | $Enums.RootCauseCategory | null
+    rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
+    rootCause?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -105738,6 +105874,10 @@ export namespace Prisma {
     observation?: StringFieldUpdateOperationsInput | string
     response?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumFindingStatusFieldUpdateOperationsInput | $Enums.FindingStatus
+    category?: NullableEnumSireObservationCategoryFieldUpdateOperationsInput | $Enums.SireObservationCategory | null
+    rootCauseCategory?: NullableEnumRootCauseCategoryFieldUpdateOperationsInput | $Enums.RootCauseCategory | null
+    rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
+    rootCause?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -105750,6 +105890,10 @@ export namespace Prisma {
     observation?: StringFieldUpdateOperationsInput | string
     response?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumFindingStatusFieldUpdateOperationsInput | $Enums.FindingStatus
+    category?: NullableEnumSireObservationCategoryFieldUpdateOperationsInput | $Enums.SireObservationCategory | null
+    rootCauseCategory?: NullableEnumRootCauseCategoryFieldUpdateOperationsInput | $Enums.RootCauseCategory | null
+    rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
+    rootCause?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null

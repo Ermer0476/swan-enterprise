@@ -70,9 +70,13 @@ export default async function CdiDetailPage({
             observations={insp.observations.map((o) => ({
               id: o.id,
               questionRef: o.questionRef,
+              category: o.category,
               observation: o.observation,
               response: o.response,
               status: o.status,
+              rootCauseCategory: o.rootCauseCategory,
+              rootCauseSubCategory: o.rootCauseSubCategory,
+              rootCause: o.rootCause,
               attachments: o.attachments.map((a) => ({
                 id: a.id,
                 fileName: a.fileName,

@@ -1,8 +1,19 @@
 import { z } from "zod";
+import { ROOT_CAUSE_CATEGORIES } from "@/lib/root-cause";
 
 export const INSPECTION_STATUSES = ["OPEN", "IN_PROGRESS", "CLOSED"] as const;
 export const FINDING_STATUSES = ["OPEN", "CLOSED"] as const;
 export const CDI_SCHEMES = ["CDI-M", "CDI-T", "CDI-SQAS"] as const;
+
+// Same classification taxonomy as SIRE observations — see
+// features/sire/schema.ts — so both feed identical KPI analytics.
+export const CDI_OBSERVATION_CATEGORIES = ["HARDWARE", "PROCESS", "HUMAN", "PHOTOGRAPH"] as const;
+export const CDI_OBSERVATION_CATEGORY_LABELS: Record<(typeof CDI_OBSERVATION_CATEGORIES)[number], string> = {
+  HARDWARE: "Hardware",
+  PROCESS: "Process",
+  HUMAN: "Human",
+  PHOTOGRAPH: "Photograph",
+};
 
 export const createCdiSchema = z.object({
   vesselId: z.string().uuid().optional().or(z.literal("")),
@@ -19,11 +30,21 @@ export const createCdiSchema = z.object({
 export const addObservationSchema = z.object({
   inspectionId: z.string().uuid(),
   questionRef: z.string().trim().max(40).optional().or(z.literal("")),
+  // Required — feeds the CDI KPI, so an observation can't be saved without
+  // it (a missing value here would silently drop out of that reporting).
+  category: z.enum(CDI_OBSERVATION_CATEGORIES, { message: "Category is required" }),
   observation: z.string().trim().min(3, "Observation is required").max(10000),
+  rootCauseCategory: z.enum(ROOT_CAUSE_CATEGORIES, { message: "Root cause category is required" }),
+  rootCauseSubCategory: z.string().trim().max(60).optional().or(z.literal("")),
+  rootCause: z.string().trim().max(10000).optional().or(z.literal("")),
 });
 
 export const updateObservationSchema = z.object({
   observationId: z.string().uuid(),
   response: z.string().trim().max(10000).optional().or(z.literal("")),
   status: z.enum(FINDING_STATUSES),
+  category: z.enum(CDI_OBSERVATION_CATEGORIES, { message: "Category is required" }),
+  rootCauseCategory: z.enum(ROOT_CAUSE_CATEGORIES, { message: "Root cause category is required" }),
+  rootCauseSubCategory: z.string().trim().max(60).optional().or(z.literal("")),
+  rootCause: z.string().trim().max(10000).optional().or(z.literal("")),
 });

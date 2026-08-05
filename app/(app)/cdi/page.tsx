@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Plus, FlaskConical } from "lucide-react";
+import { Plus, FlaskConical, BarChart3 } from "lucide-react";
 import { requirePermission, can } from "@/lib/rbac";
 import { listCdi } from "@/features/cdi/queries";
 import { INSPECTION_STATUSES } from "@/features/cdi/schema";
@@ -32,9 +32,14 @@ export default async function CdiPage({
         description="Chemical Distribution Institute inspections and observation close-out."
         actions={
           canCreate ? (
-            <Link href="/cdi/new">
-              <Button><Plus className="h-4 w-4" /> Record Inspection</Button>
-            </Link>
+            <div className="flex items-center gap-2">
+              <Link href="/cdi/kpi">
+                <Button variant="outline"><BarChart3 className="h-4 w-4" /> CDI KPIs</Button>
+              </Link>
+              <Link href="/cdi/new">
+                <Button><Plus className="h-4 w-4" /> Record Inspection</Button>
+              </Link>
+            </div>
           ) : undefined
         }
       />
