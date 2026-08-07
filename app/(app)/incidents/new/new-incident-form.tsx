@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { useActionState } from "react";
 import { useFormStatus } from "react-dom";
-import { Plus } from "lucide-react";
+import { Plus, ClipboardPaste } from "lucide-react";
 import {
   createIncidentAction,
   type ActionResult,
@@ -14,7 +14,9 @@ import {
   INCIDENT_TYPE_LABELS,
   INCIDENT_SUBCATEGORIES,
   INCIDENT_SUBCATEGORY_LABELS,
+  parseSofPasteText,
   type IncidentTypeValue,
+  type SofRow,
 } from "@/features/incidents/schema";
 import { Card, CardContent } from "@/components/ui/card";
 import { AutoGrowInput, Input, Label, Select } from "@/components/ui/input";
@@ -67,6 +69,9 @@ export function NewIncidentForm({
 
   const [checkedTypes, setCheckedTypes] = useState<Set<IncidentTypeValue>>(new Set());
   const [sofRowCount, setSofRowCount] = useState(1);
+  const [sofPasteOpen, setSofPasteOpen] = useState(false);
+  const [sofPasteText, setSofPasteText] = useState("");
+  const pendingSofRows = useRef<SofRow[] | null>(null);
 
   function toggleType(type: IncidentTypeValue, checked: boolean) {
     setCheckedTypes((prev) => {
@@ -139,6 +144,38 @@ export function NewIncidentForm({
     }
     pendingSubCategoryRestore.current = {};
   }, [checkedTypes]);
+
+  // The SOF row inputs only exist once sofRowCount renders enough of them —
+  // apply a pasted-and-parsed set of rows on the render right after, same
+  // pattern as the sub-category restore above.
+  useEffect(() => {
+    const rows = pendingSofRows.current;
+    if (!rows) return;
+    const form = formRef.current;
+    if (!form) return;
+    const timeEls = form.querySelectorAll<HTMLInputElement>('[name="sofTime"]');
+    const eventEls = form.querySelectorAll<HTMLTextAreaElement>('[name="sofEvent"]');
+    rows.forEach((row, i) => {
+      const timeEl = timeEls[i];
+      const eventEl = eventEls[i];
+      if (timeEl) timeEl.value = row.time;
+      if (eventEl) {
+        eventEl.value = row.event;
+        // AutoGrowInput only re-measures its height on an "input" event.
+        eventEl.dispatchEvent(new Event("input", { bubbles: true }));
+      }
+    });
+    pendingSofRows.current = null;
+  }, [sofRowCount]);
+
+  function applySofPaste() {
+    const rows = parseSofPasteText(sofPasteText);
+    if (rows.length === 0) return;
+    pendingSofRows.current = rows;
+    setSofRowCount(rows.length);
+    setSofPasteText("");
+    setSofPasteOpen(false);
+  }
 
   return (
     <Card>
@@ -231,6 +268,38 @@ export function NewIncidentForm({
           {/* Statement of Facts — chronological timeline of events/response */}
           <div className="space-y-2">
             <Label>Statement of Facts (SOF)</Label>
+
+            {sofPasteOpen && (
+              <div className="space-y-2 rounded-md border border-dashed border-border p-3">
+                <Label className="text-xs">
+                  Paste a SOF block — one fact per line, each starting with its time (e.g. "0730H - Pilot onboard.")
+                </Label>
+                <textarea
+                  value={sofPasteText}
+                  onChange={(e) => setSofPasteText(e.target.value)}
+                  rows={8}
+                  className="w-full resize-y rounded-md border border-input bg-background px-3 py-1.5 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  placeholder={"0730H - Pilot onboard.\n0748H - Commenced heaving up anchor.\n…"}
+                />
+                <div className="flex items-center gap-2">
+                  <Button type="button" size="sm" disabled={!sofPasteText.trim()} onClick={applySofPaste}>
+                    Fill rows
+                  </Button>
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => {
+                      setSofPasteOpen(false);
+                      setSofPasteText("");
+                    }}
+                  >
+                    Cancel
+                  </Button>
+                </div>
+              </div>
+            )}
+
             <div className="overflow-hidden rounded-md border border-border">
               <table className="w-full table-fixed text-sm">
                 <colgroup>
@@ -257,14 +326,21 @@ export function NewIncidentForm({
                 </tbody>
               </table>
             </div>
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={() => setSofRowCount((n) => n + 1)}
-            >
-              <Plus className="h-4 w-4" /> Add row
-            </Button>
+            <div className="flex items-center gap-2">
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => setSofRowCount((n) => n + 1)}
+              >
+                <Plus className="h-4 w-4" /> Add row
+              </Button>
+              {!sofPasteOpen && (
+                <Button type="button" variant="outline" size="sm" onClick={() => setSofPasteOpen(true)}>
+                  <ClipboardPaste className="h-4 w-4" /> Paste SOF
+                </Button>
+              )}
+            </div>
           </div>
 
           <div className="space-y-1.5">

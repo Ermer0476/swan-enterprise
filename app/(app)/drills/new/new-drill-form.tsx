@@ -7,12 +7,28 @@ import {
   createDrillAction,
   type ActionResult,
 } from "@/features/drills/actions";
-import { DRILL_TYPES } from "@/features/drills/schema";
-import { humanize } from "@/lib/utils";
 import { Card, CardContent } from "@/components/ui/card";
 import { AutoGrowInput, Input, Label, Select } from "@/components/ui/input";
 import { VesselField } from "@/components/ui/vessel-field";
 import { Button } from "@/components/ui/button";
+
+export type ScheduleItemOption = {
+  id: string;
+  category: string | null;
+  itemNo: string | null;
+  name: string;
+};
+
+function groupByCategory(items: ScheduleItemOption[]): [string, ScheduleItemOption[]][] {
+  const groups = new Map<string, ScheduleItemOption[]>();
+  for (const item of items) {
+    const key = item.category ?? "Other";
+    const arr = groups.get(key) ?? [];
+    arr.push(item);
+    groups.set(key, arr);
+  }
+  return Array.from(groups.entries());
+}
 
 function SubmitButton() {
   const { pending } = useFormStatus();
@@ -23,13 +39,16 @@ function SubmitButton() {
   );
 }
 
+// Mirrors SMS form R-AS-021 "Report of Drill / Training onboard" (Appendix 6).
 export function NewDrillForm({
   vessels,
+  scheduleItems,
   isShipboard,
   ownVesselId,
   ownVesselName,
 }: {
   vessels: { id: string; name: string }[];
+  scheduleItems: ScheduleItemOption[];
   isShipboard: boolean;
   ownVesselId: string | null;
   ownVesselName: string | null;
@@ -73,22 +92,35 @@ export function NewDrillForm({
       // direct .value write doesn't fire one, so it'd render collapsed.
       el.dispatchEvent(new Event("input", { bubbles: true }));
     };
-    ["drillType", "vesselId", "drillDate", "scenario", "conductedBy",
-      "participants", "observations",
+    ["scheduleItemId", "vesselId", "drillDate", "drillTime", "position",
+      "conductedBy", "participants", "details", "deficiencies",
+      "correctiveAction", "vesselRemarks",
     ].forEach(restore);
   }, [state]);
+
+  const grouped = groupByCategory(scheduleItems);
 
   return (
     <Card>
       <CardContent className="pt-5">
         <form ref={formRef} action={formAction} className="space-y-4">
+          <div className="space-y-1.5">
+            <Label htmlFor="scheduleItemId">Kind of Drill / Training</Label>
+            <Select id="scheduleItemId" name="scheduleItemId" defaultValue="" required>
+              <option value="" disabled>— Select drill —</option>
+              {grouped.map(([category, items]) => (
+                <optgroup key={category} label={category}>
+                  {items.map((item) => (
+                    <option key={item.id} value={item.id}>
+                      {item.itemNo ? `${item.itemNo} — ` : ""}{item.name}
+                    </option>
+                  ))}
+                </optgroup>
+              ))}
+            </Select>
+          </div>
+
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-            <div className="space-y-1.5">
-              <Label htmlFor="drillType">Drill type</Label>
-              <Select id="drillType" name="drillType" defaultValue="FIRE">
-                {DRILL_TYPES.map((t) => <option key={t} value={t}>{humanize(t)}</option>)}
-              </Select>
-            </div>
             <VesselField
               vessels={vessels}
               isShipboard={isShipboard}
@@ -101,26 +133,50 @@ export function NewDrillForm({
               <Label htmlFor="drillDate">Date</Label>
               <Input id="drillDate" name="drillDate" type="date" required />
             </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="drillTime">Time</Label>
+              <Input id="drillTime" name="drillTime" placeholder="e.g. 1000H-1030H" />
+            </div>
           </div>
 
           <div className="space-y-1.5">
-            <Label htmlFor="scenario">Scenario</Label>
-            <AutoGrowInput id="scenario" name="scenario" placeholder="Brief scenario description" />
+            <Label htmlFor="position">Position</Label>
+            <AutoGrowInput id="position" name="position" placeholder="Ship's position/location during the drill" />
           </div>
 
           <div className="space-y-1.5">
-            <Label htmlFor="conductedBy">Conducted by</Label>
+            <Label htmlFor="conductedBy">Master's Name</Label>
             <AutoGrowInput id="conductedBy" name="conductedBy" placeholder="Name / rank" />
           </div>
 
           <div className="space-y-1.5">
-            <Label htmlFor="participants">Participants</Label>
+            <Label htmlFor="participants">Ranks of Crew Participated</Label>
             <AutoGrowInput id="participants" name="participants" placeholder="Names / ranks / count of participants…" />
           </div>
 
           <div className="space-y-1.5">
-            <Label htmlFor="observations">Observations / follow-up</Label>
-            <AutoGrowInput id="observations" name="observations" placeholder="Deficiencies noted, lessons learned…" />
+            <Label htmlFor="details">Details of Drill / Training</Label>
+            <AutoGrowInput
+              id="details"
+              name="details"
+              className="max-h-none"
+              placeholder="Chronological narrative of the drill — paste directly from the ship's own report if you have one…"
+            />
+          </div>
+
+          <div className="space-y-1.5">
+            <Label htmlFor="deficiencies">Found Deficiencies</Label>
+            <AutoGrowInput id="deficiencies" name="deficiencies" placeholder="Leave blank if none noted" />
+          </div>
+
+          <div className="space-y-1.5">
+            <Label htmlFor="correctiveAction">Master's Opinion for Improvement and Corrective Action</Label>
+            <AutoGrowInput id="correctiveAction" name="correctiveAction" />
+          </div>
+
+          <div className="space-y-1.5">
+            <Label htmlFor="vesselRemarks">Vessel Remarks</Label>
+            <AutoGrowInput id="vesselRemarks" name="vesselRemarks" placeholder="Equipment condition, stowage, readiness…" />
           </div>
 
           {state.error && <p className="text-sm text-danger" role="alert">{state.error}</p>}

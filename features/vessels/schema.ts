@@ -61,6 +61,24 @@ export const vesselSchema = z.object({
   lastDryDock: optionalDate,
   dryDockPlace: optionalText(100),
   nextDryDockDue: optionalDate,
+  portOfRegistry: optionalText(100),
+  lbp: optionalNumber,
+  draft: optionalNumber,
+  mainEngine: optionalText(200),
+  serviceSpeed: optionalNumber,
+  navigationArea: optionalText(100),
+  classNotation: optionalText(200),
+  ownerAddress: optionalText(300),
+  builder: optionalText(200),
+  keelLaidDate: optionalDate,
+  launchingDate: optionalDate,
+  deliveryDate: optionalDate,
+  totalComplement: z.preprocess(blankToUndefined, z.coerce.number().int().positive().optional()),
+  satPhone: optionalText(50),
+  vesselEmail: z.preprocess(
+    blankToUndefined,
+    z.string().trim().email("Invalid email").max(200).optional(),
+  ),
 });
 
 export type VesselInput = z.infer<typeof vesselSchema>;

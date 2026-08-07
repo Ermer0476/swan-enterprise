@@ -197,10 +197,25 @@ export type CommitteeMeeting = $Result.DefaultSelection<Prisma.$CommitteeMeeting
  */
 export type CommitteeMeetingAgenda = $Result.DefaultSelection<Prisma.$CommitteeMeetingAgendaPayload>
 /**
+ * Model ScheduleItem
+ * 
+ */
+export type ScheduleItem = $Result.DefaultSelection<Prisma.$ScheduleItemPayload>
+/**
+ * Model ScheduleApplicability
+ * 
+ */
+export type ScheduleApplicability = $Result.DefaultSelection<Prisma.$ScheduleApplicabilityPayload>
+/**
  * Model EmergencyDrill
  * 
  */
 export type EmergencyDrill = $Result.DefaultSelection<Prisma.$EmergencyDrillPayload>
+/**
+ * Model FamiliarizationRecord
+ * 
+ */
+export type FamiliarizationRecord = $Result.DefaultSelection<Prisma.$FamiliarizationRecordPayload>
 /**
  * Model ControlledDocument
  * 
@@ -561,6 +576,26 @@ export const SireObservationCategory: {
 export type SireObservationCategory = (typeof SireObservationCategory)[keyof typeof SireObservationCategory]
 
 
+export const CdiObservationSection: {
+  SECTION_1: 'SECTION_1',
+  SECTION_2: 'SECTION_2',
+  SECTION_3: 'SECTION_3',
+  SECTION_4: 'SECTION_4',
+  SECTION_5LP: 'SECTION_5LP',
+  SECTION_6: 'SECTION_6',
+  SECTION_7: 'SECTION_7',
+  SECTION_8: 'SECTION_8',
+  SECTION_9: 'SECTION_9',
+  SECTION_10: 'SECTION_10',
+  SECTION_11: 'SECTION_11',
+  SECTION_12: 'SECTION_12',
+  SECTION_13: 'SECTION_13',
+  SECTION_14: 'SECTION_14'
+};
+
+export type CdiObservationSection = (typeof CdiObservationSection)[keyof typeof CdiObservationSection]
+
+
 export const AuditFindingCategory: {
   MAJOR_NC: 'MAJOR_NC',
   MINOR_NC: 'MINOR_NC',
@@ -590,19 +625,12 @@ export const CommitteeMeetingStatus: {
 export type CommitteeMeetingStatus = (typeof CommitteeMeetingStatus)[keyof typeof CommitteeMeetingStatus]
 
 
-export const DrillType: {
-  FIRE: 'FIRE',
-  ABANDON_SHIP: 'ABANDON_SHIP',
-  MAN_OVERBOARD: 'MAN_OVERBOARD',
-  ENCLOSED_SPACE: 'ENCLOSED_SPACE',
-  OIL_SPILL: 'OIL_SPILL',
-  SECURITY: 'SECURITY',
-  STEERING_FAILURE: 'STEERING_FAILURE',
-  DAMAGE_CONTROL: 'DAMAGE_CONTROL',
-  OTHER: 'OTHER'
+export const ScheduleItemKind: {
+  DRILL: 'DRILL',
+  FAMILIARIZATION: 'FAMILIARIZATION'
 };
 
-export type DrillType = (typeof DrillType)[keyof typeof DrillType]
+export type ScheduleItemKind = (typeof ScheduleItemKind)[keyof typeof ScheduleItemKind]
 
 
 export const DocumentCategory: {
@@ -821,6 +849,10 @@ export type SireObservationCategory = $Enums.SireObservationCategory
 
 export const SireObservationCategory: typeof $Enums.SireObservationCategory
 
+export type CdiObservationSection = $Enums.CdiObservationSection
+
+export const CdiObservationSection: typeof $Enums.CdiObservationSection
+
 export type AuditFindingCategory = $Enums.AuditFindingCategory
 
 export const AuditFindingCategory: typeof $Enums.AuditFindingCategory
@@ -833,9 +865,9 @@ export type CommitteeMeetingStatus = $Enums.CommitteeMeetingStatus
 
 export const CommitteeMeetingStatus: typeof $Enums.CommitteeMeetingStatus
 
-export type DrillType = $Enums.DrillType
+export type ScheduleItemKind = $Enums.ScheduleItemKind
 
-export const DrillType: typeof $Enums.DrillType
+export const ScheduleItemKind: typeof $Enums.ScheduleItemKind
 
 export type DocumentCategory = $Enums.DocumentCategory
 
@@ -1356,6 +1388,26 @@ export class PrismaClient<
   get committeeMeetingAgenda(): Prisma.CommitteeMeetingAgendaDelegate<ExtArgs, ClientOptions>;
 
   /**
+   * `prisma.scheduleItem`: Exposes CRUD operations for the **ScheduleItem** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ScheduleItems
+    * const scheduleItems = await prisma.scheduleItem.findMany()
+    * ```
+    */
+  get scheduleItem(): Prisma.ScheduleItemDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.scheduleApplicability`: Exposes CRUD operations for the **ScheduleApplicability** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ScheduleApplicabilities
+    * const scheduleApplicabilities = await prisma.scheduleApplicability.findMany()
+    * ```
+    */
+  get scheduleApplicability(): Prisma.ScheduleApplicabilityDelegate<ExtArgs, ClientOptions>;
+
+  /**
    * `prisma.emergencyDrill`: Exposes CRUD operations for the **EmergencyDrill** model.
     * Example usage:
     * ```ts
@@ -1364,6 +1416,16 @@ export class PrismaClient<
     * ```
     */
   get emergencyDrill(): Prisma.EmergencyDrillDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.familiarizationRecord`: Exposes CRUD operations for the **FamiliarizationRecord** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more FamiliarizationRecords
+    * const familiarizationRecords = await prisma.familiarizationRecord.findMany()
+    * ```
+    */
+  get familiarizationRecord(): Prisma.FamiliarizationRecordDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.controlledDocument`: Exposes CRUD operations for the **ControlledDocument** model.
@@ -1931,7 +1993,10 @@ export namespace Prisma {
     ExternalAuditFinding: 'ExternalAuditFinding',
     CommitteeMeeting: 'CommitteeMeeting',
     CommitteeMeetingAgenda: 'CommitteeMeetingAgenda',
+    ScheduleItem: 'ScheduleItem',
+    ScheduleApplicability: 'ScheduleApplicability',
     EmergencyDrill: 'EmergencyDrill',
+    FamiliarizationRecord: 'FamiliarizationRecord',
     ControlledDocument: 'ControlledDocument',
     Circular: 'Circular',
     CircularAcknowledgement: 'CircularAcknowledgement',
@@ -1959,7 +2024,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "company" | "user" | "role" | "permission" | "rolePermission" | "userRole" | "vessel" | "auditLog" | "attachment" | "comment" | "capaAction" | "notification" | "workflowDefinition" | "workflowStep" | "workflowInstance" | "workflowAction" | "smsDocument" | "smsRevision" | "incident" | "incidentSofEntry" | "incidentTypeEntry" | "nearMiss" | "nonConformity" | "sireInspection" | "sireObservation" | "sireObservationComment" | "pscInspection" | "pscDeficiency" | "cdiInspection" | "cdiObservation" | "internalAudit" | "internalAuditFinding" | "externalAudit" | "externalAuditFinding" | "committeeMeeting" | "committeeMeetingAgenda" | "emergencyDrill" | "controlledDocument" | "circular" | "circularAcknowledgement" | "riskAssessmentDocument" | "riskAssessmentRevision" | "riskHazardRow" | "riskAssessmentExecution" | "riskAssessmentRevisionRequest" | "defect"
+      modelProps: "company" | "user" | "role" | "permission" | "rolePermission" | "userRole" | "vessel" | "auditLog" | "attachment" | "comment" | "capaAction" | "notification" | "workflowDefinition" | "workflowStep" | "workflowInstance" | "workflowAction" | "smsDocument" | "smsRevision" | "incident" | "incidentSofEntry" | "incidentTypeEntry" | "nearMiss" | "nonConformity" | "sireInspection" | "sireObservation" | "sireObservationComment" | "pscInspection" | "pscDeficiency" | "cdiInspection" | "cdiObservation" | "internalAudit" | "internalAuditFinding" | "externalAudit" | "externalAuditFinding" | "committeeMeeting" | "committeeMeetingAgenda" | "scheduleItem" | "scheduleApplicability" | "emergencyDrill" | "familiarizationRecord" | "controlledDocument" | "circular" | "circularAcknowledgement" | "riskAssessmentDocument" | "riskAssessmentRevision" | "riskHazardRow" | "riskAssessmentExecution" | "riskAssessmentRevisionRequest" | "defect"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -4627,6 +4692,154 @@ export namespace Prisma {
           }
         }
       }
+      ScheduleItem: {
+        payload: Prisma.$ScheduleItemPayload<ExtArgs>
+        fields: Prisma.ScheduleItemFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ScheduleItemFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ScheduleItemPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ScheduleItemFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ScheduleItemPayload>
+          }
+          findFirst: {
+            args: Prisma.ScheduleItemFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ScheduleItemPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ScheduleItemFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ScheduleItemPayload>
+          }
+          findMany: {
+            args: Prisma.ScheduleItemFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ScheduleItemPayload>[]
+          }
+          create: {
+            args: Prisma.ScheduleItemCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ScheduleItemPayload>
+          }
+          createMany: {
+            args: Prisma.ScheduleItemCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ScheduleItemCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ScheduleItemPayload>[]
+          }
+          delete: {
+            args: Prisma.ScheduleItemDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ScheduleItemPayload>
+          }
+          update: {
+            args: Prisma.ScheduleItemUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ScheduleItemPayload>
+          }
+          deleteMany: {
+            args: Prisma.ScheduleItemDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ScheduleItemUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ScheduleItemUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ScheduleItemPayload>[]
+          }
+          upsert: {
+            args: Prisma.ScheduleItemUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ScheduleItemPayload>
+          }
+          aggregate: {
+            args: Prisma.ScheduleItemAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateScheduleItem>
+          }
+          groupBy: {
+            args: Prisma.ScheduleItemGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ScheduleItemGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ScheduleItemCountArgs<ExtArgs>
+            result: $Utils.Optional<ScheduleItemCountAggregateOutputType> | number
+          }
+        }
+      }
+      ScheduleApplicability: {
+        payload: Prisma.$ScheduleApplicabilityPayload<ExtArgs>
+        fields: Prisma.ScheduleApplicabilityFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ScheduleApplicabilityFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ScheduleApplicabilityPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ScheduleApplicabilityFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ScheduleApplicabilityPayload>
+          }
+          findFirst: {
+            args: Prisma.ScheduleApplicabilityFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ScheduleApplicabilityPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ScheduleApplicabilityFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ScheduleApplicabilityPayload>
+          }
+          findMany: {
+            args: Prisma.ScheduleApplicabilityFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ScheduleApplicabilityPayload>[]
+          }
+          create: {
+            args: Prisma.ScheduleApplicabilityCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ScheduleApplicabilityPayload>
+          }
+          createMany: {
+            args: Prisma.ScheduleApplicabilityCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ScheduleApplicabilityCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ScheduleApplicabilityPayload>[]
+          }
+          delete: {
+            args: Prisma.ScheduleApplicabilityDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ScheduleApplicabilityPayload>
+          }
+          update: {
+            args: Prisma.ScheduleApplicabilityUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ScheduleApplicabilityPayload>
+          }
+          deleteMany: {
+            args: Prisma.ScheduleApplicabilityDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ScheduleApplicabilityUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ScheduleApplicabilityUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ScheduleApplicabilityPayload>[]
+          }
+          upsert: {
+            args: Prisma.ScheduleApplicabilityUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ScheduleApplicabilityPayload>
+          }
+          aggregate: {
+            args: Prisma.ScheduleApplicabilityAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateScheduleApplicability>
+          }
+          groupBy: {
+            args: Prisma.ScheduleApplicabilityGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ScheduleApplicabilityGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ScheduleApplicabilityCountArgs<ExtArgs>
+            result: $Utils.Optional<ScheduleApplicabilityCountAggregateOutputType> | number
+          }
+        }
+      }
       EmergencyDrill: {
         payload: Prisma.$EmergencyDrillPayload<ExtArgs>
         fields: Prisma.EmergencyDrillFieldRefs
@@ -4698,6 +4911,80 @@ export namespace Prisma {
           count: {
             args: Prisma.EmergencyDrillCountArgs<ExtArgs>
             result: $Utils.Optional<EmergencyDrillCountAggregateOutputType> | number
+          }
+        }
+      }
+      FamiliarizationRecord: {
+        payload: Prisma.$FamiliarizationRecordPayload<ExtArgs>
+        fields: Prisma.FamiliarizationRecordFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.FamiliarizationRecordFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FamiliarizationRecordPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.FamiliarizationRecordFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FamiliarizationRecordPayload>
+          }
+          findFirst: {
+            args: Prisma.FamiliarizationRecordFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FamiliarizationRecordPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.FamiliarizationRecordFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FamiliarizationRecordPayload>
+          }
+          findMany: {
+            args: Prisma.FamiliarizationRecordFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FamiliarizationRecordPayload>[]
+          }
+          create: {
+            args: Prisma.FamiliarizationRecordCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FamiliarizationRecordPayload>
+          }
+          createMany: {
+            args: Prisma.FamiliarizationRecordCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.FamiliarizationRecordCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FamiliarizationRecordPayload>[]
+          }
+          delete: {
+            args: Prisma.FamiliarizationRecordDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FamiliarizationRecordPayload>
+          }
+          update: {
+            args: Prisma.FamiliarizationRecordUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FamiliarizationRecordPayload>
+          }
+          deleteMany: {
+            args: Prisma.FamiliarizationRecordDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.FamiliarizationRecordUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.FamiliarizationRecordUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FamiliarizationRecordPayload>[]
+          }
+          upsert: {
+            args: Prisma.FamiliarizationRecordUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FamiliarizationRecordPayload>
+          }
+          aggregate: {
+            args: Prisma.FamiliarizationRecordAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateFamiliarizationRecord>
+          }
+          groupBy: {
+            args: Prisma.FamiliarizationRecordGroupByArgs<ExtArgs>
+            result: $Utils.Optional<FamiliarizationRecordGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.FamiliarizationRecordCountArgs<ExtArgs>
+            result: $Utils.Optional<FamiliarizationRecordCountAggregateOutputType> | number
           }
         }
       }
@@ -5499,7 +5786,10 @@ export namespace Prisma {
     externalAuditFinding?: ExternalAuditFindingOmit
     committeeMeeting?: CommitteeMeetingOmit
     committeeMeetingAgenda?: CommitteeMeetingAgendaOmit
+    scheduleItem?: ScheduleItemOmit
+    scheduleApplicability?: ScheduleApplicabilityOmit
     emergencyDrill?: EmergencyDrillOmit
+    familiarizationRecord?: FamiliarizationRecordOmit
     controlledDocument?: ControlledDocumentOmit
     circular?: CircularOmit
     circularAcknowledgement?: CircularAcknowledgementOmit
@@ -5603,7 +5893,10 @@ export namespace Prisma {
     internalAudits: number
     externalAudits: number
     committeeMeetings: number
+    scheduleItems: number
     emergencyDrills: number
+    familiarizationRecords: number
+    scheduleApplicability: number
     controlledDocuments: number
     circulars: number
     riskAssessmentDocuments: number
@@ -5625,7 +5918,10 @@ export namespace Prisma {
     internalAudits?: boolean | CompanyCountOutputTypeCountInternalAuditsArgs
     externalAudits?: boolean | CompanyCountOutputTypeCountExternalAuditsArgs
     committeeMeetings?: boolean | CompanyCountOutputTypeCountCommitteeMeetingsArgs
+    scheduleItems?: boolean | CompanyCountOutputTypeCountScheduleItemsArgs
     emergencyDrills?: boolean | CompanyCountOutputTypeCountEmergencyDrillsArgs
+    familiarizationRecords?: boolean | CompanyCountOutputTypeCountFamiliarizationRecordsArgs
+    scheduleApplicability?: boolean | CompanyCountOutputTypeCountScheduleApplicabilityArgs
     controlledDocuments?: boolean | CompanyCountOutputTypeCountControlledDocumentsArgs
     circulars?: boolean | CompanyCountOutputTypeCountCircularsArgs
     riskAssessmentDocuments?: boolean | CompanyCountOutputTypeCountRiskAssessmentDocumentsArgs
@@ -5744,8 +6040,29 @@ export namespace Prisma {
   /**
    * CompanyCountOutputType without action
    */
+  export type CompanyCountOutputTypeCountScheduleItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ScheduleItemWhereInput
+  }
+
+  /**
+   * CompanyCountOutputType without action
+   */
   export type CompanyCountOutputTypeCountEmergencyDrillsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: EmergencyDrillWhereInput
+  }
+
+  /**
+   * CompanyCountOutputType without action
+   */
+  export type CompanyCountOutputTypeCountFamiliarizationRecordsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FamiliarizationRecordWhereInput
+  }
+
+  /**
+   * CompanyCountOutputType without action
+   */
+  export type CompanyCountOutputTypeCountScheduleApplicabilityArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ScheduleApplicabilityWhereInput
   }
 
   /**
@@ -5967,6 +6284,8 @@ export namespace Prisma {
     externalAudits: number
     committeeMeetings: number
     emergencyDrills: number
+    familiarizationRecords: number
+    scheduleApplicability: number
     controlledDocuments: number
     circulars: number
     riskAssessmentDocuments: number
@@ -5988,6 +6307,8 @@ export namespace Prisma {
     externalAudits?: boolean | VesselCountOutputTypeCountExternalAuditsArgs
     committeeMeetings?: boolean | VesselCountOutputTypeCountCommitteeMeetingsArgs
     emergencyDrills?: boolean | VesselCountOutputTypeCountEmergencyDrillsArgs
+    familiarizationRecords?: boolean | VesselCountOutputTypeCountFamiliarizationRecordsArgs
+    scheduleApplicability?: boolean | VesselCountOutputTypeCountScheduleApplicabilityArgs
     controlledDocuments?: boolean | VesselCountOutputTypeCountControlledDocumentsArgs
     circulars?: boolean | VesselCountOutputTypeCountCircularsArgs
     riskAssessmentDocuments?: boolean | VesselCountOutputTypeCountRiskAssessmentDocumentsArgs
@@ -6083,6 +6404,20 @@ export namespace Prisma {
    */
   export type VesselCountOutputTypeCountEmergencyDrillsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: EmergencyDrillWhereInput
+  }
+
+  /**
+   * VesselCountOutputType without action
+   */
+  export type VesselCountOutputTypeCountFamiliarizationRecordsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FamiliarizationRecordWhereInput
+  }
+
+  /**
+   * VesselCountOutputType without action
+   */
+  export type VesselCountOutputTypeCountScheduleApplicabilityArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ScheduleApplicabilityWhereInput
   }
 
   /**
@@ -6526,6 +6861,55 @@ export namespace Prisma {
 
 
   /**
+   * Count Type ScheduleItemCountOutputType
+   */
+
+  export type ScheduleItemCountOutputType = {
+    drills: number
+    familiarizations: number
+    exceptions: number
+  }
+
+  export type ScheduleItemCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    drills?: boolean | ScheduleItemCountOutputTypeCountDrillsArgs
+    familiarizations?: boolean | ScheduleItemCountOutputTypeCountFamiliarizationsArgs
+    exceptions?: boolean | ScheduleItemCountOutputTypeCountExceptionsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * ScheduleItemCountOutputType without action
+   */
+  export type ScheduleItemCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScheduleItemCountOutputType
+     */
+    select?: ScheduleItemCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * ScheduleItemCountOutputType without action
+   */
+  export type ScheduleItemCountOutputTypeCountDrillsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: EmergencyDrillWhereInput
+  }
+
+  /**
+   * ScheduleItemCountOutputType without action
+   */
+  export type ScheduleItemCountOutputTypeCountFamiliarizationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FamiliarizationRecordWhereInput
+  }
+
+  /**
+   * ScheduleItemCountOutputType without action
+   */
+  export type ScheduleItemCountOutputTypeCountExceptionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ScheduleApplicabilityWhereInput
+  }
+
+
+  /**
    * Count Type CircularCountOutputType
    */
 
@@ -6827,7 +7211,10 @@ export namespace Prisma {
     internalAudits?: boolean | Company$internalAuditsArgs<ExtArgs>
     externalAudits?: boolean | Company$externalAuditsArgs<ExtArgs>
     committeeMeetings?: boolean | Company$committeeMeetingsArgs<ExtArgs>
+    scheduleItems?: boolean | Company$scheduleItemsArgs<ExtArgs>
     emergencyDrills?: boolean | Company$emergencyDrillsArgs<ExtArgs>
+    familiarizationRecords?: boolean | Company$familiarizationRecordsArgs<ExtArgs>
+    scheduleApplicability?: boolean | Company$scheduleApplicabilityArgs<ExtArgs>
     controlledDocuments?: boolean | Company$controlledDocumentsArgs<ExtArgs>
     circulars?: boolean | Company$circularsArgs<ExtArgs>
     riskAssessmentDocuments?: boolean | Company$riskAssessmentDocumentsArgs<ExtArgs>
@@ -6875,7 +7262,10 @@ export namespace Prisma {
     internalAudits?: boolean | Company$internalAuditsArgs<ExtArgs>
     externalAudits?: boolean | Company$externalAuditsArgs<ExtArgs>
     committeeMeetings?: boolean | Company$committeeMeetingsArgs<ExtArgs>
+    scheduleItems?: boolean | Company$scheduleItemsArgs<ExtArgs>
     emergencyDrills?: boolean | Company$emergencyDrillsArgs<ExtArgs>
+    familiarizationRecords?: boolean | Company$familiarizationRecordsArgs<ExtArgs>
+    scheduleApplicability?: boolean | Company$scheduleApplicabilityArgs<ExtArgs>
     controlledDocuments?: boolean | Company$controlledDocumentsArgs<ExtArgs>
     circulars?: boolean | Company$circularsArgs<ExtArgs>
     riskAssessmentDocuments?: boolean | Company$riskAssessmentDocumentsArgs<ExtArgs>
@@ -6902,7 +7292,10 @@ export namespace Prisma {
       internalAudits: Prisma.$InternalAuditPayload<ExtArgs>[]
       externalAudits: Prisma.$ExternalAuditPayload<ExtArgs>[]
       committeeMeetings: Prisma.$CommitteeMeetingPayload<ExtArgs>[]
+      scheduleItems: Prisma.$ScheduleItemPayload<ExtArgs>[]
       emergencyDrills: Prisma.$EmergencyDrillPayload<ExtArgs>[]
+      familiarizationRecords: Prisma.$FamiliarizationRecordPayload<ExtArgs>[]
+      scheduleApplicability: Prisma.$ScheduleApplicabilityPayload<ExtArgs>[]
       controlledDocuments: Prisma.$ControlledDocumentPayload<ExtArgs>[]
       circulars: Prisma.$CircularPayload<ExtArgs>[]
       riskAssessmentDocuments: Prisma.$RiskAssessmentDocumentPayload<ExtArgs>[]
@@ -7322,7 +7715,10 @@ export namespace Prisma {
     internalAudits<T extends Company$internalAuditsArgs<ExtArgs> = {}>(args?: Subset<T, Company$internalAuditsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InternalAuditPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     externalAudits<T extends Company$externalAuditsArgs<ExtArgs> = {}>(args?: Subset<T, Company$externalAuditsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExternalAuditPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     committeeMeetings<T extends Company$committeeMeetingsArgs<ExtArgs> = {}>(args?: Subset<T, Company$committeeMeetingsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CommitteeMeetingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    scheduleItems<T extends Company$scheduleItemsArgs<ExtArgs> = {}>(args?: Subset<T, Company$scheduleItemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ScheduleItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     emergencyDrills<T extends Company$emergencyDrillsArgs<ExtArgs> = {}>(args?: Subset<T, Company$emergencyDrillsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$EmergencyDrillPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    familiarizationRecords<T extends Company$familiarizationRecordsArgs<ExtArgs> = {}>(args?: Subset<T, Company$familiarizationRecordsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FamiliarizationRecordPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    scheduleApplicability<T extends Company$scheduleApplicabilityArgs<ExtArgs> = {}>(args?: Subset<T, Company$scheduleApplicabilityArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ScheduleApplicabilityPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     controlledDocuments<T extends Company$controlledDocumentsArgs<ExtArgs> = {}>(args?: Subset<T, Company$controlledDocumentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ControlledDocumentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     circulars<T extends Company$circularsArgs<ExtArgs> = {}>(args?: Subset<T, Company$circularsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CircularPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     riskAssessmentDocuments<T extends Company$riskAssessmentDocumentsArgs<ExtArgs> = {}>(args?: Subset<T, Company$riskAssessmentDocumentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RiskAssessmentDocumentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -8085,6 +8481,30 @@ export namespace Prisma {
   }
 
   /**
+   * Company.scheduleItems
+   */
+  export type Company$scheduleItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScheduleItem
+     */
+    select?: ScheduleItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ScheduleItem
+     */
+    omit?: ScheduleItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScheduleItemInclude<ExtArgs> | null
+    where?: ScheduleItemWhereInput
+    orderBy?: ScheduleItemOrderByWithRelationInput | ScheduleItemOrderByWithRelationInput[]
+    cursor?: ScheduleItemWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ScheduleItemScalarFieldEnum | ScheduleItemScalarFieldEnum[]
+  }
+
+  /**
    * Company.emergencyDrills
    */
   export type Company$emergencyDrillsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -8106,6 +8526,54 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: EmergencyDrillScalarFieldEnum | EmergencyDrillScalarFieldEnum[]
+  }
+
+  /**
+   * Company.familiarizationRecords
+   */
+  export type Company$familiarizationRecordsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FamiliarizationRecord
+     */
+    select?: FamiliarizationRecordSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FamiliarizationRecord
+     */
+    omit?: FamiliarizationRecordOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FamiliarizationRecordInclude<ExtArgs> | null
+    where?: FamiliarizationRecordWhereInput
+    orderBy?: FamiliarizationRecordOrderByWithRelationInput | FamiliarizationRecordOrderByWithRelationInput[]
+    cursor?: FamiliarizationRecordWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: FamiliarizationRecordScalarFieldEnum | FamiliarizationRecordScalarFieldEnum[]
+  }
+
+  /**
+   * Company.scheduleApplicability
+   */
+  export type Company$scheduleApplicabilityArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScheduleApplicability
+     */
+    select?: ScheduleApplicabilitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ScheduleApplicability
+     */
+    omit?: ScheduleApplicabilityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScheduleApplicabilityInclude<ExtArgs> | null
+    where?: ScheduleApplicabilityWhereInput
+    orderBy?: ScheduleApplicabilityOrderByWithRelationInput | ScheduleApplicabilityOrderByWithRelationInput[]
+    cursor?: ScheduleApplicabilityWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ScheduleApplicabilityScalarFieldEnum | ScheduleApplicabilityScalarFieldEnum[]
   }
 
   /**
@@ -13980,6 +14448,10 @@ export namespace Prisma {
     netTonnage: number | null
     deadweight: number | null
     yearWithSwan: number | null
+    lbp: number | null
+    draft: number | null
+    serviceSpeed: number | null
+    totalComplement: number | null
   }
 
   export type VesselSumAggregateOutputType = {
@@ -13992,6 +14464,10 @@ export namespace Prisma {
     netTonnage: number | null
     deadweight: number | null
     yearWithSwan: number | null
+    lbp: number | null
+    draft: number | null
+    serviceSpeed: number | null
+    totalComplement: number | null
   }
 
   export type VesselMinAggregateOutputType = {
@@ -14023,6 +14499,21 @@ export namespace Prisma {
     lastDryDock: Date | null
     dryDockPlace: string | null
     nextDryDockDue: Date | null
+    portOfRegistry: string | null
+    lbp: number | null
+    draft: number | null
+    mainEngine: string | null
+    serviceSpeed: number | null
+    navigationArea: string | null
+    classNotation: string | null
+    ownerAddress: string | null
+    builder: string | null
+    keelLaidDate: Date | null
+    launchingDate: Date | null
+    deliveryDate: Date | null
+    totalComplement: number | null
+    satPhone: string | null
+    vesselEmail: string | null
     archivedAt: Date | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -14061,6 +14552,21 @@ export namespace Prisma {
     lastDryDock: Date | null
     dryDockPlace: string | null
     nextDryDockDue: Date | null
+    portOfRegistry: string | null
+    lbp: number | null
+    draft: number | null
+    mainEngine: string | null
+    serviceSpeed: number | null
+    navigationArea: string | null
+    classNotation: string | null
+    ownerAddress: string | null
+    builder: string | null
+    keelLaidDate: Date | null
+    launchingDate: Date | null
+    deliveryDate: Date | null
+    totalComplement: number | null
+    satPhone: string | null
+    vesselEmail: string | null
     archivedAt: Date | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -14099,6 +14605,21 @@ export namespace Prisma {
     lastDryDock: number
     dryDockPlace: number
     nextDryDockDue: number
+    portOfRegistry: number
+    lbp: number
+    draft: number
+    mainEngine: number
+    serviceSpeed: number
+    navigationArea: number
+    classNotation: number
+    ownerAddress: number
+    builder: number
+    keelLaidDate: number
+    launchingDate: number
+    deliveryDate: number
+    totalComplement: number
+    satPhone: number
+    vesselEmail: number
     archivedAt: number
     createdAt: number
     updatedAt: number
@@ -14120,6 +14641,10 @@ export namespace Prisma {
     netTonnage?: true
     deadweight?: true
     yearWithSwan?: true
+    lbp?: true
+    draft?: true
+    serviceSpeed?: true
+    totalComplement?: true
   }
 
   export type VesselSumAggregateInputType = {
@@ -14132,6 +14657,10 @@ export namespace Prisma {
     netTonnage?: true
     deadweight?: true
     yearWithSwan?: true
+    lbp?: true
+    draft?: true
+    serviceSpeed?: true
+    totalComplement?: true
   }
 
   export type VesselMinAggregateInputType = {
@@ -14163,6 +14692,21 @@ export namespace Prisma {
     lastDryDock?: true
     dryDockPlace?: true
     nextDryDockDue?: true
+    portOfRegistry?: true
+    lbp?: true
+    draft?: true
+    mainEngine?: true
+    serviceSpeed?: true
+    navigationArea?: true
+    classNotation?: true
+    ownerAddress?: true
+    builder?: true
+    keelLaidDate?: true
+    launchingDate?: true
+    deliveryDate?: true
+    totalComplement?: true
+    satPhone?: true
+    vesselEmail?: true
     archivedAt?: true
     createdAt?: true
     updatedAt?: true
@@ -14201,6 +14745,21 @@ export namespace Prisma {
     lastDryDock?: true
     dryDockPlace?: true
     nextDryDockDue?: true
+    portOfRegistry?: true
+    lbp?: true
+    draft?: true
+    mainEngine?: true
+    serviceSpeed?: true
+    navigationArea?: true
+    classNotation?: true
+    ownerAddress?: true
+    builder?: true
+    keelLaidDate?: true
+    launchingDate?: true
+    deliveryDate?: true
+    totalComplement?: true
+    satPhone?: true
+    vesselEmail?: true
     archivedAt?: true
     createdAt?: true
     updatedAt?: true
@@ -14239,6 +14798,21 @@ export namespace Prisma {
     lastDryDock?: true
     dryDockPlace?: true
     nextDryDockDue?: true
+    portOfRegistry?: true
+    lbp?: true
+    draft?: true
+    mainEngine?: true
+    serviceSpeed?: true
+    navigationArea?: true
+    classNotation?: true
+    ownerAddress?: true
+    builder?: true
+    keelLaidDate?: true
+    launchingDate?: true
+    deliveryDate?: true
+    totalComplement?: true
+    satPhone?: true
+    vesselEmail?: true
     archivedAt?: true
     createdAt?: true
     updatedAt?: true
@@ -14364,6 +14938,21 @@ export namespace Prisma {
     lastDryDock: Date | null
     dryDockPlace: string | null
     nextDryDockDue: Date | null
+    portOfRegistry: string | null
+    lbp: number | null
+    draft: number | null
+    mainEngine: string | null
+    serviceSpeed: number | null
+    navigationArea: string | null
+    classNotation: string | null
+    ownerAddress: string | null
+    builder: string | null
+    keelLaidDate: Date | null
+    launchingDate: Date | null
+    deliveryDate: Date | null
+    totalComplement: number | null
+    satPhone: string | null
+    vesselEmail: string | null
     archivedAt: Date | null
     createdAt: Date
     updatedAt: Date
@@ -14421,6 +15010,21 @@ export namespace Prisma {
     lastDryDock?: boolean
     dryDockPlace?: boolean
     nextDryDockDue?: boolean
+    portOfRegistry?: boolean
+    lbp?: boolean
+    draft?: boolean
+    mainEngine?: boolean
+    serviceSpeed?: boolean
+    navigationArea?: boolean
+    classNotation?: boolean
+    ownerAddress?: boolean
+    builder?: boolean
+    keelLaidDate?: boolean
+    launchingDate?: boolean
+    deliveryDate?: boolean
+    totalComplement?: boolean
+    satPhone?: boolean
+    vesselEmail?: boolean
     archivedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -14440,6 +15044,8 @@ export namespace Prisma {
     externalAudits?: boolean | Vessel$externalAuditsArgs<ExtArgs>
     committeeMeetings?: boolean | Vessel$committeeMeetingsArgs<ExtArgs>
     emergencyDrills?: boolean | Vessel$emergencyDrillsArgs<ExtArgs>
+    familiarizationRecords?: boolean | Vessel$familiarizationRecordsArgs<ExtArgs>
+    scheduleApplicability?: boolean | Vessel$scheduleApplicabilityArgs<ExtArgs>
     controlledDocuments?: boolean | Vessel$controlledDocumentsArgs<ExtArgs>
     circulars?: boolean | Vessel$circularsArgs<ExtArgs>
     riskAssessmentDocuments?: boolean | Vessel$riskAssessmentDocumentsArgs<ExtArgs>
@@ -14479,6 +15085,21 @@ export namespace Prisma {
     lastDryDock?: boolean
     dryDockPlace?: boolean
     nextDryDockDue?: boolean
+    portOfRegistry?: boolean
+    lbp?: boolean
+    draft?: boolean
+    mainEngine?: boolean
+    serviceSpeed?: boolean
+    navigationArea?: boolean
+    classNotation?: boolean
+    ownerAddress?: boolean
+    builder?: boolean
+    keelLaidDate?: boolean
+    launchingDate?: boolean
+    deliveryDate?: boolean
+    totalComplement?: boolean
+    satPhone?: boolean
+    vesselEmail?: boolean
     archivedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -14518,6 +15139,21 @@ export namespace Prisma {
     lastDryDock?: boolean
     dryDockPlace?: boolean
     nextDryDockDue?: boolean
+    portOfRegistry?: boolean
+    lbp?: boolean
+    draft?: boolean
+    mainEngine?: boolean
+    serviceSpeed?: boolean
+    navigationArea?: boolean
+    classNotation?: boolean
+    ownerAddress?: boolean
+    builder?: boolean
+    keelLaidDate?: boolean
+    launchingDate?: boolean
+    deliveryDate?: boolean
+    totalComplement?: boolean
+    satPhone?: boolean
+    vesselEmail?: boolean
     archivedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -14557,6 +15193,21 @@ export namespace Prisma {
     lastDryDock?: boolean
     dryDockPlace?: boolean
     nextDryDockDue?: boolean
+    portOfRegistry?: boolean
+    lbp?: boolean
+    draft?: boolean
+    mainEngine?: boolean
+    serviceSpeed?: boolean
+    navigationArea?: boolean
+    classNotation?: boolean
+    ownerAddress?: boolean
+    builder?: boolean
+    keelLaidDate?: boolean
+    launchingDate?: boolean
+    deliveryDate?: boolean
+    totalComplement?: boolean
+    satPhone?: boolean
+    vesselEmail?: boolean
     archivedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -14566,7 +15217,7 @@ export namespace Prisma {
     deletedBy?: boolean
   }
 
-  export type VesselOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "companyId" | "name" | "code" | "imo" | "officialNumber" | "callSign" | "mmsi" | "flag" | "type" | "classificationSociety" | "yearBuilt" | "grossTonnage" | "loa" | "breadth" | "depth" | "status" | "capacityCbm" | "netTonnage" | "deadweight" | "tradeArea" | "registeredOwner" | "headOwner" | "charterer" | "yearWithSwan" | "lastDryDock" | "dryDockPlace" | "nextDryDockDue" | "archivedAt" | "createdAt" | "updatedAt" | "createdBy" | "updatedBy" | "deletedAt" | "deletedBy", ExtArgs["result"]["vessel"]>
+  export type VesselOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "companyId" | "name" | "code" | "imo" | "officialNumber" | "callSign" | "mmsi" | "flag" | "type" | "classificationSociety" | "yearBuilt" | "grossTonnage" | "loa" | "breadth" | "depth" | "status" | "capacityCbm" | "netTonnage" | "deadweight" | "tradeArea" | "registeredOwner" | "headOwner" | "charterer" | "yearWithSwan" | "lastDryDock" | "dryDockPlace" | "nextDryDockDue" | "portOfRegistry" | "lbp" | "draft" | "mainEngine" | "serviceSpeed" | "navigationArea" | "classNotation" | "ownerAddress" | "builder" | "keelLaidDate" | "launchingDate" | "deliveryDate" | "totalComplement" | "satPhone" | "vesselEmail" | "archivedAt" | "createdAt" | "updatedAt" | "createdBy" | "updatedBy" | "deletedAt" | "deletedBy", ExtArgs["result"]["vessel"]>
   export type VesselInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     company?: boolean | CompanyDefaultArgs<ExtArgs>
     smsDocuments?: boolean | Vessel$smsDocumentsArgs<ExtArgs>
@@ -14580,6 +15231,8 @@ export namespace Prisma {
     externalAudits?: boolean | Vessel$externalAuditsArgs<ExtArgs>
     committeeMeetings?: boolean | Vessel$committeeMeetingsArgs<ExtArgs>
     emergencyDrills?: boolean | Vessel$emergencyDrillsArgs<ExtArgs>
+    familiarizationRecords?: boolean | Vessel$familiarizationRecordsArgs<ExtArgs>
+    scheduleApplicability?: boolean | Vessel$scheduleApplicabilityArgs<ExtArgs>
     controlledDocuments?: boolean | Vessel$controlledDocumentsArgs<ExtArgs>
     circulars?: boolean | Vessel$circularsArgs<ExtArgs>
     riskAssessmentDocuments?: boolean | Vessel$riskAssessmentDocumentsArgs<ExtArgs>
@@ -14611,6 +15264,8 @@ export namespace Prisma {
       externalAudits: Prisma.$ExternalAuditPayload<ExtArgs>[]
       committeeMeetings: Prisma.$CommitteeMeetingPayload<ExtArgs>[]
       emergencyDrills: Prisma.$EmergencyDrillPayload<ExtArgs>[]
+      familiarizationRecords: Prisma.$FamiliarizationRecordPayload<ExtArgs>[]
+      scheduleApplicability: Prisma.$ScheduleApplicabilityPayload<ExtArgs>[]
       controlledDocuments: Prisma.$ControlledDocumentPayload<ExtArgs>[]
       circulars: Prisma.$CircularPayload<ExtArgs>[]
       riskAssessmentDocuments: Prisma.$RiskAssessmentDocumentPayload<ExtArgs>[]
@@ -14648,6 +15303,21 @@ export namespace Prisma {
       lastDryDock: Date | null
       dryDockPlace: string | null
       nextDryDockDue: Date | null
+      portOfRegistry: string | null
+      lbp: number | null
+      draft: number | null
+      mainEngine: string | null
+      serviceSpeed: number | null
+      navigationArea: string | null
+      classNotation: string | null
+      ownerAddress: string | null
+      builder: string | null
+      keelLaidDate: Date | null
+      launchingDate: Date | null
+      deliveryDate: Date | null
+      totalComplement: number | null
+      satPhone: string | null
+      vesselEmail: string | null
       archivedAt: Date | null
       createdAt: Date
       updatedAt: Date
@@ -15061,6 +15731,8 @@ export namespace Prisma {
     externalAudits<T extends Vessel$externalAuditsArgs<ExtArgs> = {}>(args?: Subset<T, Vessel$externalAuditsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExternalAuditPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     committeeMeetings<T extends Vessel$committeeMeetingsArgs<ExtArgs> = {}>(args?: Subset<T, Vessel$committeeMeetingsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CommitteeMeetingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     emergencyDrills<T extends Vessel$emergencyDrillsArgs<ExtArgs> = {}>(args?: Subset<T, Vessel$emergencyDrillsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$EmergencyDrillPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    familiarizationRecords<T extends Vessel$familiarizationRecordsArgs<ExtArgs> = {}>(args?: Subset<T, Vessel$familiarizationRecordsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FamiliarizationRecordPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    scheduleApplicability<T extends Vessel$scheduleApplicabilityArgs<ExtArgs> = {}>(args?: Subset<T, Vessel$scheduleApplicabilityArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ScheduleApplicabilityPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     controlledDocuments<T extends Vessel$controlledDocumentsArgs<ExtArgs> = {}>(args?: Subset<T, Vessel$controlledDocumentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ControlledDocumentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     circulars<T extends Vessel$circularsArgs<ExtArgs> = {}>(args?: Subset<T, Vessel$circularsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CircularPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     riskAssessmentDocuments<T extends Vessel$riskAssessmentDocumentsArgs<ExtArgs> = {}>(args?: Subset<T, Vessel$riskAssessmentDocumentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RiskAssessmentDocumentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -15125,6 +15797,21 @@ export namespace Prisma {
     readonly lastDryDock: FieldRef<"Vessel", 'DateTime'>
     readonly dryDockPlace: FieldRef<"Vessel", 'String'>
     readonly nextDryDockDue: FieldRef<"Vessel", 'DateTime'>
+    readonly portOfRegistry: FieldRef<"Vessel", 'String'>
+    readonly lbp: FieldRef<"Vessel", 'Float'>
+    readonly draft: FieldRef<"Vessel", 'Float'>
+    readonly mainEngine: FieldRef<"Vessel", 'String'>
+    readonly serviceSpeed: FieldRef<"Vessel", 'Float'>
+    readonly navigationArea: FieldRef<"Vessel", 'String'>
+    readonly classNotation: FieldRef<"Vessel", 'String'>
+    readonly ownerAddress: FieldRef<"Vessel", 'String'>
+    readonly builder: FieldRef<"Vessel", 'String'>
+    readonly keelLaidDate: FieldRef<"Vessel", 'DateTime'>
+    readonly launchingDate: FieldRef<"Vessel", 'DateTime'>
+    readonly deliveryDate: FieldRef<"Vessel", 'DateTime'>
+    readonly totalComplement: FieldRef<"Vessel", 'Int'>
+    readonly satPhone: FieldRef<"Vessel", 'String'>
+    readonly vesselEmail: FieldRef<"Vessel", 'String'>
     readonly archivedAt: FieldRef<"Vessel", 'DateTime'>
     readonly createdAt: FieldRef<"Vessel", 'DateTime'>
     readonly updatedAt: FieldRef<"Vessel", 'DateTime'>
@@ -15789,6 +16476,54 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: EmergencyDrillScalarFieldEnum | EmergencyDrillScalarFieldEnum[]
+  }
+
+  /**
+   * Vessel.familiarizationRecords
+   */
+  export type Vessel$familiarizationRecordsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FamiliarizationRecord
+     */
+    select?: FamiliarizationRecordSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FamiliarizationRecord
+     */
+    omit?: FamiliarizationRecordOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FamiliarizationRecordInclude<ExtArgs> | null
+    where?: FamiliarizationRecordWhereInput
+    orderBy?: FamiliarizationRecordOrderByWithRelationInput | FamiliarizationRecordOrderByWithRelationInput[]
+    cursor?: FamiliarizationRecordWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: FamiliarizationRecordScalarFieldEnum | FamiliarizationRecordScalarFieldEnum[]
+  }
+
+  /**
+   * Vessel.scheduleApplicability
+   */
+  export type Vessel$scheduleApplicabilityArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScheduleApplicability
+     */
+    select?: ScheduleApplicabilitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ScheduleApplicability
+     */
+    omit?: ScheduleApplicabilityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScheduleApplicabilityInclude<ExtArgs> | null
+    where?: ScheduleApplicabilityWhereInput
+    orderBy?: ScheduleApplicabilityOrderByWithRelationInput | ScheduleApplicabilityOrderByWithRelationInput[]
+    cursor?: ScheduleApplicabilityWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ScheduleApplicabilityScalarFieldEnum | ScheduleApplicabilityScalarFieldEnum[]
   }
 
   /**
@@ -42715,7 +43450,7 @@ export namespace Prisma {
     observation: string | null
     response: string | null
     status: $Enums.FindingStatus | null
-    category: $Enums.SireObservationCategory | null
+    category: $Enums.CdiObservationSection | null
     rootCauseCategory: $Enums.RootCauseCategory | null
     rootCauseSubCategory: string | null
     rootCause: string | null
@@ -42732,7 +43467,7 @@ export namespace Prisma {
     observation: string | null
     response: string | null
     status: $Enums.FindingStatus | null
-    category: $Enums.SireObservationCategory | null
+    category: $Enums.CdiObservationSection | null
     rootCauseCategory: $Enums.RootCauseCategory | null
     rootCauseSubCategory: string | null
     rootCause: string | null
@@ -42892,7 +43627,7 @@ export namespace Prisma {
     observation: string
     response: string | null
     status: $Enums.FindingStatus
-    category: $Enums.SireObservationCategory | null
+    category: $Enums.CdiObservationSection | null
     rootCauseCategory: $Enums.RootCauseCategory | null
     rootCauseSubCategory: string | null
     rootCause: string | null
@@ -43013,7 +43748,7 @@ export namespace Prisma {
       observation: string
       response: string | null
       status: $Enums.FindingStatus
-      category: $Enums.SireObservationCategory | null
+      category: $Enums.CdiObservationSection | null
       rootCauseCategory: $Enums.RootCauseCategory | null
       rootCauseSubCategory: string | null
       rootCause: string | null
@@ -43451,7 +44186,7 @@ export namespace Prisma {
     readonly observation: FieldRef<"CdiObservation", 'String'>
     readonly response: FieldRef<"CdiObservation", 'String'>
     readonly status: FieldRef<"CdiObservation", 'FindingStatus'>
-    readonly category: FieldRef<"CdiObservation", 'SireObservationCategory'>
+    readonly category: FieldRef<"CdiObservation", 'CdiObservationSection'>
     readonly rootCauseCategory: FieldRef<"CdiObservation", 'RootCauseCategory'>
     readonly rootCauseSubCategory: FieldRef<"CdiObservation", 'String'>
     readonly rootCause: FieldRef<"CdiObservation", 'String'>
@@ -51258,6 +51993,2444 @@ export namespace Prisma {
 
 
   /**
+   * Model ScheduleItem
+   */
+
+  export type AggregateScheduleItem = {
+    _count: ScheduleItemCountAggregateOutputType | null
+    _avg: ScheduleItemAvgAggregateOutputType | null
+    _sum: ScheduleItemSumAggregateOutputType | null
+    _min: ScheduleItemMinAggregateOutputType | null
+    _max: ScheduleItemMaxAggregateOutputType | null
+  }
+
+  export type ScheduleItemAvgAggregateOutputType = {
+    frequencyDays: number | null
+    sortOrder: number | null
+  }
+
+  export type ScheduleItemSumAggregateOutputType = {
+    frequencyDays: number | null
+    sortOrder: number | null
+  }
+
+  export type ScheduleItemMinAggregateOutputType = {
+    id: string | null
+    companyId: string | null
+    kind: $Enums.ScheduleItemKind | null
+    category: string | null
+    itemNo: string | null
+    name: string | null
+    smsReference: string | null
+    frequencyLabel: string | null
+    frequencyDays: number | null
+    sortOrder: number | null
+    active: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    deletedAt: Date | null
+  }
+
+  export type ScheduleItemMaxAggregateOutputType = {
+    id: string | null
+    companyId: string | null
+    kind: $Enums.ScheduleItemKind | null
+    category: string | null
+    itemNo: string | null
+    name: string | null
+    smsReference: string | null
+    frequencyLabel: string | null
+    frequencyDays: number | null
+    sortOrder: number | null
+    active: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    deletedAt: Date | null
+  }
+
+  export type ScheduleItemCountAggregateOutputType = {
+    id: number
+    companyId: number
+    kind: number
+    category: number
+    itemNo: number
+    name: number
+    smsReference: number
+    frequencyLabel: number
+    frequencyDays: number
+    sortOrder: number
+    active: number
+    createdAt: number
+    updatedAt: number
+    deletedAt: number
+    _all: number
+  }
+
+
+  export type ScheduleItemAvgAggregateInputType = {
+    frequencyDays?: true
+    sortOrder?: true
+  }
+
+  export type ScheduleItemSumAggregateInputType = {
+    frequencyDays?: true
+    sortOrder?: true
+  }
+
+  export type ScheduleItemMinAggregateInputType = {
+    id?: true
+    companyId?: true
+    kind?: true
+    category?: true
+    itemNo?: true
+    name?: true
+    smsReference?: true
+    frequencyLabel?: true
+    frequencyDays?: true
+    sortOrder?: true
+    active?: true
+    createdAt?: true
+    updatedAt?: true
+    deletedAt?: true
+  }
+
+  export type ScheduleItemMaxAggregateInputType = {
+    id?: true
+    companyId?: true
+    kind?: true
+    category?: true
+    itemNo?: true
+    name?: true
+    smsReference?: true
+    frequencyLabel?: true
+    frequencyDays?: true
+    sortOrder?: true
+    active?: true
+    createdAt?: true
+    updatedAt?: true
+    deletedAt?: true
+  }
+
+  export type ScheduleItemCountAggregateInputType = {
+    id?: true
+    companyId?: true
+    kind?: true
+    category?: true
+    itemNo?: true
+    name?: true
+    smsReference?: true
+    frequencyLabel?: true
+    frequencyDays?: true
+    sortOrder?: true
+    active?: true
+    createdAt?: true
+    updatedAt?: true
+    deletedAt?: true
+    _all?: true
+  }
+
+  export type ScheduleItemAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ScheduleItem to aggregate.
+     */
+    where?: ScheduleItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ScheduleItems to fetch.
+     */
+    orderBy?: ScheduleItemOrderByWithRelationInput | ScheduleItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ScheduleItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ScheduleItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ScheduleItems.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ScheduleItems
+    **/
+    _count?: true | ScheduleItemCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: ScheduleItemAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ScheduleItemSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ScheduleItemMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ScheduleItemMaxAggregateInputType
+  }
+
+  export type GetScheduleItemAggregateType<T extends ScheduleItemAggregateArgs> = {
+        [P in keyof T & keyof AggregateScheduleItem]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateScheduleItem[P]>
+      : GetScalarType<T[P], AggregateScheduleItem[P]>
+  }
+
+
+
+
+  export type ScheduleItemGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ScheduleItemWhereInput
+    orderBy?: ScheduleItemOrderByWithAggregationInput | ScheduleItemOrderByWithAggregationInput[]
+    by: ScheduleItemScalarFieldEnum[] | ScheduleItemScalarFieldEnum
+    having?: ScheduleItemScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ScheduleItemCountAggregateInputType | true
+    _avg?: ScheduleItemAvgAggregateInputType
+    _sum?: ScheduleItemSumAggregateInputType
+    _min?: ScheduleItemMinAggregateInputType
+    _max?: ScheduleItemMaxAggregateInputType
+  }
+
+  export type ScheduleItemGroupByOutputType = {
+    id: string
+    companyId: string
+    kind: $Enums.ScheduleItemKind
+    category: string | null
+    itemNo: string | null
+    name: string
+    smsReference: string | null
+    frequencyLabel: string | null
+    frequencyDays: number | null
+    sortOrder: number
+    active: boolean
+    createdAt: Date
+    updatedAt: Date
+    deletedAt: Date | null
+    _count: ScheduleItemCountAggregateOutputType | null
+    _avg: ScheduleItemAvgAggregateOutputType | null
+    _sum: ScheduleItemSumAggregateOutputType | null
+    _min: ScheduleItemMinAggregateOutputType | null
+    _max: ScheduleItemMaxAggregateOutputType | null
+  }
+
+  type GetScheduleItemGroupByPayload<T extends ScheduleItemGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ScheduleItemGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ScheduleItemGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ScheduleItemGroupByOutputType[P]>
+            : GetScalarType<T[P], ScheduleItemGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ScheduleItemSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    companyId?: boolean
+    kind?: boolean
+    category?: boolean
+    itemNo?: boolean
+    name?: boolean
+    smsReference?: boolean
+    frequencyLabel?: boolean
+    frequencyDays?: boolean
+    sortOrder?: boolean
+    active?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    deletedAt?: boolean
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+    drills?: boolean | ScheduleItem$drillsArgs<ExtArgs>
+    familiarizations?: boolean | ScheduleItem$familiarizationsArgs<ExtArgs>
+    exceptions?: boolean | ScheduleItem$exceptionsArgs<ExtArgs>
+    _count?: boolean | ScheduleItemCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["scheduleItem"]>
+
+  export type ScheduleItemSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    companyId?: boolean
+    kind?: boolean
+    category?: boolean
+    itemNo?: boolean
+    name?: boolean
+    smsReference?: boolean
+    frequencyLabel?: boolean
+    frequencyDays?: boolean
+    sortOrder?: boolean
+    active?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    deletedAt?: boolean
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["scheduleItem"]>
+
+  export type ScheduleItemSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    companyId?: boolean
+    kind?: boolean
+    category?: boolean
+    itemNo?: boolean
+    name?: boolean
+    smsReference?: boolean
+    frequencyLabel?: boolean
+    frequencyDays?: boolean
+    sortOrder?: boolean
+    active?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    deletedAt?: boolean
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["scheduleItem"]>
+
+  export type ScheduleItemSelectScalar = {
+    id?: boolean
+    companyId?: boolean
+    kind?: boolean
+    category?: boolean
+    itemNo?: boolean
+    name?: boolean
+    smsReference?: boolean
+    frequencyLabel?: boolean
+    frequencyDays?: boolean
+    sortOrder?: boolean
+    active?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    deletedAt?: boolean
+  }
+
+  export type ScheduleItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "companyId" | "kind" | "category" | "itemNo" | "name" | "smsReference" | "frequencyLabel" | "frequencyDays" | "sortOrder" | "active" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["scheduleItem"]>
+  export type ScheduleItemInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+    drills?: boolean | ScheduleItem$drillsArgs<ExtArgs>
+    familiarizations?: boolean | ScheduleItem$familiarizationsArgs<ExtArgs>
+    exceptions?: boolean | ScheduleItem$exceptionsArgs<ExtArgs>
+    _count?: boolean | ScheduleItemCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type ScheduleItemIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+  }
+  export type ScheduleItemIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+  }
+
+  export type $ScheduleItemPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ScheduleItem"
+    objects: {
+      company: Prisma.$CompanyPayload<ExtArgs>
+      drills: Prisma.$EmergencyDrillPayload<ExtArgs>[]
+      familiarizations: Prisma.$FamiliarizationRecordPayload<ExtArgs>[]
+      exceptions: Prisma.$ScheduleApplicabilityPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      companyId: string
+      kind: $Enums.ScheduleItemKind
+      category: string | null
+      itemNo: string | null
+      name: string
+      smsReference: string | null
+      frequencyLabel: string | null
+      frequencyDays: number | null
+      sortOrder: number
+      active: boolean
+      createdAt: Date
+      updatedAt: Date
+      deletedAt: Date | null
+    }, ExtArgs["result"]["scheduleItem"]>
+    composites: {}
+  }
+
+  type ScheduleItemGetPayload<S extends boolean | null | undefined | ScheduleItemDefaultArgs> = $Result.GetResult<Prisma.$ScheduleItemPayload, S>
+
+  type ScheduleItemCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ScheduleItemFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ScheduleItemCountAggregateInputType | true
+    }
+
+  export interface ScheduleItemDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ScheduleItem'], meta: { name: 'ScheduleItem' } }
+    /**
+     * Find zero or one ScheduleItem that matches the filter.
+     * @param {ScheduleItemFindUniqueArgs} args - Arguments to find a ScheduleItem
+     * @example
+     * // Get one ScheduleItem
+     * const scheduleItem = await prisma.scheduleItem.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ScheduleItemFindUniqueArgs>(args: SelectSubset<T, ScheduleItemFindUniqueArgs<ExtArgs>>): Prisma__ScheduleItemClient<$Result.GetResult<Prisma.$ScheduleItemPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ScheduleItem that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ScheduleItemFindUniqueOrThrowArgs} args - Arguments to find a ScheduleItem
+     * @example
+     * // Get one ScheduleItem
+     * const scheduleItem = await prisma.scheduleItem.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ScheduleItemFindUniqueOrThrowArgs>(args: SelectSubset<T, ScheduleItemFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ScheduleItemClient<$Result.GetResult<Prisma.$ScheduleItemPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ScheduleItem that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ScheduleItemFindFirstArgs} args - Arguments to find a ScheduleItem
+     * @example
+     * // Get one ScheduleItem
+     * const scheduleItem = await prisma.scheduleItem.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ScheduleItemFindFirstArgs>(args?: SelectSubset<T, ScheduleItemFindFirstArgs<ExtArgs>>): Prisma__ScheduleItemClient<$Result.GetResult<Prisma.$ScheduleItemPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ScheduleItem that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ScheduleItemFindFirstOrThrowArgs} args - Arguments to find a ScheduleItem
+     * @example
+     * // Get one ScheduleItem
+     * const scheduleItem = await prisma.scheduleItem.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ScheduleItemFindFirstOrThrowArgs>(args?: SelectSubset<T, ScheduleItemFindFirstOrThrowArgs<ExtArgs>>): Prisma__ScheduleItemClient<$Result.GetResult<Prisma.$ScheduleItemPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ScheduleItems that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ScheduleItemFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ScheduleItems
+     * const scheduleItems = await prisma.scheduleItem.findMany()
+     * 
+     * // Get first 10 ScheduleItems
+     * const scheduleItems = await prisma.scheduleItem.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const scheduleItemWithIdOnly = await prisma.scheduleItem.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ScheduleItemFindManyArgs>(args?: SelectSubset<T, ScheduleItemFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ScheduleItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ScheduleItem.
+     * @param {ScheduleItemCreateArgs} args - Arguments to create a ScheduleItem.
+     * @example
+     * // Create one ScheduleItem
+     * const ScheduleItem = await prisma.scheduleItem.create({
+     *   data: {
+     *     // ... data to create a ScheduleItem
+     *   }
+     * })
+     * 
+     */
+    create<T extends ScheduleItemCreateArgs>(args: SelectSubset<T, ScheduleItemCreateArgs<ExtArgs>>): Prisma__ScheduleItemClient<$Result.GetResult<Prisma.$ScheduleItemPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ScheduleItems.
+     * @param {ScheduleItemCreateManyArgs} args - Arguments to create many ScheduleItems.
+     * @example
+     * // Create many ScheduleItems
+     * const scheduleItem = await prisma.scheduleItem.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ScheduleItemCreateManyArgs>(args?: SelectSubset<T, ScheduleItemCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ScheduleItems and returns the data saved in the database.
+     * @param {ScheduleItemCreateManyAndReturnArgs} args - Arguments to create many ScheduleItems.
+     * @example
+     * // Create many ScheduleItems
+     * const scheduleItem = await prisma.scheduleItem.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ScheduleItems and only return the `id`
+     * const scheduleItemWithIdOnly = await prisma.scheduleItem.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ScheduleItemCreateManyAndReturnArgs>(args?: SelectSubset<T, ScheduleItemCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ScheduleItemPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a ScheduleItem.
+     * @param {ScheduleItemDeleteArgs} args - Arguments to delete one ScheduleItem.
+     * @example
+     * // Delete one ScheduleItem
+     * const ScheduleItem = await prisma.scheduleItem.delete({
+     *   where: {
+     *     // ... filter to delete one ScheduleItem
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ScheduleItemDeleteArgs>(args: SelectSubset<T, ScheduleItemDeleteArgs<ExtArgs>>): Prisma__ScheduleItemClient<$Result.GetResult<Prisma.$ScheduleItemPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ScheduleItem.
+     * @param {ScheduleItemUpdateArgs} args - Arguments to update one ScheduleItem.
+     * @example
+     * // Update one ScheduleItem
+     * const scheduleItem = await prisma.scheduleItem.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ScheduleItemUpdateArgs>(args: SelectSubset<T, ScheduleItemUpdateArgs<ExtArgs>>): Prisma__ScheduleItemClient<$Result.GetResult<Prisma.$ScheduleItemPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ScheduleItems.
+     * @param {ScheduleItemDeleteManyArgs} args - Arguments to filter ScheduleItems to delete.
+     * @example
+     * // Delete a few ScheduleItems
+     * const { count } = await prisma.scheduleItem.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ScheduleItemDeleteManyArgs>(args?: SelectSubset<T, ScheduleItemDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ScheduleItems.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ScheduleItemUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ScheduleItems
+     * const scheduleItem = await prisma.scheduleItem.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ScheduleItemUpdateManyArgs>(args: SelectSubset<T, ScheduleItemUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ScheduleItems and returns the data updated in the database.
+     * @param {ScheduleItemUpdateManyAndReturnArgs} args - Arguments to update many ScheduleItems.
+     * @example
+     * // Update many ScheduleItems
+     * const scheduleItem = await prisma.scheduleItem.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more ScheduleItems and only return the `id`
+     * const scheduleItemWithIdOnly = await prisma.scheduleItem.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ScheduleItemUpdateManyAndReturnArgs>(args: SelectSubset<T, ScheduleItemUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ScheduleItemPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one ScheduleItem.
+     * @param {ScheduleItemUpsertArgs} args - Arguments to update or create a ScheduleItem.
+     * @example
+     * // Update or create a ScheduleItem
+     * const scheduleItem = await prisma.scheduleItem.upsert({
+     *   create: {
+     *     // ... data to create a ScheduleItem
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ScheduleItem we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ScheduleItemUpsertArgs>(args: SelectSubset<T, ScheduleItemUpsertArgs<ExtArgs>>): Prisma__ScheduleItemClient<$Result.GetResult<Prisma.$ScheduleItemPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ScheduleItems.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ScheduleItemCountArgs} args - Arguments to filter ScheduleItems to count.
+     * @example
+     * // Count the number of ScheduleItems
+     * const count = await prisma.scheduleItem.count({
+     *   where: {
+     *     // ... the filter for the ScheduleItems we want to count
+     *   }
+     * })
+    **/
+    count<T extends ScheduleItemCountArgs>(
+      args?: Subset<T, ScheduleItemCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ScheduleItemCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ScheduleItem.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ScheduleItemAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ScheduleItemAggregateArgs>(args: Subset<T, ScheduleItemAggregateArgs>): Prisma.PrismaPromise<GetScheduleItemAggregateType<T>>
+
+    /**
+     * Group by ScheduleItem.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ScheduleItemGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ScheduleItemGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ScheduleItemGroupByArgs['orderBy'] }
+        : { orderBy?: ScheduleItemGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ScheduleItemGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetScheduleItemGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ScheduleItem model
+   */
+  readonly fields: ScheduleItemFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ScheduleItem.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ScheduleItemClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    company<T extends CompanyDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CompanyDefaultArgs<ExtArgs>>): Prisma__CompanyClient<$Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    drills<T extends ScheduleItem$drillsArgs<ExtArgs> = {}>(args?: Subset<T, ScheduleItem$drillsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$EmergencyDrillPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    familiarizations<T extends ScheduleItem$familiarizationsArgs<ExtArgs> = {}>(args?: Subset<T, ScheduleItem$familiarizationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FamiliarizationRecordPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    exceptions<T extends ScheduleItem$exceptionsArgs<ExtArgs> = {}>(args?: Subset<T, ScheduleItem$exceptionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ScheduleApplicabilityPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ScheduleItem model
+   */
+  interface ScheduleItemFieldRefs {
+    readonly id: FieldRef<"ScheduleItem", 'String'>
+    readonly companyId: FieldRef<"ScheduleItem", 'String'>
+    readonly kind: FieldRef<"ScheduleItem", 'ScheduleItemKind'>
+    readonly category: FieldRef<"ScheduleItem", 'String'>
+    readonly itemNo: FieldRef<"ScheduleItem", 'String'>
+    readonly name: FieldRef<"ScheduleItem", 'String'>
+    readonly smsReference: FieldRef<"ScheduleItem", 'String'>
+    readonly frequencyLabel: FieldRef<"ScheduleItem", 'String'>
+    readonly frequencyDays: FieldRef<"ScheduleItem", 'Int'>
+    readonly sortOrder: FieldRef<"ScheduleItem", 'Int'>
+    readonly active: FieldRef<"ScheduleItem", 'Boolean'>
+    readonly createdAt: FieldRef<"ScheduleItem", 'DateTime'>
+    readonly updatedAt: FieldRef<"ScheduleItem", 'DateTime'>
+    readonly deletedAt: FieldRef<"ScheduleItem", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ScheduleItem findUnique
+   */
+  export type ScheduleItemFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScheduleItem
+     */
+    select?: ScheduleItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ScheduleItem
+     */
+    omit?: ScheduleItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScheduleItemInclude<ExtArgs> | null
+    /**
+     * Filter, which ScheduleItem to fetch.
+     */
+    where: ScheduleItemWhereUniqueInput
+  }
+
+  /**
+   * ScheduleItem findUniqueOrThrow
+   */
+  export type ScheduleItemFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScheduleItem
+     */
+    select?: ScheduleItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ScheduleItem
+     */
+    omit?: ScheduleItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScheduleItemInclude<ExtArgs> | null
+    /**
+     * Filter, which ScheduleItem to fetch.
+     */
+    where: ScheduleItemWhereUniqueInput
+  }
+
+  /**
+   * ScheduleItem findFirst
+   */
+  export type ScheduleItemFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScheduleItem
+     */
+    select?: ScheduleItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ScheduleItem
+     */
+    omit?: ScheduleItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScheduleItemInclude<ExtArgs> | null
+    /**
+     * Filter, which ScheduleItem to fetch.
+     */
+    where?: ScheduleItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ScheduleItems to fetch.
+     */
+    orderBy?: ScheduleItemOrderByWithRelationInput | ScheduleItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ScheduleItems.
+     */
+    cursor?: ScheduleItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ScheduleItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ScheduleItems.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ScheduleItems.
+     */
+    distinct?: ScheduleItemScalarFieldEnum | ScheduleItemScalarFieldEnum[]
+  }
+
+  /**
+   * ScheduleItem findFirstOrThrow
+   */
+  export type ScheduleItemFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScheduleItem
+     */
+    select?: ScheduleItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ScheduleItem
+     */
+    omit?: ScheduleItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScheduleItemInclude<ExtArgs> | null
+    /**
+     * Filter, which ScheduleItem to fetch.
+     */
+    where?: ScheduleItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ScheduleItems to fetch.
+     */
+    orderBy?: ScheduleItemOrderByWithRelationInput | ScheduleItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ScheduleItems.
+     */
+    cursor?: ScheduleItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ScheduleItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ScheduleItems.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ScheduleItems.
+     */
+    distinct?: ScheduleItemScalarFieldEnum | ScheduleItemScalarFieldEnum[]
+  }
+
+  /**
+   * ScheduleItem findMany
+   */
+  export type ScheduleItemFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScheduleItem
+     */
+    select?: ScheduleItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ScheduleItem
+     */
+    omit?: ScheduleItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScheduleItemInclude<ExtArgs> | null
+    /**
+     * Filter, which ScheduleItems to fetch.
+     */
+    where?: ScheduleItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ScheduleItems to fetch.
+     */
+    orderBy?: ScheduleItemOrderByWithRelationInput | ScheduleItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ScheduleItems.
+     */
+    cursor?: ScheduleItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ScheduleItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ScheduleItems.
+     */
+    skip?: number
+    distinct?: ScheduleItemScalarFieldEnum | ScheduleItemScalarFieldEnum[]
+  }
+
+  /**
+   * ScheduleItem create
+   */
+  export type ScheduleItemCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScheduleItem
+     */
+    select?: ScheduleItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ScheduleItem
+     */
+    omit?: ScheduleItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScheduleItemInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ScheduleItem.
+     */
+    data: XOR<ScheduleItemCreateInput, ScheduleItemUncheckedCreateInput>
+  }
+
+  /**
+   * ScheduleItem createMany
+   */
+  export type ScheduleItemCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ScheduleItems.
+     */
+    data: ScheduleItemCreateManyInput | ScheduleItemCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ScheduleItem createManyAndReturn
+   */
+  export type ScheduleItemCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScheduleItem
+     */
+    select?: ScheduleItemSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ScheduleItem
+     */
+    omit?: ScheduleItemOmit<ExtArgs> | null
+    /**
+     * The data used to create many ScheduleItems.
+     */
+    data: ScheduleItemCreateManyInput | ScheduleItemCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScheduleItemIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ScheduleItem update
+   */
+  export type ScheduleItemUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScheduleItem
+     */
+    select?: ScheduleItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ScheduleItem
+     */
+    omit?: ScheduleItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScheduleItemInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ScheduleItem.
+     */
+    data: XOR<ScheduleItemUpdateInput, ScheduleItemUncheckedUpdateInput>
+    /**
+     * Choose, which ScheduleItem to update.
+     */
+    where: ScheduleItemWhereUniqueInput
+  }
+
+  /**
+   * ScheduleItem updateMany
+   */
+  export type ScheduleItemUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ScheduleItems.
+     */
+    data: XOR<ScheduleItemUpdateManyMutationInput, ScheduleItemUncheckedUpdateManyInput>
+    /**
+     * Filter which ScheduleItems to update
+     */
+    where?: ScheduleItemWhereInput
+    /**
+     * Limit how many ScheduleItems to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ScheduleItem updateManyAndReturn
+   */
+  export type ScheduleItemUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScheduleItem
+     */
+    select?: ScheduleItemSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ScheduleItem
+     */
+    omit?: ScheduleItemOmit<ExtArgs> | null
+    /**
+     * The data used to update ScheduleItems.
+     */
+    data: XOR<ScheduleItemUpdateManyMutationInput, ScheduleItemUncheckedUpdateManyInput>
+    /**
+     * Filter which ScheduleItems to update
+     */
+    where?: ScheduleItemWhereInput
+    /**
+     * Limit how many ScheduleItems to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScheduleItemIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ScheduleItem upsert
+   */
+  export type ScheduleItemUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScheduleItem
+     */
+    select?: ScheduleItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ScheduleItem
+     */
+    omit?: ScheduleItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScheduleItemInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ScheduleItem to update in case it exists.
+     */
+    where: ScheduleItemWhereUniqueInput
+    /**
+     * In case the ScheduleItem found by the `where` argument doesn't exist, create a new ScheduleItem with this data.
+     */
+    create: XOR<ScheduleItemCreateInput, ScheduleItemUncheckedCreateInput>
+    /**
+     * In case the ScheduleItem was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ScheduleItemUpdateInput, ScheduleItemUncheckedUpdateInput>
+  }
+
+  /**
+   * ScheduleItem delete
+   */
+  export type ScheduleItemDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScheduleItem
+     */
+    select?: ScheduleItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ScheduleItem
+     */
+    omit?: ScheduleItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScheduleItemInclude<ExtArgs> | null
+    /**
+     * Filter which ScheduleItem to delete.
+     */
+    where: ScheduleItemWhereUniqueInput
+  }
+
+  /**
+   * ScheduleItem deleteMany
+   */
+  export type ScheduleItemDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ScheduleItems to delete
+     */
+    where?: ScheduleItemWhereInput
+    /**
+     * Limit how many ScheduleItems to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ScheduleItem.drills
+   */
+  export type ScheduleItem$drillsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EmergencyDrill
+     */
+    select?: EmergencyDrillSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EmergencyDrill
+     */
+    omit?: EmergencyDrillOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EmergencyDrillInclude<ExtArgs> | null
+    where?: EmergencyDrillWhereInput
+    orderBy?: EmergencyDrillOrderByWithRelationInput | EmergencyDrillOrderByWithRelationInput[]
+    cursor?: EmergencyDrillWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: EmergencyDrillScalarFieldEnum | EmergencyDrillScalarFieldEnum[]
+  }
+
+  /**
+   * ScheduleItem.familiarizations
+   */
+  export type ScheduleItem$familiarizationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FamiliarizationRecord
+     */
+    select?: FamiliarizationRecordSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FamiliarizationRecord
+     */
+    omit?: FamiliarizationRecordOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FamiliarizationRecordInclude<ExtArgs> | null
+    where?: FamiliarizationRecordWhereInput
+    orderBy?: FamiliarizationRecordOrderByWithRelationInput | FamiliarizationRecordOrderByWithRelationInput[]
+    cursor?: FamiliarizationRecordWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: FamiliarizationRecordScalarFieldEnum | FamiliarizationRecordScalarFieldEnum[]
+  }
+
+  /**
+   * ScheduleItem.exceptions
+   */
+  export type ScheduleItem$exceptionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScheduleApplicability
+     */
+    select?: ScheduleApplicabilitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ScheduleApplicability
+     */
+    omit?: ScheduleApplicabilityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScheduleApplicabilityInclude<ExtArgs> | null
+    where?: ScheduleApplicabilityWhereInput
+    orderBy?: ScheduleApplicabilityOrderByWithRelationInput | ScheduleApplicabilityOrderByWithRelationInput[]
+    cursor?: ScheduleApplicabilityWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ScheduleApplicabilityScalarFieldEnum | ScheduleApplicabilityScalarFieldEnum[]
+  }
+
+  /**
+   * ScheduleItem without action
+   */
+  export type ScheduleItemDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScheduleItem
+     */
+    select?: ScheduleItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ScheduleItem
+     */
+    omit?: ScheduleItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScheduleItemInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model ScheduleApplicability
+   */
+
+  export type AggregateScheduleApplicability = {
+    _count: ScheduleApplicabilityCountAggregateOutputType | null
+    _min: ScheduleApplicabilityMinAggregateOutputType | null
+    _max: ScheduleApplicabilityMaxAggregateOutputType | null
+  }
+
+  export type ScheduleApplicabilityMinAggregateOutputType = {
+    id: string | null
+    companyId: string | null
+    vesselId: string | null
+    scheduleItemId: string | null
+    notApplicable: boolean | null
+    reason: string | null
+    createdAt: Date | null
+    createdBy: string | null
+    updatedAt: Date | null
+    updatedBy: string | null
+  }
+
+  export type ScheduleApplicabilityMaxAggregateOutputType = {
+    id: string | null
+    companyId: string | null
+    vesselId: string | null
+    scheduleItemId: string | null
+    notApplicable: boolean | null
+    reason: string | null
+    createdAt: Date | null
+    createdBy: string | null
+    updatedAt: Date | null
+    updatedBy: string | null
+  }
+
+  export type ScheduleApplicabilityCountAggregateOutputType = {
+    id: number
+    companyId: number
+    vesselId: number
+    scheduleItemId: number
+    notApplicable: number
+    reason: number
+    createdAt: number
+    createdBy: number
+    updatedAt: number
+    updatedBy: number
+    _all: number
+  }
+
+
+  export type ScheduleApplicabilityMinAggregateInputType = {
+    id?: true
+    companyId?: true
+    vesselId?: true
+    scheduleItemId?: true
+    notApplicable?: true
+    reason?: true
+    createdAt?: true
+    createdBy?: true
+    updatedAt?: true
+    updatedBy?: true
+  }
+
+  export type ScheduleApplicabilityMaxAggregateInputType = {
+    id?: true
+    companyId?: true
+    vesselId?: true
+    scheduleItemId?: true
+    notApplicable?: true
+    reason?: true
+    createdAt?: true
+    createdBy?: true
+    updatedAt?: true
+    updatedBy?: true
+  }
+
+  export type ScheduleApplicabilityCountAggregateInputType = {
+    id?: true
+    companyId?: true
+    vesselId?: true
+    scheduleItemId?: true
+    notApplicable?: true
+    reason?: true
+    createdAt?: true
+    createdBy?: true
+    updatedAt?: true
+    updatedBy?: true
+    _all?: true
+  }
+
+  export type ScheduleApplicabilityAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ScheduleApplicability to aggregate.
+     */
+    where?: ScheduleApplicabilityWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ScheduleApplicabilities to fetch.
+     */
+    orderBy?: ScheduleApplicabilityOrderByWithRelationInput | ScheduleApplicabilityOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ScheduleApplicabilityWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ScheduleApplicabilities from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ScheduleApplicabilities.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ScheduleApplicabilities
+    **/
+    _count?: true | ScheduleApplicabilityCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ScheduleApplicabilityMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ScheduleApplicabilityMaxAggregateInputType
+  }
+
+  export type GetScheduleApplicabilityAggregateType<T extends ScheduleApplicabilityAggregateArgs> = {
+        [P in keyof T & keyof AggregateScheduleApplicability]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateScheduleApplicability[P]>
+      : GetScalarType<T[P], AggregateScheduleApplicability[P]>
+  }
+
+
+
+
+  export type ScheduleApplicabilityGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ScheduleApplicabilityWhereInput
+    orderBy?: ScheduleApplicabilityOrderByWithAggregationInput | ScheduleApplicabilityOrderByWithAggregationInput[]
+    by: ScheduleApplicabilityScalarFieldEnum[] | ScheduleApplicabilityScalarFieldEnum
+    having?: ScheduleApplicabilityScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ScheduleApplicabilityCountAggregateInputType | true
+    _min?: ScheduleApplicabilityMinAggregateInputType
+    _max?: ScheduleApplicabilityMaxAggregateInputType
+  }
+
+  export type ScheduleApplicabilityGroupByOutputType = {
+    id: string
+    companyId: string
+    vesselId: string
+    scheduleItemId: string
+    notApplicable: boolean
+    reason: string | null
+    createdAt: Date
+    createdBy: string | null
+    updatedAt: Date
+    updatedBy: string | null
+    _count: ScheduleApplicabilityCountAggregateOutputType | null
+    _min: ScheduleApplicabilityMinAggregateOutputType | null
+    _max: ScheduleApplicabilityMaxAggregateOutputType | null
+  }
+
+  type GetScheduleApplicabilityGroupByPayload<T extends ScheduleApplicabilityGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ScheduleApplicabilityGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ScheduleApplicabilityGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ScheduleApplicabilityGroupByOutputType[P]>
+            : GetScalarType<T[P], ScheduleApplicabilityGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ScheduleApplicabilitySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    companyId?: boolean
+    vesselId?: boolean
+    scheduleItemId?: boolean
+    notApplicable?: boolean
+    reason?: boolean
+    createdAt?: boolean
+    createdBy?: boolean
+    updatedAt?: boolean
+    updatedBy?: boolean
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+    vessel?: boolean | VesselDefaultArgs<ExtArgs>
+    scheduleItem?: boolean | ScheduleItemDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["scheduleApplicability"]>
+
+  export type ScheduleApplicabilitySelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    companyId?: boolean
+    vesselId?: boolean
+    scheduleItemId?: boolean
+    notApplicable?: boolean
+    reason?: boolean
+    createdAt?: boolean
+    createdBy?: boolean
+    updatedAt?: boolean
+    updatedBy?: boolean
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+    vessel?: boolean | VesselDefaultArgs<ExtArgs>
+    scheduleItem?: boolean | ScheduleItemDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["scheduleApplicability"]>
+
+  export type ScheduleApplicabilitySelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    companyId?: boolean
+    vesselId?: boolean
+    scheduleItemId?: boolean
+    notApplicable?: boolean
+    reason?: boolean
+    createdAt?: boolean
+    createdBy?: boolean
+    updatedAt?: boolean
+    updatedBy?: boolean
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+    vessel?: boolean | VesselDefaultArgs<ExtArgs>
+    scheduleItem?: boolean | ScheduleItemDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["scheduleApplicability"]>
+
+  export type ScheduleApplicabilitySelectScalar = {
+    id?: boolean
+    companyId?: boolean
+    vesselId?: boolean
+    scheduleItemId?: boolean
+    notApplicable?: boolean
+    reason?: boolean
+    createdAt?: boolean
+    createdBy?: boolean
+    updatedAt?: boolean
+    updatedBy?: boolean
+  }
+
+  export type ScheduleApplicabilityOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "companyId" | "vesselId" | "scheduleItemId" | "notApplicable" | "reason" | "createdAt" | "createdBy" | "updatedAt" | "updatedBy", ExtArgs["result"]["scheduleApplicability"]>
+  export type ScheduleApplicabilityInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+    vessel?: boolean | VesselDefaultArgs<ExtArgs>
+    scheduleItem?: boolean | ScheduleItemDefaultArgs<ExtArgs>
+  }
+  export type ScheduleApplicabilityIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+    vessel?: boolean | VesselDefaultArgs<ExtArgs>
+    scheduleItem?: boolean | ScheduleItemDefaultArgs<ExtArgs>
+  }
+  export type ScheduleApplicabilityIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+    vessel?: boolean | VesselDefaultArgs<ExtArgs>
+    scheduleItem?: boolean | ScheduleItemDefaultArgs<ExtArgs>
+  }
+
+  export type $ScheduleApplicabilityPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ScheduleApplicability"
+    objects: {
+      company: Prisma.$CompanyPayload<ExtArgs>
+      vessel: Prisma.$VesselPayload<ExtArgs>
+      scheduleItem: Prisma.$ScheduleItemPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      companyId: string
+      vesselId: string
+      scheduleItemId: string
+      notApplicable: boolean
+      reason: string | null
+      createdAt: Date
+      createdBy: string | null
+      updatedAt: Date
+      updatedBy: string | null
+    }, ExtArgs["result"]["scheduleApplicability"]>
+    composites: {}
+  }
+
+  type ScheduleApplicabilityGetPayload<S extends boolean | null | undefined | ScheduleApplicabilityDefaultArgs> = $Result.GetResult<Prisma.$ScheduleApplicabilityPayload, S>
+
+  type ScheduleApplicabilityCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ScheduleApplicabilityFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ScheduleApplicabilityCountAggregateInputType | true
+    }
+
+  export interface ScheduleApplicabilityDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ScheduleApplicability'], meta: { name: 'ScheduleApplicability' } }
+    /**
+     * Find zero or one ScheduleApplicability that matches the filter.
+     * @param {ScheduleApplicabilityFindUniqueArgs} args - Arguments to find a ScheduleApplicability
+     * @example
+     * // Get one ScheduleApplicability
+     * const scheduleApplicability = await prisma.scheduleApplicability.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ScheduleApplicabilityFindUniqueArgs>(args: SelectSubset<T, ScheduleApplicabilityFindUniqueArgs<ExtArgs>>): Prisma__ScheduleApplicabilityClient<$Result.GetResult<Prisma.$ScheduleApplicabilityPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ScheduleApplicability that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ScheduleApplicabilityFindUniqueOrThrowArgs} args - Arguments to find a ScheduleApplicability
+     * @example
+     * // Get one ScheduleApplicability
+     * const scheduleApplicability = await prisma.scheduleApplicability.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ScheduleApplicabilityFindUniqueOrThrowArgs>(args: SelectSubset<T, ScheduleApplicabilityFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ScheduleApplicabilityClient<$Result.GetResult<Prisma.$ScheduleApplicabilityPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ScheduleApplicability that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ScheduleApplicabilityFindFirstArgs} args - Arguments to find a ScheduleApplicability
+     * @example
+     * // Get one ScheduleApplicability
+     * const scheduleApplicability = await prisma.scheduleApplicability.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ScheduleApplicabilityFindFirstArgs>(args?: SelectSubset<T, ScheduleApplicabilityFindFirstArgs<ExtArgs>>): Prisma__ScheduleApplicabilityClient<$Result.GetResult<Prisma.$ScheduleApplicabilityPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ScheduleApplicability that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ScheduleApplicabilityFindFirstOrThrowArgs} args - Arguments to find a ScheduleApplicability
+     * @example
+     * // Get one ScheduleApplicability
+     * const scheduleApplicability = await prisma.scheduleApplicability.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ScheduleApplicabilityFindFirstOrThrowArgs>(args?: SelectSubset<T, ScheduleApplicabilityFindFirstOrThrowArgs<ExtArgs>>): Prisma__ScheduleApplicabilityClient<$Result.GetResult<Prisma.$ScheduleApplicabilityPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ScheduleApplicabilities that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ScheduleApplicabilityFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ScheduleApplicabilities
+     * const scheduleApplicabilities = await prisma.scheduleApplicability.findMany()
+     * 
+     * // Get first 10 ScheduleApplicabilities
+     * const scheduleApplicabilities = await prisma.scheduleApplicability.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const scheduleApplicabilityWithIdOnly = await prisma.scheduleApplicability.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ScheduleApplicabilityFindManyArgs>(args?: SelectSubset<T, ScheduleApplicabilityFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ScheduleApplicabilityPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ScheduleApplicability.
+     * @param {ScheduleApplicabilityCreateArgs} args - Arguments to create a ScheduleApplicability.
+     * @example
+     * // Create one ScheduleApplicability
+     * const ScheduleApplicability = await prisma.scheduleApplicability.create({
+     *   data: {
+     *     // ... data to create a ScheduleApplicability
+     *   }
+     * })
+     * 
+     */
+    create<T extends ScheduleApplicabilityCreateArgs>(args: SelectSubset<T, ScheduleApplicabilityCreateArgs<ExtArgs>>): Prisma__ScheduleApplicabilityClient<$Result.GetResult<Prisma.$ScheduleApplicabilityPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ScheduleApplicabilities.
+     * @param {ScheduleApplicabilityCreateManyArgs} args - Arguments to create many ScheduleApplicabilities.
+     * @example
+     * // Create many ScheduleApplicabilities
+     * const scheduleApplicability = await prisma.scheduleApplicability.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ScheduleApplicabilityCreateManyArgs>(args?: SelectSubset<T, ScheduleApplicabilityCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ScheduleApplicabilities and returns the data saved in the database.
+     * @param {ScheduleApplicabilityCreateManyAndReturnArgs} args - Arguments to create many ScheduleApplicabilities.
+     * @example
+     * // Create many ScheduleApplicabilities
+     * const scheduleApplicability = await prisma.scheduleApplicability.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ScheduleApplicabilities and only return the `id`
+     * const scheduleApplicabilityWithIdOnly = await prisma.scheduleApplicability.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ScheduleApplicabilityCreateManyAndReturnArgs>(args?: SelectSubset<T, ScheduleApplicabilityCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ScheduleApplicabilityPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a ScheduleApplicability.
+     * @param {ScheduleApplicabilityDeleteArgs} args - Arguments to delete one ScheduleApplicability.
+     * @example
+     * // Delete one ScheduleApplicability
+     * const ScheduleApplicability = await prisma.scheduleApplicability.delete({
+     *   where: {
+     *     // ... filter to delete one ScheduleApplicability
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ScheduleApplicabilityDeleteArgs>(args: SelectSubset<T, ScheduleApplicabilityDeleteArgs<ExtArgs>>): Prisma__ScheduleApplicabilityClient<$Result.GetResult<Prisma.$ScheduleApplicabilityPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ScheduleApplicability.
+     * @param {ScheduleApplicabilityUpdateArgs} args - Arguments to update one ScheduleApplicability.
+     * @example
+     * // Update one ScheduleApplicability
+     * const scheduleApplicability = await prisma.scheduleApplicability.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ScheduleApplicabilityUpdateArgs>(args: SelectSubset<T, ScheduleApplicabilityUpdateArgs<ExtArgs>>): Prisma__ScheduleApplicabilityClient<$Result.GetResult<Prisma.$ScheduleApplicabilityPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ScheduleApplicabilities.
+     * @param {ScheduleApplicabilityDeleteManyArgs} args - Arguments to filter ScheduleApplicabilities to delete.
+     * @example
+     * // Delete a few ScheduleApplicabilities
+     * const { count } = await prisma.scheduleApplicability.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ScheduleApplicabilityDeleteManyArgs>(args?: SelectSubset<T, ScheduleApplicabilityDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ScheduleApplicabilities.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ScheduleApplicabilityUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ScheduleApplicabilities
+     * const scheduleApplicability = await prisma.scheduleApplicability.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ScheduleApplicabilityUpdateManyArgs>(args: SelectSubset<T, ScheduleApplicabilityUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ScheduleApplicabilities and returns the data updated in the database.
+     * @param {ScheduleApplicabilityUpdateManyAndReturnArgs} args - Arguments to update many ScheduleApplicabilities.
+     * @example
+     * // Update many ScheduleApplicabilities
+     * const scheduleApplicability = await prisma.scheduleApplicability.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more ScheduleApplicabilities and only return the `id`
+     * const scheduleApplicabilityWithIdOnly = await prisma.scheduleApplicability.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ScheduleApplicabilityUpdateManyAndReturnArgs>(args: SelectSubset<T, ScheduleApplicabilityUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ScheduleApplicabilityPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one ScheduleApplicability.
+     * @param {ScheduleApplicabilityUpsertArgs} args - Arguments to update or create a ScheduleApplicability.
+     * @example
+     * // Update or create a ScheduleApplicability
+     * const scheduleApplicability = await prisma.scheduleApplicability.upsert({
+     *   create: {
+     *     // ... data to create a ScheduleApplicability
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ScheduleApplicability we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ScheduleApplicabilityUpsertArgs>(args: SelectSubset<T, ScheduleApplicabilityUpsertArgs<ExtArgs>>): Prisma__ScheduleApplicabilityClient<$Result.GetResult<Prisma.$ScheduleApplicabilityPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ScheduleApplicabilities.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ScheduleApplicabilityCountArgs} args - Arguments to filter ScheduleApplicabilities to count.
+     * @example
+     * // Count the number of ScheduleApplicabilities
+     * const count = await prisma.scheduleApplicability.count({
+     *   where: {
+     *     // ... the filter for the ScheduleApplicabilities we want to count
+     *   }
+     * })
+    **/
+    count<T extends ScheduleApplicabilityCountArgs>(
+      args?: Subset<T, ScheduleApplicabilityCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ScheduleApplicabilityCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ScheduleApplicability.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ScheduleApplicabilityAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ScheduleApplicabilityAggregateArgs>(args: Subset<T, ScheduleApplicabilityAggregateArgs>): Prisma.PrismaPromise<GetScheduleApplicabilityAggregateType<T>>
+
+    /**
+     * Group by ScheduleApplicability.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ScheduleApplicabilityGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ScheduleApplicabilityGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ScheduleApplicabilityGroupByArgs['orderBy'] }
+        : { orderBy?: ScheduleApplicabilityGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ScheduleApplicabilityGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetScheduleApplicabilityGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ScheduleApplicability model
+   */
+  readonly fields: ScheduleApplicabilityFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ScheduleApplicability.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ScheduleApplicabilityClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    company<T extends CompanyDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CompanyDefaultArgs<ExtArgs>>): Prisma__CompanyClient<$Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    vessel<T extends VesselDefaultArgs<ExtArgs> = {}>(args?: Subset<T, VesselDefaultArgs<ExtArgs>>): Prisma__VesselClient<$Result.GetResult<Prisma.$VesselPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    scheduleItem<T extends ScheduleItemDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ScheduleItemDefaultArgs<ExtArgs>>): Prisma__ScheduleItemClient<$Result.GetResult<Prisma.$ScheduleItemPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ScheduleApplicability model
+   */
+  interface ScheduleApplicabilityFieldRefs {
+    readonly id: FieldRef<"ScheduleApplicability", 'String'>
+    readonly companyId: FieldRef<"ScheduleApplicability", 'String'>
+    readonly vesselId: FieldRef<"ScheduleApplicability", 'String'>
+    readonly scheduleItemId: FieldRef<"ScheduleApplicability", 'String'>
+    readonly notApplicable: FieldRef<"ScheduleApplicability", 'Boolean'>
+    readonly reason: FieldRef<"ScheduleApplicability", 'String'>
+    readonly createdAt: FieldRef<"ScheduleApplicability", 'DateTime'>
+    readonly createdBy: FieldRef<"ScheduleApplicability", 'String'>
+    readonly updatedAt: FieldRef<"ScheduleApplicability", 'DateTime'>
+    readonly updatedBy: FieldRef<"ScheduleApplicability", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ScheduleApplicability findUnique
+   */
+  export type ScheduleApplicabilityFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScheduleApplicability
+     */
+    select?: ScheduleApplicabilitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ScheduleApplicability
+     */
+    omit?: ScheduleApplicabilityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScheduleApplicabilityInclude<ExtArgs> | null
+    /**
+     * Filter, which ScheduleApplicability to fetch.
+     */
+    where: ScheduleApplicabilityWhereUniqueInput
+  }
+
+  /**
+   * ScheduleApplicability findUniqueOrThrow
+   */
+  export type ScheduleApplicabilityFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScheduleApplicability
+     */
+    select?: ScheduleApplicabilitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ScheduleApplicability
+     */
+    omit?: ScheduleApplicabilityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScheduleApplicabilityInclude<ExtArgs> | null
+    /**
+     * Filter, which ScheduleApplicability to fetch.
+     */
+    where: ScheduleApplicabilityWhereUniqueInput
+  }
+
+  /**
+   * ScheduleApplicability findFirst
+   */
+  export type ScheduleApplicabilityFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScheduleApplicability
+     */
+    select?: ScheduleApplicabilitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ScheduleApplicability
+     */
+    omit?: ScheduleApplicabilityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScheduleApplicabilityInclude<ExtArgs> | null
+    /**
+     * Filter, which ScheduleApplicability to fetch.
+     */
+    where?: ScheduleApplicabilityWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ScheduleApplicabilities to fetch.
+     */
+    orderBy?: ScheduleApplicabilityOrderByWithRelationInput | ScheduleApplicabilityOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ScheduleApplicabilities.
+     */
+    cursor?: ScheduleApplicabilityWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ScheduleApplicabilities from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ScheduleApplicabilities.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ScheduleApplicabilities.
+     */
+    distinct?: ScheduleApplicabilityScalarFieldEnum | ScheduleApplicabilityScalarFieldEnum[]
+  }
+
+  /**
+   * ScheduleApplicability findFirstOrThrow
+   */
+  export type ScheduleApplicabilityFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScheduleApplicability
+     */
+    select?: ScheduleApplicabilitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ScheduleApplicability
+     */
+    omit?: ScheduleApplicabilityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScheduleApplicabilityInclude<ExtArgs> | null
+    /**
+     * Filter, which ScheduleApplicability to fetch.
+     */
+    where?: ScheduleApplicabilityWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ScheduleApplicabilities to fetch.
+     */
+    orderBy?: ScheduleApplicabilityOrderByWithRelationInput | ScheduleApplicabilityOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ScheduleApplicabilities.
+     */
+    cursor?: ScheduleApplicabilityWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ScheduleApplicabilities from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ScheduleApplicabilities.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ScheduleApplicabilities.
+     */
+    distinct?: ScheduleApplicabilityScalarFieldEnum | ScheduleApplicabilityScalarFieldEnum[]
+  }
+
+  /**
+   * ScheduleApplicability findMany
+   */
+  export type ScheduleApplicabilityFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScheduleApplicability
+     */
+    select?: ScheduleApplicabilitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ScheduleApplicability
+     */
+    omit?: ScheduleApplicabilityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScheduleApplicabilityInclude<ExtArgs> | null
+    /**
+     * Filter, which ScheduleApplicabilities to fetch.
+     */
+    where?: ScheduleApplicabilityWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ScheduleApplicabilities to fetch.
+     */
+    orderBy?: ScheduleApplicabilityOrderByWithRelationInput | ScheduleApplicabilityOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ScheduleApplicabilities.
+     */
+    cursor?: ScheduleApplicabilityWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ScheduleApplicabilities from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ScheduleApplicabilities.
+     */
+    skip?: number
+    distinct?: ScheduleApplicabilityScalarFieldEnum | ScheduleApplicabilityScalarFieldEnum[]
+  }
+
+  /**
+   * ScheduleApplicability create
+   */
+  export type ScheduleApplicabilityCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScheduleApplicability
+     */
+    select?: ScheduleApplicabilitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ScheduleApplicability
+     */
+    omit?: ScheduleApplicabilityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScheduleApplicabilityInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ScheduleApplicability.
+     */
+    data: XOR<ScheduleApplicabilityCreateInput, ScheduleApplicabilityUncheckedCreateInput>
+  }
+
+  /**
+   * ScheduleApplicability createMany
+   */
+  export type ScheduleApplicabilityCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ScheduleApplicabilities.
+     */
+    data: ScheduleApplicabilityCreateManyInput | ScheduleApplicabilityCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ScheduleApplicability createManyAndReturn
+   */
+  export type ScheduleApplicabilityCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScheduleApplicability
+     */
+    select?: ScheduleApplicabilitySelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ScheduleApplicability
+     */
+    omit?: ScheduleApplicabilityOmit<ExtArgs> | null
+    /**
+     * The data used to create many ScheduleApplicabilities.
+     */
+    data: ScheduleApplicabilityCreateManyInput | ScheduleApplicabilityCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScheduleApplicabilityIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ScheduleApplicability update
+   */
+  export type ScheduleApplicabilityUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScheduleApplicability
+     */
+    select?: ScheduleApplicabilitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ScheduleApplicability
+     */
+    omit?: ScheduleApplicabilityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScheduleApplicabilityInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ScheduleApplicability.
+     */
+    data: XOR<ScheduleApplicabilityUpdateInput, ScheduleApplicabilityUncheckedUpdateInput>
+    /**
+     * Choose, which ScheduleApplicability to update.
+     */
+    where: ScheduleApplicabilityWhereUniqueInput
+  }
+
+  /**
+   * ScheduleApplicability updateMany
+   */
+  export type ScheduleApplicabilityUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ScheduleApplicabilities.
+     */
+    data: XOR<ScheduleApplicabilityUpdateManyMutationInput, ScheduleApplicabilityUncheckedUpdateManyInput>
+    /**
+     * Filter which ScheduleApplicabilities to update
+     */
+    where?: ScheduleApplicabilityWhereInput
+    /**
+     * Limit how many ScheduleApplicabilities to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ScheduleApplicability updateManyAndReturn
+   */
+  export type ScheduleApplicabilityUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScheduleApplicability
+     */
+    select?: ScheduleApplicabilitySelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ScheduleApplicability
+     */
+    omit?: ScheduleApplicabilityOmit<ExtArgs> | null
+    /**
+     * The data used to update ScheduleApplicabilities.
+     */
+    data: XOR<ScheduleApplicabilityUpdateManyMutationInput, ScheduleApplicabilityUncheckedUpdateManyInput>
+    /**
+     * Filter which ScheduleApplicabilities to update
+     */
+    where?: ScheduleApplicabilityWhereInput
+    /**
+     * Limit how many ScheduleApplicabilities to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScheduleApplicabilityIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ScheduleApplicability upsert
+   */
+  export type ScheduleApplicabilityUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScheduleApplicability
+     */
+    select?: ScheduleApplicabilitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ScheduleApplicability
+     */
+    omit?: ScheduleApplicabilityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScheduleApplicabilityInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ScheduleApplicability to update in case it exists.
+     */
+    where: ScheduleApplicabilityWhereUniqueInput
+    /**
+     * In case the ScheduleApplicability found by the `where` argument doesn't exist, create a new ScheduleApplicability with this data.
+     */
+    create: XOR<ScheduleApplicabilityCreateInput, ScheduleApplicabilityUncheckedCreateInput>
+    /**
+     * In case the ScheduleApplicability was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ScheduleApplicabilityUpdateInput, ScheduleApplicabilityUncheckedUpdateInput>
+  }
+
+  /**
+   * ScheduleApplicability delete
+   */
+  export type ScheduleApplicabilityDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScheduleApplicability
+     */
+    select?: ScheduleApplicabilitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ScheduleApplicability
+     */
+    omit?: ScheduleApplicabilityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScheduleApplicabilityInclude<ExtArgs> | null
+    /**
+     * Filter which ScheduleApplicability to delete.
+     */
+    where: ScheduleApplicabilityWhereUniqueInput
+  }
+
+  /**
+   * ScheduleApplicability deleteMany
+   */
+  export type ScheduleApplicabilityDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ScheduleApplicabilities to delete
+     */
+    where?: ScheduleApplicabilityWhereInput
+    /**
+     * Limit how many ScheduleApplicabilities to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ScheduleApplicability without action
+   */
+  export type ScheduleApplicabilityDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScheduleApplicability
+     */
+    select?: ScheduleApplicabilitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ScheduleApplicability
+     */
+    omit?: ScheduleApplicabilityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScheduleApplicabilityInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Model EmergencyDrill
    */
 
@@ -51272,12 +54445,16 @@ export namespace Prisma {
     companyId: string | null
     refNo: string | null
     vesselId: string | null
-    drillType: $Enums.DrillType | null
+    scheduleItemId: string | null
     drillDate: Date | null
-    scenario: string | null
+    drillTime: string | null
+    position: string | null
     participants: string | null
     conductedBy: string | null
-    observations: string | null
+    details: string | null
+    deficiencies: string | null
+    correctiveAction: string | null
+    vesselRemarks: string | null
     status: $Enums.FindingStatus | null
     closedAt: Date | null
     createdAt: Date | null
@@ -51293,12 +54470,16 @@ export namespace Prisma {
     companyId: string | null
     refNo: string | null
     vesselId: string | null
-    drillType: $Enums.DrillType | null
+    scheduleItemId: string | null
     drillDate: Date | null
-    scenario: string | null
+    drillTime: string | null
+    position: string | null
     participants: string | null
     conductedBy: string | null
-    observations: string | null
+    details: string | null
+    deficiencies: string | null
+    correctiveAction: string | null
+    vesselRemarks: string | null
     status: $Enums.FindingStatus | null
     closedAt: Date | null
     createdAt: Date | null
@@ -51314,12 +54495,16 @@ export namespace Prisma {
     companyId: number
     refNo: number
     vesselId: number
-    drillType: number
+    scheduleItemId: number
     drillDate: number
-    scenario: number
+    drillTime: number
+    position: number
     participants: number
     conductedBy: number
-    observations: number
+    details: number
+    deficiencies: number
+    correctiveAction: number
+    vesselRemarks: number
     status: number
     closedAt: number
     createdAt: number
@@ -51337,12 +54522,16 @@ export namespace Prisma {
     companyId?: true
     refNo?: true
     vesselId?: true
-    drillType?: true
+    scheduleItemId?: true
     drillDate?: true
-    scenario?: true
+    drillTime?: true
+    position?: true
     participants?: true
     conductedBy?: true
-    observations?: true
+    details?: true
+    deficiencies?: true
+    correctiveAction?: true
+    vesselRemarks?: true
     status?: true
     closedAt?: true
     createdAt?: true
@@ -51358,12 +54547,16 @@ export namespace Prisma {
     companyId?: true
     refNo?: true
     vesselId?: true
-    drillType?: true
+    scheduleItemId?: true
     drillDate?: true
-    scenario?: true
+    drillTime?: true
+    position?: true
     participants?: true
     conductedBy?: true
-    observations?: true
+    details?: true
+    deficiencies?: true
+    correctiveAction?: true
+    vesselRemarks?: true
     status?: true
     closedAt?: true
     createdAt?: true
@@ -51379,12 +54572,16 @@ export namespace Prisma {
     companyId?: true
     refNo?: true
     vesselId?: true
-    drillType?: true
+    scheduleItemId?: true
     drillDate?: true
-    scenario?: true
+    drillTime?: true
+    position?: true
     participants?: true
     conductedBy?: true
-    observations?: true
+    details?: true
+    deficiencies?: true
+    correctiveAction?: true
+    vesselRemarks?: true
     status?: true
     closedAt?: true
     createdAt?: true
@@ -51473,12 +54670,16 @@ export namespace Prisma {
     companyId: string
     refNo: string
     vesselId: string
-    drillType: $Enums.DrillType
+    scheduleItemId: string
     drillDate: Date
-    scenario: string | null
+    drillTime: string | null
+    position: string | null
     participants: string | null
     conductedBy: string | null
-    observations: string | null
+    details: string | null
+    deficiencies: string | null
+    correctiveAction: string | null
+    vesselRemarks: string | null
     status: $Enums.FindingStatus
     closedAt: Date | null
     createdAt: Date
@@ -51511,12 +54712,16 @@ export namespace Prisma {
     companyId?: boolean
     refNo?: boolean
     vesselId?: boolean
-    drillType?: boolean
+    scheduleItemId?: boolean
     drillDate?: boolean
-    scenario?: boolean
+    drillTime?: boolean
+    position?: boolean
     participants?: boolean
     conductedBy?: boolean
-    observations?: boolean
+    details?: boolean
+    deficiencies?: boolean
+    correctiveAction?: boolean
+    vesselRemarks?: boolean
     status?: boolean
     closedAt?: boolean
     createdAt?: boolean
@@ -51527,6 +54732,7 @@ export namespace Prisma {
     deletedBy?: boolean
     company?: boolean | CompanyDefaultArgs<ExtArgs>
     vessel?: boolean | VesselDefaultArgs<ExtArgs>
+    scheduleItem?: boolean | ScheduleItemDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["emergencyDrill"]>
 
   export type EmergencyDrillSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -51534,12 +54740,16 @@ export namespace Prisma {
     companyId?: boolean
     refNo?: boolean
     vesselId?: boolean
-    drillType?: boolean
+    scheduleItemId?: boolean
     drillDate?: boolean
-    scenario?: boolean
+    drillTime?: boolean
+    position?: boolean
     participants?: boolean
     conductedBy?: boolean
-    observations?: boolean
+    details?: boolean
+    deficiencies?: boolean
+    correctiveAction?: boolean
+    vesselRemarks?: boolean
     status?: boolean
     closedAt?: boolean
     createdAt?: boolean
@@ -51550,6 +54760,7 @@ export namespace Prisma {
     deletedBy?: boolean
     company?: boolean | CompanyDefaultArgs<ExtArgs>
     vessel?: boolean | VesselDefaultArgs<ExtArgs>
+    scheduleItem?: boolean | ScheduleItemDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["emergencyDrill"]>
 
   export type EmergencyDrillSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -51557,12 +54768,16 @@ export namespace Prisma {
     companyId?: boolean
     refNo?: boolean
     vesselId?: boolean
-    drillType?: boolean
+    scheduleItemId?: boolean
     drillDate?: boolean
-    scenario?: boolean
+    drillTime?: boolean
+    position?: boolean
     participants?: boolean
     conductedBy?: boolean
-    observations?: boolean
+    details?: boolean
+    deficiencies?: boolean
+    correctiveAction?: boolean
+    vesselRemarks?: boolean
     status?: boolean
     closedAt?: boolean
     createdAt?: boolean
@@ -51573,6 +54788,7 @@ export namespace Prisma {
     deletedBy?: boolean
     company?: boolean | CompanyDefaultArgs<ExtArgs>
     vessel?: boolean | VesselDefaultArgs<ExtArgs>
+    scheduleItem?: boolean | ScheduleItemDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["emergencyDrill"]>
 
   export type EmergencyDrillSelectScalar = {
@@ -51580,12 +54796,16 @@ export namespace Prisma {
     companyId?: boolean
     refNo?: boolean
     vesselId?: boolean
-    drillType?: boolean
+    scheduleItemId?: boolean
     drillDate?: boolean
-    scenario?: boolean
+    drillTime?: boolean
+    position?: boolean
     participants?: boolean
     conductedBy?: boolean
-    observations?: boolean
+    details?: boolean
+    deficiencies?: boolean
+    correctiveAction?: boolean
+    vesselRemarks?: boolean
     status?: boolean
     closedAt?: boolean
     createdAt?: boolean
@@ -51596,18 +54816,21 @@ export namespace Prisma {
     deletedBy?: boolean
   }
 
-  export type EmergencyDrillOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "companyId" | "refNo" | "vesselId" | "drillType" | "drillDate" | "scenario" | "participants" | "conductedBy" | "observations" | "status" | "closedAt" | "createdAt" | "updatedAt" | "createdBy" | "updatedBy" | "deletedAt" | "deletedBy", ExtArgs["result"]["emergencyDrill"]>
+  export type EmergencyDrillOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "companyId" | "refNo" | "vesselId" | "scheduleItemId" | "drillDate" | "drillTime" | "position" | "participants" | "conductedBy" | "details" | "deficiencies" | "correctiveAction" | "vesselRemarks" | "status" | "closedAt" | "createdAt" | "updatedAt" | "createdBy" | "updatedBy" | "deletedAt" | "deletedBy", ExtArgs["result"]["emergencyDrill"]>
   export type EmergencyDrillInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     company?: boolean | CompanyDefaultArgs<ExtArgs>
     vessel?: boolean | VesselDefaultArgs<ExtArgs>
+    scheduleItem?: boolean | ScheduleItemDefaultArgs<ExtArgs>
   }
   export type EmergencyDrillIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     company?: boolean | CompanyDefaultArgs<ExtArgs>
     vessel?: boolean | VesselDefaultArgs<ExtArgs>
+    scheduleItem?: boolean | ScheduleItemDefaultArgs<ExtArgs>
   }
   export type EmergencyDrillIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     company?: boolean | CompanyDefaultArgs<ExtArgs>
     vessel?: boolean | VesselDefaultArgs<ExtArgs>
+    scheduleItem?: boolean | ScheduleItemDefaultArgs<ExtArgs>
   }
 
   export type $EmergencyDrillPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -51615,18 +54838,23 @@ export namespace Prisma {
     objects: {
       company: Prisma.$CompanyPayload<ExtArgs>
       vessel: Prisma.$VesselPayload<ExtArgs>
+      scheduleItem: Prisma.$ScheduleItemPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       companyId: string
       refNo: string
       vesselId: string
-      drillType: $Enums.DrillType
+      scheduleItemId: string
       drillDate: Date
-      scenario: string | null
+      drillTime: string | null
+      position: string | null
       participants: string | null
       conductedBy: string | null
-      observations: string | null
+      details: string | null
+      deficiencies: string | null
+      correctiveAction: string | null
+      vesselRemarks: string | null
       status: $Enums.FindingStatus
       closedAt: Date | null
       createdAt: Date
@@ -52031,6 +55259,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     company<T extends CompanyDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CompanyDefaultArgs<ExtArgs>>): Prisma__CompanyClient<$Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     vessel<T extends VesselDefaultArgs<ExtArgs> = {}>(args?: Subset<T, VesselDefaultArgs<ExtArgs>>): Prisma__VesselClient<$Result.GetResult<Prisma.$VesselPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    scheduleItem<T extends ScheduleItemDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ScheduleItemDefaultArgs<ExtArgs>>): Prisma__ScheduleItemClient<$Result.GetResult<Prisma.$ScheduleItemPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -52064,12 +55293,16 @@ export namespace Prisma {
     readonly companyId: FieldRef<"EmergencyDrill", 'String'>
     readonly refNo: FieldRef<"EmergencyDrill", 'String'>
     readonly vesselId: FieldRef<"EmergencyDrill", 'String'>
-    readonly drillType: FieldRef<"EmergencyDrill", 'DrillType'>
+    readonly scheduleItemId: FieldRef<"EmergencyDrill", 'String'>
     readonly drillDate: FieldRef<"EmergencyDrill", 'DateTime'>
-    readonly scenario: FieldRef<"EmergencyDrill", 'String'>
+    readonly drillTime: FieldRef<"EmergencyDrill", 'String'>
+    readonly position: FieldRef<"EmergencyDrill", 'String'>
     readonly participants: FieldRef<"EmergencyDrill", 'String'>
     readonly conductedBy: FieldRef<"EmergencyDrill", 'String'>
-    readonly observations: FieldRef<"EmergencyDrill", 'String'>
+    readonly details: FieldRef<"EmergencyDrill", 'String'>
+    readonly deficiencies: FieldRef<"EmergencyDrill", 'String'>
+    readonly correctiveAction: FieldRef<"EmergencyDrill", 'String'>
+    readonly vesselRemarks: FieldRef<"EmergencyDrill", 'String'>
     readonly status: FieldRef<"EmergencyDrill", 'FindingStatus'>
     readonly closedAt: FieldRef<"EmergencyDrill", 'DateTime'>
     readonly createdAt: FieldRef<"EmergencyDrill", 'DateTime'>
@@ -52489,6 +55722,1184 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: EmergencyDrillInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model FamiliarizationRecord
+   */
+
+  export type AggregateFamiliarizationRecord = {
+    _count: FamiliarizationRecordCountAggregateOutputType | null
+    _min: FamiliarizationRecordMinAggregateOutputType | null
+    _max: FamiliarizationRecordMaxAggregateOutputType | null
+  }
+
+  export type FamiliarizationRecordMinAggregateOutputType = {
+    id: string | null
+    companyId: string | null
+    vesselId: string | null
+    scheduleItemId: string | null
+    completedDate: Date | null
+    notedBy: string | null
+    remarks: string | null
+    createdAt: Date | null
+    createdBy: string | null
+    updatedAt: Date | null
+    updatedBy: string | null
+    deletedAt: Date | null
+    deletedBy: string | null
+  }
+
+  export type FamiliarizationRecordMaxAggregateOutputType = {
+    id: string | null
+    companyId: string | null
+    vesselId: string | null
+    scheduleItemId: string | null
+    completedDate: Date | null
+    notedBy: string | null
+    remarks: string | null
+    createdAt: Date | null
+    createdBy: string | null
+    updatedAt: Date | null
+    updatedBy: string | null
+    deletedAt: Date | null
+    deletedBy: string | null
+  }
+
+  export type FamiliarizationRecordCountAggregateOutputType = {
+    id: number
+    companyId: number
+    vesselId: number
+    scheduleItemId: number
+    completedDate: number
+    notedBy: number
+    remarks: number
+    createdAt: number
+    createdBy: number
+    updatedAt: number
+    updatedBy: number
+    deletedAt: number
+    deletedBy: number
+    _all: number
+  }
+
+
+  export type FamiliarizationRecordMinAggregateInputType = {
+    id?: true
+    companyId?: true
+    vesselId?: true
+    scheduleItemId?: true
+    completedDate?: true
+    notedBy?: true
+    remarks?: true
+    createdAt?: true
+    createdBy?: true
+    updatedAt?: true
+    updatedBy?: true
+    deletedAt?: true
+    deletedBy?: true
+  }
+
+  export type FamiliarizationRecordMaxAggregateInputType = {
+    id?: true
+    companyId?: true
+    vesselId?: true
+    scheduleItemId?: true
+    completedDate?: true
+    notedBy?: true
+    remarks?: true
+    createdAt?: true
+    createdBy?: true
+    updatedAt?: true
+    updatedBy?: true
+    deletedAt?: true
+    deletedBy?: true
+  }
+
+  export type FamiliarizationRecordCountAggregateInputType = {
+    id?: true
+    companyId?: true
+    vesselId?: true
+    scheduleItemId?: true
+    completedDate?: true
+    notedBy?: true
+    remarks?: true
+    createdAt?: true
+    createdBy?: true
+    updatedAt?: true
+    updatedBy?: true
+    deletedAt?: true
+    deletedBy?: true
+    _all?: true
+  }
+
+  export type FamiliarizationRecordAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which FamiliarizationRecord to aggregate.
+     */
+    where?: FamiliarizationRecordWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FamiliarizationRecords to fetch.
+     */
+    orderBy?: FamiliarizationRecordOrderByWithRelationInput | FamiliarizationRecordOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: FamiliarizationRecordWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FamiliarizationRecords from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FamiliarizationRecords.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned FamiliarizationRecords
+    **/
+    _count?: true | FamiliarizationRecordCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: FamiliarizationRecordMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: FamiliarizationRecordMaxAggregateInputType
+  }
+
+  export type GetFamiliarizationRecordAggregateType<T extends FamiliarizationRecordAggregateArgs> = {
+        [P in keyof T & keyof AggregateFamiliarizationRecord]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateFamiliarizationRecord[P]>
+      : GetScalarType<T[P], AggregateFamiliarizationRecord[P]>
+  }
+
+
+
+
+  export type FamiliarizationRecordGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FamiliarizationRecordWhereInput
+    orderBy?: FamiliarizationRecordOrderByWithAggregationInput | FamiliarizationRecordOrderByWithAggregationInput[]
+    by: FamiliarizationRecordScalarFieldEnum[] | FamiliarizationRecordScalarFieldEnum
+    having?: FamiliarizationRecordScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: FamiliarizationRecordCountAggregateInputType | true
+    _min?: FamiliarizationRecordMinAggregateInputType
+    _max?: FamiliarizationRecordMaxAggregateInputType
+  }
+
+  export type FamiliarizationRecordGroupByOutputType = {
+    id: string
+    companyId: string
+    vesselId: string
+    scheduleItemId: string
+    completedDate: Date
+    notedBy: string | null
+    remarks: string | null
+    createdAt: Date
+    createdBy: string | null
+    updatedAt: Date
+    updatedBy: string | null
+    deletedAt: Date | null
+    deletedBy: string | null
+    _count: FamiliarizationRecordCountAggregateOutputType | null
+    _min: FamiliarizationRecordMinAggregateOutputType | null
+    _max: FamiliarizationRecordMaxAggregateOutputType | null
+  }
+
+  type GetFamiliarizationRecordGroupByPayload<T extends FamiliarizationRecordGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<FamiliarizationRecordGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof FamiliarizationRecordGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], FamiliarizationRecordGroupByOutputType[P]>
+            : GetScalarType<T[P], FamiliarizationRecordGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type FamiliarizationRecordSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    companyId?: boolean
+    vesselId?: boolean
+    scheduleItemId?: boolean
+    completedDate?: boolean
+    notedBy?: boolean
+    remarks?: boolean
+    createdAt?: boolean
+    createdBy?: boolean
+    updatedAt?: boolean
+    updatedBy?: boolean
+    deletedAt?: boolean
+    deletedBy?: boolean
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+    vessel?: boolean | VesselDefaultArgs<ExtArgs>
+    scheduleItem?: boolean | ScheduleItemDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["familiarizationRecord"]>
+
+  export type FamiliarizationRecordSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    companyId?: boolean
+    vesselId?: boolean
+    scheduleItemId?: boolean
+    completedDate?: boolean
+    notedBy?: boolean
+    remarks?: boolean
+    createdAt?: boolean
+    createdBy?: boolean
+    updatedAt?: boolean
+    updatedBy?: boolean
+    deletedAt?: boolean
+    deletedBy?: boolean
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+    vessel?: boolean | VesselDefaultArgs<ExtArgs>
+    scheduleItem?: boolean | ScheduleItemDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["familiarizationRecord"]>
+
+  export type FamiliarizationRecordSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    companyId?: boolean
+    vesselId?: boolean
+    scheduleItemId?: boolean
+    completedDate?: boolean
+    notedBy?: boolean
+    remarks?: boolean
+    createdAt?: boolean
+    createdBy?: boolean
+    updatedAt?: boolean
+    updatedBy?: boolean
+    deletedAt?: boolean
+    deletedBy?: boolean
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+    vessel?: boolean | VesselDefaultArgs<ExtArgs>
+    scheduleItem?: boolean | ScheduleItemDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["familiarizationRecord"]>
+
+  export type FamiliarizationRecordSelectScalar = {
+    id?: boolean
+    companyId?: boolean
+    vesselId?: boolean
+    scheduleItemId?: boolean
+    completedDate?: boolean
+    notedBy?: boolean
+    remarks?: boolean
+    createdAt?: boolean
+    createdBy?: boolean
+    updatedAt?: boolean
+    updatedBy?: boolean
+    deletedAt?: boolean
+    deletedBy?: boolean
+  }
+
+  export type FamiliarizationRecordOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "companyId" | "vesselId" | "scheduleItemId" | "completedDate" | "notedBy" | "remarks" | "createdAt" | "createdBy" | "updatedAt" | "updatedBy" | "deletedAt" | "deletedBy", ExtArgs["result"]["familiarizationRecord"]>
+  export type FamiliarizationRecordInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+    vessel?: boolean | VesselDefaultArgs<ExtArgs>
+    scheduleItem?: boolean | ScheduleItemDefaultArgs<ExtArgs>
+  }
+  export type FamiliarizationRecordIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+    vessel?: boolean | VesselDefaultArgs<ExtArgs>
+    scheduleItem?: boolean | ScheduleItemDefaultArgs<ExtArgs>
+  }
+  export type FamiliarizationRecordIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+    vessel?: boolean | VesselDefaultArgs<ExtArgs>
+    scheduleItem?: boolean | ScheduleItemDefaultArgs<ExtArgs>
+  }
+
+  export type $FamiliarizationRecordPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "FamiliarizationRecord"
+    objects: {
+      company: Prisma.$CompanyPayload<ExtArgs>
+      vessel: Prisma.$VesselPayload<ExtArgs>
+      scheduleItem: Prisma.$ScheduleItemPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      companyId: string
+      vesselId: string
+      scheduleItemId: string
+      completedDate: Date
+      notedBy: string | null
+      remarks: string | null
+      createdAt: Date
+      createdBy: string | null
+      updatedAt: Date
+      updatedBy: string | null
+      deletedAt: Date | null
+      deletedBy: string | null
+    }, ExtArgs["result"]["familiarizationRecord"]>
+    composites: {}
+  }
+
+  type FamiliarizationRecordGetPayload<S extends boolean | null | undefined | FamiliarizationRecordDefaultArgs> = $Result.GetResult<Prisma.$FamiliarizationRecordPayload, S>
+
+  type FamiliarizationRecordCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<FamiliarizationRecordFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: FamiliarizationRecordCountAggregateInputType | true
+    }
+
+  export interface FamiliarizationRecordDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['FamiliarizationRecord'], meta: { name: 'FamiliarizationRecord' } }
+    /**
+     * Find zero or one FamiliarizationRecord that matches the filter.
+     * @param {FamiliarizationRecordFindUniqueArgs} args - Arguments to find a FamiliarizationRecord
+     * @example
+     * // Get one FamiliarizationRecord
+     * const familiarizationRecord = await prisma.familiarizationRecord.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends FamiliarizationRecordFindUniqueArgs>(args: SelectSubset<T, FamiliarizationRecordFindUniqueArgs<ExtArgs>>): Prisma__FamiliarizationRecordClient<$Result.GetResult<Prisma.$FamiliarizationRecordPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one FamiliarizationRecord that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {FamiliarizationRecordFindUniqueOrThrowArgs} args - Arguments to find a FamiliarizationRecord
+     * @example
+     * // Get one FamiliarizationRecord
+     * const familiarizationRecord = await prisma.familiarizationRecord.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends FamiliarizationRecordFindUniqueOrThrowArgs>(args: SelectSubset<T, FamiliarizationRecordFindUniqueOrThrowArgs<ExtArgs>>): Prisma__FamiliarizationRecordClient<$Result.GetResult<Prisma.$FamiliarizationRecordPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first FamiliarizationRecord that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FamiliarizationRecordFindFirstArgs} args - Arguments to find a FamiliarizationRecord
+     * @example
+     * // Get one FamiliarizationRecord
+     * const familiarizationRecord = await prisma.familiarizationRecord.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends FamiliarizationRecordFindFirstArgs>(args?: SelectSubset<T, FamiliarizationRecordFindFirstArgs<ExtArgs>>): Prisma__FamiliarizationRecordClient<$Result.GetResult<Prisma.$FamiliarizationRecordPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first FamiliarizationRecord that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FamiliarizationRecordFindFirstOrThrowArgs} args - Arguments to find a FamiliarizationRecord
+     * @example
+     * // Get one FamiliarizationRecord
+     * const familiarizationRecord = await prisma.familiarizationRecord.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends FamiliarizationRecordFindFirstOrThrowArgs>(args?: SelectSubset<T, FamiliarizationRecordFindFirstOrThrowArgs<ExtArgs>>): Prisma__FamiliarizationRecordClient<$Result.GetResult<Prisma.$FamiliarizationRecordPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more FamiliarizationRecords that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FamiliarizationRecordFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all FamiliarizationRecords
+     * const familiarizationRecords = await prisma.familiarizationRecord.findMany()
+     * 
+     * // Get first 10 FamiliarizationRecords
+     * const familiarizationRecords = await prisma.familiarizationRecord.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const familiarizationRecordWithIdOnly = await prisma.familiarizationRecord.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends FamiliarizationRecordFindManyArgs>(args?: SelectSubset<T, FamiliarizationRecordFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FamiliarizationRecordPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a FamiliarizationRecord.
+     * @param {FamiliarizationRecordCreateArgs} args - Arguments to create a FamiliarizationRecord.
+     * @example
+     * // Create one FamiliarizationRecord
+     * const FamiliarizationRecord = await prisma.familiarizationRecord.create({
+     *   data: {
+     *     // ... data to create a FamiliarizationRecord
+     *   }
+     * })
+     * 
+     */
+    create<T extends FamiliarizationRecordCreateArgs>(args: SelectSubset<T, FamiliarizationRecordCreateArgs<ExtArgs>>): Prisma__FamiliarizationRecordClient<$Result.GetResult<Prisma.$FamiliarizationRecordPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many FamiliarizationRecords.
+     * @param {FamiliarizationRecordCreateManyArgs} args - Arguments to create many FamiliarizationRecords.
+     * @example
+     * // Create many FamiliarizationRecords
+     * const familiarizationRecord = await prisma.familiarizationRecord.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends FamiliarizationRecordCreateManyArgs>(args?: SelectSubset<T, FamiliarizationRecordCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many FamiliarizationRecords and returns the data saved in the database.
+     * @param {FamiliarizationRecordCreateManyAndReturnArgs} args - Arguments to create many FamiliarizationRecords.
+     * @example
+     * // Create many FamiliarizationRecords
+     * const familiarizationRecord = await prisma.familiarizationRecord.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many FamiliarizationRecords and only return the `id`
+     * const familiarizationRecordWithIdOnly = await prisma.familiarizationRecord.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends FamiliarizationRecordCreateManyAndReturnArgs>(args?: SelectSubset<T, FamiliarizationRecordCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FamiliarizationRecordPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a FamiliarizationRecord.
+     * @param {FamiliarizationRecordDeleteArgs} args - Arguments to delete one FamiliarizationRecord.
+     * @example
+     * // Delete one FamiliarizationRecord
+     * const FamiliarizationRecord = await prisma.familiarizationRecord.delete({
+     *   where: {
+     *     // ... filter to delete one FamiliarizationRecord
+     *   }
+     * })
+     * 
+     */
+    delete<T extends FamiliarizationRecordDeleteArgs>(args: SelectSubset<T, FamiliarizationRecordDeleteArgs<ExtArgs>>): Prisma__FamiliarizationRecordClient<$Result.GetResult<Prisma.$FamiliarizationRecordPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one FamiliarizationRecord.
+     * @param {FamiliarizationRecordUpdateArgs} args - Arguments to update one FamiliarizationRecord.
+     * @example
+     * // Update one FamiliarizationRecord
+     * const familiarizationRecord = await prisma.familiarizationRecord.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends FamiliarizationRecordUpdateArgs>(args: SelectSubset<T, FamiliarizationRecordUpdateArgs<ExtArgs>>): Prisma__FamiliarizationRecordClient<$Result.GetResult<Prisma.$FamiliarizationRecordPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more FamiliarizationRecords.
+     * @param {FamiliarizationRecordDeleteManyArgs} args - Arguments to filter FamiliarizationRecords to delete.
+     * @example
+     * // Delete a few FamiliarizationRecords
+     * const { count } = await prisma.familiarizationRecord.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends FamiliarizationRecordDeleteManyArgs>(args?: SelectSubset<T, FamiliarizationRecordDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more FamiliarizationRecords.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FamiliarizationRecordUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many FamiliarizationRecords
+     * const familiarizationRecord = await prisma.familiarizationRecord.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends FamiliarizationRecordUpdateManyArgs>(args: SelectSubset<T, FamiliarizationRecordUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more FamiliarizationRecords and returns the data updated in the database.
+     * @param {FamiliarizationRecordUpdateManyAndReturnArgs} args - Arguments to update many FamiliarizationRecords.
+     * @example
+     * // Update many FamiliarizationRecords
+     * const familiarizationRecord = await prisma.familiarizationRecord.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more FamiliarizationRecords and only return the `id`
+     * const familiarizationRecordWithIdOnly = await prisma.familiarizationRecord.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends FamiliarizationRecordUpdateManyAndReturnArgs>(args: SelectSubset<T, FamiliarizationRecordUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FamiliarizationRecordPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one FamiliarizationRecord.
+     * @param {FamiliarizationRecordUpsertArgs} args - Arguments to update or create a FamiliarizationRecord.
+     * @example
+     * // Update or create a FamiliarizationRecord
+     * const familiarizationRecord = await prisma.familiarizationRecord.upsert({
+     *   create: {
+     *     // ... data to create a FamiliarizationRecord
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the FamiliarizationRecord we want to update
+     *   }
+     * })
+     */
+    upsert<T extends FamiliarizationRecordUpsertArgs>(args: SelectSubset<T, FamiliarizationRecordUpsertArgs<ExtArgs>>): Prisma__FamiliarizationRecordClient<$Result.GetResult<Prisma.$FamiliarizationRecordPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of FamiliarizationRecords.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FamiliarizationRecordCountArgs} args - Arguments to filter FamiliarizationRecords to count.
+     * @example
+     * // Count the number of FamiliarizationRecords
+     * const count = await prisma.familiarizationRecord.count({
+     *   where: {
+     *     // ... the filter for the FamiliarizationRecords we want to count
+     *   }
+     * })
+    **/
+    count<T extends FamiliarizationRecordCountArgs>(
+      args?: Subset<T, FamiliarizationRecordCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], FamiliarizationRecordCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a FamiliarizationRecord.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FamiliarizationRecordAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends FamiliarizationRecordAggregateArgs>(args: Subset<T, FamiliarizationRecordAggregateArgs>): Prisma.PrismaPromise<GetFamiliarizationRecordAggregateType<T>>
+
+    /**
+     * Group by FamiliarizationRecord.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FamiliarizationRecordGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends FamiliarizationRecordGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: FamiliarizationRecordGroupByArgs['orderBy'] }
+        : { orderBy?: FamiliarizationRecordGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, FamiliarizationRecordGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetFamiliarizationRecordGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the FamiliarizationRecord model
+   */
+  readonly fields: FamiliarizationRecordFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for FamiliarizationRecord.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__FamiliarizationRecordClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    company<T extends CompanyDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CompanyDefaultArgs<ExtArgs>>): Prisma__CompanyClient<$Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    vessel<T extends VesselDefaultArgs<ExtArgs> = {}>(args?: Subset<T, VesselDefaultArgs<ExtArgs>>): Prisma__VesselClient<$Result.GetResult<Prisma.$VesselPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    scheduleItem<T extends ScheduleItemDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ScheduleItemDefaultArgs<ExtArgs>>): Prisma__ScheduleItemClient<$Result.GetResult<Prisma.$ScheduleItemPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the FamiliarizationRecord model
+   */
+  interface FamiliarizationRecordFieldRefs {
+    readonly id: FieldRef<"FamiliarizationRecord", 'String'>
+    readonly companyId: FieldRef<"FamiliarizationRecord", 'String'>
+    readonly vesselId: FieldRef<"FamiliarizationRecord", 'String'>
+    readonly scheduleItemId: FieldRef<"FamiliarizationRecord", 'String'>
+    readonly completedDate: FieldRef<"FamiliarizationRecord", 'DateTime'>
+    readonly notedBy: FieldRef<"FamiliarizationRecord", 'String'>
+    readonly remarks: FieldRef<"FamiliarizationRecord", 'String'>
+    readonly createdAt: FieldRef<"FamiliarizationRecord", 'DateTime'>
+    readonly createdBy: FieldRef<"FamiliarizationRecord", 'String'>
+    readonly updatedAt: FieldRef<"FamiliarizationRecord", 'DateTime'>
+    readonly updatedBy: FieldRef<"FamiliarizationRecord", 'String'>
+    readonly deletedAt: FieldRef<"FamiliarizationRecord", 'DateTime'>
+    readonly deletedBy: FieldRef<"FamiliarizationRecord", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * FamiliarizationRecord findUnique
+   */
+  export type FamiliarizationRecordFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FamiliarizationRecord
+     */
+    select?: FamiliarizationRecordSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FamiliarizationRecord
+     */
+    omit?: FamiliarizationRecordOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FamiliarizationRecordInclude<ExtArgs> | null
+    /**
+     * Filter, which FamiliarizationRecord to fetch.
+     */
+    where: FamiliarizationRecordWhereUniqueInput
+  }
+
+  /**
+   * FamiliarizationRecord findUniqueOrThrow
+   */
+  export type FamiliarizationRecordFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FamiliarizationRecord
+     */
+    select?: FamiliarizationRecordSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FamiliarizationRecord
+     */
+    omit?: FamiliarizationRecordOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FamiliarizationRecordInclude<ExtArgs> | null
+    /**
+     * Filter, which FamiliarizationRecord to fetch.
+     */
+    where: FamiliarizationRecordWhereUniqueInput
+  }
+
+  /**
+   * FamiliarizationRecord findFirst
+   */
+  export type FamiliarizationRecordFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FamiliarizationRecord
+     */
+    select?: FamiliarizationRecordSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FamiliarizationRecord
+     */
+    omit?: FamiliarizationRecordOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FamiliarizationRecordInclude<ExtArgs> | null
+    /**
+     * Filter, which FamiliarizationRecord to fetch.
+     */
+    where?: FamiliarizationRecordWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FamiliarizationRecords to fetch.
+     */
+    orderBy?: FamiliarizationRecordOrderByWithRelationInput | FamiliarizationRecordOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for FamiliarizationRecords.
+     */
+    cursor?: FamiliarizationRecordWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FamiliarizationRecords from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FamiliarizationRecords.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of FamiliarizationRecords.
+     */
+    distinct?: FamiliarizationRecordScalarFieldEnum | FamiliarizationRecordScalarFieldEnum[]
+  }
+
+  /**
+   * FamiliarizationRecord findFirstOrThrow
+   */
+  export type FamiliarizationRecordFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FamiliarizationRecord
+     */
+    select?: FamiliarizationRecordSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FamiliarizationRecord
+     */
+    omit?: FamiliarizationRecordOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FamiliarizationRecordInclude<ExtArgs> | null
+    /**
+     * Filter, which FamiliarizationRecord to fetch.
+     */
+    where?: FamiliarizationRecordWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FamiliarizationRecords to fetch.
+     */
+    orderBy?: FamiliarizationRecordOrderByWithRelationInput | FamiliarizationRecordOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for FamiliarizationRecords.
+     */
+    cursor?: FamiliarizationRecordWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FamiliarizationRecords from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FamiliarizationRecords.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of FamiliarizationRecords.
+     */
+    distinct?: FamiliarizationRecordScalarFieldEnum | FamiliarizationRecordScalarFieldEnum[]
+  }
+
+  /**
+   * FamiliarizationRecord findMany
+   */
+  export type FamiliarizationRecordFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FamiliarizationRecord
+     */
+    select?: FamiliarizationRecordSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FamiliarizationRecord
+     */
+    omit?: FamiliarizationRecordOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FamiliarizationRecordInclude<ExtArgs> | null
+    /**
+     * Filter, which FamiliarizationRecords to fetch.
+     */
+    where?: FamiliarizationRecordWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FamiliarizationRecords to fetch.
+     */
+    orderBy?: FamiliarizationRecordOrderByWithRelationInput | FamiliarizationRecordOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing FamiliarizationRecords.
+     */
+    cursor?: FamiliarizationRecordWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FamiliarizationRecords from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FamiliarizationRecords.
+     */
+    skip?: number
+    distinct?: FamiliarizationRecordScalarFieldEnum | FamiliarizationRecordScalarFieldEnum[]
+  }
+
+  /**
+   * FamiliarizationRecord create
+   */
+  export type FamiliarizationRecordCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FamiliarizationRecord
+     */
+    select?: FamiliarizationRecordSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FamiliarizationRecord
+     */
+    omit?: FamiliarizationRecordOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FamiliarizationRecordInclude<ExtArgs> | null
+    /**
+     * The data needed to create a FamiliarizationRecord.
+     */
+    data: XOR<FamiliarizationRecordCreateInput, FamiliarizationRecordUncheckedCreateInput>
+  }
+
+  /**
+   * FamiliarizationRecord createMany
+   */
+  export type FamiliarizationRecordCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many FamiliarizationRecords.
+     */
+    data: FamiliarizationRecordCreateManyInput | FamiliarizationRecordCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * FamiliarizationRecord createManyAndReturn
+   */
+  export type FamiliarizationRecordCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FamiliarizationRecord
+     */
+    select?: FamiliarizationRecordSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the FamiliarizationRecord
+     */
+    omit?: FamiliarizationRecordOmit<ExtArgs> | null
+    /**
+     * The data used to create many FamiliarizationRecords.
+     */
+    data: FamiliarizationRecordCreateManyInput | FamiliarizationRecordCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FamiliarizationRecordIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * FamiliarizationRecord update
+   */
+  export type FamiliarizationRecordUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FamiliarizationRecord
+     */
+    select?: FamiliarizationRecordSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FamiliarizationRecord
+     */
+    omit?: FamiliarizationRecordOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FamiliarizationRecordInclude<ExtArgs> | null
+    /**
+     * The data needed to update a FamiliarizationRecord.
+     */
+    data: XOR<FamiliarizationRecordUpdateInput, FamiliarizationRecordUncheckedUpdateInput>
+    /**
+     * Choose, which FamiliarizationRecord to update.
+     */
+    where: FamiliarizationRecordWhereUniqueInput
+  }
+
+  /**
+   * FamiliarizationRecord updateMany
+   */
+  export type FamiliarizationRecordUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update FamiliarizationRecords.
+     */
+    data: XOR<FamiliarizationRecordUpdateManyMutationInput, FamiliarizationRecordUncheckedUpdateManyInput>
+    /**
+     * Filter which FamiliarizationRecords to update
+     */
+    where?: FamiliarizationRecordWhereInput
+    /**
+     * Limit how many FamiliarizationRecords to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * FamiliarizationRecord updateManyAndReturn
+   */
+  export type FamiliarizationRecordUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FamiliarizationRecord
+     */
+    select?: FamiliarizationRecordSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the FamiliarizationRecord
+     */
+    omit?: FamiliarizationRecordOmit<ExtArgs> | null
+    /**
+     * The data used to update FamiliarizationRecords.
+     */
+    data: XOR<FamiliarizationRecordUpdateManyMutationInput, FamiliarizationRecordUncheckedUpdateManyInput>
+    /**
+     * Filter which FamiliarizationRecords to update
+     */
+    where?: FamiliarizationRecordWhereInput
+    /**
+     * Limit how many FamiliarizationRecords to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FamiliarizationRecordIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * FamiliarizationRecord upsert
+   */
+  export type FamiliarizationRecordUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FamiliarizationRecord
+     */
+    select?: FamiliarizationRecordSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FamiliarizationRecord
+     */
+    omit?: FamiliarizationRecordOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FamiliarizationRecordInclude<ExtArgs> | null
+    /**
+     * The filter to search for the FamiliarizationRecord to update in case it exists.
+     */
+    where: FamiliarizationRecordWhereUniqueInput
+    /**
+     * In case the FamiliarizationRecord found by the `where` argument doesn't exist, create a new FamiliarizationRecord with this data.
+     */
+    create: XOR<FamiliarizationRecordCreateInput, FamiliarizationRecordUncheckedCreateInput>
+    /**
+     * In case the FamiliarizationRecord was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<FamiliarizationRecordUpdateInput, FamiliarizationRecordUncheckedUpdateInput>
+  }
+
+  /**
+   * FamiliarizationRecord delete
+   */
+  export type FamiliarizationRecordDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FamiliarizationRecord
+     */
+    select?: FamiliarizationRecordSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FamiliarizationRecord
+     */
+    omit?: FamiliarizationRecordOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FamiliarizationRecordInclude<ExtArgs> | null
+    /**
+     * Filter which FamiliarizationRecord to delete.
+     */
+    where: FamiliarizationRecordWhereUniqueInput
+  }
+
+  /**
+   * FamiliarizationRecord deleteMany
+   */
+  export type FamiliarizationRecordDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which FamiliarizationRecords to delete
+     */
+    where?: FamiliarizationRecordWhereInput
+    /**
+     * Limit how many FamiliarizationRecords to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * FamiliarizationRecord without action
+   */
+  export type FamiliarizationRecordDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FamiliarizationRecord
+     */
+    select?: FamiliarizationRecordSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FamiliarizationRecord
+     */
+    omit?: FamiliarizationRecordOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FamiliarizationRecordInclude<ExtArgs> | null
   }
 
 
@@ -63912,6 +68323,21 @@ export namespace Prisma {
     lastDryDock: 'lastDryDock',
     dryDockPlace: 'dryDockPlace',
     nextDryDockDue: 'nextDryDockDue',
+    portOfRegistry: 'portOfRegistry',
+    lbp: 'lbp',
+    draft: 'draft',
+    mainEngine: 'mainEngine',
+    serviceSpeed: 'serviceSpeed',
+    navigationArea: 'navigationArea',
+    classNotation: 'classNotation',
+    ownerAddress: 'ownerAddress',
+    builder: 'builder',
+    keelLaidDate: 'keelLaidDate',
+    launchingDate: 'launchingDate',
+    deliveryDate: 'deliveryDate',
+    totalComplement: 'totalComplement',
+    satPhone: 'satPhone',
+    vesselEmail: 'vesselEmail',
     archivedAt: 'archivedAt',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
@@ -64523,17 +68949,57 @@ export namespace Prisma {
   export type CommitteeMeetingAgendaScalarFieldEnum = (typeof CommitteeMeetingAgendaScalarFieldEnum)[keyof typeof CommitteeMeetingAgendaScalarFieldEnum]
 
 
+  export const ScheduleItemScalarFieldEnum: {
+    id: 'id',
+    companyId: 'companyId',
+    kind: 'kind',
+    category: 'category',
+    itemNo: 'itemNo',
+    name: 'name',
+    smsReference: 'smsReference',
+    frequencyLabel: 'frequencyLabel',
+    frequencyDays: 'frequencyDays',
+    sortOrder: 'sortOrder',
+    active: 'active',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+    deletedAt: 'deletedAt'
+  };
+
+  export type ScheduleItemScalarFieldEnum = (typeof ScheduleItemScalarFieldEnum)[keyof typeof ScheduleItemScalarFieldEnum]
+
+
+  export const ScheduleApplicabilityScalarFieldEnum: {
+    id: 'id',
+    companyId: 'companyId',
+    vesselId: 'vesselId',
+    scheduleItemId: 'scheduleItemId',
+    notApplicable: 'notApplicable',
+    reason: 'reason',
+    createdAt: 'createdAt',
+    createdBy: 'createdBy',
+    updatedAt: 'updatedAt',
+    updatedBy: 'updatedBy'
+  };
+
+  export type ScheduleApplicabilityScalarFieldEnum = (typeof ScheduleApplicabilityScalarFieldEnum)[keyof typeof ScheduleApplicabilityScalarFieldEnum]
+
+
   export const EmergencyDrillScalarFieldEnum: {
     id: 'id',
     companyId: 'companyId',
     refNo: 'refNo',
     vesselId: 'vesselId',
-    drillType: 'drillType',
+    scheduleItemId: 'scheduleItemId',
     drillDate: 'drillDate',
-    scenario: 'scenario',
+    drillTime: 'drillTime',
+    position: 'position',
     participants: 'participants',
     conductedBy: 'conductedBy',
-    observations: 'observations',
+    details: 'details',
+    deficiencies: 'deficiencies',
+    correctiveAction: 'correctiveAction',
+    vesselRemarks: 'vesselRemarks',
     status: 'status',
     closedAt: 'closedAt',
     createdAt: 'createdAt',
@@ -64545,6 +69011,25 @@ export namespace Prisma {
   };
 
   export type EmergencyDrillScalarFieldEnum = (typeof EmergencyDrillScalarFieldEnum)[keyof typeof EmergencyDrillScalarFieldEnum]
+
+
+  export const FamiliarizationRecordScalarFieldEnum: {
+    id: 'id',
+    companyId: 'companyId',
+    vesselId: 'vesselId',
+    scheduleItemId: 'scheduleItemId',
+    completedDate: 'completedDate',
+    notedBy: 'notedBy',
+    remarks: 'remarks',
+    createdAt: 'createdAt',
+    createdBy: 'createdBy',
+    updatedAt: 'updatedAt',
+    updatedBy: 'updatedBy',
+    deletedAt: 'deletedAt',
+    deletedBy: 'deletedBy'
+  };
+
+  export type FamiliarizationRecordScalarFieldEnum = (typeof FamiliarizationRecordScalarFieldEnum)[keyof typeof FamiliarizationRecordScalarFieldEnum]
 
 
   export const ControlledDocumentScalarFieldEnum: {
@@ -65235,6 +69720,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'CdiObservationSection'
+   */
+  export type EnumCdiObservationSectionFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CdiObservationSection'>
+    
+
+
+  /**
+   * Reference to a field of type 'CdiObservationSection[]'
+   */
+  export type ListEnumCdiObservationSectionFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CdiObservationSection[]'>
+    
+
+
+  /**
    * Reference to a field of type 'AuditFindingCategory'
    */
   export type EnumAuditFindingCategoryFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AuditFindingCategory'>
@@ -65277,16 +69776,16 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'DrillType'
+   * Reference to a field of type 'ScheduleItemKind'
    */
-  export type EnumDrillTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DrillType'>
+  export type EnumScheduleItemKindFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ScheduleItemKind'>
     
 
 
   /**
-   * Reference to a field of type 'DrillType[]'
+   * Reference to a field of type 'ScheduleItemKind[]'
    */
-  export type ListEnumDrillTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DrillType[]'>
+  export type ListEnumScheduleItemKindFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ScheduleItemKind[]'>
     
 
 
@@ -65456,7 +69955,10 @@ export namespace Prisma {
     internalAudits?: InternalAuditListRelationFilter
     externalAudits?: ExternalAuditListRelationFilter
     committeeMeetings?: CommitteeMeetingListRelationFilter
+    scheduleItems?: ScheduleItemListRelationFilter
     emergencyDrills?: EmergencyDrillListRelationFilter
+    familiarizationRecords?: FamiliarizationRecordListRelationFilter
+    scheduleApplicability?: ScheduleApplicabilityListRelationFilter
     controlledDocuments?: ControlledDocumentListRelationFilter
     circulars?: CircularListRelationFilter
     riskAssessmentDocuments?: RiskAssessmentDocumentListRelationFilter
@@ -65483,7 +69985,10 @@ export namespace Prisma {
     internalAudits?: InternalAuditOrderByRelationAggregateInput
     externalAudits?: ExternalAuditOrderByRelationAggregateInput
     committeeMeetings?: CommitteeMeetingOrderByRelationAggregateInput
+    scheduleItems?: ScheduleItemOrderByRelationAggregateInput
     emergencyDrills?: EmergencyDrillOrderByRelationAggregateInput
+    familiarizationRecords?: FamiliarizationRecordOrderByRelationAggregateInput
+    scheduleApplicability?: ScheduleApplicabilityOrderByRelationAggregateInput
     controlledDocuments?: ControlledDocumentOrderByRelationAggregateInput
     circulars?: CircularOrderByRelationAggregateInput
     riskAssessmentDocuments?: RiskAssessmentDocumentOrderByRelationAggregateInput
@@ -65513,7 +70018,10 @@ export namespace Prisma {
     internalAudits?: InternalAuditListRelationFilter
     externalAudits?: ExternalAuditListRelationFilter
     committeeMeetings?: CommitteeMeetingListRelationFilter
+    scheduleItems?: ScheduleItemListRelationFilter
     emergencyDrills?: EmergencyDrillListRelationFilter
+    familiarizationRecords?: FamiliarizationRecordListRelationFilter
+    scheduleApplicability?: ScheduleApplicabilityListRelationFilter
     controlledDocuments?: ControlledDocumentListRelationFilter
     circulars?: CircularListRelationFilter
     riskAssessmentDocuments?: RiskAssessmentDocumentListRelationFilter
@@ -65924,6 +70432,21 @@ export namespace Prisma {
     lastDryDock?: DateTimeNullableFilter<"Vessel"> | Date | string | null
     dryDockPlace?: StringNullableFilter<"Vessel"> | string | null
     nextDryDockDue?: DateTimeNullableFilter<"Vessel"> | Date | string | null
+    portOfRegistry?: StringNullableFilter<"Vessel"> | string | null
+    lbp?: FloatNullableFilter<"Vessel"> | number | null
+    draft?: FloatNullableFilter<"Vessel"> | number | null
+    mainEngine?: StringNullableFilter<"Vessel"> | string | null
+    serviceSpeed?: FloatNullableFilter<"Vessel"> | number | null
+    navigationArea?: StringNullableFilter<"Vessel"> | string | null
+    classNotation?: StringNullableFilter<"Vessel"> | string | null
+    ownerAddress?: StringNullableFilter<"Vessel"> | string | null
+    builder?: StringNullableFilter<"Vessel"> | string | null
+    keelLaidDate?: DateTimeNullableFilter<"Vessel"> | Date | string | null
+    launchingDate?: DateTimeNullableFilter<"Vessel"> | Date | string | null
+    deliveryDate?: DateTimeNullableFilter<"Vessel"> | Date | string | null
+    totalComplement?: IntNullableFilter<"Vessel"> | number | null
+    satPhone?: StringNullableFilter<"Vessel"> | string | null
+    vesselEmail?: StringNullableFilter<"Vessel"> | string | null
     archivedAt?: DateTimeNullableFilter<"Vessel"> | Date | string | null
     createdAt?: DateTimeFilter<"Vessel"> | Date | string
     updatedAt?: DateTimeFilter<"Vessel"> | Date | string
@@ -65943,6 +70466,8 @@ export namespace Prisma {
     externalAudits?: ExternalAuditListRelationFilter
     committeeMeetings?: CommitteeMeetingListRelationFilter
     emergencyDrills?: EmergencyDrillListRelationFilter
+    familiarizationRecords?: FamiliarizationRecordListRelationFilter
+    scheduleApplicability?: ScheduleApplicabilityListRelationFilter
     controlledDocuments?: ControlledDocumentListRelationFilter
     circulars?: CircularListRelationFilter
     riskAssessmentDocuments?: RiskAssessmentDocumentListRelationFilter
@@ -65981,6 +70506,21 @@ export namespace Prisma {
     lastDryDock?: SortOrderInput | SortOrder
     dryDockPlace?: SortOrderInput | SortOrder
     nextDryDockDue?: SortOrderInput | SortOrder
+    portOfRegistry?: SortOrderInput | SortOrder
+    lbp?: SortOrderInput | SortOrder
+    draft?: SortOrderInput | SortOrder
+    mainEngine?: SortOrderInput | SortOrder
+    serviceSpeed?: SortOrderInput | SortOrder
+    navigationArea?: SortOrderInput | SortOrder
+    classNotation?: SortOrderInput | SortOrder
+    ownerAddress?: SortOrderInput | SortOrder
+    builder?: SortOrderInput | SortOrder
+    keelLaidDate?: SortOrderInput | SortOrder
+    launchingDate?: SortOrderInput | SortOrder
+    deliveryDate?: SortOrderInput | SortOrder
+    totalComplement?: SortOrderInput | SortOrder
+    satPhone?: SortOrderInput | SortOrder
+    vesselEmail?: SortOrderInput | SortOrder
     archivedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -66000,6 +70540,8 @@ export namespace Prisma {
     externalAudits?: ExternalAuditOrderByRelationAggregateInput
     committeeMeetings?: CommitteeMeetingOrderByRelationAggregateInput
     emergencyDrills?: EmergencyDrillOrderByRelationAggregateInput
+    familiarizationRecords?: FamiliarizationRecordOrderByRelationAggregateInput
+    scheduleApplicability?: ScheduleApplicabilityOrderByRelationAggregateInput
     controlledDocuments?: ControlledDocumentOrderByRelationAggregateInput
     circulars?: CircularOrderByRelationAggregateInput
     riskAssessmentDocuments?: RiskAssessmentDocumentOrderByRelationAggregateInput
@@ -66042,6 +70584,21 @@ export namespace Prisma {
     lastDryDock?: DateTimeNullableFilter<"Vessel"> | Date | string | null
     dryDockPlace?: StringNullableFilter<"Vessel"> | string | null
     nextDryDockDue?: DateTimeNullableFilter<"Vessel"> | Date | string | null
+    portOfRegistry?: StringNullableFilter<"Vessel"> | string | null
+    lbp?: FloatNullableFilter<"Vessel"> | number | null
+    draft?: FloatNullableFilter<"Vessel"> | number | null
+    mainEngine?: StringNullableFilter<"Vessel"> | string | null
+    serviceSpeed?: FloatNullableFilter<"Vessel"> | number | null
+    navigationArea?: StringNullableFilter<"Vessel"> | string | null
+    classNotation?: StringNullableFilter<"Vessel"> | string | null
+    ownerAddress?: StringNullableFilter<"Vessel"> | string | null
+    builder?: StringNullableFilter<"Vessel"> | string | null
+    keelLaidDate?: DateTimeNullableFilter<"Vessel"> | Date | string | null
+    launchingDate?: DateTimeNullableFilter<"Vessel"> | Date | string | null
+    deliveryDate?: DateTimeNullableFilter<"Vessel"> | Date | string | null
+    totalComplement?: IntNullableFilter<"Vessel"> | number | null
+    satPhone?: StringNullableFilter<"Vessel"> | string | null
+    vesselEmail?: StringNullableFilter<"Vessel"> | string | null
     archivedAt?: DateTimeNullableFilter<"Vessel"> | Date | string | null
     createdAt?: DateTimeFilter<"Vessel"> | Date | string
     updatedAt?: DateTimeFilter<"Vessel"> | Date | string
@@ -66061,6 +70618,8 @@ export namespace Prisma {
     externalAudits?: ExternalAuditListRelationFilter
     committeeMeetings?: CommitteeMeetingListRelationFilter
     emergencyDrills?: EmergencyDrillListRelationFilter
+    familiarizationRecords?: FamiliarizationRecordListRelationFilter
+    scheduleApplicability?: ScheduleApplicabilityListRelationFilter
     controlledDocuments?: ControlledDocumentListRelationFilter
     circulars?: CircularListRelationFilter
     riskAssessmentDocuments?: RiskAssessmentDocumentListRelationFilter
@@ -66099,6 +70658,21 @@ export namespace Prisma {
     lastDryDock?: SortOrderInput | SortOrder
     dryDockPlace?: SortOrderInput | SortOrder
     nextDryDockDue?: SortOrderInput | SortOrder
+    portOfRegistry?: SortOrderInput | SortOrder
+    lbp?: SortOrderInput | SortOrder
+    draft?: SortOrderInput | SortOrder
+    mainEngine?: SortOrderInput | SortOrder
+    serviceSpeed?: SortOrderInput | SortOrder
+    navigationArea?: SortOrderInput | SortOrder
+    classNotation?: SortOrderInput | SortOrder
+    ownerAddress?: SortOrderInput | SortOrder
+    builder?: SortOrderInput | SortOrder
+    keelLaidDate?: SortOrderInput | SortOrder
+    launchingDate?: SortOrderInput | SortOrder
+    deliveryDate?: SortOrderInput | SortOrder
+    totalComplement?: SortOrderInput | SortOrder
+    satPhone?: SortOrderInput | SortOrder
+    vesselEmail?: SortOrderInput | SortOrder
     archivedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -66145,6 +70719,21 @@ export namespace Prisma {
     lastDryDock?: DateTimeNullableWithAggregatesFilter<"Vessel"> | Date | string | null
     dryDockPlace?: StringNullableWithAggregatesFilter<"Vessel"> | string | null
     nextDryDockDue?: DateTimeNullableWithAggregatesFilter<"Vessel"> | Date | string | null
+    portOfRegistry?: StringNullableWithAggregatesFilter<"Vessel"> | string | null
+    lbp?: FloatNullableWithAggregatesFilter<"Vessel"> | number | null
+    draft?: FloatNullableWithAggregatesFilter<"Vessel"> | number | null
+    mainEngine?: StringNullableWithAggregatesFilter<"Vessel"> | string | null
+    serviceSpeed?: FloatNullableWithAggregatesFilter<"Vessel"> | number | null
+    navigationArea?: StringNullableWithAggregatesFilter<"Vessel"> | string | null
+    classNotation?: StringNullableWithAggregatesFilter<"Vessel"> | string | null
+    ownerAddress?: StringNullableWithAggregatesFilter<"Vessel"> | string | null
+    builder?: StringNullableWithAggregatesFilter<"Vessel"> | string | null
+    keelLaidDate?: DateTimeNullableWithAggregatesFilter<"Vessel"> | Date | string | null
+    launchingDate?: DateTimeNullableWithAggregatesFilter<"Vessel"> | Date | string | null
+    deliveryDate?: DateTimeNullableWithAggregatesFilter<"Vessel"> | Date | string | null
+    totalComplement?: IntNullableWithAggregatesFilter<"Vessel"> | number | null
+    satPhone?: StringNullableWithAggregatesFilter<"Vessel"> | string | null
+    vesselEmail?: StringNullableWithAggregatesFilter<"Vessel"> | string | null
     archivedAt?: DateTimeNullableWithAggregatesFilter<"Vessel"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Vessel"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Vessel"> | Date | string
@@ -68506,7 +73095,7 @@ export namespace Prisma {
     observation?: StringFilter<"CdiObservation"> | string
     response?: StringNullableFilter<"CdiObservation"> | string | null
     status?: EnumFindingStatusFilter<"CdiObservation"> | $Enums.FindingStatus
-    category?: EnumSireObservationCategoryNullableFilter<"CdiObservation"> | $Enums.SireObservationCategory | null
+    category?: EnumCdiObservationSectionNullableFilter<"CdiObservation"> | $Enums.CdiObservationSection | null
     rootCauseCategory?: EnumRootCauseCategoryNullableFilter<"CdiObservation"> | $Enums.RootCauseCategory | null
     rootCauseSubCategory?: StringNullableFilter<"CdiObservation"> | string | null
     rootCause?: StringNullableFilter<"CdiObservation"> | string | null
@@ -68545,7 +73134,7 @@ export namespace Prisma {
     observation?: StringFilter<"CdiObservation"> | string
     response?: StringNullableFilter<"CdiObservation"> | string | null
     status?: EnumFindingStatusFilter<"CdiObservation"> | $Enums.FindingStatus
-    category?: EnumSireObservationCategoryNullableFilter<"CdiObservation"> | $Enums.SireObservationCategory | null
+    category?: EnumCdiObservationSectionNullableFilter<"CdiObservation"> | $Enums.CdiObservationSection | null
     rootCauseCategory?: EnumRootCauseCategoryNullableFilter<"CdiObservation"> | $Enums.RootCauseCategory | null
     rootCauseSubCategory?: StringNullableFilter<"CdiObservation"> | string | null
     rootCause?: StringNullableFilter<"CdiObservation"> | string | null
@@ -68586,7 +73175,7 @@ export namespace Prisma {
     observation?: StringWithAggregatesFilter<"CdiObservation"> | string
     response?: StringNullableWithAggregatesFilter<"CdiObservation"> | string | null
     status?: EnumFindingStatusWithAggregatesFilter<"CdiObservation"> | $Enums.FindingStatus
-    category?: EnumSireObservationCategoryNullableWithAggregatesFilter<"CdiObservation"> | $Enums.SireObservationCategory | null
+    category?: EnumCdiObservationSectionNullableWithAggregatesFilter<"CdiObservation"> | $Enums.CdiObservationSection | null
     rootCauseCategory?: EnumRootCauseCategoryNullableWithAggregatesFilter<"CdiObservation"> | $Enums.RootCauseCategory | null
     rootCauseSubCategory?: StringNullableWithAggregatesFilter<"CdiObservation"> | string | null
     rootCause?: StringNullableWithAggregatesFilter<"CdiObservation"> | string | null
@@ -69268,6 +73857,205 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter<"CommitteeMeetingAgenda"> | Date | string
   }
 
+  export type ScheduleItemWhereInput = {
+    AND?: ScheduleItemWhereInput | ScheduleItemWhereInput[]
+    OR?: ScheduleItemWhereInput[]
+    NOT?: ScheduleItemWhereInput | ScheduleItemWhereInput[]
+    id?: StringFilter<"ScheduleItem"> | string
+    companyId?: StringFilter<"ScheduleItem"> | string
+    kind?: EnumScheduleItemKindFilter<"ScheduleItem"> | $Enums.ScheduleItemKind
+    category?: StringNullableFilter<"ScheduleItem"> | string | null
+    itemNo?: StringNullableFilter<"ScheduleItem"> | string | null
+    name?: StringFilter<"ScheduleItem"> | string
+    smsReference?: StringNullableFilter<"ScheduleItem"> | string | null
+    frequencyLabel?: StringNullableFilter<"ScheduleItem"> | string | null
+    frequencyDays?: IntNullableFilter<"ScheduleItem"> | number | null
+    sortOrder?: IntFilter<"ScheduleItem"> | number
+    active?: BoolFilter<"ScheduleItem"> | boolean
+    createdAt?: DateTimeFilter<"ScheduleItem"> | Date | string
+    updatedAt?: DateTimeFilter<"ScheduleItem"> | Date | string
+    deletedAt?: DateTimeNullableFilter<"ScheduleItem"> | Date | string | null
+    company?: XOR<CompanyScalarRelationFilter, CompanyWhereInput>
+    drills?: EmergencyDrillListRelationFilter
+    familiarizations?: FamiliarizationRecordListRelationFilter
+    exceptions?: ScheduleApplicabilityListRelationFilter
+  }
+
+  export type ScheduleItemOrderByWithRelationInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    kind?: SortOrder
+    category?: SortOrderInput | SortOrder
+    itemNo?: SortOrderInput | SortOrder
+    name?: SortOrder
+    smsReference?: SortOrderInput | SortOrder
+    frequencyLabel?: SortOrderInput | SortOrder
+    frequencyDays?: SortOrderInput | SortOrder
+    sortOrder?: SortOrder
+    active?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    deletedAt?: SortOrderInput | SortOrder
+    company?: CompanyOrderByWithRelationInput
+    drills?: EmergencyDrillOrderByRelationAggregateInput
+    familiarizations?: FamiliarizationRecordOrderByRelationAggregateInput
+    exceptions?: ScheduleApplicabilityOrderByRelationAggregateInput
+  }
+
+  export type ScheduleItemWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    companyId_kind_itemNo?: ScheduleItemCompanyIdKindItemNoCompoundUniqueInput
+    AND?: ScheduleItemWhereInput | ScheduleItemWhereInput[]
+    OR?: ScheduleItemWhereInput[]
+    NOT?: ScheduleItemWhereInput | ScheduleItemWhereInput[]
+    companyId?: StringFilter<"ScheduleItem"> | string
+    kind?: EnumScheduleItemKindFilter<"ScheduleItem"> | $Enums.ScheduleItemKind
+    category?: StringNullableFilter<"ScheduleItem"> | string | null
+    itemNo?: StringNullableFilter<"ScheduleItem"> | string | null
+    name?: StringFilter<"ScheduleItem"> | string
+    smsReference?: StringNullableFilter<"ScheduleItem"> | string | null
+    frequencyLabel?: StringNullableFilter<"ScheduleItem"> | string | null
+    frequencyDays?: IntNullableFilter<"ScheduleItem"> | number | null
+    sortOrder?: IntFilter<"ScheduleItem"> | number
+    active?: BoolFilter<"ScheduleItem"> | boolean
+    createdAt?: DateTimeFilter<"ScheduleItem"> | Date | string
+    updatedAt?: DateTimeFilter<"ScheduleItem"> | Date | string
+    deletedAt?: DateTimeNullableFilter<"ScheduleItem"> | Date | string | null
+    company?: XOR<CompanyScalarRelationFilter, CompanyWhereInput>
+    drills?: EmergencyDrillListRelationFilter
+    familiarizations?: FamiliarizationRecordListRelationFilter
+    exceptions?: ScheduleApplicabilityListRelationFilter
+  }, "id" | "companyId_kind_itemNo">
+
+  export type ScheduleItemOrderByWithAggregationInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    kind?: SortOrder
+    category?: SortOrderInput | SortOrder
+    itemNo?: SortOrderInput | SortOrder
+    name?: SortOrder
+    smsReference?: SortOrderInput | SortOrder
+    frequencyLabel?: SortOrderInput | SortOrder
+    frequencyDays?: SortOrderInput | SortOrder
+    sortOrder?: SortOrder
+    active?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    deletedAt?: SortOrderInput | SortOrder
+    _count?: ScheduleItemCountOrderByAggregateInput
+    _avg?: ScheduleItemAvgOrderByAggregateInput
+    _max?: ScheduleItemMaxOrderByAggregateInput
+    _min?: ScheduleItemMinOrderByAggregateInput
+    _sum?: ScheduleItemSumOrderByAggregateInput
+  }
+
+  export type ScheduleItemScalarWhereWithAggregatesInput = {
+    AND?: ScheduleItemScalarWhereWithAggregatesInput | ScheduleItemScalarWhereWithAggregatesInput[]
+    OR?: ScheduleItemScalarWhereWithAggregatesInput[]
+    NOT?: ScheduleItemScalarWhereWithAggregatesInput | ScheduleItemScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"ScheduleItem"> | string
+    companyId?: StringWithAggregatesFilter<"ScheduleItem"> | string
+    kind?: EnumScheduleItemKindWithAggregatesFilter<"ScheduleItem"> | $Enums.ScheduleItemKind
+    category?: StringNullableWithAggregatesFilter<"ScheduleItem"> | string | null
+    itemNo?: StringNullableWithAggregatesFilter<"ScheduleItem"> | string | null
+    name?: StringWithAggregatesFilter<"ScheduleItem"> | string
+    smsReference?: StringNullableWithAggregatesFilter<"ScheduleItem"> | string | null
+    frequencyLabel?: StringNullableWithAggregatesFilter<"ScheduleItem"> | string | null
+    frequencyDays?: IntNullableWithAggregatesFilter<"ScheduleItem"> | number | null
+    sortOrder?: IntWithAggregatesFilter<"ScheduleItem"> | number
+    active?: BoolWithAggregatesFilter<"ScheduleItem"> | boolean
+    createdAt?: DateTimeWithAggregatesFilter<"ScheduleItem"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"ScheduleItem"> | Date | string
+    deletedAt?: DateTimeNullableWithAggregatesFilter<"ScheduleItem"> | Date | string | null
+  }
+
+  export type ScheduleApplicabilityWhereInput = {
+    AND?: ScheduleApplicabilityWhereInput | ScheduleApplicabilityWhereInput[]
+    OR?: ScheduleApplicabilityWhereInput[]
+    NOT?: ScheduleApplicabilityWhereInput | ScheduleApplicabilityWhereInput[]
+    id?: StringFilter<"ScheduleApplicability"> | string
+    companyId?: StringFilter<"ScheduleApplicability"> | string
+    vesselId?: StringFilter<"ScheduleApplicability"> | string
+    scheduleItemId?: StringFilter<"ScheduleApplicability"> | string
+    notApplicable?: BoolFilter<"ScheduleApplicability"> | boolean
+    reason?: StringNullableFilter<"ScheduleApplicability"> | string | null
+    createdAt?: DateTimeFilter<"ScheduleApplicability"> | Date | string
+    createdBy?: StringNullableFilter<"ScheduleApplicability"> | string | null
+    updatedAt?: DateTimeFilter<"ScheduleApplicability"> | Date | string
+    updatedBy?: StringNullableFilter<"ScheduleApplicability"> | string | null
+    company?: XOR<CompanyScalarRelationFilter, CompanyWhereInput>
+    vessel?: XOR<VesselScalarRelationFilter, VesselWhereInput>
+    scheduleItem?: XOR<ScheduleItemScalarRelationFilter, ScheduleItemWhereInput>
+  }
+
+  export type ScheduleApplicabilityOrderByWithRelationInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    vesselId?: SortOrder
+    scheduleItemId?: SortOrder
+    notApplicable?: SortOrder
+    reason?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    createdBy?: SortOrderInput | SortOrder
+    updatedAt?: SortOrder
+    updatedBy?: SortOrderInput | SortOrder
+    company?: CompanyOrderByWithRelationInput
+    vessel?: VesselOrderByWithRelationInput
+    scheduleItem?: ScheduleItemOrderByWithRelationInput
+  }
+
+  export type ScheduleApplicabilityWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    companyId_vesselId_scheduleItemId?: ScheduleApplicabilityCompanyIdVesselIdScheduleItemIdCompoundUniqueInput
+    AND?: ScheduleApplicabilityWhereInput | ScheduleApplicabilityWhereInput[]
+    OR?: ScheduleApplicabilityWhereInput[]
+    NOT?: ScheduleApplicabilityWhereInput | ScheduleApplicabilityWhereInput[]
+    companyId?: StringFilter<"ScheduleApplicability"> | string
+    vesselId?: StringFilter<"ScheduleApplicability"> | string
+    scheduleItemId?: StringFilter<"ScheduleApplicability"> | string
+    notApplicable?: BoolFilter<"ScheduleApplicability"> | boolean
+    reason?: StringNullableFilter<"ScheduleApplicability"> | string | null
+    createdAt?: DateTimeFilter<"ScheduleApplicability"> | Date | string
+    createdBy?: StringNullableFilter<"ScheduleApplicability"> | string | null
+    updatedAt?: DateTimeFilter<"ScheduleApplicability"> | Date | string
+    updatedBy?: StringNullableFilter<"ScheduleApplicability"> | string | null
+    company?: XOR<CompanyScalarRelationFilter, CompanyWhereInput>
+    vessel?: XOR<VesselScalarRelationFilter, VesselWhereInput>
+    scheduleItem?: XOR<ScheduleItemScalarRelationFilter, ScheduleItemWhereInput>
+  }, "id" | "companyId_vesselId_scheduleItemId">
+
+  export type ScheduleApplicabilityOrderByWithAggregationInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    vesselId?: SortOrder
+    scheduleItemId?: SortOrder
+    notApplicable?: SortOrder
+    reason?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    createdBy?: SortOrderInput | SortOrder
+    updatedAt?: SortOrder
+    updatedBy?: SortOrderInput | SortOrder
+    _count?: ScheduleApplicabilityCountOrderByAggregateInput
+    _max?: ScheduleApplicabilityMaxOrderByAggregateInput
+    _min?: ScheduleApplicabilityMinOrderByAggregateInput
+  }
+
+  export type ScheduleApplicabilityScalarWhereWithAggregatesInput = {
+    AND?: ScheduleApplicabilityScalarWhereWithAggregatesInput | ScheduleApplicabilityScalarWhereWithAggregatesInput[]
+    OR?: ScheduleApplicabilityScalarWhereWithAggregatesInput[]
+    NOT?: ScheduleApplicabilityScalarWhereWithAggregatesInput | ScheduleApplicabilityScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"ScheduleApplicability"> | string
+    companyId?: StringWithAggregatesFilter<"ScheduleApplicability"> | string
+    vesselId?: StringWithAggregatesFilter<"ScheduleApplicability"> | string
+    scheduleItemId?: StringWithAggregatesFilter<"ScheduleApplicability"> | string
+    notApplicable?: BoolWithAggregatesFilter<"ScheduleApplicability"> | boolean
+    reason?: StringNullableWithAggregatesFilter<"ScheduleApplicability"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"ScheduleApplicability"> | Date | string
+    createdBy?: StringNullableWithAggregatesFilter<"ScheduleApplicability"> | string | null
+    updatedAt?: DateTimeWithAggregatesFilter<"ScheduleApplicability"> | Date | string
+    updatedBy?: StringNullableWithAggregatesFilter<"ScheduleApplicability"> | string | null
+  }
+
   export type EmergencyDrillWhereInput = {
     AND?: EmergencyDrillWhereInput | EmergencyDrillWhereInput[]
     OR?: EmergencyDrillWhereInput[]
@@ -69276,12 +74064,16 @@ export namespace Prisma {
     companyId?: StringFilter<"EmergencyDrill"> | string
     refNo?: StringFilter<"EmergencyDrill"> | string
     vesselId?: StringFilter<"EmergencyDrill"> | string
-    drillType?: EnumDrillTypeFilter<"EmergencyDrill"> | $Enums.DrillType
+    scheduleItemId?: StringFilter<"EmergencyDrill"> | string
     drillDate?: DateTimeFilter<"EmergencyDrill"> | Date | string
-    scenario?: StringNullableFilter<"EmergencyDrill"> | string | null
+    drillTime?: StringNullableFilter<"EmergencyDrill"> | string | null
+    position?: StringNullableFilter<"EmergencyDrill"> | string | null
     participants?: StringNullableFilter<"EmergencyDrill"> | string | null
     conductedBy?: StringNullableFilter<"EmergencyDrill"> | string | null
-    observations?: StringNullableFilter<"EmergencyDrill"> | string | null
+    details?: StringNullableFilter<"EmergencyDrill"> | string | null
+    deficiencies?: StringNullableFilter<"EmergencyDrill"> | string | null
+    correctiveAction?: StringNullableFilter<"EmergencyDrill"> | string | null
+    vesselRemarks?: StringNullableFilter<"EmergencyDrill"> | string | null
     status?: EnumFindingStatusFilter<"EmergencyDrill"> | $Enums.FindingStatus
     closedAt?: DateTimeNullableFilter<"EmergencyDrill"> | Date | string | null
     createdAt?: DateTimeFilter<"EmergencyDrill"> | Date | string
@@ -69292,6 +74084,7 @@ export namespace Prisma {
     deletedBy?: StringNullableFilter<"EmergencyDrill"> | string | null
     company?: XOR<CompanyScalarRelationFilter, CompanyWhereInput>
     vessel?: XOR<VesselScalarRelationFilter, VesselWhereInput>
+    scheduleItem?: XOR<ScheduleItemScalarRelationFilter, ScheduleItemWhereInput>
   }
 
   export type EmergencyDrillOrderByWithRelationInput = {
@@ -69299,12 +74092,16 @@ export namespace Prisma {
     companyId?: SortOrder
     refNo?: SortOrder
     vesselId?: SortOrder
-    drillType?: SortOrder
+    scheduleItemId?: SortOrder
     drillDate?: SortOrder
-    scenario?: SortOrderInput | SortOrder
+    drillTime?: SortOrderInput | SortOrder
+    position?: SortOrderInput | SortOrder
     participants?: SortOrderInput | SortOrder
     conductedBy?: SortOrderInput | SortOrder
-    observations?: SortOrderInput | SortOrder
+    details?: SortOrderInput | SortOrder
+    deficiencies?: SortOrderInput | SortOrder
+    correctiveAction?: SortOrderInput | SortOrder
+    vesselRemarks?: SortOrderInput | SortOrder
     status?: SortOrder
     closedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
@@ -69315,6 +74112,7 @@ export namespace Prisma {
     deletedBy?: SortOrderInput | SortOrder
     company?: CompanyOrderByWithRelationInput
     vessel?: VesselOrderByWithRelationInput
+    scheduleItem?: ScheduleItemOrderByWithRelationInput
   }
 
   export type EmergencyDrillWhereUniqueInput = Prisma.AtLeast<{
@@ -69326,12 +74124,16 @@ export namespace Prisma {
     companyId?: StringFilter<"EmergencyDrill"> | string
     refNo?: StringFilter<"EmergencyDrill"> | string
     vesselId?: StringFilter<"EmergencyDrill"> | string
-    drillType?: EnumDrillTypeFilter<"EmergencyDrill"> | $Enums.DrillType
+    scheduleItemId?: StringFilter<"EmergencyDrill"> | string
     drillDate?: DateTimeFilter<"EmergencyDrill"> | Date | string
-    scenario?: StringNullableFilter<"EmergencyDrill"> | string | null
+    drillTime?: StringNullableFilter<"EmergencyDrill"> | string | null
+    position?: StringNullableFilter<"EmergencyDrill"> | string | null
     participants?: StringNullableFilter<"EmergencyDrill"> | string | null
     conductedBy?: StringNullableFilter<"EmergencyDrill"> | string | null
-    observations?: StringNullableFilter<"EmergencyDrill"> | string | null
+    details?: StringNullableFilter<"EmergencyDrill"> | string | null
+    deficiencies?: StringNullableFilter<"EmergencyDrill"> | string | null
+    correctiveAction?: StringNullableFilter<"EmergencyDrill"> | string | null
+    vesselRemarks?: StringNullableFilter<"EmergencyDrill"> | string | null
     status?: EnumFindingStatusFilter<"EmergencyDrill"> | $Enums.FindingStatus
     closedAt?: DateTimeNullableFilter<"EmergencyDrill"> | Date | string | null
     createdAt?: DateTimeFilter<"EmergencyDrill"> | Date | string
@@ -69342,6 +74144,7 @@ export namespace Prisma {
     deletedBy?: StringNullableFilter<"EmergencyDrill"> | string | null
     company?: XOR<CompanyScalarRelationFilter, CompanyWhereInput>
     vessel?: XOR<VesselScalarRelationFilter, VesselWhereInput>
+    scheduleItem?: XOR<ScheduleItemScalarRelationFilter, ScheduleItemWhereInput>
   }, "id" | "companyId_refNo">
 
   export type EmergencyDrillOrderByWithAggregationInput = {
@@ -69349,12 +74152,16 @@ export namespace Prisma {
     companyId?: SortOrder
     refNo?: SortOrder
     vesselId?: SortOrder
-    drillType?: SortOrder
+    scheduleItemId?: SortOrder
     drillDate?: SortOrder
-    scenario?: SortOrderInput | SortOrder
+    drillTime?: SortOrderInput | SortOrder
+    position?: SortOrderInput | SortOrder
     participants?: SortOrderInput | SortOrder
     conductedBy?: SortOrderInput | SortOrder
-    observations?: SortOrderInput | SortOrder
+    details?: SortOrderInput | SortOrder
+    deficiencies?: SortOrderInput | SortOrder
+    correctiveAction?: SortOrderInput | SortOrder
+    vesselRemarks?: SortOrderInput | SortOrder
     status?: SortOrder
     closedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
@@ -69376,12 +74183,16 @@ export namespace Prisma {
     companyId?: StringWithAggregatesFilter<"EmergencyDrill"> | string
     refNo?: StringWithAggregatesFilter<"EmergencyDrill"> | string
     vesselId?: StringWithAggregatesFilter<"EmergencyDrill"> | string
-    drillType?: EnumDrillTypeWithAggregatesFilter<"EmergencyDrill"> | $Enums.DrillType
+    scheduleItemId?: StringWithAggregatesFilter<"EmergencyDrill"> | string
     drillDate?: DateTimeWithAggregatesFilter<"EmergencyDrill"> | Date | string
-    scenario?: StringNullableWithAggregatesFilter<"EmergencyDrill"> | string | null
+    drillTime?: StringNullableWithAggregatesFilter<"EmergencyDrill"> | string | null
+    position?: StringNullableWithAggregatesFilter<"EmergencyDrill"> | string | null
     participants?: StringNullableWithAggregatesFilter<"EmergencyDrill"> | string | null
     conductedBy?: StringNullableWithAggregatesFilter<"EmergencyDrill"> | string | null
-    observations?: StringNullableWithAggregatesFilter<"EmergencyDrill"> | string | null
+    details?: StringNullableWithAggregatesFilter<"EmergencyDrill"> | string | null
+    deficiencies?: StringNullableWithAggregatesFilter<"EmergencyDrill"> | string | null
+    correctiveAction?: StringNullableWithAggregatesFilter<"EmergencyDrill"> | string | null
+    vesselRemarks?: StringNullableWithAggregatesFilter<"EmergencyDrill"> | string | null
     status?: EnumFindingStatusWithAggregatesFilter<"EmergencyDrill"> | $Enums.FindingStatus
     closedAt?: DateTimeNullableWithAggregatesFilter<"EmergencyDrill"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"EmergencyDrill"> | Date | string
@@ -69390,6 +74201,107 @@ export namespace Prisma {
     updatedBy?: StringNullableWithAggregatesFilter<"EmergencyDrill"> | string | null
     deletedAt?: DateTimeNullableWithAggregatesFilter<"EmergencyDrill"> | Date | string | null
     deletedBy?: StringNullableWithAggregatesFilter<"EmergencyDrill"> | string | null
+  }
+
+  export type FamiliarizationRecordWhereInput = {
+    AND?: FamiliarizationRecordWhereInput | FamiliarizationRecordWhereInput[]
+    OR?: FamiliarizationRecordWhereInput[]
+    NOT?: FamiliarizationRecordWhereInput | FamiliarizationRecordWhereInput[]
+    id?: StringFilter<"FamiliarizationRecord"> | string
+    companyId?: StringFilter<"FamiliarizationRecord"> | string
+    vesselId?: StringFilter<"FamiliarizationRecord"> | string
+    scheduleItemId?: StringFilter<"FamiliarizationRecord"> | string
+    completedDate?: DateTimeFilter<"FamiliarizationRecord"> | Date | string
+    notedBy?: StringNullableFilter<"FamiliarizationRecord"> | string | null
+    remarks?: StringNullableFilter<"FamiliarizationRecord"> | string | null
+    createdAt?: DateTimeFilter<"FamiliarizationRecord"> | Date | string
+    createdBy?: StringNullableFilter<"FamiliarizationRecord"> | string | null
+    updatedAt?: DateTimeFilter<"FamiliarizationRecord"> | Date | string
+    updatedBy?: StringNullableFilter<"FamiliarizationRecord"> | string | null
+    deletedAt?: DateTimeNullableFilter<"FamiliarizationRecord"> | Date | string | null
+    deletedBy?: StringNullableFilter<"FamiliarizationRecord"> | string | null
+    company?: XOR<CompanyScalarRelationFilter, CompanyWhereInput>
+    vessel?: XOR<VesselScalarRelationFilter, VesselWhereInput>
+    scheduleItem?: XOR<ScheduleItemScalarRelationFilter, ScheduleItemWhereInput>
+  }
+
+  export type FamiliarizationRecordOrderByWithRelationInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    vesselId?: SortOrder
+    scheduleItemId?: SortOrder
+    completedDate?: SortOrder
+    notedBy?: SortOrderInput | SortOrder
+    remarks?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    createdBy?: SortOrderInput | SortOrder
+    updatedAt?: SortOrder
+    updatedBy?: SortOrderInput | SortOrder
+    deletedAt?: SortOrderInput | SortOrder
+    deletedBy?: SortOrderInput | SortOrder
+    company?: CompanyOrderByWithRelationInput
+    vessel?: VesselOrderByWithRelationInput
+    scheduleItem?: ScheduleItemOrderByWithRelationInput
+  }
+
+  export type FamiliarizationRecordWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: FamiliarizationRecordWhereInput | FamiliarizationRecordWhereInput[]
+    OR?: FamiliarizationRecordWhereInput[]
+    NOT?: FamiliarizationRecordWhereInput | FamiliarizationRecordWhereInput[]
+    companyId?: StringFilter<"FamiliarizationRecord"> | string
+    vesselId?: StringFilter<"FamiliarizationRecord"> | string
+    scheduleItemId?: StringFilter<"FamiliarizationRecord"> | string
+    completedDate?: DateTimeFilter<"FamiliarizationRecord"> | Date | string
+    notedBy?: StringNullableFilter<"FamiliarizationRecord"> | string | null
+    remarks?: StringNullableFilter<"FamiliarizationRecord"> | string | null
+    createdAt?: DateTimeFilter<"FamiliarizationRecord"> | Date | string
+    createdBy?: StringNullableFilter<"FamiliarizationRecord"> | string | null
+    updatedAt?: DateTimeFilter<"FamiliarizationRecord"> | Date | string
+    updatedBy?: StringNullableFilter<"FamiliarizationRecord"> | string | null
+    deletedAt?: DateTimeNullableFilter<"FamiliarizationRecord"> | Date | string | null
+    deletedBy?: StringNullableFilter<"FamiliarizationRecord"> | string | null
+    company?: XOR<CompanyScalarRelationFilter, CompanyWhereInput>
+    vessel?: XOR<VesselScalarRelationFilter, VesselWhereInput>
+    scheduleItem?: XOR<ScheduleItemScalarRelationFilter, ScheduleItemWhereInput>
+  }, "id">
+
+  export type FamiliarizationRecordOrderByWithAggregationInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    vesselId?: SortOrder
+    scheduleItemId?: SortOrder
+    completedDate?: SortOrder
+    notedBy?: SortOrderInput | SortOrder
+    remarks?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    createdBy?: SortOrderInput | SortOrder
+    updatedAt?: SortOrder
+    updatedBy?: SortOrderInput | SortOrder
+    deletedAt?: SortOrderInput | SortOrder
+    deletedBy?: SortOrderInput | SortOrder
+    _count?: FamiliarizationRecordCountOrderByAggregateInput
+    _max?: FamiliarizationRecordMaxOrderByAggregateInput
+    _min?: FamiliarizationRecordMinOrderByAggregateInput
+  }
+
+  export type FamiliarizationRecordScalarWhereWithAggregatesInput = {
+    AND?: FamiliarizationRecordScalarWhereWithAggregatesInput | FamiliarizationRecordScalarWhereWithAggregatesInput[]
+    OR?: FamiliarizationRecordScalarWhereWithAggregatesInput[]
+    NOT?: FamiliarizationRecordScalarWhereWithAggregatesInput | FamiliarizationRecordScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"FamiliarizationRecord"> | string
+    companyId?: StringWithAggregatesFilter<"FamiliarizationRecord"> | string
+    vesselId?: StringWithAggregatesFilter<"FamiliarizationRecord"> | string
+    scheduleItemId?: StringWithAggregatesFilter<"FamiliarizationRecord"> | string
+    completedDate?: DateTimeWithAggregatesFilter<"FamiliarizationRecord"> | Date | string
+    notedBy?: StringNullableWithAggregatesFilter<"FamiliarizationRecord"> | string | null
+    remarks?: StringNullableWithAggregatesFilter<"FamiliarizationRecord"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"FamiliarizationRecord"> | Date | string
+    createdBy?: StringNullableWithAggregatesFilter<"FamiliarizationRecord"> | string | null
+    updatedAt?: DateTimeWithAggregatesFilter<"FamiliarizationRecord"> | Date | string
+    updatedBy?: StringNullableWithAggregatesFilter<"FamiliarizationRecord"> | string | null
+    deletedAt?: DateTimeNullableWithAggregatesFilter<"FamiliarizationRecord"> | Date | string | null
+    deletedBy?: StringNullableWithAggregatesFilter<"FamiliarizationRecord"> | string | null
   }
 
   export type ControlledDocumentWhereInput = {
@@ -70469,7 +75381,10 @@ export namespace Prisma {
     internalAudits?: InternalAuditCreateNestedManyWithoutCompanyInput
     externalAudits?: ExternalAuditCreateNestedManyWithoutCompanyInput
     committeeMeetings?: CommitteeMeetingCreateNestedManyWithoutCompanyInput
+    scheduleItems?: ScheduleItemCreateNestedManyWithoutCompanyInput
     emergencyDrills?: EmergencyDrillCreateNestedManyWithoutCompanyInput
+    familiarizationRecords?: FamiliarizationRecordCreateNestedManyWithoutCompanyInput
+    scheduleApplicability?: ScheduleApplicabilityCreateNestedManyWithoutCompanyInput
     controlledDocuments?: ControlledDocumentCreateNestedManyWithoutCompanyInput
     circulars?: CircularCreateNestedManyWithoutCompanyInput
     riskAssessmentDocuments?: RiskAssessmentDocumentCreateNestedManyWithoutCompanyInput
@@ -70496,7 +75411,10 @@ export namespace Prisma {
     internalAudits?: InternalAuditUncheckedCreateNestedManyWithoutCompanyInput
     externalAudits?: ExternalAuditUncheckedCreateNestedManyWithoutCompanyInput
     committeeMeetings?: CommitteeMeetingUncheckedCreateNestedManyWithoutCompanyInput
+    scheduleItems?: ScheduleItemUncheckedCreateNestedManyWithoutCompanyInput
     emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutCompanyInput
+    familiarizationRecords?: FamiliarizationRecordUncheckedCreateNestedManyWithoutCompanyInput
+    scheduleApplicability?: ScheduleApplicabilityUncheckedCreateNestedManyWithoutCompanyInput
     controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutCompanyInput
     circulars?: CircularUncheckedCreateNestedManyWithoutCompanyInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedCreateNestedManyWithoutCompanyInput
@@ -70523,7 +75441,10 @@ export namespace Prisma {
     internalAudits?: InternalAuditUpdateManyWithoutCompanyNestedInput
     externalAudits?: ExternalAuditUpdateManyWithoutCompanyNestedInput
     committeeMeetings?: CommitteeMeetingUpdateManyWithoutCompanyNestedInput
+    scheduleItems?: ScheduleItemUpdateManyWithoutCompanyNestedInput
     emergencyDrills?: EmergencyDrillUpdateManyWithoutCompanyNestedInput
+    familiarizationRecords?: FamiliarizationRecordUpdateManyWithoutCompanyNestedInput
+    scheduleApplicability?: ScheduleApplicabilityUpdateManyWithoutCompanyNestedInput
     controlledDocuments?: ControlledDocumentUpdateManyWithoutCompanyNestedInput
     circulars?: CircularUpdateManyWithoutCompanyNestedInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUpdateManyWithoutCompanyNestedInput
@@ -70550,7 +75471,10 @@ export namespace Prisma {
     internalAudits?: InternalAuditUncheckedUpdateManyWithoutCompanyNestedInput
     externalAudits?: ExternalAuditUncheckedUpdateManyWithoutCompanyNestedInput
     committeeMeetings?: CommitteeMeetingUncheckedUpdateManyWithoutCompanyNestedInput
+    scheduleItems?: ScheduleItemUncheckedUpdateManyWithoutCompanyNestedInput
     emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutCompanyNestedInput
+    familiarizationRecords?: FamiliarizationRecordUncheckedUpdateManyWithoutCompanyNestedInput
+    scheduleApplicability?: ScheduleApplicabilityUncheckedUpdateManyWithoutCompanyNestedInput
     controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutCompanyNestedInput
     circulars?: CircularUncheckedUpdateManyWithoutCompanyNestedInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedUpdateManyWithoutCompanyNestedInput
@@ -70974,6 +75898,21 @@ export namespace Prisma {
     lastDryDock?: Date | string | null
     dryDockPlace?: string | null
     nextDryDockDue?: Date | string | null
+    portOfRegistry?: string | null
+    lbp?: number | null
+    draft?: number | null
+    mainEngine?: string | null
+    serviceSpeed?: number | null
+    navigationArea?: string | null
+    classNotation?: string | null
+    ownerAddress?: string | null
+    builder?: string | null
+    keelLaidDate?: Date | string | null
+    launchingDate?: Date | string | null
+    deliveryDate?: Date | string | null
+    totalComplement?: number | null
+    satPhone?: string | null
+    vesselEmail?: string | null
     archivedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -70993,6 +75932,8 @@ export namespace Prisma {
     externalAudits?: ExternalAuditCreateNestedManyWithoutVesselInput
     committeeMeetings?: CommitteeMeetingCreateNestedManyWithoutVesselInput
     emergencyDrills?: EmergencyDrillCreateNestedManyWithoutVesselInput
+    familiarizationRecords?: FamiliarizationRecordCreateNestedManyWithoutVesselInput
+    scheduleApplicability?: ScheduleApplicabilityCreateNestedManyWithoutVesselInput
     controlledDocuments?: ControlledDocumentCreateNestedManyWithoutVesselInput
     circulars?: CircularCreateNestedManyWithoutVesselInput
     riskAssessmentDocuments?: RiskAssessmentDocumentCreateNestedManyWithoutVesselInput
@@ -71031,6 +75972,21 @@ export namespace Prisma {
     lastDryDock?: Date | string | null
     dryDockPlace?: string | null
     nextDryDockDue?: Date | string | null
+    portOfRegistry?: string | null
+    lbp?: number | null
+    draft?: number | null
+    mainEngine?: string | null
+    serviceSpeed?: number | null
+    navigationArea?: string | null
+    classNotation?: string | null
+    ownerAddress?: string | null
+    builder?: string | null
+    keelLaidDate?: Date | string | null
+    launchingDate?: Date | string | null
+    deliveryDate?: Date | string | null
+    totalComplement?: number | null
+    satPhone?: string | null
+    vesselEmail?: string | null
     archivedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -71049,6 +76005,8 @@ export namespace Prisma {
     externalAudits?: ExternalAuditUncheckedCreateNestedManyWithoutVesselInput
     committeeMeetings?: CommitteeMeetingUncheckedCreateNestedManyWithoutVesselInput
     emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutVesselInput
+    familiarizationRecords?: FamiliarizationRecordUncheckedCreateNestedManyWithoutVesselInput
+    scheduleApplicability?: ScheduleApplicabilityUncheckedCreateNestedManyWithoutVesselInput
     controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutVesselInput
     circulars?: CircularUncheckedCreateNestedManyWithoutVesselInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedCreateNestedManyWithoutVesselInput
@@ -71086,6 +76044,21 @@ export namespace Prisma {
     lastDryDock?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dryDockPlace?: NullableStringFieldUpdateOperationsInput | string | null
     nextDryDockDue?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    portOfRegistry?: NullableStringFieldUpdateOperationsInput | string | null
+    lbp?: NullableFloatFieldUpdateOperationsInput | number | null
+    draft?: NullableFloatFieldUpdateOperationsInput | number | null
+    mainEngine?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceSpeed?: NullableFloatFieldUpdateOperationsInput | number | null
+    navigationArea?: NullableStringFieldUpdateOperationsInput | string | null
+    classNotation?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    builder?: NullableStringFieldUpdateOperationsInput | string | null
+    keelLaidDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    launchingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    totalComplement?: NullableIntFieldUpdateOperationsInput | number | null
+    satPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    vesselEmail?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -71105,6 +76078,8 @@ export namespace Prisma {
     externalAudits?: ExternalAuditUpdateManyWithoutVesselNestedInput
     committeeMeetings?: CommitteeMeetingUpdateManyWithoutVesselNestedInput
     emergencyDrills?: EmergencyDrillUpdateManyWithoutVesselNestedInput
+    familiarizationRecords?: FamiliarizationRecordUpdateManyWithoutVesselNestedInput
+    scheduleApplicability?: ScheduleApplicabilityUpdateManyWithoutVesselNestedInput
     controlledDocuments?: ControlledDocumentUpdateManyWithoutVesselNestedInput
     circulars?: CircularUpdateManyWithoutVesselNestedInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUpdateManyWithoutVesselNestedInput
@@ -71143,6 +76118,21 @@ export namespace Prisma {
     lastDryDock?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dryDockPlace?: NullableStringFieldUpdateOperationsInput | string | null
     nextDryDockDue?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    portOfRegistry?: NullableStringFieldUpdateOperationsInput | string | null
+    lbp?: NullableFloatFieldUpdateOperationsInput | number | null
+    draft?: NullableFloatFieldUpdateOperationsInput | number | null
+    mainEngine?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceSpeed?: NullableFloatFieldUpdateOperationsInput | number | null
+    navigationArea?: NullableStringFieldUpdateOperationsInput | string | null
+    classNotation?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    builder?: NullableStringFieldUpdateOperationsInput | string | null
+    keelLaidDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    launchingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    totalComplement?: NullableIntFieldUpdateOperationsInput | number | null
+    satPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    vesselEmail?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -71161,6 +76151,8 @@ export namespace Prisma {
     externalAudits?: ExternalAuditUncheckedUpdateManyWithoutVesselNestedInput
     committeeMeetings?: CommitteeMeetingUncheckedUpdateManyWithoutVesselNestedInput
     emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutVesselNestedInput
+    familiarizationRecords?: FamiliarizationRecordUncheckedUpdateManyWithoutVesselNestedInput
+    scheduleApplicability?: ScheduleApplicabilityUncheckedUpdateManyWithoutVesselNestedInput
     controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutVesselNestedInput
     circulars?: CircularUncheckedUpdateManyWithoutVesselNestedInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedUpdateManyWithoutVesselNestedInput
@@ -71199,6 +76191,21 @@ export namespace Prisma {
     lastDryDock?: Date | string | null
     dryDockPlace?: string | null
     nextDryDockDue?: Date | string | null
+    portOfRegistry?: string | null
+    lbp?: number | null
+    draft?: number | null
+    mainEngine?: string | null
+    serviceSpeed?: number | null
+    navigationArea?: string | null
+    classNotation?: string | null
+    ownerAddress?: string | null
+    builder?: string | null
+    keelLaidDate?: Date | string | null
+    launchingDate?: Date | string | null
+    deliveryDate?: Date | string | null
+    totalComplement?: number | null
+    satPhone?: string | null
+    vesselEmail?: string | null
     archivedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -71236,6 +76243,21 @@ export namespace Prisma {
     lastDryDock?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dryDockPlace?: NullableStringFieldUpdateOperationsInput | string | null
     nextDryDockDue?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    portOfRegistry?: NullableStringFieldUpdateOperationsInput | string | null
+    lbp?: NullableFloatFieldUpdateOperationsInput | number | null
+    draft?: NullableFloatFieldUpdateOperationsInput | number | null
+    mainEngine?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceSpeed?: NullableFloatFieldUpdateOperationsInput | number | null
+    navigationArea?: NullableStringFieldUpdateOperationsInput | string | null
+    classNotation?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    builder?: NullableStringFieldUpdateOperationsInput | string | null
+    keelLaidDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    launchingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    totalComplement?: NullableIntFieldUpdateOperationsInput | number | null
+    satPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    vesselEmail?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -71274,6 +76296,21 @@ export namespace Prisma {
     lastDryDock?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dryDockPlace?: NullableStringFieldUpdateOperationsInput | string | null
     nextDryDockDue?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    portOfRegistry?: NullableStringFieldUpdateOperationsInput | string | null
+    lbp?: NullableFloatFieldUpdateOperationsInput | number | null
+    draft?: NullableFloatFieldUpdateOperationsInput | number | null
+    mainEngine?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceSpeed?: NullableFloatFieldUpdateOperationsInput | number | null
+    navigationArea?: NullableStringFieldUpdateOperationsInput | string | null
+    classNotation?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    builder?: NullableStringFieldUpdateOperationsInput | string | null
+    keelLaidDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    launchingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    totalComplement?: NullableIntFieldUpdateOperationsInput | number | null
+    satPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    vesselEmail?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -73985,7 +79022,7 @@ export namespace Prisma {
     observation: string
     response?: string | null
     status?: $Enums.FindingStatus
-    category?: $Enums.SireObservationCategory | null
+    category?: $Enums.CdiObservationSection | null
     rootCauseCategory?: $Enums.RootCauseCategory | null
     rootCauseSubCategory?: string | null
     rootCause?: string | null
@@ -74003,7 +79040,7 @@ export namespace Prisma {
     observation: string
     response?: string | null
     status?: $Enums.FindingStatus
-    category?: $Enums.SireObservationCategory | null
+    category?: $Enums.CdiObservationSection | null
     rootCauseCategory?: $Enums.RootCauseCategory | null
     rootCauseSubCategory?: string | null
     rootCause?: string | null
@@ -74019,7 +79056,7 @@ export namespace Prisma {
     observation?: StringFieldUpdateOperationsInput | string
     response?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumFindingStatusFieldUpdateOperationsInput | $Enums.FindingStatus
-    category?: NullableEnumSireObservationCategoryFieldUpdateOperationsInput | $Enums.SireObservationCategory | null
+    category?: NullableEnumCdiObservationSectionFieldUpdateOperationsInput | $Enums.CdiObservationSection | null
     rootCauseCategory?: NullableEnumRootCauseCategoryFieldUpdateOperationsInput | $Enums.RootCauseCategory | null
     rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
     rootCause?: NullableStringFieldUpdateOperationsInput | string | null
@@ -74037,7 +79074,7 @@ export namespace Prisma {
     observation?: StringFieldUpdateOperationsInput | string
     response?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumFindingStatusFieldUpdateOperationsInput | $Enums.FindingStatus
-    category?: NullableEnumSireObservationCategoryFieldUpdateOperationsInput | $Enums.SireObservationCategory | null
+    category?: NullableEnumCdiObservationSectionFieldUpdateOperationsInput | $Enums.CdiObservationSection | null
     rootCauseCategory?: NullableEnumRootCauseCategoryFieldUpdateOperationsInput | $Enums.RootCauseCategory | null
     rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
     rootCause?: NullableStringFieldUpdateOperationsInput | string | null
@@ -74054,7 +79091,7 @@ export namespace Prisma {
     observation: string
     response?: string | null
     status?: $Enums.FindingStatus
-    category?: $Enums.SireObservationCategory | null
+    category?: $Enums.CdiObservationSection | null
     rootCauseCategory?: $Enums.RootCauseCategory | null
     rootCauseSubCategory?: string | null
     rootCause?: string | null
@@ -74070,7 +79107,7 @@ export namespace Prisma {
     observation?: StringFieldUpdateOperationsInput | string
     response?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumFindingStatusFieldUpdateOperationsInput | $Enums.FindingStatus
-    category?: NullableEnumSireObservationCategoryFieldUpdateOperationsInput | $Enums.SireObservationCategory | null
+    category?: NullableEnumCdiObservationSectionFieldUpdateOperationsInput | $Enums.CdiObservationSection | null
     rootCauseCategory?: NullableEnumRootCauseCategoryFieldUpdateOperationsInput | $Enums.RootCauseCategory | null
     rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
     rootCause?: NullableStringFieldUpdateOperationsInput | string | null
@@ -74087,7 +79124,7 @@ export namespace Prisma {
     observation?: StringFieldUpdateOperationsInput | string
     response?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumFindingStatusFieldUpdateOperationsInput | $Enums.FindingStatus
-    category?: NullableEnumSireObservationCategoryFieldUpdateOperationsInput | $Enums.SireObservationCategory | null
+    category?: NullableEnumCdiObservationSectionFieldUpdateOperationsInput | $Enums.CdiObservationSection | null
     rootCauseCategory?: NullableEnumRootCauseCategoryFieldUpdateOperationsInput | $Enums.RootCauseCategory | null
     rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
     rootCause?: NullableStringFieldUpdateOperationsInput | string | null
@@ -74883,15 +79920,236 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type ScheduleItemCreateInput = {
+    id?: string
+    kind: $Enums.ScheduleItemKind
+    category?: string | null
+    itemNo?: string | null
+    name: string
+    smsReference?: string | null
+    frequencyLabel?: string | null
+    frequencyDays?: number | null
+    sortOrder: number
+    active?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
+    company: CompanyCreateNestedOneWithoutScheduleItemsInput
+    drills?: EmergencyDrillCreateNestedManyWithoutScheduleItemInput
+    familiarizations?: FamiliarizationRecordCreateNestedManyWithoutScheduleItemInput
+    exceptions?: ScheduleApplicabilityCreateNestedManyWithoutScheduleItemInput
+  }
+
+  export type ScheduleItemUncheckedCreateInput = {
+    id?: string
+    companyId: string
+    kind: $Enums.ScheduleItemKind
+    category?: string | null
+    itemNo?: string | null
+    name: string
+    smsReference?: string | null
+    frequencyLabel?: string | null
+    frequencyDays?: number | null
+    sortOrder: number
+    active?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
+    drills?: EmergencyDrillUncheckedCreateNestedManyWithoutScheduleItemInput
+    familiarizations?: FamiliarizationRecordUncheckedCreateNestedManyWithoutScheduleItemInput
+    exceptions?: ScheduleApplicabilityUncheckedCreateNestedManyWithoutScheduleItemInput
+  }
+
+  export type ScheduleItemUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    kind?: EnumScheduleItemKindFieldUpdateOperationsInput | $Enums.ScheduleItemKind
+    category?: NullableStringFieldUpdateOperationsInput | string | null
+    itemNo?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    smsReference?: NullableStringFieldUpdateOperationsInput | string | null
+    frequencyLabel?: NullableStringFieldUpdateOperationsInput | string | null
+    frequencyDays?: NullableIntFieldUpdateOperationsInput | number | null
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    active?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    company?: CompanyUpdateOneRequiredWithoutScheduleItemsNestedInput
+    drills?: EmergencyDrillUpdateManyWithoutScheduleItemNestedInput
+    familiarizations?: FamiliarizationRecordUpdateManyWithoutScheduleItemNestedInput
+    exceptions?: ScheduleApplicabilityUpdateManyWithoutScheduleItemNestedInput
+  }
+
+  export type ScheduleItemUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    kind?: EnumScheduleItemKindFieldUpdateOperationsInput | $Enums.ScheduleItemKind
+    category?: NullableStringFieldUpdateOperationsInput | string | null
+    itemNo?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    smsReference?: NullableStringFieldUpdateOperationsInput | string | null
+    frequencyLabel?: NullableStringFieldUpdateOperationsInput | string | null
+    frequencyDays?: NullableIntFieldUpdateOperationsInput | number | null
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    active?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    drills?: EmergencyDrillUncheckedUpdateManyWithoutScheduleItemNestedInput
+    familiarizations?: FamiliarizationRecordUncheckedUpdateManyWithoutScheduleItemNestedInput
+    exceptions?: ScheduleApplicabilityUncheckedUpdateManyWithoutScheduleItemNestedInput
+  }
+
+  export type ScheduleItemCreateManyInput = {
+    id?: string
+    companyId: string
+    kind: $Enums.ScheduleItemKind
+    category?: string | null
+    itemNo?: string | null
+    name: string
+    smsReference?: string | null
+    frequencyLabel?: string | null
+    frequencyDays?: number | null
+    sortOrder: number
+    active?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
+  }
+
+  export type ScheduleItemUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    kind?: EnumScheduleItemKindFieldUpdateOperationsInput | $Enums.ScheduleItemKind
+    category?: NullableStringFieldUpdateOperationsInput | string | null
+    itemNo?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    smsReference?: NullableStringFieldUpdateOperationsInput | string | null
+    frequencyLabel?: NullableStringFieldUpdateOperationsInput | string | null
+    frequencyDays?: NullableIntFieldUpdateOperationsInput | number | null
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    active?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type ScheduleItemUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    kind?: EnumScheduleItemKindFieldUpdateOperationsInput | $Enums.ScheduleItemKind
+    category?: NullableStringFieldUpdateOperationsInput | string | null
+    itemNo?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    smsReference?: NullableStringFieldUpdateOperationsInput | string | null
+    frequencyLabel?: NullableStringFieldUpdateOperationsInput | string | null
+    frequencyDays?: NullableIntFieldUpdateOperationsInput | number | null
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    active?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type ScheduleApplicabilityCreateInput = {
+    id?: string
+    notApplicable?: boolean
+    reason?: string | null
+    createdAt?: Date | string
+    createdBy?: string | null
+    updatedAt?: Date | string
+    updatedBy?: string | null
+    company: CompanyCreateNestedOneWithoutScheduleApplicabilityInput
+    vessel: VesselCreateNestedOneWithoutScheduleApplicabilityInput
+    scheduleItem: ScheduleItemCreateNestedOneWithoutExceptionsInput
+  }
+
+  export type ScheduleApplicabilityUncheckedCreateInput = {
+    id?: string
+    companyId: string
+    vesselId: string
+    scheduleItemId: string
+    notApplicable?: boolean
+    reason?: string | null
+    createdAt?: Date | string
+    createdBy?: string | null
+    updatedAt?: Date | string
+    updatedBy?: string | null
+  }
+
+  export type ScheduleApplicabilityUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    notApplicable?: BoolFieldUpdateOperationsInput | boolean
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    company?: CompanyUpdateOneRequiredWithoutScheduleApplicabilityNestedInput
+    vessel?: VesselUpdateOneRequiredWithoutScheduleApplicabilityNestedInput
+    scheduleItem?: ScheduleItemUpdateOneRequiredWithoutExceptionsNestedInput
+  }
+
+  export type ScheduleApplicabilityUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    vesselId?: StringFieldUpdateOperationsInput | string
+    scheduleItemId?: StringFieldUpdateOperationsInput | string
+    notApplicable?: BoolFieldUpdateOperationsInput | boolean
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type ScheduleApplicabilityCreateManyInput = {
+    id?: string
+    companyId: string
+    vesselId: string
+    scheduleItemId: string
+    notApplicable?: boolean
+    reason?: string | null
+    createdAt?: Date | string
+    createdBy?: string | null
+    updatedAt?: Date | string
+    updatedBy?: string | null
+  }
+
+  export type ScheduleApplicabilityUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    notApplicable?: BoolFieldUpdateOperationsInput | boolean
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type ScheduleApplicabilityUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    vesselId?: StringFieldUpdateOperationsInput | string
+    scheduleItemId?: StringFieldUpdateOperationsInput | string
+    notApplicable?: BoolFieldUpdateOperationsInput | boolean
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
   export type EmergencyDrillCreateInput = {
     id?: string
     refNo: string
-    drillType: $Enums.DrillType
     drillDate: Date | string
-    scenario?: string | null
+    drillTime?: string | null
+    position?: string | null
     participants?: string | null
     conductedBy?: string | null
-    observations?: string | null
+    details?: string | null
+    deficiencies?: string | null
+    correctiveAction?: string | null
+    vesselRemarks?: string | null
     status?: $Enums.FindingStatus
     closedAt?: Date | string | null
     createdAt?: Date | string
@@ -74902,6 +80160,7 @@ export namespace Prisma {
     deletedBy?: string | null
     company: CompanyCreateNestedOneWithoutEmergencyDrillsInput
     vessel: VesselCreateNestedOneWithoutEmergencyDrillsInput
+    scheduleItem: ScheduleItemCreateNestedOneWithoutDrillsInput
   }
 
   export type EmergencyDrillUncheckedCreateInput = {
@@ -74909,12 +80168,16 @@ export namespace Prisma {
     companyId: string
     refNo: string
     vesselId: string
-    drillType: $Enums.DrillType
+    scheduleItemId: string
     drillDate: Date | string
-    scenario?: string | null
+    drillTime?: string | null
+    position?: string | null
     participants?: string | null
     conductedBy?: string | null
-    observations?: string | null
+    details?: string | null
+    deficiencies?: string | null
+    correctiveAction?: string | null
+    vesselRemarks?: string | null
     status?: $Enums.FindingStatus
     closedAt?: Date | string | null
     createdAt?: Date | string
@@ -74928,12 +80191,15 @@ export namespace Prisma {
   export type EmergencyDrillUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     refNo?: StringFieldUpdateOperationsInput | string
-    drillType?: EnumDrillTypeFieldUpdateOperationsInput | $Enums.DrillType
     drillDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    scenario?: NullableStringFieldUpdateOperationsInput | string | null
+    drillTime?: NullableStringFieldUpdateOperationsInput | string | null
+    position?: NullableStringFieldUpdateOperationsInput | string | null
     participants?: NullableStringFieldUpdateOperationsInput | string | null
     conductedBy?: NullableStringFieldUpdateOperationsInput | string | null
-    observations?: NullableStringFieldUpdateOperationsInput | string | null
+    details?: NullableStringFieldUpdateOperationsInput | string | null
+    deficiencies?: NullableStringFieldUpdateOperationsInput | string | null
+    correctiveAction?: NullableStringFieldUpdateOperationsInput | string | null
+    vesselRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumFindingStatusFieldUpdateOperationsInput | $Enums.FindingStatus
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -74944,6 +80210,7 @@ export namespace Prisma {
     deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     company?: CompanyUpdateOneRequiredWithoutEmergencyDrillsNestedInput
     vessel?: VesselUpdateOneRequiredWithoutEmergencyDrillsNestedInput
+    scheduleItem?: ScheduleItemUpdateOneRequiredWithoutDrillsNestedInput
   }
 
   export type EmergencyDrillUncheckedUpdateInput = {
@@ -74951,12 +80218,16 @@ export namespace Prisma {
     companyId?: StringFieldUpdateOperationsInput | string
     refNo?: StringFieldUpdateOperationsInput | string
     vesselId?: StringFieldUpdateOperationsInput | string
-    drillType?: EnumDrillTypeFieldUpdateOperationsInput | $Enums.DrillType
+    scheduleItemId?: StringFieldUpdateOperationsInput | string
     drillDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    scenario?: NullableStringFieldUpdateOperationsInput | string | null
+    drillTime?: NullableStringFieldUpdateOperationsInput | string | null
+    position?: NullableStringFieldUpdateOperationsInput | string | null
     participants?: NullableStringFieldUpdateOperationsInput | string | null
     conductedBy?: NullableStringFieldUpdateOperationsInput | string | null
-    observations?: NullableStringFieldUpdateOperationsInput | string | null
+    details?: NullableStringFieldUpdateOperationsInput | string | null
+    deficiencies?: NullableStringFieldUpdateOperationsInput | string | null
+    correctiveAction?: NullableStringFieldUpdateOperationsInput | string | null
+    vesselRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumFindingStatusFieldUpdateOperationsInput | $Enums.FindingStatus
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -74972,12 +80243,16 @@ export namespace Prisma {
     companyId: string
     refNo: string
     vesselId: string
-    drillType: $Enums.DrillType
+    scheduleItemId: string
     drillDate: Date | string
-    scenario?: string | null
+    drillTime?: string | null
+    position?: string | null
     participants?: string | null
     conductedBy?: string | null
-    observations?: string | null
+    details?: string | null
+    deficiencies?: string | null
+    correctiveAction?: string | null
+    vesselRemarks?: string | null
     status?: $Enums.FindingStatus
     closedAt?: Date | string | null
     createdAt?: Date | string
@@ -74991,12 +80266,15 @@ export namespace Prisma {
   export type EmergencyDrillUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     refNo?: StringFieldUpdateOperationsInput | string
-    drillType?: EnumDrillTypeFieldUpdateOperationsInput | $Enums.DrillType
     drillDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    scenario?: NullableStringFieldUpdateOperationsInput | string | null
+    drillTime?: NullableStringFieldUpdateOperationsInput | string | null
+    position?: NullableStringFieldUpdateOperationsInput | string | null
     participants?: NullableStringFieldUpdateOperationsInput | string | null
     conductedBy?: NullableStringFieldUpdateOperationsInput | string | null
-    observations?: NullableStringFieldUpdateOperationsInput | string | null
+    details?: NullableStringFieldUpdateOperationsInput | string | null
+    deficiencies?: NullableStringFieldUpdateOperationsInput | string | null
+    correctiveAction?: NullableStringFieldUpdateOperationsInput | string | null
+    vesselRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumFindingStatusFieldUpdateOperationsInput | $Enums.FindingStatus
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -75012,17 +80290,130 @@ export namespace Prisma {
     companyId?: StringFieldUpdateOperationsInput | string
     refNo?: StringFieldUpdateOperationsInput | string
     vesselId?: StringFieldUpdateOperationsInput | string
-    drillType?: EnumDrillTypeFieldUpdateOperationsInput | $Enums.DrillType
+    scheduleItemId?: StringFieldUpdateOperationsInput | string
     drillDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    scenario?: NullableStringFieldUpdateOperationsInput | string | null
+    drillTime?: NullableStringFieldUpdateOperationsInput | string | null
+    position?: NullableStringFieldUpdateOperationsInput | string | null
     participants?: NullableStringFieldUpdateOperationsInput | string | null
     conductedBy?: NullableStringFieldUpdateOperationsInput | string | null
-    observations?: NullableStringFieldUpdateOperationsInput | string | null
+    details?: NullableStringFieldUpdateOperationsInput | string | null
+    deficiencies?: NullableStringFieldUpdateOperationsInput | string | null
+    correctiveAction?: NullableStringFieldUpdateOperationsInput | string | null
+    vesselRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumFindingStatusFieldUpdateOperationsInput | $Enums.FindingStatus
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type FamiliarizationRecordCreateInput = {
+    id?: string
+    completedDate: Date | string
+    notedBy?: string | null
+    remarks?: string | null
+    createdAt?: Date | string
+    createdBy?: string | null
+    updatedAt?: Date | string
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    company: CompanyCreateNestedOneWithoutFamiliarizationRecordsInput
+    vessel: VesselCreateNestedOneWithoutFamiliarizationRecordsInput
+    scheduleItem: ScheduleItemCreateNestedOneWithoutFamiliarizationsInput
+  }
+
+  export type FamiliarizationRecordUncheckedCreateInput = {
+    id?: string
+    companyId: string
+    vesselId: string
+    scheduleItemId: string
+    completedDate: Date | string
+    notedBy?: string | null
+    remarks?: string | null
+    createdAt?: Date | string
+    createdBy?: string | null
+    updatedAt?: Date | string
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+  }
+
+  export type FamiliarizationRecordUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    completedDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    notedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    remarks?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    company?: CompanyUpdateOneRequiredWithoutFamiliarizationRecordsNestedInput
+    vessel?: VesselUpdateOneRequiredWithoutFamiliarizationRecordsNestedInput
+    scheduleItem?: ScheduleItemUpdateOneRequiredWithoutFamiliarizationsNestedInput
+  }
+
+  export type FamiliarizationRecordUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    vesselId?: StringFieldUpdateOperationsInput | string
+    scheduleItemId?: StringFieldUpdateOperationsInput | string
+    completedDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    notedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    remarks?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type FamiliarizationRecordCreateManyInput = {
+    id?: string
+    companyId: string
+    vesselId: string
+    scheduleItemId: string
+    completedDate: Date | string
+    notedBy?: string | null
+    remarks?: string | null
+    createdAt?: Date | string
+    createdBy?: string | null
+    updatedAt?: Date | string
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+  }
+
+  export type FamiliarizationRecordUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    completedDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    notedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    remarks?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type FamiliarizationRecordUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    vesselId?: StringFieldUpdateOperationsInput | string
+    scheduleItemId?: StringFieldUpdateOperationsInput | string
+    completedDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    notedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    remarks?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -76360,10 +81751,28 @@ export namespace Prisma {
     none?: CommitteeMeetingWhereInput
   }
 
+  export type ScheduleItemListRelationFilter = {
+    every?: ScheduleItemWhereInput
+    some?: ScheduleItemWhereInput
+    none?: ScheduleItemWhereInput
+  }
+
   export type EmergencyDrillListRelationFilter = {
     every?: EmergencyDrillWhereInput
     some?: EmergencyDrillWhereInput
     none?: EmergencyDrillWhereInput
+  }
+
+  export type FamiliarizationRecordListRelationFilter = {
+    every?: FamiliarizationRecordWhereInput
+    some?: FamiliarizationRecordWhereInput
+    none?: FamiliarizationRecordWhereInput
+  }
+
+  export type ScheduleApplicabilityListRelationFilter = {
+    every?: ScheduleApplicabilityWhereInput
+    some?: ScheduleApplicabilityWhereInput
+    none?: ScheduleApplicabilityWhereInput
   }
 
   export type ControlledDocumentListRelationFilter = {
@@ -76446,7 +81855,19 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
+  export type ScheduleItemOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type EmergencyDrillOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type FamiliarizationRecordOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ScheduleApplicabilityOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -76926,6 +82347,21 @@ export namespace Prisma {
     lastDryDock?: SortOrder
     dryDockPlace?: SortOrder
     nextDryDockDue?: SortOrder
+    portOfRegistry?: SortOrder
+    lbp?: SortOrder
+    draft?: SortOrder
+    mainEngine?: SortOrder
+    serviceSpeed?: SortOrder
+    navigationArea?: SortOrder
+    classNotation?: SortOrder
+    ownerAddress?: SortOrder
+    builder?: SortOrder
+    keelLaidDate?: SortOrder
+    launchingDate?: SortOrder
+    deliveryDate?: SortOrder
+    totalComplement?: SortOrder
+    satPhone?: SortOrder
+    vesselEmail?: SortOrder
     archivedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -76945,6 +82381,10 @@ export namespace Prisma {
     netTonnage?: SortOrder
     deadweight?: SortOrder
     yearWithSwan?: SortOrder
+    lbp?: SortOrder
+    draft?: SortOrder
+    serviceSpeed?: SortOrder
+    totalComplement?: SortOrder
   }
 
   export type VesselMaxOrderByAggregateInput = {
@@ -76976,6 +82416,21 @@ export namespace Prisma {
     lastDryDock?: SortOrder
     dryDockPlace?: SortOrder
     nextDryDockDue?: SortOrder
+    portOfRegistry?: SortOrder
+    lbp?: SortOrder
+    draft?: SortOrder
+    mainEngine?: SortOrder
+    serviceSpeed?: SortOrder
+    navigationArea?: SortOrder
+    classNotation?: SortOrder
+    ownerAddress?: SortOrder
+    builder?: SortOrder
+    keelLaidDate?: SortOrder
+    launchingDate?: SortOrder
+    deliveryDate?: SortOrder
+    totalComplement?: SortOrder
+    satPhone?: SortOrder
+    vesselEmail?: SortOrder
     archivedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -77014,6 +82469,21 @@ export namespace Prisma {
     lastDryDock?: SortOrder
     dryDockPlace?: SortOrder
     nextDryDockDue?: SortOrder
+    portOfRegistry?: SortOrder
+    lbp?: SortOrder
+    draft?: SortOrder
+    mainEngine?: SortOrder
+    serviceSpeed?: SortOrder
+    navigationArea?: SortOrder
+    classNotation?: SortOrder
+    ownerAddress?: SortOrder
+    builder?: SortOrder
+    keelLaidDate?: SortOrder
+    launchingDate?: SortOrder
+    deliveryDate?: SortOrder
+    totalComplement?: SortOrder
+    satPhone?: SortOrder
+    vesselEmail?: SortOrder
     archivedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -77033,6 +82503,10 @@ export namespace Prisma {
     netTonnage?: SortOrder
     deadweight?: SortOrder
     yearWithSwan?: SortOrder
+    lbp?: SortOrder
+    draft?: SortOrder
+    serviceSpeed?: SortOrder
+    totalComplement?: SortOrder
   }
 
   export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -78994,6 +84468,13 @@ export namespace Prisma {
     not?: NestedEnumFindingStatusFilter<$PrismaModel> | $Enums.FindingStatus
   }
 
+  export type EnumCdiObservationSectionNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.CdiObservationSection | EnumCdiObservationSectionFieldRefInput<$PrismaModel> | null
+    in?: $Enums.CdiObservationSection[] | ListEnumCdiObservationSectionFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.CdiObservationSection[] | ListEnumCdiObservationSectionFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumCdiObservationSectionNullableFilter<$PrismaModel> | $Enums.CdiObservationSection | null
+  }
+
   export type CdiInspectionScalarRelationFilter = {
     is?: CdiInspectionWhereInput
     isNot?: CdiInspectionWhereInput
@@ -79058,6 +84539,16 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumFindingStatusFilter<$PrismaModel>
     _max?: NestedEnumFindingStatusFilter<$PrismaModel>
+  }
+
+  export type EnumCdiObservationSectionNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.CdiObservationSection | EnumCdiObservationSectionFieldRefInput<$PrismaModel> | null
+    in?: $Enums.CdiObservationSection[] | ListEnumCdiObservationSectionFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.CdiObservationSection[] | ListEnumCdiObservationSectionFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumCdiObservationSectionNullableWithAggregatesFilter<$PrismaModel> | $Enums.CdiObservationSection | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumCdiObservationSectionNullableFilter<$PrismaModel>
+    _max?: NestedEnumCdiObservationSectionNullableFilter<$PrismaModel>
   }
 
   export type InternalAuditFindingListRelationFilter = {
@@ -79515,16 +85006,143 @@ export namespace Prisma {
     _max?: NestedEnumCommitteeTypeFilter<$PrismaModel>
   }
 
-  export type EnumDrillTypeFilter<$PrismaModel = never> = {
-    equals?: $Enums.DrillType | EnumDrillTypeFieldRefInput<$PrismaModel>
-    in?: $Enums.DrillType[] | ListEnumDrillTypeFieldRefInput<$PrismaModel>
-    notIn?: $Enums.DrillType[] | ListEnumDrillTypeFieldRefInput<$PrismaModel>
-    not?: NestedEnumDrillTypeFilter<$PrismaModel> | $Enums.DrillType
+  export type EnumScheduleItemKindFilter<$PrismaModel = never> = {
+    equals?: $Enums.ScheduleItemKind | EnumScheduleItemKindFieldRefInput<$PrismaModel>
+    in?: $Enums.ScheduleItemKind[] | ListEnumScheduleItemKindFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ScheduleItemKind[] | ListEnumScheduleItemKindFieldRefInput<$PrismaModel>
+    not?: NestedEnumScheduleItemKindFilter<$PrismaModel> | $Enums.ScheduleItemKind
+  }
+
+  export type ScheduleItemCompanyIdKindItemNoCompoundUniqueInput = {
+    companyId: string
+    kind: $Enums.ScheduleItemKind
+    itemNo: string
+  }
+
+  export type ScheduleItemCountOrderByAggregateInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    kind?: SortOrder
+    category?: SortOrder
+    itemNo?: SortOrder
+    name?: SortOrder
+    smsReference?: SortOrder
+    frequencyLabel?: SortOrder
+    frequencyDays?: SortOrder
+    sortOrder?: SortOrder
+    active?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    deletedAt?: SortOrder
+  }
+
+  export type ScheduleItemAvgOrderByAggregateInput = {
+    frequencyDays?: SortOrder
+    sortOrder?: SortOrder
+  }
+
+  export type ScheduleItemMaxOrderByAggregateInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    kind?: SortOrder
+    category?: SortOrder
+    itemNo?: SortOrder
+    name?: SortOrder
+    smsReference?: SortOrder
+    frequencyLabel?: SortOrder
+    frequencyDays?: SortOrder
+    sortOrder?: SortOrder
+    active?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    deletedAt?: SortOrder
+  }
+
+  export type ScheduleItemMinOrderByAggregateInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    kind?: SortOrder
+    category?: SortOrder
+    itemNo?: SortOrder
+    name?: SortOrder
+    smsReference?: SortOrder
+    frequencyLabel?: SortOrder
+    frequencyDays?: SortOrder
+    sortOrder?: SortOrder
+    active?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    deletedAt?: SortOrder
+  }
+
+  export type ScheduleItemSumOrderByAggregateInput = {
+    frequencyDays?: SortOrder
+    sortOrder?: SortOrder
+  }
+
+  export type EnumScheduleItemKindWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ScheduleItemKind | EnumScheduleItemKindFieldRefInput<$PrismaModel>
+    in?: $Enums.ScheduleItemKind[] | ListEnumScheduleItemKindFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ScheduleItemKind[] | ListEnumScheduleItemKindFieldRefInput<$PrismaModel>
+    not?: NestedEnumScheduleItemKindWithAggregatesFilter<$PrismaModel> | $Enums.ScheduleItemKind
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumScheduleItemKindFilter<$PrismaModel>
+    _max?: NestedEnumScheduleItemKindFilter<$PrismaModel>
   }
 
   export type VesselScalarRelationFilter = {
     is?: VesselWhereInput
     isNot?: VesselWhereInput
+  }
+
+  export type ScheduleItemScalarRelationFilter = {
+    is?: ScheduleItemWhereInput
+    isNot?: ScheduleItemWhereInput
+  }
+
+  export type ScheduleApplicabilityCompanyIdVesselIdScheduleItemIdCompoundUniqueInput = {
+    companyId: string
+    vesselId: string
+    scheduleItemId: string
+  }
+
+  export type ScheduleApplicabilityCountOrderByAggregateInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    vesselId?: SortOrder
+    scheduleItemId?: SortOrder
+    notApplicable?: SortOrder
+    reason?: SortOrder
+    createdAt?: SortOrder
+    createdBy?: SortOrder
+    updatedAt?: SortOrder
+    updatedBy?: SortOrder
+  }
+
+  export type ScheduleApplicabilityMaxOrderByAggregateInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    vesselId?: SortOrder
+    scheduleItemId?: SortOrder
+    notApplicable?: SortOrder
+    reason?: SortOrder
+    createdAt?: SortOrder
+    createdBy?: SortOrder
+    updatedAt?: SortOrder
+    updatedBy?: SortOrder
+  }
+
+  export type ScheduleApplicabilityMinOrderByAggregateInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    vesselId?: SortOrder
+    scheduleItemId?: SortOrder
+    notApplicable?: SortOrder
+    reason?: SortOrder
+    createdAt?: SortOrder
+    createdBy?: SortOrder
+    updatedAt?: SortOrder
+    updatedBy?: SortOrder
   }
 
   export type EmergencyDrillCompanyIdRefNoCompoundUniqueInput = {
@@ -79537,12 +85155,16 @@ export namespace Prisma {
     companyId?: SortOrder
     refNo?: SortOrder
     vesselId?: SortOrder
-    drillType?: SortOrder
+    scheduleItemId?: SortOrder
     drillDate?: SortOrder
-    scenario?: SortOrder
+    drillTime?: SortOrder
+    position?: SortOrder
     participants?: SortOrder
     conductedBy?: SortOrder
-    observations?: SortOrder
+    details?: SortOrder
+    deficiencies?: SortOrder
+    correctiveAction?: SortOrder
+    vesselRemarks?: SortOrder
     status?: SortOrder
     closedAt?: SortOrder
     createdAt?: SortOrder
@@ -79558,12 +85180,16 @@ export namespace Prisma {
     companyId?: SortOrder
     refNo?: SortOrder
     vesselId?: SortOrder
-    drillType?: SortOrder
+    scheduleItemId?: SortOrder
     drillDate?: SortOrder
-    scenario?: SortOrder
+    drillTime?: SortOrder
+    position?: SortOrder
     participants?: SortOrder
     conductedBy?: SortOrder
-    observations?: SortOrder
+    details?: SortOrder
+    deficiencies?: SortOrder
+    correctiveAction?: SortOrder
+    vesselRemarks?: SortOrder
     status?: SortOrder
     closedAt?: SortOrder
     createdAt?: SortOrder
@@ -79579,12 +85205,16 @@ export namespace Prisma {
     companyId?: SortOrder
     refNo?: SortOrder
     vesselId?: SortOrder
-    drillType?: SortOrder
+    scheduleItemId?: SortOrder
     drillDate?: SortOrder
-    scenario?: SortOrder
+    drillTime?: SortOrder
+    position?: SortOrder
     participants?: SortOrder
     conductedBy?: SortOrder
-    observations?: SortOrder
+    details?: SortOrder
+    deficiencies?: SortOrder
+    correctiveAction?: SortOrder
+    vesselRemarks?: SortOrder
     status?: SortOrder
     closedAt?: SortOrder
     createdAt?: SortOrder
@@ -79595,14 +85225,52 @@ export namespace Prisma {
     deletedBy?: SortOrder
   }
 
-  export type EnumDrillTypeWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.DrillType | EnumDrillTypeFieldRefInput<$PrismaModel>
-    in?: $Enums.DrillType[] | ListEnumDrillTypeFieldRefInput<$PrismaModel>
-    notIn?: $Enums.DrillType[] | ListEnumDrillTypeFieldRefInput<$PrismaModel>
-    not?: NestedEnumDrillTypeWithAggregatesFilter<$PrismaModel> | $Enums.DrillType
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumDrillTypeFilter<$PrismaModel>
-    _max?: NestedEnumDrillTypeFilter<$PrismaModel>
+  export type FamiliarizationRecordCountOrderByAggregateInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    vesselId?: SortOrder
+    scheduleItemId?: SortOrder
+    completedDate?: SortOrder
+    notedBy?: SortOrder
+    remarks?: SortOrder
+    createdAt?: SortOrder
+    createdBy?: SortOrder
+    updatedAt?: SortOrder
+    updatedBy?: SortOrder
+    deletedAt?: SortOrder
+    deletedBy?: SortOrder
+  }
+
+  export type FamiliarizationRecordMaxOrderByAggregateInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    vesselId?: SortOrder
+    scheduleItemId?: SortOrder
+    completedDate?: SortOrder
+    notedBy?: SortOrder
+    remarks?: SortOrder
+    createdAt?: SortOrder
+    createdBy?: SortOrder
+    updatedAt?: SortOrder
+    updatedBy?: SortOrder
+    deletedAt?: SortOrder
+    deletedBy?: SortOrder
+  }
+
+  export type FamiliarizationRecordMinOrderByAggregateInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    vesselId?: SortOrder
+    scheduleItemId?: SortOrder
+    completedDate?: SortOrder
+    notedBy?: SortOrder
+    remarks?: SortOrder
+    createdAt?: SortOrder
+    createdBy?: SortOrder
+    updatedAt?: SortOrder
+    updatedBy?: SortOrder
+    deletedAt?: SortOrder
+    deletedBy?: SortOrder
   }
 
   export type EnumDocumentCategoryFilter<$PrismaModel = never> = {
@@ -80525,11 +86193,32 @@ export namespace Prisma {
     connect?: CommitteeMeetingWhereUniqueInput | CommitteeMeetingWhereUniqueInput[]
   }
 
+  export type ScheduleItemCreateNestedManyWithoutCompanyInput = {
+    create?: XOR<ScheduleItemCreateWithoutCompanyInput, ScheduleItemUncheckedCreateWithoutCompanyInput> | ScheduleItemCreateWithoutCompanyInput[] | ScheduleItemUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: ScheduleItemCreateOrConnectWithoutCompanyInput | ScheduleItemCreateOrConnectWithoutCompanyInput[]
+    createMany?: ScheduleItemCreateManyCompanyInputEnvelope
+    connect?: ScheduleItemWhereUniqueInput | ScheduleItemWhereUniqueInput[]
+  }
+
   export type EmergencyDrillCreateNestedManyWithoutCompanyInput = {
     create?: XOR<EmergencyDrillCreateWithoutCompanyInput, EmergencyDrillUncheckedCreateWithoutCompanyInput> | EmergencyDrillCreateWithoutCompanyInput[] | EmergencyDrillUncheckedCreateWithoutCompanyInput[]
     connectOrCreate?: EmergencyDrillCreateOrConnectWithoutCompanyInput | EmergencyDrillCreateOrConnectWithoutCompanyInput[]
     createMany?: EmergencyDrillCreateManyCompanyInputEnvelope
     connect?: EmergencyDrillWhereUniqueInput | EmergencyDrillWhereUniqueInput[]
+  }
+
+  export type FamiliarizationRecordCreateNestedManyWithoutCompanyInput = {
+    create?: XOR<FamiliarizationRecordCreateWithoutCompanyInput, FamiliarizationRecordUncheckedCreateWithoutCompanyInput> | FamiliarizationRecordCreateWithoutCompanyInput[] | FamiliarizationRecordUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: FamiliarizationRecordCreateOrConnectWithoutCompanyInput | FamiliarizationRecordCreateOrConnectWithoutCompanyInput[]
+    createMany?: FamiliarizationRecordCreateManyCompanyInputEnvelope
+    connect?: FamiliarizationRecordWhereUniqueInput | FamiliarizationRecordWhereUniqueInput[]
+  }
+
+  export type ScheduleApplicabilityCreateNestedManyWithoutCompanyInput = {
+    create?: XOR<ScheduleApplicabilityCreateWithoutCompanyInput, ScheduleApplicabilityUncheckedCreateWithoutCompanyInput> | ScheduleApplicabilityCreateWithoutCompanyInput[] | ScheduleApplicabilityUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: ScheduleApplicabilityCreateOrConnectWithoutCompanyInput | ScheduleApplicabilityCreateOrConnectWithoutCompanyInput[]
+    createMany?: ScheduleApplicabilityCreateManyCompanyInputEnvelope
+    connect?: ScheduleApplicabilityWhereUniqueInput | ScheduleApplicabilityWhereUniqueInput[]
   }
 
   export type ControlledDocumentCreateNestedManyWithoutCompanyInput = {
@@ -80658,11 +86347,32 @@ export namespace Prisma {
     connect?: CommitteeMeetingWhereUniqueInput | CommitteeMeetingWhereUniqueInput[]
   }
 
+  export type ScheduleItemUncheckedCreateNestedManyWithoutCompanyInput = {
+    create?: XOR<ScheduleItemCreateWithoutCompanyInput, ScheduleItemUncheckedCreateWithoutCompanyInput> | ScheduleItemCreateWithoutCompanyInput[] | ScheduleItemUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: ScheduleItemCreateOrConnectWithoutCompanyInput | ScheduleItemCreateOrConnectWithoutCompanyInput[]
+    createMany?: ScheduleItemCreateManyCompanyInputEnvelope
+    connect?: ScheduleItemWhereUniqueInput | ScheduleItemWhereUniqueInput[]
+  }
+
   export type EmergencyDrillUncheckedCreateNestedManyWithoutCompanyInput = {
     create?: XOR<EmergencyDrillCreateWithoutCompanyInput, EmergencyDrillUncheckedCreateWithoutCompanyInput> | EmergencyDrillCreateWithoutCompanyInput[] | EmergencyDrillUncheckedCreateWithoutCompanyInput[]
     connectOrCreate?: EmergencyDrillCreateOrConnectWithoutCompanyInput | EmergencyDrillCreateOrConnectWithoutCompanyInput[]
     createMany?: EmergencyDrillCreateManyCompanyInputEnvelope
     connect?: EmergencyDrillWhereUniqueInput | EmergencyDrillWhereUniqueInput[]
+  }
+
+  export type FamiliarizationRecordUncheckedCreateNestedManyWithoutCompanyInput = {
+    create?: XOR<FamiliarizationRecordCreateWithoutCompanyInput, FamiliarizationRecordUncheckedCreateWithoutCompanyInput> | FamiliarizationRecordCreateWithoutCompanyInput[] | FamiliarizationRecordUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: FamiliarizationRecordCreateOrConnectWithoutCompanyInput | FamiliarizationRecordCreateOrConnectWithoutCompanyInput[]
+    createMany?: FamiliarizationRecordCreateManyCompanyInputEnvelope
+    connect?: FamiliarizationRecordWhereUniqueInput | FamiliarizationRecordWhereUniqueInput[]
+  }
+
+  export type ScheduleApplicabilityUncheckedCreateNestedManyWithoutCompanyInput = {
+    create?: XOR<ScheduleApplicabilityCreateWithoutCompanyInput, ScheduleApplicabilityUncheckedCreateWithoutCompanyInput> | ScheduleApplicabilityCreateWithoutCompanyInput[] | ScheduleApplicabilityUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: ScheduleApplicabilityCreateOrConnectWithoutCompanyInput | ScheduleApplicabilityCreateOrConnectWithoutCompanyInput[]
+    createMany?: ScheduleApplicabilityCreateManyCompanyInputEnvelope
+    connect?: ScheduleApplicabilityWhereUniqueInput | ScheduleApplicabilityWhereUniqueInput[]
   }
 
   export type ControlledDocumentUncheckedCreateNestedManyWithoutCompanyInput = {
@@ -80897,6 +86607,20 @@ export namespace Prisma {
     deleteMany?: CommitteeMeetingScalarWhereInput | CommitteeMeetingScalarWhereInput[]
   }
 
+  export type ScheduleItemUpdateManyWithoutCompanyNestedInput = {
+    create?: XOR<ScheduleItemCreateWithoutCompanyInput, ScheduleItemUncheckedCreateWithoutCompanyInput> | ScheduleItemCreateWithoutCompanyInput[] | ScheduleItemUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: ScheduleItemCreateOrConnectWithoutCompanyInput | ScheduleItemCreateOrConnectWithoutCompanyInput[]
+    upsert?: ScheduleItemUpsertWithWhereUniqueWithoutCompanyInput | ScheduleItemUpsertWithWhereUniqueWithoutCompanyInput[]
+    createMany?: ScheduleItemCreateManyCompanyInputEnvelope
+    set?: ScheduleItemWhereUniqueInput | ScheduleItemWhereUniqueInput[]
+    disconnect?: ScheduleItemWhereUniqueInput | ScheduleItemWhereUniqueInput[]
+    delete?: ScheduleItemWhereUniqueInput | ScheduleItemWhereUniqueInput[]
+    connect?: ScheduleItemWhereUniqueInput | ScheduleItemWhereUniqueInput[]
+    update?: ScheduleItemUpdateWithWhereUniqueWithoutCompanyInput | ScheduleItemUpdateWithWhereUniqueWithoutCompanyInput[]
+    updateMany?: ScheduleItemUpdateManyWithWhereWithoutCompanyInput | ScheduleItemUpdateManyWithWhereWithoutCompanyInput[]
+    deleteMany?: ScheduleItemScalarWhereInput | ScheduleItemScalarWhereInput[]
+  }
+
   export type EmergencyDrillUpdateManyWithoutCompanyNestedInput = {
     create?: XOR<EmergencyDrillCreateWithoutCompanyInput, EmergencyDrillUncheckedCreateWithoutCompanyInput> | EmergencyDrillCreateWithoutCompanyInput[] | EmergencyDrillUncheckedCreateWithoutCompanyInput[]
     connectOrCreate?: EmergencyDrillCreateOrConnectWithoutCompanyInput | EmergencyDrillCreateOrConnectWithoutCompanyInput[]
@@ -80909,6 +86633,34 @@ export namespace Prisma {
     update?: EmergencyDrillUpdateWithWhereUniqueWithoutCompanyInput | EmergencyDrillUpdateWithWhereUniqueWithoutCompanyInput[]
     updateMany?: EmergencyDrillUpdateManyWithWhereWithoutCompanyInput | EmergencyDrillUpdateManyWithWhereWithoutCompanyInput[]
     deleteMany?: EmergencyDrillScalarWhereInput | EmergencyDrillScalarWhereInput[]
+  }
+
+  export type FamiliarizationRecordUpdateManyWithoutCompanyNestedInput = {
+    create?: XOR<FamiliarizationRecordCreateWithoutCompanyInput, FamiliarizationRecordUncheckedCreateWithoutCompanyInput> | FamiliarizationRecordCreateWithoutCompanyInput[] | FamiliarizationRecordUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: FamiliarizationRecordCreateOrConnectWithoutCompanyInput | FamiliarizationRecordCreateOrConnectWithoutCompanyInput[]
+    upsert?: FamiliarizationRecordUpsertWithWhereUniqueWithoutCompanyInput | FamiliarizationRecordUpsertWithWhereUniqueWithoutCompanyInput[]
+    createMany?: FamiliarizationRecordCreateManyCompanyInputEnvelope
+    set?: FamiliarizationRecordWhereUniqueInput | FamiliarizationRecordWhereUniqueInput[]
+    disconnect?: FamiliarizationRecordWhereUniqueInput | FamiliarizationRecordWhereUniqueInput[]
+    delete?: FamiliarizationRecordWhereUniqueInput | FamiliarizationRecordWhereUniqueInput[]
+    connect?: FamiliarizationRecordWhereUniqueInput | FamiliarizationRecordWhereUniqueInput[]
+    update?: FamiliarizationRecordUpdateWithWhereUniqueWithoutCompanyInput | FamiliarizationRecordUpdateWithWhereUniqueWithoutCompanyInput[]
+    updateMany?: FamiliarizationRecordUpdateManyWithWhereWithoutCompanyInput | FamiliarizationRecordUpdateManyWithWhereWithoutCompanyInput[]
+    deleteMany?: FamiliarizationRecordScalarWhereInput | FamiliarizationRecordScalarWhereInput[]
+  }
+
+  export type ScheduleApplicabilityUpdateManyWithoutCompanyNestedInput = {
+    create?: XOR<ScheduleApplicabilityCreateWithoutCompanyInput, ScheduleApplicabilityUncheckedCreateWithoutCompanyInput> | ScheduleApplicabilityCreateWithoutCompanyInput[] | ScheduleApplicabilityUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: ScheduleApplicabilityCreateOrConnectWithoutCompanyInput | ScheduleApplicabilityCreateOrConnectWithoutCompanyInput[]
+    upsert?: ScheduleApplicabilityUpsertWithWhereUniqueWithoutCompanyInput | ScheduleApplicabilityUpsertWithWhereUniqueWithoutCompanyInput[]
+    createMany?: ScheduleApplicabilityCreateManyCompanyInputEnvelope
+    set?: ScheduleApplicabilityWhereUniqueInput | ScheduleApplicabilityWhereUniqueInput[]
+    disconnect?: ScheduleApplicabilityWhereUniqueInput | ScheduleApplicabilityWhereUniqueInput[]
+    delete?: ScheduleApplicabilityWhereUniqueInput | ScheduleApplicabilityWhereUniqueInput[]
+    connect?: ScheduleApplicabilityWhereUniqueInput | ScheduleApplicabilityWhereUniqueInput[]
+    update?: ScheduleApplicabilityUpdateWithWhereUniqueWithoutCompanyInput | ScheduleApplicabilityUpdateWithWhereUniqueWithoutCompanyInput[]
+    updateMany?: ScheduleApplicabilityUpdateManyWithWhereWithoutCompanyInput | ScheduleApplicabilityUpdateManyWithWhereWithoutCompanyInput[]
+    deleteMany?: ScheduleApplicabilityScalarWhereInput | ScheduleApplicabilityScalarWhereInput[]
   }
 
   export type ControlledDocumentUpdateManyWithoutCompanyNestedInput = {
@@ -81163,6 +86915,20 @@ export namespace Prisma {
     deleteMany?: CommitteeMeetingScalarWhereInput | CommitteeMeetingScalarWhereInput[]
   }
 
+  export type ScheduleItemUncheckedUpdateManyWithoutCompanyNestedInput = {
+    create?: XOR<ScheduleItemCreateWithoutCompanyInput, ScheduleItemUncheckedCreateWithoutCompanyInput> | ScheduleItemCreateWithoutCompanyInput[] | ScheduleItemUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: ScheduleItemCreateOrConnectWithoutCompanyInput | ScheduleItemCreateOrConnectWithoutCompanyInput[]
+    upsert?: ScheduleItemUpsertWithWhereUniqueWithoutCompanyInput | ScheduleItemUpsertWithWhereUniqueWithoutCompanyInput[]
+    createMany?: ScheduleItemCreateManyCompanyInputEnvelope
+    set?: ScheduleItemWhereUniqueInput | ScheduleItemWhereUniqueInput[]
+    disconnect?: ScheduleItemWhereUniqueInput | ScheduleItemWhereUniqueInput[]
+    delete?: ScheduleItemWhereUniqueInput | ScheduleItemWhereUniqueInput[]
+    connect?: ScheduleItemWhereUniqueInput | ScheduleItemWhereUniqueInput[]
+    update?: ScheduleItemUpdateWithWhereUniqueWithoutCompanyInput | ScheduleItemUpdateWithWhereUniqueWithoutCompanyInput[]
+    updateMany?: ScheduleItemUpdateManyWithWhereWithoutCompanyInput | ScheduleItemUpdateManyWithWhereWithoutCompanyInput[]
+    deleteMany?: ScheduleItemScalarWhereInput | ScheduleItemScalarWhereInput[]
+  }
+
   export type EmergencyDrillUncheckedUpdateManyWithoutCompanyNestedInput = {
     create?: XOR<EmergencyDrillCreateWithoutCompanyInput, EmergencyDrillUncheckedCreateWithoutCompanyInput> | EmergencyDrillCreateWithoutCompanyInput[] | EmergencyDrillUncheckedCreateWithoutCompanyInput[]
     connectOrCreate?: EmergencyDrillCreateOrConnectWithoutCompanyInput | EmergencyDrillCreateOrConnectWithoutCompanyInput[]
@@ -81175,6 +86941,34 @@ export namespace Prisma {
     update?: EmergencyDrillUpdateWithWhereUniqueWithoutCompanyInput | EmergencyDrillUpdateWithWhereUniqueWithoutCompanyInput[]
     updateMany?: EmergencyDrillUpdateManyWithWhereWithoutCompanyInput | EmergencyDrillUpdateManyWithWhereWithoutCompanyInput[]
     deleteMany?: EmergencyDrillScalarWhereInput | EmergencyDrillScalarWhereInput[]
+  }
+
+  export type FamiliarizationRecordUncheckedUpdateManyWithoutCompanyNestedInput = {
+    create?: XOR<FamiliarizationRecordCreateWithoutCompanyInput, FamiliarizationRecordUncheckedCreateWithoutCompanyInput> | FamiliarizationRecordCreateWithoutCompanyInput[] | FamiliarizationRecordUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: FamiliarizationRecordCreateOrConnectWithoutCompanyInput | FamiliarizationRecordCreateOrConnectWithoutCompanyInput[]
+    upsert?: FamiliarizationRecordUpsertWithWhereUniqueWithoutCompanyInput | FamiliarizationRecordUpsertWithWhereUniqueWithoutCompanyInput[]
+    createMany?: FamiliarizationRecordCreateManyCompanyInputEnvelope
+    set?: FamiliarizationRecordWhereUniqueInput | FamiliarizationRecordWhereUniqueInput[]
+    disconnect?: FamiliarizationRecordWhereUniqueInput | FamiliarizationRecordWhereUniqueInput[]
+    delete?: FamiliarizationRecordWhereUniqueInput | FamiliarizationRecordWhereUniqueInput[]
+    connect?: FamiliarizationRecordWhereUniqueInput | FamiliarizationRecordWhereUniqueInput[]
+    update?: FamiliarizationRecordUpdateWithWhereUniqueWithoutCompanyInput | FamiliarizationRecordUpdateWithWhereUniqueWithoutCompanyInput[]
+    updateMany?: FamiliarizationRecordUpdateManyWithWhereWithoutCompanyInput | FamiliarizationRecordUpdateManyWithWhereWithoutCompanyInput[]
+    deleteMany?: FamiliarizationRecordScalarWhereInput | FamiliarizationRecordScalarWhereInput[]
+  }
+
+  export type ScheduleApplicabilityUncheckedUpdateManyWithoutCompanyNestedInput = {
+    create?: XOR<ScheduleApplicabilityCreateWithoutCompanyInput, ScheduleApplicabilityUncheckedCreateWithoutCompanyInput> | ScheduleApplicabilityCreateWithoutCompanyInput[] | ScheduleApplicabilityUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: ScheduleApplicabilityCreateOrConnectWithoutCompanyInput | ScheduleApplicabilityCreateOrConnectWithoutCompanyInput[]
+    upsert?: ScheduleApplicabilityUpsertWithWhereUniqueWithoutCompanyInput | ScheduleApplicabilityUpsertWithWhereUniqueWithoutCompanyInput[]
+    createMany?: ScheduleApplicabilityCreateManyCompanyInputEnvelope
+    set?: ScheduleApplicabilityWhereUniqueInput | ScheduleApplicabilityWhereUniqueInput[]
+    disconnect?: ScheduleApplicabilityWhereUniqueInput | ScheduleApplicabilityWhereUniqueInput[]
+    delete?: ScheduleApplicabilityWhereUniqueInput | ScheduleApplicabilityWhereUniqueInput[]
+    connect?: ScheduleApplicabilityWhereUniqueInput | ScheduleApplicabilityWhereUniqueInput[]
+    update?: ScheduleApplicabilityUpdateWithWhereUniqueWithoutCompanyInput | ScheduleApplicabilityUpdateWithWhereUniqueWithoutCompanyInput[]
+    updateMany?: ScheduleApplicabilityUpdateManyWithWhereWithoutCompanyInput | ScheduleApplicabilityUpdateManyWithWhereWithoutCompanyInput[]
+    deleteMany?: ScheduleApplicabilityScalarWhereInput | ScheduleApplicabilityScalarWhereInput[]
   }
 
   export type ControlledDocumentUncheckedUpdateManyWithoutCompanyNestedInput = {
@@ -81936,6 +87730,20 @@ export namespace Prisma {
     connect?: EmergencyDrillWhereUniqueInput | EmergencyDrillWhereUniqueInput[]
   }
 
+  export type FamiliarizationRecordCreateNestedManyWithoutVesselInput = {
+    create?: XOR<FamiliarizationRecordCreateWithoutVesselInput, FamiliarizationRecordUncheckedCreateWithoutVesselInput> | FamiliarizationRecordCreateWithoutVesselInput[] | FamiliarizationRecordUncheckedCreateWithoutVesselInput[]
+    connectOrCreate?: FamiliarizationRecordCreateOrConnectWithoutVesselInput | FamiliarizationRecordCreateOrConnectWithoutVesselInput[]
+    createMany?: FamiliarizationRecordCreateManyVesselInputEnvelope
+    connect?: FamiliarizationRecordWhereUniqueInput | FamiliarizationRecordWhereUniqueInput[]
+  }
+
+  export type ScheduleApplicabilityCreateNestedManyWithoutVesselInput = {
+    create?: XOR<ScheduleApplicabilityCreateWithoutVesselInput, ScheduleApplicabilityUncheckedCreateWithoutVesselInput> | ScheduleApplicabilityCreateWithoutVesselInput[] | ScheduleApplicabilityUncheckedCreateWithoutVesselInput[]
+    connectOrCreate?: ScheduleApplicabilityCreateOrConnectWithoutVesselInput | ScheduleApplicabilityCreateOrConnectWithoutVesselInput[]
+    createMany?: ScheduleApplicabilityCreateManyVesselInputEnvelope
+    connect?: ScheduleApplicabilityWhereUniqueInput | ScheduleApplicabilityWhereUniqueInput[]
+  }
+
   export type ControlledDocumentCreateNestedManyWithoutVesselInput = {
     create?: XOR<ControlledDocumentCreateWithoutVesselInput, ControlledDocumentUncheckedCreateWithoutVesselInput> | ControlledDocumentCreateWithoutVesselInput[] | ControlledDocumentUncheckedCreateWithoutVesselInput[]
     connectOrCreate?: ControlledDocumentCreateOrConnectWithoutVesselInput | ControlledDocumentCreateOrConnectWithoutVesselInput[]
@@ -82060,6 +87868,20 @@ export namespace Prisma {
     connectOrCreate?: EmergencyDrillCreateOrConnectWithoutVesselInput | EmergencyDrillCreateOrConnectWithoutVesselInput[]
     createMany?: EmergencyDrillCreateManyVesselInputEnvelope
     connect?: EmergencyDrillWhereUniqueInput | EmergencyDrillWhereUniqueInput[]
+  }
+
+  export type FamiliarizationRecordUncheckedCreateNestedManyWithoutVesselInput = {
+    create?: XOR<FamiliarizationRecordCreateWithoutVesselInput, FamiliarizationRecordUncheckedCreateWithoutVesselInput> | FamiliarizationRecordCreateWithoutVesselInput[] | FamiliarizationRecordUncheckedCreateWithoutVesselInput[]
+    connectOrCreate?: FamiliarizationRecordCreateOrConnectWithoutVesselInput | FamiliarizationRecordCreateOrConnectWithoutVesselInput[]
+    createMany?: FamiliarizationRecordCreateManyVesselInputEnvelope
+    connect?: FamiliarizationRecordWhereUniqueInput | FamiliarizationRecordWhereUniqueInput[]
+  }
+
+  export type ScheduleApplicabilityUncheckedCreateNestedManyWithoutVesselInput = {
+    create?: XOR<ScheduleApplicabilityCreateWithoutVesselInput, ScheduleApplicabilityUncheckedCreateWithoutVesselInput> | ScheduleApplicabilityCreateWithoutVesselInput[] | ScheduleApplicabilityUncheckedCreateWithoutVesselInput[]
+    connectOrCreate?: ScheduleApplicabilityCreateOrConnectWithoutVesselInput | ScheduleApplicabilityCreateOrConnectWithoutVesselInput[]
+    createMany?: ScheduleApplicabilityCreateManyVesselInputEnvelope
+    connect?: ScheduleApplicabilityWhereUniqueInput | ScheduleApplicabilityWhereUniqueInput[]
   }
 
   export type ControlledDocumentUncheckedCreateNestedManyWithoutVesselInput = {
@@ -82291,6 +88113,34 @@ export namespace Prisma {
     update?: EmergencyDrillUpdateWithWhereUniqueWithoutVesselInput | EmergencyDrillUpdateWithWhereUniqueWithoutVesselInput[]
     updateMany?: EmergencyDrillUpdateManyWithWhereWithoutVesselInput | EmergencyDrillUpdateManyWithWhereWithoutVesselInput[]
     deleteMany?: EmergencyDrillScalarWhereInput | EmergencyDrillScalarWhereInput[]
+  }
+
+  export type FamiliarizationRecordUpdateManyWithoutVesselNestedInput = {
+    create?: XOR<FamiliarizationRecordCreateWithoutVesselInput, FamiliarizationRecordUncheckedCreateWithoutVesselInput> | FamiliarizationRecordCreateWithoutVesselInput[] | FamiliarizationRecordUncheckedCreateWithoutVesselInput[]
+    connectOrCreate?: FamiliarizationRecordCreateOrConnectWithoutVesselInput | FamiliarizationRecordCreateOrConnectWithoutVesselInput[]
+    upsert?: FamiliarizationRecordUpsertWithWhereUniqueWithoutVesselInput | FamiliarizationRecordUpsertWithWhereUniqueWithoutVesselInput[]
+    createMany?: FamiliarizationRecordCreateManyVesselInputEnvelope
+    set?: FamiliarizationRecordWhereUniqueInput | FamiliarizationRecordWhereUniqueInput[]
+    disconnect?: FamiliarizationRecordWhereUniqueInput | FamiliarizationRecordWhereUniqueInput[]
+    delete?: FamiliarizationRecordWhereUniqueInput | FamiliarizationRecordWhereUniqueInput[]
+    connect?: FamiliarizationRecordWhereUniqueInput | FamiliarizationRecordWhereUniqueInput[]
+    update?: FamiliarizationRecordUpdateWithWhereUniqueWithoutVesselInput | FamiliarizationRecordUpdateWithWhereUniqueWithoutVesselInput[]
+    updateMany?: FamiliarizationRecordUpdateManyWithWhereWithoutVesselInput | FamiliarizationRecordUpdateManyWithWhereWithoutVesselInput[]
+    deleteMany?: FamiliarizationRecordScalarWhereInput | FamiliarizationRecordScalarWhereInput[]
+  }
+
+  export type ScheduleApplicabilityUpdateManyWithoutVesselNestedInput = {
+    create?: XOR<ScheduleApplicabilityCreateWithoutVesselInput, ScheduleApplicabilityUncheckedCreateWithoutVesselInput> | ScheduleApplicabilityCreateWithoutVesselInput[] | ScheduleApplicabilityUncheckedCreateWithoutVesselInput[]
+    connectOrCreate?: ScheduleApplicabilityCreateOrConnectWithoutVesselInput | ScheduleApplicabilityCreateOrConnectWithoutVesselInput[]
+    upsert?: ScheduleApplicabilityUpsertWithWhereUniqueWithoutVesselInput | ScheduleApplicabilityUpsertWithWhereUniqueWithoutVesselInput[]
+    createMany?: ScheduleApplicabilityCreateManyVesselInputEnvelope
+    set?: ScheduleApplicabilityWhereUniqueInput | ScheduleApplicabilityWhereUniqueInput[]
+    disconnect?: ScheduleApplicabilityWhereUniqueInput | ScheduleApplicabilityWhereUniqueInput[]
+    delete?: ScheduleApplicabilityWhereUniqueInput | ScheduleApplicabilityWhereUniqueInput[]
+    connect?: ScheduleApplicabilityWhereUniqueInput | ScheduleApplicabilityWhereUniqueInput[]
+    update?: ScheduleApplicabilityUpdateWithWhereUniqueWithoutVesselInput | ScheduleApplicabilityUpdateWithWhereUniqueWithoutVesselInput[]
+    updateMany?: ScheduleApplicabilityUpdateManyWithWhereWithoutVesselInput | ScheduleApplicabilityUpdateManyWithWhereWithoutVesselInput[]
+    deleteMany?: ScheduleApplicabilityScalarWhereInput | ScheduleApplicabilityScalarWhereInput[]
   }
 
   export type ControlledDocumentUpdateManyWithoutVesselNestedInput = {
@@ -82543,6 +88393,34 @@ export namespace Prisma {
     update?: EmergencyDrillUpdateWithWhereUniqueWithoutVesselInput | EmergencyDrillUpdateWithWhereUniqueWithoutVesselInput[]
     updateMany?: EmergencyDrillUpdateManyWithWhereWithoutVesselInput | EmergencyDrillUpdateManyWithWhereWithoutVesselInput[]
     deleteMany?: EmergencyDrillScalarWhereInput | EmergencyDrillScalarWhereInput[]
+  }
+
+  export type FamiliarizationRecordUncheckedUpdateManyWithoutVesselNestedInput = {
+    create?: XOR<FamiliarizationRecordCreateWithoutVesselInput, FamiliarizationRecordUncheckedCreateWithoutVesselInput> | FamiliarizationRecordCreateWithoutVesselInput[] | FamiliarizationRecordUncheckedCreateWithoutVesselInput[]
+    connectOrCreate?: FamiliarizationRecordCreateOrConnectWithoutVesselInput | FamiliarizationRecordCreateOrConnectWithoutVesselInput[]
+    upsert?: FamiliarizationRecordUpsertWithWhereUniqueWithoutVesselInput | FamiliarizationRecordUpsertWithWhereUniqueWithoutVesselInput[]
+    createMany?: FamiliarizationRecordCreateManyVesselInputEnvelope
+    set?: FamiliarizationRecordWhereUniqueInput | FamiliarizationRecordWhereUniqueInput[]
+    disconnect?: FamiliarizationRecordWhereUniqueInput | FamiliarizationRecordWhereUniqueInput[]
+    delete?: FamiliarizationRecordWhereUniqueInput | FamiliarizationRecordWhereUniqueInput[]
+    connect?: FamiliarizationRecordWhereUniqueInput | FamiliarizationRecordWhereUniqueInput[]
+    update?: FamiliarizationRecordUpdateWithWhereUniqueWithoutVesselInput | FamiliarizationRecordUpdateWithWhereUniqueWithoutVesselInput[]
+    updateMany?: FamiliarizationRecordUpdateManyWithWhereWithoutVesselInput | FamiliarizationRecordUpdateManyWithWhereWithoutVesselInput[]
+    deleteMany?: FamiliarizationRecordScalarWhereInput | FamiliarizationRecordScalarWhereInput[]
+  }
+
+  export type ScheduleApplicabilityUncheckedUpdateManyWithoutVesselNestedInput = {
+    create?: XOR<ScheduleApplicabilityCreateWithoutVesselInput, ScheduleApplicabilityUncheckedCreateWithoutVesselInput> | ScheduleApplicabilityCreateWithoutVesselInput[] | ScheduleApplicabilityUncheckedCreateWithoutVesselInput[]
+    connectOrCreate?: ScheduleApplicabilityCreateOrConnectWithoutVesselInput | ScheduleApplicabilityCreateOrConnectWithoutVesselInput[]
+    upsert?: ScheduleApplicabilityUpsertWithWhereUniqueWithoutVesselInput | ScheduleApplicabilityUpsertWithWhereUniqueWithoutVesselInput[]
+    createMany?: ScheduleApplicabilityCreateManyVesselInputEnvelope
+    set?: ScheduleApplicabilityWhereUniqueInput | ScheduleApplicabilityWhereUniqueInput[]
+    disconnect?: ScheduleApplicabilityWhereUniqueInput | ScheduleApplicabilityWhereUniqueInput[]
+    delete?: ScheduleApplicabilityWhereUniqueInput | ScheduleApplicabilityWhereUniqueInput[]
+    connect?: ScheduleApplicabilityWhereUniqueInput | ScheduleApplicabilityWhereUniqueInput[]
+    update?: ScheduleApplicabilityUpdateWithWhereUniqueWithoutVesselInput | ScheduleApplicabilityUpdateWithWhereUniqueWithoutVesselInput[]
+    updateMany?: ScheduleApplicabilityUpdateManyWithWhereWithoutVesselInput | ScheduleApplicabilityUpdateManyWithWhereWithoutVesselInput[]
+    deleteMany?: ScheduleApplicabilityScalarWhereInput | ScheduleApplicabilityScalarWhereInput[]
   }
 
   export type ControlledDocumentUncheckedUpdateManyWithoutVesselNestedInput = {
@@ -83765,6 +89643,10 @@ export namespace Prisma {
     set?: $Enums.FindingStatus
   }
 
+  export type NullableEnumCdiObservationSectionFieldUpdateOperationsInput = {
+    set?: $Enums.CdiObservationSection | null
+  }
+
   export type CdiInspectionUpdateOneRequiredWithoutObservationsNestedInput = {
     create?: XOR<CdiInspectionCreateWithoutObservationsInput, CdiInspectionUncheckedCreateWithoutObservationsInput>
     connectOrCreate?: CdiInspectionCreateOrConnectWithoutObservationsInput
@@ -84043,6 +89925,192 @@ export namespace Prisma {
     update?: XOR<XOR<CommitteeMeetingUpdateToOneWithWhereWithoutAgendaItemsInput, CommitteeMeetingUpdateWithoutAgendaItemsInput>, CommitteeMeetingUncheckedUpdateWithoutAgendaItemsInput>
   }
 
+  export type CompanyCreateNestedOneWithoutScheduleItemsInput = {
+    create?: XOR<CompanyCreateWithoutScheduleItemsInput, CompanyUncheckedCreateWithoutScheduleItemsInput>
+    connectOrCreate?: CompanyCreateOrConnectWithoutScheduleItemsInput
+    connect?: CompanyWhereUniqueInput
+  }
+
+  export type EmergencyDrillCreateNestedManyWithoutScheduleItemInput = {
+    create?: XOR<EmergencyDrillCreateWithoutScheduleItemInput, EmergencyDrillUncheckedCreateWithoutScheduleItemInput> | EmergencyDrillCreateWithoutScheduleItemInput[] | EmergencyDrillUncheckedCreateWithoutScheduleItemInput[]
+    connectOrCreate?: EmergencyDrillCreateOrConnectWithoutScheduleItemInput | EmergencyDrillCreateOrConnectWithoutScheduleItemInput[]
+    createMany?: EmergencyDrillCreateManyScheduleItemInputEnvelope
+    connect?: EmergencyDrillWhereUniqueInput | EmergencyDrillWhereUniqueInput[]
+  }
+
+  export type FamiliarizationRecordCreateNestedManyWithoutScheduleItemInput = {
+    create?: XOR<FamiliarizationRecordCreateWithoutScheduleItemInput, FamiliarizationRecordUncheckedCreateWithoutScheduleItemInput> | FamiliarizationRecordCreateWithoutScheduleItemInput[] | FamiliarizationRecordUncheckedCreateWithoutScheduleItemInput[]
+    connectOrCreate?: FamiliarizationRecordCreateOrConnectWithoutScheduleItemInput | FamiliarizationRecordCreateOrConnectWithoutScheduleItemInput[]
+    createMany?: FamiliarizationRecordCreateManyScheduleItemInputEnvelope
+    connect?: FamiliarizationRecordWhereUniqueInput | FamiliarizationRecordWhereUniqueInput[]
+  }
+
+  export type ScheduleApplicabilityCreateNestedManyWithoutScheduleItemInput = {
+    create?: XOR<ScheduleApplicabilityCreateWithoutScheduleItemInput, ScheduleApplicabilityUncheckedCreateWithoutScheduleItemInput> | ScheduleApplicabilityCreateWithoutScheduleItemInput[] | ScheduleApplicabilityUncheckedCreateWithoutScheduleItemInput[]
+    connectOrCreate?: ScheduleApplicabilityCreateOrConnectWithoutScheduleItemInput | ScheduleApplicabilityCreateOrConnectWithoutScheduleItemInput[]
+    createMany?: ScheduleApplicabilityCreateManyScheduleItemInputEnvelope
+    connect?: ScheduleApplicabilityWhereUniqueInput | ScheduleApplicabilityWhereUniqueInput[]
+  }
+
+  export type EmergencyDrillUncheckedCreateNestedManyWithoutScheduleItemInput = {
+    create?: XOR<EmergencyDrillCreateWithoutScheduleItemInput, EmergencyDrillUncheckedCreateWithoutScheduleItemInput> | EmergencyDrillCreateWithoutScheduleItemInput[] | EmergencyDrillUncheckedCreateWithoutScheduleItemInput[]
+    connectOrCreate?: EmergencyDrillCreateOrConnectWithoutScheduleItemInput | EmergencyDrillCreateOrConnectWithoutScheduleItemInput[]
+    createMany?: EmergencyDrillCreateManyScheduleItemInputEnvelope
+    connect?: EmergencyDrillWhereUniqueInput | EmergencyDrillWhereUniqueInput[]
+  }
+
+  export type FamiliarizationRecordUncheckedCreateNestedManyWithoutScheduleItemInput = {
+    create?: XOR<FamiliarizationRecordCreateWithoutScheduleItemInput, FamiliarizationRecordUncheckedCreateWithoutScheduleItemInput> | FamiliarizationRecordCreateWithoutScheduleItemInput[] | FamiliarizationRecordUncheckedCreateWithoutScheduleItemInput[]
+    connectOrCreate?: FamiliarizationRecordCreateOrConnectWithoutScheduleItemInput | FamiliarizationRecordCreateOrConnectWithoutScheduleItemInput[]
+    createMany?: FamiliarizationRecordCreateManyScheduleItemInputEnvelope
+    connect?: FamiliarizationRecordWhereUniqueInput | FamiliarizationRecordWhereUniqueInput[]
+  }
+
+  export type ScheduleApplicabilityUncheckedCreateNestedManyWithoutScheduleItemInput = {
+    create?: XOR<ScheduleApplicabilityCreateWithoutScheduleItemInput, ScheduleApplicabilityUncheckedCreateWithoutScheduleItemInput> | ScheduleApplicabilityCreateWithoutScheduleItemInput[] | ScheduleApplicabilityUncheckedCreateWithoutScheduleItemInput[]
+    connectOrCreate?: ScheduleApplicabilityCreateOrConnectWithoutScheduleItemInput | ScheduleApplicabilityCreateOrConnectWithoutScheduleItemInput[]
+    createMany?: ScheduleApplicabilityCreateManyScheduleItemInputEnvelope
+    connect?: ScheduleApplicabilityWhereUniqueInput | ScheduleApplicabilityWhereUniqueInput[]
+  }
+
+  export type EnumScheduleItemKindFieldUpdateOperationsInput = {
+    set?: $Enums.ScheduleItemKind
+  }
+
+  export type CompanyUpdateOneRequiredWithoutScheduleItemsNestedInput = {
+    create?: XOR<CompanyCreateWithoutScheduleItemsInput, CompanyUncheckedCreateWithoutScheduleItemsInput>
+    connectOrCreate?: CompanyCreateOrConnectWithoutScheduleItemsInput
+    upsert?: CompanyUpsertWithoutScheduleItemsInput
+    connect?: CompanyWhereUniqueInput
+    update?: XOR<XOR<CompanyUpdateToOneWithWhereWithoutScheduleItemsInput, CompanyUpdateWithoutScheduleItemsInput>, CompanyUncheckedUpdateWithoutScheduleItemsInput>
+  }
+
+  export type EmergencyDrillUpdateManyWithoutScheduleItemNestedInput = {
+    create?: XOR<EmergencyDrillCreateWithoutScheduleItemInput, EmergencyDrillUncheckedCreateWithoutScheduleItemInput> | EmergencyDrillCreateWithoutScheduleItemInput[] | EmergencyDrillUncheckedCreateWithoutScheduleItemInput[]
+    connectOrCreate?: EmergencyDrillCreateOrConnectWithoutScheduleItemInput | EmergencyDrillCreateOrConnectWithoutScheduleItemInput[]
+    upsert?: EmergencyDrillUpsertWithWhereUniqueWithoutScheduleItemInput | EmergencyDrillUpsertWithWhereUniqueWithoutScheduleItemInput[]
+    createMany?: EmergencyDrillCreateManyScheduleItemInputEnvelope
+    set?: EmergencyDrillWhereUniqueInput | EmergencyDrillWhereUniqueInput[]
+    disconnect?: EmergencyDrillWhereUniqueInput | EmergencyDrillWhereUniqueInput[]
+    delete?: EmergencyDrillWhereUniqueInput | EmergencyDrillWhereUniqueInput[]
+    connect?: EmergencyDrillWhereUniqueInput | EmergencyDrillWhereUniqueInput[]
+    update?: EmergencyDrillUpdateWithWhereUniqueWithoutScheduleItemInput | EmergencyDrillUpdateWithWhereUniqueWithoutScheduleItemInput[]
+    updateMany?: EmergencyDrillUpdateManyWithWhereWithoutScheduleItemInput | EmergencyDrillUpdateManyWithWhereWithoutScheduleItemInput[]
+    deleteMany?: EmergencyDrillScalarWhereInput | EmergencyDrillScalarWhereInput[]
+  }
+
+  export type FamiliarizationRecordUpdateManyWithoutScheduleItemNestedInput = {
+    create?: XOR<FamiliarizationRecordCreateWithoutScheduleItemInput, FamiliarizationRecordUncheckedCreateWithoutScheduleItemInput> | FamiliarizationRecordCreateWithoutScheduleItemInput[] | FamiliarizationRecordUncheckedCreateWithoutScheduleItemInput[]
+    connectOrCreate?: FamiliarizationRecordCreateOrConnectWithoutScheduleItemInput | FamiliarizationRecordCreateOrConnectWithoutScheduleItemInput[]
+    upsert?: FamiliarizationRecordUpsertWithWhereUniqueWithoutScheduleItemInput | FamiliarizationRecordUpsertWithWhereUniqueWithoutScheduleItemInput[]
+    createMany?: FamiliarizationRecordCreateManyScheduleItemInputEnvelope
+    set?: FamiliarizationRecordWhereUniqueInput | FamiliarizationRecordWhereUniqueInput[]
+    disconnect?: FamiliarizationRecordWhereUniqueInput | FamiliarizationRecordWhereUniqueInput[]
+    delete?: FamiliarizationRecordWhereUniqueInput | FamiliarizationRecordWhereUniqueInput[]
+    connect?: FamiliarizationRecordWhereUniqueInput | FamiliarizationRecordWhereUniqueInput[]
+    update?: FamiliarizationRecordUpdateWithWhereUniqueWithoutScheduleItemInput | FamiliarizationRecordUpdateWithWhereUniqueWithoutScheduleItemInput[]
+    updateMany?: FamiliarizationRecordUpdateManyWithWhereWithoutScheduleItemInput | FamiliarizationRecordUpdateManyWithWhereWithoutScheduleItemInput[]
+    deleteMany?: FamiliarizationRecordScalarWhereInput | FamiliarizationRecordScalarWhereInput[]
+  }
+
+  export type ScheduleApplicabilityUpdateManyWithoutScheduleItemNestedInput = {
+    create?: XOR<ScheduleApplicabilityCreateWithoutScheduleItemInput, ScheduleApplicabilityUncheckedCreateWithoutScheduleItemInput> | ScheduleApplicabilityCreateWithoutScheduleItemInput[] | ScheduleApplicabilityUncheckedCreateWithoutScheduleItemInput[]
+    connectOrCreate?: ScheduleApplicabilityCreateOrConnectWithoutScheduleItemInput | ScheduleApplicabilityCreateOrConnectWithoutScheduleItemInput[]
+    upsert?: ScheduleApplicabilityUpsertWithWhereUniqueWithoutScheduleItemInput | ScheduleApplicabilityUpsertWithWhereUniqueWithoutScheduleItemInput[]
+    createMany?: ScheduleApplicabilityCreateManyScheduleItemInputEnvelope
+    set?: ScheduleApplicabilityWhereUniqueInput | ScheduleApplicabilityWhereUniqueInput[]
+    disconnect?: ScheduleApplicabilityWhereUniqueInput | ScheduleApplicabilityWhereUniqueInput[]
+    delete?: ScheduleApplicabilityWhereUniqueInput | ScheduleApplicabilityWhereUniqueInput[]
+    connect?: ScheduleApplicabilityWhereUniqueInput | ScheduleApplicabilityWhereUniqueInput[]
+    update?: ScheduleApplicabilityUpdateWithWhereUniqueWithoutScheduleItemInput | ScheduleApplicabilityUpdateWithWhereUniqueWithoutScheduleItemInput[]
+    updateMany?: ScheduleApplicabilityUpdateManyWithWhereWithoutScheduleItemInput | ScheduleApplicabilityUpdateManyWithWhereWithoutScheduleItemInput[]
+    deleteMany?: ScheduleApplicabilityScalarWhereInput | ScheduleApplicabilityScalarWhereInput[]
+  }
+
+  export type EmergencyDrillUncheckedUpdateManyWithoutScheduleItemNestedInput = {
+    create?: XOR<EmergencyDrillCreateWithoutScheduleItemInput, EmergencyDrillUncheckedCreateWithoutScheduleItemInput> | EmergencyDrillCreateWithoutScheduleItemInput[] | EmergencyDrillUncheckedCreateWithoutScheduleItemInput[]
+    connectOrCreate?: EmergencyDrillCreateOrConnectWithoutScheduleItemInput | EmergencyDrillCreateOrConnectWithoutScheduleItemInput[]
+    upsert?: EmergencyDrillUpsertWithWhereUniqueWithoutScheduleItemInput | EmergencyDrillUpsertWithWhereUniqueWithoutScheduleItemInput[]
+    createMany?: EmergencyDrillCreateManyScheduleItemInputEnvelope
+    set?: EmergencyDrillWhereUniqueInput | EmergencyDrillWhereUniqueInput[]
+    disconnect?: EmergencyDrillWhereUniqueInput | EmergencyDrillWhereUniqueInput[]
+    delete?: EmergencyDrillWhereUniqueInput | EmergencyDrillWhereUniqueInput[]
+    connect?: EmergencyDrillWhereUniqueInput | EmergencyDrillWhereUniqueInput[]
+    update?: EmergencyDrillUpdateWithWhereUniqueWithoutScheduleItemInput | EmergencyDrillUpdateWithWhereUniqueWithoutScheduleItemInput[]
+    updateMany?: EmergencyDrillUpdateManyWithWhereWithoutScheduleItemInput | EmergencyDrillUpdateManyWithWhereWithoutScheduleItemInput[]
+    deleteMany?: EmergencyDrillScalarWhereInput | EmergencyDrillScalarWhereInput[]
+  }
+
+  export type FamiliarizationRecordUncheckedUpdateManyWithoutScheduleItemNestedInput = {
+    create?: XOR<FamiliarizationRecordCreateWithoutScheduleItemInput, FamiliarizationRecordUncheckedCreateWithoutScheduleItemInput> | FamiliarizationRecordCreateWithoutScheduleItemInput[] | FamiliarizationRecordUncheckedCreateWithoutScheduleItemInput[]
+    connectOrCreate?: FamiliarizationRecordCreateOrConnectWithoutScheduleItemInput | FamiliarizationRecordCreateOrConnectWithoutScheduleItemInput[]
+    upsert?: FamiliarizationRecordUpsertWithWhereUniqueWithoutScheduleItemInput | FamiliarizationRecordUpsertWithWhereUniqueWithoutScheduleItemInput[]
+    createMany?: FamiliarizationRecordCreateManyScheduleItemInputEnvelope
+    set?: FamiliarizationRecordWhereUniqueInput | FamiliarizationRecordWhereUniqueInput[]
+    disconnect?: FamiliarizationRecordWhereUniqueInput | FamiliarizationRecordWhereUniqueInput[]
+    delete?: FamiliarizationRecordWhereUniqueInput | FamiliarizationRecordWhereUniqueInput[]
+    connect?: FamiliarizationRecordWhereUniqueInput | FamiliarizationRecordWhereUniqueInput[]
+    update?: FamiliarizationRecordUpdateWithWhereUniqueWithoutScheduleItemInput | FamiliarizationRecordUpdateWithWhereUniqueWithoutScheduleItemInput[]
+    updateMany?: FamiliarizationRecordUpdateManyWithWhereWithoutScheduleItemInput | FamiliarizationRecordUpdateManyWithWhereWithoutScheduleItemInput[]
+    deleteMany?: FamiliarizationRecordScalarWhereInput | FamiliarizationRecordScalarWhereInput[]
+  }
+
+  export type ScheduleApplicabilityUncheckedUpdateManyWithoutScheduleItemNestedInput = {
+    create?: XOR<ScheduleApplicabilityCreateWithoutScheduleItemInput, ScheduleApplicabilityUncheckedCreateWithoutScheduleItemInput> | ScheduleApplicabilityCreateWithoutScheduleItemInput[] | ScheduleApplicabilityUncheckedCreateWithoutScheduleItemInput[]
+    connectOrCreate?: ScheduleApplicabilityCreateOrConnectWithoutScheduleItemInput | ScheduleApplicabilityCreateOrConnectWithoutScheduleItemInput[]
+    upsert?: ScheduleApplicabilityUpsertWithWhereUniqueWithoutScheduleItemInput | ScheduleApplicabilityUpsertWithWhereUniqueWithoutScheduleItemInput[]
+    createMany?: ScheduleApplicabilityCreateManyScheduleItemInputEnvelope
+    set?: ScheduleApplicabilityWhereUniqueInput | ScheduleApplicabilityWhereUniqueInput[]
+    disconnect?: ScheduleApplicabilityWhereUniqueInput | ScheduleApplicabilityWhereUniqueInput[]
+    delete?: ScheduleApplicabilityWhereUniqueInput | ScheduleApplicabilityWhereUniqueInput[]
+    connect?: ScheduleApplicabilityWhereUniqueInput | ScheduleApplicabilityWhereUniqueInput[]
+    update?: ScheduleApplicabilityUpdateWithWhereUniqueWithoutScheduleItemInput | ScheduleApplicabilityUpdateWithWhereUniqueWithoutScheduleItemInput[]
+    updateMany?: ScheduleApplicabilityUpdateManyWithWhereWithoutScheduleItemInput | ScheduleApplicabilityUpdateManyWithWhereWithoutScheduleItemInput[]
+    deleteMany?: ScheduleApplicabilityScalarWhereInput | ScheduleApplicabilityScalarWhereInput[]
+  }
+
+  export type CompanyCreateNestedOneWithoutScheduleApplicabilityInput = {
+    create?: XOR<CompanyCreateWithoutScheduleApplicabilityInput, CompanyUncheckedCreateWithoutScheduleApplicabilityInput>
+    connectOrCreate?: CompanyCreateOrConnectWithoutScheduleApplicabilityInput
+    connect?: CompanyWhereUniqueInput
+  }
+
+  export type VesselCreateNestedOneWithoutScheduleApplicabilityInput = {
+    create?: XOR<VesselCreateWithoutScheduleApplicabilityInput, VesselUncheckedCreateWithoutScheduleApplicabilityInput>
+    connectOrCreate?: VesselCreateOrConnectWithoutScheduleApplicabilityInput
+    connect?: VesselWhereUniqueInput
+  }
+
+  export type ScheduleItemCreateNestedOneWithoutExceptionsInput = {
+    create?: XOR<ScheduleItemCreateWithoutExceptionsInput, ScheduleItemUncheckedCreateWithoutExceptionsInput>
+    connectOrCreate?: ScheduleItemCreateOrConnectWithoutExceptionsInput
+    connect?: ScheduleItemWhereUniqueInput
+  }
+
+  export type CompanyUpdateOneRequiredWithoutScheduleApplicabilityNestedInput = {
+    create?: XOR<CompanyCreateWithoutScheduleApplicabilityInput, CompanyUncheckedCreateWithoutScheduleApplicabilityInput>
+    connectOrCreate?: CompanyCreateOrConnectWithoutScheduleApplicabilityInput
+    upsert?: CompanyUpsertWithoutScheduleApplicabilityInput
+    connect?: CompanyWhereUniqueInput
+    update?: XOR<XOR<CompanyUpdateToOneWithWhereWithoutScheduleApplicabilityInput, CompanyUpdateWithoutScheduleApplicabilityInput>, CompanyUncheckedUpdateWithoutScheduleApplicabilityInput>
+  }
+
+  export type VesselUpdateOneRequiredWithoutScheduleApplicabilityNestedInput = {
+    create?: XOR<VesselCreateWithoutScheduleApplicabilityInput, VesselUncheckedCreateWithoutScheduleApplicabilityInput>
+    connectOrCreate?: VesselCreateOrConnectWithoutScheduleApplicabilityInput
+    upsert?: VesselUpsertWithoutScheduleApplicabilityInput
+    connect?: VesselWhereUniqueInput
+    update?: XOR<XOR<VesselUpdateToOneWithWhereWithoutScheduleApplicabilityInput, VesselUpdateWithoutScheduleApplicabilityInput>, VesselUncheckedUpdateWithoutScheduleApplicabilityInput>
+  }
+
+  export type ScheduleItemUpdateOneRequiredWithoutExceptionsNestedInput = {
+    create?: XOR<ScheduleItemCreateWithoutExceptionsInput, ScheduleItemUncheckedCreateWithoutExceptionsInput>
+    connectOrCreate?: ScheduleItemCreateOrConnectWithoutExceptionsInput
+    upsert?: ScheduleItemUpsertWithoutExceptionsInput
+    connect?: ScheduleItemWhereUniqueInput
+    update?: XOR<XOR<ScheduleItemUpdateToOneWithWhereWithoutExceptionsInput, ScheduleItemUpdateWithoutExceptionsInput>, ScheduleItemUncheckedUpdateWithoutExceptionsInput>
+  }
+
   export type CompanyCreateNestedOneWithoutEmergencyDrillsInput = {
     create?: XOR<CompanyCreateWithoutEmergencyDrillsInput, CompanyUncheckedCreateWithoutEmergencyDrillsInput>
     connectOrCreate?: CompanyCreateOrConnectWithoutEmergencyDrillsInput
@@ -84055,8 +90123,10 @@ export namespace Prisma {
     connect?: VesselWhereUniqueInput
   }
 
-  export type EnumDrillTypeFieldUpdateOperationsInput = {
-    set?: $Enums.DrillType
+  export type ScheduleItemCreateNestedOneWithoutDrillsInput = {
+    create?: XOR<ScheduleItemCreateWithoutDrillsInput, ScheduleItemUncheckedCreateWithoutDrillsInput>
+    connectOrCreate?: ScheduleItemCreateOrConnectWithoutDrillsInput
+    connect?: ScheduleItemWhereUniqueInput
   }
 
   export type CompanyUpdateOneRequiredWithoutEmergencyDrillsNestedInput = {
@@ -84073,6 +90143,56 @@ export namespace Prisma {
     upsert?: VesselUpsertWithoutEmergencyDrillsInput
     connect?: VesselWhereUniqueInput
     update?: XOR<XOR<VesselUpdateToOneWithWhereWithoutEmergencyDrillsInput, VesselUpdateWithoutEmergencyDrillsInput>, VesselUncheckedUpdateWithoutEmergencyDrillsInput>
+  }
+
+  export type ScheduleItemUpdateOneRequiredWithoutDrillsNestedInput = {
+    create?: XOR<ScheduleItemCreateWithoutDrillsInput, ScheduleItemUncheckedCreateWithoutDrillsInput>
+    connectOrCreate?: ScheduleItemCreateOrConnectWithoutDrillsInput
+    upsert?: ScheduleItemUpsertWithoutDrillsInput
+    connect?: ScheduleItemWhereUniqueInput
+    update?: XOR<XOR<ScheduleItemUpdateToOneWithWhereWithoutDrillsInput, ScheduleItemUpdateWithoutDrillsInput>, ScheduleItemUncheckedUpdateWithoutDrillsInput>
+  }
+
+  export type CompanyCreateNestedOneWithoutFamiliarizationRecordsInput = {
+    create?: XOR<CompanyCreateWithoutFamiliarizationRecordsInput, CompanyUncheckedCreateWithoutFamiliarizationRecordsInput>
+    connectOrCreate?: CompanyCreateOrConnectWithoutFamiliarizationRecordsInput
+    connect?: CompanyWhereUniqueInput
+  }
+
+  export type VesselCreateNestedOneWithoutFamiliarizationRecordsInput = {
+    create?: XOR<VesselCreateWithoutFamiliarizationRecordsInput, VesselUncheckedCreateWithoutFamiliarizationRecordsInput>
+    connectOrCreate?: VesselCreateOrConnectWithoutFamiliarizationRecordsInput
+    connect?: VesselWhereUniqueInput
+  }
+
+  export type ScheduleItemCreateNestedOneWithoutFamiliarizationsInput = {
+    create?: XOR<ScheduleItemCreateWithoutFamiliarizationsInput, ScheduleItemUncheckedCreateWithoutFamiliarizationsInput>
+    connectOrCreate?: ScheduleItemCreateOrConnectWithoutFamiliarizationsInput
+    connect?: ScheduleItemWhereUniqueInput
+  }
+
+  export type CompanyUpdateOneRequiredWithoutFamiliarizationRecordsNestedInput = {
+    create?: XOR<CompanyCreateWithoutFamiliarizationRecordsInput, CompanyUncheckedCreateWithoutFamiliarizationRecordsInput>
+    connectOrCreate?: CompanyCreateOrConnectWithoutFamiliarizationRecordsInput
+    upsert?: CompanyUpsertWithoutFamiliarizationRecordsInput
+    connect?: CompanyWhereUniqueInput
+    update?: XOR<XOR<CompanyUpdateToOneWithWhereWithoutFamiliarizationRecordsInput, CompanyUpdateWithoutFamiliarizationRecordsInput>, CompanyUncheckedUpdateWithoutFamiliarizationRecordsInput>
+  }
+
+  export type VesselUpdateOneRequiredWithoutFamiliarizationRecordsNestedInput = {
+    create?: XOR<VesselCreateWithoutFamiliarizationRecordsInput, VesselUncheckedCreateWithoutFamiliarizationRecordsInput>
+    connectOrCreate?: VesselCreateOrConnectWithoutFamiliarizationRecordsInput
+    upsert?: VesselUpsertWithoutFamiliarizationRecordsInput
+    connect?: VesselWhereUniqueInput
+    update?: XOR<XOR<VesselUpdateToOneWithWhereWithoutFamiliarizationRecordsInput, VesselUpdateWithoutFamiliarizationRecordsInput>, VesselUncheckedUpdateWithoutFamiliarizationRecordsInput>
+  }
+
+  export type ScheduleItemUpdateOneRequiredWithoutFamiliarizationsNestedInput = {
+    create?: XOR<ScheduleItemCreateWithoutFamiliarizationsInput, ScheduleItemUncheckedCreateWithoutFamiliarizationsInput>
+    connectOrCreate?: ScheduleItemCreateOrConnectWithoutFamiliarizationsInput
+    upsert?: ScheduleItemUpsertWithoutFamiliarizationsInput
+    connect?: ScheduleItemWhereUniqueInput
+    update?: XOR<XOR<ScheduleItemUpdateToOneWithWhereWithoutFamiliarizationsInput, ScheduleItemUpdateWithoutFamiliarizationsInput>, ScheduleItemUncheckedUpdateWithoutFamiliarizationsInput>
   }
 
   export type CompanyCreateNestedOneWithoutControlledDocumentsInput = {
@@ -85374,6 +91494,13 @@ export namespace Prisma {
     not?: NestedEnumFindingStatusFilter<$PrismaModel> | $Enums.FindingStatus
   }
 
+  export type NestedEnumCdiObservationSectionNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.CdiObservationSection | EnumCdiObservationSectionFieldRefInput<$PrismaModel> | null
+    in?: $Enums.CdiObservationSection[] | ListEnumCdiObservationSectionFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.CdiObservationSection[] | ListEnumCdiObservationSectionFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumCdiObservationSectionNullableFilter<$PrismaModel> | $Enums.CdiObservationSection | null
+  }
+
   export type NestedEnumFindingStatusWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.FindingStatus | EnumFindingStatusFieldRefInput<$PrismaModel>
     in?: $Enums.FindingStatus[] | ListEnumFindingStatusFieldRefInput<$PrismaModel>
@@ -85382,6 +91509,16 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumFindingStatusFilter<$PrismaModel>
     _max?: NestedEnumFindingStatusFilter<$PrismaModel>
+  }
+
+  export type NestedEnumCdiObservationSectionNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.CdiObservationSection | EnumCdiObservationSectionFieldRefInput<$PrismaModel> | null
+    in?: $Enums.CdiObservationSection[] | ListEnumCdiObservationSectionFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.CdiObservationSection[] | ListEnumCdiObservationSectionFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumCdiObservationSectionNullableWithAggregatesFilter<$PrismaModel> | $Enums.CdiObservationSection | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumCdiObservationSectionNullableFilter<$PrismaModel>
+    _max?: NestedEnumCdiObservationSectionNullableFilter<$PrismaModel>
   }
 
   export type NestedEnumAuditFindingCategoryFilter<$PrismaModel = never> = {
@@ -85435,21 +91572,21 @@ export namespace Prisma {
     _max?: NestedEnumCommitteeTypeFilter<$PrismaModel>
   }
 
-  export type NestedEnumDrillTypeFilter<$PrismaModel = never> = {
-    equals?: $Enums.DrillType | EnumDrillTypeFieldRefInput<$PrismaModel>
-    in?: $Enums.DrillType[] | ListEnumDrillTypeFieldRefInput<$PrismaModel>
-    notIn?: $Enums.DrillType[] | ListEnumDrillTypeFieldRefInput<$PrismaModel>
-    not?: NestedEnumDrillTypeFilter<$PrismaModel> | $Enums.DrillType
+  export type NestedEnumScheduleItemKindFilter<$PrismaModel = never> = {
+    equals?: $Enums.ScheduleItemKind | EnumScheduleItemKindFieldRefInput<$PrismaModel>
+    in?: $Enums.ScheduleItemKind[] | ListEnumScheduleItemKindFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ScheduleItemKind[] | ListEnumScheduleItemKindFieldRefInput<$PrismaModel>
+    not?: NestedEnumScheduleItemKindFilter<$PrismaModel> | $Enums.ScheduleItemKind
   }
 
-  export type NestedEnumDrillTypeWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.DrillType | EnumDrillTypeFieldRefInput<$PrismaModel>
-    in?: $Enums.DrillType[] | ListEnumDrillTypeFieldRefInput<$PrismaModel>
-    notIn?: $Enums.DrillType[] | ListEnumDrillTypeFieldRefInput<$PrismaModel>
-    not?: NestedEnumDrillTypeWithAggregatesFilter<$PrismaModel> | $Enums.DrillType
+  export type NestedEnumScheduleItemKindWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ScheduleItemKind | EnumScheduleItemKindFieldRefInput<$PrismaModel>
+    in?: $Enums.ScheduleItemKind[] | ListEnumScheduleItemKindFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ScheduleItemKind[] | ListEnumScheduleItemKindFieldRefInput<$PrismaModel>
+    not?: NestedEnumScheduleItemKindWithAggregatesFilter<$PrismaModel> | $Enums.ScheduleItemKind
     _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumDrillTypeFilter<$PrismaModel>
-    _max?: NestedEnumDrillTypeFilter<$PrismaModel>
+    _min?: NestedEnumScheduleItemKindFilter<$PrismaModel>
+    _max?: NestedEnumScheduleItemKindFilter<$PrismaModel>
   }
 
   export type NestedEnumDocumentCategoryFilter<$PrismaModel = never> = {
@@ -85763,6 +91900,21 @@ export namespace Prisma {
     lastDryDock?: Date | string | null
     dryDockPlace?: string | null
     nextDryDockDue?: Date | string | null
+    portOfRegistry?: string | null
+    lbp?: number | null
+    draft?: number | null
+    mainEngine?: string | null
+    serviceSpeed?: number | null
+    navigationArea?: string | null
+    classNotation?: string | null
+    ownerAddress?: string | null
+    builder?: string | null
+    keelLaidDate?: Date | string | null
+    launchingDate?: Date | string | null
+    deliveryDate?: Date | string | null
+    totalComplement?: number | null
+    satPhone?: string | null
+    vesselEmail?: string | null
     archivedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -85781,6 +91933,8 @@ export namespace Prisma {
     externalAudits?: ExternalAuditCreateNestedManyWithoutVesselInput
     committeeMeetings?: CommitteeMeetingCreateNestedManyWithoutVesselInput
     emergencyDrills?: EmergencyDrillCreateNestedManyWithoutVesselInput
+    familiarizationRecords?: FamiliarizationRecordCreateNestedManyWithoutVesselInput
+    scheduleApplicability?: ScheduleApplicabilityCreateNestedManyWithoutVesselInput
     controlledDocuments?: ControlledDocumentCreateNestedManyWithoutVesselInput
     circulars?: CircularCreateNestedManyWithoutVesselInput
     riskAssessmentDocuments?: RiskAssessmentDocumentCreateNestedManyWithoutVesselInput
@@ -85818,6 +91972,21 @@ export namespace Prisma {
     lastDryDock?: Date | string | null
     dryDockPlace?: string | null
     nextDryDockDue?: Date | string | null
+    portOfRegistry?: string | null
+    lbp?: number | null
+    draft?: number | null
+    mainEngine?: string | null
+    serviceSpeed?: number | null
+    navigationArea?: string | null
+    classNotation?: string | null
+    ownerAddress?: string | null
+    builder?: string | null
+    keelLaidDate?: Date | string | null
+    launchingDate?: Date | string | null
+    deliveryDate?: Date | string | null
+    totalComplement?: number | null
+    satPhone?: string | null
+    vesselEmail?: string | null
     archivedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -85836,6 +92005,8 @@ export namespace Prisma {
     externalAudits?: ExternalAuditUncheckedCreateNestedManyWithoutVesselInput
     committeeMeetings?: CommitteeMeetingUncheckedCreateNestedManyWithoutVesselInput
     emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutVesselInput
+    familiarizationRecords?: FamiliarizationRecordUncheckedCreateNestedManyWithoutVesselInput
+    scheduleApplicability?: ScheduleApplicabilityUncheckedCreateNestedManyWithoutVesselInput
     controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutVesselInput
     circulars?: CircularUncheckedCreateNestedManyWithoutVesselInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedCreateNestedManyWithoutVesselInput
@@ -86479,15 +92650,66 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type ScheduleItemCreateWithoutCompanyInput = {
+    id?: string
+    kind: $Enums.ScheduleItemKind
+    category?: string | null
+    itemNo?: string | null
+    name: string
+    smsReference?: string | null
+    frequencyLabel?: string | null
+    frequencyDays?: number | null
+    sortOrder: number
+    active?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
+    drills?: EmergencyDrillCreateNestedManyWithoutScheduleItemInput
+    familiarizations?: FamiliarizationRecordCreateNestedManyWithoutScheduleItemInput
+    exceptions?: ScheduleApplicabilityCreateNestedManyWithoutScheduleItemInput
+  }
+
+  export type ScheduleItemUncheckedCreateWithoutCompanyInput = {
+    id?: string
+    kind: $Enums.ScheduleItemKind
+    category?: string | null
+    itemNo?: string | null
+    name: string
+    smsReference?: string | null
+    frequencyLabel?: string | null
+    frequencyDays?: number | null
+    sortOrder: number
+    active?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
+    drills?: EmergencyDrillUncheckedCreateNestedManyWithoutScheduleItemInput
+    familiarizations?: FamiliarizationRecordUncheckedCreateNestedManyWithoutScheduleItemInput
+    exceptions?: ScheduleApplicabilityUncheckedCreateNestedManyWithoutScheduleItemInput
+  }
+
+  export type ScheduleItemCreateOrConnectWithoutCompanyInput = {
+    where: ScheduleItemWhereUniqueInput
+    create: XOR<ScheduleItemCreateWithoutCompanyInput, ScheduleItemUncheckedCreateWithoutCompanyInput>
+  }
+
+  export type ScheduleItemCreateManyCompanyInputEnvelope = {
+    data: ScheduleItemCreateManyCompanyInput | ScheduleItemCreateManyCompanyInput[]
+    skipDuplicates?: boolean
+  }
+
   export type EmergencyDrillCreateWithoutCompanyInput = {
     id?: string
     refNo: string
-    drillType: $Enums.DrillType
     drillDate: Date | string
-    scenario?: string | null
+    drillTime?: string | null
+    position?: string | null
     participants?: string | null
     conductedBy?: string | null
-    observations?: string | null
+    details?: string | null
+    deficiencies?: string | null
+    correctiveAction?: string | null
+    vesselRemarks?: string | null
     status?: $Enums.FindingStatus
     closedAt?: Date | string | null
     createdAt?: Date | string
@@ -86497,18 +92719,23 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     deletedBy?: string | null
     vessel: VesselCreateNestedOneWithoutEmergencyDrillsInput
+    scheduleItem: ScheduleItemCreateNestedOneWithoutDrillsInput
   }
 
   export type EmergencyDrillUncheckedCreateWithoutCompanyInput = {
     id?: string
     refNo: string
     vesselId: string
-    drillType: $Enums.DrillType
+    scheduleItemId: string
     drillDate: Date | string
-    scenario?: string | null
+    drillTime?: string | null
+    position?: string | null
     participants?: string | null
     conductedBy?: string | null
-    observations?: string | null
+    details?: string | null
+    deficiencies?: string | null
+    correctiveAction?: string | null
+    vesselRemarks?: string | null
     status?: $Enums.FindingStatus
     closedAt?: Date | string | null
     createdAt?: Date | string
@@ -86526,6 +92753,80 @@ export namespace Prisma {
 
   export type EmergencyDrillCreateManyCompanyInputEnvelope = {
     data: EmergencyDrillCreateManyCompanyInput | EmergencyDrillCreateManyCompanyInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type FamiliarizationRecordCreateWithoutCompanyInput = {
+    id?: string
+    completedDate: Date | string
+    notedBy?: string | null
+    remarks?: string | null
+    createdAt?: Date | string
+    createdBy?: string | null
+    updatedAt?: Date | string
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    vessel: VesselCreateNestedOneWithoutFamiliarizationRecordsInput
+    scheduleItem: ScheduleItemCreateNestedOneWithoutFamiliarizationsInput
+  }
+
+  export type FamiliarizationRecordUncheckedCreateWithoutCompanyInput = {
+    id?: string
+    vesselId: string
+    scheduleItemId: string
+    completedDate: Date | string
+    notedBy?: string | null
+    remarks?: string | null
+    createdAt?: Date | string
+    createdBy?: string | null
+    updatedAt?: Date | string
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+  }
+
+  export type FamiliarizationRecordCreateOrConnectWithoutCompanyInput = {
+    where: FamiliarizationRecordWhereUniqueInput
+    create: XOR<FamiliarizationRecordCreateWithoutCompanyInput, FamiliarizationRecordUncheckedCreateWithoutCompanyInput>
+  }
+
+  export type FamiliarizationRecordCreateManyCompanyInputEnvelope = {
+    data: FamiliarizationRecordCreateManyCompanyInput | FamiliarizationRecordCreateManyCompanyInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ScheduleApplicabilityCreateWithoutCompanyInput = {
+    id?: string
+    notApplicable?: boolean
+    reason?: string | null
+    createdAt?: Date | string
+    createdBy?: string | null
+    updatedAt?: Date | string
+    updatedBy?: string | null
+    vessel: VesselCreateNestedOneWithoutScheduleApplicabilityInput
+    scheduleItem: ScheduleItemCreateNestedOneWithoutExceptionsInput
+  }
+
+  export type ScheduleApplicabilityUncheckedCreateWithoutCompanyInput = {
+    id?: string
+    vesselId: string
+    scheduleItemId: string
+    notApplicable?: boolean
+    reason?: string | null
+    createdAt?: Date | string
+    createdBy?: string | null
+    updatedAt?: Date | string
+    updatedBy?: string | null
+  }
+
+  export type ScheduleApplicabilityCreateOrConnectWithoutCompanyInput = {
+    where: ScheduleApplicabilityWhereUniqueInput
+    create: XOR<ScheduleApplicabilityCreateWithoutCompanyInput, ScheduleApplicabilityUncheckedCreateWithoutCompanyInput>
+  }
+
+  export type ScheduleApplicabilityCreateManyCompanyInputEnvelope = {
+    data: ScheduleApplicabilityCreateManyCompanyInput | ScheduleApplicabilityCreateManyCompanyInput[]
     skipDuplicates?: boolean
   }
 
@@ -86858,6 +93159,21 @@ export namespace Prisma {
     lastDryDock?: DateTimeNullableFilter<"Vessel"> | Date | string | null
     dryDockPlace?: StringNullableFilter<"Vessel"> | string | null
     nextDryDockDue?: DateTimeNullableFilter<"Vessel"> | Date | string | null
+    portOfRegistry?: StringNullableFilter<"Vessel"> | string | null
+    lbp?: FloatNullableFilter<"Vessel"> | number | null
+    draft?: FloatNullableFilter<"Vessel"> | number | null
+    mainEngine?: StringNullableFilter<"Vessel"> | string | null
+    serviceSpeed?: FloatNullableFilter<"Vessel"> | number | null
+    navigationArea?: StringNullableFilter<"Vessel"> | string | null
+    classNotation?: StringNullableFilter<"Vessel"> | string | null
+    ownerAddress?: StringNullableFilter<"Vessel"> | string | null
+    builder?: StringNullableFilter<"Vessel"> | string | null
+    keelLaidDate?: DateTimeNullableFilter<"Vessel"> | Date | string | null
+    launchingDate?: DateTimeNullableFilter<"Vessel"> | Date | string | null
+    deliveryDate?: DateTimeNullableFilter<"Vessel"> | Date | string | null
+    totalComplement?: IntNullableFilter<"Vessel"> | number | null
+    satPhone?: StringNullableFilter<"Vessel"> | string | null
+    vesselEmail?: StringNullableFilter<"Vessel"> | string | null
     archivedAt?: DateTimeNullableFilter<"Vessel"> | Date | string | null
     createdAt?: DateTimeFilter<"Vessel"> | Date | string
     updatedAt?: DateTimeFilter<"Vessel"> | Date | string
@@ -87333,6 +93649,42 @@ export namespace Prisma {
     deletedBy?: StringNullableFilter<"CommitteeMeeting"> | string | null
   }
 
+  export type ScheduleItemUpsertWithWhereUniqueWithoutCompanyInput = {
+    where: ScheduleItemWhereUniqueInput
+    update: XOR<ScheduleItemUpdateWithoutCompanyInput, ScheduleItemUncheckedUpdateWithoutCompanyInput>
+    create: XOR<ScheduleItemCreateWithoutCompanyInput, ScheduleItemUncheckedCreateWithoutCompanyInput>
+  }
+
+  export type ScheduleItemUpdateWithWhereUniqueWithoutCompanyInput = {
+    where: ScheduleItemWhereUniqueInput
+    data: XOR<ScheduleItemUpdateWithoutCompanyInput, ScheduleItemUncheckedUpdateWithoutCompanyInput>
+  }
+
+  export type ScheduleItemUpdateManyWithWhereWithoutCompanyInput = {
+    where: ScheduleItemScalarWhereInput
+    data: XOR<ScheduleItemUpdateManyMutationInput, ScheduleItemUncheckedUpdateManyWithoutCompanyInput>
+  }
+
+  export type ScheduleItemScalarWhereInput = {
+    AND?: ScheduleItemScalarWhereInput | ScheduleItemScalarWhereInput[]
+    OR?: ScheduleItemScalarWhereInput[]
+    NOT?: ScheduleItemScalarWhereInput | ScheduleItemScalarWhereInput[]
+    id?: StringFilter<"ScheduleItem"> | string
+    companyId?: StringFilter<"ScheduleItem"> | string
+    kind?: EnumScheduleItemKindFilter<"ScheduleItem"> | $Enums.ScheduleItemKind
+    category?: StringNullableFilter<"ScheduleItem"> | string | null
+    itemNo?: StringNullableFilter<"ScheduleItem"> | string | null
+    name?: StringFilter<"ScheduleItem"> | string
+    smsReference?: StringNullableFilter<"ScheduleItem"> | string | null
+    frequencyLabel?: StringNullableFilter<"ScheduleItem"> | string | null
+    frequencyDays?: IntNullableFilter<"ScheduleItem"> | number | null
+    sortOrder?: IntFilter<"ScheduleItem"> | number
+    active?: BoolFilter<"ScheduleItem"> | boolean
+    createdAt?: DateTimeFilter<"ScheduleItem"> | Date | string
+    updatedAt?: DateTimeFilter<"ScheduleItem"> | Date | string
+    deletedAt?: DateTimeNullableFilter<"ScheduleItem"> | Date | string | null
+  }
+
   export type EmergencyDrillUpsertWithWhereUniqueWithoutCompanyInput = {
     where: EmergencyDrillWhereUniqueInput
     update: XOR<EmergencyDrillUpdateWithoutCompanyInput, EmergencyDrillUncheckedUpdateWithoutCompanyInput>
@@ -87357,12 +93709,16 @@ export namespace Prisma {
     companyId?: StringFilter<"EmergencyDrill"> | string
     refNo?: StringFilter<"EmergencyDrill"> | string
     vesselId?: StringFilter<"EmergencyDrill"> | string
-    drillType?: EnumDrillTypeFilter<"EmergencyDrill"> | $Enums.DrillType
+    scheduleItemId?: StringFilter<"EmergencyDrill"> | string
     drillDate?: DateTimeFilter<"EmergencyDrill"> | Date | string
-    scenario?: StringNullableFilter<"EmergencyDrill"> | string | null
+    drillTime?: StringNullableFilter<"EmergencyDrill"> | string | null
+    position?: StringNullableFilter<"EmergencyDrill"> | string | null
     participants?: StringNullableFilter<"EmergencyDrill"> | string | null
     conductedBy?: StringNullableFilter<"EmergencyDrill"> | string | null
-    observations?: StringNullableFilter<"EmergencyDrill"> | string | null
+    details?: StringNullableFilter<"EmergencyDrill"> | string | null
+    deficiencies?: StringNullableFilter<"EmergencyDrill"> | string | null
+    correctiveAction?: StringNullableFilter<"EmergencyDrill"> | string | null
+    vesselRemarks?: StringNullableFilter<"EmergencyDrill"> | string | null
     status?: EnumFindingStatusFilter<"EmergencyDrill"> | $Enums.FindingStatus
     closedAt?: DateTimeNullableFilter<"EmergencyDrill"> | Date | string | null
     createdAt?: DateTimeFilter<"EmergencyDrill"> | Date | string
@@ -87371,6 +93727,73 @@ export namespace Prisma {
     updatedBy?: StringNullableFilter<"EmergencyDrill"> | string | null
     deletedAt?: DateTimeNullableFilter<"EmergencyDrill"> | Date | string | null
     deletedBy?: StringNullableFilter<"EmergencyDrill"> | string | null
+  }
+
+  export type FamiliarizationRecordUpsertWithWhereUniqueWithoutCompanyInput = {
+    where: FamiliarizationRecordWhereUniqueInput
+    update: XOR<FamiliarizationRecordUpdateWithoutCompanyInput, FamiliarizationRecordUncheckedUpdateWithoutCompanyInput>
+    create: XOR<FamiliarizationRecordCreateWithoutCompanyInput, FamiliarizationRecordUncheckedCreateWithoutCompanyInput>
+  }
+
+  export type FamiliarizationRecordUpdateWithWhereUniqueWithoutCompanyInput = {
+    where: FamiliarizationRecordWhereUniqueInput
+    data: XOR<FamiliarizationRecordUpdateWithoutCompanyInput, FamiliarizationRecordUncheckedUpdateWithoutCompanyInput>
+  }
+
+  export type FamiliarizationRecordUpdateManyWithWhereWithoutCompanyInput = {
+    where: FamiliarizationRecordScalarWhereInput
+    data: XOR<FamiliarizationRecordUpdateManyMutationInput, FamiliarizationRecordUncheckedUpdateManyWithoutCompanyInput>
+  }
+
+  export type FamiliarizationRecordScalarWhereInput = {
+    AND?: FamiliarizationRecordScalarWhereInput | FamiliarizationRecordScalarWhereInput[]
+    OR?: FamiliarizationRecordScalarWhereInput[]
+    NOT?: FamiliarizationRecordScalarWhereInput | FamiliarizationRecordScalarWhereInput[]
+    id?: StringFilter<"FamiliarizationRecord"> | string
+    companyId?: StringFilter<"FamiliarizationRecord"> | string
+    vesselId?: StringFilter<"FamiliarizationRecord"> | string
+    scheduleItemId?: StringFilter<"FamiliarizationRecord"> | string
+    completedDate?: DateTimeFilter<"FamiliarizationRecord"> | Date | string
+    notedBy?: StringNullableFilter<"FamiliarizationRecord"> | string | null
+    remarks?: StringNullableFilter<"FamiliarizationRecord"> | string | null
+    createdAt?: DateTimeFilter<"FamiliarizationRecord"> | Date | string
+    createdBy?: StringNullableFilter<"FamiliarizationRecord"> | string | null
+    updatedAt?: DateTimeFilter<"FamiliarizationRecord"> | Date | string
+    updatedBy?: StringNullableFilter<"FamiliarizationRecord"> | string | null
+    deletedAt?: DateTimeNullableFilter<"FamiliarizationRecord"> | Date | string | null
+    deletedBy?: StringNullableFilter<"FamiliarizationRecord"> | string | null
+  }
+
+  export type ScheduleApplicabilityUpsertWithWhereUniqueWithoutCompanyInput = {
+    where: ScheduleApplicabilityWhereUniqueInput
+    update: XOR<ScheduleApplicabilityUpdateWithoutCompanyInput, ScheduleApplicabilityUncheckedUpdateWithoutCompanyInput>
+    create: XOR<ScheduleApplicabilityCreateWithoutCompanyInput, ScheduleApplicabilityUncheckedCreateWithoutCompanyInput>
+  }
+
+  export type ScheduleApplicabilityUpdateWithWhereUniqueWithoutCompanyInput = {
+    where: ScheduleApplicabilityWhereUniqueInput
+    data: XOR<ScheduleApplicabilityUpdateWithoutCompanyInput, ScheduleApplicabilityUncheckedUpdateWithoutCompanyInput>
+  }
+
+  export type ScheduleApplicabilityUpdateManyWithWhereWithoutCompanyInput = {
+    where: ScheduleApplicabilityScalarWhereInput
+    data: XOR<ScheduleApplicabilityUpdateManyMutationInput, ScheduleApplicabilityUncheckedUpdateManyWithoutCompanyInput>
+  }
+
+  export type ScheduleApplicabilityScalarWhereInput = {
+    AND?: ScheduleApplicabilityScalarWhereInput | ScheduleApplicabilityScalarWhereInput[]
+    OR?: ScheduleApplicabilityScalarWhereInput[]
+    NOT?: ScheduleApplicabilityScalarWhereInput | ScheduleApplicabilityScalarWhereInput[]
+    id?: StringFilter<"ScheduleApplicability"> | string
+    companyId?: StringFilter<"ScheduleApplicability"> | string
+    vesselId?: StringFilter<"ScheduleApplicability"> | string
+    scheduleItemId?: StringFilter<"ScheduleApplicability"> | string
+    notApplicable?: BoolFilter<"ScheduleApplicability"> | boolean
+    reason?: StringNullableFilter<"ScheduleApplicability"> | string | null
+    createdAt?: DateTimeFilter<"ScheduleApplicability"> | Date | string
+    createdBy?: StringNullableFilter<"ScheduleApplicability"> | string | null
+    updatedAt?: DateTimeFilter<"ScheduleApplicability"> | Date | string
+    updatedBy?: StringNullableFilter<"ScheduleApplicability"> | string | null
   }
 
   export type ControlledDocumentUpsertWithWhereUniqueWithoutCompanyInput = {
@@ -87555,7 +93978,10 @@ export namespace Prisma {
     internalAudits?: InternalAuditCreateNestedManyWithoutCompanyInput
     externalAudits?: ExternalAuditCreateNestedManyWithoutCompanyInput
     committeeMeetings?: CommitteeMeetingCreateNestedManyWithoutCompanyInput
+    scheduleItems?: ScheduleItemCreateNestedManyWithoutCompanyInput
     emergencyDrills?: EmergencyDrillCreateNestedManyWithoutCompanyInput
+    familiarizationRecords?: FamiliarizationRecordCreateNestedManyWithoutCompanyInput
+    scheduleApplicability?: ScheduleApplicabilityCreateNestedManyWithoutCompanyInput
     controlledDocuments?: ControlledDocumentCreateNestedManyWithoutCompanyInput
     circulars?: CircularCreateNestedManyWithoutCompanyInput
     riskAssessmentDocuments?: RiskAssessmentDocumentCreateNestedManyWithoutCompanyInput
@@ -87581,7 +94007,10 @@ export namespace Prisma {
     internalAudits?: InternalAuditUncheckedCreateNestedManyWithoutCompanyInput
     externalAudits?: ExternalAuditUncheckedCreateNestedManyWithoutCompanyInput
     committeeMeetings?: CommitteeMeetingUncheckedCreateNestedManyWithoutCompanyInput
+    scheduleItems?: ScheduleItemUncheckedCreateNestedManyWithoutCompanyInput
     emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutCompanyInput
+    familiarizationRecords?: FamiliarizationRecordUncheckedCreateNestedManyWithoutCompanyInput
+    scheduleApplicability?: ScheduleApplicabilityUncheckedCreateNestedManyWithoutCompanyInput
     controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutCompanyInput
     circulars?: CircularUncheckedCreateNestedManyWithoutCompanyInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedCreateNestedManyWithoutCompanyInput
@@ -87621,6 +94050,21 @@ export namespace Prisma {
     lastDryDock?: Date | string | null
     dryDockPlace?: string | null
     nextDryDockDue?: Date | string | null
+    portOfRegistry?: string | null
+    lbp?: number | null
+    draft?: number | null
+    mainEngine?: string | null
+    serviceSpeed?: number | null
+    navigationArea?: string | null
+    classNotation?: string | null
+    ownerAddress?: string | null
+    builder?: string | null
+    keelLaidDate?: Date | string | null
+    launchingDate?: Date | string | null
+    deliveryDate?: Date | string | null
+    totalComplement?: number | null
+    satPhone?: string | null
+    vesselEmail?: string | null
     archivedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -87640,6 +94084,8 @@ export namespace Prisma {
     externalAudits?: ExternalAuditCreateNestedManyWithoutVesselInput
     committeeMeetings?: CommitteeMeetingCreateNestedManyWithoutVesselInput
     emergencyDrills?: EmergencyDrillCreateNestedManyWithoutVesselInput
+    familiarizationRecords?: FamiliarizationRecordCreateNestedManyWithoutVesselInput
+    scheduleApplicability?: ScheduleApplicabilityCreateNestedManyWithoutVesselInput
     controlledDocuments?: ControlledDocumentCreateNestedManyWithoutVesselInput
     circulars?: CircularCreateNestedManyWithoutVesselInput
     riskAssessmentDocuments?: RiskAssessmentDocumentCreateNestedManyWithoutVesselInput
@@ -87677,6 +94123,21 @@ export namespace Prisma {
     lastDryDock?: Date | string | null
     dryDockPlace?: string | null
     nextDryDockDue?: Date | string | null
+    portOfRegistry?: string | null
+    lbp?: number | null
+    draft?: number | null
+    mainEngine?: string | null
+    serviceSpeed?: number | null
+    navigationArea?: string | null
+    classNotation?: string | null
+    ownerAddress?: string | null
+    builder?: string | null
+    keelLaidDate?: Date | string | null
+    launchingDate?: Date | string | null
+    deliveryDate?: Date | string | null
+    totalComplement?: number | null
+    satPhone?: string | null
+    vesselEmail?: string | null
     archivedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -87695,6 +94156,8 @@ export namespace Prisma {
     externalAudits?: ExternalAuditUncheckedCreateNestedManyWithoutVesselInput
     committeeMeetings?: CommitteeMeetingUncheckedCreateNestedManyWithoutVesselInput
     emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutVesselInput
+    familiarizationRecords?: FamiliarizationRecordUncheckedCreateNestedManyWithoutVesselInput
+    scheduleApplicability?: ScheduleApplicabilityUncheckedCreateNestedManyWithoutVesselInput
     controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutVesselInput
     circulars?: CircularUncheckedCreateNestedManyWithoutVesselInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedCreateNestedManyWithoutVesselInput
@@ -88200,7 +94663,10 @@ export namespace Prisma {
     internalAudits?: InternalAuditUpdateManyWithoutCompanyNestedInput
     externalAudits?: ExternalAuditUpdateManyWithoutCompanyNestedInput
     committeeMeetings?: CommitteeMeetingUpdateManyWithoutCompanyNestedInput
+    scheduleItems?: ScheduleItemUpdateManyWithoutCompanyNestedInput
     emergencyDrills?: EmergencyDrillUpdateManyWithoutCompanyNestedInput
+    familiarizationRecords?: FamiliarizationRecordUpdateManyWithoutCompanyNestedInput
+    scheduleApplicability?: ScheduleApplicabilityUpdateManyWithoutCompanyNestedInput
     controlledDocuments?: ControlledDocumentUpdateManyWithoutCompanyNestedInput
     circulars?: CircularUpdateManyWithoutCompanyNestedInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUpdateManyWithoutCompanyNestedInput
@@ -88226,7 +94692,10 @@ export namespace Prisma {
     internalAudits?: InternalAuditUncheckedUpdateManyWithoutCompanyNestedInput
     externalAudits?: ExternalAuditUncheckedUpdateManyWithoutCompanyNestedInput
     committeeMeetings?: CommitteeMeetingUncheckedUpdateManyWithoutCompanyNestedInput
+    scheduleItems?: ScheduleItemUncheckedUpdateManyWithoutCompanyNestedInput
     emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutCompanyNestedInput
+    familiarizationRecords?: FamiliarizationRecordUncheckedUpdateManyWithoutCompanyNestedInput
+    scheduleApplicability?: ScheduleApplicabilityUncheckedUpdateManyWithoutCompanyNestedInput
     controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutCompanyNestedInput
     circulars?: CircularUncheckedUpdateManyWithoutCompanyNestedInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedUpdateManyWithoutCompanyNestedInput
@@ -88272,6 +94741,21 @@ export namespace Prisma {
     lastDryDock?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dryDockPlace?: NullableStringFieldUpdateOperationsInput | string | null
     nextDryDockDue?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    portOfRegistry?: NullableStringFieldUpdateOperationsInput | string | null
+    lbp?: NullableFloatFieldUpdateOperationsInput | number | null
+    draft?: NullableFloatFieldUpdateOperationsInput | number | null
+    mainEngine?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceSpeed?: NullableFloatFieldUpdateOperationsInput | number | null
+    navigationArea?: NullableStringFieldUpdateOperationsInput | string | null
+    classNotation?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    builder?: NullableStringFieldUpdateOperationsInput | string | null
+    keelLaidDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    launchingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    totalComplement?: NullableIntFieldUpdateOperationsInput | number | null
+    satPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    vesselEmail?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -88291,6 +94775,8 @@ export namespace Prisma {
     externalAudits?: ExternalAuditUpdateManyWithoutVesselNestedInput
     committeeMeetings?: CommitteeMeetingUpdateManyWithoutVesselNestedInput
     emergencyDrills?: EmergencyDrillUpdateManyWithoutVesselNestedInput
+    familiarizationRecords?: FamiliarizationRecordUpdateManyWithoutVesselNestedInput
+    scheduleApplicability?: ScheduleApplicabilityUpdateManyWithoutVesselNestedInput
     controlledDocuments?: ControlledDocumentUpdateManyWithoutVesselNestedInput
     circulars?: CircularUpdateManyWithoutVesselNestedInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUpdateManyWithoutVesselNestedInput
@@ -88328,6 +94814,21 @@ export namespace Prisma {
     lastDryDock?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dryDockPlace?: NullableStringFieldUpdateOperationsInput | string | null
     nextDryDockDue?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    portOfRegistry?: NullableStringFieldUpdateOperationsInput | string | null
+    lbp?: NullableFloatFieldUpdateOperationsInput | number | null
+    draft?: NullableFloatFieldUpdateOperationsInput | number | null
+    mainEngine?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceSpeed?: NullableFloatFieldUpdateOperationsInput | number | null
+    navigationArea?: NullableStringFieldUpdateOperationsInput | string | null
+    classNotation?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    builder?: NullableStringFieldUpdateOperationsInput | string | null
+    keelLaidDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    launchingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    totalComplement?: NullableIntFieldUpdateOperationsInput | number | null
+    satPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    vesselEmail?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -88346,6 +94847,8 @@ export namespace Prisma {
     externalAudits?: ExternalAuditUncheckedUpdateManyWithoutVesselNestedInput
     committeeMeetings?: CommitteeMeetingUncheckedUpdateManyWithoutVesselNestedInput
     emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutVesselNestedInput
+    familiarizationRecords?: FamiliarizationRecordUncheckedUpdateManyWithoutVesselNestedInput
+    scheduleApplicability?: ScheduleApplicabilityUncheckedUpdateManyWithoutVesselNestedInput
     controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutVesselNestedInput
     circulars?: CircularUncheckedUpdateManyWithoutVesselNestedInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedUpdateManyWithoutVesselNestedInput
@@ -88581,7 +95084,10 @@ export namespace Prisma {
     internalAudits?: InternalAuditCreateNestedManyWithoutCompanyInput
     externalAudits?: ExternalAuditCreateNestedManyWithoutCompanyInput
     committeeMeetings?: CommitteeMeetingCreateNestedManyWithoutCompanyInput
+    scheduleItems?: ScheduleItemCreateNestedManyWithoutCompanyInput
     emergencyDrills?: EmergencyDrillCreateNestedManyWithoutCompanyInput
+    familiarizationRecords?: FamiliarizationRecordCreateNestedManyWithoutCompanyInput
+    scheduleApplicability?: ScheduleApplicabilityCreateNestedManyWithoutCompanyInput
     controlledDocuments?: ControlledDocumentCreateNestedManyWithoutCompanyInput
     circulars?: CircularCreateNestedManyWithoutCompanyInput
     riskAssessmentDocuments?: RiskAssessmentDocumentCreateNestedManyWithoutCompanyInput
@@ -88607,7 +95113,10 @@ export namespace Prisma {
     internalAudits?: InternalAuditUncheckedCreateNestedManyWithoutCompanyInput
     externalAudits?: ExternalAuditUncheckedCreateNestedManyWithoutCompanyInput
     committeeMeetings?: CommitteeMeetingUncheckedCreateNestedManyWithoutCompanyInput
+    scheduleItems?: ScheduleItemUncheckedCreateNestedManyWithoutCompanyInput
     emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutCompanyInput
+    familiarizationRecords?: FamiliarizationRecordUncheckedCreateNestedManyWithoutCompanyInput
+    scheduleApplicability?: ScheduleApplicabilityUncheckedCreateNestedManyWithoutCompanyInput
     controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutCompanyInput
     circulars?: CircularUncheckedCreateNestedManyWithoutCompanyInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedCreateNestedManyWithoutCompanyInput
@@ -88685,7 +95194,10 @@ export namespace Prisma {
     internalAudits?: InternalAuditUpdateManyWithoutCompanyNestedInput
     externalAudits?: ExternalAuditUpdateManyWithoutCompanyNestedInput
     committeeMeetings?: CommitteeMeetingUpdateManyWithoutCompanyNestedInput
+    scheduleItems?: ScheduleItemUpdateManyWithoutCompanyNestedInput
     emergencyDrills?: EmergencyDrillUpdateManyWithoutCompanyNestedInput
+    familiarizationRecords?: FamiliarizationRecordUpdateManyWithoutCompanyNestedInput
+    scheduleApplicability?: ScheduleApplicabilityUpdateManyWithoutCompanyNestedInput
     controlledDocuments?: ControlledDocumentUpdateManyWithoutCompanyNestedInput
     circulars?: CircularUpdateManyWithoutCompanyNestedInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUpdateManyWithoutCompanyNestedInput
@@ -88711,7 +95223,10 @@ export namespace Prisma {
     internalAudits?: InternalAuditUncheckedUpdateManyWithoutCompanyNestedInput
     externalAudits?: ExternalAuditUncheckedUpdateManyWithoutCompanyNestedInput
     committeeMeetings?: CommitteeMeetingUncheckedUpdateManyWithoutCompanyNestedInput
+    scheduleItems?: ScheduleItemUncheckedUpdateManyWithoutCompanyNestedInput
     emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutCompanyNestedInput
+    familiarizationRecords?: FamiliarizationRecordUncheckedUpdateManyWithoutCompanyNestedInput
+    scheduleApplicability?: ScheduleApplicabilityUncheckedUpdateManyWithoutCompanyNestedInput
     controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutCompanyNestedInput
     circulars?: CircularUncheckedUpdateManyWithoutCompanyNestedInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedUpdateManyWithoutCompanyNestedInput
@@ -89099,7 +95614,10 @@ export namespace Prisma {
     internalAudits?: InternalAuditCreateNestedManyWithoutCompanyInput
     externalAudits?: ExternalAuditCreateNestedManyWithoutCompanyInput
     committeeMeetings?: CommitteeMeetingCreateNestedManyWithoutCompanyInput
+    scheduleItems?: ScheduleItemCreateNestedManyWithoutCompanyInput
     emergencyDrills?: EmergencyDrillCreateNestedManyWithoutCompanyInput
+    familiarizationRecords?: FamiliarizationRecordCreateNestedManyWithoutCompanyInput
+    scheduleApplicability?: ScheduleApplicabilityCreateNestedManyWithoutCompanyInput
     controlledDocuments?: ControlledDocumentCreateNestedManyWithoutCompanyInput
     circulars?: CircularCreateNestedManyWithoutCompanyInput
     riskAssessmentDocuments?: RiskAssessmentDocumentCreateNestedManyWithoutCompanyInput
@@ -89125,7 +95643,10 @@ export namespace Prisma {
     internalAudits?: InternalAuditUncheckedCreateNestedManyWithoutCompanyInput
     externalAudits?: ExternalAuditUncheckedCreateNestedManyWithoutCompanyInput
     committeeMeetings?: CommitteeMeetingUncheckedCreateNestedManyWithoutCompanyInput
+    scheduleItems?: ScheduleItemUncheckedCreateNestedManyWithoutCompanyInput
     emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutCompanyInput
+    familiarizationRecords?: FamiliarizationRecordUncheckedCreateNestedManyWithoutCompanyInput
+    scheduleApplicability?: ScheduleApplicabilityUncheckedCreateNestedManyWithoutCompanyInput
     controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutCompanyInput
     circulars?: CircularUncheckedCreateNestedManyWithoutCompanyInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedCreateNestedManyWithoutCompanyInput
@@ -89728,12 +96249,15 @@ export namespace Prisma {
   export type EmergencyDrillCreateWithoutVesselInput = {
     id?: string
     refNo: string
-    drillType: $Enums.DrillType
     drillDate: Date | string
-    scenario?: string | null
+    drillTime?: string | null
+    position?: string | null
     participants?: string | null
     conductedBy?: string | null
-    observations?: string | null
+    details?: string | null
+    deficiencies?: string | null
+    correctiveAction?: string | null
+    vesselRemarks?: string | null
     status?: $Enums.FindingStatus
     closedAt?: Date | string | null
     createdAt?: Date | string
@@ -89743,18 +96267,23 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     deletedBy?: string | null
     company: CompanyCreateNestedOneWithoutEmergencyDrillsInput
+    scheduleItem: ScheduleItemCreateNestedOneWithoutDrillsInput
   }
 
   export type EmergencyDrillUncheckedCreateWithoutVesselInput = {
     id?: string
     companyId: string
     refNo: string
-    drillType: $Enums.DrillType
+    scheduleItemId: string
     drillDate: Date | string
-    scenario?: string | null
+    drillTime?: string | null
+    position?: string | null
     participants?: string | null
     conductedBy?: string | null
-    observations?: string | null
+    details?: string | null
+    deficiencies?: string | null
+    correctiveAction?: string | null
+    vesselRemarks?: string | null
     status?: $Enums.FindingStatus
     closedAt?: Date | string | null
     createdAt?: Date | string
@@ -89772,6 +96301,80 @@ export namespace Prisma {
 
   export type EmergencyDrillCreateManyVesselInputEnvelope = {
     data: EmergencyDrillCreateManyVesselInput | EmergencyDrillCreateManyVesselInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type FamiliarizationRecordCreateWithoutVesselInput = {
+    id?: string
+    completedDate: Date | string
+    notedBy?: string | null
+    remarks?: string | null
+    createdAt?: Date | string
+    createdBy?: string | null
+    updatedAt?: Date | string
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    company: CompanyCreateNestedOneWithoutFamiliarizationRecordsInput
+    scheduleItem: ScheduleItemCreateNestedOneWithoutFamiliarizationsInput
+  }
+
+  export type FamiliarizationRecordUncheckedCreateWithoutVesselInput = {
+    id?: string
+    companyId: string
+    scheduleItemId: string
+    completedDate: Date | string
+    notedBy?: string | null
+    remarks?: string | null
+    createdAt?: Date | string
+    createdBy?: string | null
+    updatedAt?: Date | string
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+  }
+
+  export type FamiliarizationRecordCreateOrConnectWithoutVesselInput = {
+    where: FamiliarizationRecordWhereUniqueInput
+    create: XOR<FamiliarizationRecordCreateWithoutVesselInput, FamiliarizationRecordUncheckedCreateWithoutVesselInput>
+  }
+
+  export type FamiliarizationRecordCreateManyVesselInputEnvelope = {
+    data: FamiliarizationRecordCreateManyVesselInput | FamiliarizationRecordCreateManyVesselInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ScheduleApplicabilityCreateWithoutVesselInput = {
+    id?: string
+    notApplicable?: boolean
+    reason?: string | null
+    createdAt?: Date | string
+    createdBy?: string | null
+    updatedAt?: Date | string
+    updatedBy?: string | null
+    company: CompanyCreateNestedOneWithoutScheduleApplicabilityInput
+    scheduleItem: ScheduleItemCreateNestedOneWithoutExceptionsInput
+  }
+
+  export type ScheduleApplicabilityUncheckedCreateWithoutVesselInput = {
+    id?: string
+    companyId: string
+    scheduleItemId: string
+    notApplicable?: boolean
+    reason?: string | null
+    createdAt?: Date | string
+    createdBy?: string | null
+    updatedAt?: Date | string
+    updatedBy?: string | null
+  }
+
+  export type ScheduleApplicabilityCreateOrConnectWithoutVesselInput = {
+    where: ScheduleApplicabilityWhereUniqueInput
+    create: XOR<ScheduleApplicabilityCreateWithoutVesselInput, ScheduleApplicabilityUncheckedCreateWithoutVesselInput>
+  }
+
+  export type ScheduleApplicabilityCreateManyVesselInputEnvelope = {
+    data: ScheduleApplicabilityCreateManyVesselInput | ScheduleApplicabilityCreateManyVesselInput[]
     skipDuplicates?: boolean
   }
 
@@ -90167,7 +96770,10 @@ export namespace Prisma {
     internalAudits?: InternalAuditUpdateManyWithoutCompanyNestedInput
     externalAudits?: ExternalAuditUpdateManyWithoutCompanyNestedInput
     committeeMeetings?: CommitteeMeetingUpdateManyWithoutCompanyNestedInput
+    scheduleItems?: ScheduleItemUpdateManyWithoutCompanyNestedInput
     emergencyDrills?: EmergencyDrillUpdateManyWithoutCompanyNestedInput
+    familiarizationRecords?: FamiliarizationRecordUpdateManyWithoutCompanyNestedInput
+    scheduleApplicability?: ScheduleApplicabilityUpdateManyWithoutCompanyNestedInput
     controlledDocuments?: ControlledDocumentUpdateManyWithoutCompanyNestedInput
     circulars?: CircularUpdateManyWithoutCompanyNestedInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUpdateManyWithoutCompanyNestedInput
@@ -90193,7 +96799,10 @@ export namespace Prisma {
     internalAudits?: InternalAuditUncheckedUpdateManyWithoutCompanyNestedInput
     externalAudits?: ExternalAuditUncheckedUpdateManyWithoutCompanyNestedInput
     committeeMeetings?: CommitteeMeetingUncheckedUpdateManyWithoutCompanyNestedInput
+    scheduleItems?: ScheduleItemUncheckedUpdateManyWithoutCompanyNestedInput
     emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutCompanyNestedInput
+    familiarizationRecords?: FamiliarizationRecordUncheckedUpdateManyWithoutCompanyNestedInput
+    scheduleApplicability?: ScheduleApplicabilityUncheckedUpdateManyWithoutCompanyNestedInput
     controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutCompanyNestedInput
     circulars?: CircularUncheckedUpdateManyWithoutCompanyNestedInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedUpdateManyWithoutCompanyNestedInput
@@ -90374,6 +96983,38 @@ export namespace Prisma {
   export type EmergencyDrillUpdateManyWithWhereWithoutVesselInput = {
     where: EmergencyDrillScalarWhereInput
     data: XOR<EmergencyDrillUpdateManyMutationInput, EmergencyDrillUncheckedUpdateManyWithoutVesselInput>
+  }
+
+  export type FamiliarizationRecordUpsertWithWhereUniqueWithoutVesselInput = {
+    where: FamiliarizationRecordWhereUniqueInput
+    update: XOR<FamiliarizationRecordUpdateWithoutVesselInput, FamiliarizationRecordUncheckedUpdateWithoutVesselInput>
+    create: XOR<FamiliarizationRecordCreateWithoutVesselInput, FamiliarizationRecordUncheckedCreateWithoutVesselInput>
+  }
+
+  export type FamiliarizationRecordUpdateWithWhereUniqueWithoutVesselInput = {
+    where: FamiliarizationRecordWhereUniqueInput
+    data: XOR<FamiliarizationRecordUpdateWithoutVesselInput, FamiliarizationRecordUncheckedUpdateWithoutVesselInput>
+  }
+
+  export type FamiliarizationRecordUpdateManyWithWhereWithoutVesselInput = {
+    where: FamiliarizationRecordScalarWhereInput
+    data: XOR<FamiliarizationRecordUpdateManyMutationInput, FamiliarizationRecordUncheckedUpdateManyWithoutVesselInput>
+  }
+
+  export type ScheduleApplicabilityUpsertWithWhereUniqueWithoutVesselInput = {
+    where: ScheduleApplicabilityWhereUniqueInput
+    update: XOR<ScheduleApplicabilityUpdateWithoutVesselInput, ScheduleApplicabilityUncheckedUpdateWithoutVesselInput>
+    create: XOR<ScheduleApplicabilityCreateWithoutVesselInput, ScheduleApplicabilityUncheckedCreateWithoutVesselInput>
+  }
+
+  export type ScheduleApplicabilityUpdateWithWhereUniqueWithoutVesselInput = {
+    where: ScheduleApplicabilityWhereUniqueInput
+    data: XOR<ScheduleApplicabilityUpdateWithoutVesselInput, ScheduleApplicabilityUncheckedUpdateWithoutVesselInput>
+  }
+
+  export type ScheduleApplicabilityUpdateManyWithWhereWithoutVesselInput = {
+    where: ScheduleApplicabilityScalarWhereInput
+    data: XOR<ScheduleApplicabilityUpdateManyMutationInput, ScheduleApplicabilityUncheckedUpdateManyWithoutVesselInput>
   }
 
   export type ControlledDocumentUpsertWithWhereUniqueWithoutVesselInput = {
@@ -90671,7 +97312,10 @@ export namespace Prisma {
     internalAudits?: InternalAuditCreateNestedManyWithoutCompanyInput
     externalAudits?: ExternalAuditCreateNestedManyWithoutCompanyInput
     committeeMeetings?: CommitteeMeetingCreateNestedManyWithoutCompanyInput
+    scheduleItems?: ScheduleItemCreateNestedManyWithoutCompanyInput
     emergencyDrills?: EmergencyDrillCreateNestedManyWithoutCompanyInput
+    familiarizationRecords?: FamiliarizationRecordCreateNestedManyWithoutCompanyInput
+    scheduleApplicability?: ScheduleApplicabilityCreateNestedManyWithoutCompanyInput
     controlledDocuments?: ControlledDocumentCreateNestedManyWithoutCompanyInput
     circulars?: CircularCreateNestedManyWithoutCompanyInput
     riskAssessmentDocuments?: RiskAssessmentDocumentCreateNestedManyWithoutCompanyInput
@@ -90697,7 +97341,10 @@ export namespace Prisma {
     internalAudits?: InternalAuditUncheckedCreateNestedManyWithoutCompanyInput
     externalAudits?: ExternalAuditUncheckedCreateNestedManyWithoutCompanyInput
     committeeMeetings?: CommitteeMeetingUncheckedCreateNestedManyWithoutCompanyInput
+    scheduleItems?: ScheduleItemUncheckedCreateNestedManyWithoutCompanyInput
     emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutCompanyInput
+    familiarizationRecords?: FamiliarizationRecordUncheckedCreateNestedManyWithoutCompanyInput
+    scheduleApplicability?: ScheduleApplicabilityUncheckedCreateNestedManyWithoutCompanyInput
     controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutCompanyInput
     circulars?: CircularUncheckedCreateNestedManyWithoutCompanyInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedCreateNestedManyWithoutCompanyInput
@@ -90807,7 +97454,10 @@ export namespace Prisma {
     internalAudits?: InternalAuditUpdateManyWithoutCompanyNestedInput
     externalAudits?: ExternalAuditUpdateManyWithoutCompanyNestedInput
     committeeMeetings?: CommitteeMeetingUpdateManyWithoutCompanyNestedInput
+    scheduleItems?: ScheduleItemUpdateManyWithoutCompanyNestedInput
     emergencyDrills?: EmergencyDrillUpdateManyWithoutCompanyNestedInput
+    familiarizationRecords?: FamiliarizationRecordUpdateManyWithoutCompanyNestedInput
+    scheduleApplicability?: ScheduleApplicabilityUpdateManyWithoutCompanyNestedInput
     controlledDocuments?: ControlledDocumentUpdateManyWithoutCompanyNestedInput
     circulars?: CircularUpdateManyWithoutCompanyNestedInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUpdateManyWithoutCompanyNestedInput
@@ -90833,7 +97483,10 @@ export namespace Prisma {
     internalAudits?: InternalAuditUncheckedUpdateManyWithoutCompanyNestedInput
     externalAudits?: ExternalAuditUncheckedUpdateManyWithoutCompanyNestedInput
     committeeMeetings?: CommitteeMeetingUncheckedUpdateManyWithoutCompanyNestedInput
+    scheduleItems?: ScheduleItemUncheckedUpdateManyWithoutCompanyNestedInput
     emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutCompanyNestedInput
+    familiarizationRecords?: FamiliarizationRecordUncheckedUpdateManyWithoutCompanyNestedInput
+    scheduleApplicability?: ScheduleApplicabilityUncheckedUpdateManyWithoutCompanyNestedInput
     controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutCompanyNestedInput
     circulars?: CircularUncheckedUpdateManyWithoutCompanyNestedInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedUpdateManyWithoutCompanyNestedInput
@@ -91291,7 +97944,10 @@ export namespace Prisma {
     internalAudits?: InternalAuditCreateNestedManyWithoutCompanyInput
     externalAudits?: ExternalAuditCreateNestedManyWithoutCompanyInput
     committeeMeetings?: CommitteeMeetingCreateNestedManyWithoutCompanyInput
+    scheduleItems?: ScheduleItemCreateNestedManyWithoutCompanyInput
     emergencyDrills?: EmergencyDrillCreateNestedManyWithoutCompanyInput
+    familiarizationRecords?: FamiliarizationRecordCreateNestedManyWithoutCompanyInput
+    scheduleApplicability?: ScheduleApplicabilityCreateNestedManyWithoutCompanyInput
     controlledDocuments?: ControlledDocumentCreateNestedManyWithoutCompanyInput
     circulars?: CircularCreateNestedManyWithoutCompanyInput
     riskAssessmentDocuments?: RiskAssessmentDocumentCreateNestedManyWithoutCompanyInput
@@ -91317,7 +97973,10 @@ export namespace Prisma {
     internalAudits?: InternalAuditUncheckedCreateNestedManyWithoutCompanyInput
     externalAudits?: ExternalAuditUncheckedCreateNestedManyWithoutCompanyInput
     committeeMeetings?: CommitteeMeetingUncheckedCreateNestedManyWithoutCompanyInput
+    scheduleItems?: ScheduleItemUncheckedCreateNestedManyWithoutCompanyInput
     emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutCompanyInput
+    familiarizationRecords?: FamiliarizationRecordUncheckedCreateNestedManyWithoutCompanyInput
+    scheduleApplicability?: ScheduleApplicabilityUncheckedCreateNestedManyWithoutCompanyInput
     controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutCompanyInput
     circulars?: CircularUncheckedCreateNestedManyWithoutCompanyInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedCreateNestedManyWithoutCompanyInput
@@ -91416,6 +98075,21 @@ export namespace Prisma {
     lastDryDock?: Date | string | null
     dryDockPlace?: string | null
     nextDryDockDue?: Date | string | null
+    portOfRegistry?: string | null
+    lbp?: number | null
+    draft?: number | null
+    mainEngine?: string | null
+    serviceSpeed?: number | null
+    navigationArea?: string | null
+    classNotation?: string | null
+    ownerAddress?: string | null
+    builder?: string | null
+    keelLaidDate?: Date | string | null
+    launchingDate?: Date | string | null
+    deliveryDate?: Date | string | null
+    totalComplement?: number | null
+    satPhone?: string | null
+    vesselEmail?: string | null
     archivedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -91434,6 +98108,8 @@ export namespace Prisma {
     externalAudits?: ExternalAuditCreateNestedManyWithoutVesselInput
     committeeMeetings?: CommitteeMeetingCreateNestedManyWithoutVesselInput
     emergencyDrills?: EmergencyDrillCreateNestedManyWithoutVesselInput
+    familiarizationRecords?: FamiliarizationRecordCreateNestedManyWithoutVesselInput
+    scheduleApplicability?: ScheduleApplicabilityCreateNestedManyWithoutVesselInput
     controlledDocuments?: ControlledDocumentCreateNestedManyWithoutVesselInput
     circulars?: CircularCreateNestedManyWithoutVesselInput
     riskAssessmentDocuments?: RiskAssessmentDocumentCreateNestedManyWithoutVesselInput
@@ -91472,6 +98148,21 @@ export namespace Prisma {
     lastDryDock?: Date | string | null
     dryDockPlace?: string | null
     nextDryDockDue?: Date | string | null
+    portOfRegistry?: string | null
+    lbp?: number | null
+    draft?: number | null
+    mainEngine?: string | null
+    serviceSpeed?: number | null
+    navigationArea?: string | null
+    classNotation?: string | null
+    ownerAddress?: string | null
+    builder?: string | null
+    keelLaidDate?: Date | string | null
+    launchingDate?: Date | string | null
+    deliveryDate?: Date | string | null
+    totalComplement?: number | null
+    satPhone?: string | null
+    vesselEmail?: string | null
     archivedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -91489,6 +98180,8 @@ export namespace Prisma {
     externalAudits?: ExternalAuditUncheckedCreateNestedManyWithoutVesselInput
     committeeMeetings?: CommitteeMeetingUncheckedCreateNestedManyWithoutVesselInput
     emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutVesselInput
+    familiarizationRecords?: FamiliarizationRecordUncheckedCreateNestedManyWithoutVesselInput
+    scheduleApplicability?: ScheduleApplicabilityUncheckedCreateNestedManyWithoutVesselInput
     controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutVesselInput
     circulars?: CircularUncheckedCreateNestedManyWithoutVesselInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedCreateNestedManyWithoutVesselInput
@@ -91612,7 +98305,10 @@ export namespace Prisma {
     internalAudits?: InternalAuditUpdateManyWithoutCompanyNestedInput
     externalAudits?: ExternalAuditUpdateManyWithoutCompanyNestedInput
     committeeMeetings?: CommitteeMeetingUpdateManyWithoutCompanyNestedInput
+    scheduleItems?: ScheduleItemUpdateManyWithoutCompanyNestedInput
     emergencyDrills?: EmergencyDrillUpdateManyWithoutCompanyNestedInput
+    familiarizationRecords?: FamiliarizationRecordUpdateManyWithoutCompanyNestedInput
+    scheduleApplicability?: ScheduleApplicabilityUpdateManyWithoutCompanyNestedInput
     controlledDocuments?: ControlledDocumentUpdateManyWithoutCompanyNestedInput
     circulars?: CircularUpdateManyWithoutCompanyNestedInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUpdateManyWithoutCompanyNestedInput
@@ -91638,7 +98334,10 @@ export namespace Prisma {
     internalAudits?: InternalAuditUncheckedUpdateManyWithoutCompanyNestedInput
     externalAudits?: ExternalAuditUncheckedUpdateManyWithoutCompanyNestedInput
     committeeMeetings?: CommitteeMeetingUncheckedUpdateManyWithoutCompanyNestedInput
+    scheduleItems?: ScheduleItemUncheckedUpdateManyWithoutCompanyNestedInput
     emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutCompanyNestedInput
+    familiarizationRecords?: FamiliarizationRecordUncheckedUpdateManyWithoutCompanyNestedInput
+    scheduleApplicability?: ScheduleApplicabilityUncheckedUpdateManyWithoutCompanyNestedInput
     controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutCompanyNestedInput
     circulars?: CircularUncheckedUpdateManyWithoutCompanyNestedInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedUpdateManyWithoutCompanyNestedInput
@@ -91749,6 +98448,21 @@ export namespace Prisma {
     lastDryDock?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dryDockPlace?: NullableStringFieldUpdateOperationsInput | string | null
     nextDryDockDue?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    portOfRegistry?: NullableStringFieldUpdateOperationsInput | string | null
+    lbp?: NullableFloatFieldUpdateOperationsInput | number | null
+    draft?: NullableFloatFieldUpdateOperationsInput | number | null
+    mainEngine?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceSpeed?: NullableFloatFieldUpdateOperationsInput | number | null
+    navigationArea?: NullableStringFieldUpdateOperationsInput | string | null
+    classNotation?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    builder?: NullableStringFieldUpdateOperationsInput | string | null
+    keelLaidDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    launchingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    totalComplement?: NullableIntFieldUpdateOperationsInput | number | null
+    satPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    vesselEmail?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -91767,6 +98481,8 @@ export namespace Prisma {
     externalAudits?: ExternalAuditUpdateManyWithoutVesselNestedInput
     committeeMeetings?: CommitteeMeetingUpdateManyWithoutVesselNestedInput
     emergencyDrills?: EmergencyDrillUpdateManyWithoutVesselNestedInput
+    familiarizationRecords?: FamiliarizationRecordUpdateManyWithoutVesselNestedInput
+    scheduleApplicability?: ScheduleApplicabilityUpdateManyWithoutVesselNestedInput
     controlledDocuments?: ControlledDocumentUpdateManyWithoutVesselNestedInput
     circulars?: CircularUpdateManyWithoutVesselNestedInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUpdateManyWithoutVesselNestedInput
@@ -91805,6 +98521,21 @@ export namespace Prisma {
     lastDryDock?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dryDockPlace?: NullableStringFieldUpdateOperationsInput | string | null
     nextDryDockDue?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    portOfRegistry?: NullableStringFieldUpdateOperationsInput | string | null
+    lbp?: NullableFloatFieldUpdateOperationsInput | number | null
+    draft?: NullableFloatFieldUpdateOperationsInput | number | null
+    mainEngine?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceSpeed?: NullableFloatFieldUpdateOperationsInput | number | null
+    navigationArea?: NullableStringFieldUpdateOperationsInput | string | null
+    classNotation?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    builder?: NullableStringFieldUpdateOperationsInput | string | null
+    keelLaidDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    launchingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    totalComplement?: NullableIntFieldUpdateOperationsInput | number | null
+    satPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    vesselEmail?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -91822,6 +98553,8 @@ export namespace Prisma {
     externalAudits?: ExternalAuditUncheckedUpdateManyWithoutVesselNestedInput
     committeeMeetings?: CommitteeMeetingUncheckedUpdateManyWithoutVesselNestedInput
     emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutVesselNestedInput
+    familiarizationRecords?: FamiliarizationRecordUncheckedUpdateManyWithoutVesselNestedInput
+    scheduleApplicability?: ScheduleApplicabilityUncheckedUpdateManyWithoutVesselNestedInput
     controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutVesselNestedInput
     circulars?: CircularUncheckedUpdateManyWithoutVesselNestedInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedUpdateManyWithoutVesselNestedInput
@@ -92120,7 +98853,10 @@ export namespace Prisma {
     internalAudits?: InternalAuditCreateNestedManyWithoutCompanyInput
     externalAudits?: ExternalAuditCreateNestedManyWithoutCompanyInput
     committeeMeetings?: CommitteeMeetingCreateNestedManyWithoutCompanyInput
+    scheduleItems?: ScheduleItemCreateNestedManyWithoutCompanyInput
     emergencyDrills?: EmergencyDrillCreateNestedManyWithoutCompanyInput
+    familiarizationRecords?: FamiliarizationRecordCreateNestedManyWithoutCompanyInput
+    scheduleApplicability?: ScheduleApplicabilityCreateNestedManyWithoutCompanyInput
     controlledDocuments?: ControlledDocumentCreateNestedManyWithoutCompanyInput
     circulars?: CircularCreateNestedManyWithoutCompanyInput
     riskAssessmentDocuments?: RiskAssessmentDocumentCreateNestedManyWithoutCompanyInput
@@ -92146,7 +98882,10 @@ export namespace Prisma {
     internalAudits?: InternalAuditUncheckedCreateNestedManyWithoutCompanyInput
     externalAudits?: ExternalAuditUncheckedCreateNestedManyWithoutCompanyInput
     committeeMeetings?: CommitteeMeetingUncheckedCreateNestedManyWithoutCompanyInput
+    scheduleItems?: ScheduleItemUncheckedCreateNestedManyWithoutCompanyInput
     emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutCompanyInput
+    familiarizationRecords?: FamiliarizationRecordUncheckedCreateNestedManyWithoutCompanyInput
+    scheduleApplicability?: ScheduleApplicabilityUncheckedCreateNestedManyWithoutCompanyInput
     controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutCompanyInput
     circulars?: CircularUncheckedCreateNestedManyWithoutCompanyInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedCreateNestedManyWithoutCompanyInput
@@ -92186,6 +98925,21 @@ export namespace Prisma {
     lastDryDock?: Date | string | null
     dryDockPlace?: string | null
     nextDryDockDue?: Date | string | null
+    portOfRegistry?: string | null
+    lbp?: number | null
+    draft?: number | null
+    mainEngine?: string | null
+    serviceSpeed?: number | null
+    navigationArea?: string | null
+    classNotation?: string | null
+    ownerAddress?: string | null
+    builder?: string | null
+    keelLaidDate?: Date | string | null
+    launchingDate?: Date | string | null
+    deliveryDate?: Date | string | null
+    totalComplement?: number | null
+    satPhone?: string | null
+    vesselEmail?: string | null
     archivedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -92204,6 +98958,8 @@ export namespace Prisma {
     externalAudits?: ExternalAuditCreateNestedManyWithoutVesselInput
     committeeMeetings?: CommitteeMeetingCreateNestedManyWithoutVesselInput
     emergencyDrills?: EmergencyDrillCreateNestedManyWithoutVesselInput
+    familiarizationRecords?: FamiliarizationRecordCreateNestedManyWithoutVesselInput
+    scheduleApplicability?: ScheduleApplicabilityCreateNestedManyWithoutVesselInput
     controlledDocuments?: ControlledDocumentCreateNestedManyWithoutVesselInput
     circulars?: CircularCreateNestedManyWithoutVesselInput
     riskAssessmentDocuments?: RiskAssessmentDocumentCreateNestedManyWithoutVesselInput
@@ -92242,6 +98998,21 @@ export namespace Prisma {
     lastDryDock?: Date | string | null
     dryDockPlace?: string | null
     nextDryDockDue?: Date | string | null
+    portOfRegistry?: string | null
+    lbp?: number | null
+    draft?: number | null
+    mainEngine?: string | null
+    serviceSpeed?: number | null
+    navigationArea?: string | null
+    classNotation?: string | null
+    ownerAddress?: string | null
+    builder?: string | null
+    keelLaidDate?: Date | string | null
+    launchingDate?: Date | string | null
+    deliveryDate?: Date | string | null
+    totalComplement?: number | null
+    satPhone?: string | null
+    vesselEmail?: string | null
     archivedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -92259,6 +99030,8 @@ export namespace Prisma {
     externalAudits?: ExternalAuditUncheckedCreateNestedManyWithoutVesselInput
     committeeMeetings?: CommitteeMeetingUncheckedCreateNestedManyWithoutVesselInput
     emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutVesselInput
+    familiarizationRecords?: FamiliarizationRecordUncheckedCreateNestedManyWithoutVesselInput
+    scheduleApplicability?: ScheduleApplicabilityUncheckedCreateNestedManyWithoutVesselInput
     controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutVesselInput
     circulars?: CircularUncheckedCreateNestedManyWithoutVesselInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedCreateNestedManyWithoutVesselInput
@@ -92414,7 +99187,10 @@ export namespace Prisma {
     internalAudits?: InternalAuditUpdateManyWithoutCompanyNestedInput
     externalAudits?: ExternalAuditUpdateManyWithoutCompanyNestedInput
     committeeMeetings?: CommitteeMeetingUpdateManyWithoutCompanyNestedInput
+    scheduleItems?: ScheduleItemUpdateManyWithoutCompanyNestedInput
     emergencyDrills?: EmergencyDrillUpdateManyWithoutCompanyNestedInput
+    familiarizationRecords?: FamiliarizationRecordUpdateManyWithoutCompanyNestedInput
+    scheduleApplicability?: ScheduleApplicabilityUpdateManyWithoutCompanyNestedInput
     controlledDocuments?: ControlledDocumentUpdateManyWithoutCompanyNestedInput
     circulars?: CircularUpdateManyWithoutCompanyNestedInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUpdateManyWithoutCompanyNestedInput
@@ -92440,7 +99216,10 @@ export namespace Prisma {
     internalAudits?: InternalAuditUncheckedUpdateManyWithoutCompanyNestedInput
     externalAudits?: ExternalAuditUncheckedUpdateManyWithoutCompanyNestedInput
     committeeMeetings?: CommitteeMeetingUncheckedUpdateManyWithoutCompanyNestedInput
+    scheduleItems?: ScheduleItemUncheckedUpdateManyWithoutCompanyNestedInput
     emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutCompanyNestedInput
+    familiarizationRecords?: FamiliarizationRecordUncheckedUpdateManyWithoutCompanyNestedInput
+    scheduleApplicability?: ScheduleApplicabilityUncheckedUpdateManyWithoutCompanyNestedInput
     controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutCompanyNestedInput
     circulars?: CircularUncheckedUpdateManyWithoutCompanyNestedInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedUpdateManyWithoutCompanyNestedInput
@@ -92486,6 +99265,21 @@ export namespace Prisma {
     lastDryDock?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dryDockPlace?: NullableStringFieldUpdateOperationsInput | string | null
     nextDryDockDue?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    portOfRegistry?: NullableStringFieldUpdateOperationsInput | string | null
+    lbp?: NullableFloatFieldUpdateOperationsInput | number | null
+    draft?: NullableFloatFieldUpdateOperationsInput | number | null
+    mainEngine?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceSpeed?: NullableFloatFieldUpdateOperationsInput | number | null
+    navigationArea?: NullableStringFieldUpdateOperationsInput | string | null
+    classNotation?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    builder?: NullableStringFieldUpdateOperationsInput | string | null
+    keelLaidDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    launchingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    totalComplement?: NullableIntFieldUpdateOperationsInput | number | null
+    satPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    vesselEmail?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -92504,6 +99298,8 @@ export namespace Prisma {
     externalAudits?: ExternalAuditUpdateManyWithoutVesselNestedInput
     committeeMeetings?: CommitteeMeetingUpdateManyWithoutVesselNestedInput
     emergencyDrills?: EmergencyDrillUpdateManyWithoutVesselNestedInput
+    familiarizationRecords?: FamiliarizationRecordUpdateManyWithoutVesselNestedInput
+    scheduleApplicability?: ScheduleApplicabilityUpdateManyWithoutVesselNestedInput
     controlledDocuments?: ControlledDocumentUpdateManyWithoutVesselNestedInput
     circulars?: CircularUpdateManyWithoutVesselNestedInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUpdateManyWithoutVesselNestedInput
@@ -92542,6 +99338,21 @@ export namespace Prisma {
     lastDryDock?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dryDockPlace?: NullableStringFieldUpdateOperationsInput | string | null
     nextDryDockDue?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    portOfRegistry?: NullableStringFieldUpdateOperationsInput | string | null
+    lbp?: NullableFloatFieldUpdateOperationsInput | number | null
+    draft?: NullableFloatFieldUpdateOperationsInput | number | null
+    mainEngine?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceSpeed?: NullableFloatFieldUpdateOperationsInput | number | null
+    navigationArea?: NullableStringFieldUpdateOperationsInput | string | null
+    classNotation?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    builder?: NullableStringFieldUpdateOperationsInput | string | null
+    keelLaidDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    launchingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    totalComplement?: NullableIntFieldUpdateOperationsInput | number | null
+    satPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    vesselEmail?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -92559,6 +99370,8 @@ export namespace Prisma {
     externalAudits?: ExternalAuditUncheckedUpdateManyWithoutVesselNestedInput
     committeeMeetings?: CommitteeMeetingUncheckedUpdateManyWithoutVesselNestedInput
     emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutVesselNestedInput
+    familiarizationRecords?: FamiliarizationRecordUncheckedUpdateManyWithoutVesselNestedInput
+    scheduleApplicability?: ScheduleApplicabilityUncheckedUpdateManyWithoutVesselNestedInput
     controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutVesselNestedInput
     circulars?: CircularUncheckedUpdateManyWithoutVesselNestedInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedUpdateManyWithoutVesselNestedInput
@@ -92996,7 +99809,10 @@ export namespace Prisma {
     internalAudits?: InternalAuditCreateNestedManyWithoutCompanyInput
     externalAudits?: ExternalAuditCreateNestedManyWithoutCompanyInput
     committeeMeetings?: CommitteeMeetingCreateNestedManyWithoutCompanyInput
+    scheduleItems?: ScheduleItemCreateNestedManyWithoutCompanyInput
     emergencyDrills?: EmergencyDrillCreateNestedManyWithoutCompanyInput
+    familiarizationRecords?: FamiliarizationRecordCreateNestedManyWithoutCompanyInput
+    scheduleApplicability?: ScheduleApplicabilityCreateNestedManyWithoutCompanyInput
     controlledDocuments?: ControlledDocumentCreateNestedManyWithoutCompanyInput
     circulars?: CircularCreateNestedManyWithoutCompanyInput
     riskAssessmentDocuments?: RiskAssessmentDocumentCreateNestedManyWithoutCompanyInput
@@ -93022,7 +99838,10 @@ export namespace Prisma {
     internalAudits?: InternalAuditUncheckedCreateNestedManyWithoutCompanyInput
     externalAudits?: ExternalAuditUncheckedCreateNestedManyWithoutCompanyInput
     committeeMeetings?: CommitteeMeetingUncheckedCreateNestedManyWithoutCompanyInput
+    scheduleItems?: ScheduleItemUncheckedCreateNestedManyWithoutCompanyInput
     emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutCompanyInput
+    familiarizationRecords?: FamiliarizationRecordUncheckedCreateNestedManyWithoutCompanyInput
+    scheduleApplicability?: ScheduleApplicabilityUncheckedCreateNestedManyWithoutCompanyInput
     controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutCompanyInput
     circulars?: CircularUncheckedCreateNestedManyWithoutCompanyInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedCreateNestedManyWithoutCompanyInput
@@ -93062,6 +99881,21 @@ export namespace Prisma {
     lastDryDock?: Date | string | null
     dryDockPlace?: string | null
     nextDryDockDue?: Date | string | null
+    portOfRegistry?: string | null
+    lbp?: number | null
+    draft?: number | null
+    mainEngine?: string | null
+    serviceSpeed?: number | null
+    navigationArea?: string | null
+    classNotation?: string | null
+    ownerAddress?: string | null
+    builder?: string | null
+    keelLaidDate?: Date | string | null
+    launchingDate?: Date | string | null
+    deliveryDate?: Date | string | null
+    totalComplement?: number | null
+    satPhone?: string | null
+    vesselEmail?: string | null
     archivedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -93080,6 +99914,8 @@ export namespace Prisma {
     externalAudits?: ExternalAuditCreateNestedManyWithoutVesselInput
     committeeMeetings?: CommitteeMeetingCreateNestedManyWithoutVesselInput
     emergencyDrills?: EmergencyDrillCreateNestedManyWithoutVesselInput
+    familiarizationRecords?: FamiliarizationRecordCreateNestedManyWithoutVesselInput
+    scheduleApplicability?: ScheduleApplicabilityCreateNestedManyWithoutVesselInput
     controlledDocuments?: ControlledDocumentCreateNestedManyWithoutVesselInput
     circulars?: CircularCreateNestedManyWithoutVesselInput
     riskAssessmentDocuments?: RiskAssessmentDocumentCreateNestedManyWithoutVesselInput
@@ -93118,6 +99954,21 @@ export namespace Prisma {
     lastDryDock?: Date | string | null
     dryDockPlace?: string | null
     nextDryDockDue?: Date | string | null
+    portOfRegistry?: string | null
+    lbp?: number | null
+    draft?: number | null
+    mainEngine?: string | null
+    serviceSpeed?: number | null
+    navigationArea?: string | null
+    classNotation?: string | null
+    ownerAddress?: string | null
+    builder?: string | null
+    keelLaidDate?: Date | string | null
+    launchingDate?: Date | string | null
+    deliveryDate?: Date | string | null
+    totalComplement?: number | null
+    satPhone?: string | null
+    vesselEmail?: string | null
     archivedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -93135,6 +99986,8 @@ export namespace Prisma {
     externalAudits?: ExternalAuditUncheckedCreateNestedManyWithoutVesselInput
     committeeMeetings?: CommitteeMeetingUncheckedCreateNestedManyWithoutVesselInput
     emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutVesselInput
+    familiarizationRecords?: FamiliarizationRecordUncheckedCreateNestedManyWithoutVesselInput
+    scheduleApplicability?: ScheduleApplicabilityUncheckedCreateNestedManyWithoutVesselInput
     controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutVesselInput
     circulars?: CircularUncheckedCreateNestedManyWithoutVesselInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedCreateNestedManyWithoutVesselInput
@@ -93238,7 +100091,10 @@ export namespace Prisma {
     internalAudits?: InternalAuditUpdateManyWithoutCompanyNestedInput
     externalAudits?: ExternalAuditUpdateManyWithoutCompanyNestedInput
     committeeMeetings?: CommitteeMeetingUpdateManyWithoutCompanyNestedInput
+    scheduleItems?: ScheduleItemUpdateManyWithoutCompanyNestedInput
     emergencyDrills?: EmergencyDrillUpdateManyWithoutCompanyNestedInput
+    familiarizationRecords?: FamiliarizationRecordUpdateManyWithoutCompanyNestedInput
+    scheduleApplicability?: ScheduleApplicabilityUpdateManyWithoutCompanyNestedInput
     controlledDocuments?: ControlledDocumentUpdateManyWithoutCompanyNestedInput
     circulars?: CircularUpdateManyWithoutCompanyNestedInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUpdateManyWithoutCompanyNestedInput
@@ -93264,7 +100120,10 @@ export namespace Prisma {
     internalAudits?: InternalAuditUncheckedUpdateManyWithoutCompanyNestedInput
     externalAudits?: ExternalAuditUncheckedUpdateManyWithoutCompanyNestedInput
     committeeMeetings?: CommitteeMeetingUncheckedUpdateManyWithoutCompanyNestedInput
+    scheduleItems?: ScheduleItemUncheckedUpdateManyWithoutCompanyNestedInput
     emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutCompanyNestedInput
+    familiarizationRecords?: FamiliarizationRecordUncheckedUpdateManyWithoutCompanyNestedInput
+    scheduleApplicability?: ScheduleApplicabilityUncheckedUpdateManyWithoutCompanyNestedInput
     controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutCompanyNestedInput
     circulars?: CircularUncheckedUpdateManyWithoutCompanyNestedInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedUpdateManyWithoutCompanyNestedInput
@@ -93310,6 +100169,21 @@ export namespace Prisma {
     lastDryDock?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dryDockPlace?: NullableStringFieldUpdateOperationsInput | string | null
     nextDryDockDue?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    portOfRegistry?: NullableStringFieldUpdateOperationsInput | string | null
+    lbp?: NullableFloatFieldUpdateOperationsInput | number | null
+    draft?: NullableFloatFieldUpdateOperationsInput | number | null
+    mainEngine?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceSpeed?: NullableFloatFieldUpdateOperationsInput | number | null
+    navigationArea?: NullableStringFieldUpdateOperationsInput | string | null
+    classNotation?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    builder?: NullableStringFieldUpdateOperationsInput | string | null
+    keelLaidDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    launchingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    totalComplement?: NullableIntFieldUpdateOperationsInput | number | null
+    satPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    vesselEmail?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -93328,6 +100202,8 @@ export namespace Prisma {
     externalAudits?: ExternalAuditUpdateManyWithoutVesselNestedInput
     committeeMeetings?: CommitteeMeetingUpdateManyWithoutVesselNestedInput
     emergencyDrills?: EmergencyDrillUpdateManyWithoutVesselNestedInput
+    familiarizationRecords?: FamiliarizationRecordUpdateManyWithoutVesselNestedInput
+    scheduleApplicability?: ScheduleApplicabilityUpdateManyWithoutVesselNestedInput
     controlledDocuments?: ControlledDocumentUpdateManyWithoutVesselNestedInput
     circulars?: CircularUpdateManyWithoutVesselNestedInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUpdateManyWithoutVesselNestedInput
@@ -93366,6 +100242,21 @@ export namespace Prisma {
     lastDryDock?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dryDockPlace?: NullableStringFieldUpdateOperationsInput | string | null
     nextDryDockDue?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    portOfRegistry?: NullableStringFieldUpdateOperationsInput | string | null
+    lbp?: NullableFloatFieldUpdateOperationsInput | number | null
+    draft?: NullableFloatFieldUpdateOperationsInput | number | null
+    mainEngine?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceSpeed?: NullableFloatFieldUpdateOperationsInput | number | null
+    navigationArea?: NullableStringFieldUpdateOperationsInput | string | null
+    classNotation?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    builder?: NullableStringFieldUpdateOperationsInput | string | null
+    keelLaidDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    launchingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    totalComplement?: NullableIntFieldUpdateOperationsInput | number | null
+    satPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    vesselEmail?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -93383,6 +100274,8 @@ export namespace Prisma {
     externalAudits?: ExternalAuditUncheckedUpdateManyWithoutVesselNestedInput
     committeeMeetings?: CommitteeMeetingUncheckedUpdateManyWithoutVesselNestedInput
     emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutVesselNestedInput
+    familiarizationRecords?: FamiliarizationRecordUncheckedUpdateManyWithoutVesselNestedInput
+    scheduleApplicability?: ScheduleApplicabilityUncheckedUpdateManyWithoutVesselNestedInput
     controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutVesselNestedInput
     circulars?: CircularUncheckedUpdateManyWithoutVesselNestedInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedUpdateManyWithoutVesselNestedInput
@@ -93476,7 +100369,10 @@ export namespace Prisma {
     internalAudits?: InternalAuditCreateNestedManyWithoutCompanyInput
     externalAudits?: ExternalAuditCreateNestedManyWithoutCompanyInput
     committeeMeetings?: CommitteeMeetingCreateNestedManyWithoutCompanyInput
+    scheduleItems?: ScheduleItemCreateNestedManyWithoutCompanyInput
     emergencyDrills?: EmergencyDrillCreateNestedManyWithoutCompanyInput
+    familiarizationRecords?: FamiliarizationRecordCreateNestedManyWithoutCompanyInput
+    scheduleApplicability?: ScheduleApplicabilityCreateNestedManyWithoutCompanyInput
     controlledDocuments?: ControlledDocumentCreateNestedManyWithoutCompanyInput
     circulars?: CircularCreateNestedManyWithoutCompanyInput
     riskAssessmentDocuments?: RiskAssessmentDocumentCreateNestedManyWithoutCompanyInput
@@ -93502,7 +100398,10 @@ export namespace Prisma {
     internalAudits?: InternalAuditUncheckedCreateNestedManyWithoutCompanyInput
     externalAudits?: ExternalAuditUncheckedCreateNestedManyWithoutCompanyInput
     committeeMeetings?: CommitteeMeetingUncheckedCreateNestedManyWithoutCompanyInput
+    scheduleItems?: ScheduleItemUncheckedCreateNestedManyWithoutCompanyInput
     emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutCompanyInput
+    familiarizationRecords?: FamiliarizationRecordUncheckedCreateNestedManyWithoutCompanyInput
+    scheduleApplicability?: ScheduleApplicabilityUncheckedCreateNestedManyWithoutCompanyInput
     controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutCompanyInput
     circulars?: CircularUncheckedCreateNestedManyWithoutCompanyInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedCreateNestedManyWithoutCompanyInput
@@ -93542,6 +100441,21 @@ export namespace Prisma {
     lastDryDock?: Date | string | null
     dryDockPlace?: string | null
     nextDryDockDue?: Date | string | null
+    portOfRegistry?: string | null
+    lbp?: number | null
+    draft?: number | null
+    mainEngine?: string | null
+    serviceSpeed?: number | null
+    navigationArea?: string | null
+    classNotation?: string | null
+    ownerAddress?: string | null
+    builder?: string | null
+    keelLaidDate?: Date | string | null
+    launchingDate?: Date | string | null
+    deliveryDate?: Date | string | null
+    totalComplement?: number | null
+    satPhone?: string | null
+    vesselEmail?: string | null
     archivedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -93560,6 +100474,8 @@ export namespace Prisma {
     externalAudits?: ExternalAuditCreateNestedManyWithoutVesselInput
     committeeMeetings?: CommitteeMeetingCreateNestedManyWithoutVesselInput
     emergencyDrills?: EmergencyDrillCreateNestedManyWithoutVesselInput
+    familiarizationRecords?: FamiliarizationRecordCreateNestedManyWithoutVesselInput
+    scheduleApplicability?: ScheduleApplicabilityCreateNestedManyWithoutVesselInput
     controlledDocuments?: ControlledDocumentCreateNestedManyWithoutVesselInput
     circulars?: CircularCreateNestedManyWithoutVesselInput
     riskAssessmentDocuments?: RiskAssessmentDocumentCreateNestedManyWithoutVesselInput
@@ -93598,6 +100514,21 @@ export namespace Prisma {
     lastDryDock?: Date | string | null
     dryDockPlace?: string | null
     nextDryDockDue?: Date | string | null
+    portOfRegistry?: string | null
+    lbp?: number | null
+    draft?: number | null
+    mainEngine?: string | null
+    serviceSpeed?: number | null
+    navigationArea?: string | null
+    classNotation?: string | null
+    ownerAddress?: string | null
+    builder?: string | null
+    keelLaidDate?: Date | string | null
+    launchingDate?: Date | string | null
+    deliveryDate?: Date | string | null
+    totalComplement?: number | null
+    satPhone?: string | null
+    vesselEmail?: string | null
     archivedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -93615,6 +100546,8 @@ export namespace Prisma {
     externalAudits?: ExternalAuditUncheckedCreateNestedManyWithoutVesselInput
     committeeMeetings?: CommitteeMeetingUncheckedCreateNestedManyWithoutVesselInput
     emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutVesselInput
+    familiarizationRecords?: FamiliarizationRecordUncheckedCreateNestedManyWithoutVesselInput
+    scheduleApplicability?: ScheduleApplicabilityUncheckedCreateNestedManyWithoutVesselInput
     controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutVesselInput
     circulars?: CircularUncheckedCreateNestedManyWithoutVesselInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedCreateNestedManyWithoutVesselInput
@@ -93718,7 +100651,10 @@ export namespace Prisma {
     internalAudits?: InternalAuditUpdateManyWithoutCompanyNestedInput
     externalAudits?: ExternalAuditUpdateManyWithoutCompanyNestedInput
     committeeMeetings?: CommitteeMeetingUpdateManyWithoutCompanyNestedInput
+    scheduleItems?: ScheduleItemUpdateManyWithoutCompanyNestedInput
     emergencyDrills?: EmergencyDrillUpdateManyWithoutCompanyNestedInput
+    familiarizationRecords?: FamiliarizationRecordUpdateManyWithoutCompanyNestedInput
+    scheduleApplicability?: ScheduleApplicabilityUpdateManyWithoutCompanyNestedInput
     controlledDocuments?: ControlledDocumentUpdateManyWithoutCompanyNestedInput
     circulars?: CircularUpdateManyWithoutCompanyNestedInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUpdateManyWithoutCompanyNestedInput
@@ -93744,7 +100680,10 @@ export namespace Prisma {
     internalAudits?: InternalAuditUncheckedUpdateManyWithoutCompanyNestedInput
     externalAudits?: ExternalAuditUncheckedUpdateManyWithoutCompanyNestedInput
     committeeMeetings?: CommitteeMeetingUncheckedUpdateManyWithoutCompanyNestedInput
+    scheduleItems?: ScheduleItemUncheckedUpdateManyWithoutCompanyNestedInput
     emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutCompanyNestedInput
+    familiarizationRecords?: FamiliarizationRecordUncheckedUpdateManyWithoutCompanyNestedInput
+    scheduleApplicability?: ScheduleApplicabilityUncheckedUpdateManyWithoutCompanyNestedInput
     controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutCompanyNestedInput
     circulars?: CircularUncheckedUpdateManyWithoutCompanyNestedInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedUpdateManyWithoutCompanyNestedInput
@@ -93790,6 +100729,21 @@ export namespace Prisma {
     lastDryDock?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dryDockPlace?: NullableStringFieldUpdateOperationsInput | string | null
     nextDryDockDue?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    portOfRegistry?: NullableStringFieldUpdateOperationsInput | string | null
+    lbp?: NullableFloatFieldUpdateOperationsInput | number | null
+    draft?: NullableFloatFieldUpdateOperationsInput | number | null
+    mainEngine?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceSpeed?: NullableFloatFieldUpdateOperationsInput | number | null
+    navigationArea?: NullableStringFieldUpdateOperationsInput | string | null
+    classNotation?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    builder?: NullableStringFieldUpdateOperationsInput | string | null
+    keelLaidDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    launchingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    totalComplement?: NullableIntFieldUpdateOperationsInput | number | null
+    satPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    vesselEmail?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -93808,6 +100762,8 @@ export namespace Prisma {
     externalAudits?: ExternalAuditUpdateManyWithoutVesselNestedInput
     committeeMeetings?: CommitteeMeetingUpdateManyWithoutVesselNestedInput
     emergencyDrills?: EmergencyDrillUpdateManyWithoutVesselNestedInput
+    familiarizationRecords?: FamiliarizationRecordUpdateManyWithoutVesselNestedInput
+    scheduleApplicability?: ScheduleApplicabilityUpdateManyWithoutVesselNestedInput
     controlledDocuments?: ControlledDocumentUpdateManyWithoutVesselNestedInput
     circulars?: CircularUpdateManyWithoutVesselNestedInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUpdateManyWithoutVesselNestedInput
@@ -93846,6 +100802,21 @@ export namespace Prisma {
     lastDryDock?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dryDockPlace?: NullableStringFieldUpdateOperationsInput | string | null
     nextDryDockDue?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    portOfRegistry?: NullableStringFieldUpdateOperationsInput | string | null
+    lbp?: NullableFloatFieldUpdateOperationsInput | number | null
+    draft?: NullableFloatFieldUpdateOperationsInput | number | null
+    mainEngine?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceSpeed?: NullableFloatFieldUpdateOperationsInput | number | null
+    navigationArea?: NullableStringFieldUpdateOperationsInput | string | null
+    classNotation?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    builder?: NullableStringFieldUpdateOperationsInput | string | null
+    keelLaidDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    launchingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    totalComplement?: NullableIntFieldUpdateOperationsInput | number | null
+    satPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    vesselEmail?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -93863,6 +100834,8 @@ export namespace Prisma {
     externalAudits?: ExternalAuditUncheckedUpdateManyWithoutVesselNestedInput
     committeeMeetings?: CommitteeMeetingUncheckedUpdateManyWithoutVesselNestedInput
     emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutVesselNestedInput
+    familiarizationRecords?: FamiliarizationRecordUncheckedUpdateManyWithoutVesselNestedInput
+    scheduleApplicability?: ScheduleApplicabilityUncheckedUpdateManyWithoutVesselNestedInput
     controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutVesselNestedInput
     circulars?: CircularUncheckedUpdateManyWithoutVesselNestedInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedUpdateManyWithoutVesselNestedInput
@@ -93956,7 +100929,10 @@ export namespace Prisma {
     internalAudits?: InternalAuditCreateNestedManyWithoutCompanyInput
     externalAudits?: ExternalAuditCreateNestedManyWithoutCompanyInput
     committeeMeetings?: CommitteeMeetingCreateNestedManyWithoutCompanyInput
+    scheduleItems?: ScheduleItemCreateNestedManyWithoutCompanyInput
     emergencyDrills?: EmergencyDrillCreateNestedManyWithoutCompanyInput
+    familiarizationRecords?: FamiliarizationRecordCreateNestedManyWithoutCompanyInput
+    scheduleApplicability?: ScheduleApplicabilityCreateNestedManyWithoutCompanyInput
     controlledDocuments?: ControlledDocumentCreateNestedManyWithoutCompanyInput
     circulars?: CircularCreateNestedManyWithoutCompanyInput
     riskAssessmentDocuments?: RiskAssessmentDocumentCreateNestedManyWithoutCompanyInput
@@ -93982,7 +100958,10 @@ export namespace Prisma {
     internalAudits?: InternalAuditUncheckedCreateNestedManyWithoutCompanyInput
     externalAudits?: ExternalAuditUncheckedCreateNestedManyWithoutCompanyInput
     committeeMeetings?: CommitteeMeetingUncheckedCreateNestedManyWithoutCompanyInput
+    scheduleItems?: ScheduleItemUncheckedCreateNestedManyWithoutCompanyInput
     emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutCompanyInput
+    familiarizationRecords?: FamiliarizationRecordUncheckedCreateNestedManyWithoutCompanyInput
+    scheduleApplicability?: ScheduleApplicabilityUncheckedCreateNestedManyWithoutCompanyInput
     controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutCompanyInput
     circulars?: CircularUncheckedCreateNestedManyWithoutCompanyInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedCreateNestedManyWithoutCompanyInput
@@ -94022,6 +101001,21 @@ export namespace Prisma {
     lastDryDock?: Date | string | null
     dryDockPlace?: string | null
     nextDryDockDue?: Date | string | null
+    portOfRegistry?: string | null
+    lbp?: number | null
+    draft?: number | null
+    mainEngine?: string | null
+    serviceSpeed?: number | null
+    navigationArea?: string | null
+    classNotation?: string | null
+    ownerAddress?: string | null
+    builder?: string | null
+    keelLaidDate?: Date | string | null
+    launchingDate?: Date | string | null
+    deliveryDate?: Date | string | null
+    totalComplement?: number | null
+    satPhone?: string | null
+    vesselEmail?: string | null
     archivedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -94040,6 +101034,8 @@ export namespace Prisma {
     externalAudits?: ExternalAuditCreateNestedManyWithoutVesselInput
     committeeMeetings?: CommitteeMeetingCreateNestedManyWithoutVesselInput
     emergencyDrills?: EmergencyDrillCreateNestedManyWithoutVesselInput
+    familiarizationRecords?: FamiliarizationRecordCreateNestedManyWithoutVesselInput
+    scheduleApplicability?: ScheduleApplicabilityCreateNestedManyWithoutVesselInput
     controlledDocuments?: ControlledDocumentCreateNestedManyWithoutVesselInput
     circulars?: CircularCreateNestedManyWithoutVesselInput
     riskAssessmentDocuments?: RiskAssessmentDocumentCreateNestedManyWithoutVesselInput
@@ -94078,6 +101074,21 @@ export namespace Prisma {
     lastDryDock?: Date | string | null
     dryDockPlace?: string | null
     nextDryDockDue?: Date | string | null
+    portOfRegistry?: string | null
+    lbp?: number | null
+    draft?: number | null
+    mainEngine?: string | null
+    serviceSpeed?: number | null
+    navigationArea?: string | null
+    classNotation?: string | null
+    ownerAddress?: string | null
+    builder?: string | null
+    keelLaidDate?: Date | string | null
+    launchingDate?: Date | string | null
+    deliveryDate?: Date | string | null
+    totalComplement?: number | null
+    satPhone?: string | null
+    vesselEmail?: string | null
     archivedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -94095,6 +101106,8 @@ export namespace Prisma {
     externalAudits?: ExternalAuditUncheckedCreateNestedManyWithoutVesselInput
     committeeMeetings?: CommitteeMeetingUncheckedCreateNestedManyWithoutVesselInput
     emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutVesselInput
+    familiarizationRecords?: FamiliarizationRecordUncheckedCreateNestedManyWithoutVesselInput
+    scheduleApplicability?: ScheduleApplicabilityUncheckedCreateNestedManyWithoutVesselInput
     controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutVesselInput
     circulars?: CircularUncheckedCreateNestedManyWithoutVesselInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedCreateNestedManyWithoutVesselInput
@@ -94201,7 +101214,10 @@ export namespace Prisma {
     internalAudits?: InternalAuditUpdateManyWithoutCompanyNestedInput
     externalAudits?: ExternalAuditUpdateManyWithoutCompanyNestedInput
     committeeMeetings?: CommitteeMeetingUpdateManyWithoutCompanyNestedInput
+    scheduleItems?: ScheduleItemUpdateManyWithoutCompanyNestedInput
     emergencyDrills?: EmergencyDrillUpdateManyWithoutCompanyNestedInput
+    familiarizationRecords?: FamiliarizationRecordUpdateManyWithoutCompanyNestedInput
+    scheduleApplicability?: ScheduleApplicabilityUpdateManyWithoutCompanyNestedInput
     controlledDocuments?: ControlledDocumentUpdateManyWithoutCompanyNestedInput
     circulars?: CircularUpdateManyWithoutCompanyNestedInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUpdateManyWithoutCompanyNestedInput
@@ -94227,7 +101243,10 @@ export namespace Prisma {
     internalAudits?: InternalAuditUncheckedUpdateManyWithoutCompanyNestedInput
     externalAudits?: ExternalAuditUncheckedUpdateManyWithoutCompanyNestedInput
     committeeMeetings?: CommitteeMeetingUncheckedUpdateManyWithoutCompanyNestedInput
+    scheduleItems?: ScheduleItemUncheckedUpdateManyWithoutCompanyNestedInput
     emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutCompanyNestedInput
+    familiarizationRecords?: FamiliarizationRecordUncheckedUpdateManyWithoutCompanyNestedInput
+    scheduleApplicability?: ScheduleApplicabilityUncheckedUpdateManyWithoutCompanyNestedInput
     controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutCompanyNestedInput
     circulars?: CircularUncheckedUpdateManyWithoutCompanyNestedInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedUpdateManyWithoutCompanyNestedInput
@@ -94273,6 +101292,21 @@ export namespace Prisma {
     lastDryDock?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dryDockPlace?: NullableStringFieldUpdateOperationsInput | string | null
     nextDryDockDue?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    portOfRegistry?: NullableStringFieldUpdateOperationsInput | string | null
+    lbp?: NullableFloatFieldUpdateOperationsInput | number | null
+    draft?: NullableFloatFieldUpdateOperationsInput | number | null
+    mainEngine?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceSpeed?: NullableFloatFieldUpdateOperationsInput | number | null
+    navigationArea?: NullableStringFieldUpdateOperationsInput | string | null
+    classNotation?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    builder?: NullableStringFieldUpdateOperationsInput | string | null
+    keelLaidDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    launchingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    totalComplement?: NullableIntFieldUpdateOperationsInput | number | null
+    satPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    vesselEmail?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -94291,6 +101325,8 @@ export namespace Prisma {
     externalAudits?: ExternalAuditUpdateManyWithoutVesselNestedInput
     committeeMeetings?: CommitteeMeetingUpdateManyWithoutVesselNestedInput
     emergencyDrills?: EmergencyDrillUpdateManyWithoutVesselNestedInput
+    familiarizationRecords?: FamiliarizationRecordUpdateManyWithoutVesselNestedInput
+    scheduleApplicability?: ScheduleApplicabilityUpdateManyWithoutVesselNestedInput
     controlledDocuments?: ControlledDocumentUpdateManyWithoutVesselNestedInput
     circulars?: CircularUpdateManyWithoutVesselNestedInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUpdateManyWithoutVesselNestedInput
@@ -94329,6 +101365,21 @@ export namespace Prisma {
     lastDryDock?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dryDockPlace?: NullableStringFieldUpdateOperationsInput | string | null
     nextDryDockDue?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    portOfRegistry?: NullableStringFieldUpdateOperationsInput | string | null
+    lbp?: NullableFloatFieldUpdateOperationsInput | number | null
+    draft?: NullableFloatFieldUpdateOperationsInput | number | null
+    mainEngine?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceSpeed?: NullableFloatFieldUpdateOperationsInput | number | null
+    navigationArea?: NullableStringFieldUpdateOperationsInput | string | null
+    classNotation?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    builder?: NullableStringFieldUpdateOperationsInput | string | null
+    keelLaidDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    launchingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    totalComplement?: NullableIntFieldUpdateOperationsInput | number | null
+    satPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    vesselEmail?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -94346,6 +101397,8 @@ export namespace Prisma {
     externalAudits?: ExternalAuditUncheckedUpdateManyWithoutVesselNestedInput
     committeeMeetings?: CommitteeMeetingUncheckedUpdateManyWithoutVesselNestedInput
     emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutVesselNestedInput
+    familiarizationRecords?: FamiliarizationRecordUncheckedUpdateManyWithoutVesselNestedInput
+    scheduleApplicability?: ScheduleApplicabilityUncheckedUpdateManyWithoutVesselNestedInput
     controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutVesselNestedInput
     circulars?: CircularUncheckedUpdateManyWithoutVesselNestedInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedUpdateManyWithoutVesselNestedInput
@@ -95032,7 +102085,10 @@ export namespace Prisma {
     internalAudits?: InternalAuditCreateNestedManyWithoutCompanyInput
     externalAudits?: ExternalAuditCreateNestedManyWithoutCompanyInput
     committeeMeetings?: CommitteeMeetingCreateNestedManyWithoutCompanyInput
+    scheduleItems?: ScheduleItemCreateNestedManyWithoutCompanyInput
     emergencyDrills?: EmergencyDrillCreateNestedManyWithoutCompanyInput
+    familiarizationRecords?: FamiliarizationRecordCreateNestedManyWithoutCompanyInput
+    scheduleApplicability?: ScheduleApplicabilityCreateNestedManyWithoutCompanyInput
     controlledDocuments?: ControlledDocumentCreateNestedManyWithoutCompanyInput
     circulars?: CircularCreateNestedManyWithoutCompanyInput
     riskAssessmentDocuments?: RiskAssessmentDocumentCreateNestedManyWithoutCompanyInput
@@ -95058,7 +102114,10 @@ export namespace Prisma {
     internalAudits?: InternalAuditUncheckedCreateNestedManyWithoutCompanyInput
     externalAudits?: ExternalAuditUncheckedCreateNestedManyWithoutCompanyInput
     committeeMeetings?: CommitteeMeetingUncheckedCreateNestedManyWithoutCompanyInput
+    scheduleItems?: ScheduleItemUncheckedCreateNestedManyWithoutCompanyInput
     emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutCompanyInput
+    familiarizationRecords?: FamiliarizationRecordUncheckedCreateNestedManyWithoutCompanyInput
+    scheduleApplicability?: ScheduleApplicabilityUncheckedCreateNestedManyWithoutCompanyInput
     controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutCompanyInput
     circulars?: CircularUncheckedCreateNestedManyWithoutCompanyInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedCreateNestedManyWithoutCompanyInput
@@ -95098,6 +102157,21 @@ export namespace Prisma {
     lastDryDock?: Date | string | null
     dryDockPlace?: string | null
     nextDryDockDue?: Date | string | null
+    portOfRegistry?: string | null
+    lbp?: number | null
+    draft?: number | null
+    mainEngine?: string | null
+    serviceSpeed?: number | null
+    navigationArea?: string | null
+    classNotation?: string | null
+    ownerAddress?: string | null
+    builder?: string | null
+    keelLaidDate?: Date | string | null
+    launchingDate?: Date | string | null
+    deliveryDate?: Date | string | null
+    totalComplement?: number | null
+    satPhone?: string | null
+    vesselEmail?: string | null
     archivedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -95116,6 +102190,8 @@ export namespace Prisma {
     externalAudits?: ExternalAuditCreateNestedManyWithoutVesselInput
     committeeMeetings?: CommitteeMeetingCreateNestedManyWithoutVesselInput
     emergencyDrills?: EmergencyDrillCreateNestedManyWithoutVesselInput
+    familiarizationRecords?: FamiliarizationRecordCreateNestedManyWithoutVesselInput
+    scheduleApplicability?: ScheduleApplicabilityCreateNestedManyWithoutVesselInput
     controlledDocuments?: ControlledDocumentCreateNestedManyWithoutVesselInput
     circulars?: CircularCreateNestedManyWithoutVesselInput
     riskAssessmentDocuments?: RiskAssessmentDocumentCreateNestedManyWithoutVesselInput
@@ -95154,6 +102230,21 @@ export namespace Prisma {
     lastDryDock?: Date | string | null
     dryDockPlace?: string | null
     nextDryDockDue?: Date | string | null
+    portOfRegistry?: string | null
+    lbp?: number | null
+    draft?: number | null
+    mainEngine?: string | null
+    serviceSpeed?: number | null
+    navigationArea?: string | null
+    classNotation?: string | null
+    ownerAddress?: string | null
+    builder?: string | null
+    keelLaidDate?: Date | string | null
+    launchingDate?: Date | string | null
+    deliveryDate?: Date | string | null
+    totalComplement?: number | null
+    satPhone?: string | null
+    vesselEmail?: string | null
     archivedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -95171,6 +102262,8 @@ export namespace Prisma {
     externalAudits?: ExternalAuditUncheckedCreateNestedManyWithoutVesselInput
     committeeMeetings?: CommitteeMeetingUncheckedCreateNestedManyWithoutVesselInput
     emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutVesselInput
+    familiarizationRecords?: FamiliarizationRecordUncheckedCreateNestedManyWithoutVesselInput
+    scheduleApplicability?: ScheduleApplicabilityUncheckedCreateNestedManyWithoutVesselInput
     controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutVesselInput
     circulars?: CircularUncheckedCreateNestedManyWithoutVesselInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedCreateNestedManyWithoutVesselInput
@@ -95255,7 +102348,10 @@ export namespace Prisma {
     internalAudits?: InternalAuditUpdateManyWithoutCompanyNestedInput
     externalAudits?: ExternalAuditUpdateManyWithoutCompanyNestedInput
     committeeMeetings?: CommitteeMeetingUpdateManyWithoutCompanyNestedInput
+    scheduleItems?: ScheduleItemUpdateManyWithoutCompanyNestedInput
     emergencyDrills?: EmergencyDrillUpdateManyWithoutCompanyNestedInput
+    familiarizationRecords?: FamiliarizationRecordUpdateManyWithoutCompanyNestedInput
+    scheduleApplicability?: ScheduleApplicabilityUpdateManyWithoutCompanyNestedInput
     controlledDocuments?: ControlledDocumentUpdateManyWithoutCompanyNestedInput
     circulars?: CircularUpdateManyWithoutCompanyNestedInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUpdateManyWithoutCompanyNestedInput
@@ -95281,7 +102377,10 @@ export namespace Prisma {
     internalAudits?: InternalAuditUncheckedUpdateManyWithoutCompanyNestedInput
     externalAudits?: ExternalAuditUncheckedUpdateManyWithoutCompanyNestedInput
     committeeMeetings?: CommitteeMeetingUncheckedUpdateManyWithoutCompanyNestedInput
+    scheduleItems?: ScheduleItemUncheckedUpdateManyWithoutCompanyNestedInput
     emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutCompanyNestedInput
+    familiarizationRecords?: FamiliarizationRecordUncheckedUpdateManyWithoutCompanyNestedInput
+    scheduleApplicability?: ScheduleApplicabilityUncheckedUpdateManyWithoutCompanyNestedInput
     controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutCompanyNestedInput
     circulars?: CircularUncheckedUpdateManyWithoutCompanyNestedInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedUpdateManyWithoutCompanyNestedInput
@@ -95327,6 +102426,21 @@ export namespace Prisma {
     lastDryDock?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dryDockPlace?: NullableStringFieldUpdateOperationsInput | string | null
     nextDryDockDue?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    portOfRegistry?: NullableStringFieldUpdateOperationsInput | string | null
+    lbp?: NullableFloatFieldUpdateOperationsInput | number | null
+    draft?: NullableFloatFieldUpdateOperationsInput | number | null
+    mainEngine?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceSpeed?: NullableFloatFieldUpdateOperationsInput | number | null
+    navigationArea?: NullableStringFieldUpdateOperationsInput | string | null
+    classNotation?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    builder?: NullableStringFieldUpdateOperationsInput | string | null
+    keelLaidDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    launchingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    totalComplement?: NullableIntFieldUpdateOperationsInput | number | null
+    satPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    vesselEmail?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -95345,6 +102459,8 @@ export namespace Prisma {
     externalAudits?: ExternalAuditUpdateManyWithoutVesselNestedInput
     committeeMeetings?: CommitteeMeetingUpdateManyWithoutVesselNestedInput
     emergencyDrills?: EmergencyDrillUpdateManyWithoutVesselNestedInput
+    familiarizationRecords?: FamiliarizationRecordUpdateManyWithoutVesselNestedInput
+    scheduleApplicability?: ScheduleApplicabilityUpdateManyWithoutVesselNestedInput
     controlledDocuments?: ControlledDocumentUpdateManyWithoutVesselNestedInput
     circulars?: CircularUpdateManyWithoutVesselNestedInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUpdateManyWithoutVesselNestedInput
@@ -95383,6 +102499,21 @@ export namespace Prisma {
     lastDryDock?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dryDockPlace?: NullableStringFieldUpdateOperationsInput | string | null
     nextDryDockDue?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    portOfRegistry?: NullableStringFieldUpdateOperationsInput | string | null
+    lbp?: NullableFloatFieldUpdateOperationsInput | number | null
+    draft?: NullableFloatFieldUpdateOperationsInput | number | null
+    mainEngine?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceSpeed?: NullableFloatFieldUpdateOperationsInput | number | null
+    navigationArea?: NullableStringFieldUpdateOperationsInput | string | null
+    classNotation?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    builder?: NullableStringFieldUpdateOperationsInput | string | null
+    keelLaidDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    launchingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    totalComplement?: NullableIntFieldUpdateOperationsInput | number | null
+    satPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    vesselEmail?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -95400,6 +102531,8 @@ export namespace Prisma {
     externalAudits?: ExternalAuditUncheckedUpdateManyWithoutVesselNestedInput
     committeeMeetings?: CommitteeMeetingUncheckedUpdateManyWithoutVesselNestedInput
     emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutVesselNestedInput
+    familiarizationRecords?: FamiliarizationRecordUncheckedUpdateManyWithoutVesselNestedInput
+    scheduleApplicability?: ScheduleApplicabilityUncheckedUpdateManyWithoutVesselNestedInput
     controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutVesselNestedInput
     circulars?: CircularUncheckedUpdateManyWithoutVesselNestedInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedUpdateManyWithoutVesselNestedInput
@@ -95563,7 +102696,10 @@ export namespace Prisma {
     internalAudits?: InternalAuditCreateNestedManyWithoutCompanyInput
     externalAudits?: ExternalAuditCreateNestedManyWithoutCompanyInput
     committeeMeetings?: CommitteeMeetingCreateNestedManyWithoutCompanyInput
+    scheduleItems?: ScheduleItemCreateNestedManyWithoutCompanyInput
     emergencyDrills?: EmergencyDrillCreateNestedManyWithoutCompanyInput
+    familiarizationRecords?: FamiliarizationRecordCreateNestedManyWithoutCompanyInput
+    scheduleApplicability?: ScheduleApplicabilityCreateNestedManyWithoutCompanyInput
     controlledDocuments?: ControlledDocumentCreateNestedManyWithoutCompanyInput
     circulars?: CircularCreateNestedManyWithoutCompanyInput
     riskAssessmentDocuments?: RiskAssessmentDocumentCreateNestedManyWithoutCompanyInput
@@ -95589,7 +102725,10 @@ export namespace Prisma {
     internalAudits?: InternalAuditUncheckedCreateNestedManyWithoutCompanyInput
     externalAudits?: ExternalAuditUncheckedCreateNestedManyWithoutCompanyInput
     committeeMeetings?: CommitteeMeetingUncheckedCreateNestedManyWithoutCompanyInput
+    scheduleItems?: ScheduleItemUncheckedCreateNestedManyWithoutCompanyInput
     emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutCompanyInput
+    familiarizationRecords?: FamiliarizationRecordUncheckedCreateNestedManyWithoutCompanyInput
+    scheduleApplicability?: ScheduleApplicabilityUncheckedCreateNestedManyWithoutCompanyInput
     controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutCompanyInput
     circulars?: CircularUncheckedCreateNestedManyWithoutCompanyInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedCreateNestedManyWithoutCompanyInput
@@ -95629,6 +102768,21 @@ export namespace Prisma {
     lastDryDock?: Date | string | null
     dryDockPlace?: string | null
     nextDryDockDue?: Date | string | null
+    portOfRegistry?: string | null
+    lbp?: number | null
+    draft?: number | null
+    mainEngine?: string | null
+    serviceSpeed?: number | null
+    navigationArea?: string | null
+    classNotation?: string | null
+    ownerAddress?: string | null
+    builder?: string | null
+    keelLaidDate?: Date | string | null
+    launchingDate?: Date | string | null
+    deliveryDate?: Date | string | null
+    totalComplement?: number | null
+    satPhone?: string | null
+    vesselEmail?: string | null
     archivedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -95647,6 +102801,8 @@ export namespace Prisma {
     externalAudits?: ExternalAuditCreateNestedManyWithoutVesselInput
     committeeMeetings?: CommitteeMeetingCreateNestedManyWithoutVesselInput
     emergencyDrills?: EmergencyDrillCreateNestedManyWithoutVesselInput
+    familiarizationRecords?: FamiliarizationRecordCreateNestedManyWithoutVesselInput
+    scheduleApplicability?: ScheduleApplicabilityCreateNestedManyWithoutVesselInput
     controlledDocuments?: ControlledDocumentCreateNestedManyWithoutVesselInput
     circulars?: CircularCreateNestedManyWithoutVesselInput
     riskAssessmentDocuments?: RiskAssessmentDocumentCreateNestedManyWithoutVesselInput
@@ -95685,6 +102841,21 @@ export namespace Prisma {
     lastDryDock?: Date | string | null
     dryDockPlace?: string | null
     nextDryDockDue?: Date | string | null
+    portOfRegistry?: string | null
+    lbp?: number | null
+    draft?: number | null
+    mainEngine?: string | null
+    serviceSpeed?: number | null
+    navigationArea?: string | null
+    classNotation?: string | null
+    ownerAddress?: string | null
+    builder?: string | null
+    keelLaidDate?: Date | string | null
+    launchingDate?: Date | string | null
+    deliveryDate?: Date | string | null
+    totalComplement?: number | null
+    satPhone?: string | null
+    vesselEmail?: string | null
     archivedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -95702,6 +102873,8 @@ export namespace Prisma {
     externalAudits?: ExternalAuditUncheckedCreateNestedManyWithoutVesselInput
     committeeMeetings?: CommitteeMeetingUncheckedCreateNestedManyWithoutVesselInput
     emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutVesselInput
+    familiarizationRecords?: FamiliarizationRecordUncheckedCreateNestedManyWithoutVesselInput
+    scheduleApplicability?: ScheduleApplicabilityUncheckedCreateNestedManyWithoutVesselInput
     controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutVesselInput
     circulars?: CircularUncheckedCreateNestedManyWithoutVesselInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedCreateNestedManyWithoutVesselInput
@@ -95723,7 +102896,7 @@ export namespace Prisma {
     observation: string
     response?: string | null
     status?: $Enums.FindingStatus
-    category?: $Enums.SireObservationCategory | null
+    category?: $Enums.CdiObservationSection | null
     rootCauseCategory?: $Enums.RootCauseCategory | null
     rootCauseSubCategory?: string | null
     rootCause?: string | null
@@ -95739,7 +102912,7 @@ export namespace Prisma {
     observation: string
     response?: string | null
     status?: $Enums.FindingStatus
-    category?: $Enums.SireObservationCategory | null
+    category?: $Enums.CdiObservationSection | null
     rootCauseCategory?: $Enums.RootCauseCategory | null
     rootCauseSubCategory?: string | null
     rootCause?: string | null
@@ -95788,7 +102961,10 @@ export namespace Prisma {
     internalAudits?: InternalAuditUpdateManyWithoutCompanyNestedInput
     externalAudits?: ExternalAuditUpdateManyWithoutCompanyNestedInput
     committeeMeetings?: CommitteeMeetingUpdateManyWithoutCompanyNestedInput
+    scheduleItems?: ScheduleItemUpdateManyWithoutCompanyNestedInput
     emergencyDrills?: EmergencyDrillUpdateManyWithoutCompanyNestedInput
+    familiarizationRecords?: FamiliarizationRecordUpdateManyWithoutCompanyNestedInput
+    scheduleApplicability?: ScheduleApplicabilityUpdateManyWithoutCompanyNestedInput
     controlledDocuments?: ControlledDocumentUpdateManyWithoutCompanyNestedInput
     circulars?: CircularUpdateManyWithoutCompanyNestedInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUpdateManyWithoutCompanyNestedInput
@@ -95814,7 +102990,10 @@ export namespace Prisma {
     internalAudits?: InternalAuditUncheckedUpdateManyWithoutCompanyNestedInput
     externalAudits?: ExternalAuditUncheckedUpdateManyWithoutCompanyNestedInput
     committeeMeetings?: CommitteeMeetingUncheckedUpdateManyWithoutCompanyNestedInput
+    scheduleItems?: ScheduleItemUncheckedUpdateManyWithoutCompanyNestedInput
     emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutCompanyNestedInput
+    familiarizationRecords?: FamiliarizationRecordUncheckedUpdateManyWithoutCompanyNestedInput
+    scheduleApplicability?: ScheduleApplicabilityUncheckedUpdateManyWithoutCompanyNestedInput
     controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutCompanyNestedInput
     circulars?: CircularUncheckedUpdateManyWithoutCompanyNestedInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedUpdateManyWithoutCompanyNestedInput
@@ -95860,6 +103039,21 @@ export namespace Prisma {
     lastDryDock?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dryDockPlace?: NullableStringFieldUpdateOperationsInput | string | null
     nextDryDockDue?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    portOfRegistry?: NullableStringFieldUpdateOperationsInput | string | null
+    lbp?: NullableFloatFieldUpdateOperationsInput | number | null
+    draft?: NullableFloatFieldUpdateOperationsInput | number | null
+    mainEngine?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceSpeed?: NullableFloatFieldUpdateOperationsInput | number | null
+    navigationArea?: NullableStringFieldUpdateOperationsInput | string | null
+    classNotation?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    builder?: NullableStringFieldUpdateOperationsInput | string | null
+    keelLaidDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    launchingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    totalComplement?: NullableIntFieldUpdateOperationsInput | number | null
+    satPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    vesselEmail?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -95878,6 +103072,8 @@ export namespace Prisma {
     externalAudits?: ExternalAuditUpdateManyWithoutVesselNestedInput
     committeeMeetings?: CommitteeMeetingUpdateManyWithoutVesselNestedInput
     emergencyDrills?: EmergencyDrillUpdateManyWithoutVesselNestedInput
+    familiarizationRecords?: FamiliarizationRecordUpdateManyWithoutVesselNestedInput
+    scheduleApplicability?: ScheduleApplicabilityUpdateManyWithoutVesselNestedInput
     controlledDocuments?: ControlledDocumentUpdateManyWithoutVesselNestedInput
     circulars?: CircularUpdateManyWithoutVesselNestedInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUpdateManyWithoutVesselNestedInput
@@ -95916,6 +103112,21 @@ export namespace Prisma {
     lastDryDock?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dryDockPlace?: NullableStringFieldUpdateOperationsInput | string | null
     nextDryDockDue?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    portOfRegistry?: NullableStringFieldUpdateOperationsInput | string | null
+    lbp?: NullableFloatFieldUpdateOperationsInput | number | null
+    draft?: NullableFloatFieldUpdateOperationsInput | number | null
+    mainEngine?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceSpeed?: NullableFloatFieldUpdateOperationsInput | number | null
+    navigationArea?: NullableStringFieldUpdateOperationsInput | string | null
+    classNotation?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    builder?: NullableStringFieldUpdateOperationsInput | string | null
+    keelLaidDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    launchingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    totalComplement?: NullableIntFieldUpdateOperationsInput | number | null
+    satPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    vesselEmail?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -95933,6 +103144,8 @@ export namespace Prisma {
     externalAudits?: ExternalAuditUncheckedUpdateManyWithoutVesselNestedInput
     committeeMeetings?: CommitteeMeetingUncheckedUpdateManyWithoutVesselNestedInput
     emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutVesselNestedInput
+    familiarizationRecords?: FamiliarizationRecordUncheckedUpdateManyWithoutVesselNestedInput
+    scheduleApplicability?: ScheduleApplicabilityUncheckedUpdateManyWithoutVesselNestedInput
     controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutVesselNestedInput
     circulars?: CircularUncheckedUpdateManyWithoutVesselNestedInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedUpdateManyWithoutVesselNestedInput
@@ -95969,7 +103182,7 @@ export namespace Prisma {
     observation?: StringFilter<"CdiObservation"> | string
     response?: StringNullableFilter<"CdiObservation"> | string | null
     status?: EnumFindingStatusFilter<"CdiObservation"> | $Enums.FindingStatus
-    category?: EnumSireObservationCategoryNullableFilter<"CdiObservation"> | $Enums.SireObservationCategory | null
+    category?: EnumCdiObservationSectionNullableFilter<"CdiObservation"> | $Enums.CdiObservationSection | null
     rootCauseCategory?: EnumRootCauseCategoryNullableFilter<"CdiObservation"> | $Enums.RootCauseCategory | null
     rootCauseSubCategory?: StringNullableFilter<"CdiObservation"> | string | null
     rootCause?: StringNullableFilter<"CdiObservation"> | string | null
@@ -96093,7 +103306,10 @@ export namespace Prisma {
     cdiInspections?: CdiInspectionCreateNestedManyWithoutCompanyInput
     externalAudits?: ExternalAuditCreateNestedManyWithoutCompanyInput
     committeeMeetings?: CommitteeMeetingCreateNestedManyWithoutCompanyInput
+    scheduleItems?: ScheduleItemCreateNestedManyWithoutCompanyInput
     emergencyDrills?: EmergencyDrillCreateNestedManyWithoutCompanyInput
+    familiarizationRecords?: FamiliarizationRecordCreateNestedManyWithoutCompanyInput
+    scheduleApplicability?: ScheduleApplicabilityCreateNestedManyWithoutCompanyInput
     controlledDocuments?: ControlledDocumentCreateNestedManyWithoutCompanyInput
     circulars?: CircularCreateNestedManyWithoutCompanyInput
     riskAssessmentDocuments?: RiskAssessmentDocumentCreateNestedManyWithoutCompanyInput
@@ -96119,7 +103335,10 @@ export namespace Prisma {
     cdiInspections?: CdiInspectionUncheckedCreateNestedManyWithoutCompanyInput
     externalAudits?: ExternalAuditUncheckedCreateNestedManyWithoutCompanyInput
     committeeMeetings?: CommitteeMeetingUncheckedCreateNestedManyWithoutCompanyInput
+    scheduleItems?: ScheduleItemUncheckedCreateNestedManyWithoutCompanyInput
     emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutCompanyInput
+    familiarizationRecords?: FamiliarizationRecordUncheckedCreateNestedManyWithoutCompanyInput
+    scheduleApplicability?: ScheduleApplicabilityUncheckedCreateNestedManyWithoutCompanyInput
     controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutCompanyInput
     circulars?: CircularUncheckedCreateNestedManyWithoutCompanyInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedCreateNestedManyWithoutCompanyInput
@@ -96159,6 +103378,21 @@ export namespace Prisma {
     lastDryDock?: Date | string | null
     dryDockPlace?: string | null
     nextDryDockDue?: Date | string | null
+    portOfRegistry?: string | null
+    lbp?: number | null
+    draft?: number | null
+    mainEngine?: string | null
+    serviceSpeed?: number | null
+    navigationArea?: string | null
+    classNotation?: string | null
+    ownerAddress?: string | null
+    builder?: string | null
+    keelLaidDate?: Date | string | null
+    launchingDate?: Date | string | null
+    deliveryDate?: Date | string | null
+    totalComplement?: number | null
+    satPhone?: string | null
+    vesselEmail?: string | null
     archivedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -96177,6 +103411,8 @@ export namespace Prisma {
     externalAudits?: ExternalAuditCreateNestedManyWithoutVesselInput
     committeeMeetings?: CommitteeMeetingCreateNestedManyWithoutVesselInput
     emergencyDrills?: EmergencyDrillCreateNestedManyWithoutVesselInput
+    familiarizationRecords?: FamiliarizationRecordCreateNestedManyWithoutVesselInput
+    scheduleApplicability?: ScheduleApplicabilityCreateNestedManyWithoutVesselInput
     controlledDocuments?: ControlledDocumentCreateNestedManyWithoutVesselInput
     circulars?: CircularCreateNestedManyWithoutVesselInput
     riskAssessmentDocuments?: RiskAssessmentDocumentCreateNestedManyWithoutVesselInput
@@ -96215,6 +103451,21 @@ export namespace Prisma {
     lastDryDock?: Date | string | null
     dryDockPlace?: string | null
     nextDryDockDue?: Date | string | null
+    portOfRegistry?: string | null
+    lbp?: number | null
+    draft?: number | null
+    mainEngine?: string | null
+    serviceSpeed?: number | null
+    navigationArea?: string | null
+    classNotation?: string | null
+    ownerAddress?: string | null
+    builder?: string | null
+    keelLaidDate?: Date | string | null
+    launchingDate?: Date | string | null
+    deliveryDate?: Date | string | null
+    totalComplement?: number | null
+    satPhone?: string | null
+    vesselEmail?: string | null
     archivedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -96232,6 +103483,8 @@ export namespace Prisma {
     externalAudits?: ExternalAuditUncheckedCreateNestedManyWithoutVesselInput
     committeeMeetings?: CommitteeMeetingUncheckedCreateNestedManyWithoutVesselInput
     emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutVesselInput
+    familiarizationRecords?: FamiliarizationRecordUncheckedCreateNestedManyWithoutVesselInput
+    scheduleApplicability?: ScheduleApplicabilityUncheckedCreateNestedManyWithoutVesselInput
     controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutVesselInput
     circulars?: CircularUncheckedCreateNestedManyWithoutVesselInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedCreateNestedManyWithoutVesselInput
@@ -96314,7 +103567,10 @@ export namespace Prisma {
     cdiInspections?: CdiInspectionUpdateManyWithoutCompanyNestedInput
     externalAudits?: ExternalAuditUpdateManyWithoutCompanyNestedInput
     committeeMeetings?: CommitteeMeetingUpdateManyWithoutCompanyNestedInput
+    scheduleItems?: ScheduleItemUpdateManyWithoutCompanyNestedInput
     emergencyDrills?: EmergencyDrillUpdateManyWithoutCompanyNestedInput
+    familiarizationRecords?: FamiliarizationRecordUpdateManyWithoutCompanyNestedInput
+    scheduleApplicability?: ScheduleApplicabilityUpdateManyWithoutCompanyNestedInput
     controlledDocuments?: ControlledDocumentUpdateManyWithoutCompanyNestedInput
     circulars?: CircularUpdateManyWithoutCompanyNestedInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUpdateManyWithoutCompanyNestedInput
@@ -96340,7 +103596,10 @@ export namespace Prisma {
     cdiInspections?: CdiInspectionUncheckedUpdateManyWithoutCompanyNestedInput
     externalAudits?: ExternalAuditUncheckedUpdateManyWithoutCompanyNestedInput
     committeeMeetings?: CommitteeMeetingUncheckedUpdateManyWithoutCompanyNestedInput
+    scheduleItems?: ScheduleItemUncheckedUpdateManyWithoutCompanyNestedInput
     emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutCompanyNestedInput
+    familiarizationRecords?: FamiliarizationRecordUncheckedUpdateManyWithoutCompanyNestedInput
+    scheduleApplicability?: ScheduleApplicabilityUncheckedUpdateManyWithoutCompanyNestedInput
     controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutCompanyNestedInput
     circulars?: CircularUncheckedUpdateManyWithoutCompanyNestedInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedUpdateManyWithoutCompanyNestedInput
@@ -96386,6 +103645,21 @@ export namespace Prisma {
     lastDryDock?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dryDockPlace?: NullableStringFieldUpdateOperationsInput | string | null
     nextDryDockDue?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    portOfRegistry?: NullableStringFieldUpdateOperationsInput | string | null
+    lbp?: NullableFloatFieldUpdateOperationsInput | number | null
+    draft?: NullableFloatFieldUpdateOperationsInput | number | null
+    mainEngine?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceSpeed?: NullableFloatFieldUpdateOperationsInput | number | null
+    navigationArea?: NullableStringFieldUpdateOperationsInput | string | null
+    classNotation?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    builder?: NullableStringFieldUpdateOperationsInput | string | null
+    keelLaidDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    launchingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    totalComplement?: NullableIntFieldUpdateOperationsInput | number | null
+    satPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    vesselEmail?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -96404,6 +103678,8 @@ export namespace Prisma {
     externalAudits?: ExternalAuditUpdateManyWithoutVesselNestedInput
     committeeMeetings?: CommitteeMeetingUpdateManyWithoutVesselNestedInput
     emergencyDrills?: EmergencyDrillUpdateManyWithoutVesselNestedInput
+    familiarizationRecords?: FamiliarizationRecordUpdateManyWithoutVesselNestedInput
+    scheduleApplicability?: ScheduleApplicabilityUpdateManyWithoutVesselNestedInput
     controlledDocuments?: ControlledDocumentUpdateManyWithoutVesselNestedInput
     circulars?: CircularUpdateManyWithoutVesselNestedInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUpdateManyWithoutVesselNestedInput
@@ -96442,6 +103718,21 @@ export namespace Prisma {
     lastDryDock?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dryDockPlace?: NullableStringFieldUpdateOperationsInput | string | null
     nextDryDockDue?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    portOfRegistry?: NullableStringFieldUpdateOperationsInput | string | null
+    lbp?: NullableFloatFieldUpdateOperationsInput | number | null
+    draft?: NullableFloatFieldUpdateOperationsInput | number | null
+    mainEngine?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceSpeed?: NullableFloatFieldUpdateOperationsInput | number | null
+    navigationArea?: NullableStringFieldUpdateOperationsInput | string | null
+    classNotation?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    builder?: NullableStringFieldUpdateOperationsInput | string | null
+    keelLaidDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    launchingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    totalComplement?: NullableIntFieldUpdateOperationsInput | number | null
+    satPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    vesselEmail?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -96459,6 +103750,8 @@ export namespace Prisma {
     externalAudits?: ExternalAuditUncheckedUpdateManyWithoutVesselNestedInput
     committeeMeetings?: CommitteeMeetingUncheckedUpdateManyWithoutVesselNestedInput
     emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutVesselNestedInput
+    familiarizationRecords?: FamiliarizationRecordUncheckedUpdateManyWithoutVesselNestedInput
+    scheduleApplicability?: ScheduleApplicabilityUncheckedUpdateManyWithoutVesselNestedInput
     controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutVesselNestedInput
     circulars?: CircularUncheckedUpdateManyWithoutVesselNestedInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedUpdateManyWithoutVesselNestedInput
@@ -96621,7 +103914,10 @@ export namespace Prisma {
     cdiInspections?: CdiInspectionCreateNestedManyWithoutCompanyInput
     internalAudits?: InternalAuditCreateNestedManyWithoutCompanyInput
     committeeMeetings?: CommitteeMeetingCreateNestedManyWithoutCompanyInput
+    scheduleItems?: ScheduleItemCreateNestedManyWithoutCompanyInput
     emergencyDrills?: EmergencyDrillCreateNestedManyWithoutCompanyInput
+    familiarizationRecords?: FamiliarizationRecordCreateNestedManyWithoutCompanyInput
+    scheduleApplicability?: ScheduleApplicabilityCreateNestedManyWithoutCompanyInput
     controlledDocuments?: ControlledDocumentCreateNestedManyWithoutCompanyInput
     circulars?: CircularCreateNestedManyWithoutCompanyInput
     riskAssessmentDocuments?: RiskAssessmentDocumentCreateNestedManyWithoutCompanyInput
@@ -96647,7 +103943,10 @@ export namespace Prisma {
     cdiInspections?: CdiInspectionUncheckedCreateNestedManyWithoutCompanyInput
     internalAudits?: InternalAuditUncheckedCreateNestedManyWithoutCompanyInput
     committeeMeetings?: CommitteeMeetingUncheckedCreateNestedManyWithoutCompanyInput
+    scheduleItems?: ScheduleItemUncheckedCreateNestedManyWithoutCompanyInput
     emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutCompanyInput
+    familiarizationRecords?: FamiliarizationRecordUncheckedCreateNestedManyWithoutCompanyInput
+    scheduleApplicability?: ScheduleApplicabilityUncheckedCreateNestedManyWithoutCompanyInput
     controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutCompanyInput
     circulars?: CircularUncheckedCreateNestedManyWithoutCompanyInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedCreateNestedManyWithoutCompanyInput
@@ -96687,6 +103986,21 @@ export namespace Prisma {
     lastDryDock?: Date | string | null
     dryDockPlace?: string | null
     nextDryDockDue?: Date | string | null
+    portOfRegistry?: string | null
+    lbp?: number | null
+    draft?: number | null
+    mainEngine?: string | null
+    serviceSpeed?: number | null
+    navigationArea?: string | null
+    classNotation?: string | null
+    ownerAddress?: string | null
+    builder?: string | null
+    keelLaidDate?: Date | string | null
+    launchingDate?: Date | string | null
+    deliveryDate?: Date | string | null
+    totalComplement?: number | null
+    satPhone?: string | null
+    vesselEmail?: string | null
     archivedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -96705,6 +104019,8 @@ export namespace Prisma {
     internalAudits?: InternalAuditCreateNestedManyWithoutVesselInput
     committeeMeetings?: CommitteeMeetingCreateNestedManyWithoutVesselInput
     emergencyDrills?: EmergencyDrillCreateNestedManyWithoutVesselInput
+    familiarizationRecords?: FamiliarizationRecordCreateNestedManyWithoutVesselInput
+    scheduleApplicability?: ScheduleApplicabilityCreateNestedManyWithoutVesselInput
     controlledDocuments?: ControlledDocumentCreateNestedManyWithoutVesselInput
     circulars?: CircularCreateNestedManyWithoutVesselInput
     riskAssessmentDocuments?: RiskAssessmentDocumentCreateNestedManyWithoutVesselInput
@@ -96743,6 +104059,21 @@ export namespace Prisma {
     lastDryDock?: Date | string | null
     dryDockPlace?: string | null
     nextDryDockDue?: Date | string | null
+    portOfRegistry?: string | null
+    lbp?: number | null
+    draft?: number | null
+    mainEngine?: string | null
+    serviceSpeed?: number | null
+    navigationArea?: string | null
+    classNotation?: string | null
+    ownerAddress?: string | null
+    builder?: string | null
+    keelLaidDate?: Date | string | null
+    launchingDate?: Date | string | null
+    deliveryDate?: Date | string | null
+    totalComplement?: number | null
+    satPhone?: string | null
+    vesselEmail?: string | null
     archivedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -96760,6 +104091,8 @@ export namespace Prisma {
     internalAudits?: InternalAuditUncheckedCreateNestedManyWithoutVesselInput
     committeeMeetings?: CommitteeMeetingUncheckedCreateNestedManyWithoutVesselInput
     emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutVesselInput
+    familiarizationRecords?: FamiliarizationRecordUncheckedCreateNestedManyWithoutVesselInput
+    scheduleApplicability?: ScheduleApplicabilityUncheckedCreateNestedManyWithoutVesselInput
     controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutVesselInput
     circulars?: CircularUncheckedCreateNestedManyWithoutVesselInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedCreateNestedManyWithoutVesselInput
@@ -96842,7 +104175,10 @@ export namespace Prisma {
     cdiInspections?: CdiInspectionUpdateManyWithoutCompanyNestedInput
     internalAudits?: InternalAuditUpdateManyWithoutCompanyNestedInput
     committeeMeetings?: CommitteeMeetingUpdateManyWithoutCompanyNestedInput
+    scheduleItems?: ScheduleItemUpdateManyWithoutCompanyNestedInput
     emergencyDrills?: EmergencyDrillUpdateManyWithoutCompanyNestedInput
+    familiarizationRecords?: FamiliarizationRecordUpdateManyWithoutCompanyNestedInput
+    scheduleApplicability?: ScheduleApplicabilityUpdateManyWithoutCompanyNestedInput
     controlledDocuments?: ControlledDocumentUpdateManyWithoutCompanyNestedInput
     circulars?: CircularUpdateManyWithoutCompanyNestedInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUpdateManyWithoutCompanyNestedInput
@@ -96868,7 +104204,10 @@ export namespace Prisma {
     cdiInspections?: CdiInspectionUncheckedUpdateManyWithoutCompanyNestedInput
     internalAudits?: InternalAuditUncheckedUpdateManyWithoutCompanyNestedInput
     committeeMeetings?: CommitteeMeetingUncheckedUpdateManyWithoutCompanyNestedInput
+    scheduleItems?: ScheduleItemUncheckedUpdateManyWithoutCompanyNestedInput
     emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutCompanyNestedInput
+    familiarizationRecords?: FamiliarizationRecordUncheckedUpdateManyWithoutCompanyNestedInput
+    scheduleApplicability?: ScheduleApplicabilityUncheckedUpdateManyWithoutCompanyNestedInput
     controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutCompanyNestedInput
     circulars?: CircularUncheckedUpdateManyWithoutCompanyNestedInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedUpdateManyWithoutCompanyNestedInput
@@ -96914,6 +104253,21 @@ export namespace Prisma {
     lastDryDock?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dryDockPlace?: NullableStringFieldUpdateOperationsInput | string | null
     nextDryDockDue?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    portOfRegistry?: NullableStringFieldUpdateOperationsInput | string | null
+    lbp?: NullableFloatFieldUpdateOperationsInput | number | null
+    draft?: NullableFloatFieldUpdateOperationsInput | number | null
+    mainEngine?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceSpeed?: NullableFloatFieldUpdateOperationsInput | number | null
+    navigationArea?: NullableStringFieldUpdateOperationsInput | string | null
+    classNotation?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    builder?: NullableStringFieldUpdateOperationsInput | string | null
+    keelLaidDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    launchingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    totalComplement?: NullableIntFieldUpdateOperationsInput | number | null
+    satPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    vesselEmail?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -96932,6 +104286,8 @@ export namespace Prisma {
     internalAudits?: InternalAuditUpdateManyWithoutVesselNestedInput
     committeeMeetings?: CommitteeMeetingUpdateManyWithoutVesselNestedInput
     emergencyDrills?: EmergencyDrillUpdateManyWithoutVesselNestedInput
+    familiarizationRecords?: FamiliarizationRecordUpdateManyWithoutVesselNestedInput
+    scheduleApplicability?: ScheduleApplicabilityUpdateManyWithoutVesselNestedInput
     controlledDocuments?: ControlledDocumentUpdateManyWithoutVesselNestedInput
     circulars?: CircularUpdateManyWithoutVesselNestedInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUpdateManyWithoutVesselNestedInput
@@ -96970,6 +104326,21 @@ export namespace Prisma {
     lastDryDock?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dryDockPlace?: NullableStringFieldUpdateOperationsInput | string | null
     nextDryDockDue?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    portOfRegistry?: NullableStringFieldUpdateOperationsInput | string | null
+    lbp?: NullableFloatFieldUpdateOperationsInput | number | null
+    draft?: NullableFloatFieldUpdateOperationsInput | number | null
+    mainEngine?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceSpeed?: NullableFloatFieldUpdateOperationsInput | number | null
+    navigationArea?: NullableStringFieldUpdateOperationsInput | string | null
+    classNotation?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    builder?: NullableStringFieldUpdateOperationsInput | string | null
+    keelLaidDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    launchingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    totalComplement?: NullableIntFieldUpdateOperationsInput | number | null
+    satPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    vesselEmail?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -96987,6 +104358,8 @@ export namespace Prisma {
     internalAudits?: InternalAuditUncheckedUpdateManyWithoutVesselNestedInput
     committeeMeetings?: CommitteeMeetingUncheckedUpdateManyWithoutVesselNestedInput
     emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutVesselNestedInput
+    familiarizationRecords?: FamiliarizationRecordUncheckedUpdateManyWithoutVesselNestedInput
+    scheduleApplicability?: ScheduleApplicabilityUncheckedUpdateManyWithoutVesselNestedInput
     controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutVesselNestedInput
     circulars?: CircularUncheckedUpdateManyWithoutVesselNestedInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedUpdateManyWithoutVesselNestedInput
@@ -97149,7 +104522,10 @@ export namespace Prisma {
     cdiInspections?: CdiInspectionCreateNestedManyWithoutCompanyInput
     internalAudits?: InternalAuditCreateNestedManyWithoutCompanyInput
     externalAudits?: ExternalAuditCreateNestedManyWithoutCompanyInput
+    scheduleItems?: ScheduleItemCreateNestedManyWithoutCompanyInput
     emergencyDrills?: EmergencyDrillCreateNestedManyWithoutCompanyInput
+    familiarizationRecords?: FamiliarizationRecordCreateNestedManyWithoutCompanyInput
+    scheduleApplicability?: ScheduleApplicabilityCreateNestedManyWithoutCompanyInput
     controlledDocuments?: ControlledDocumentCreateNestedManyWithoutCompanyInput
     circulars?: CircularCreateNestedManyWithoutCompanyInput
     riskAssessmentDocuments?: RiskAssessmentDocumentCreateNestedManyWithoutCompanyInput
@@ -97175,7 +104551,10 @@ export namespace Prisma {
     cdiInspections?: CdiInspectionUncheckedCreateNestedManyWithoutCompanyInput
     internalAudits?: InternalAuditUncheckedCreateNestedManyWithoutCompanyInput
     externalAudits?: ExternalAuditUncheckedCreateNestedManyWithoutCompanyInput
+    scheduleItems?: ScheduleItemUncheckedCreateNestedManyWithoutCompanyInput
     emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutCompanyInput
+    familiarizationRecords?: FamiliarizationRecordUncheckedCreateNestedManyWithoutCompanyInput
+    scheduleApplicability?: ScheduleApplicabilityUncheckedCreateNestedManyWithoutCompanyInput
     controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutCompanyInput
     circulars?: CircularUncheckedCreateNestedManyWithoutCompanyInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedCreateNestedManyWithoutCompanyInput
@@ -97215,6 +104594,21 @@ export namespace Prisma {
     lastDryDock?: Date | string | null
     dryDockPlace?: string | null
     nextDryDockDue?: Date | string | null
+    portOfRegistry?: string | null
+    lbp?: number | null
+    draft?: number | null
+    mainEngine?: string | null
+    serviceSpeed?: number | null
+    navigationArea?: string | null
+    classNotation?: string | null
+    ownerAddress?: string | null
+    builder?: string | null
+    keelLaidDate?: Date | string | null
+    launchingDate?: Date | string | null
+    deliveryDate?: Date | string | null
+    totalComplement?: number | null
+    satPhone?: string | null
+    vesselEmail?: string | null
     archivedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -97233,6 +104627,8 @@ export namespace Prisma {
     internalAudits?: InternalAuditCreateNestedManyWithoutVesselInput
     externalAudits?: ExternalAuditCreateNestedManyWithoutVesselInput
     emergencyDrills?: EmergencyDrillCreateNestedManyWithoutVesselInput
+    familiarizationRecords?: FamiliarizationRecordCreateNestedManyWithoutVesselInput
+    scheduleApplicability?: ScheduleApplicabilityCreateNestedManyWithoutVesselInput
     controlledDocuments?: ControlledDocumentCreateNestedManyWithoutVesselInput
     circulars?: CircularCreateNestedManyWithoutVesselInput
     riskAssessmentDocuments?: RiskAssessmentDocumentCreateNestedManyWithoutVesselInput
@@ -97271,6 +104667,21 @@ export namespace Prisma {
     lastDryDock?: Date | string | null
     dryDockPlace?: string | null
     nextDryDockDue?: Date | string | null
+    portOfRegistry?: string | null
+    lbp?: number | null
+    draft?: number | null
+    mainEngine?: string | null
+    serviceSpeed?: number | null
+    navigationArea?: string | null
+    classNotation?: string | null
+    ownerAddress?: string | null
+    builder?: string | null
+    keelLaidDate?: Date | string | null
+    launchingDate?: Date | string | null
+    deliveryDate?: Date | string | null
+    totalComplement?: number | null
+    satPhone?: string | null
+    vesselEmail?: string | null
     archivedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -97288,6 +104699,8 @@ export namespace Prisma {
     internalAudits?: InternalAuditUncheckedCreateNestedManyWithoutVesselInput
     externalAudits?: ExternalAuditUncheckedCreateNestedManyWithoutVesselInput
     emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutVesselInput
+    familiarizationRecords?: FamiliarizationRecordUncheckedCreateNestedManyWithoutVesselInput
+    scheduleApplicability?: ScheduleApplicabilityUncheckedCreateNestedManyWithoutVesselInput
     controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutVesselInput
     circulars?: CircularUncheckedCreateNestedManyWithoutVesselInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedCreateNestedManyWithoutVesselInput
@@ -97366,7 +104779,10 @@ export namespace Prisma {
     cdiInspections?: CdiInspectionUpdateManyWithoutCompanyNestedInput
     internalAudits?: InternalAuditUpdateManyWithoutCompanyNestedInput
     externalAudits?: ExternalAuditUpdateManyWithoutCompanyNestedInput
+    scheduleItems?: ScheduleItemUpdateManyWithoutCompanyNestedInput
     emergencyDrills?: EmergencyDrillUpdateManyWithoutCompanyNestedInput
+    familiarizationRecords?: FamiliarizationRecordUpdateManyWithoutCompanyNestedInput
+    scheduleApplicability?: ScheduleApplicabilityUpdateManyWithoutCompanyNestedInput
     controlledDocuments?: ControlledDocumentUpdateManyWithoutCompanyNestedInput
     circulars?: CircularUpdateManyWithoutCompanyNestedInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUpdateManyWithoutCompanyNestedInput
@@ -97392,7 +104808,10 @@ export namespace Prisma {
     cdiInspections?: CdiInspectionUncheckedUpdateManyWithoutCompanyNestedInput
     internalAudits?: InternalAuditUncheckedUpdateManyWithoutCompanyNestedInput
     externalAudits?: ExternalAuditUncheckedUpdateManyWithoutCompanyNestedInput
+    scheduleItems?: ScheduleItemUncheckedUpdateManyWithoutCompanyNestedInput
     emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutCompanyNestedInput
+    familiarizationRecords?: FamiliarizationRecordUncheckedUpdateManyWithoutCompanyNestedInput
+    scheduleApplicability?: ScheduleApplicabilityUncheckedUpdateManyWithoutCompanyNestedInput
     controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutCompanyNestedInput
     circulars?: CircularUncheckedUpdateManyWithoutCompanyNestedInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedUpdateManyWithoutCompanyNestedInput
@@ -97438,6 +104857,21 @@ export namespace Prisma {
     lastDryDock?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dryDockPlace?: NullableStringFieldUpdateOperationsInput | string | null
     nextDryDockDue?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    portOfRegistry?: NullableStringFieldUpdateOperationsInput | string | null
+    lbp?: NullableFloatFieldUpdateOperationsInput | number | null
+    draft?: NullableFloatFieldUpdateOperationsInput | number | null
+    mainEngine?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceSpeed?: NullableFloatFieldUpdateOperationsInput | number | null
+    navigationArea?: NullableStringFieldUpdateOperationsInput | string | null
+    classNotation?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    builder?: NullableStringFieldUpdateOperationsInput | string | null
+    keelLaidDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    launchingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    totalComplement?: NullableIntFieldUpdateOperationsInput | number | null
+    satPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    vesselEmail?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -97456,6 +104890,8 @@ export namespace Prisma {
     internalAudits?: InternalAuditUpdateManyWithoutVesselNestedInput
     externalAudits?: ExternalAuditUpdateManyWithoutVesselNestedInput
     emergencyDrills?: EmergencyDrillUpdateManyWithoutVesselNestedInput
+    familiarizationRecords?: FamiliarizationRecordUpdateManyWithoutVesselNestedInput
+    scheduleApplicability?: ScheduleApplicabilityUpdateManyWithoutVesselNestedInput
     controlledDocuments?: ControlledDocumentUpdateManyWithoutVesselNestedInput
     circulars?: CircularUpdateManyWithoutVesselNestedInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUpdateManyWithoutVesselNestedInput
@@ -97494,6 +104930,21 @@ export namespace Prisma {
     lastDryDock?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dryDockPlace?: NullableStringFieldUpdateOperationsInput | string | null
     nextDryDockDue?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    portOfRegistry?: NullableStringFieldUpdateOperationsInput | string | null
+    lbp?: NullableFloatFieldUpdateOperationsInput | number | null
+    draft?: NullableFloatFieldUpdateOperationsInput | number | null
+    mainEngine?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceSpeed?: NullableFloatFieldUpdateOperationsInput | number | null
+    navigationArea?: NullableStringFieldUpdateOperationsInput | string | null
+    classNotation?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    builder?: NullableStringFieldUpdateOperationsInput | string | null
+    keelLaidDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    launchingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    totalComplement?: NullableIntFieldUpdateOperationsInput | number | null
+    satPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    vesselEmail?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -97511,6 +104962,8 @@ export namespace Prisma {
     internalAudits?: InternalAuditUncheckedUpdateManyWithoutVesselNestedInput
     externalAudits?: ExternalAuditUncheckedUpdateManyWithoutVesselNestedInput
     emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutVesselNestedInput
+    familiarizationRecords?: FamiliarizationRecordUncheckedUpdateManyWithoutVesselNestedInput
+    scheduleApplicability?: ScheduleApplicabilityUncheckedUpdateManyWithoutVesselNestedInput
     controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutVesselNestedInput
     circulars?: CircularUncheckedUpdateManyWithoutVesselNestedInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedUpdateManyWithoutVesselNestedInput
@@ -97676,6 +105129,846 @@ export namespace Prisma {
     deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
+  export type CompanyCreateWithoutScheduleItemsInput = {
+    id?: string
+    name: string
+    code: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    users?: UserCreateNestedManyWithoutCompanyInput
+    roles?: RoleCreateNestedManyWithoutCompanyInput
+    vessels?: VesselCreateNestedManyWithoutCompanyInput
+    smsDocuments?: SmsDocumentCreateNestedManyWithoutCompanyInput
+    workflows?: WorkflowDefinitionCreateNestedManyWithoutCompanyInput
+    incidents?: IncidentCreateNestedManyWithoutCompanyInput
+    nearMisses?: NearMissCreateNestedManyWithoutCompanyInput
+    nonConformities?: NonConformityCreateNestedManyWithoutCompanyInput
+    sireInspections?: SireInspectionCreateNestedManyWithoutCompanyInput
+    pscInspections?: PscInspectionCreateNestedManyWithoutCompanyInput
+    cdiInspections?: CdiInspectionCreateNestedManyWithoutCompanyInput
+    internalAudits?: InternalAuditCreateNestedManyWithoutCompanyInput
+    externalAudits?: ExternalAuditCreateNestedManyWithoutCompanyInput
+    committeeMeetings?: CommitteeMeetingCreateNestedManyWithoutCompanyInput
+    emergencyDrills?: EmergencyDrillCreateNestedManyWithoutCompanyInput
+    familiarizationRecords?: FamiliarizationRecordCreateNestedManyWithoutCompanyInput
+    scheduleApplicability?: ScheduleApplicabilityCreateNestedManyWithoutCompanyInput
+    controlledDocuments?: ControlledDocumentCreateNestedManyWithoutCompanyInput
+    circulars?: CircularCreateNestedManyWithoutCompanyInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentCreateNestedManyWithoutCompanyInput
+    defects?: DefectCreateNestedManyWithoutCompanyInput
+  }
+
+  export type CompanyUncheckedCreateWithoutScheduleItemsInput = {
+    id?: string
+    name: string
+    code: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    users?: UserUncheckedCreateNestedManyWithoutCompanyInput
+    roles?: RoleUncheckedCreateNestedManyWithoutCompanyInput
+    vessels?: VesselUncheckedCreateNestedManyWithoutCompanyInput
+    smsDocuments?: SmsDocumentUncheckedCreateNestedManyWithoutCompanyInput
+    workflows?: WorkflowDefinitionUncheckedCreateNestedManyWithoutCompanyInput
+    incidents?: IncidentUncheckedCreateNestedManyWithoutCompanyInput
+    nearMisses?: NearMissUncheckedCreateNestedManyWithoutCompanyInput
+    nonConformities?: NonConformityUncheckedCreateNestedManyWithoutCompanyInput
+    sireInspections?: SireInspectionUncheckedCreateNestedManyWithoutCompanyInput
+    pscInspections?: PscInspectionUncheckedCreateNestedManyWithoutCompanyInput
+    cdiInspections?: CdiInspectionUncheckedCreateNestedManyWithoutCompanyInput
+    internalAudits?: InternalAuditUncheckedCreateNestedManyWithoutCompanyInput
+    externalAudits?: ExternalAuditUncheckedCreateNestedManyWithoutCompanyInput
+    committeeMeetings?: CommitteeMeetingUncheckedCreateNestedManyWithoutCompanyInput
+    emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutCompanyInput
+    familiarizationRecords?: FamiliarizationRecordUncheckedCreateNestedManyWithoutCompanyInput
+    scheduleApplicability?: ScheduleApplicabilityUncheckedCreateNestedManyWithoutCompanyInput
+    controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutCompanyInput
+    circulars?: CircularUncheckedCreateNestedManyWithoutCompanyInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedCreateNestedManyWithoutCompanyInput
+    defects?: DefectUncheckedCreateNestedManyWithoutCompanyInput
+  }
+
+  export type CompanyCreateOrConnectWithoutScheduleItemsInput = {
+    where: CompanyWhereUniqueInput
+    create: XOR<CompanyCreateWithoutScheduleItemsInput, CompanyUncheckedCreateWithoutScheduleItemsInput>
+  }
+
+  export type EmergencyDrillCreateWithoutScheduleItemInput = {
+    id?: string
+    refNo: string
+    drillDate: Date | string
+    drillTime?: string | null
+    position?: string | null
+    participants?: string | null
+    conductedBy?: string | null
+    details?: string | null
+    deficiencies?: string | null
+    correctiveAction?: string | null
+    vesselRemarks?: string | null
+    status?: $Enums.FindingStatus
+    closedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    company: CompanyCreateNestedOneWithoutEmergencyDrillsInput
+    vessel: VesselCreateNestedOneWithoutEmergencyDrillsInput
+  }
+
+  export type EmergencyDrillUncheckedCreateWithoutScheduleItemInput = {
+    id?: string
+    companyId: string
+    refNo: string
+    vesselId: string
+    drillDate: Date | string
+    drillTime?: string | null
+    position?: string | null
+    participants?: string | null
+    conductedBy?: string | null
+    details?: string | null
+    deficiencies?: string | null
+    correctiveAction?: string | null
+    vesselRemarks?: string | null
+    status?: $Enums.FindingStatus
+    closedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+  }
+
+  export type EmergencyDrillCreateOrConnectWithoutScheduleItemInput = {
+    where: EmergencyDrillWhereUniqueInput
+    create: XOR<EmergencyDrillCreateWithoutScheduleItemInput, EmergencyDrillUncheckedCreateWithoutScheduleItemInput>
+  }
+
+  export type EmergencyDrillCreateManyScheduleItemInputEnvelope = {
+    data: EmergencyDrillCreateManyScheduleItemInput | EmergencyDrillCreateManyScheduleItemInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type FamiliarizationRecordCreateWithoutScheduleItemInput = {
+    id?: string
+    completedDate: Date | string
+    notedBy?: string | null
+    remarks?: string | null
+    createdAt?: Date | string
+    createdBy?: string | null
+    updatedAt?: Date | string
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    company: CompanyCreateNestedOneWithoutFamiliarizationRecordsInput
+    vessel: VesselCreateNestedOneWithoutFamiliarizationRecordsInput
+  }
+
+  export type FamiliarizationRecordUncheckedCreateWithoutScheduleItemInput = {
+    id?: string
+    companyId: string
+    vesselId: string
+    completedDate: Date | string
+    notedBy?: string | null
+    remarks?: string | null
+    createdAt?: Date | string
+    createdBy?: string | null
+    updatedAt?: Date | string
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+  }
+
+  export type FamiliarizationRecordCreateOrConnectWithoutScheduleItemInput = {
+    where: FamiliarizationRecordWhereUniqueInput
+    create: XOR<FamiliarizationRecordCreateWithoutScheduleItemInput, FamiliarizationRecordUncheckedCreateWithoutScheduleItemInput>
+  }
+
+  export type FamiliarizationRecordCreateManyScheduleItemInputEnvelope = {
+    data: FamiliarizationRecordCreateManyScheduleItemInput | FamiliarizationRecordCreateManyScheduleItemInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ScheduleApplicabilityCreateWithoutScheduleItemInput = {
+    id?: string
+    notApplicable?: boolean
+    reason?: string | null
+    createdAt?: Date | string
+    createdBy?: string | null
+    updatedAt?: Date | string
+    updatedBy?: string | null
+    company: CompanyCreateNestedOneWithoutScheduleApplicabilityInput
+    vessel: VesselCreateNestedOneWithoutScheduleApplicabilityInput
+  }
+
+  export type ScheduleApplicabilityUncheckedCreateWithoutScheduleItemInput = {
+    id?: string
+    companyId: string
+    vesselId: string
+    notApplicable?: boolean
+    reason?: string | null
+    createdAt?: Date | string
+    createdBy?: string | null
+    updatedAt?: Date | string
+    updatedBy?: string | null
+  }
+
+  export type ScheduleApplicabilityCreateOrConnectWithoutScheduleItemInput = {
+    where: ScheduleApplicabilityWhereUniqueInput
+    create: XOR<ScheduleApplicabilityCreateWithoutScheduleItemInput, ScheduleApplicabilityUncheckedCreateWithoutScheduleItemInput>
+  }
+
+  export type ScheduleApplicabilityCreateManyScheduleItemInputEnvelope = {
+    data: ScheduleApplicabilityCreateManyScheduleItemInput | ScheduleApplicabilityCreateManyScheduleItemInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type CompanyUpsertWithoutScheduleItemsInput = {
+    update: XOR<CompanyUpdateWithoutScheduleItemsInput, CompanyUncheckedUpdateWithoutScheduleItemsInput>
+    create: XOR<CompanyCreateWithoutScheduleItemsInput, CompanyUncheckedCreateWithoutScheduleItemsInput>
+    where?: CompanyWhereInput
+  }
+
+  export type CompanyUpdateToOneWithWhereWithoutScheduleItemsInput = {
+    where?: CompanyWhereInput
+    data: XOR<CompanyUpdateWithoutScheduleItemsInput, CompanyUncheckedUpdateWithoutScheduleItemsInput>
+  }
+
+  export type CompanyUpdateWithoutScheduleItemsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    users?: UserUpdateManyWithoutCompanyNestedInput
+    roles?: RoleUpdateManyWithoutCompanyNestedInput
+    vessels?: VesselUpdateManyWithoutCompanyNestedInput
+    smsDocuments?: SmsDocumentUpdateManyWithoutCompanyNestedInput
+    workflows?: WorkflowDefinitionUpdateManyWithoutCompanyNestedInput
+    incidents?: IncidentUpdateManyWithoutCompanyNestedInput
+    nearMisses?: NearMissUpdateManyWithoutCompanyNestedInput
+    nonConformities?: NonConformityUpdateManyWithoutCompanyNestedInput
+    sireInspections?: SireInspectionUpdateManyWithoutCompanyNestedInput
+    pscInspections?: PscInspectionUpdateManyWithoutCompanyNestedInput
+    cdiInspections?: CdiInspectionUpdateManyWithoutCompanyNestedInput
+    internalAudits?: InternalAuditUpdateManyWithoutCompanyNestedInput
+    externalAudits?: ExternalAuditUpdateManyWithoutCompanyNestedInput
+    committeeMeetings?: CommitteeMeetingUpdateManyWithoutCompanyNestedInput
+    emergencyDrills?: EmergencyDrillUpdateManyWithoutCompanyNestedInput
+    familiarizationRecords?: FamiliarizationRecordUpdateManyWithoutCompanyNestedInput
+    scheduleApplicability?: ScheduleApplicabilityUpdateManyWithoutCompanyNestedInput
+    controlledDocuments?: ControlledDocumentUpdateManyWithoutCompanyNestedInput
+    circulars?: CircularUpdateManyWithoutCompanyNestedInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUpdateManyWithoutCompanyNestedInput
+    defects?: DefectUpdateManyWithoutCompanyNestedInput
+  }
+
+  export type CompanyUncheckedUpdateWithoutScheduleItemsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    users?: UserUncheckedUpdateManyWithoutCompanyNestedInput
+    roles?: RoleUncheckedUpdateManyWithoutCompanyNestedInput
+    vessels?: VesselUncheckedUpdateManyWithoutCompanyNestedInput
+    smsDocuments?: SmsDocumentUncheckedUpdateManyWithoutCompanyNestedInput
+    workflows?: WorkflowDefinitionUncheckedUpdateManyWithoutCompanyNestedInput
+    incidents?: IncidentUncheckedUpdateManyWithoutCompanyNestedInput
+    nearMisses?: NearMissUncheckedUpdateManyWithoutCompanyNestedInput
+    nonConformities?: NonConformityUncheckedUpdateManyWithoutCompanyNestedInput
+    sireInspections?: SireInspectionUncheckedUpdateManyWithoutCompanyNestedInput
+    pscInspections?: PscInspectionUncheckedUpdateManyWithoutCompanyNestedInput
+    cdiInspections?: CdiInspectionUncheckedUpdateManyWithoutCompanyNestedInput
+    internalAudits?: InternalAuditUncheckedUpdateManyWithoutCompanyNestedInput
+    externalAudits?: ExternalAuditUncheckedUpdateManyWithoutCompanyNestedInput
+    committeeMeetings?: CommitteeMeetingUncheckedUpdateManyWithoutCompanyNestedInput
+    emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutCompanyNestedInput
+    familiarizationRecords?: FamiliarizationRecordUncheckedUpdateManyWithoutCompanyNestedInput
+    scheduleApplicability?: ScheduleApplicabilityUncheckedUpdateManyWithoutCompanyNestedInput
+    controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutCompanyNestedInput
+    circulars?: CircularUncheckedUpdateManyWithoutCompanyNestedInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedUpdateManyWithoutCompanyNestedInput
+    defects?: DefectUncheckedUpdateManyWithoutCompanyNestedInput
+  }
+
+  export type EmergencyDrillUpsertWithWhereUniqueWithoutScheduleItemInput = {
+    where: EmergencyDrillWhereUniqueInput
+    update: XOR<EmergencyDrillUpdateWithoutScheduleItemInput, EmergencyDrillUncheckedUpdateWithoutScheduleItemInput>
+    create: XOR<EmergencyDrillCreateWithoutScheduleItemInput, EmergencyDrillUncheckedCreateWithoutScheduleItemInput>
+  }
+
+  export type EmergencyDrillUpdateWithWhereUniqueWithoutScheduleItemInput = {
+    where: EmergencyDrillWhereUniqueInput
+    data: XOR<EmergencyDrillUpdateWithoutScheduleItemInput, EmergencyDrillUncheckedUpdateWithoutScheduleItemInput>
+  }
+
+  export type EmergencyDrillUpdateManyWithWhereWithoutScheduleItemInput = {
+    where: EmergencyDrillScalarWhereInput
+    data: XOR<EmergencyDrillUpdateManyMutationInput, EmergencyDrillUncheckedUpdateManyWithoutScheduleItemInput>
+  }
+
+  export type FamiliarizationRecordUpsertWithWhereUniqueWithoutScheduleItemInput = {
+    where: FamiliarizationRecordWhereUniqueInput
+    update: XOR<FamiliarizationRecordUpdateWithoutScheduleItemInput, FamiliarizationRecordUncheckedUpdateWithoutScheduleItemInput>
+    create: XOR<FamiliarizationRecordCreateWithoutScheduleItemInput, FamiliarizationRecordUncheckedCreateWithoutScheduleItemInput>
+  }
+
+  export type FamiliarizationRecordUpdateWithWhereUniqueWithoutScheduleItemInput = {
+    where: FamiliarizationRecordWhereUniqueInput
+    data: XOR<FamiliarizationRecordUpdateWithoutScheduleItemInput, FamiliarizationRecordUncheckedUpdateWithoutScheduleItemInput>
+  }
+
+  export type FamiliarizationRecordUpdateManyWithWhereWithoutScheduleItemInput = {
+    where: FamiliarizationRecordScalarWhereInput
+    data: XOR<FamiliarizationRecordUpdateManyMutationInput, FamiliarizationRecordUncheckedUpdateManyWithoutScheduleItemInput>
+  }
+
+  export type ScheduleApplicabilityUpsertWithWhereUniqueWithoutScheduleItemInput = {
+    where: ScheduleApplicabilityWhereUniqueInput
+    update: XOR<ScheduleApplicabilityUpdateWithoutScheduleItemInput, ScheduleApplicabilityUncheckedUpdateWithoutScheduleItemInput>
+    create: XOR<ScheduleApplicabilityCreateWithoutScheduleItemInput, ScheduleApplicabilityUncheckedCreateWithoutScheduleItemInput>
+  }
+
+  export type ScheduleApplicabilityUpdateWithWhereUniqueWithoutScheduleItemInput = {
+    where: ScheduleApplicabilityWhereUniqueInput
+    data: XOR<ScheduleApplicabilityUpdateWithoutScheduleItemInput, ScheduleApplicabilityUncheckedUpdateWithoutScheduleItemInput>
+  }
+
+  export type ScheduleApplicabilityUpdateManyWithWhereWithoutScheduleItemInput = {
+    where: ScheduleApplicabilityScalarWhereInput
+    data: XOR<ScheduleApplicabilityUpdateManyMutationInput, ScheduleApplicabilityUncheckedUpdateManyWithoutScheduleItemInput>
+  }
+
+  export type CompanyCreateWithoutScheduleApplicabilityInput = {
+    id?: string
+    name: string
+    code: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    users?: UserCreateNestedManyWithoutCompanyInput
+    roles?: RoleCreateNestedManyWithoutCompanyInput
+    vessels?: VesselCreateNestedManyWithoutCompanyInput
+    smsDocuments?: SmsDocumentCreateNestedManyWithoutCompanyInput
+    workflows?: WorkflowDefinitionCreateNestedManyWithoutCompanyInput
+    incidents?: IncidentCreateNestedManyWithoutCompanyInput
+    nearMisses?: NearMissCreateNestedManyWithoutCompanyInput
+    nonConformities?: NonConformityCreateNestedManyWithoutCompanyInput
+    sireInspections?: SireInspectionCreateNestedManyWithoutCompanyInput
+    pscInspections?: PscInspectionCreateNestedManyWithoutCompanyInput
+    cdiInspections?: CdiInspectionCreateNestedManyWithoutCompanyInput
+    internalAudits?: InternalAuditCreateNestedManyWithoutCompanyInput
+    externalAudits?: ExternalAuditCreateNestedManyWithoutCompanyInput
+    committeeMeetings?: CommitteeMeetingCreateNestedManyWithoutCompanyInput
+    scheduleItems?: ScheduleItemCreateNestedManyWithoutCompanyInput
+    emergencyDrills?: EmergencyDrillCreateNestedManyWithoutCompanyInput
+    familiarizationRecords?: FamiliarizationRecordCreateNestedManyWithoutCompanyInput
+    controlledDocuments?: ControlledDocumentCreateNestedManyWithoutCompanyInput
+    circulars?: CircularCreateNestedManyWithoutCompanyInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentCreateNestedManyWithoutCompanyInput
+    defects?: DefectCreateNestedManyWithoutCompanyInput
+  }
+
+  export type CompanyUncheckedCreateWithoutScheduleApplicabilityInput = {
+    id?: string
+    name: string
+    code: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    users?: UserUncheckedCreateNestedManyWithoutCompanyInput
+    roles?: RoleUncheckedCreateNestedManyWithoutCompanyInput
+    vessels?: VesselUncheckedCreateNestedManyWithoutCompanyInput
+    smsDocuments?: SmsDocumentUncheckedCreateNestedManyWithoutCompanyInput
+    workflows?: WorkflowDefinitionUncheckedCreateNestedManyWithoutCompanyInput
+    incidents?: IncidentUncheckedCreateNestedManyWithoutCompanyInput
+    nearMisses?: NearMissUncheckedCreateNestedManyWithoutCompanyInput
+    nonConformities?: NonConformityUncheckedCreateNestedManyWithoutCompanyInput
+    sireInspections?: SireInspectionUncheckedCreateNestedManyWithoutCompanyInput
+    pscInspections?: PscInspectionUncheckedCreateNestedManyWithoutCompanyInput
+    cdiInspections?: CdiInspectionUncheckedCreateNestedManyWithoutCompanyInput
+    internalAudits?: InternalAuditUncheckedCreateNestedManyWithoutCompanyInput
+    externalAudits?: ExternalAuditUncheckedCreateNestedManyWithoutCompanyInput
+    committeeMeetings?: CommitteeMeetingUncheckedCreateNestedManyWithoutCompanyInput
+    scheduleItems?: ScheduleItemUncheckedCreateNestedManyWithoutCompanyInput
+    emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutCompanyInput
+    familiarizationRecords?: FamiliarizationRecordUncheckedCreateNestedManyWithoutCompanyInput
+    controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutCompanyInput
+    circulars?: CircularUncheckedCreateNestedManyWithoutCompanyInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedCreateNestedManyWithoutCompanyInput
+    defects?: DefectUncheckedCreateNestedManyWithoutCompanyInput
+  }
+
+  export type CompanyCreateOrConnectWithoutScheduleApplicabilityInput = {
+    where: CompanyWhereUniqueInput
+    create: XOR<CompanyCreateWithoutScheduleApplicabilityInput, CompanyUncheckedCreateWithoutScheduleApplicabilityInput>
+  }
+
+  export type VesselCreateWithoutScheduleApplicabilityInput = {
+    id?: string
+    name: string
+    code?: string | null
+    imo?: string | null
+    officialNumber?: string | null
+    callSign?: string | null
+    mmsi?: string | null
+    flag?: string | null
+    type?: string
+    classificationSociety?: string | null
+    yearBuilt?: number | null
+    grossTonnage?: number | null
+    loa?: number | null
+    breadth?: number | null
+    depth?: number | null
+    status?: $Enums.VesselStatus
+    capacityCbm?: number | null
+    netTonnage?: number | null
+    deadweight?: number | null
+    tradeArea?: string | null
+    registeredOwner?: string | null
+    headOwner?: string | null
+    charterer?: string | null
+    yearWithSwan?: number | null
+    lastDryDock?: Date | string | null
+    dryDockPlace?: string | null
+    nextDryDockDue?: Date | string | null
+    portOfRegistry?: string | null
+    lbp?: number | null
+    draft?: number | null
+    mainEngine?: string | null
+    serviceSpeed?: number | null
+    navigationArea?: string | null
+    classNotation?: string | null
+    ownerAddress?: string | null
+    builder?: string | null
+    keelLaidDate?: Date | string | null
+    launchingDate?: Date | string | null
+    deliveryDate?: Date | string | null
+    totalComplement?: number | null
+    satPhone?: string | null
+    vesselEmail?: string | null
+    archivedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    company: CompanyCreateNestedOneWithoutVesselsInput
+    smsDocuments?: SmsDocumentCreateNestedManyWithoutVesselInput
+    incidents?: IncidentCreateNestedManyWithoutVesselInput
+    nearMisses?: NearMissCreateNestedManyWithoutVesselInput
+    nonConformities?: NonConformityCreateNestedManyWithoutVesselInput
+    sireInspections?: SireInspectionCreateNestedManyWithoutVesselInput
+    pscInspections?: PscInspectionCreateNestedManyWithoutVesselInput
+    cdiInspections?: CdiInspectionCreateNestedManyWithoutVesselInput
+    internalAudits?: InternalAuditCreateNestedManyWithoutVesselInput
+    externalAudits?: ExternalAuditCreateNestedManyWithoutVesselInput
+    committeeMeetings?: CommitteeMeetingCreateNestedManyWithoutVesselInput
+    emergencyDrills?: EmergencyDrillCreateNestedManyWithoutVesselInput
+    familiarizationRecords?: FamiliarizationRecordCreateNestedManyWithoutVesselInput
+    controlledDocuments?: ControlledDocumentCreateNestedManyWithoutVesselInput
+    circulars?: CircularCreateNestedManyWithoutVesselInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentCreateNestedManyWithoutVesselInput
+    riskAssessmentExecutions?: RiskAssessmentExecutionCreateNestedManyWithoutVesselInput
+    riskAssessmentRevisionRequests?: RiskAssessmentRevisionRequestCreateNestedManyWithoutVesselInput
+    defects?: DefectCreateNestedManyWithoutVesselInput
+    users?: UserCreateNestedManyWithoutVesselInput
+  }
+
+  export type VesselUncheckedCreateWithoutScheduleApplicabilityInput = {
+    id?: string
+    companyId: string
+    name: string
+    code?: string | null
+    imo?: string | null
+    officialNumber?: string | null
+    callSign?: string | null
+    mmsi?: string | null
+    flag?: string | null
+    type?: string
+    classificationSociety?: string | null
+    yearBuilt?: number | null
+    grossTonnage?: number | null
+    loa?: number | null
+    breadth?: number | null
+    depth?: number | null
+    status?: $Enums.VesselStatus
+    capacityCbm?: number | null
+    netTonnage?: number | null
+    deadweight?: number | null
+    tradeArea?: string | null
+    registeredOwner?: string | null
+    headOwner?: string | null
+    charterer?: string | null
+    yearWithSwan?: number | null
+    lastDryDock?: Date | string | null
+    dryDockPlace?: string | null
+    nextDryDockDue?: Date | string | null
+    portOfRegistry?: string | null
+    lbp?: number | null
+    draft?: number | null
+    mainEngine?: string | null
+    serviceSpeed?: number | null
+    navigationArea?: string | null
+    classNotation?: string | null
+    ownerAddress?: string | null
+    builder?: string | null
+    keelLaidDate?: Date | string | null
+    launchingDate?: Date | string | null
+    deliveryDate?: Date | string | null
+    totalComplement?: number | null
+    satPhone?: string | null
+    vesselEmail?: string | null
+    archivedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    smsDocuments?: SmsDocumentUncheckedCreateNestedManyWithoutVesselInput
+    incidents?: IncidentUncheckedCreateNestedManyWithoutVesselInput
+    nearMisses?: NearMissUncheckedCreateNestedManyWithoutVesselInput
+    nonConformities?: NonConformityUncheckedCreateNestedManyWithoutVesselInput
+    sireInspections?: SireInspectionUncheckedCreateNestedManyWithoutVesselInput
+    pscInspections?: PscInspectionUncheckedCreateNestedManyWithoutVesselInput
+    cdiInspections?: CdiInspectionUncheckedCreateNestedManyWithoutVesselInput
+    internalAudits?: InternalAuditUncheckedCreateNestedManyWithoutVesselInput
+    externalAudits?: ExternalAuditUncheckedCreateNestedManyWithoutVesselInput
+    committeeMeetings?: CommitteeMeetingUncheckedCreateNestedManyWithoutVesselInput
+    emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutVesselInput
+    familiarizationRecords?: FamiliarizationRecordUncheckedCreateNestedManyWithoutVesselInput
+    controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutVesselInput
+    circulars?: CircularUncheckedCreateNestedManyWithoutVesselInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedCreateNestedManyWithoutVesselInput
+    riskAssessmentExecutions?: RiskAssessmentExecutionUncheckedCreateNestedManyWithoutVesselInput
+    riskAssessmentRevisionRequests?: RiskAssessmentRevisionRequestUncheckedCreateNestedManyWithoutVesselInput
+    defects?: DefectUncheckedCreateNestedManyWithoutVesselInput
+    users?: UserUncheckedCreateNestedManyWithoutVesselInput
+  }
+
+  export type VesselCreateOrConnectWithoutScheduleApplicabilityInput = {
+    where: VesselWhereUniqueInput
+    create: XOR<VesselCreateWithoutScheduleApplicabilityInput, VesselUncheckedCreateWithoutScheduleApplicabilityInput>
+  }
+
+  export type ScheduleItemCreateWithoutExceptionsInput = {
+    id?: string
+    kind: $Enums.ScheduleItemKind
+    category?: string | null
+    itemNo?: string | null
+    name: string
+    smsReference?: string | null
+    frequencyLabel?: string | null
+    frequencyDays?: number | null
+    sortOrder: number
+    active?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
+    company: CompanyCreateNestedOneWithoutScheduleItemsInput
+    drills?: EmergencyDrillCreateNestedManyWithoutScheduleItemInput
+    familiarizations?: FamiliarizationRecordCreateNestedManyWithoutScheduleItemInput
+  }
+
+  export type ScheduleItemUncheckedCreateWithoutExceptionsInput = {
+    id?: string
+    companyId: string
+    kind: $Enums.ScheduleItemKind
+    category?: string | null
+    itemNo?: string | null
+    name: string
+    smsReference?: string | null
+    frequencyLabel?: string | null
+    frequencyDays?: number | null
+    sortOrder: number
+    active?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
+    drills?: EmergencyDrillUncheckedCreateNestedManyWithoutScheduleItemInput
+    familiarizations?: FamiliarizationRecordUncheckedCreateNestedManyWithoutScheduleItemInput
+  }
+
+  export type ScheduleItemCreateOrConnectWithoutExceptionsInput = {
+    where: ScheduleItemWhereUniqueInput
+    create: XOR<ScheduleItemCreateWithoutExceptionsInput, ScheduleItemUncheckedCreateWithoutExceptionsInput>
+  }
+
+  export type CompanyUpsertWithoutScheduleApplicabilityInput = {
+    update: XOR<CompanyUpdateWithoutScheduleApplicabilityInput, CompanyUncheckedUpdateWithoutScheduleApplicabilityInput>
+    create: XOR<CompanyCreateWithoutScheduleApplicabilityInput, CompanyUncheckedCreateWithoutScheduleApplicabilityInput>
+    where?: CompanyWhereInput
+  }
+
+  export type CompanyUpdateToOneWithWhereWithoutScheduleApplicabilityInput = {
+    where?: CompanyWhereInput
+    data: XOR<CompanyUpdateWithoutScheduleApplicabilityInput, CompanyUncheckedUpdateWithoutScheduleApplicabilityInput>
+  }
+
+  export type CompanyUpdateWithoutScheduleApplicabilityInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    users?: UserUpdateManyWithoutCompanyNestedInput
+    roles?: RoleUpdateManyWithoutCompanyNestedInput
+    vessels?: VesselUpdateManyWithoutCompanyNestedInput
+    smsDocuments?: SmsDocumentUpdateManyWithoutCompanyNestedInput
+    workflows?: WorkflowDefinitionUpdateManyWithoutCompanyNestedInput
+    incidents?: IncidentUpdateManyWithoutCompanyNestedInput
+    nearMisses?: NearMissUpdateManyWithoutCompanyNestedInput
+    nonConformities?: NonConformityUpdateManyWithoutCompanyNestedInput
+    sireInspections?: SireInspectionUpdateManyWithoutCompanyNestedInput
+    pscInspections?: PscInspectionUpdateManyWithoutCompanyNestedInput
+    cdiInspections?: CdiInspectionUpdateManyWithoutCompanyNestedInput
+    internalAudits?: InternalAuditUpdateManyWithoutCompanyNestedInput
+    externalAudits?: ExternalAuditUpdateManyWithoutCompanyNestedInput
+    committeeMeetings?: CommitteeMeetingUpdateManyWithoutCompanyNestedInput
+    scheduleItems?: ScheduleItemUpdateManyWithoutCompanyNestedInput
+    emergencyDrills?: EmergencyDrillUpdateManyWithoutCompanyNestedInput
+    familiarizationRecords?: FamiliarizationRecordUpdateManyWithoutCompanyNestedInput
+    controlledDocuments?: ControlledDocumentUpdateManyWithoutCompanyNestedInput
+    circulars?: CircularUpdateManyWithoutCompanyNestedInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUpdateManyWithoutCompanyNestedInput
+    defects?: DefectUpdateManyWithoutCompanyNestedInput
+  }
+
+  export type CompanyUncheckedUpdateWithoutScheduleApplicabilityInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    users?: UserUncheckedUpdateManyWithoutCompanyNestedInput
+    roles?: RoleUncheckedUpdateManyWithoutCompanyNestedInput
+    vessels?: VesselUncheckedUpdateManyWithoutCompanyNestedInput
+    smsDocuments?: SmsDocumentUncheckedUpdateManyWithoutCompanyNestedInput
+    workflows?: WorkflowDefinitionUncheckedUpdateManyWithoutCompanyNestedInput
+    incidents?: IncidentUncheckedUpdateManyWithoutCompanyNestedInput
+    nearMisses?: NearMissUncheckedUpdateManyWithoutCompanyNestedInput
+    nonConformities?: NonConformityUncheckedUpdateManyWithoutCompanyNestedInput
+    sireInspections?: SireInspectionUncheckedUpdateManyWithoutCompanyNestedInput
+    pscInspections?: PscInspectionUncheckedUpdateManyWithoutCompanyNestedInput
+    cdiInspections?: CdiInspectionUncheckedUpdateManyWithoutCompanyNestedInput
+    internalAudits?: InternalAuditUncheckedUpdateManyWithoutCompanyNestedInput
+    externalAudits?: ExternalAuditUncheckedUpdateManyWithoutCompanyNestedInput
+    committeeMeetings?: CommitteeMeetingUncheckedUpdateManyWithoutCompanyNestedInput
+    scheduleItems?: ScheduleItemUncheckedUpdateManyWithoutCompanyNestedInput
+    emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutCompanyNestedInput
+    familiarizationRecords?: FamiliarizationRecordUncheckedUpdateManyWithoutCompanyNestedInput
+    controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutCompanyNestedInput
+    circulars?: CircularUncheckedUpdateManyWithoutCompanyNestedInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedUpdateManyWithoutCompanyNestedInput
+    defects?: DefectUncheckedUpdateManyWithoutCompanyNestedInput
+  }
+
+  export type VesselUpsertWithoutScheduleApplicabilityInput = {
+    update: XOR<VesselUpdateWithoutScheduleApplicabilityInput, VesselUncheckedUpdateWithoutScheduleApplicabilityInput>
+    create: XOR<VesselCreateWithoutScheduleApplicabilityInput, VesselUncheckedCreateWithoutScheduleApplicabilityInput>
+    where?: VesselWhereInput
+  }
+
+  export type VesselUpdateToOneWithWhereWithoutScheduleApplicabilityInput = {
+    where?: VesselWhereInput
+    data: XOR<VesselUpdateWithoutScheduleApplicabilityInput, VesselUncheckedUpdateWithoutScheduleApplicabilityInput>
+  }
+
+  export type VesselUpdateWithoutScheduleApplicabilityInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: NullableStringFieldUpdateOperationsInput | string | null
+    imo?: NullableStringFieldUpdateOperationsInput | string | null
+    officialNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    callSign?: NullableStringFieldUpdateOperationsInput | string | null
+    mmsi?: NullableStringFieldUpdateOperationsInput | string | null
+    flag?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: StringFieldUpdateOperationsInput | string
+    classificationSociety?: NullableStringFieldUpdateOperationsInput | string | null
+    yearBuilt?: NullableIntFieldUpdateOperationsInput | number | null
+    grossTonnage?: NullableFloatFieldUpdateOperationsInput | number | null
+    loa?: NullableFloatFieldUpdateOperationsInput | number | null
+    breadth?: NullableFloatFieldUpdateOperationsInput | number | null
+    depth?: NullableFloatFieldUpdateOperationsInput | number | null
+    status?: EnumVesselStatusFieldUpdateOperationsInput | $Enums.VesselStatus
+    capacityCbm?: NullableFloatFieldUpdateOperationsInput | number | null
+    netTonnage?: NullableFloatFieldUpdateOperationsInput | number | null
+    deadweight?: NullableFloatFieldUpdateOperationsInput | number | null
+    tradeArea?: NullableStringFieldUpdateOperationsInput | string | null
+    registeredOwner?: NullableStringFieldUpdateOperationsInput | string | null
+    headOwner?: NullableStringFieldUpdateOperationsInput | string | null
+    charterer?: NullableStringFieldUpdateOperationsInput | string | null
+    yearWithSwan?: NullableIntFieldUpdateOperationsInput | number | null
+    lastDryDock?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dryDockPlace?: NullableStringFieldUpdateOperationsInput | string | null
+    nextDryDockDue?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    portOfRegistry?: NullableStringFieldUpdateOperationsInput | string | null
+    lbp?: NullableFloatFieldUpdateOperationsInput | number | null
+    draft?: NullableFloatFieldUpdateOperationsInput | number | null
+    mainEngine?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceSpeed?: NullableFloatFieldUpdateOperationsInput | number | null
+    navigationArea?: NullableStringFieldUpdateOperationsInput | string | null
+    classNotation?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    builder?: NullableStringFieldUpdateOperationsInput | string | null
+    keelLaidDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    launchingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    totalComplement?: NullableIntFieldUpdateOperationsInput | number | null
+    satPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    vesselEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    company?: CompanyUpdateOneRequiredWithoutVesselsNestedInput
+    smsDocuments?: SmsDocumentUpdateManyWithoutVesselNestedInput
+    incidents?: IncidentUpdateManyWithoutVesselNestedInput
+    nearMisses?: NearMissUpdateManyWithoutVesselNestedInput
+    nonConformities?: NonConformityUpdateManyWithoutVesselNestedInput
+    sireInspections?: SireInspectionUpdateManyWithoutVesselNestedInput
+    pscInspections?: PscInspectionUpdateManyWithoutVesselNestedInput
+    cdiInspections?: CdiInspectionUpdateManyWithoutVesselNestedInput
+    internalAudits?: InternalAuditUpdateManyWithoutVesselNestedInput
+    externalAudits?: ExternalAuditUpdateManyWithoutVesselNestedInput
+    committeeMeetings?: CommitteeMeetingUpdateManyWithoutVesselNestedInput
+    emergencyDrills?: EmergencyDrillUpdateManyWithoutVesselNestedInput
+    familiarizationRecords?: FamiliarizationRecordUpdateManyWithoutVesselNestedInput
+    controlledDocuments?: ControlledDocumentUpdateManyWithoutVesselNestedInput
+    circulars?: CircularUpdateManyWithoutVesselNestedInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUpdateManyWithoutVesselNestedInput
+    riskAssessmentExecutions?: RiskAssessmentExecutionUpdateManyWithoutVesselNestedInput
+    riskAssessmentRevisionRequests?: RiskAssessmentRevisionRequestUpdateManyWithoutVesselNestedInput
+    defects?: DefectUpdateManyWithoutVesselNestedInput
+    users?: UserUpdateManyWithoutVesselNestedInput
+  }
+
+  export type VesselUncheckedUpdateWithoutScheduleApplicabilityInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: NullableStringFieldUpdateOperationsInput | string | null
+    imo?: NullableStringFieldUpdateOperationsInput | string | null
+    officialNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    callSign?: NullableStringFieldUpdateOperationsInput | string | null
+    mmsi?: NullableStringFieldUpdateOperationsInput | string | null
+    flag?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: StringFieldUpdateOperationsInput | string
+    classificationSociety?: NullableStringFieldUpdateOperationsInput | string | null
+    yearBuilt?: NullableIntFieldUpdateOperationsInput | number | null
+    grossTonnage?: NullableFloatFieldUpdateOperationsInput | number | null
+    loa?: NullableFloatFieldUpdateOperationsInput | number | null
+    breadth?: NullableFloatFieldUpdateOperationsInput | number | null
+    depth?: NullableFloatFieldUpdateOperationsInput | number | null
+    status?: EnumVesselStatusFieldUpdateOperationsInput | $Enums.VesselStatus
+    capacityCbm?: NullableFloatFieldUpdateOperationsInput | number | null
+    netTonnage?: NullableFloatFieldUpdateOperationsInput | number | null
+    deadweight?: NullableFloatFieldUpdateOperationsInput | number | null
+    tradeArea?: NullableStringFieldUpdateOperationsInput | string | null
+    registeredOwner?: NullableStringFieldUpdateOperationsInput | string | null
+    headOwner?: NullableStringFieldUpdateOperationsInput | string | null
+    charterer?: NullableStringFieldUpdateOperationsInput | string | null
+    yearWithSwan?: NullableIntFieldUpdateOperationsInput | number | null
+    lastDryDock?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dryDockPlace?: NullableStringFieldUpdateOperationsInput | string | null
+    nextDryDockDue?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    portOfRegistry?: NullableStringFieldUpdateOperationsInput | string | null
+    lbp?: NullableFloatFieldUpdateOperationsInput | number | null
+    draft?: NullableFloatFieldUpdateOperationsInput | number | null
+    mainEngine?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceSpeed?: NullableFloatFieldUpdateOperationsInput | number | null
+    navigationArea?: NullableStringFieldUpdateOperationsInput | string | null
+    classNotation?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    builder?: NullableStringFieldUpdateOperationsInput | string | null
+    keelLaidDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    launchingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    totalComplement?: NullableIntFieldUpdateOperationsInput | number | null
+    satPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    vesselEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    smsDocuments?: SmsDocumentUncheckedUpdateManyWithoutVesselNestedInput
+    incidents?: IncidentUncheckedUpdateManyWithoutVesselNestedInput
+    nearMisses?: NearMissUncheckedUpdateManyWithoutVesselNestedInput
+    nonConformities?: NonConformityUncheckedUpdateManyWithoutVesselNestedInput
+    sireInspections?: SireInspectionUncheckedUpdateManyWithoutVesselNestedInput
+    pscInspections?: PscInspectionUncheckedUpdateManyWithoutVesselNestedInput
+    cdiInspections?: CdiInspectionUncheckedUpdateManyWithoutVesselNestedInput
+    internalAudits?: InternalAuditUncheckedUpdateManyWithoutVesselNestedInput
+    externalAudits?: ExternalAuditUncheckedUpdateManyWithoutVesselNestedInput
+    committeeMeetings?: CommitteeMeetingUncheckedUpdateManyWithoutVesselNestedInput
+    emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutVesselNestedInput
+    familiarizationRecords?: FamiliarizationRecordUncheckedUpdateManyWithoutVesselNestedInput
+    controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutVesselNestedInput
+    circulars?: CircularUncheckedUpdateManyWithoutVesselNestedInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedUpdateManyWithoutVesselNestedInput
+    riskAssessmentExecutions?: RiskAssessmentExecutionUncheckedUpdateManyWithoutVesselNestedInput
+    riskAssessmentRevisionRequests?: RiskAssessmentRevisionRequestUncheckedUpdateManyWithoutVesselNestedInput
+    defects?: DefectUncheckedUpdateManyWithoutVesselNestedInput
+    users?: UserUncheckedUpdateManyWithoutVesselNestedInput
+  }
+
+  export type ScheduleItemUpsertWithoutExceptionsInput = {
+    update: XOR<ScheduleItemUpdateWithoutExceptionsInput, ScheduleItemUncheckedUpdateWithoutExceptionsInput>
+    create: XOR<ScheduleItemCreateWithoutExceptionsInput, ScheduleItemUncheckedCreateWithoutExceptionsInput>
+    where?: ScheduleItemWhereInput
+  }
+
+  export type ScheduleItemUpdateToOneWithWhereWithoutExceptionsInput = {
+    where?: ScheduleItemWhereInput
+    data: XOR<ScheduleItemUpdateWithoutExceptionsInput, ScheduleItemUncheckedUpdateWithoutExceptionsInput>
+  }
+
+  export type ScheduleItemUpdateWithoutExceptionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    kind?: EnumScheduleItemKindFieldUpdateOperationsInput | $Enums.ScheduleItemKind
+    category?: NullableStringFieldUpdateOperationsInput | string | null
+    itemNo?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    smsReference?: NullableStringFieldUpdateOperationsInput | string | null
+    frequencyLabel?: NullableStringFieldUpdateOperationsInput | string | null
+    frequencyDays?: NullableIntFieldUpdateOperationsInput | number | null
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    active?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    company?: CompanyUpdateOneRequiredWithoutScheduleItemsNestedInput
+    drills?: EmergencyDrillUpdateManyWithoutScheduleItemNestedInput
+    familiarizations?: FamiliarizationRecordUpdateManyWithoutScheduleItemNestedInput
+  }
+
+  export type ScheduleItemUncheckedUpdateWithoutExceptionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    kind?: EnumScheduleItemKindFieldUpdateOperationsInput | $Enums.ScheduleItemKind
+    category?: NullableStringFieldUpdateOperationsInput | string | null
+    itemNo?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    smsReference?: NullableStringFieldUpdateOperationsInput | string | null
+    frequencyLabel?: NullableStringFieldUpdateOperationsInput | string | null
+    frequencyDays?: NullableIntFieldUpdateOperationsInput | number | null
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    active?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    drills?: EmergencyDrillUncheckedUpdateManyWithoutScheduleItemNestedInput
+    familiarizations?: FamiliarizationRecordUncheckedUpdateManyWithoutScheduleItemNestedInput
+  }
+
   export type CompanyCreateWithoutEmergencyDrillsInput = {
     id?: string
     name: string
@@ -97696,6 +105989,9 @@ export namespace Prisma {
     internalAudits?: InternalAuditCreateNestedManyWithoutCompanyInput
     externalAudits?: ExternalAuditCreateNestedManyWithoutCompanyInput
     committeeMeetings?: CommitteeMeetingCreateNestedManyWithoutCompanyInput
+    scheduleItems?: ScheduleItemCreateNestedManyWithoutCompanyInput
+    familiarizationRecords?: FamiliarizationRecordCreateNestedManyWithoutCompanyInput
+    scheduleApplicability?: ScheduleApplicabilityCreateNestedManyWithoutCompanyInput
     controlledDocuments?: ControlledDocumentCreateNestedManyWithoutCompanyInput
     circulars?: CircularCreateNestedManyWithoutCompanyInput
     riskAssessmentDocuments?: RiskAssessmentDocumentCreateNestedManyWithoutCompanyInput
@@ -97722,6 +106018,9 @@ export namespace Prisma {
     internalAudits?: InternalAuditUncheckedCreateNestedManyWithoutCompanyInput
     externalAudits?: ExternalAuditUncheckedCreateNestedManyWithoutCompanyInput
     committeeMeetings?: CommitteeMeetingUncheckedCreateNestedManyWithoutCompanyInput
+    scheduleItems?: ScheduleItemUncheckedCreateNestedManyWithoutCompanyInput
+    familiarizationRecords?: FamiliarizationRecordUncheckedCreateNestedManyWithoutCompanyInput
+    scheduleApplicability?: ScheduleApplicabilityUncheckedCreateNestedManyWithoutCompanyInput
     controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutCompanyInput
     circulars?: CircularUncheckedCreateNestedManyWithoutCompanyInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedCreateNestedManyWithoutCompanyInput
@@ -97761,6 +106060,21 @@ export namespace Prisma {
     lastDryDock?: Date | string | null
     dryDockPlace?: string | null
     nextDryDockDue?: Date | string | null
+    portOfRegistry?: string | null
+    lbp?: number | null
+    draft?: number | null
+    mainEngine?: string | null
+    serviceSpeed?: number | null
+    navigationArea?: string | null
+    classNotation?: string | null
+    ownerAddress?: string | null
+    builder?: string | null
+    keelLaidDate?: Date | string | null
+    launchingDate?: Date | string | null
+    deliveryDate?: Date | string | null
+    totalComplement?: number | null
+    satPhone?: string | null
+    vesselEmail?: string | null
     archivedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -97779,6 +106093,8 @@ export namespace Prisma {
     internalAudits?: InternalAuditCreateNestedManyWithoutVesselInput
     externalAudits?: ExternalAuditCreateNestedManyWithoutVesselInput
     committeeMeetings?: CommitteeMeetingCreateNestedManyWithoutVesselInput
+    familiarizationRecords?: FamiliarizationRecordCreateNestedManyWithoutVesselInput
+    scheduleApplicability?: ScheduleApplicabilityCreateNestedManyWithoutVesselInput
     controlledDocuments?: ControlledDocumentCreateNestedManyWithoutVesselInput
     circulars?: CircularCreateNestedManyWithoutVesselInput
     riskAssessmentDocuments?: RiskAssessmentDocumentCreateNestedManyWithoutVesselInput
@@ -97817,6 +106133,21 @@ export namespace Prisma {
     lastDryDock?: Date | string | null
     dryDockPlace?: string | null
     nextDryDockDue?: Date | string | null
+    portOfRegistry?: string | null
+    lbp?: number | null
+    draft?: number | null
+    mainEngine?: string | null
+    serviceSpeed?: number | null
+    navigationArea?: string | null
+    classNotation?: string | null
+    ownerAddress?: string | null
+    builder?: string | null
+    keelLaidDate?: Date | string | null
+    launchingDate?: Date | string | null
+    deliveryDate?: Date | string | null
+    totalComplement?: number | null
+    satPhone?: string | null
+    vesselEmail?: string | null
     archivedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -97834,6 +106165,8 @@ export namespace Prisma {
     internalAudits?: InternalAuditUncheckedCreateNestedManyWithoutVesselInput
     externalAudits?: ExternalAuditUncheckedCreateNestedManyWithoutVesselInput
     committeeMeetings?: CommitteeMeetingUncheckedCreateNestedManyWithoutVesselInput
+    familiarizationRecords?: FamiliarizationRecordUncheckedCreateNestedManyWithoutVesselInput
+    scheduleApplicability?: ScheduleApplicabilityUncheckedCreateNestedManyWithoutVesselInput
     controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutVesselInput
     circulars?: CircularUncheckedCreateNestedManyWithoutVesselInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedCreateNestedManyWithoutVesselInput
@@ -97846,6 +106179,49 @@ export namespace Prisma {
   export type VesselCreateOrConnectWithoutEmergencyDrillsInput = {
     where: VesselWhereUniqueInput
     create: XOR<VesselCreateWithoutEmergencyDrillsInput, VesselUncheckedCreateWithoutEmergencyDrillsInput>
+  }
+
+  export type ScheduleItemCreateWithoutDrillsInput = {
+    id?: string
+    kind: $Enums.ScheduleItemKind
+    category?: string | null
+    itemNo?: string | null
+    name: string
+    smsReference?: string | null
+    frequencyLabel?: string | null
+    frequencyDays?: number | null
+    sortOrder: number
+    active?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
+    company: CompanyCreateNestedOneWithoutScheduleItemsInput
+    familiarizations?: FamiliarizationRecordCreateNestedManyWithoutScheduleItemInput
+    exceptions?: ScheduleApplicabilityCreateNestedManyWithoutScheduleItemInput
+  }
+
+  export type ScheduleItemUncheckedCreateWithoutDrillsInput = {
+    id?: string
+    companyId: string
+    kind: $Enums.ScheduleItemKind
+    category?: string | null
+    itemNo?: string | null
+    name: string
+    smsReference?: string | null
+    frequencyLabel?: string | null
+    frequencyDays?: number | null
+    sortOrder: number
+    active?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
+    familiarizations?: FamiliarizationRecordUncheckedCreateNestedManyWithoutScheduleItemInput
+    exceptions?: ScheduleApplicabilityUncheckedCreateNestedManyWithoutScheduleItemInput
+  }
+
+  export type ScheduleItemCreateOrConnectWithoutDrillsInput = {
+    where: ScheduleItemWhereUniqueInput
+    create: XOR<ScheduleItemCreateWithoutDrillsInput, ScheduleItemUncheckedCreateWithoutDrillsInput>
   }
 
   export type CompanyUpsertWithoutEmergencyDrillsInput = {
@@ -97879,6 +106255,9 @@ export namespace Prisma {
     internalAudits?: InternalAuditUpdateManyWithoutCompanyNestedInput
     externalAudits?: ExternalAuditUpdateManyWithoutCompanyNestedInput
     committeeMeetings?: CommitteeMeetingUpdateManyWithoutCompanyNestedInput
+    scheduleItems?: ScheduleItemUpdateManyWithoutCompanyNestedInput
+    familiarizationRecords?: FamiliarizationRecordUpdateManyWithoutCompanyNestedInput
+    scheduleApplicability?: ScheduleApplicabilityUpdateManyWithoutCompanyNestedInput
     controlledDocuments?: ControlledDocumentUpdateManyWithoutCompanyNestedInput
     circulars?: CircularUpdateManyWithoutCompanyNestedInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUpdateManyWithoutCompanyNestedInput
@@ -97905,6 +106284,9 @@ export namespace Prisma {
     internalAudits?: InternalAuditUncheckedUpdateManyWithoutCompanyNestedInput
     externalAudits?: ExternalAuditUncheckedUpdateManyWithoutCompanyNestedInput
     committeeMeetings?: CommitteeMeetingUncheckedUpdateManyWithoutCompanyNestedInput
+    scheduleItems?: ScheduleItemUncheckedUpdateManyWithoutCompanyNestedInput
+    familiarizationRecords?: FamiliarizationRecordUncheckedUpdateManyWithoutCompanyNestedInput
+    scheduleApplicability?: ScheduleApplicabilityUncheckedUpdateManyWithoutCompanyNestedInput
     controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutCompanyNestedInput
     circulars?: CircularUncheckedUpdateManyWithoutCompanyNestedInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedUpdateManyWithoutCompanyNestedInput
@@ -97950,6 +106332,21 @@ export namespace Prisma {
     lastDryDock?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dryDockPlace?: NullableStringFieldUpdateOperationsInput | string | null
     nextDryDockDue?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    portOfRegistry?: NullableStringFieldUpdateOperationsInput | string | null
+    lbp?: NullableFloatFieldUpdateOperationsInput | number | null
+    draft?: NullableFloatFieldUpdateOperationsInput | number | null
+    mainEngine?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceSpeed?: NullableFloatFieldUpdateOperationsInput | number | null
+    navigationArea?: NullableStringFieldUpdateOperationsInput | string | null
+    classNotation?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    builder?: NullableStringFieldUpdateOperationsInput | string | null
+    keelLaidDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    launchingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    totalComplement?: NullableIntFieldUpdateOperationsInput | number | null
+    satPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    vesselEmail?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -97968,6 +106365,8 @@ export namespace Prisma {
     internalAudits?: InternalAuditUpdateManyWithoutVesselNestedInput
     externalAudits?: ExternalAuditUpdateManyWithoutVesselNestedInput
     committeeMeetings?: CommitteeMeetingUpdateManyWithoutVesselNestedInput
+    familiarizationRecords?: FamiliarizationRecordUpdateManyWithoutVesselNestedInput
+    scheduleApplicability?: ScheduleApplicabilityUpdateManyWithoutVesselNestedInput
     controlledDocuments?: ControlledDocumentUpdateManyWithoutVesselNestedInput
     circulars?: CircularUpdateManyWithoutVesselNestedInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUpdateManyWithoutVesselNestedInput
@@ -98006,6 +106405,21 @@ export namespace Prisma {
     lastDryDock?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dryDockPlace?: NullableStringFieldUpdateOperationsInput | string | null
     nextDryDockDue?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    portOfRegistry?: NullableStringFieldUpdateOperationsInput | string | null
+    lbp?: NullableFloatFieldUpdateOperationsInput | number | null
+    draft?: NullableFloatFieldUpdateOperationsInput | number | null
+    mainEngine?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceSpeed?: NullableFloatFieldUpdateOperationsInput | number | null
+    navigationArea?: NullableStringFieldUpdateOperationsInput | string | null
+    classNotation?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    builder?: NullableStringFieldUpdateOperationsInput | string | null
+    keelLaidDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    launchingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    totalComplement?: NullableIntFieldUpdateOperationsInput | number | null
+    satPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    vesselEmail?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -98023,6 +106437,8 @@ export namespace Prisma {
     internalAudits?: InternalAuditUncheckedUpdateManyWithoutVesselNestedInput
     externalAudits?: ExternalAuditUncheckedUpdateManyWithoutVesselNestedInput
     committeeMeetings?: CommitteeMeetingUncheckedUpdateManyWithoutVesselNestedInput
+    familiarizationRecords?: FamiliarizationRecordUncheckedUpdateManyWithoutVesselNestedInput
+    scheduleApplicability?: ScheduleApplicabilityUncheckedUpdateManyWithoutVesselNestedInput
     controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutVesselNestedInput
     circulars?: CircularUncheckedUpdateManyWithoutVesselNestedInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedUpdateManyWithoutVesselNestedInput
@@ -98030,6 +106446,583 @@ export namespace Prisma {
     riskAssessmentRevisionRequests?: RiskAssessmentRevisionRequestUncheckedUpdateManyWithoutVesselNestedInput
     defects?: DefectUncheckedUpdateManyWithoutVesselNestedInput
     users?: UserUncheckedUpdateManyWithoutVesselNestedInput
+  }
+
+  export type ScheduleItemUpsertWithoutDrillsInput = {
+    update: XOR<ScheduleItemUpdateWithoutDrillsInput, ScheduleItemUncheckedUpdateWithoutDrillsInput>
+    create: XOR<ScheduleItemCreateWithoutDrillsInput, ScheduleItemUncheckedCreateWithoutDrillsInput>
+    where?: ScheduleItemWhereInput
+  }
+
+  export type ScheduleItemUpdateToOneWithWhereWithoutDrillsInput = {
+    where?: ScheduleItemWhereInput
+    data: XOR<ScheduleItemUpdateWithoutDrillsInput, ScheduleItemUncheckedUpdateWithoutDrillsInput>
+  }
+
+  export type ScheduleItemUpdateWithoutDrillsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    kind?: EnumScheduleItemKindFieldUpdateOperationsInput | $Enums.ScheduleItemKind
+    category?: NullableStringFieldUpdateOperationsInput | string | null
+    itemNo?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    smsReference?: NullableStringFieldUpdateOperationsInput | string | null
+    frequencyLabel?: NullableStringFieldUpdateOperationsInput | string | null
+    frequencyDays?: NullableIntFieldUpdateOperationsInput | number | null
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    active?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    company?: CompanyUpdateOneRequiredWithoutScheduleItemsNestedInput
+    familiarizations?: FamiliarizationRecordUpdateManyWithoutScheduleItemNestedInput
+    exceptions?: ScheduleApplicabilityUpdateManyWithoutScheduleItemNestedInput
+  }
+
+  export type ScheduleItemUncheckedUpdateWithoutDrillsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    kind?: EnumScheduleItemKindFieldUpdateOperationsInput | $Enums.ScheduleItemKind
+    category?: NullableStringFieldUpdateOperationsInput | string | null
+    itemNo?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    smsReference?: NullableStringFieldUpdateOperationsInput | string | null
+    frequencyLabel?: NullableStringFieldUpdateOperationsInput | string | null
+    frequencyDays?: NullableIntFieldUpdateOperationsInput | number | null
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    active?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    familiarizations?: FamiliarizationRecordUncheckedUpdateManyWithoutScheduleItemNestedInput
+    exceptions?: ScheduleApplicabilityUncheckedUpdateManyWithoutScheduleItemNestedInput
+  }
+
+  export type CompanyCreateWithoutFamiliarizationRecordsInput = {
+    id?: string
+    name: string
+    code: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    users?: UserCreateNestedManyWithoutCompanyInput
+    roles?: RoleCreateNestedManyWithoutCompanyInput
+    vessels?: VesselCreateNestedManyWithoutCompanyInput
+    smsDocuments?: SmsDocumentCreateNestedManyWithoutCompanyInput
+    workflows?: WorkflowDefinitionCreateNestedManyWithoutCompanyInput
+    incidents?: IncidentCreateNestedManyWithoutCompanyInput
+    nearMisses?: NearMissCreateNestedManyWithoutCompanyInput
+    nonConformities?: NonConformityCreateNestedManyWithoutCompanyInput
+    sireInspections?: SireInspectionCreateNestedManyWithoutCompanyInput
+    pscInspections?: PscInspectionCreateNestedManyWithoutCompanyInput
+    cdiInspections?: CdiInspectionCreateNestedManyWithoutCompanyInput
+    internalAudits?: InternalAuditCreateNestedManyWithoutCompanyInput
+    externalAudits?: ExternalAuditCreateNestedManyWithoutCompanyInput
+    committeeMeetings?: CommitteeMeetingCreateNestedManyWithoutCompanyInput
+    scheduleItems?: ScheduleItemCreateNestedManyWithoutCompanyInput
+    emergencyDrills?: EmergencyDrillCreateNestedManyWithoutCompanyInput
+    scheduleApplicability?: ScheduleApplicabilityCreateNestedManyWithoutCompanyInput
+    controlledDocuments?: ControlledDocumentCreateNestedManyWithoutCompanyInput
+    circulars?: CircularCreateNestedManyWithoutCompanyInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentCreateNestedManyWithoutCompanyInput
+    defects?: DefectCreateNestedManyWithoutCompanyInput
+  }
+
+  export type CompanyUncheckedCreateWithoutFamiliarizationRecordsInput = {
+    id?: string
+    name: string
+    code: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    users?: UserUncheckedCreateNestedManyWithoutCompanyInput
+    roles?: RoleUncheckedCreateNestedManyWithoutCompanyInput
+    vessels?: VesselUncheckedCreateNestedManyWithoutCompanyInput
+    smsDocuments?: SmsDocumentUncheckedCreateNestedManyWithoutCompanyInput
+    workflows?: WorkflowDefinitionUncheckedCreateNestedManyWithoutCompanyInput
+    incidents?: IncidentUncheckedCreateNestedManyWithoutCompanyInput
+    nearMisses?: NearMissUncheckedCreateNestedManyWithoutCompanyInput
+    nonConformities?: NonConformityUncheckedCreateNestedManyWithoutCompanyInput
+    sireInspections?: SireInspectionUncheckedCreateNestedManyWithoutCompanyInput
+    pscInspections?: PscInspectionUncheckedCreateNestedManyWithoutCompanyInput
+    cdiInspections?: CdiInspectionUncheckedCreateNestedManyWithoutCompanyInput
+    internalAudits?: InternalAuditUncheckedCreateNestedManyWithoutCompanyInput
+    externalAudits?: ExternalAuditUncheckedCreateNestedManyWithoutCompanyInput
+    committeeMeetings?: CommitteeMeetingUncheckedCreateNestedManyWithoutCompanyInput
+    scheduleItems?: ScheduleItemUncheckedCreateNestedManyWithoutCompanyInput
+    emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutCompanyInput
+    scheduleApplicability?: ScheduleApplicabilityUncheckedCreateNestedManyWithoutCompanyInput
+    controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutCompanyInput
+    circulars?: CircularUncheckedCreateNestedManyWithoutCompanyInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedCreateNestedManyWithoutCompanyInput
+    defects?: DefectUncheckedCreateNestedManyWithoutCompanyInput
+  }
+
+  export type CompanyCreateOrConnectWithoutFamiliarizationRecordsInput = {
+    where: CompanyWhereUniqueInput
+    create: XOR<CompanyCreateWithoutFamiliarizationRecordsInput, CompanyUncheckedCreateWithoutFamiliarizationRecordsInput>
+  }
+
+  export type VesselCreateWithoutFamiliarizationRecordsInput = {
+    id?: string
+    name: string
+    code?: string | null
+    imo?: string | null
+    officialNumber?: string | null
+    callSign?: string | null
+    mmsi?: string | null
+    flag?: string | null
+    type?: string
+    classificationSociety?: string | null
+    yearBuilt?: number | null
+    grossTonnage?: number | null
+    loa?: number | null
+    breadth?: number | null
+    depth?: number | null
+    status?: $Enums.VesselStatus
+    capacityCbm?: number | null
+    netTonnage?: number | null
+    deadweight?: number | null
+    tradeArea?: string | null
+    registeredOwner?: string | null
+    headOwner?: string | null
+    charterer?: string | null
+    yearWithSwan?: number | null
+    lastDryDock?: Date | string | null
+    dryDockPlace?: string | null
+    nextDryDockDue?: Date | string | null
+    portOfRegistry?: string | null
+    lbp?: number | null
+    draft?: number | null
+    mainEngine?: string | null
+    serviceSpeed?: number | null
+    navigationArea?: string | null
+    classNotation?: string | null
+    ownerAddress?: string | null
+    builder?: string | null
+    keelLaidDate?: Date | string | null
+    launchingDate?: Date | string | null
+    deliveryDate?: Date | string | null
+    totalComplement?: number | null
+    satPhone?: string | null
+    vesselEmail?: string | null
+    archivedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    company: CompanyCreateNestedOneWithoutVesselsInput
+    smsDocuments?: SmsDocumentCreateNestedManyWithoutVesselInput
+    incidents?: IncidentCreateNestedManyWithoutVesselInput
+    nearMisses?: NearMissCreateNestedManyWithoutVesselInput
+    nonConformities?: NonConformityCreateNestedManyWithoutVesselInput
+    sireInspections?: SireInspectionCreateNestedManyWithoutVesselInput
+    pscInspections?: PscInspectionCreateNestedManyWithoutVesselInput
+    cdiInspections?: CdiInspectionCreateNestedManyWithoutVesselInput
+    internalAudits?: InternalAuditCreateNestedManyWithoutVesselInput
+    externalAudits?: ExternalAuditCreateNestedManyWithoutVesselInput
+    committeeMeetings?: CommitteeMeetingCreateNestedManyWithoutVesselInput
+    emergencyDrills?: EmergencyDrillCreateNestedManyWithoutVesselInput
+    scheduleApplicability?: ScheduleApplicabilityCreateNestedManyWithoutVesselInput
+    controlledDocuments?: ControlledDocumentCreateNestedManyWithoutVesselInput
+    circulars?: CircularCreateNestedManyWithoutVesselInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentCreateNestedManyWithoutVesselInput
+    riskAssessmentExecutions?: RiskAssessmentExecutionCreateNestedManyWithoutVesselInput
+    riskAssessmentRevisionRequests?: RiskAssessmentRevisionRequestCreateNestedManyWithoutVesselInput
+    defects?: DefectCreateNestedManyWithoutVesselInput
+    users?: UserCreateNestedManyWithoutVesselInput
+  }
+
+  export type VesselUncheckedCreateWithoutFamiliarizationRecordsInput = {
+    id?: string
+    companyId: string
+    name: string
+    code?: string | null
+    imo?: string | null
+    officialNumber?: string | null
+    callSign?: string | null
+    mmsi?: string | null
+    flag?: string | null
+    type?: string
+    classificationSociety?: string | null
+    yearBuilt?: number | null
+    grossTonnage?: number | null
+    loa?: number | null
+    breadth?: number | null
+    depth?: number | null
+    status?: $Enums.VesselStatus
+    capacityCbm?: number | null
+    netTonnage?: number | null
+    deadweight?: number | null
+    tradeArea?: string | null
+    registeredOwner?: string | null
+    headOwner?: string | null
+    charterer?: string | null
+    yearWithSwan?: number | null
+    lastDryDock?: Date | string | null
+    dryDockPlace?: string | null
+    nextDryDockDue?: Date | string | null
+    portOfRegistry?: string | null
+    lbp?: number | null
+    draft?: number | null
+    mainEngine?: string | null
+    serviceSpeed?: number | null
+    navigationArea?: string | null
+    classNotation?: string | null
+    ownerAddress?: string | null
+    builder?: string | null
+    keelLaidDate?: Date | string | null
+    launchingDate?: Date | string | null
+    deliveryDate?: Date | string | null
+    totalComplement?: number | null
+    satPhone?: string | null
+    vesselEmail?: string | null
+    archivedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    smsDocuments?: SmsDocumentUncheckedCreateNestedManyWithoutVesselInput
+    incidents?: IncidentUncheckedCreateNestedManyWithoutVesselInput
+    nearMisses?: NearMissUncheckedCreateNestedManyWithoutVesselInput
+    nonConformities?: NonConformityUncheckedCreateNestedManyWithoutVesselInput
+    sireInspections?: SireInspectionUncheckedCreateNestedManyWithoutVesselInput
+    pscInspections?: PscInspectionUncheckedCreateNestedManyWithoutVesselInput
+    cdiInspections?: CdiInspectionUncheckedCreateNestedManyWithoutVesselInput
+    internalAudits?: InternalAuditUncheckedCreateNestedManyWithoutVesselInput
+    externalAudits?: ExternalAuditUncheckedCreateNestedManyWithoutVesselInput
+    committeeMeetings?: CommitteeMeetingUncheckedCreateNestedManyWithoutVesselInput
+    emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutVesselInput
+    scheduleApplicability?: ScheduleApplicabilityUncheckedCreateNestedManyWithoutVesselInput
+    controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutVesselInput
+    circulars?: CircularUncheckedCreateNestedManyWithoutVesselInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedCreateNestedManyWithoutVesselInput
+    riskAssessmentExecutions?: RiskAssessmentExecutionUncheckedCreateNestedManyWithoutVesselInput
+    riskAssessmentRevisionRequests?: RiskAssessmentRevisionRequestUncheckedCreateNestedManyWithoutVesselInput
+    defects?: DefectUncheckedCreateNestedManyWithoutVesselInput
+    users?: UserUncheckedCreateNestedManyWithoutVesselInput
+  }
+
+  export type VesselCreateOrConnectWithoutFamiliarizationRecordsInput = {
+    where: VesselWhereUniqueInput
+    create: XOR<VesselCreateWithoutFamiliarizationRecordsInput, VesselUncheckedCreateWithoutFamiliarizationRecordsInput>
+  }
+
+  export type ScheduleItemCreateWithoutFamiliarizationsInput = {
+    id?: string
+    kind: $Enums.ScheduleItemKind
+    category?: string | null
+    itemNo?: string | null
+    name: string
+    smsReference?: string | null
+    frequencyLabel?: string | null
+    frequencyDays?: number | null
+    sortOrder: number
+    active?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
+    company: CompanyCreateNestedOneWithoutScheduleItemsInput
+    drills?: EmergencyDrillCreateNestedManyWithoutScheduleItemInput
+    exceptions?: ScheduleApplicabilityCreateNestedManyWithoutScheduleItemInput
+  }
+
+  export type ScheduleItemUncheckedCreateWithoutFamiliarizationsInput = {
+    id?: string
+    companyId: string
+    kind: $Enums.ScheduleItemKind
+    category?: string | null
+    itemNo?: string | null
+    name: string
+    smsReference?: string | null
+    frequencyLabel?: string | null
+    frequencyDays?: number | null
+    sortOrder: number
+    active?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
+    drills?: EmergencyDrillUncheckedCreateNestedManyWithoutScheduleItemInput
+    exceptions?: ScheduleApplicabilityUncheckedCreateNestedManyWithoutScheduleItemInput
+  }
+
+  export type ScheduleItemCreateOrConnectWithoutFamiliarizationsInput = {
+    where: ScheduleItemWhereUniqueInput
+    create: XOR<ScheduleItemCreateWithoutFamiliarizationsInput, ScheduleItemUncheckedCreateWithoutFamiliarizationsInput>
+  }
+
+  export type CompanyUpsertWithoutFamiliarizationRecordsInput = {
+    update: XOR<CompanyUpdateWithoutFamiliarizationRecordsInput, CompanyUncheckedUpdateWithoutFamiliarizationRecordsInput>
+    create: XOR<CompanyCreateWithoutFamiliarizationRecordsInput, CompanyUncheckedCreateWithoutFamiliarizationRecordsInput>
+    where?: CompanyWhereInput
+  }
+
+  export type CompanyUpdateToOneWithWhereWithoutFamiliarizationRecordsInput = {
+    where?: CompanyWhereInput
+    data: XOR<CompanyUpdateWithoutFamiliarizationRecordsInput, CompanyUncheckedUpdateWithoutFamiliarizationRecordsInput>
+  }
+
+  export type CompanyUpdateWithoutFamiliarizationRecordsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    users?: UserUpdateManyWithoutCompanyNestedInput
+    roles?: RoleUpdateManyWithoutCompanyNestedInput
+    vessels?: VesselUpdateManyWithoutCompanyNestedInput
+    smsDocuments?: SmsDocumentUpdateManyWithoutCompanyNestedInput
+    workflows?: WorkflowDefinitionUpdateManyWithoutCompanyNestedInput
+    incidents?: IncidentUpdateManyWithoutCompanyNestedInput
+    nearMisses?: NearMissUpdateManyWithoutCompanyNestedInput
+    nonConformities?: NonConformityUpdateManyWithoutCompanyNestedInput
+    sireInspections?: SireInspectionUpdateManyWithoutCompanyNestedInput
+    pscInspections?: PscInspectionUpdateManyWithoutCompanyNestedInput
+    cdiInspections?: CdiInspectionUpdateManyWithoutCompanyNestedInput
+    internalAudits?: InternalAuditUpdateManyWithoutCompanyNestedInput
+    externalAudits?: ExternalAuditUpdateManyWithoutCompanyNestedInput
+    committeeMeetings?: CommitteeMeetingUpdateManyWithoutCompanyNestedInput
+    scheduleItems?: ScheduleItemUpdateManyWithoutCompanyNestedInput
+    emergencyDrills?: EmergencyDrillUpdateManyWithoutCompanyNestedInput
+    scheduleApplicability?: ScheduleApplicabilityUpdateManyWithoutCompanyNestedInput
+    controlledDocuments?: ControlledDocumentUpdateManyWithoutCompanyNestedInput
+    circulars?: CircularUpdateManyWithoutCompanyNestedInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUpdateManyWithoutCompanyNestedInput
+    defects?: DefectUpdateManyWithoutCompanyNestedInput
+  }
+
+  export type CompanyUncheckedUpdateWithoutFamiliarizationRecordsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    users?: UserUncheckedUpdateManyWithoutCompanyNestedInput
+    roles?: RoleUncheckedUpdateManyWithoutCompanyNestedInput
+    vessels?: VesselUncheckedUpdateManyWithoutCompanyNestedInput
+    smsDocuments?: SmsDocumentUncheckedUpdateManyWithoutCompanyNestedInput
+    workflows?: WorkflowDefinitionUncheckedUpdateManyWithoutCompanyNestedInput
+    incidents?: IncidentUncheckedUpdateManyWithoutCompanyNestedInput
+    nearMisses?: NearMissUncheckedUpdateManyWithoutCompanyNestedInput
+    nonConformities?: NonConformityUncheckedUpdateManyWithoutCompanyNestedInput
+    sireInspections?: SireInspectionUncheckedUpdateManyWithoutCompanyNestedInput
+    pscInspections?: PscInspectionUncheckedUpdateManyWithoutCompanyNestedInput
+    cdiInspections?: CdiInspectionUncheckedUpdateManyWithoutCompanyNestedInput
+    internalAudits?: InternalAuditUncheckedUpdateManyWithoutCompanyNestedInput
+    externalAudits?: ExternalAuditUncheckedUpdateManyWithoutCompanyNestedInput
+    committeeMeetings?: CommitteeMeetingUncheckedUpdateManyWithoutCompanyNestedInput
+    scheduleItems?: ScheduleItemUncheckedUpdateManyWithoutCompanyNestedInput
+    emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutCompanyNestedInput
+    scheduleApplicability?: ScheduleApplicabilityUncheckedUpdateManyWithoutCompanyNestedInput
+    controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutCompanyNestedInput
+    circulars?: CircularUncheckedUpdateManyWithoutCompanyNestedInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedUpdateManyWithoutCompanyNestedInput
+    defects?: DefectUncheckedUpdateManyWithoutCompanyNestedInput
+  }
+
+  export type VesselUpsertWithoutFamiliarizationRecordsInput = {
+    update: XOR<VesselUpdateWithoutFamiliarizationRecordsInput, VesselUncheckedUpdateWithoutFamiliarizationRecordsInput>
+    create: XOR<VesselCreateWithoutFamiliarizationRecordsInput, VesselUncheckedCreateWithoutFamiliarizationRecordsInput>
+    where?: VesselWhereInput
+  }
+
+  export type VesselUpdateToOneWithWhereWithoutFamiliarizationRecordsInput = {
+    where?: VesselWhereInput
+    data: XOR<VesselUpdateWithoutFamiliarizationRecordsInput, VesselUncheckedUpdateWithoutFamiliarizationRecordsInput>
+  }
+
+  export type VesselUpdateWithoutFamiliarizationRecordsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: NullableStringFieldUpdateOperationsInput | string | null
+    imo?: NullableStringFieldUpdateOperationsInput | string | null
+    officialNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    callSign?: NullableStringFieldUpdateOperationsInput | string | null
+    mmsi?: NullableStringFieldUpdateOperationsInput | string | null
+    flag?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: StringFieldUpdateOperationsInput | string
+    classificationSociety?: NullableStringFieldUpdateOperationsInput | string | null
+    yearBuilt?: NullableIntFieldUpdateOperationsInput | number | null
+    grossTonnage?: NullableFloatFieldUpdateOperationsInput | number | null
+    loa?: NullableFloatFieldUpdateOperationsInput | number | null
+    breadth?: NullableFloatFieldUpdateOperationsInput | number | null
+    depth?: NullableFloatFieldUpdateOperationsInput | number | null
+    status?: EnumVesselStatusFieldUpdateOperationsInput | $Enums.VesselStatus
+    capacityCbm?: NullableFloatFieldUpdateOperationsInput | number | null
+    netTonnage?: NullableFloatFieldUpdateOperationsInput | number | null
+    deadweight?: NullableFloatFieldUpdateOperationsInput | number | null
+    tradeArea?: NullableStringFieldUpdateOperationsInput | string | null
+    registeredOwner?: NullableStringFieldUpdateOperationsInput | string | null
+    headOwner?: NullableStringFieldUpdateOperationsInput | string | null
+    charterer?: NullableStringFieldUpdateOperationsInput | string | null
+    yearWithSwan?: NullableIntFieldUpdateOperationsInput | number | null
+    lastDryDock?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dryDockPlace?: NullableStringFieldUpdateOperationsInput | string | null
+    nextDryDockDue?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    portOfRegistry?: NullableStringFieldUpdateOperationsInput | string | null
+    lbp?: NullableFloatFieldUpdateOperationsInput | number | null
+    draft?: NullableFloatFieldUpdateOperationsInput | number | null
+    mainEngine?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceSpeed?: NullableFloatFieldUpdateOperationsInput | number | null
+    navigationArea?: NullableStringFieldUpdateOperationsInput | string | null
+    classNotation?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    builder?: NullableStringFieldUpdateOperationsInput | string | null
+    keelLaidDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    launchingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    totalComplement?: NullableIntFieldUpdateOperationsInput | number | null
+    satPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    vesselEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    company?: CompanyUpdateOneRequiredWithoutVesselsNestedInput
+    smsDocuments?: SmsDocumentUpdateManyWithoutVesselNestedInput
+    incidents?: IncidentUpdateManyWithoutVesselNestedInput
+    nearMisses?: NearMissUpdateManyWithoutVesselNestedInput
+    nonConformities?: NonConformityUpdateManyWithoutVesselNestedInput
+    sireInspections?: SireInspectionUpdateManyWithoutVesselNestedInput
+    pscInspections?: PscInspectionUpdateManyWithoutVesselNestedInput
+    cdiInspections?: CdiInspectionUpdateManyWithoutVesselNestedInput
+    internalAudits?: InternalAuditUpdateManyWithoutVesselNestedInput
+    externalAudits?: ExternalAuditUpdateManyWithoutVesselNestedInput
+    committeeMeetings?: CommitteeMeetingUpdateManyWithoutVesselNestedInput
+    emergencyDrills?: EmergencyDrillUpdateManyWithoutVesselNestedInput
+    scheduleApplicability?: ScheduleApplicabilityUpdateManyWithoutVesselNestedInput
+    controlledDocuments?: ControlledDocumentUpdateManyWithoutVesselNestedInput
+    circulars?: CircularUpdateManyWithoutVesselNestedInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUpdateManyWithoutVesselNestedInput
+    riskAssessmentExecutions?: RiskAssessmentExecutionUpdateManyWithoutVesselNestedInput
+    riskAssessmentRevisionRequests?: RiskAssessmentRevisionRequestUpdateManyWithoutVesselNestedInput
+    defects?: DefectUpdateManyWithoutVesselNestedInput
+    users?: UserUpdateManyWithoutVesselNestedInput
+  }
+
+  export type VesselUncheckedUpdateWithoutFamiliarizationRecordsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: NullableStringFieldUpdateOperationsInput | string | null
+    imo?: NullableStringFieldUpdateOperationsInput | string | null
+    officialNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    callSign?: NullableStringFieldUpdateOperationsInput | string | null
+    mmsi?: NullableStringFieldUpdateOperationsInput | string | null
+    flag?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: StringFieldUpdateOperationsInput | string
+    classificationSociety?: NullableStringFieldUpdateOperationsInput | string | null
+    yearBuilt?: NullableIntFieldUpdateOperationsInput | number | null
+    grossTonnage?: NullableFloatFieldUpdateOperationsInput | number | null
+    loa?: NullableFloatFieldUpdateOperationsInput | number | null
+    breadth?: NullableFloatFieldUpdateOperationsInput | number | null
+    depth?: NullableFloatFieldUpdateOperationsInput | number | null
+    status?: EnumVesselStatusFieldUpdateOperationsInput | $Enums.VesselStatus
+    capacityCbm?: NullableFloatFieldUpdateOperationsInput | number | null
+    netTonnage?: NullableFloatFieldUpdateOperationsInput | number | null
+    deadweight?: NullableFloatFieldUpdateOperationsInput | number | null
+    tradeArea?: NullableStringFieldUpdateOperationsInput | string | null
+    registeredOwner?: NullableStringFieldUpdateOperationsInput | string | null
+    headOwner?: NullableStringFieldUpdateOperationsInput | string | null
+    charterer?: NullableStringFieldUpdateOperationsInput | string | null
+    yearWithSwan?: NullableIntFieldUpdateOperationsInput | number | null
+    lastDryDock?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dryDockPlace?: NullableStringFieldUpdateOperationsInput | string | null
+    nextDryDockDue?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    portOfRegistry?: NullableStringFieldUpdateOperationsInput | string | null
+    lbp?: NullableFloatFieldUpdateOperationsInput | number | null
+    draft?: NullableFloatFieldUpdateOperationsInput | number | null
+    mainEngine?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceSpeed?: NullableFloatFieldUpdateOperationsInput | number | null
+    navigationArea?: NullableStringFieldUpdateOperationsInput | string | null
+    classNotation?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    builder?: NullableStringFieldUpdateOperationsInput | string | null
+    keelLaidDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    launchingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    totalComplement?: NullableIntFieldUpdateOperationsInput | number | null
+    satPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    vesselEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    smsDocuments?: SmsDocumentUncheckedUpdateManyWithoutVesselNestedInput
+    incidents?: IncidentUncheckedUpdateManyWithoutVesselNestedInput
+    nearMisses?: NearMissUncheckedUpdateManyWithoutVesselNestedInput
+    nonConformities?: NonConformityUncheckedUpdateManyWithoutVesselNestedInput
+    sireInspections?: SireInspectionUncheckedUpdateManyWithoutVesselNestedInput
+    pscInspections?: PscInspectionUncheckedUpdateManyWithoutVesselNestedInput
+    cdiInspections?: CdiInspectionUncheckedUpdateManyWithoutVesselNestedInput
+    internalAudits?: InternalAuditUncheckedUpdateManyWithoutVesselNestedInput
+    externalAudits?: ExternalAuditUncheckedUpdateManyWithoutVesselNestedInput
+    committeeMeetings?: CommitteeMeetingUncheckedUpdateManyWithoutVesselNestedInput
+    emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutVesselNestedInput
+    scheduleApplicability?: ScheduleApplicabilityUncheckedUpdateManyWithoutVesselNestedInput
+    controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutVesselNestedInput
+    circulars?: CircularUncheckedUpdateManyWithoutVesselNestedInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedUpdateManyWithoutVesselNestedInput
+    riskAssessmentExecutions?: RiskAssessmentExecutionUncheckedUpdateManyWithoutVesselNestedInput
+    riskAssessmentRevisionRequests?: RiskAssessmentRevisionRequestUncheckedUpdateManyWithoutVesselNestedInput
+    defects?: DefectUncheckedUpdateManyWithoutVesselNestedInput
+    users?: UserUncheckedUpdateManyWithoutVesselNestedInput
+  }
+
+  export type ScheduleItemUpsertWithoutFamiliarizationsInput = {
+    update: XOR<ScheduleItemUpdateWithoutFamiliarizationsInput, ScheduleItemUncheckedUpdateWithoutFamiliarizationsInput>
+    create: XOR<ScheduleItemCreateWithoutFamiliarizationsInput, ScheduleItemUncheckedCreateWithoutFamiliarizationsInput>
+    where?: ScheduleItemWhereInput
+  }
+
+  export type ScheduleItemUpdateToOneWithWhereWithoutFamiliarizationsInput = {
+    where?: ScheduleItemWhereInput
+    data: XOR<ScheduleItemUpdateWithoutFamiliarizationsInput, ScheduleItemUncheckedUpdateWithoutFamiliarizationsInput>
+  }
+
+  export type ScheduleItemUpdateWithoutFamiliarizationsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    kind?: EnumScheduleItemKindFieldUpdateOperationsInput | $Enums.ScheduleItemKind
+    category?: NullableStringFieldUpdateOperationsInput | string | null
+    itemNo?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    smsReference?: NullableStringFieldUpdateOperationsInput | string | null
+    frequencyLabel?: NullableStringFieldUpdateOperationsInput | string | null
+    frequencyDays?: NullableIntFieldUpdateOperationsInput | number | null
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    active?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    company?: CompanyUpdateOneRequiredWithoutScheduleItemsNestedInput
+    drills?: EmergencyDrillUpdateManyWithoutScheduleItemNestedInput
+    exceptions?: ScheduleApplicabilityUpdateManyWithoutScheduleItemNestedInput
+  }
+
+  export type ScheduleItemUncheckedUpdateWithoutFamiliarizationsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    kind?: EnumScheduleItemKindFieldUpdateOperationsInput | $Enums.ScheduleItemKind
+    category?: NullableStringFieldUpdateOperationsInput | string | null
+    itemNo?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    smsReference?: NullableStringFieldUpdateOperationsInput | string | null
+    frequencyLabel?: NullableStringFieldUpdateOperationsInput | string | null
+    frequencyDays?: NullableIntFieldUpdateOperationsInput | number | null
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    active?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    drills?: EmergencyDrillUncheckedUpdateManyWithoutScheduleItemNestedInput
+    exceptions?: ScheduleApplicabilityUncheckedUpdateManyWithoutScheduleItemNestedInput
   }
 
   export type CompanyCreateWithoutControlledDocumentsInput = {
@@ -98052,7 +107045,10 @@ export namespace Prisma {
     internalAudits?: InternalAuditCreateNestedManyWithoutCompanyInput
     externalAudits?: ExternalAuditCreateNestedManyWithoutCompanyInput
     committeeMeetings?: CommitteeMeetingCreateNestedManyWithoutCompanyInput
+    scheduleItems?: ScheduleItemCreateNestedManyWithoutCompanyInput
     emergencyDrills?: EmergencyDrillCreateNestedManyWithoutCompanyInput
+    familiarizationRecords?: FamiliarizationRecordCreateNestedManyWithoutCompanyInput
+    scheduleApplicability?: ScheduleApplicabilityCreateNestedManyWithoutCompanyInput
     circulars?: CircularCreateNestedManyWithoutCompanyInput
     riskAssessmentDocuments?: RiskAssessmentDocumentCreateNestedManyWithoutCompanyInput
     defects?: DefectCreateNestedManyWithoutCompanyInput
@@ -98078,7 +107074,10 @@ export namespace Prisma {
     internalAudits?: InternalAuditUncheckedCreateNestedManyWithoutCompanyInput
     externalAudits?: ExternalAuditUncheckedCreateNestedManyWithoutCompanyInput
     committeeMeetings?: CommitteeMeetingUncheckedCreateNestedManyWithoutCompanyInput
+    scheduleItems?: ScheduleItemUncheckedCreateNestedManyWithoutCompanyInput
     emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutCompanyInput
+    familiarizationRecords?: FamiliarizationRecordUncheckedCreateNestedManyWithoutCompanyInput
+    scheduleApplicability?: ScheduleApplicabilityUncheckedCreateNestedManyWithoutCompanyInput
     circulars?: CircularUncheckedCreateNestedManyWithoutCompanyInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedCreateNestedManyWithoutCompanyInput
     defects?: DefectUncheckedCreateNestedManyWithoutCompanyInput
@@ -98117,6 +107116,21 @@ export namespace Prisma {
     lastDryDock?: Date | string | null
     dryDockPlace?: string | null
     nextDryDockDue?: Date | string | null
+    portOfRegistry?: string | null
+    lbp?: number | null
+    draft?: number | null
+    mainEngine?: string | null
+    serviceSpeed?: number | null
+    navigationArea?: string | null
+    classNotation?: string | null
+    ownerAddress?: string | null
+    builder?: string | null
+    keelLaidDate?: Date | string | null
+    launchingDate?: Date | string | null
+    deliveryDate?: Date | string | null
+    totalComplement?: number | null
+    satPhone?: string | null
+    vesselEmail?: string | null
     archivedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -98136,6 +107150,8 @@ export namespace Prisma {
     externalAudits?: ExternalAuditCreateNestedManyWithoutVesselInput
     committeeMeetings?: CommitteeMeetingCreateNestedManyWithoutVesselInput
     emergencyDrills?: EmergencyDrillCreateNestedManyWithoutVesselInput
+    familiarizationRecords?: FamiliarizationRecordCreateNestedManyWithoutVesselInput
+    scheduleApplicability?: ScheduleApplicabilityCreateNestedManyWithoutVesselInput
     circulars?: CircularCreateNestedManyWithoutVesselInput
     riskAssessmentDocuments?: RiskAssessmentDocumentCreateNestedManyWithoutVesselInput
     riskAssessmentExecutions?: RiskAssessmentExecutionCreateNestedManyWithoutVesselInput
@@ -98173,6 +107189,21 @@ export namespace Prisma {
     lastDryDock?: Date | string | null
     dryDockPlace?: string | null
     nextDryDockDue?: Date | string | null
+    portOfRegistry?: string | null
+    lbp?: number | null
+    draft?: number | null
+    mainEngine?: string | null
+    serviceSpeed?: number | null
+    navigationArea?: string | null
+    classNotation?: string | null
+    ownerAddress?: string | null
+    builder?: string | null
+    keelLaidDate?: Date | string | null
+    launchingDate?: Date | string | null
+    deliveryDate?: Date | string | null
+    totalComplement?: number | null
+    satPhone?: string | null
+    vesselEmail?: string | null
     archivedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -98191,6 +107222,8 @@ export namespace Prisma {
     externalAudits?: ExternalAuditUncheckedCreateNestedManyWithoutVesselInput
     committeeMeetings?: CommitteeMeetingUncheckedCreateNestedManyWithoutVesselInput
     emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutVesselInput
+    familiarizationRecords?: FamiliarizationRecordUncheckedCreateNestedManyWithoutVesselInput
+    scheduleApplicability?: ScheduleApplicabilityUncheckedCreateNestedManyWithoutVesselInput
     circulars?: CircularUncheckedCreateNestedManyWithoutVesselInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedCreateNestedManyWithoutVesselInput
     riskAssessmentExecutions?: RiskAssessmentExecutionUncheckedCreateNestedManyWithoutVesselInput
@@ -98235,7 +107268,10 @@ export namespace Prisma {
     internalAudits?: InternalAuditUpdateManyWithoutCompanyNestedInput
     externalAudits?: ExternalAuditUpdateManyWithoutCompanyNestedInput
     committeeMeetings?: CommitteeMeetingUpdateManyWithoutCompanyNestedInput
+    scheduleItems?: ScheduleItemUpdateManyWithoutCompanyNestedInput
     emergencyDrills?: EmergencyDrillUpdateManyWithoutCompanyNestedInput
+    familiarizationRecords?: FamiliarizationRecordUpdateManyWithoutCompanyNestedInput
+    scheduleApplicability?: ScheduleApplicabilityUpdateManyWithoutCompanyNestedInput
     circulars?: CircularUpdateManyWithoutCompanyNestedInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUpdateManyWithoutCompanyNestedInput
     defects?: DefectUpdateManyWithoutCompanyNestedInput
@@ -98261,7 +107297,10 @@ export namespace Prisma {
     internalAudits?: InternalAuditUncheckedUpdateManyWithoutCompanyNestedInput
     externalAudits?: ExternalAuditUncheckedUpdateManyWithoutCompanyNestedInput
     committeeMeetings?: CommitteeMeetingUncheckedUpdateManyWithoutCompanyNestedInput
+    scheduleItems?: ScheduleItemUncheckedUpdateManyWithoutCompanyNestedInput
     emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutCompanyNestedInput
+    familiarizationRecords?: FamiliarizationRecordUncheckedUpdateManyWithoutCompanyNestedInput
+    scheduleApplicability?: ScheduleApplicabilityUncheckedUpdateManyWithoutCompanyNestedInput
     circulars?: CircularUncheckedUpdateManyWithoutCompanyNestedInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedUpdateManyWithoutCompanyNestedInput
     defects?: DefectUncheckedUpdateManyWithoutCompanyNestedInput
@@ -98306,6 +107345,21 @@ export namespace Prisma {
     lastDryDock?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dryDockPlace?: NullableStringFieldUpdateOperationsInput | string | null
     nextDryDockDue?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    portOfRegistry?: NullableStringFieldUpdateOperationsInput | string | null
+    lbp?: NullableFloatFieldUpdateOperationsInput | number | null
+    draft?: NullableFloatFieldUpdateOperationsInput | number | null
+    mainEngine?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceSpeed?: NullableFloatFieldUpdateOperationsInput | number | null
+    navigationArea?: NullableStringFieldUpdateOperationsInput | string | null
+    classNotation?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    builder?: NullableStringFieldUpdateOperationsInput | string | null
+    keelLaidDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    launchingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    totalComplement?: NullableIntFieldUpdateOperationsInput | number | null
+    satPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    vesselEmail?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -98325,6 +107379,8 @@ export namespace Prisma {
     externalAudits?: ExternalAuditUpdateManyWithoutVesselNestedInput
     committeeMeetings?: CommitteeMeetingUpdateManyWithoutVesselNestedInput
     emergencyDrills?: EmergencyDrillUpdateManyWithoutVesselNestedInput
+    familiarizationRecords?: FamiliarizationRecordUpdateManyWithoutVesselNestedInput
+    scheduleApplicability?: ScheduleApplicabilityUpdateManyWithoutVesselNestedInput
     circulars?: CircularUpdateManyWithoutVesselNestedInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUpdateManyWithoutVesselNestedInput
     riskAssessmentExecutions?: RiskAssessmentExecutionUpdateManyWithoutVesselNestedInput
@@ -98362,6 +107418,21 @@ export namespace Prisma {
     lastDryDock?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dryDockPlace?: NullableStringFieldUpdateOperationsInput | string | null
     nextDryDockDue?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    portOfRegistry?: NullableStringFieldUpdateOperationsInput | string | null
+    lbp?: NullableFloatFieldUpdateOperationsInput | number | null
+    draft?: NullableFloatFieldUpdateOperationsInput | number | null
+    mainEngine?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceSpeed?: NullableFloatFieldUpdateOperationsInput | number | null
+    navigationArea?: NullableStringFieldUpdateOperationsInput | string | null
+    classNotation?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    builder?: NullableStringFieldUpdateOperationsInput | string | null
+    keelLaidDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    launchingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    totalComplement?: NullableIntFieldUpdateOperationsInput | number | null
+    satPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    vesselEmail?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -98380,6 +107451,8 @@ export namespace Prisma {
     externalAudits?: ExternalAuditUncheckedUpdateManyWithoutVesselNestedInput
     committeeMeetings?: CommitteeMeetingUncheckedUpdateManyWithoutVesselNestedInput
     emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutVesselNestedInput
+    familiarizationRecords?: FamiliarizationRecordUncheckedUpdateManyWithoutVesselNestedInput
+    scheduleApplicability?: ScheduleApplicabilityUncheckedUpdateManyWithoutVesselNestedInput
     circulars?: CircularUncheckedUpdateManyWithoutVesselNestedInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedUpdateManyWithoutVesselNestedInput
     riskAssessmentExecutions?: RiskAssessmentExecutionUncheckedUpdateManyWithoutVesselNestedInput
@@ -98408,7 +107481,10 @@ export namespace Prisma {
     internalAudits?: InternalAuditCreateNestedManyWithoutCompanyInput
     externalAudits?: ExternalAuditCreateNestedManyWithoutCompanyInput
     committeeMeetings?: CommitteeMeetingCreateNestedManyWithoutCompanyInput
+    scheduleItems?: ScheduleItemCreateNestedManyWithoutCompanyInput
     emergencyDrills?: EmergencyDrillCreateNestedManyWithoutCompanyInput
+    familiarizationRecords?: FamiliarizationRecordCreateNestedManyWithoutCompanyInput
+    scheduleApplicability?: ScheduleApplicabilityCreateNestedManyWithoutCompanyInput
     controlledDocuments?: ControlledDocumentCreateNestedManyWithoutCompanyInput
     riskAssessmentDocuments?: RiskAssessmentDocumentCreateNestedManyWithoutCompanyInput
     defects?: DefectCreateNestedManyWithoutCompanyInput
@@ -98434,7 +107510,10 @@ export namespace Prisma {
     internalAudits?: InternalAuditUncheckedCreateNestedManyWithoutCompanyInput
     externalAudits?: ExternalAuditUncheckedCreateNestedManyWithoutCompanyInput
     committeeMeetings?: CommitteeMeetingUncheckedCreateNestedManyWithoutCompanyInput
+    scheduleItems?: ScheduleItemUncheckedCreateNestedManyWithoutCompanyInput
     emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutCompanyInput
+    familiarizationRecords?: FamiliarizationRecordUncheckedCreateNestedManyWithoutCompanyInput
+    scheduleApplicability?: ScheduleApplicabilityUncheckedCreateNestedManyWithoutCompanyInput
     controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutCompanyInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedCreateNestedManyWithoutCompanyInput
     defects?: DefectUncheckedCreateNestedManyWithoutCompanyInput
@@ -98473,6 +107552,21 @@ export namespace Prisma {
     lastDryDock?: Date | string | null
     dryDockPlace?: string | null
     nextDryDockDue?: Date | string | null
+    portOfRegistry?: string | null
+    lbp?: number | null
+    draft?: number | null
+    mainEngine?: string | null
+    serviceSpeed?: number | null
+    navigationArea?: string | null
+    classNotation?: string | null
+    ownerAddress?: string | null
+    builder?: string | null
+    keelLaidDate?: Date | string | null
+    launchingDate?: Date | string | null
+    deliveryDate?: Date | string | null
+    totalComplement?: number | null
+    satPhone?: string | null
+    vesselEmail?: string | null
     archivedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -98492,6 +107586,8 @@ export namespace Prisma {
     externalAudits?: ExternalAuditCreateNestedManyWithoutVesselInput
     committeeMeetings?: CommitteeMeetingCreateNestedManyWithoutVesselInput
     emergencyDrills?: EmergencyDrillCreateNestedManyWithoutVesselInput
+    familiarizationRecords?: FamiliarizationRecordCreateNestedManyWithoutVesselInput
+    scheduleApplicability?: ScheduleApplicabilityCreateNestedManyWithoutVesselInput
     controlledDocuments?: ControlledDocumentCreateNestedManyWithoutVesselInput
     riskAssessmentDocuments?: RiskAssessmentDocumentCreateNestedManyWithoutVesselInput
     riskAssessmentExecutions?: RiskAssessmentExecutionCreateNestedManyWithoutVesselInput
@@ -98529,6 +107625,21 @@ export namespace Prisma {
     lastDryDock?: Date | string | null
     dryDockPlace?: string | null
     nextDryDockDue?: Date | string | null
+    portOfRegistry?: string | null
+    lbp?: number | null
+    draft?: number | null
+    mainEngine?: string | null
+    serviceSpeed?: number | null
+    navigationArea?: string | null
+    classNotation?: string | null
+    ownerAddress?: string | null
+    builder?: string | null
+    keelLaidDate?: Date | string | null
+    launchingDate?: Date | string | null
+    deliveryDate?: Date | string | null
+    totalComplement?: number | null
+    satPhone?: string | null
+    vesselEmail?: string | null
     archivedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -98547,6 +107658,8 @@ export namespace Prisma {
     externalAudits?: ExternalAuditUncheckedCreateNestedManyWithoutVesselInput
     committeeMeetings?: CommitteeMeetingUncheckedCreateNestedManyWithoutVesselInput
     emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutVesselInput
+    familiarizationRecords?: FamiliarizationRecordUncheckedCreateNestedManyWithoutVesselInput
+    scheduleApplicability?: ScheduleApplicabilityUncheckedCreateNestedManyWithoutVesselInput
     controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutVesselInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedCreateNestedManyWithoutVesselInput
     riskAssessmentExecutions?: RiskAssessmentExecutionUncheckedCreateNestedManyWithoutVesselInput
@@ -98625,7 +107738,10 @@ export namespace Prisma {
     internalAudits?: InternalAuditUpdateManyWithoutCompanyNestedInput
     externalAudits?: ExternalAuditUpdateManyWithoutCompanyNestedInput
     committeeMeetings?: CommitteeMeetingUpdateManyWithoutCompanyNestedInput
+    scheduleItems?: ScheduleItemUpdateManyWithoutCompanyNestedInput
     emergencyDrills?: EmergencyDrillUpdateManyWithoutCompanyNestedInput
+    familiarizationRecords?: FamiliarizationRecordUpdateManyWithoutCompanyNestedInput
+    scheduleApplicability?: ScheduleApplicabilityUpdateManyWithoutCompanyNestedInput
     controlledDocuments?: ControlledDocumentUpdateManyWithoutCompanyNestedInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUpdateManyWithoutCompanyNestedInput
     defects?: DefectUpdateManyWithoutCompanyNestedInput
@@ -98651,7 +107767,10 @@ export namespace Prisma {
     internalAudits?: InternalAuditUncheckedUpdateManyWithoutCompanyNestedInput
     externalAudits?: ExternalAuditUncheckedUpdateManyWithoutCompanyNestedInput
     committeeMeetings?: CommitteeMeetingUncheckedUpdateManyWithoutCompanyNestedInput
+    scheduleItems?: ScheduleItemUncheckedUpdateManyWithoutCompanyNestedInput
     emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutCompanyNestedInput
+    familiarizationRecords?: FamiliarizationRecordUncheckedUpdateManyWithoutCompanyNestedInput
+    scheduleApplicability?: ScheduleApplicabilityUncheckedUpdateManyWithoutCompanyNestedInput
     controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutCompanyNestedInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedUpdateManyWithoutCompanyNestedInput
     defects?: DefectUncheckedUpdateManyWithoutCompanyNestedInput
@@ -98696,6 +107815,21 @@ export namespace Prisma {
     lastDryDock?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dryDockPlace?: NullableStringFieldUpdateOperationsInput | string | null
     nextDryDockDue?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    portOfRegistry?: NullableStringFieldUpdateOperationsInput | string | null
+    lbp?: NullableFloatFieldUpdateOperationsInput | number | null
+    draft?: NullableFloatFieldUpdateOperationsInput | number | null
+    mainEngine?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceSpeed?: NullableFloatFieldUpdateOperationsInput | number | null
+    navigationArea?: NullableStringFieldUpdateOperationsInput | string | null
+    classNotation?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    builder?: NullableStringFieldUpdateOperationsInput | string | null
+    keelLaidDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    launchingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    totalComplement?: NullableIntFieldUpdateOperationsInput | number | null
+    satPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    vesselEmail?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -98715,6 +107849,8 @@ export namespace Prisma {
     externalAudits?: ExternalAuditUpdateManyWithoutVesselNestedInput
     committeeMeetings?: CommitteeMeetingUpdateManyWithoutVesselNestedInput
     emergencyDrills?: EmergencyDrillUpdateManyWithoutVesselNestedInput
+    familiarizationRecords?: FamiliarizationRecordUpdateManyWithoutVesselNestedInput
+    scheduleApplicability?: ScheduleApplicabilityUpdateManyWithoutVesselNestedInput
     controlledDocuments?: ControlledDocumentUpdateManyWithoutVesselNestedInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUpdateManyWithoutVesselNestedInput
     riskAssessmentExecutions?: RiskAssessmentExecutionUpdateManyWithoutVesselNestedInput
@@ -98752,6 +107888,21 @@ export namespace Prisma {
     lastDryDock?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dryDockPlace?: NullableStringFieldUpdateOperationsInput | string | null
     nextDryDockDue?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    portOfRegistry?: NullableStringFieldUpdateOperationsInput | string | null
+    lbp?: NullableFloatFieldUpdateOperationsInput | number | null
+    draft?: NullableFloatFieldUpdateOperationsInput | number | null
+    mainEngine?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceSpeed?: NullableFloatFieldUpdateOperationsInput | number | null
+    navigationArea?: NullableStringFieldUpdateOperationsInput | string | null
+    classNotation?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    builder?: NullableStringFieldUpdateOperationsInput | string | null
+    keelLaidDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    launchingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    totalComplement?: NullableIntFieldUpdateOperationsInput | number | null
+    satPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    vesselEmail?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -98770,6 +107921,8 @@ export namespace Prisma {
     externalAudits?: ExternalAuditUncheckedUpdateManyWithoutVesselNestedInput
     committeeMeetings?: CommitteeMeetingUncheckedUpdateManyWithoutVesselNestedInput
     emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutVesselNestedInput
+    familiarizationRecords?: FamiliarizationRecordUncheckedUpdateManyWithoutVesselNestedInput
+    scheduleApplicability?: ScheduleApplicabilityUncheckedUpdateManyWithoutVesselNestedInput
     controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutVesselNestedInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedUpdateManyWithoutVesselNestedInput
     riskAssessmentExecutions?: RiskAssessmentExecutionUncheckedUpdateManyWithoutVesselNestedInput
@@ -98926,7 +108079,10 @@ export namespace Prisma {
     internalAudits?: InternalAuditCreateNestedManyWithoutCompanyInput
     externalAudits?: ExternalAuditCreateNestedManyWithoutCompanyInput
     committeeMeetings?: CommitteeMeetingCreateNestedManyWithoutCompanyInput
+    scheduleItems?: ScheduleItemCreateNestedManyWithoutCompanyInput
     emergencyDrills?: EmergencyDrillCreateNestedManyWithoutCompanyInput
+    familiarizationRecords?: FamiliarizationRecordCreateNestedManyWithoutCompanyInput
+    scheduleApplicability?: ScheduleApplicabilityCreateNestedManyWithoutCompanyInput
     controlledDocuments?: ControlledDocumentCreateNestedManyWithoutCompanyInput
     circulars?: CircularCreateNestedManyWithoutCompanyInput
     defects?: DefectCreateNestedManyWithoutCompanyInput
@@ -98952,7 +108108,10 @@ export namespace Prisma {
     internalAudits?: InternalAuditUncheckedCreateNestedManyWithoutCompanyInput
     externalAudits?: ExternalAuditUncheckedCreateNestedManyWithoutCompanyInput
     committeeMeetings?: CommitteeMeetingUncheckedCreateNestedManyWithoutCompanyInput
+    scheduleItems?: ScheduleItemUncheckedCreateNestedManyWithoutCompanyInput
     emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutCompanyInput
+    familiarizationRecords?: FamiliarizationRecordUncheckedCreateNestedManyWithoutCompanyInput
+    scheduleApplicability?: ScheduleApplicabilityUncheckedCreateNestedManyWithoutCompanyInput
     controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutCompanyInput
     circulars?: CircularUncheckedCreateNestedManyWithoutCompanyInput
     defects?: DefectUncheckedCreateNestedManyWithoutCompanyInput
@@ -98991,6 +108150,21 @@ export namespace Prisma {
     lastDryDock?: Date | string | null
     dryDockPlace?: string | null
     nextDryDockDue?: Date | string | null
+    portOfRegistry?: string | null
+    lbp?: number | null
+    draft?: number | null
+    mainEngine?: string | null
+    serviceSpeed?: number | null
+    navigationArea?: string | null
+    classNotation?: string | null
+    ownerAddress?: string | null
+    builder?: string | null
+    keelLaidDate?: Date | string | null
+    launchingDate?: Date | string | null
+    deliveryDate?: Date | string | null
+    totalComplement?: number | null
+    satPhone?: string | null
+    vesselEmail?: string | null
     archivedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -99010,6 +108184,8 @@ export namespace Prisma {
     externalAudits?: ExternalAuditCreateNestedManyWithoutVesselInput
     committeeMeetings?: CommitteeMeetingCreateNestedManyWithoutVesselInput
     emergencyDrills?: EmergencyDrillCreateNestedManyWithoutVesselInput
+    familiarizationRecords?: FamiliarizationRecordCreateNestedManyWithoutVesselInput
+    scheduleApplicability?: ScheduleApplicabilityCreateNestedManyWithoutVesselInput
     controlledDocuments?: ControlledDocumentCreateNestedManyWithoutVesselInput
     circulars?: CircularCreateNestedManyWithoutVesselInput
     riskAssessmentExecutions?: RiskAssessmentExecutionCreateNestedManyWithoutVesselInput
@@ -99047,6 +108223,21 @@ export namespace Prisma {
     lastDryDock?: Date | string | null
     dryDockPlace?: string | null
     nextDryDockDue?: Date | string | null
+    portOfRegistry?: string | null
+    lbp?: number | null
+    draft?: number | null
+    mainEngine?: string | null
+    serviceSpeed?: number | null
+    navigationArea?: string | null
+    classNotation?: string | null
+    ownerAddress?: string | null
+    builder?: string | null
+    keelLaidDate?: Date | string | null
+    launchingDate?: Date | string | null
+    deliveryDate?: Date | string | null
+    totalComplement?: number | null
+    satPhone?: string | null
+    vesselEmail?: string | null
     archivedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -99065,6 +108256,8 @@ export namespace Prisma {
     externalAudits?: ExternalAuditUncheckedCreateNestedManyWithoutVesselInput
     committeeMeetings?: CommitteeMeetingUncheckedCreateNestedManyWithoutVesselInput
     emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutVesselInput
+    familiarizationRecords?: FamiliarizationRecordUncheckedCreateNestedManyWithoutVesselInput
+    scheduleApplicability?: ScheduleApplicabilityUncheckedCreateNestedManyWithoutVesselInput
     controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutVesselInput
     circulars?: CircularUncheckedCreateNestedManyWithoutVesselInput
     riskAssessmentExecutions?: RiskAssessmentExecutionUncheckedCreateNestedManyWithoutVesselInput
@@ -99292,7 +108485,10 @@ export namespace Prisma {
     internalAudits?: InternalAuditUpdateManyWithoutCompanyNestedInput
     externalAudits?: ExternalAuditUpdateManyWithoutCompanyNestedInput
     committeeMeetings?: CommitteeMeetingUpdateManyWithoutCompanyNestedInput
+    scheduleItems?: ScheduleItemUpdateManyWithoutCompanyNestedInput
     emergencyDrills?: EmergencyDrillUpdateManyWithoutCompanyNestedInput
+    familiarizationRecords?: FamiliarizationRecordUpdateManyWithoutCompanyNestedInput
+    scheduleApplicability?: ScheduleApplicabilityUpdateManyWithoutCompanyNestedInput
     controlledDocuments?: ControlledDocumentUpdateManyWithoutCompanyNestedInput
     circulars?: CircularUpdateManyWithoutCompanyNestedInput
     defects?: DefectUpdateManyWithoutCompanyNestedInput
@@ -99318,7 +108514,10 @@ export namespace Prisma {
     internalAudits?: InternalAuditUncheckedUpdateManyWithoutCompanyNestedInput
     externalAudits?: ExternalAuditUncheckedUpdateManyWithoutCompanyNestedInput
     committeeMeetings?: CommitteeMeetingUncheckedUpdateManyWithoutCompanyNestedInput
+    scheduleItems?: ScheduleItemUncheckedUpdateManyWithoutCompanyNestedInput
     emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutCompanyNestedInput
+    familiarizationRecords?: FamiliarizationRecordUncheckedUpdateManyWithoutCompanyNestedInput
+    scheduleApplicability?: ScheduleApplicabilityUncheckedUpdateManyWithoutCompanyNestedInput
     controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutCompanyNestedInput
     circulars?: CircularUncheckedUpdateManyWithoutCompanyNestedInput
     defects?: DefectUncheckedUpdateManyWithoutCompanyNestedInput
@@ -99363,6 +108562,21 @@ export namespace Prisma {
     lastDryDock?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dryDockPlace?: NullableStringFieldUpdateOperationsInput | string | null
     nextDryDockDue?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    portOfRegistry?: NullableStringFieldUpdateOperationsInput | string | null
+    lbp?: NullableFloatFieldUpdateOperationsInput | number | null
+    draft?: NullableFloatFieldUpdateOperationsInput | number | null
+    mainEngine?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceSpeed?: NullableFloatFieldUpdateOperationsInput | number | null
+    navigationArea?: NullableStringFieldUpdateOperationsInput | string | null
+    classNotation?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    builder?: NullableStringFieldUpdateOperationsInput | string | null
+    keelLaidDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    launchingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    totalComplement?: NullableIntFieldUpdateOperationsInput | number | null
+    satPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    vesselEmail?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -99382,6 +108596,8 @@ export namespace Prisma {
     externalAudits?: ExternalAuditUpdateManyWithoutVesselNestedInput
     committeeMeetings?: CommitteeMeetingUpdateManyWithoutVesselNestedInput
     emergencyDrills?: EmergencyDrillUpdateManyWithoutVesselNestedInput
+    familiarizationRecords?: FamiliarizationRecordUpdateManyWithoutVesselNestedInput
+    scheduleApplicability?: ScheduleApplicabilityUpdateManyWithoutVesselNestedInput
     controlledDocuments?: ControlledDocumentUpdateManyWithoutVesselNestedInput
     circulars?: CircularUpdateManyWithoutVesselNestedInput
     riskAssessmentExecutions?: RiskAssessmentExecutionUpdateManyWithoutVesselNestedInput
@@ -99419,6 +108635,21 @@ export namespace Prisma {
     lastDryDock?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dryDockPlace?: NullableStringFieldUpdateOperationsInput | string | null
     nextDryDockDue?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    portOfRegistry?: NullableStringFieldUpdateOperationsInput | string | null
+    lbp?: NullableFloatFieldUpdateOperationsInput | number | null
+    draft?: NullableFloatFieldUpdateOperationsInput | number | null
+    mainEngine?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceSpeed?: NullableFloatFieldUpdateOperationsInput | number | null
+    navigationArea?: NullableStringFieldUpdateOperationsInput | string | null
+    classNotation?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    builder?: NullableStringFieldUpdateOperationsInput | string | null
+    keelLaidDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    launchingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    totalComplement?: NullableIntFieldUpdateOperationsInput | number | null
+    satPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    vesselEmail?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -99437,6 +108668,8 @@ export namespace Prisma {
     externalAudits?: ExternalAuditUncheckedUpdateManyWithoutVesselNestedInput
     committeeMeetings?: CommitteeMeetingUncheckedUpdateManyWithoutVesselNestedInput
     emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutVesselNestedInput
+    familiarizationRecords?: FamiliarizationRecordUncheckedUpdateManyWithoutVesselNestedInput
+    scheduleApplicability?: ScheduleApplicabilityUncheckedUpdateManyWithoutVesselNestedInput
     controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutVesselNestedInput
     circulars?: CircularUncheckedUpdateManyWithoutVesselNestedInput
     riskAssessmentExecutions?: RiskAssessmentExecutionUncheckedUpdateManyWithoutVesselNestedInput
@@ -100189,6 +109422,21 @@ export namespace Prisma {
     lastDryDock?: Date | string | null
     dryDockPlace?: string | null
     nextDryDockDue?: Date | string | null
+    portOfRegistry?: string | null
+    lbp?: number | null
+    draft?: number | null
+    mainEngine?: string | null
+    serviceSpeed?: number | null
+    navigationArea?: string | null
+    classNotation?: string | null
+    ownerAddress?: string | null
+    builder?: string | null
+    keelLaidDate?: Date | string | null
+    launchingDate?: Date | string | null
+    deliveryDate?: Date | string | null
+    totalComplement?: number | null
+    satPhone?: string | null
+    vesselEmail?: string | null
     archivedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -100208,6 +109456,8 @@ export namespace Prisma {
     externalAudits?: ExternalAuditCreateNestedManyWithoutVesselInput
     committeeMeetings?: CommitteeMeetingCreateNestedManyWithoutVesselInput
     emergencyDrills?: EmergencyDrillCreateNestedManyWithoutVesselInput
+    familiarizationRecords?: FamiliarizationRecordCreateNestedManyWithoutVesselInput
+    scheduleApplicability?: ScheduleApplicabilityCreateNestedManyWithoutVesselInput
     controlledDocuments?: ControlledDocumentCreateNestedManyWithoutVesselInput
     circulars?: CircularCreateNestedManyWithoutVesselInput
     riskAssessmentDocuments?: RiskAssessmentDocumentCreateNestedManyWithoutVesselInput
@@ -100245,6 +109495,21 @@ export namespace Prisma {
     lastDryDock?: Date | string | null
     dryDockPlace?: string | null
     nextDryDockDue?: Date | string | null
+    portOfRegistry?: string | null
+    lbp?: number | null
+    draft?: number | null
+    mainEngine?: string | null
+    serviceSpeed?: number | null
+    navigationArea?: string | null
+    classNotation?: string | null
+    ownerAddress?: string | null
+    builder?: string | null
+    keelLaidDate?: Date | string | null
+    launchingDate?: Date | string | null
+    deliveryDate?: Date | string | null
+    totalComplement?: number | null
+    satPhone?: string | null
+    vesselEmail?: string | null
     archivedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -100263,6 +109528,8 @@ export namespace Prisma {
     externalAudits?: ExternalAuditUncheckedCreateNestedManyWithoutVesselInput
     committeeMeetings?: CommitteeMeetingUncheckedCreateNestedManyWithoutVesselInput
     emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutVesselInput
+    familiarizationRecords?: FamiliarizationRecordUncheckedCreateNestedManyWithoutVesselInput
+    scheduleApplicability?: ScheduleApplicabilityUncheckedCreateNestedManyWithoutVesselInput
     controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutVesselInput
     circulars?: CircularUncheckedCreateNestedManyWithoutVesselInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedCreateNestedManyWithoutVesselInput
@@ -100431,6 +109698,21 @@ export namespace Prisma {
     lastDryDock?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dryDockPlace?: NullableStringFieldUpdateOperationsInput | string | null
     nextDryDockDue?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    portOfRegistry?: NullableStringFieldUpdateOperationsInput | string | null
+    lbp?: NullableFloatFieldUpdateOperationsInput | number | null
+    draft?: NullableFloatFieldUpdateOperationsInput | number | null
+    mainEngine?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceSpeed?: NullableFloatFieldUpdateOperationsInput | number | null
+    navigationArea?: NullableStringFieldUpdateOperationsInput | string | null
+    classNotation?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    builder?: NullableStringFieldUpdateOperationsInput | string | null
+    keelLaidDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    launchingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    totalComplement?: NullableIntFieldUpdateOperationsInput | number | null
+    satPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    vesselEmail?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -100450,6 +109732,8 @@ export namespace Prisma {
     externalAudits?: ExternalAuditUpdateManyWithoutVesselNestedInput
     committeeMeetings?: CommitteeMeetingUpdateManyWithoutVesselNestedInput
     emergencyDrills?: EmergencyDrillUpdateManyWithoutVesselNestedInput
+    familiarizationRecords?: FamiliarizationRecordUpdateManyWithoutVesselNestedInput
+    scheduleApplicability?: ScheduleApplicabilityUpdateManyWithoutVesselNestedInput
     controlledDocuments?: ControlledDocumentUpdateManyWithoutVesselNestedInput
     circulars?: CircularUpdateManyWithoutVesselNestedInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUpdateManyWithoutVesselNestedInput
@@ -100487,6 +109771,21 @@ export namespace Prisma {
     lastDryDock?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dryDockPlace?: NullableStringFieldUpdateOperationsInput | string | null
     nextDryDockDue?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    portOfRegistry?: NullableStringFieldUpdateOperationsInput | string | null
+    lbp?: NullableFloatFieldUpdateOperationsInput | number | null
+    draft?: NullableFloatFieldUpdateOperationsInput | number | null
+    mainEngine?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceSpeed?: NullableFloatFieldUpdateOperationsInput | number | null
+    navigationArea?: NullableStringFieldUpdateOperationsInput | string | null
+    classNotation?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    builder?: NullableStringFieldUpdateOperationsInput | string | null
+    keelLaidDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    launchingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    totalComplement?: NullableIntFieldUpdateOperationsInput | number | null
+    satPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    vesselEmail?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -100505,6 +109804,8 @@ export namespace Prisma {
     externalAudits?: ExternalAuditUncheckedUpdateManyWithoutVesselNestedInput
     committeeMeetings?: CommitteeMeetingUncheckedUpdateManyWithoutVesselNestedInput
     emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutVesselNestedInput
+    familiarizationRecords?: FamiliarizationRecordUncheckedUpdateManyWithoutVesselNestedInput
+    scheduleApplicability?: ScheduleApplicabilityUncheckedUpdateManyWithoutVesselNestedInput
     controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutVesselNestedInput
     circulars?: CircularUncheckedUpdateManyWithoutVesselNestedInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedUpdateManyWithoutVesselNestedInput
@@ -100598,6 +109899,21 @@ export namespace Prisma {
     lastDryDock?: Date | string | null
     dryDockPlace?: string | null
     nextDryDockDue?: Date | string | null
+    portOfRegistry?: string | null
+    lbp?: number | null
+    draft?: number | null
+    mainEngine?: string | null
+    serviceSpeed?: number | null
+    navigationArea?: string | null
+    classNotation?: string | null
+    ownerAddress?: string | null
+    builder?: string | null
+    keelLaidDate?: Date | string | null
+    launchingDate?: Date | string | null
+    deliveryDate?: Date | string | null
+    totalComplement?: number | null
+    satPhone?: string | null
+    vesselEmail?: string | null
     archivedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -100617,6 +109933,8 @@ export namespace Prisma {
     externalAudits?: ExternalAuditCreateNestedManyWithoutVesselInput
     committeeMeetings?: CommitteeMeetingCreateNestedManyWithoutVesselInput
     emergencyDrills?: EmergencyDrillCreateNestedManyWithoutVesselInput
+    familiarizationRecords?: FamiliarizationRecordCreateNestedManyWithoutVesselInput
+    scheduleApplicability?: ScheduleApplicabilityCreateNestedManyWithoutVesselInput
     controlledDocuments?: ControlledDocumentCreateNestedManyWithoutVesselInput
     circulars?: CircularCreateNestedManyWithoutVesselInput
     riskAssessmentDocuments?: RiskAssessmentDocumentCreateNestedManyWithoutVesselInput
@@ -100654,6 +109972,21 @@ export namespace Prisma {
     lastDryDock?: Date | string | null
     dryDockPlace?: string | null
     nextDryDockDue?: Date | string | null
+    portOfRegistry?: string | null
+    lbp?: number | null
+    draft?: number | null
+    mainEngine?: string | null
+    serviceSpeed?: number | null
+    navigationArea?: string | null
+    classNotation?: string | null
+    ownerAddress?: string | null
+    builder?: string | null
+    keelLaidDate?: Date | string | null
+    launchingDate?: Date | string | null
+    deliveryDate?: Date | string | null
+    totalComplement?: number | null
+    satPhone?: string | null
+    vesselEmail?: string | null
     archivedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -100672,6 +110005,8 @@ export namespace Prisma {
     externalAudits?: ExternalAuditUncheckedCreateNestedManyWithoutVesselInput
     committeeMeetings?: CommitteeMeetingUncheckedCreateNestedManyWithoutVesselInput
     emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutVesselInput
+    familiarizationRecords?: FamiliarizationRecordUncheckedCreateNestedManyWithoutVesselInput
+    scheduleApplicability?: ScheduleApplicabilityUncheckedCreateNestedManyWithoutVesselInput
     controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutVesselInput
     circulars?: CircularUncheckedCreateNestedManyWithoutVesselInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedCreateNestedManyWithoutVesselInput
@@ -100787,6 +110122,21 @@ export namespace Prisma {
     lastDryDock?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dryDockPlace?: NullableStringFieldUpdateOperationsInput | string | null
     nextDryDockDue?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    portOfRegistry?: NullableStringFieldUpdateOperationsInput | string | null
+    lbp?: NullableFloatFieldUpdateOperationsInput | number | null
+    draft?: NullableFloatFieldUpdateOperationsInput | number | null
+    mainEngine?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceSpeed?: NullableFloatFieldUpdateOperationsInput | number | null
+    navigationArea?: NullableStringFieldUpdateOperationsInput | string | null
+    classNotation?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    builder?: NullableStringFieldUpdateOperationsInput | string | null
+    keelLaidDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    launchingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    totalComplement?: NullableIntFieldUpdateOperationsInput | number | null
+    satPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    vesselEmail?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -100806,6 +110156,8 @@ export namespace Prisma {
     externalAudits?: ExternalAuditUpdateManyWithoutVesselNestedInput
     committeeMeetings?: CommitteeMeetingUpdateManyWithoutVesselNestedInput
     emergencyDrills?: EmergencyDrillUpdateManyWithoutVesselNestedInput
+    familiarizationRecords?: FamiliarizationRecordUpdateManyWithoutVesselNestedInput
+    scheduleApplicability?: ScheduleApplicabilityUpdateManyWithoutVesselNestedInput
     controlledDocuments?: ControlledDocumentUpdateManyWithoutVesselNestedInput
     circulars?: CircularUpdateManyWithoutVesselNestedInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUpdateManyWithoutVesselNestedInput
@@ -100843,6 +110195,21 @@ export namespace Prisma {
     lastDryDock?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dryDockPlace?: NullableStringFieldUpdateOperationsInput | string | null
     nextDryDockDue?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    portOfRegistry?: NullableStringFieldUpdateOperationsInput | string | null
+    lbp?: NullableFloatFieldUpdateOperationsInput | number | null
+    draft?: NullableFloatFieldUpdateOperationsInput | number | null
+    mainEngine?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceSpeed?: NullableFloatFieldUpdateOperationsInput | number | null
+    navigationArea?: NullableStringFieldUpdateOperationsInput | string | null
+    classNotation?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    builder?: NullableStringFieldUpdateOperationsInput | string | null
+    keelLaidDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    launchingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    totalComplement?: NullableIntFieldUpdateOperationsInput | number | null
+    satPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    vesselEmail?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -100861,6 +110228,8 @@ export namespace Prisma {
     externalAudits?: ExternalAuditUncheckedUpdateManyWithoutVesselNestedInput
     committeeMeetings?: CommitteeMeetingUncheckedUpdateManyWithoutVesselNestedInput
     emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutVesselNestedInput
+    familiarizationRecords?: FamiliarizationRecordUncheckedUpdateManyWithoutVesselNestedInput
+    scheduleApplicability?: ScheduleApplicabilityUncheckedUpdateManyWithoutVesselNestedInput
     controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutVesselNestedInput
     circulars?: CircularUncheckedUpdateManyWithoutVesselNestedInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedUpdateManyWithoutVesselNestedInput
@@ -100889,7 +110258,10 @@ export namespace Prisma {
     internalAudits?: InternalAuditCreateNestedManyWithoutCompanyInput
     externalAudits?: ExternalAuditCreateNestedManyWithoutCompanyInput
     committeeMeetings?: CommitteeMeetingCreateNestedManyWithoutCompanyInput
+    scheduleItems?: ScheduleItemCreateNestedManyWithoutCompanyInput
     emergencyDrills?: EmergencyDrillCreateNestedManyWithoutCompanyInput
+    familiarizationRecords?: FamiliarizationRecordCreateNestedManyWithoutCompanyInput
+    scheduleApplicability?: ScheduleApplicabilityCreateNestedManyWithoutCompanyInput
     controlledDocuments?: ControlledDocumentCreateNestedManyWithoutCompanyInput
     circulars?: CircularCreateNestedManyWithoutCompanyInput
     riskAssessmentDocuments?: RiskAssessmentDocumentCreateNestedManyWithoutCompanyInput
@@ -100915,7 +110287,10 @@ export namespace Prisma {
     internalAudits?: InternalAuditUncheckedCreateNestedManyWithoutCompanyInput
     externalAudits?: ExternalAuditUncheckedCreateNestedManyWithoutCompanyInput
     committeeMeetings?: CommitteeMeetingUncheckedCreateNestedManyWithoutCompanyInput
+    scheduleItems?: ScheduleItemUncheckedCreateNestedManyWithoutCompanyInput
     emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutCompanyInput
+    familiarizationRecords?: FamiliarizationRecordUncheckedCreateNestedManyWithoutCompanyInput
+    scheduleApplicability?: ScheduleApplicabilityUncheckedCreateNestedManyWithoutCompanyInput
     controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutCompanyInput
     circulars?: CircularUncheckedCreateNestedManyWithoutCompanyInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedCreateNestedManyWithoutCompanyInput
@@ -100954,6 +110329,21 @@ export namespace Prisma {
     lastDryDock?: Date | string | null
     dryDockPlace?: string | null
     nextDryDockDue?: Date | string | null
+    portOfRegistry?: string | null
+    lbp?: number | null
+    draft?: number | null
+    mainEngine?: string | null
+    serviceSpeed?: number | null
+    navigationArea?: string | null
+    classNotation?: string | null
+    ownerAddress?: string | null
+    builder?: string | null
+    keelLaidDate?: Date | string | null
+    launchingDate?: Date | string | null
+    deliveryDate?: Date | string | null
+    totalComplement?: number | null
+    satPhone?: string | null
+    vesselEmail?: string | null
     archivedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -100973,6 +110363,8 @@ export namespace Prisma {
     externalAudits?: ExternalAuditCreateNestedManyWithoutVesselInput
     committeeMeetings?: CommitteeMeetingCreateNestedManyWithoutVesselInput
     emergencyDrills?: EmergencyDrillCreateNestedManyWithoutVesselInput
+    familiarizationRecords?: FamiliarizationRecordCreateNestedManyWithoutVesselInput
+    scheduleApplicability?: ScheduleApplicabilityCreateNestedManyWithoutVesselInput
     controlledDocuments?: ControlledDocumentCreateNestedManyWithoutVesselInput
     circulars?: CircularCreateNestedManyWithoutVesselInput
     riskAssessmentDocuments?: RiskAssessmentDocumentCreateNestedManyWithoutVesselInput
@@ -101010,6 +110402,21 @@ export namespace Prisma {
     lastDryDock?: Date | string | null
     dryDockPlace?: string | null
     nextDryDockDue?: Date | string | null
+    portOfRegistry?: string | null
+    lbp?: number | null
+    draft?: number | null
+    mainEngine?: string | null
+    serviceSpeed?: number | null
+    navigationArea?: string | null
+    classNotation?: string | null
+    ownerAddress?: string | null
+    builder?: string | null
+    keelLaidDate?: Date | string | null
+    launchingDate?: Date | string | null
+    deliveryDate?: Date | string | null
+    totalComplement?: number | null
+    satPhone?: string | null
+    vesselEmail?: string | null
     archivedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -101028,6 +110435,8 @@ export namespace Prisma {
     externalAudits?: ExternalAuditUncheckedCreateNestedManyWithoutVesselInput
     committeeMeetings?: CommitteeMeetingUncheckedCreateNestedManyWithoutVesselInput
     emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutVesselInput
+    familiarizationRecords?: FamiliarizationRecordUncheckedCreateNestedManyWithoutVesselInput
+    scheduleApplicability?: ScheduleApplicabilityUncheckedCreateNestedManyWithoutVesselInput
     controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutVesselInput
     circulars?: CircularUncheckedCreateNestedManyWithoutVesselInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedCreateNestedManyWithoutVesselInput
@@ -101072,7 +110481,10 @@ export namespace Prisma {
     internalAudits?: InternalAuditUpdateManyWithoutCompanyNestedInput
     externalAudits?: ExternalAuditUpdateManyWithoutCompanyNestedInput
     committeeMeetings?: CommitteeMeetingUpdateManyWithoutCompanyNestedInput
+    scheduleItems?: ScheduleItemUpdateManyWithoutCompanyNestedInput
     emergencyDrills?: EmergencyDrillUpdateManyWithoutCompanyNestedInput
+    familiarizationRecords?: FamiliarizationRecordUpdateManyWithoutCompanyNestedInput
+    scheduleApplicability?: ScheduleApplicabilityUpdateManyWithoutCompanyNestedInput
     controlledDocuments?: ControlledDocumentUpdateManyWithoutCompanyNestedInput
     circulars?: CircularUpdateManyWithoutCompanyNestedInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUpdateManyWithoutCompanyNestedInput
@@ -101098,7 +110510,10 @@ export namespace Prisma {
     internalAudits?: InternalAuditUncheckedUpdateManyWithoutCompanyNestedInput
     externalAudits?: ExternalAuditUncheckedUpdateManyWithoutCompanyNestedInput
     committeeMeetings?: CommitteeMeetingUncheckedUpdateManyWithoutCompanyNestedInput
+    scheduleItems?: ScheduleItemUncheckedUpdateManyWithoutCompanyNestedInput
     emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutCompanyNestedInput
+    familiarizationRecords?: FamiliarizationRecordUncheckedUpdateManyWithoutCompanyNestedInput
+    scheduleApplicability?: ScheduleApplicabilityUncheckedUpdateManyWithoutCompanyNestedInput
     controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutCompanyNestedInput
     circulars?: CircularUncheckedUpdateManyWithoutCompanyNestedInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedUpdateManyWithoutCompanyNestedInput
@@ -101143,6 +110558,21 @@ export namespace Prisma {
     lastDryDock?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dryDockPlace?: NullableStringFieldUpdateOperationsInput | string | null
     nextDryDockDue?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    portOfRegistry?: NullableStringFieldUpdateOperationsInput | string | null
+    lbp?: NullableFloatFieldUpdateOperationsInput | number | null
+    draft?: NullableFloatFieldUpdateOperationsInput | number | null
+    mainEngine?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceSpeed?: NullableFloatFieldUpdateOperationsInput | number | null
+    navigationArea?: NullableStringFieldUpdateOperationsInput | string | null
+    classNotation?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    builder?: NullableStringFieldUpdateOperationsInput | string | null
+    keelLaidDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    launchingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    totalComplement?: NullableIntFieldUpdateOperationsInput | number | null
+    satPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    vesselEmail?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -101162,6 +110592,8 @@ export namespace Prisma {
     externalAudits?: ExternalAuditUpdateManyWithoutVesselNestedInput
     committeeMeetings?: CommitteeMeetingUpdateManyWithoutVesselNestedInput
     emergencyDrills?: EmergencyDrillUpdateManyWithoutVesselNestedInput
+    familiarizationRecords?: FamiliarizationRecordUpdateManyWithoutVesselNestedInput
+    scheduleApplicability?: ScheduleApplicabilityUpdateManyWithoutVesselNestedInput
     controlledDocuments?: ControlledDocumentUpdateManyWithoutVesselNestedInput
     circulars?: CircularUpdateManyWithoutVesselNestedInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUpdateManyWithoutVesselNestedInput
@@ -101199,6 +110631,21 @@ export namespace Prisma {
     lastDryDock?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dryDockPlace?: NullableStringFieldUpdateOperationsInput | string | null
     nextDryDockDue?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    portOfRegistry?: NullableStringFieldUpdateOperationsInput | string | null
+    lbp?: NullableFloatFieldUpdateOperationsInput | number | null
+    draft?: NullableFloatFieldUpdateOperationsInput | number | null
+    mainEngine?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceSpeed?: NullableFloatFieldUpdateOperationsInput | number | null
+    navigationArea?: NullableStringFieldUpdateOperationsInput | string | null
+    classNotation?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    builder?: NullableStringFieldUpdateOperationsInput | string | null
+    keelLaidDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    launchingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    totalComplement?: NullableIntFieldUpdateOperationsInput | number | null
+    satPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    vesselEmail?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -101217,6 +110664,8 @@ export namespace Prisma {
     externalAudits?: ExternalAuditUncheckedUpdateManyWithoutVesselNestedInput
     committeeMeetings?: CommitteeMeetingUncheckedUpdateManyWithoutVesselNestedInput
     emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutVesselNestedInput
+    familiarizationRecords?: FamiliarizationRecordUncheckedUpdateManyWithoutVesselNestedInput
+    scheduleApplicability?: ScheduleApplicabilityUncheckedUpdateManyWithoutVesselNestedInput
     controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutVesselNestedInput
     circulars?: CircularUncheckedUpdateManyWithoutVesselNestedInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedUpdateManyWithoutVesselNestedInput
@@ -101280,6 +110729,21 @@ export namespace Prisma {
     lastDryDock?: Date | string | null
     dryDockPlace?: string | null
     nextDryDockDue?: Date | string | null
+    portOfRegistry?: string | null
+    lbp?: number | null
+    draft?: number | null
+    mainEngine?: string | null
+    serviceSpeed?: number | null
+    navigationArea?: string | null
+    classNotation?: string | null
+    ownerAddress?: string | null
+    builder?: string | null
+    keelLaidDate?: Date | string | null
+    launchingDate?: Date | string | null
+    deliveryDate?: Date | string | null
+    totalComplement?: number | null
+    satPhone?: string | null
+    vesselEmail?: string | null
     archivedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -101535,16 +110999,36 @@ export namespace Prisma {
     deletedBy?: string | null
   }
 
+  export type ScheduleItemCreateManyCompanyInput = {
+    id?: string
+    kind: $Enums.ScheduleItemKind
+    category?: string | null
+    itemNo?: string | null
+    name: string
+    smsReference?: string | null
+    frequencyLabel?: string | null
+    frequencyDays?: number | null
+    sortOrder: number
+    active?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
+  }
+
   export type EmergencyDrillCreateManyCompanyInput = {
     id?: string
     refNo: string
     vesselId: string
-    drillType: $Enums.DrillType
+    scheduleItemId: string
     drillDate: Date | string
-    scenario?: string | null
+    drillTime?: string | null
+    position?: string | null
     participants?: string | null
     conductedBy?: string | null
-    observations?: string | null
+    details?: string | null
+    deficiencies?: string | null
+    correctiveAction?: string | null
+    vesselRemarks?: string | null
     status?: $Enums.FindingStatus
     closedAt?: Date | string | null
     createdAt?: Date | string
@@ -101553,6 +111037,33 @@ export namespace Prisma {
     updatedBy?: string | null
     deletedAt?: Date | string | null
     deletedBy?: string | null
+  }
+
+  export type FamiliarizationRecordCreateManyCompanyInput = {
+    id?: string
+    vesselId: string
+    scheduleItemId: string
+    completedDate: Date | string
+    notedBy?: string | null
+    remarks?: string | null
+    createdAt?: Date | string
+    createdBy?: string | null
+    updatedAt?: Date | string
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+  }
+
+  export type ScheduleApplicabilityCreateManyCompanyInput = {
+    id?: string
+    vesselId: string
+    scheduleItemId: string
+    notApplicable?: boolean
+    reason?: string | null
+    createdAt?: Date | string
+    createdBy?: string | null
+    updatedAt?: Date | string
+    updatedBy?: string | null
   }
 
   export type ControlledDocumentCreateManyCompanyInput = {
@@ -101769,6 +111280,21 @@ export namespace Prisma {
     lastDryDock?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dryDockPlace?: NullableStringFieldUpdateOperationsInput | string | null
     nextDryDockDue?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    portOfRegistry?: NullableStringFieldUpdateOperationsInput | string | null
+    lbp?: NullableFloatFieldUpdateOperationsInput | number | null
+    draft?: NullableFloatFieldUpdateOperationsInput | number | null
+    mainEngine?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceSpeed?: NullableFloatFieldUpdateOperationsInput | number | null
+    navigationArea?: NullableStringFieldUpdateOperationsInput | string | null
+    classNotation?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    builder?: NullableStringFieldUpdateOperationsInput | string | null
+    keelLaidDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    launchingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    totalComplement?: NullableIntFieldUpdateOperationsInput | number | null
+    satPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    vesselEmail?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -101787,6 +111313,8 @@ export namespace Prisma {
     externalAudits?: ExternalAuditUpdateManyWithoutVesselNestedInput
     committeeMeetings?: CommitteeMeetingUpdateManyWithoutVesselNestedInput
     emergencyDrills?: EmergencyDrillUpdateManyWithoutVesselNestedInput
+    familiarizationRecords?: FamiliarizationRecordUpdateManyWithoutVesselNestedInput
+    scheduleApplicability?: ScheduleApplicabilityUpdateManyWithoutVesselNestedInput
     controlledDocuments?: ControlledDocumentUpdateManyWithoutVesselNestedInput
     circulars?: CircularUpdateManyWithoutVesselNestedInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUpdateManyWithoutVesselNestedInput
@@ -101824,6 +111352,21 @@ export namespace Prisma {
     lastDryDock?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dryDockPlace?: NullableStringFieldUpdateOperationsInput | string | null
     nextDryDockDue?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    portOfRegistry?: NullableStringFieldUpdateOperationsInput | string | null
+    lbp?: NullableFloatFieldUpdateOperationsInput | number | null
+    draft?: NullableFloatFieldUpdateOperationsInput | number | null
+    mainEngine?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceSpeed?: NullableFloatFieldUpdateOperationsInput | number | null
+    navigationArea?: NullableStringFieldUpdateOperationsInput | string | null
+    classNotation?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    builder?: NullableStringFieldUpdateOperationsInput | string | null
+    keelLaidDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    launchingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    totalComplement?: NullableIntFieldUpdateOperationsInput | number | null
+    satPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    vesselEmail?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -101842,6 +111385,8 @@ export namespace Prisma {
     externalAudits?: ExternalAuditUncheckedUpdateManyWithoutVesselNestedInput
     committeeMeetings?: CommitteeMeetingUncheckedUpdateManyWithoutVesselNestedInput
     emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutVesselNestedInput
+    familiarizationRecords?: FamiliarizationRecordUncheckedUpdateManyWithoutVesselNestedInput
+    scheduleApplicability?: ScheduleApplicabilityUncheckedUpdateManyWithoutVesselNestedInput
     controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutVesselNestedInput
     circulars?: CircularUncheckedUpdateManyWithoutVesselNestedInput
     riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedUpdateManyWithoutVesselNestedInput
@@ -101879,6 +111424,21 @@ export namespace Prisma {
     lastDryDock?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dryDockPlace?: NullableStringFieldUpdateOperationsInput | string | null
     nextDryDockDue?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    portOfRegistry?: NullableStringFieldUpdateOperationsInput | string | null
+    lbp?: NullableFloatFieldUpdateOperationsInput | number | null
+    draft?: NullableFloatFieldUpdateOperationsInput | number | null
+    mainEngine?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceSpeed?: NullableFloatFieldUpdateOperationsInput | number | null
+    navigationArea?: NullableStringFieldUpdateOperationsInput | string | null
+    classNotation?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    builder?: NullableStringFieldUpdateOperationsInput | string | null
+    keelLaidDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    launchingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    totalComplement?: NullableIntFieldUpdateOperationsInput | number | null
+    satPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    vesselEmail?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -102648,15 +112208,72 @@ export namespace Prisma {
     deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
+  export type ScheduleItemUpdateWithoutCompanyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    kind?: EnumScheduleItemKindFieldUpdateOperationsInput | $Enums.ScheduleItemKind
+    category?: NullableStringFieldUpdateOperationsInput | string | null
+    itemNo?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    smsReference?: NullableStringFieldUpdateOperationsInput | string | null
+    frequencyLabel?: NullableStringFieldUpdateOperationsInput | string | null
+    frequencyDays?: NullableIntFieldUpdateOperationsInput | number | null
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    active?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    drills?: EmergencyDrillUpdateManyWithoutScheduleItemNestedInput
+    familiarizations?: FamiliarizationRecordUpdateManyWithoutScheduleItemNestedInput
+    exceptions?: ScheduleApplicabilityUpdateManyWithoutScheduleItemNestedInput
+  }
+
+  export type ScheduleItemUncheckedUpdateWithoutCompanyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    kind?: EnumScheduleItemKindFieldUpdateOperationsInput | $Enums.ScheduleItemKind
+    category?: NullableStringFieldUpdateOperationsInput | string | null
+    itemNo?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    smsReference?: NullableStringFieldUpdateOperationsInput | string | null
+    frequencyLabel?: NullableStringFieldUpdateOperationsInput | string | null
+    frequencyDays?: NullableIntFieldUpdateOperationsInput | number | null
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    active?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    drills?: EmergencyDrillUncheckedUpdateManyWithoutScheduleItemNestedInput
+    familiarizations?: FamiliarizationRecordUncheckedUpdateManyWithoutScheduleItemNestedInput
+    exceptions?: ScheduleApplicabilityUncheckedUpdateManyWithoutScheduleItemNestedInput
+  }
+
+  export type ScheduleItemUncheckedUpdateManyWithoutCompanyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    kind?: EnumScheduleItemKindFieldUpdateOperationsInput | $Enums.ScheduleItemKind
+    category?: NullableStringFieldUpdateOperationsInput | string | null
+    itemNo?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    smsReference?: NullableStringFieldUpdateOperationsInput | string | null
+    frequencyLabel?: NullableStringFieldUpdateOperationsInput | string | null
+    frequencyDays?: NullableIntFieldUpdateOperationsInput | number | null
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    active?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
   export type EmergencyDrillUpdateWithoutCompanyInput = {
     id?: StringFieldUpdateOperationsInput | string
     refNo?: StringFieldUpdateOperationsInput | string
-    drillType?: EnumDrillTypeFieldUpdateOperationsInput | $Enums.DrillType
     drillDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    scenario?: NullableStringFieldUpdateOperationsInput | string | null
+    drillTime?: NullableStringFieldUpdateOperationsInput | string | null
+    position?: NullableStringFieldUpdateOperationsInput | string | null
     participants?: NullableStringFieldUpdateOperationsInput | string | null
     conductedBy?: NullableStringFieldUpdateOperationsInput | string | null
-    observations?: NullableStringFieldUpdateOperationsInput | string | null
+    details?: NullableStringFieldUpdateOperationsInput | string | null
+    deficiencies?: NullableStringFieldUpdateOperationsInput | string | null
+    correctiveAction?: NullableStringFieldUpdateOperationsInput | string | null
+    vesselRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumFindingStatusFieldUpdateOperationsInput | $Enums.FindingStatus
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -102666,18 +112283,23 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     vessel?: VesselUpdateOneRequiredWithoutEmergencyDrillsNestedInput
+    scheduleItem?: ScheduleItemUpdateOneRequiredWithoutDrillsNestedInput
   }
 
   export type EmergencyDrillUncheckedUpdateWithoutCompanyInput = {
     id?: StringFieldUpdateOperationsInput | string
     refNo?: StringFieldUpdateOperationsInput | string
     vesselId?: StringFieldUpdateOperationsInput | string
-    drillType?: EnumDrillTypeFieldUpdateOperationsInput | $Enums.DrillType
+    scheduleItemId?: StringFieldUpdateOperationsInput | string
     drillDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    scenario?: NullableStringFieldUpdateOperationsInput | string | null
+    drillTime?: NullableStringFieldUpdateOperationsInput | string | null
+    position?: NullableStringFieldUpdateOperationsInput | string | null
     participants?: NullableStringFieldUpdateOperationsInput | string | null
     conductedBy?: NullableStringFieldUpdateOperationsInput | string | null
-    observations?: NullableStringFieldUpdateOperationsInput | string | null
+    details?: NullableStringFieldUpdateOperationsInput | string | null
+    deficiencies?: NullableStringFieldUpdateOperationsInput | string | null
+    correctiveAction?: NullableStringFieldUpdateOperationsInput | string | null
+    vesselRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumFindingStatusFieldUpdateOperationsInput | $Enums.FindingStatus
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -102692,12 +112314,16 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     refNo?: StringFieldUpdateOperationsInput | string
     vesselId?: StringFieldUpdateOperationsInput | string
-    drillType?: EnumDrillTypeFieldUpdateOperationsInput | $Enums.DrillType
+    scheduleItemId?: StringFieldUpdateOperationsInput | string
     drillDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    scenario?: NullableStringFieldUpdateOperationsInput | string | null
+    drillTime?: NullableStringFieldUpdateOperationsInput | string | null
+    position?: NullableStringFieldUpdateOperationsInput | string | null
     participants?: NullableStringFieldUpdateOperationsInput | string | null
     conductedBy?: NullableStringFieldUpdateOperationsInput | string | null
-    observations?: NullableStringFieldUpdateOperationsInput | string | null
+    details?: NullableStringFieldUpdateOperationsInput | string | null
+    deficiencies?: NullableStringFieldUpdateOperationsInput | string | null
+    correctiveAction?: NullableStringFieldUpdateOperationsInput | string | null
+    vesselRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumFindingStatusFieldUpdateOperationsInput | $Enums.FindingStatus
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -102706,6 +112332,87 @@ export namespace Prisma {
     updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type FamiliarizationRecordUpdateWithoutCompanyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    completedDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    notedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    remarks?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    vessel?: VesselUpdateOneRequiredWithoutFamiliarizationRecordsNestedInput
+    scheduleItem?: ScheduleItemUpdateOneRequiredWithoutFamiliarizationsNestedInput
+  }
+
+  export type FamiliarizationRecordUncheckedUpdateWithoutCompanyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    vesselId?: StringFieldUpdateOperationsInput | string
+    scheduleItemId?: StringFieldUpdateOperationsInput | string
+    completedDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    notedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    remarks?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type FamiliarizationRecordUncheckedUpdateManyWithoutCompanyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    vesselId?: StringFieldUpdateOperationsInput | string
+    scheduleItemId?: StringFieldUpdateOperationsInput | string
+    completedDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    notedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    remarks?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type ScheduleApplicabilityUpdateWithoutCompanyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    notApplicable?: BoolFieldUpdateOperationsInput | boolean
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    vessel?: VesselUpdateOneRequiredWithoutScheduleApplicabilityNestedInput
+    scheduleItem?: ScheduleItemUpdateOneRequiredWithoutExceptionsNestedInput
+  }
+
+  export type ScheduleApplicabilityUncheckedUpdateWithoutCompanyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    vesselId?: StringFieldUpdateOperationsInput | string
+    scheduleItemId?: StringFieldUpdateOperationsInput | string
+    notApplicable?: BoolFieldUpdateOperationsInput | boolean
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type ScheduleApplicabilityUncheckedUpdateManyWithoutCompanyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    vesselId?: StringFieldUpdateOperationsInput | string
+    scheduleItemId?: StringFieldUpdateOperationsInput | string
+    notApplicable?: BoolFieldUpdateOperationsInput | boolean
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ControlledDocumentUpdateWithoutCompanyInput = {
@@ -103986,12 +113693,16 @@ export namespace Prisma {
     id?: string
     companyId: string
     refNo: string
-    drillType: $Enums.DrillType
+    scheduleItemId: string
     drillDate: Date | string
-    scenario?: string | null
+    drillTime?: string | null
+    position?: string | null
     participants?: string | null
     conductedBy?: string | null
-    observations?: string | null
+    details?: string | null
+    deficiencies?: string | null
+    correctiveAction?: string | null
+    vesselRemarks?: string | null
     status?: $Enums.FindingStatus
     closedAt?: Date | string | null
     createdAt?: Date | string
@@ -104000,6 +113711,33 @@ export namespace Prisma {
     updatedBy?: string | null
     deletedAt?: Date | string | null
     deletedBy?: string | null
+  }
+
+  export type FamiliarizationRecordCreateManyVesselInput = {
+    id?: string
+    companyId: string
+    scheduleItemId: string
+    completedDate: Date | string
+    notedBy?: string | null
+    remarks?: string | null
+    createdAt?: Date | string
+    createdBy?: string | null
+    updatedAt?: Date | string
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+  }
+
+  export type ScheduleApplicabilityCreateManyVesselInput = {
+    id?: string
+    companyId: string
+    scheduleItemId: string
+    notApplicable?: boolean
+    reason?: string | null
+    createdAt?: Date | string
+    createdBy?: string | null
+    updatedAt?: Date | string
+    updatedBy?: string | null
   }
 
   export type ControlledDocumentCreateManyVesselInput = {
@@ -104861,12 +114599,15 @@ export namespace Prisma {
   export type EmergencyDrillUpdateWithoutVesselInput = {
     id?: StringFieldUpdateOperationsInput | string
     refNo?: StringFieldUpdateOperationsInput | string
-    drillType?: EnumDrillTypeFieldUpdateOperationsInput | $Enums.DrillType
     drillDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    scenario?: NullableStringFieldUpdateOperationsInput | string | null
+    drillTime?: NullableStringFieldUpdateOperationsInput | string | null
+    position?: NullableStringFieldUpdateOperationsInput | string | null
     participants?: NullableStringFieldUpdateOperationsInput | string | null
     conductedBy?: NullableStringFieldUpdateOperationsInput | string | null
-    observations?: NullableStringFieldUpdateOperationsInput | string | null
+    details?: NullableStringFieldUpdateOperationsInput | string | null
+    deficiencies?: NullableStringFieldUpdateOperationsInput | string | null
+    correctiveAction?: NullableStringFieldUpdateOperationsInput | string | null
+    vesselRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumFindingStatusFieldUpdateOperationsInput | $Enums.FindingStatus
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -104876,18 +114617,23 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     company?: CompanyUpdateOneRequiredWithoutEmergencyDrillsNestedInput
+    scheduleItem?: ScheduleItemUpdateOneRequiredWithoutDrillsNestedInput
   }
 
   export type EmergencyDrillUncheckedUpdateWithoutVesselInput = {
     id?: StringFieldUpdateOperationsInput | string
     companyId?: StringFieldUpdateOperationsInput | string
     refNo?: StringFieldUpdateOperationsInput | string
-    drillType?: EnumDrillTypeFieldUpdateOperationsInput | $Enums.DrillType
+    scheduleItemId?: StringFieldUpdateOperationsInput | string
     drillDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    scenario?: NullableStringFieldUpdateOperationsInput | string | null
+    drillTime?: NullableStringFieldUpdateOperationsInput | string | null
+    position?: NullableStringFieldUpdateOperationsInput | string | null
     participants?: NullableStringFieldUpdateOperationsInput | string | null
     conductedBy?: NullableStringFieldUpdateOperationsInput | string | null
-    observations?: NullableStringFieldUpdateOperationsInput | string | null
+    details?: NullableStringFieldUpdateOperationsInput | string | null
+    deficiencies?: NullableStringFieldUpdateOperationsInput | string | null
+    correctiveAction?: NullableStringFieldUpdateOperationsInput | string | null
+    vesselRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumFindingStatusFieldUpdateOperationsInput | $Enums.FindingStatus
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -104902,12 +114648,16 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     companyId?: StringFieldUpdateOperationsInput | string
     refNo?: StringFieldUpdateOperationsInput | string
-    drillType?: EnumDrillTypeFieldUpdateOperationsInput | $Enums.DrillType
+    scheduleItemId?: StringFieldUpdateOperationsInput | string
     drillDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    scenario?: NullableStringFieldUpdateOperationsInput | string | null
+    drillTime?: NullableStringFieldUpdateOperationsInput | string | null
+    position?: NullableStringFieldUpdateOperationsInput | string | null
     participants?: NullableStringFieldUpdateOperationsInput | string | null
     conductedBy?: NullableStringFieldUpdateOperationsInput | string | null
-    observations?: NullableStringFieldUpdateOperationsInput | string | null
+    details?: NullableStringFieldUpdateOperationsInput | string | null
+    deficiencies?: NullableStringFieldUpdateOperationsInput | string | null
+    correctiveAction?: NullableStringFieldUpdateOperationsInput | string | null
+    vesselRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumFindingStatusFieldUpdateOperationsInput | $Enums.FindingStatus
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -104916,6 +114666,87 @@ export namespace Prisma {
     updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type FamiliarizationRecordUpdateWithoutVesselInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    completedDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    notedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    remarks?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    company?: CompanyUpdateOneRequiredWithoutFamiliarizationRecordsNestedInput
+    scheduleItem?: ScheduleItemUpdateOneRequiredWithoutFamiliarizationsNestedInput
+  }
+
+  export type FamiliarizationRecordUncheckedUpdateWithoutVesselInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    scheduleItemId?: StringFieldUpdateOperationsInput | string
+    completedDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    notedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    remarks?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type FamiliarizationRecordUncheckedUpdateManyWithoutVesselInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    scheduleItemId?: StringFieldUpdateOperationsInput | string
+    completedDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    notedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    remarks?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type ScheduleApplicabilityUpdateWithoutVesselInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    notApplicable?: BoolFieldUpdateOperationsInput | boolean
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    company?: CompanyUpdateOneRequiredWithoutScheduleApplicabilityNestedInput
+    scheduleItem?: ScheduleItemUpdateOneRequiredWithoutExceptionsNestedInput
+  }
+
+  export type ScheduleApplicabilityUncheckedUpdateWithoutVesselInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    scheduleItemId?: StringFieldUpdateOperationsInput | string
+    notApplicable?: BoolFieldUpdateOperationsInput | boolean
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type ScheduleApplicabilityUncheckedUpdateManyWithoutVesselInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    scheduleItemId?: StringFieldUpdateOperationsInput | string
+    notApplicable?: BoolFieldUpdateOperationsInput | boolean
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ControlledDocumentUpdateWithoutVesselInput = {
@@ -105842,7 +115673,7 @@ export namespace Prisma {
     observation: string
     response?: string | null
     status?: $Enums.FindingStatus
-    category?: $Enums.SireObservationCategory | null
+    category?: $Enums.CdiObservationSection | null
     rootCauseCategory?: $Enums.RootCauseCategory | null
     rootCauseSubCategory?: string | null
     rootCause?: string | null
@@ -105858,7 +115689,7 @@ export namespace Prisma {
     observation?: StringFieldUpdateOperationsInput | string
     response?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumFindingStatusFieldUpdateOperationsInput | $Enums.FindingStatus
-    category?: NullableEnumSireObservationCategoryFieldUpdateOperationsInput | $Enums.SireObservationCategory | null
+    category?: NullableEnumCdiObservationSectionFieldUpdateOperationsInput | $Enums.CdiObservationSection | null
     rootCauseCategory?: NullableEnumRootCauseCategoryFieldUpdateOperationsInput | $Enums.RootCauseCategory | null
     rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
     rootCause?: NullableStringFieldUpdateOperationsInput | string | null
@@ -105874,7 +115705,7 @@ export namespace Prisma {
     observation?: StringFieldUpdateOperationsInput | string
     response?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumFindingStatusFieldUpdateOperationsInput | $Enums.FindingStatus
-    category?: NullableEnumSireObservationCategoryFieldUpdateOperationsInput | $Enums.SireObservationCategory | null
+    category?: NullableEnumCdiObservationSectionFieldUpdateOperationsInput | $Enums.CdiObservationSection | null
     rootCauseCategory?: NullableEnumRootCauseCategoryFieldUpdateOperationsInput | $Enums.RootCauseCategory | null
     rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
     rootCause?: NullableStringFieldUpdateOperationsInput | string | null
@@ -105890,7 +115721,7 @@ export namespace Prisma {
     observation?: StringFieldUpdateOperationsInput | string
     response?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumFindingStatusFieldUpdateOperationsInput | $Enums.FindingStatus
-    category?: NullableEnumSireObservationCategoryFieldUpdateOperationsInput | $Enums.SireObservationCategory | null
+    category?: NullableEnumCdiObservationSectionFieldUpdateOperationsInput | $Enums.CdiObservationSection | null
     rootCauseCategory?: NullableEnumRootCauseCategoryFieldUpdateOperationsInput | $Enums.RootCauseCategory | null
     rootCauseSubCategory?: NullableStringFieldUpdateOperationsInput | string | null
     rootCause?: NullableStringFieldUpdateOperationsInput | string | null
@@ -106057,6 +115888,210 @@ export namespace Prisma {
     details?: NullableStringFieldUpdateOperationsInput | string | null
     shoreComments?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type EmergencyDrillCreateManyScheduleItemInput = {
+    id?: string
+    companyId: string
+    refNo: string
+    vesselId: string
+    drillDate: Date | string
+    drillTime?: string | null
+    position?: string | null
+    participants?: string | null
+    conductedBy?: string | null
+    details?: string | null
+    deficiencies?: string | null
+    correctiveAction?: string | null
+    vesselRemarks?: string | null
+    status?: $Enums.FindingStatus
+    closedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+  }
+
+  export type FamiliarizationRecordCreateManyScheduleItemInput = {
+    id?: string
+    companyId: string
+    vesselId: string
+    completedDate: Date | string
+    notedBy?: string | null
+    remarks?: string | null
+    createdAt?: Date | string
+    createdBy?: string | null
+    updatedAt?: Date | string
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+  }
+
+  export type ScheduleApplicabilityCreateManyScheduleItemInput = {
+    id?: string
+    companyId: string
+    vesselId: string
+    notApplicable?: boolean
+    reason?: string | null
+    createdAt?: Date | string
+    createdBy?: string | null
+    updatedAt?: Date | string
+    updatedBy?: string | null
+  }
+
+  export type EmergencyDrillUpdateWithoutScheduleItemInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    refNo?: StringFieldUpdateOperationsInput | string
+    drillDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    drillTime?: NullableStringFieldUpdateOperationsInput | string | null
+    position?: NullableStringFieldUpdateOperationsInput | string | null
+    participants?: NullableStringFieldUpdateOperationsInput | string | null
+    conductedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    details?: NullableStringFieldUpdateOperationsInput | string | null
+    deficiencies?: NullableStringFieldUpdateOperationsInput | string | null
+    correctiveAction?: NullableStringFieldUpdateOperationsInput | string | null
+    vesselRemarks?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumFindingStatusFieldUpdateOperationsInput | $Enums.FindingStatus
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    company?: CompanyUpdateOneRequiredWithoutEmergencyDrillsNestedInput
+    vessel?: VesselUpdateOneRequiredWithoutEmergencyDrillsNestedInput
+  }
+
+  export type EmergencyDrillUncheckedUpdateWithoutScheduleItemInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    refNo?: StringFieldUpdateOperationsInput | string
+    vesselId?: StringFieldUpdateOperationsInput | string
+    drillDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    drillTime?: NullableStringFieldUpdateOperationsInput | string | null
+    position?: NullableStringFieldUpdateOperationsInput | string | null
+    participants?: NullableStringFieldUpdateOperationsInput | string | null
+    conductedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    details?: NullableStringFieldUpdateOperationsInput | string | null
+    deficiencies?: NullableStringFieldUpdateOperationsInput | string | null
+    correctiveAction?: NullableStringFieldUpdateOperationsInput | string | null
+    vesselRemarks?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumFindingStatusFieldUpdateOperationsInput | $Enums.FindingStatus
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type EmergencyDrillUncheckedUpdateManyWithoutScheduleItemInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    refNo?: StringFieldUpdateOperationsInput | string
+    vesselId?: StringFieldUpdateOperationsInput | string
+    drillDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    drillTime?: NullableStringFieldUpdateOperationsInput | string | null
+    position?: NullableStringFieldUpdateOperationsInput | string | null
+    participants?: NullableStringFieldUpdateOperationsInput | string | null
+    conductedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    details?: NullableStringFieldUpdateOperationsInput | string | null
+    deficiencies?: NullableStringFieldUpdateOperationsInput | string | null
+    correctiveAction?: NullableStringFieldUpdateOperationsInput | string | null
+    vesselRemarks?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumFindingStatusFieldUpdateOperationsInput | $Enums.FindingStatus
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type FamiliarizationRecordUpdateWithoutScheduleItemInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    completedDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    notedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    remarks?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    company?: CompanyUpdateOneRequiredWithoutFamiliarizationRecordsNestedInput
+    vessel?: VesselUpdateOneRequiredWithoutFamiliarizationRecordsNestedInput
+  }
+
+  export type FamiliarizationRecordUncheckedUpdateWithoutScheduleItemInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    vesselId?: StringFieldUpdateOperationsInput | string
+    completedDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    notedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    remarks?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type FamiliarizationRecordUncheckedUpdateManyWithoutScheduleItemInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    vesselId?: StringFieldUpdateOperationsInput | string
+    completedDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    notedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    remarks?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type ScheduleApplicabilityUpdateWithoutScheduleItemInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    notApplicable?: BoolFieldUpdateOperationsInput | boolean
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    company?: CompanyUpdateOneRequiredWithoutScheduleApplicabilityNestedInput
+    vessel?: VesselUpdateOneRequiredWithoutScheduleApplicabilityNestedInput
+  }
+
+  export type ScheduleApplicabilityUncheckedUpdateWithoutScheduleItemInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    vesselId?: StringFieldUpdateOperationsInput | string
+    notApplicable?: BoolFieldUpdateOperationsInput | boolean
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type ScheduleApplicabilityUncheckedUpdateManyWithoutScheduleItemInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    vesselId?: StringFieldUpdateOperationsInput | string
+    notApplicable?: BoolFieldUpdateOperationsInput | boolean
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type CircularAcknowledgementCreateManyCircularInput = {

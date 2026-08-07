@@ -1,9 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { useActionState } from "react";
+import { useActionState, useEffect, useState } from "react";
 import { useFormStatus } from "react-dom";
+import { FileUp } from "lucide-react";
 import { VESSEL_STATUSES, humanize } from "@/features/vessels/schema";
+import { parseVesselDocumentAction, type ParseVesselDocumentResult } from "@/features/vessels/actions";
 import { Card, CardContent } from "@/components/ui/card";
 import { AutoGrowInput, Input, Label, Select } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -38,6 +40,21 @@ export type VesselFormValues = {
   lastDryDock: string;
   dryDockPlace: string;
   nextDryDockDue: string;
+  portOfRegistry: string;
+  lbp: string;
+  draft: string;
+  mainEngine: string;
+  serviceSpeed: string;
+  navigationArea: string;
+  classNotation: string;
+  ownerAddress: string;
+  builder: string;
+  keelLaidDate: string;
+  launchingDate: string;
+  deliveryDate: string;
+  totalComplement: string;
+  satPhone: string;
+  vesselEmail: string;
 };
 
 const EMPTY: VesselFormValues = {
@@ -67,6 +84,21 @@ const EMPTY: VesselFormValues = {
   lastDryDock: "",
   dryDockPlace: "",
   nextDryDockDue: "",
+  portOfRegistry: "",
+  lbp: "",
+  draft: "",
+  mainEngine: "",
+  serviceSpeed: "",
+  navigationArea: "",
+  classNotation: "",
+  ownerAddress: "",
+  builder: "",
+  keelLaidDate: "",
+  launchingDate: "",
+  deliveryDate: "",
+  totalComplement: "",
+  satPhone: "",
+  vesselEmail: "",
 };
 
 function SubmitButton({ label, pendingLabel }: { label: string; pendingLabel: string }) {
@@ -75,6 +107,58 @@ function SubmitButton({ label, pendingLabel }: { label: string; pendingLabel: st
     <Button type="submit" disabled={pending}>
       {pending ? pendingLabel : label}
     </Button>
+  );
+}
+
+function ParseButton() {
+  const { pending } = useFormStatus();
+  return (
+    <Button type="submit" size="sm" disabled={pending}>
+      <FileUp className="h-4 w-4" /> {pending ? "Reading document…" : "Parse document"}
+    </Button>
+  );
+}
+
+/** Upload a Ship's Particulars sheet (.docx or .pdf, including a scanned
+ * PDF read via OCR) and auto-fill the form fields below — nothing saves
+ * until the office reviews the pre-filled fields and submits normally. */
+function ImportParticularsPanel({ onParsed }: { onParsed: (fields: Partial<VesselFormValues>) => void }) {
+  const [state, formAction] = useActionState<ParseVesselDocumentResult, FormData>(parseVesselDocumentAction, {
+    ok: false,
+    error: null,
+    fields: {},
+  });
+
+  useEffect(() => {
+    if (state.ok && Object.keys(state.fields).length > 0) {
+      onParsed(state.fields);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state]);
+
+  return (
+    <form
+      action={formAction}
+      className="flex flex-wrap items-end gap-2 rounded-md border border-dashed border-border p-4"
+    >
+      <div className="space-y-1">
+        <Label className="text-xs">Import from Ship's Particulars (.docx or .pdf)</Label>
+        <input
+          type="file"
+          name="file"
+          required
+          accept=".docx,.pdf"
+          className="max-w-full text-sm file:mr-3 file:rounded-md file:border-0 file:bg-muted file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-foreground hover:file:bg-muted/70"
+        />
+      </div>
+      <ParseButton />
+      {state.ok && Object.keys(state.fields).length > 0 && (
+        <p className="w-full text-sm text-success">
+          Filled {Object.keys(state.fields).length} field(s) below from the document — review before saving.
+        </p>
+      )}
+      {state.error && <p className="w-full text-sm text-danger">{state.error}</p>}
+    </form>
   );
 }
 
@@ -89,16 +173,24 @@ export function VesselForm({
   submitLabel: string;
   pendingLabel: string;
 }) {
-  const v = { ...EMPTY, ...values };
+  const [parsed, setParsed] = useState<Partial<VesselFormValues> | null>(null);
+  const [formVersion, setFormVersion] = useState(0);
+  const v = { ...EMPTY, ...values, ...parsed };
   const [state, formAction] = useActionState<ActionResult, FormData>(action, {
     ok: false,
     error: null,
   });
 
+  function handleParsed(fields: Partial<VesselFormValues>) {
+    setParsed(fields);
+    setFormVersion((n) => n + 1);
+  }
+
   return (
     <Card>
-      <CardContent className="pt-5">
-        <form action={formAction} className="space-y-6">
+      <CardContent className="pt-5 space-y-4">
+        <ImportParticularsPanel onParsed={handleParsed} />
+        <form key={formVersion} action={formAction} className="space-y-6">
       {v.id && <input type="hidden" name="vesselId" value={v.id} />}
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -130,6 +222,10 @@ export function VesselForm({
         <div className="space-y-1.5">
           <Label htmlFor="flag">Flag State</Label>
           <AutoGrowInput id="flag" name="flag" defaultValue={v.flag} />
+        </div>
+        <div className="space-y-1.5">
+          <Label htmlFor="portOfRegistry">Port of Registry</Label>
+          <AutoGrowInput id="portOfRegistry" name="portOfRegistry" defaultValue={v.portOfRegistry} />
         </div>
         <div className="space-y-1.5">
           <Label htmlFor="type">Type of Ship</Label>
@@ -168,10 +264,36 @@ export function VesselForm({
             <Label htmlFor="depth">Depth (m)</Label>
             <Input id="depth" name="depth" type="number" step="any" defaultValue={v.depth} />
           </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="lbp">LBP (m)</Label>
+            <Input id="lbp" name="lbp" type="number" step="any" defaultValue={v.lbp} />
+          </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="draft">Draft, ext. (m)</Label>
+            <Input id="draft" name="draft" type="number" step="any" defaultValue={v.draft} />
+          </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="serviceSpeed">Service Speed (knots)</Label>
+            <Input id="serviceSpeed" name="serviceSpeed" type="number" step="any" defaultValue={v.serviceSpeed} />
+          </div>
+        </div>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+          <div className="space-y-1.5">
+            <Label htmlFor="navigationArea">Navigation Area</Label>
+            <AutoGrowInput id="navigationArea" name="navigationArea" defaultValue={v.navigationArea} placeholder="e.g. OCEAN GOING" />
+          </div>
+        </div>
+        <div className="space-y-1.5">
+          <Label htmlFor="classNotation">Class Notation</Label>
+          <AutoGrowInput id="classNotation" name="classNotation" defaultValue={v.classNotation} />
+        </div>
+        <div className="space-y-1.5">
+          <Label htmlFor="mainEngine">Main Engine</Label>
+          <AutoGrowInput id="mainEngine" name="mainEngine" defaultValue={v.mainEngine} />
         </div>
       </fieldset>
 
-      <fieldset className="space-y-2">
+      <fieldset className="space-y-4">
         <legend className="text-sm font-medium">Fleet Register</legend>
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
           <div className="space-y-1.5">
@@ -191,6 +313,25 @@ export function VesselForm({
             <AutoGrowInput id="tradeArea" name="tradeArea" defaultValue={v.tradeArea} placeholder="e.g. FE / SEA" />
           </div>
           <div className="space-y-1.5">
+            <Label htmlFor="yearWithSwan">Year Joined Fleet</Label>
+            <Input id="yearWithSwan" name="yearWithSwan" type="number" defaultValue={v.yearWithSwan} />
+          </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="totalComplement">Total Complement</Label>
+            <Input id="totalComplement" name="totalComplement" type="number" defaultValue={v.totalComplement} />
+          </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="satPhone">Satellite Phone</Label>
+            <Input id="satPhone" name="satPhone" defaultValue={v.satPhone} placeholder="V-SAT number" />
+          </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="vesselEmail">Vessel Email</Label>
+            <Input id="vesselEmail" name="vesselEmail" type="email" defaultValue={v.vesselEmail} />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <div className="space-y-1.5">
             <Label htmlFor="registeredOwner">Registered Owner</Label>
             <AutoGrowInput id="registeredOwner" name="registeredOwner" defaultValue={v.registeredOwner} />
           </div>
@@ -198,13 +339,34 @@ export function VesselForm({
             <Label htmlFor="headOwner">Head Owner</Label>
             <AutoGrowInput id="headOwner" name="headOwner" defaultValue={v.headOwner} />
           </div>
+        </div>
+        <div className="space-y-1.5">
+          <Label htmlFor="ownerAddress">Owner's Address</Label>
+          <AutoGrowInput id="ownerAddress" name="ownerAddress" defaultValue={v.ownerAddress} />
+        </div>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div className="space-y-1.5">
             <Label htmlFor="charterer">Charterer</Label>
             <AutoGrowInput id="charterer" name="charterer" defaultValue={v.charterer} />
           </div>
           <div className="space-y-1.5">
-            <Label htmlFor="yearWithSwan">Year Joined Fleet</Label>
-            <Input id="yearWithSwan" name="yearWithSwan" type="number" defaultValue={v.yearWithSwan} />
+            <Label htmlFor="builder">Builder</Label>
+            <AutoGrowInput id="builder" name="builder" defaultValue={v.builder} />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+          <div className="space-y-1.5">
+            <Label htmlFor="keelLaidDate">Date Keel Laid</Label>
+            <Input id="keelLaidDate" name="keelLaidDate" type="date" defaultValue={v.keelLaidDate} />
+          </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="launchingDate">Launching</Label>
+            <Input id="launchingDate" name="launchingDate" type="date" defaultValue={v.launchingDate} />
+          </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="deliveryDate">Delivery</Label>
+            <Input id="deliveryDate" name="deliveryDate" type="date" defaultValue={v.deliveryDate} />
           </div>
           <div className="space-y-1.5">
             <Label htmlFor="lastDryDock">Last Dry Dock</Label>
@@ -233,6 +395,7 @@ export function VesselForm({
       {state.error && (
         <p className="text-sm text-danger" role="alert">{state.error}</p>
       )}
+      {state.ok && <p className="text-sm text-success">Saved.</p>}
       <div className="flex items-center gap-2">
         <SubmitButton label={submitLabel} pendingLabel={pendingLabel} />
         <Link href="/vessels"><Button type="button" variant="ghost">Cancel</Button></Link>

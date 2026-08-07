@@ -256,6 +256,24 @@ enum SireObservationCategory {
   PHOTOGRAPH
 }
 
+// CDI checklist section. 5LP is type-specific (LPG cargo operations).
+enum CdiObservationSection {
+  SECTION_1
+  SECTION_2
+  SECTION_3
+  SECTION_4
+  SECTION_5LP
+  SECTION_6
+  SECTION_7
+  SECTION_8
+  SECTION_9
+  SECTION_10
+  SECTION_11
+  SECTION_12
+  SECTION_13
+  SECTION_14
+}
+
 // Audit finding severity (Internal & External audits share this).
 enum AuditFindingCategory {
   MAJOR_NC
@@ -286,7 +304,10 @@ model Company {
   internalAudits          InternalAudit[]
   externalAudits          ExternalAudit[]
   committeeMeetings       CommitteeMeeting[]
+  scheduleItems           ScheduleItem[]
   emergencyDrills         EmergencyDrill[]
+  familiarizationRecords  FamiliarizationRecord[]
+  scheduleApplicability   ScheduleApplicability[]
   controlledDocuments     ControlledDocument[]
   circulars               Circular[]
   riskAssessmentDocuments RiskAssessmentDocument[]
@@ -423,6 +444,23 @@ model Vessel {
   lastDryDock     DateTime?
   dryDockPlace    String?
   nextDryDockDue  DateTime?
+
+  // Ship's Particulars — from the vessel's official particulars sheet.
+  portOfRegistry  String?
+  lbp             Float? // Length Between Perpendiculars (m)
+  draft           Float? // Draft, extreme (m)
+  mainEngine      String? // e.g. "HITACHI MAN B&W 6S35ME-B9.7-HPSCR x 1 set"
+  serviceSpeed    Float? // knots
+  navigationArea  String? // e.g. "OCEAN GOING"
+  classNotation   String?
+  ownerAddress    String?
+  builder         String?
+  keelLaidDate    DateTime?
+  launchingDate   DateTime?
+  deliveryDate    DateTime?
+  totalComplement Int? // Grand total complement (persons)
+  satPhone        String? // V-SAT / satellite phone number
+  vesselEmail     String?
   // When this vessel left the fleet (sold / no longer managed) — set
   // automatically when status is changed to SOLD (and cleared if changed
   // back). Drives the "vessels under management by year" fleet history
@@ -447,6 +485,8 @@ model Vessel {
   externalAudits                 ExternalAudit[]
   committeeMeetings              CommitteeMeeting[]
   emergencyDrills                EmergencyDrill[]
+  familiarizationRecords         FamiliarizationRecord[]
+  scheduleApplicability          ScheduleApplicability[]
   controlledDocuments            ControlledDocument[]
   circulars                      Circular[]
   riskAssessmentDocuments        RiskAssessmentDocument[]        @relation("RaDocumentVessel")
@@ -1132,9 +1172,9 @@ model CdiObservation {
   response     String?
   status       FindingStatus @default(OPEN)
 
-  // Same classification taxonomy as SIRE observations, so both modules feed
-  // the same KPI analytics (by category / root cause / vessel).
-  category             SireObservationCategory?
+  // category is the CDI checklist section (1–14, 5LP for LPG cargo ops).
+  // Root-cause taxonomy still mirrors SIRE, so both feed the same KPI shape.
+  category             CdiObservationSection?
   rootCauseCategory    RootCauseCategory?
   rootCauseSubCategory String? // one flat sub-cause per category — see lib/root-cause.ts
   rootCause            String? // free-text root cause description
@@ -1358,18 +1398,82 @@ model CommitteeMeetingAgenda {
   @@index([meetingId])
 }
 
-// ─── Phase 1 module: Emergency Drills ─────────────────────────────────────────
+// ─── Phase 1 module: Emergency Drills & Familiarization ───────────────────────
+//  ScheduleItem is the master checklist — one row per required drill (from
+//  SMS procedure A-EMP-01) or familiarization topic (from CK-047(b)), each
+//  with its required frequency. EmergencyDrill and FamiliarizationRecord are
+//  the actual logged completions against those items; the compliance matrix
+//  (Last/Next due + month grid, per SMS-EMP-01 layout) is computed from them
+//  at read time in features/schedule/queries.ts rather than stored.
 
-enum DrillType {
-  FIRE
-  ABANDON_SHIP
-  MAN_OVERBOARD
-  ENCLOSED_SPACE
-  OIL_SPILL
-  SECURITY
-  STEERING_FAILURE
-  DAMAGE_CONTROL
-  OTHER
+enum ScheduleItemKind {
+  DRILL
+  FAMILIARIZATION
+}
+
+model ScheduleItem {
+  id        String           @id @default(uuid())
+  companyId String
+  company   Company          @relation(fields: [companyId], references: [id])
+  kind      ScheduleItemKind
+
+  // Section heading as printed on the SMS form — "STATUTORY DRILLS",
+  // "NON-STATUTORY DRILL", "TRAINING" (drills); null for familiarization,
+  // which has a single flat list.
+  category       String?
+  // Display numbering as printed, e.g. "1.0", "2.3" — informational only,
+  // not used for sorting (sortOrder is).
+  itemNo         String?
+  name           String
+  smsReference   String?
+  // Required interval, both as printed ("Once in 3 months") and parsed to
+  // days for due-date math. frequencyDays is null for irregular items
+  // ("as required/applicable") — those never show an overdue status.
+  frequencyLabel String?
+  frequencyDays  Int?
+  sortOrder      Int
+  active         Boolean @default(true)
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  drills           EmergencyDrill[]
+  familiarizations FamiliarizationRecord[]
+  exceptions       ScheduleApplicability[]
+
+  @@unique([companyId, kind, itemNo])
+  @@index([companyId, kind, sortOrder])
+}
+
+// Per-vessel override marking a checklist item as not applicable to that
+// specific ship (e.g. a Free Fall Lifeboat drill on a vessel with
+// conventional lifeboats only, or "if applicable" familiarization topics
+// like VGP/Biofouling) — several source-form items are explicitly qualified
+// this way ("only for vessel provided with one liferaft", "if applicable").
+// Only "not applicable" rows are stored; a missing row means the item is
+// applicable (the default) — office-managed, since it's a vessel-equipment
+// fact, not something the ship should toggle unilaterally.
+model ScheduleApplicability {
+  id        String  @id @default(uuid())
+  companyId String
+  company   Company @relation(fields: [companyId], references: [id])
+
+  vesselId String
+  vessel   Vessel @relation(fields: [vesselId], references: [id])
+
+  scheduleItemId String
+  scheduleItem   ScheduleItem @relation(fields: [scheduleItemId], references: [id])
+
+  notApplicable Boolean @default(true)
+  reason        String?
+
+  createdAt DateTime @default(now())
+  createdBy String?
+  updatedAt DateTime @updatedAt
+  updatedBy String?
+
+  @@unique([companyId, vesselId, scheduleItemId])
 }
 
 model EmergencyDrill {
@@ -1381,12 +1485,20 @@ model EmergencyDrill {
   vesselId String
   vessel   Vessel @relation(fields: [vesselId], references: [id])
 
-  drillType    DrillType
-  drillDate    DateTime
-  scenario     String?
-  participants String?
-  conductedBy  String?
-  observations String? // deficiencies / follow-up noted during the drill
+  scheduleItemId String
+  scheduleItem   ScheduleItem @relation(fields: [scheduleItemId], references: [id])
+
+  // Fields mirror SMS form R-AS-021 "Report of Drill / Training onboard"
+  // (Appendix 6) — the vessel's actual paper/PDF report.
+  drillDate        DateTime
+  drillTime        String? // as printed, e.g. "1000H-1030H" — a range, not parsed
+  position         String? // ship's position/location during the drill
+  participants     String? // "Ranks of Crew Participated"
+  conductedBy      String? // Master's name
+  details          String? // "Details of Drill / Training" — full narrative
+  deficiencies     String? // "Found Deficiencies"
+  correctiveAction String? // "Master's Opinion for Improvement and Corrective Action"
+  vesselRemarks    String?
 
   status   FindingStatus @default(OPEN)
   closedAt DateTime?
@@ -1400,6 +1512,36 @@ model EmergencyDrill {
 
   @@unique([companyId, refNo])
   @@index([companyId, status])
+  @@index([companyId, vesselId, scheduleItemId])
+}
+
+// Vessel-level familiarization log (CK-047(b)) — same shape/purpose as
+// EmergencyDrill but for familiarization topics rather than drills; kept as
+// a separate model since the two are logged and reviewed independently even
+// though they share the same ScheduleItem + matrix machinery.
+model FamiliarizationRecord {
+  id        String  @id @default(uuid())
+  companyId String
+  company   Company @relation(fields: [companyId], references: [id])
+
+  vesselId String
+  vessel   Vessel @relation(fields: [vesselId], references: [id])
+
+  scheduleItemId String
+  scheduleItem   ScheduleItem @relation(fields: [scheduleItemId], references: [id])
+
+  completedDate DateTime
+  notedBy       String?
+  remarks       String?
+
+  createdAt DateTime  @default(now())
+  createdBy String?
+  updatedAt DateTime  @updatedAt
+  updatedBy String?
+  deletedAt DateTime?
+  deletedBy String?
+
+  @@index([companyId, vesselId, scheduleItemId])
 }
 
 // ─── Phase 1 module: Controlled Documents ─────────────────────────────────────

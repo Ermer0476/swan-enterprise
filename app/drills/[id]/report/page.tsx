@@ -1,19 +1,18 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, FileText } from "lucide-react";
-import { requirePermission, can } from "@/lib/rbac";
+import { ArrowLeft } from "lucide-react";
+import { requirePermission } from "@/lib/rbac";
 import { getDrill } from "@/features/drills/queries";
-import { PageHeader } from "@/components/ui/page-header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { formatDate, humanize } from "@/lib/utils";
 import { lifecycleStatusTone } from "@/lib/status";
-import { listAttachments } from "@/features/attachments/queries";
-import { AttachmentList } from "@/components/attachments/attachment-list";
-import { DrillActions } from "./drill-actions";
 
-export default async function DrillDetailPage({
+// Clean, fully read-only view of a Drill report — mirrors SMS form R-AS-021
+// "Report of Drill / Training onboard" (Appendix 6). Lives outside the (app)
+// route group on purpose: no Sidebar/Topbar, so there's nothing to hide
+// either on screen or on paper.
+export default async function DrillReportPage({
   params,
 }: {
   params: Promise<{ id: string }>;
@@ -22,11 +21,6 @@ export default async function DrillDetailPage({
   const { id } = await params;
   const drill = await getDrill(user.companyId, id);
   if (!drill) notFound();
-
-  const editable = can(user, "drill:update") && drill.status !== "CLOSED";
-  const canClose = can(user, "drill:close");
-  const canDelete = can(user, "drill:delete");
-  const attachments = await listAttachments(user.companyId, "EmergencyDrill", drill.id);
 
   const meta = [
     {
@@ -45,24 +39,20 @@ export default async function DrillDetailPage({
   ];
 
   return (
-    <div className="mx-auto max-w-7xl">
-      <Link href="/drills" className="mb-3 inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground">
-        <ArrowLeft className="h-4 w-4" /> Back to Emergency Drills
-      </Link>
+    <div className="mx-auto max-w-4xl p-6">
+      <div className="mb-4 print:hidden">
+        <Link
+          href={`/drills/${drill.id}`}
+          className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground"
+        >
+          <ArrowLeft className="h-4 w-4" /> Back to record
+        </Link>
+      </div>
 
-      <PageHeader
-        title={drill.refNo}
-        actions={
-          <div className="flex items-center gap-2">
-            <Badge tone={lifecycleStatusTone(drill.status)}>{humanize(drill.status)}</Badge>
-            <Link href={`/drills/${drill.id}/report`} target="_blank" rel="noopener noreferrer">
-              <Button type="button" variant="outline" size="sm">
-                <FileText className="h-4 w-4" /> Show Report
-              </Button>
-            </Link>
-          </div>
-        }
-      />
+      <div className="mb-6 flex items-center justify-between gap-3">
+        <h1 className="text-xl font-semibold">{drill.refNo}</h1>
+        <Badge tone={lifecycleStatusTone(drill.status)}>{humanize(drill.status)}</Badge>
+      </div>
 
       <div className="mb-6 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
         {meta.map((m) => (
@@ -89,38 +79,13 @@ export default async function DrillDetailPage({
       </Card>
 
       <Card className="mb-6">
-        <CardHeader><CardTitle>Master's Opinion for Improvement and Corrective Action</CardTitle></CardHeader>
+        <CardHeader><CardTitle>Master&apos;s Opinion for Improvement and Corrective Action</CardTitle></CardHeader>
         <CardContent><p className="whitespace-pre-wrap text-sm">{drill.correctiveAction || "—"}</p></CardContent>
       </Card>
 
-      <Card className="mb-6">
+      <Card>
         <CardHeader><CardTitle>Vessel Remarks</CardTitle></CardHeader>
         <CardContent><p className="whitespace-pre-wrap text-sm">{drill.vesselRemarks || "—"}</p></CardContent>
-      </Card>
-
-      <Card className="mb-6">
-        <CardHeader><CardTitle>Attachments</CardTitle></CardHeader>
-        <CardContent>
-          <AttachmentList
-            entityType="EmergencyDrill"
-            entityId={drill.id}
-            editable={editable}
-            attachments={attachments.map((a) => ({
-              id: a.id,
-              fileName: a.fileName,
-              mimeType: a.mimeType,
-              sizeBytes: a.sizeBytes,
-              createdAt: a.createdAt.toISOString(),
-            }))}
-          />
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader><CardTitle>Drill status</CardTitle></CardHeader>
-        <CardContent>
-          <DrillActions drillId={drill.id} isOpen={drill.status !== "CLOSED"} canClose={canClose} canDelete={canDelete} />
-        </CardContent>
       </Card>
     </div>
   );

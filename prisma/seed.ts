@@ -11,6 +11,102 @@ import { ALL_PERMISSION_KEYS, PERMISSIONS, permissionModule } from "../lib/permi
 
 const prisma = new PrismaClient();
 
+// Master drill checklist (SMS A-EMP-01LPG "Emergency Preparedness Drill
+// Monitoring") and familiarization checklist (SMS CK-047(b) "Onboard
+// Familiarization Monitoring") — transcribed verbatim from the company's own
+// forms. frequencyDays is the parsed interval used for Last/Next-due math;
+// null means "as required/applicable" (never flagged overdue).
+type ScheduleItemSeed = {
+  kind: "DRILL" | "FAMILIARIZATION";
+  category: string | null;
+  itemNo: string;
+  name: string;
+  smsReference: string | null;
+  frequencyLabel: string | null;
+  frequencyDays: number | null;
+};
+
+const SCHEDULE_ITEMS: ScheduleItemSeed[] = [
+  // ── STATUTORY DRILLS (SMS A-EMP-01LPG) ──────────────────────────────────
+  { kind: "DRILL", category: "STATUTORY DRILLS", itemNo: "1.0", name: "Abandon Ship (include the lowering of one conventional lifeboat from stowed position, training on hypothermia, test of emergency lights, closing of watertight doors)", smsReference: "EMP-37 / TRN-03", frequencyLabel: "Once in a month", frequencyDays: 30 },
+  { kind: "DRILL", category: "STATUTORY DRILLS", itemNo: "1.1", name: "Liferaft transfer from port side to starboard side (only for vessel provided with one liferaft)", smsReference: "TRN-03", frequencyLabel: "Once in a month", frequencyDays: 30 },
+  { kind: "DRILL", category: "STATUTORY DRILLS", itemNo: "1.2", name: "Lifeboat 1 (Lowering from stowed position)", smsReference: "TRN-03", frequencyLabel: "Once a month (at least one of the lifeboats be lowered)", frequencyDays: 30 },
+  { kind: "DRILL", category: "STATUTORY DRILLS", itemNo: "1.3", name: "Lifeboat 2 (Lowering from stowed position)", smsReference: "TRN-03", frequencyLabel: "Once a month", frequencyDays: 30 },
+  { kind: "DRILL", category: "STATUTORY DRILLS", itemNo: "2.1", name: "Launching and Maneuvering in the water — (a) Conventional Lifeboats (PORT & STARBOARD lifeboats should be lowered and maneuvered in the water)", smsReference: "TRN-03", frequencyLabel: "Once in 3 months", frequencyDays: 90 },
+  { kind: "DRILL", category: "STATUTORY DRILLS", itemNo: "2.2", name: "(b) Free Fall Lifeboat [drill for boarding order and crane launching only, per TRN-03, 5.2(b)]", smsReference: "TRN-03", frequencyLabel: "Once in 3 months", frequencyDays: 90 },
+  { kind: "DRILL", category: "STATUTORY DRILLS", itemNo: "2.3", name: "(c) Free Fall Lifeboat [simulated launching, per TRN-03, 5.2(c)]", smsReference: "TRN-03", frequencyLabel: "Once in 6 months", frequencyDays: 180 },
+  { kind: "DRILL", category: "STATUTORY DRILLS", itemNo: "2.4", name: "(d) Weekly moving out of conventional lifeboat (not required for freefall lifeboat) — record in LSA Maintenance Log (LG-014)", smsReference: "TRN-03", frequencyLabel: "Weekly", frequencyDays: 7 },
+  { kind: "DRILL", category: "STATUTORY DRILLS", itemNo: "2.5", name: "(e) Rescue Boats [maneuver in the water, per TRN-03, 5.4(a)]", smsReference: "TRN-03", frequencyLabel: "Once a month", frequencyDays: 30 },
+  { kind: "DRILL", category: "STATUTORY DRILLS", itemNo: "2.6", name: "(f) Training in Davit-Launched Liferaft (SOLAS III/19.4.3)", smsReference: "TRN-03", frequencyLabel: "Once in 4 months", frequencyDays: 120 },
+  { kind: "DRILL", category: "STATUTORY DRILLS", itemNo: "3.1", name: "Fire Fighting — (a) Fire in the Accommodation", smsReference: "EMP-30/TRN-02", frequencyLabel: "Once in a month", frequencyDays: 30 },
+  { kind: "DRILL", category: "STATUTORY DRILLS", itemNo: "3.2", name: "(b) Fire in the Engine Room (including training and simulated activation of Fixed CO2 system)", smsReference: "EMP-31/TRN-02", frequencyLabel: "Once in a month", frequencyDays: 30 },
+  { kind: "DRILL", category: "STATUTORY DRILLS", itemNo: "3.3", name: "(c) Fire on Deck (cargo area, paint locker, chemical locker, compressor room; including training in the fixed fire extinguishing system for the space)", smsReference: "EMP-15/21/24", frequencyLabel: "Once in a month", frequencyDays: 30 },
+  { kind: "DRILL", category: "STATUTORY DRILLS", itemNo: "4.0", name: "Oil Spill Response / SMPEP equipment handling & onboard communication", smsReference: "TRN-04", frequencyLabel: "Once in a month", frequencyDays: 30 },
+  { kind: "DRILL", category: "STATUTORY DRILLS", itemNo: "5.0", name: "Emergency Steering", smsReference: "EMP-11/TRN-05", frequencyLabel: "Once in 3 months", frequencyDays: 90 },
+  { kind: "DRILL", category: "STATUTORY DRILLS", itemNo: "6.0", name: "Search and Rescue / MOB Drill / Recovery of Persons From the Water", smsReference: "EMP-04/13", frequencyLabel: "Once in 3 months", frequencyDays: 90 },
+  { kind: "DRILL", category: "STATUTORY DRILLS", itemNo: "7.1", name: "Security — (a) Bomb Search", smsReference: "EMP-16", frequencyLabel: "Once in 3 months", frequencyDays: 90 },
+  { kind: "DRILL", category: "STATUTORY DRILLS", itemNo: "7.2", name: "(b) Piracy Prevention", smsReference: "EMP-16", frequencyLabel: "Once in 3 months", frequencyDays: 90 },
+  { kind: "DRILL", category: "STATUTORY DRILLS", itemNo: "7.3", name: "(c) Stowaway Search", smsReference: "EMP-16", frequencyLabel: "Once in 3 months", frequencyDays: 90 },
+  { kind: "DRILL", category: "STATUTORY DRILLS", itemNo: "7.4", name: "(d) Cyber Security", smsReference: "CSP", frequencyLabel: "Yearly", frequencyDays: 365 },
+  { kind: "DRILL", category: "STATUTORY DRILLS", itemNo: "8.0", name: "Enclosed Space Entry & Rescue", smsReference: "EMP-29/TRN-13", frequencyLabel: "Every 2 months", frequencyDays: 60 },
+
+  // ── NON-STATUTORY DRILL (table-top or incorporated with statutory drills) ──
+  { kind: "DRILL", category: "NON-STATUTORY DRILL", itemNo: "9.0", name: "Bridge Control Failure", smsReference: "EMP-43", frequencyLabel: "6 months", frequencyDays: 180 },
+  { kind: "DRILL", category: "NON-STATUTORY DRILL", itemNo: "10.0", name: "Collision", smsReference: "EMP-02", frequencyLabel: "Yearly", frequencyDays: 365 },
+  { kind: "DRILL", category: "NON-STATUTORY DRILL", itemNo: "11.0", name: "Grounding/Flooding", smsReference: "EMP-03", frequencyLabel: "Yearly", frequencyDays: 365 },
+  { kind: "DRILL", category: "NON-STATUTORY DRILL", itemNo: "12.0", name: "Serious Injury, Acute First Aid (Including Death)", smsReference: "EMP-05/06/07", frequencyLabel: "Yearly", frequencyDays: 365 },
+  { kind: "DRILL", category: "NON-STATUTORY DRILL", itemNo: "13.0", name: "Failure of Communication", smsReference: "EMP-08", frequencyLabel: "Yearly", frequencyDays: 365 },
+  { kind: "DRILL", category: "NON-STATUTORY DRILL", itemNo: "14.0", name: "Critical Machinery Failure (M/E, Gen, etc.)", smsReference: "EMP-09/18", frequencyLabel: "Yearly", frequencyDays: 365 },
+  { kind: "DRILL", category: "NON-STATUTORY DRILL", itemNo: "15.0", name: "Heavy Weather Damage", smsReference: "EMP-10", frequencyLabel: "Yearly", frequencyDays: 365 },
+  { kind: "DRILL", category: "NON-STATUTORY DRILL", itemNo: "16.0", name: "Failure of Gyro Compass", smsReference: "EMP-12", frequencyLabel: "Yearly", frequencyDays: 365 },
+  { kind: "DRILL", category: "NON-STATUTORY DRILL", itemNo: "17.0", name: "Salvage and Emergency Towing", smsReference: "EMP-14", frequencyLabel: "Yearly", frequencyDays: 365 },
+  { kind: "DRILL", category: "NON-STATUTORY DRILL", itemNo: "18.0", name: "Asking for Assistance", smsReference: "EMP-17", frequencyLabel: "Yearly", frequencyDays: 365 },
+  { kind: "DRILL", category: "NON-STATUTORY DRILL", itemNo: "19.0", name: "Uncontrolled Venting", smsReference: "EMP-19", frequencyLabel: "Yearly", frequencyDays: 365 },
+  { kind: "DRILL", category: "NON-STATUTORY DRILL", itemNo: "20.0", name: "Jettison of Cargo", smsReference: "EMP-20", frequencyLabel: "Yearly", frequencyDays: 365 },
+  { kind: "DRILL", category: "NON-STATUTORY DRILL", itemNo: "21.0", name: "Cargo Arm Fracture", smsReference: "EMP-22", frequencyLabel: "Yearly", frequencyDays: 365 },
+  { kind: "DRILL", category: "NON-STATUTORY DRILL", itemNo: "22.0", name: "Break Away from Jetty", smsReference: "EMP-23", frequencyLabel: "Yearly", frequencyDays: 365 },
+  { kind: "DRILL", category: "NON-STATUTORY DRILL", itemNo: "23.0", name: "Explosion on Board", smsReference: "EMP-24", frequencyLabel: "Yearly", frequencyDays: 365 },
+  { kind: "DRILL", category: "NON-STATUTORY DRILL", itemNo: "24.0", name: "Cargo Containment Failure", smsReference: "EMP-25", frequencyLabel: "Yearly", frequencyDays: 365 },
+  { kind: "DRILL", category: "NON-STATUTORY DRILL", itemNo: "25.0", name: "Gas or Toxic Cargo Release", smsReference: "EMP-26", frequencyLabel: "Yearly", frequencyDays: 365 },
+  { kind: "DRILL", category: "NON-STATUTORY DRILL", itemNo: "26.0", name: "Structural Failure", smsReference: "EMP-27", frequencyLabel: "Yearly", frequencyDays: 365 },
+  { kind: "DRILL", category: "NON-STATUTORY DRILL", itemNo: "27.0", name: "Tank Overflow (Cargo/Bunker)", smsReference: "EMP-32", frequencyLabel: "Yearly", frequencyDays: 365 },
+  { kind: "DRILL", category: "NON-STATUTORY DRILL", itemNo: "28.0", name: "Toxic & Chemical Cargo Release at Sea/Anchor", smsReference: "EMP-33", frequencyLabel: "Yearly", frequencyDays: 365 },
+  { kind: "DRILL", category: "NON-STATUTORY DRILL", itemNo: "29.0", name: "Hose Burst", smsReference: "EMP-34", frequencyLabel: "Yearly", frequencyDays: 365 },
+  { kind: "DRILL", category: "NON-STATUTORY DRILL", itemNo: "30.0", name: "Helicopter Operation Training (SMS TRN-14)", smsReference: "EMP-39", frequencyLabel: "Yearly", frequencyDays: 365 },
+  { kind: "DRILL", category: "NON-STATUTORY DRILL", itemNo: "31.0", name: "Emergency Situation in the Terminal", smsReference: "EMP-40", frequencyLabel: "Yearly", frequencyDays: 365 },
+  { kind: "DRILL", category: "NON-STATUTORY DRILL", itemNo: "32.0", name: "Cargo Emergency Procedure", smsReference: "EMP-42", frequencyLabel: "Yearly", frequencyDays: 365 },
+  { kind: "DRILL", category: "NON-STATUTORY DRILL", itemNo: "33.0", name: "Emergency Departure with Sloshing Restriction on Tank Levels", smsReference: "EMP-44", frequencyLabel: "Yearly", frequencyDays: 365 },
+  { kind: "DRILL", category: "NON-STATUTORY DRILL", itemNo: "34.0", name: "Fire onboard a Nearby Vessel (underway / at anchor / at berth)", smsReference: null, frequencyLabel: "Yearly", frequencyDays: 365 },
+  { kind: "DRILL", category: "NON-STATUTORY DRILL", itemNo: "35.0", name: "Excessive List", smsReference: "EMP-46", frequencyLabel: "Yearly", frequencyDays: 365 },
+  { kind: "DRILL", category: "NON-STATUTORY DRILL", itemNo: "36.0", name: "SMPEP Complete Plan Drill", smsReference: "SMPEP", frequencyLabel: "Every 3 Years", frequencyDays: 1095 },
+
+  // ── Trainings as required by SMS procedure TRAINING ─────────────────────
+  { kind: "DRILL", category: "TRAINING", itemNo: "37.0", name: "Use of SCBA (per TRN-06) — may be done in conjunction with monthly Fire drills", smsReference: "TRN-06", frequencyLabel: "Monthly", frequencyDays: 30 },
+  { kind: "DRILL", category: "TRAINING", itemNo: "38.0", name: "Periodical GMDSS Drill (per TRN-11, 4.3) — may be in conjunction with Abandon Ship drills", smsReference: "TRN-11", frequencyLabel: "3 months", frequencyDays: 90 },
+  { kind: "DRILL", category: "TRAINING", itemNo: "39.0", name: "Training/Familiarization of type-specific GMDSS Equipment (per TRN-11, 4.2) — record in the GMDSS log", smsReference: "TRN-11", frequencyLabel: "6 Months", frequencyDays: 180 },
+
+  // ── Familiarization (SMS CK-047(b) "Onboard Familiarization Monitoring") ─
+  { kind: "FAMILIARIZATION", category: null, itemNo: "1", name: "Cyber Security Plan (CSP 11)", smsReference: "CSP 11", frequencyLabel: "3 months", frequencyDays: 90 },
+  { kind: "FAMILIARIZATION", category: null, itemNo: "2", name: "Ballast Water Management Plan (BWMP 13)", smsReference: "BWMP 13", frequencyLabel: "3 months", frequencyDays: 90 },
+  { kind: "FAMILIARIZATION", category: null, itemNo: "3", name: "Shipboard Energy Efficiency Management Plan (SEEMP — VIQ 2.4)", smsReference: "SEEMP", frequencyLabel: "3 months", frequencyDays: 90 },
+  { kind: "FAMILIARIZATION", category: null, itemNo: "4", name: "Mooring System Management Plan incl. Line Management Plan (MSMP 5.3)", smsReference: "MSMP 5.3", frequencyLabel: "3 months", frequencyDays: 90 },
+  { kind: "FAMILIARIZATION", category: null, itemNo: "5", name: "Shipboard Marine Pollution Emergency Plan (SMPEP 6.3)", smsReference: "SMPEP 6.3", frequencyLabel: "3 months", frequencyDays: 90 },
+  { kind: "FAMILIARIZATION", category: null, itemNo: "6", name: "Garbage Management Plan (GMP Ch. V)", smsReference: "GMP Ch. V", frequencyLabel: "3 months", frequencyDays: 90 },
+  { kind: "FAMILIARIZATION", category: null, itemNo: "7", name: "Crane Operation (VIQ 8.5)", smsReference: "VIQ 8.5", frequencyLabel: "3 months", frequencyDays: 90 },
+  { kind: "FAMILIARIZATION", category: null, itemNo: "8", name: "Recovery of Persons from Water", smsReference: null, frequencyLabel: "3 months", frequencyDays: 90 },
+  { kind: "FAMILIARIZATION", category: null, itemNo: "9", name: "Guide for Cold Water Survival", smsReference: null, frequencyLabel: "3 months", frequencyDays: 90 },
+  { kind: "FAMILIARIZATION", category: null, itemNo: "10", name: "Vessel Hardening Plan (VHP)", smsReference: "VHP", frequencyLabel: "3 months", frequencyDays: 90 },
+  { kind: "FAMILIARIZATION", category: null, itemNo: "11", name: "Biofouling Plan, if applicable", smsReference: null, frequencyLabel: "6 months", frequencyDays: 180 },
+  { kind: "FAMILIARIZATION", category: null, itemNo: "12", name: "VGP, if applicable", smsReference: "VGP", frequencyLabel: "6 months", frequencyDays: 180 },
+  { kind: "FAMILIARIZATION", category: null, itemNo: "13", name: "NTVRP, if applicable", smsReference: "NTVRP", frequencyLabel: "6 months", frequencyDays: 180 },
+  { kind: "FAMILIARIZATION", category: null, itemNo: "14", name: "EU MRV Monitoring Plan, if applicable", smsReference: null, frequencyLabel: "6 months", frequencyDays: 180 },
+  { kind: "FAMILIARIZATION", category: null, itemNo: "15", name: "iSMS Training / Familiarization for Joined Crew and Ratings", smsReference: null, frequencyLabel: "Monthly", frequencyDays: 30 },
+  { kind: "FAMILIARIZATION", category: null, itemNo: "16", name: "Ship to Ship Operation Training", smsReference: null, frequencyLabel: "As required/applicable", frequencyDays: null },
+  { kind: "FAMILIARIZATION", category: null, itemNo: "17", name: "Resilience", smsReference: null, frequencyLabel: "Monthly", frequencyDays: 30 },
+  { kind: "FAMILIARIZATION", category: null, itemNo: "18", name: "Learning Engagement Tool", smsReference: null, frequencyLabel: "Monthly", frequencyDays: 30 },
+  { kind: "FAMILIARIZATION", category: null, itemNo: "19", name: "Reflective Learning", smsReference: null, frequencyLabel: "Monthly", frequencyDays: 30 },
+];
+
 // Role → permission grants. Roles are data; adjust freely.
 const ROLE_GRANTS: Record<string, { desc: string; perms: string[] }> = {
   Administrator: {
@@ -847,20 +943,80 @@ async function main() {
     });
   }
 
-  // Sample Emergency Drill
+  // Drill & Familiarization master checklist (SMS A-EMP-01LPG / CK-047(b))
+  const scheduleItemIds: Record<string, string> = {};
+  for (let i = 0; i < SCHEDULE_ITEMS.length; i++) {
+    const s = SCHEDULE_ITEMS[i]!;
+    const item = await prisma.scheduleItem.upsert({
+      where: { companyId_kind_itemNo: { companyId: company.id, kind: s.kind, itemNo: s.itemNo } },
+      update: {
+        category: s.category,
+        name: s.name,
+        smsReference: s.smsReference,
+        frequencyLabel: s.frequencyLabel,
+        frequencyDays: s.frequencyDays,
+        sortOrder: i,
+      },
+      create: {
+        companyId: company.id,
+        kind: s.kind,
+        category: s.category,
+        itemNo: s.itemNo,
+        name: s.name,
+        smsReference: s.smsReference,
+        frequencyLabel: s.frequencyLabel,
+        frequencyDays: s.frequencyDays,
+        sortOrder: i,
+      },
+    });
+    scheduleItemIds[`${s.kind}:${s.itemNo}`] = item.id;
+  }
+
+  // Sample Emergency Drill — transcribed verbatim from SMS form R-AS-021
+  // "Report of Drill / Training onboard" (Appendix 6).
   if (!(await prisma.emergencyDrill.findFirst({ where: { companyId: company.id, refNo: "DR-2026-0001" } }))) {
     await prisma.emergencyDrill.create({
       data: {
         companyId: company.id,
         refNo: "DR-2026-0001",
         vesselId: firstVessel!.id,
-        drillType: "FIRE",
-        drillDate: new Date(),
-        scenario: "Engine room fire, CO2 release drill (simulated).",
-        participants: "All crew on board",
-        conductedBy: "Capt. Ramon Reyes",
-        observations: "Response time within target; one extinguisher due for service.",
+        scheduleItemId: scheduleItemIds["DRILL:1.0"]!, // Abandon Ship
+        drillDate: new Date("2026-01-06"),
+        drillTime: "1000H-1030H",
+        position: "AT CAPE TOWN ANCHORAGE, SOUTH AFRICA",
+        participants: "ALL CREW EXCEPT DUTY ENGINEER",
+        conductedBy: "CAPT. FERDINAND R. DEL MONTE",
+        details:
+          "1000H – General Emergency Alarm sounded (seven short and one long blast) from the ship's bell followed by announcement by the Master on the PA System “ABANDON SHIP DRILL (said three times)!”\n\n" +
+          "1004H – All crew (except Duty Engineer) arrived at the designated abandon ship muster station, passing by the Navigation Bridge. Chief Officer reported to Command Squad that all crew are accounted for with their assigned carrying things provided in the Station Bill. Master then instructed Chief Officer to review all crew's duties and responsibilities during abandon ship scenario and to check if their assigned things to carry are correct and complete. Checking of lifejacket lights and whistles as well as donning will then follow. Chief Officer acknowledges Master's instructions.\n\n" +
+          "1006H – Chief Officer reported lifejacket inspection and review of duties and responsibilities completed. All lights and whistles are working properly. Master then instructed all crew to proceed by pair inside the Freefall Lifeboat and to review each own seating arrangement. Seat belt fit should also be ensured. After which, Chief Officer to conduct Training in hypothermia and review of the Freefall Lifeboat's features which includes testing of the lifeboat's engine, rudder, and lights; location and use of the lifeboat's equipment; preparation for launching and launching procedures; and the use of radio life-saving appliances.\n\n" +
+          "1020H – Emergency lights were switched on for checking. Master assigned some crew to check all emergency lights and if all watertight doors in the accommodation area can be closed accordingly.\n\n" +
+          "1023H – Chief Officer reported that familiarization and training completed, no busted emergency lights noted, and all watertight doors can be closed tightly. Drill debriefing was then conducted after.\n\n" +
+          "1030H – Debriefing concluded. Master dismissed the drill and instructed all Deck hands to proceed to the Nav. Bridge for GMDSS Drill. All Engine hands were dismissed to their respective agenda for the rest of the day.",
+        deficiencies: "No deficiencies were noted during the drill.",
+        correctiveAction:
+          "Commended all crew for a successful abandon ship drill. Reminded all crew to be fully familiar with their duties and responsibilities during abandon ship scenario for a more rapid response and action.",
+        vesselRemarks: "Freefall Lifeboat and equipment found in good working condition and stowage positions; and ready for immediate use.",
         status: "OPEN",
+        createdBy: adminId || null,
+      },
+    });
+  }
+
+  // Sample Familiarization record
+  if (
+    !(await prisma.familiarizationRecord.findFirst({
+      where: { companyId: company.id, vesselId: firstVessel!.id, scheduleItemId: scheduleItemIds["FAMILIARIZATION:1"] },
+    }))
+  ) {
+    await prisma.familiarizationRecord.create({
+      data: {
+        companyId: company.id,
+        vesselId: firstVessel!.id,
+        scheduleItemId: scheduleItemIds["FAMILIARIZATION:1"]!, // Cyber Security Plan
+        completedDate: new Date(),
+        notedBy: "Capt. Ramon Reyes",
+        remarks: "Reviewed with deck & engine officers.",
         createdBy: adminId || null,
       },
     });

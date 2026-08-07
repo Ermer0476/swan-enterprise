@@ -5,14 +5,38 @@ export const INSPECTION_STATUSES = ["OPEN", "IN_PROGRESS", "CLOSED"] as const;
 export const FINDING_STATUSES = ["OPEN", "CLOSED"] as const;
 export const CDI_SCHEMES = ["CDI-M", "CDI-T", "CDI-SQAS"] as const;
 
-// Same classification taxonomy as SIRE observations — see
-// features/sire/schema.ts — so both feed identical KPI analytics.
-export const CDI_OBSERVATION_CATEGORIES = ["HARDWARE", "PROCESS", "HUMAN", "PHOTOGRAPH"] as const;
+// CDI checklist sections. 5LP is type-specific (LPG cargo operations).
+export const CDI_OBSERVATION_CATEGORIES = [
+  "SECTION_1",
+  "SECTION_2",
+  "SECTION_3",
+  "SECTION_4",
+  "SECTION_5LP",
+  "SECTION_6",
+  "SECTION_7",
+  "SECTION_8",
+  "SECTION_9",
+  "SECTION_10",
+  "SECTION_11",
+  "SECTION_12",
+  "SECTION_13",
+  "SECTION_14",
+] as const;
 export const CDI_OBSERVATION_CATEGORY_LABELS: Record<(typeof CDI_OBSERVATION_CATEGORIES)[number], string> = {
-  HARDWARE: "Hardware",
-  PROCESS: "Process",
-  HUMAN: "Human",
-  PHOTOGRAPH: "Photograph",
+  SECTION_1: "1 — Certification, Manning, etc.",
+  SECTION_2: "2 — Management and Personnel",
+  SECTION_3: "3 — Bridge",
+  SECTION_4: "4 — Mooring",
+  SECTION_5LP: "5LP — Cargo Operations (LPG)",
+  SECTION_6: "6 — Engine Department",
+  SECTION_7: "7 — Operational Safety",
+  SECTION_8: "8 — Health, Safety and Personnel Protection",
+  SECTION_9: "9 — Firefighting",
+  SECTION_10: "10 — Lifesaving",
+  SECTION_11: "11 — Environmental Protection",
+  SECTION_12: "12 — Security",
+  SECTION_13: "13 — Hull and Superstructure",
+  SECTION_14: "14 — Accommodation",
 };
 
 export const createCdiSchema = z.object({

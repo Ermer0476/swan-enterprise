@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { requirePermission } from "@/lib/rbac";
 import { cdiAnalytics, resolveCdiPeriod } from "@/features/cdi/queries";
+import { CDI_OBSERVATION_CATEGORIES, CDI_OBSERVATION_CATEGORY_LABELS } from "@/features/cdi/schema";
 import { ROOT_CAUSE_LABELS, ROOT_CAUSE_SUBCATEGORY_LABELS, type RootCauseCategoryValue } from "@/lib/root-cause";
 import { PageHeader } from "@/components/ui/page-header";
 import { Card, CardContent } from "@/components/ui/card";
@@ -29,7 +30,11 @@ export default async function CdiKpiPage({
   const data = await cdiAnalytics(user.companyId, range);
 
   const categoryData: BarDatum[] = Object.entries(data.byCategory)
-    .map(([key, value], i) => ({ label: humanize(key), value, color: paletteColor(i) }))
+    .map(([key, value], i) => ({
+      label: CDI_OBSERVATION_CATEGORY_LABELS[key as (typeof CDI_OBSERVATION_CATEGORIES)[number]] ?? humanize(key),
+      value,
+      color: paletteColor(i),
+    }))
     .sort((a, b) => b.value - a.value);
 
   const rootCauseData: BarDatum[] = Object.entries(data.byRootCause)

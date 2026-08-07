@@ -1,8 +1,8 @@
 import Link from "next/link";
-import { Plus, Flame } from "lucide-react";
+import { Plus, Flame, LayoutGrid } from "lucide-react";
 import { requirePermission, can } from "@/lib/rbac";
 import { listDrills } from "@/features/drills/queries";
-import { DRILL_TYPES } from "@/features/drills/schema";
+import { listScheduleItems } from "@/features/schedule/queries";
 import { PageHeader } from "@/components/ui/page-header";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -10,7 +10,7 @@ import { Input, Select } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { formatDate, humanize } from "@/lib/utils";
 import { lifecycleStatusTone } from "@/lib/status";
-import type { FindingStatus, DrillType } from "@/lib/generated/prisma";
+import type { FindingStatus } from "@/lib/generated/prisma";
 
 export default async function DrillsPage({
   searchParams,
@@ -19,11 +19,14 @@ export default async function DrillsPage({
 }) {
   const user = await requirePermission("drill:read");
   const sp = await searchParams;
-  const rows = await listDrills(user.companyId, {
-    search: sp.q || undefined,
-    status: (sp.status as FindingStatus) || undefined,
-    drillType: (sp.drillType as DrillType) || undefined,
-  });
+  const [rows, scheduleItems] = await Promise.all([
+    listDrills(user.companyId, {
+      search: sp.q || undefined,
+      status: (sp.status as FindingStatus) || undefined,
+      scheduleItemId: sp.scheduleItemId || undefined,
+    }),
+    listScheduleItems(user.companyId, "DRILL"),
+  ]);
   const canCreate = can(user, "drill:create");
 
   return (
@@ -32,11 +35,16 @@ export default async function DrillsPage({
         title="Emergency Drills"
         description="Fire, abandon ship, man overboard and other SOLAS/ISM drill records."
         actions={
-          canCreate ? (
-            <Link href="/drills/new">
-              <Button><Plus className="h-4 w-4" /> Record Drill</Button>
+          <div className="flex items-center gap-2">
+            <Link href="/drills/matrix">
+              <Button variant="outline"><LayoutGrid className="h-4 w-4" /> Drill Matrix</Button>
             </Link>
-          ) : undefined
+            {canCreate && (
+              <Link href="/drills/new">
+                <Button><Plus className="h-4 w-4" /> Record Drill</Button>
+              </Link>
+            )}
+          </div>
         }
       />
 
@@ -44,9 +52,13 @@ export default async function DrillsPage({
         <div className="min-w-52 flex-1">
           <Input name="q" placeholder="Search by ref or conducted by…" defaultValue={sp.q ?? ""} />
         </div>
-        <Select name="drillType" defaultValue={sp.drillType ?? ""} className="w-52">
-          <option value="">Any type</option>
-          {DRILL_TYPES.map((t) => <option key={t} value={t}>{humanize(t)}</option>)}
+        <Select name="scheduleItemId" defaultValue={sp.scheduleItemId ?? ""} className="w-64">
+          <option value="">Any drill item</option>
+          {scheduleItems.map((item) => (
+            <option key={item.id} value={item.id}>
+              {item.itemNo ? `${item.itemNo} — ` : ""}{item.name}
+            </option>
+          ))}
         </Select>
         <Select name="status" defaultValue={sp.status ?? ""} className="w-36">
           <option value="">All statuses</option>
@@ -71,7 +83,7 @@ export default async function DrillsPage({
               <thead className="border-b border-border bg-muted/40 text-left text-xs uppercase tracking-wide text-muted-foreground">
                 <tr>
                   <th className="px-4 py-2.5 font-medium">Ref</th>
-                  <th className="px-4 py-2.5 font-medium">Type</th>
+                  <th className="px-4 py-2.5 font-medium">Drill</th>
                   <th className="px-4 py-2.5 font-medium">Vessel</th>
                   <th className="px-4 py-2.5 font-medium">Date</th>
                   <th className="px-4 py-2.5 font-medium">Conducted by</th>
@@ -84,7 +96,9 @@ export default async function DrillsPage({
                     <td className="px-4 py-2.5 font-mono text-xs">
                       <Link href={`/drills/${r.id}`} className="text-accent hover:underline">{r.refNo}</Link>
                     </td>
-                    <td className="px-4 py-2.5 text-muted-foreground">{humanize(r.drillType)}</td>
+                    <td className="px-4 py-2.5 text-muted-foreground">
+                      {r.scheduleItem ? `${r.scheduleItem.itemNo ? `${r.scheduleItem.itemNo} — ` : ""}${r.scheduleItem.name}` : "—"}
+                    </td>
                     <td className="px-4 py-2.5 text-muted-foreground">{r.vessel?.name ?? "—"}</td>
                     <td className="px-4 py-2.5 text-muted-foreground">{formatDate(r.drillDate)}</td>
                     <td className="px-4 py-2.5 text-muted-foreground">{r.conductedBy ?? "—"}</td>

@@ -311,6 +311,38 @@ export const investigationSchema = z
 
 export type SofRow = { time: string; event: string };
 
+// Matches a leading time (or time range) at the start of a pasted SOF line —
+// "0730H", "0910 LT", or a range like "1506H – 1512H" (en dash) — followed
+// by the "TIME - event text" separator. Lines that don't start with a
+// recognizable time (a narrative aside, a condition/remark, a bullet under
+// the previous line) have no match and get folded into the previous row
+// instead, since they're continuations of that fact, not a new one.
+const SOF_TIME_LINE =
+  /^(\d{3,4}\s*(?:H|LT)?(?:\s*[–—-]\s*\d{3,4}\s*(?:H|LT)?)?)\s*-\s*(.+)$/i;
+
+/** Parses a pasted Statement-of-Facts block (one fact per line, each
+ * starting with a time) into Time/Event rows. A line with no recognizable
+ * leading time — a date/section header before the first timed line, a
+ * remark with no timestamp, or a bullet continuing the previous line —
+ * gets appended to whichever row precedes it (or starts a blank-time row,
+ * if it's the very first line) rather than being dropped. */
+export function parseSofPasteText(text: string): SofRow[] {
+  const rows: SofRow[] = [];
+  for (const rawLine of text.split(/\r?\n/)) {
+    const line = rawLine.trim();
+    if (!line) continue;
+    const m = SOF_TIME_LINE.exec(line);
+    if (m) {
+      rows.push({ time: m[1]!.trim(), event: m[2]!.trim() });
+    } else if (rows.length > 0) {
+      rows[rows.length - 1]!.event += "\n" + line;
+    } else {
+      rows.push({ time: "", event: line });
+    }
+  }
+  return rows;
+}
+
 /** Zips sofTime/sofEvent form arrays (paired by index); drops blank rows. */
 export function buildSofRows(sofTime: string[], sofEvent: string[]): SofRow[] {
   const rows: SofRow[] = [];

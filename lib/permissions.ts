@@ -89,12 +89,13 @@ export const PERMISSIONS = {
   "meeting:close": "Close out a reported committee meeting once shore has commented",
   "meeting:delete": "Delete committee meetings",
 
-  // Emergency Drills module
-  "drill:read": "View emergency drills",
-  "drill:create": "Record emergency drills",
+  // Emergency Drills module — also gates Familiarization logging (CK-047(b)),
+  // which shares the same audience/workflow rather than its own key set.
+  "drill:read": "View emergency drills and familiarization records",
+  "drill:create": "Record emergency drills and familiarization completions",
   "drill:update": "Edit drill records and observations",
   "drill:close": "Close emergency drills",
-  "drill:delete": "Delete emergency drills",
+  "drill:delete": "Delete emergency drills and familiarization records",
 
   // Controlled Documents module
   "doc:read": "View controlled documents",
