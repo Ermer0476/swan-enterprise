@@ -49,7 +49,9 @@ export async function buildScheduleMatrix(
   if (itemIds.length > 0) {
     if (kind === "DRILL") {
       const rows = await prisma.emergencyDrill.findMany({
-        where: { companyId, vesselId, scheduleItemId: { in: itemIds }, deletedAt: null },
+        // A Draft isn't a completed drill yet — exclude it so it doesn't
+        // count toward this month's compliance until it's actually reported.
+        where: { companyId, vesselId, scheduleItemId: { in: itemIds }, deletedAt: null, status: { not: "DRAFT" } },
         select: { id: true, scheduleItemId: true, drillDate: true },
       });
       for (const r of rows) {
@@ -119,4 +121,141 @@ export async function buildScheduleMatrix(
       naReason: naByItem.get(item.id) ?? null,
     };
   });
+}
+
+export type DrillMonthlyComplianceRow = {
+  vesselId: string;
+  vesselName: string;
+  missingItems: string[];
+};
+
+// A drill/familiarization item with frequencyDays this short only makes
+// sense read as "required every calendar month" — anything longer (e.g.
+// quarterly) is already covered by buildScheduleMatrix's ordinary
+// last-date/next-due overdue tracking, not a per-month requirement.
+export const MONTHLY_FREQUENCY_DAYS_MAX = 31;
+
+/** Same per-vessel matrix as buildScheduleMatrix, but for every vessel at
+ * once in a fixed handful of queries instead of one buildScheduleMatrix
+ * call (2-3 queries) per vessel — the difference between ~3 queries and
+ * ~50+ once the fleet is more than a couple vessels. Used by the fleet-wide
+ * Vessel Health rollup and the monthly-compliance alert list below. */
+export async function buildFleetDrillMatrix(companyId: string, year: number): Promise<Map<string, MatrixRow[]>> {
+  const [vessels, items] = await Promise.all([
+    prisma.vessel.findMany({
+      where: { companyId, deletedAt: null, status: "ACTIVE" },
+      select: { id: true },
+    }),
+    listScheduleItems(companyId, "DRILL"),
+  ]);
+  const vesselIds = vessels.map((v) => v.id);
+  const itemIds = items.map((i) => i.id);
+
+  const [drillRows, exceptions] =
+    vesselIds.length && itemIds.length
+      ? await Promise.all([
+          prisma.emergencyDrill.findMany({
+            where: { companyId, vesselId: { in: vesselIds }, scheduleItemId: { in: itemIds }, deletedAt: null, status: { not: "DRAFT" } },
+            select: { id: true, vesselId: true, scheduleItemId: true, drillDate: true },
+          }),
+          prisma.scheduleApplicability.findMany({
+            where: { companyId, vesselId: { in: vesselIds }, scheduleItemId: { in: itemIds }, notApplicable: true },
+            select: { vesselId: true, scheduleItemId: true, reason: true },
+          }),
+        ])
+      : [[], []];
+
+  const byVesselItem = new Map<string, Map<string, { id: string; date: Date }[]>>();
+  for (const r of drillRows) {
+    const itemMap = byVesselItem.get(r.vesselId) ?? new Map();
+    const arr = itemMap.get(r.scheduleItemId) ?? [];
+    arr.push({ id: r.id, date: r.drillDate });
+    itemMap.set(r.scheduleItemId, arr);
+    byVesselItem.set(r.vesselId, itemMap);
+  }
+  const naByVesselItem = new Map<string, Map<string, string | null>>();
+  for (const e of exceptions) {
+    const itemMap = naByVesselItem.get(e.vesselId) ?? new Map();
+    itemMap.set(e.scheduleItemId, e.reason);
+    naByVesselItem.set(e.vesselId, itemMap);
+  }
+
+  const today = new Date();
+  const result = new Map<string, MatrixRow[]>();
+  for (const vesselId of vesselIds) {
+    const itemMap: Map<string, { id: string; date: Date }[]> = byVesselItem.get(vesselId) ?? new Map();
+    const naMap: Map<string, string | null> = naByVesselItem.get(vesselId) ?? new Map();
+    result.set(
+      vesselId,
+      items.map((item) => {
+        const entries = (itemMap.get(item.id) ?? []).sort((a, b) => b.date.getTime() - a.date.getTime());
+        const lastDate = entries[0]?.date ?? null;
+        const nextDue = lastDate && item.frequencyDays ? new Date(lastDate.getTime() + item.frequencyDays * 86_400_000) : null;
+        const notApplicable = naMap.has(item.id);
+
+        let status: MatrixRow["status"] = "none";
+        if (item.frequencyDays && !notApplicable) {
+          status = !lastDate || (nextDue && nextDue < today) ? "red" : "green";
+        }
+
+        const monthEntries: { day: number; id: string }[][] = Array.from({ length: 12 }, () => []);
+        for (const e of entries) {
+          if (e.date.getFullYear() === year) {
+            monthEntries[e.date.getMonth()]!.push({ day: e.date.getDate(), id: e.id });
+          }
+        }
+        for (const month of monthEntries) month.sort((a, b) => a.day - b.day);
+
+        return {
+          id: item.id,
+          category: item.category,
+          itemNo: item.itemNo,
+          name: item.name,
+          smsReference: item.smsReference,
+          frequencyLabel: item.frequencyLabel,
+          frequencyDays: item.frequencyDays,
+          lastDate,
+          nextDue,
+          status,
+          monthEntries,
+          notApplicable,
+          naReason: naMap.get(item.id) ?? null,
+        };
+      }),
+    );
+  }
+  return result;
+}
+
+/** Fleet-wide "did every vessel do its monthly-required drill(s) this
+ * calendar month" check — built on buildFleetDrillMatrix's single batched
+ * pass rather than one buildScheduleMatrix call per vessel. */
+export async function listDrillMonthlyCompliance(companyId: string): Promise<DrillMonthlyComplianceRow[]> {
+  const vessels = await prisma.vessel.findMany({
+    where: { companyId, deletedAt: null, status: "ACTIVE" },
+    select: { id: true, name: true },
+    orderBy: { name: "asc" },
+  });
+
+  const now = new Date();
+  const month = now.getMonth();
+  const matrixByVessel = await buildFleetDrillMatrix(companyId, now.getFullYear());
+
+  return vessels.map((v) => {
+    const matrix = matrixByVessel.get(v.id) ?? [];
+    const missing = matrix.filter(
+      (item) =>
+        item.frequencyDays !== null &&
+        item.frequencyDays <= MONTHLY_FREQUENCY_DAYS_MAX &&
+        !item.notApplicable &&
+        (item.monthEntries[month] ?? []).length === 0,
+    );
+    return { vesselId: v.id, vesselName: v.name, missingItems: missing.map((m) => m.name) };
+  });
+}
+
+/** Vessels with at least one monthly-required drill not yet done this
+ * month — the Dashboard alert-worthy subset. */
+export function drillMonthlyAlerts(rows: DrillMonthlyComplianceRow[]): DrillMonthlyComplianceRow[] {
+  return rows.filter((r) => r.missingItems.length > 0);
 }

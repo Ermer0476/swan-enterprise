@@ -48,3 +48,47 @@ export async function setScheduleApplicabilityAction(formData: FormData): Promis
   revalidatePath("/drills/matrix");
   return OK;
 }
+
+// Administrator-only (schedule:manage) — stricter than the N/A toggle
+// above, since this is a fixed SMS schedule fact shared by the whole
+// fleet, not a per-vessel one. No office role other than Administrator
+// should be able to change it, let alone a vessel.
+export async function updateScheduleItemFrequencyAction(formData: FormData): Promise<ActionResult> {
+  const user = await requirePermission("schedule:manage");
+  const scheduleItemId = String(formData.get("scheduleItemId") ?? "");
+  const frequencyLabel = String(formData.get("frequencyLabel") ?? "").trim();
+  const frequencyDaysRaw = String(formData.get("frequencyDays") ?? "").trim();
+  if (!scheduleItemId) return fail("Missing item");
+
+  const item = await prisma.scheduleItem.findFirst({
+    where: { id: scheduleItemId, companyId: user.companyId, deletedAt: null },
+  });
+  if (!item) return fail("Schedule item not found");
+
+  // Blank days = irregular item ("as required/applicable") — never flagged
+  // overdue, matching the existing frequencyDays-null convention.
+  let frequencyDays: number | null = null;
+  if (frequencyDaysRaw) {
+    const parsed = Number(frequencyDaysRaw);
+    if (!Number.isInteger(parsed) || parsed <= 0) {
+      return fail("Frequency (days) must be a positive whole number");
+    }
+    frequencyDays = parsed;
+  }
+
+  await prisma.scheduleItem.update({
+    where: { id: item.id },
+    data: { frequencyLabel: frequencyLabel || null, frequencyDays },
+  });
+
+  await writeAudit({
+    actor: user,
+    action: "UPDATE",
+    entityType: "ScheduleItem",
+    entityId: item.id,
+    summary: `Updated frequency for ${item.name} — ${frequencyLabel || "no fixed frequency"}`,
+  });
+
+  revalidatePath("/drills/matrix");
+  return OK;
+}

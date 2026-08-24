@@ -19,7 +19,8 @@ export default async function DefectDetailPage({
 }) {
   const user = await requirePermission("defect:read");
   const { id } = await params;
-  const defect = await getDefect(user.companyId, id);
+  const isShipboard = user.department === "SHIPBOARD";
+  const defect = await getDefect(user.companyId, id, isShipboard, user.vesselId);
   if (!defect) notFound();
 
   const editable = can(user, "defect:update");

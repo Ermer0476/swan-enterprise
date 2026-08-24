@@ -7,6 +7,13 @@ export type RiskDocFilters = { search?: string; status?: DocumentStatus };
 
 const hazardRowOrder = { rowNo: "asc" as const };
 
+// Vessel-added rows (vesselId set) carry their vessel's name along so
+// callers can label "added by <vessel>" without a separate lookup.
+const hazardRowInclude = {
+  orderBy: hazardRowOrder,
+  include: { vessel: { select: { name: true } } },
+} as const;
+
 /** Highest residual-risk band across a revision's hazard rows — per RC-012
  * policy, overall risk = the worst row after controls, never a flat average. */
 export function overallRiskBand(
@@ -21,30 +28,48 @@ export function overallRiskBand(
   return riskBand(worst);
 }
 
+export type ExecutionFilters = { search?: string; vesselId?: string };
+
 /** All job executions across every Risk Assessment, newest first — the
- * shipboard-facing landing view ("what jobs have we done RAs for"). */
-export async function listAllExecutions(companyId: string, filters: { search?: string } = {}) {
-  return prisma.riskAssessmentExecution.findMany({
-    where: {
-      companyId,
-      ...(filters.search
-        ? {
-            OR: [
-              { jobName: { contains: filters.search } },
-              { document: { refNo: { contains: filters.search } } },
-              { document: { title: { contains: filters.search } } },
-            ],
-          }
-        : {}),
-    },
-    include: {
-      vessel: { select: { name: true } },
-      document: { select: { id: true, refNo: true, title: true } },
-      revision: { select: { revisionNo: true } },
-    },
-    orderBy: { executedAt: "desc" },
-    take: 200,
-  });
+ * shipboard-facing landing view ("what jobs have we done RAs for"). Paginated
+ * (30/page) so the table stays fast once the fleet has built up months of
+ * executions instead of loading everything at once. */
+export async function listAllExecutions(
+  companyId: string,
+  filters: ExecutionFilters = {},
+  page = 1,
+  pageSize = 30,
+) {
+  const where = {
+    companyId,
+    ...(filters.vesselId ? { vesselId: filters.vesselId } : {}),
+    ...(filters.search
+      ? {
+          OR: [
+            { jobName: { contains: filters.search } },
+            { document: { refNo: { contains: filters.search } } },
+            { document: { title: { contains: filters.search } } },
+          ],
+        }
+      : {}),
+  };
+
+  const [rows, total] = await Promise.all([
+    prisma.riskAssessmentExecution.findMany({
+      where,
+      include: {
+        vessel: { select: { name: true } },
+        document: { select: { id: true, refNo: true, title: true } },
+        revision: { select: { revisionNo: true } },
+      },
+      orderBy: { executedAt: "desc" },
+      skip: (page - 1) * pageSize,
+      take: pageSize,
+    }),
+    prisma.riskAssessmentExecution.count({ where }),
+  ]);
+
+  return { rows, total, page, pageSize, totalPages: Math.max(1, Math.ceil(total / pageSize)) };
 }
 
 /** Office-facing KPIs for the Job Executions landing page. */
@@ -102,16 +127,27 @@ export async function listRiskDocuments(companyId: string, filters: RiskDocFilte
   });
 }
 
-/** Full document with revision history (+ hazard rows), executions and revision requests. */
-export async function getRiskDocument(companyId: string, id: string) {
+/** Full document with revision history (+ hazard rows), executions and revision requests.
+ * `shipboardVesselId` — pass the caller's vessel id (or null) when the caller
+ * is SHIPBOARD to restrict to fleet-wide (vesselId null, per schema comment)
+ * or this vessel's own document; omit entirely for OFFICE callers, who see
+ * every document as before. */
+export async function getRiskDocument(companyId: string, id: string, shipboardVesselId?: string | null) {
   return prisma.riskAssessmentDocument.findFirst({
-    where: { id, companyId, deletedAt: null },
+    where: {
+      id,
+      companyId,
+      deletedAt: null,
+      ...(shipboardVesselId !== undefined
+        ? { OR: [{ vesselId: null }, { vesselId: shipboardVesselId ?? "__no-vessel-assigned__" }] }
+        : {}),
+    },
     include: {
       vessel: { select: { name: true } },
-      currentRevision: { include: { hazardRows: { orderBy: hazardRowOrder } } },
+      currentRevision: { include: { hazardRows: hazardRowInclude } },
       revisions: {
         orderBy: { revisionNo: "desc" },
-        include: { hazardRows: { orderBy: hazardRowOrder } },
+        include: { hazardRows: hazardRowInclude },
       },
       executions: {
         orderBy: { executedAt: "desc" },

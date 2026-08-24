@@ -13,7 +13,6 @@ export type RiskDocRowView = {
   refNo: string;
   title: string;
   category: string;
-  vesselName: string | null;
   status: string;
   riskLevel: RiskBand | null; // overall band from currentRevision's hazard rows
   nextReviewDate: string | null; // ISO
@@ -31,8 +30,6 @@ export function RiskDocTable({ rows }: { rows: RiskDocRowView[] }) {
           return r.title;
         case "category":
           return r.category;
-        case "vessel":
-          return r.vesselName ?? "";
         case "level":
           return r.riskLevel ?? "";
         case "review":
@@ -54,7 +51,6 @@ export function RiskDocTable({ rows }: { rows: RiskDocRowView[] }) {
           <SortableHeader label="Ref" sortKey="ref" activeKey={sortKey} dir={sortDir} onSort={toggleSort} />
           <SortableHeader label="Title" sortKey="title" activeKey={sortKey} dir={sortDir} onSort={toggleSort} />
           <SortableHeader label="Category" sortKey="category" activeKey={sortKey} dir={sortDir} onSort={toggleSort} />
-          <SortableHeader label="Vessel" sortKey="vessel" activeKey={sortKey} dir={sortDir} onSort={toggleSort} />
           <SortableHeader label="Risk Level" sortKey="level" activeKey={sortKey} dir={sortDir} onSort={toggleSort} />
           <SortableHeader label="Next Review" sortKey="review" activeKey={sortKey} dir={sortDir} onSort={toggleSort} />
           <SortableHeader label="Uses" sortKey="uses" activeKey={sortKey} dir={sortDir} onSort={toggleSort} />
@@ -73,7 +69,6 @@ export function RiskDocTable({ rows }: { rows: RiskDocRowView[] }) {
                 <Link href={`/risk/${r.id}`} className="hover:underline">{r.title}</Link>
               </td>
               <td className="px-4 py-2.5 text-muted-foreground">{r.category}</td>
-              <td className="px-4 py-2.5 text-muted-foreground">{r.vesselName ?? "Fleet-wide"}</td>
               <td className="px-4 py-2.5">
                 {r.riskLevel ? (
                   <Badge tone={bandTone(r.riskLevel)}>{humanize(r.riskLevel)}</Badge>

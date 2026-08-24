@@ -9,13 +9,15 @@ import { formatDate, humanize } from "@/lib/utils";
 
 export type IncidentRowView = {
   id: string;
-  refNo: string;
+  refNo: string | null; // null while status = DRAFT — no ref number assigned yet
   title: string;
   vesselName: string | null;
   typeLabels: string[]; // pre-resolved "Type — Sub-category" labels
   severity: string | null;
   occurredAt: string; // ISO
   status: string;
+  capaClosed: number;
+  capaTotal: number;
 };
 
 export function IncidentsTable({ rows }: { rows: IncidentRowView[] }) {
@@ -26,7 +28,7 @@ export function IncidentsTable({ rows }: { rows: IncidentRowView[] }) {
         case "vessel":
           return r.vesselName ?? "";
         case "ref":
-          return r.refNo;
+          return r.refNo ?? "";
         case "type":
           return r.typeLabels[0] ?? "";
         case "title":
@@ -37,6 +39,8 @@ export function IncidentsTable({ rows }: { rows: IncidentRowView[] }) {
           return new Date(r.occurredAt);
         case "status":
           return r.status;
+        case "capa":
+          return r.capaTotal > 0 ? r.capaClosed / r.capaTotal : -1;
         default:
           return "";
       }
@@ -54,6 +58,7 @@ export function IncidentsTable({ rows }: { rows: IncidentRowView[] }) {
           <SortableHeader label="Severity" sortKey="severity" activeKey={sortKey} dir={sortDir} onSort={toggleSort} />
           <SortableHeader label="Occurred" sortKey="occurred" activeKey={sortKey} dir={sortDir} onSort={toggleSort} />
           <SortableHeader label="Status" sortKey="status" activeKey={sortKey} dir={sortDir} onSort={toggleSort} />
+          <SortableHeader label="CAPA Tracker" sortKey="capa" activeKey={sortKey} dir={sortDir} onSort={toggleSort} />
         </tr>
       </thead>
       <tbody>
@@ -62,7 +67,7 @@ export function IncidentsTable({ rows }: { rows: IncidentRowView[] }) {
             <td className="px-4 py-2.5 text-muted-foreground">{inc.vesselName ?? "—"}</td>
             <td className="px-4 py-2.5 font-mono text-xs">
               <Link href={`/incidents/${inc.id}`} className="text-accent hover:underline">
-                {inc.refNo}
+                {inc.refNo ?? "Draft"}
               </Link>
             </td>
             <td className="px-4 py-2.5 text-muted-foreground">
@@ -84,6 +89,9 @@ export function IncidentsTable({ rows }: { rows: IncidentRowView[] }) {
             <td className="px-4 py-2.5 text-muted-foreground">{formatDate(inc.occurredAt)}</td>
             <td className="px-4 py-2.5">
               <Badge tone={incidentStatusTone(inc.status)}>{humanize(inc.status)}</Badge>
+            </td>
+            <td className="px-4 py-2.5 tabular-nums text-muted-foreground">
+              {inc.capaTotal > 0 ? `${inc.capaClosed}/${inc.capaTotal}` : "—"}
             </td>
           </tr>
         ))}

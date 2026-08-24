@@ -1,8 +1,12 @@
 import { z } from "zod";
 
-export const createFamiliarizationSchema = z.object({
+// A single induction/familiarization session typically covers several SMS
+// topics at once (e.g. new-crew induction touching CSP, BWMP, and SEEMP in
+// one sitting) — logging happens as one dated batch across the topics
+// actually covered, rather than one record at a time.
+export const logFamiliarizationBatchSchema = z.object({
   vesselId: z.string().uuid("Vessel is required"),
-  scheduleItemId: z.string().uuid("Select which topic was covered"),
+  scheduleItemIds: z.array(z.string().uuid()).min(1, "Select at least one topic"),
   completedDate: z
     .string()
     .min(1, "Date is required")

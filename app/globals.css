@@ -7,6 +7,12 @@
 
 :root {
   --background: 0 0% 100%;
+  /* Page canvas behind every card — a soft blue tint (not white, not
+     --muted's gray) so cards visibly float instead of blending into a flat
+     page. --background itself stays pure white: it's reused by bg-background
+     everywhere (inputs, the blurred sticky header, sticky table cells), and
+     those still need to read as neutral "surface" white, not tinted. */
+  --page-background: 213 55% 96%;
   --foreground: 222 15% 12%;
   --card: 0 0% 100%;
   --card-foreground: 222 15% 12%;
@@ -30,6 +36,7 @@
 
 .dark {
   --background: 222 22% 9%;
+  --page-background: 222 22% 9%;
   --foreground: 220 14% 92%;
   --card: 222 20% 12%;
   --card-foreground: 220 14% 92%;
@@ -80,7 +87,7 @@
 }
 
 body {
-  background-color: hsl(var(--background));
+  background-color: hsl(var(--page-background));
   color: hsl(var(--foreground));
   font-feature-settings: "rlig" 1, "calt" 1;
   -webkit-font-smoothing: antialiased;

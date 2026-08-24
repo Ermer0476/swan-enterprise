@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Plus, ShieldCheck } from "lucide-react";
+import { Plus, ShieldCheck, BarChart3 } from "lucide-react";
 import { requirePermission, can } from "@/lib/rbac";
 import { listExternalAudits } from "@/features/external-audits/queries";
 import { INSPECTION_STATUSES } from "@/features/external-audits/schema";
@@ -8,6 +8,8 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input, Select } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Pager } from "@/components/ui/pager";
+import { readPage } from "@/lib/pagination";
 import { formatDate, humanize } from "@/lib/utils";
 import { lifecycleStatusTone } from "@/lib/status";
 import type { InspectionStatus } from "@/lib/generated/prisma";
@@ -19,10 +21,17 @@ export default async function ExternalAuditsPage({
 }) {
   const user = await requirePermission("eaudit:read");
   const sp = await searchParams;
-  const rows = await listExternalAudits(user.companyId, {
-    search: sp.q || undefined,
-    status: (sp.status as InspectionStatus) || undefined,
-  });
+  const isShipboard = user.department === "SHIPBOARD";
+  const vesselId = isShipboard ? user.vesselId ?? "__no-vessel-assigned__" : sp.vesselId || undefined;
+  const { rows, total, page, totalPages } = await listExternalAudits(
+    user.companyId,
+    {
+      search: sp.q || undefined,
+      status: (sp.status as InspectionStatus) || undefined,
+      vesselId,
+    },
+    readPage(sp),
+  );
   const canCreate = can(user, "eaudit:create");
 
   return (
@@ -31,11 +40,20 @@ export default async function ExternalAuditsPage({
         title="External Audits"
         description="Third-party audits (class, flag, ISO) and their finding close-out."
         actions={
-          canCreate ? (
-            <Link href="/external-audits/new">
-              <Button><Plus className="h-4 w-4" /> New Audit</Button>
+          <div className="flex items-center gap-2">
+            <Link href="/external-audits/kpi">
+              <Button variant="warning">
+                <BarChart3 className="h-4 w-4" /> External KPIs
+              </Button>
             </Link>
-          ) : undefined
+            {canCreate && (
+              <Link href="/external-audits/new">
+                <Button>
+                  <Plus className="h-4 w-4" /> New Audit
+                </Button>
+              </Link>
+            )}
+          </div>
         }
       />
 
@@ -71,6 +89,7 @@ export default async function ExternalAuditsPage({
                   <th className="px-4 py-2.5 font-medium">Vessel</th>
                   <th className="px-4 py-2.5 font-medium">Date</th>
                   <th className="px-4 py-2.5 font-medium">Findings</th>
+                  <th className="px-4 py-2.5 font-medium">CAPA Tracker</th>
                   <th className="px-4 py-2.5 font-medium">Status</th>
                 </tr>
               </thead>
@@ -87,13 +106,26 @@ export default async function ExternalAuditsPage({
                     <td className="px-4 py-2.5 text-muted-foreground">{r.auditBody ?? "—"}</td>
                     <td className="px-4 py-2.5 text-muted-foreground">{r.vessel?.name ?? "Shore"}</td>
                     <td className="px-4 py-2.5 text-muted-foreground">{formatDate(r.auditDate)}</td>
-                    <td className="px-4 py-2.5 tabular-nums text-muted-foreground">{r._count.findings}</td>
+                    <td className="px-4 py-2.5 tabular-nums text-muted-foreground">{r.findingCount}</td>
+                    <td className="px-4 py-2.5">
+                      {r.capaPending === 0 ? (
+                        <span className="text-muted-foreground">—</span>
+                      ) : (
+                        <div className="flex flex-col gap-0.5">
+                          <span>{r.capaPending} Pending</span>
+                          {r.capaOverdue > 0 && (
+                            <span className="text-xs font-medium text-danger">{r.capaOverdue} Overdue</span>
+                          )}
+                        </div>
+                      )}
+                    </td>
                     <td className="px-4 py-2.5"><Badge tone={lifecycleStatusTone(r.status)}>{humanize(r.status)}</Badge></td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
+          <Pager page={page} totalPages={totalPages} total={total} basePath="/external-audits" searchParams={sp} />
         </Card>
       )}
     </>

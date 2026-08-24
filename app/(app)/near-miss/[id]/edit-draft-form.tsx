@@ -56,9 +56,11 @@ export type EditableNearMiss = {
 /**
  * Full edit of a Draft's own report fields — everything except the
  * corrective action rows, which the shared CAPA tracker below this card
- * already lets the vessel add/remove/edit in place. Only ever rendered for
- * the DRAFT's own SHIPBOARD reporter (see [id]/page.tsx's isOwnDraft gate);
- * the vessel is locked, so unlike the create form there's no office branch.
+ * already lets the owner add/remove/edit in place. Only ever rendered for
+ * the draft's own reporter — any shipboard user, or the specific office
+ * user who created it (see [id]/page.tsx's isOwnDraft gate). The vessel
+ * field is locked either way, so unlike the create form there's no
+ * shipboard/office branch here.
  */
 export function EditDraftNearMissForm({
   nearMiss,
@@ -218,9 +220,9 @@ export function EditDraftNearMissForm({
           </div>
 
           <div className="space-y-1.5">
-            <Label htmlFor="description">Details of the Near Miss</Label>
+            <Label htmlFor="description">Details of the {isHor ? "HOR" : "Near Miss"}</Label>
             <AutoGrowInput id="description" name="description" defaultValue={nearMiss.description} required
-              placeholder="Describe the near miss…" />
+              placeholder={isHor ? "Describe the hazard observation…" : "Describe the near miss…"} />
           </div>
 
           <div className="space-y-1.5">

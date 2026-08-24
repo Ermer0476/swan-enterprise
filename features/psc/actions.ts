@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { requirePermission } from "@/lib/rbac";
 import { writeAudit } from "@/lib/audit";
+import { allocateRefNo } from "@/lib/ref-sequence";
 import {
   createPscSchema,
   addDeficiencySchema,
@@ -15,13 +16,9 @@ export type ActionResult = { ok: boolean; error: string | null };
 const OK: ActionResult = { ok: true, error: null };
 const fail = (error: string): ActionResult => ({ ok: false, error });
 
-async function nextRefNo(companyId: string): Promise<string> {
+async function nextRefNo(companyId: string, vesselCode: string | null): Promise<string> {
   const year = new Date().getFullYear();
-  const prefix = `PSC-${year}-`;
-  const count = await prisma.pscInspection.count({
-    where: { companyId, refNo: { startsWith: prefix } },
-  });
-  return `${prefix}${String(count + 1).padStart(4, "0")}`;
+  return allocateRefNo(companyId, vesselCode ? `${vesselCode}-PSC-${year}` : `PSC-${year}`);
 }
 
 export async function createPscAction(
@@ -43,10 +40,20 @@ export async function createPscAction(
   }
   const d = parsed.data;
 
+  let vesselCode: string | null = null;
+  if (d.vesselId) {
+    const vessel = await prisma.vessel.findFirst({
+      where: { id: d.vesselId, companyId: user.companyId },
+      select: { code: true },
+    });
+    if (!vessel) return fail("Vessel not found");
+    vesselCode = vessel.code;
+  }
+
   const insp = await prisma.pscInspection.create({
     data: {
       companyId: user.companyId,
-      refNo: await nextRefNo(user.companyId),
+      refNo: await nextRefNo(user.companyId, vesselCode),
       vesselId: d.vesselId || null,
       authority: d.authority,
       mouRegion: d.mouRegion || null,

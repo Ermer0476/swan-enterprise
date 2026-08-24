@@ -13,12 +13,7 @@ import {
   positionsFor,
 } from "@/features/near-miss/schema";
 import { listCapaActions, listAllCapaActions } from "@/features/capa/queries";
-import {
-  CapaTracker,
-  CapaSummaryTable,
-  type CapaRowView,
-  type CapaSummaryRowView,
-} from "@/components/capa/capa-tracker";
+import { CapaTracker, type CapaRowView } from "@/components/capa/capa-tracker";
 import { formatRootCause } from "@/lib/root-cause";
 import { listAttachments } from "@/features/attachments/queries";
 import { AttachmentList } from "@/components/attachments/attachment-list";
@@ -49,12 +44,6 @@ function toRowView(r: {
   };
 }
 
-function toSummaryRowView(
-  r: Parameters<typeof toRowView>[0] & { kind: "CORRECTIVE" | "PREVENTIVE" },
-): CapaSummaryRowView {
-  return { ...toRowView(r), kind: r.kind };
-}
-
 function nextOf(status: NearMissStatus): NearMissStatus | null {
   const i = NM_STATUSES.indexOf(status);
   return (NM_STATUSES[i + 1] as NearMissStatus | undefined) ?? null;
@@ -66,7 +55,7 @@ export default async function NearMissDetailPage({
 }) {
   const user = await requirePermission("nm:read");
   const { id } = await params;
-  const nm = await getNearMiss(user.companyId, id, user.department === "SHIPBOARD");
+  const nm = await getNearMiss(user.companyId, id, user.department === "SHIPBOARD", user.id, user.vesselId);
   if (!nm) notFound();
 
   const canUpdate = can(user, "nm:update");
@@ -75,16 +64,20 @@ export default async function NearMissDetailPage({
   const next = nextOf(nm.status);
   const canAdvance = canUpdate && !!next && (next !== "CLOSED" || canClose);
 
-  // Corrective actions are vessel-owned — office roles hold nm:create too
-  // (to report their own near misses) but shouldn't edit CAPA on someone
-  // else's report, so gate on department as well (mirrors the CAPA
+  // Corrective actions can only be edited/closed by the Administrator role —
+  // office roles below Administrator (and the vessel itself) hold nm:create
+  // too (to report near misses) but shouldn't edit CAPA (mirrors the CAPA
   // REGISTRY's server-side guard for NearMiss in features/capa/actions.ts).
   const canEditCapa =
-    can(user, "nm:create") && user.department === "SHIPBOARD" && nm.status !== "CLOSED";
-  // A draft is only ever visible to its own vessel (see queries.ts) — so
-  // reaching this page while it's still DRAFT already means "this is my own
-  // draft." Drives the full edit form, the Report button, and Delete alike.
-  const isOwnDraft = nm.status === "DRAFT" && can(user, "nm:create") && user.department === "SHIPBOARD";
+    can(user, "nm:create") && user.roles.includes("Administrator") && nm.status !== "CLOSED";
+  // A draft is only ever visible to a shipboard user (any vessel account) or
+  // to the specific office user who created it (see queries.ts) — so
+  // reaching this page while it's still DRAFT already means "this is mine to
+  // act on." Drives the full edit form, the Report button, and Delete alike.
+  const isOwnDraft =
+    nm.status === "DRAFT" &&
+    can(user, "nm:create") &&
+    (user.department === "SHIPBOARD" || nm.createdBy === user.id);
 
   const [correctiveRows, allCapaRows, attachments] = await Promise.all([
     listCapaActions(user.companyId, "NearMiss", nm.id, "CORRECTIVE"),
@@ -120,7 +113,7 @@ export default async function NearMissDetailPage({
       <PageHeader
         title={nm.refNo ? `${nm.refNo} — ${nm.title}` : `Draft — ${nm.title}`}
         actions={
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <Badge tone={nm.kind === "HOR" ? "warning" : "accent"}>{NEARMISS_KIND_LABELS[nm.kind]}</Badge>
             <Badge tone={severityTone(nm.potentialSeverity)}>Potential: {humanize(nm.potentialSeverity)}</Badge>
             <Badge tone={nearMissStatusTone(nm.status)}>{nearMissStatusLabel(nm.status, user.department)}</Badge>
@@ -199,14 +192,6 @@ export default async function NearMissDetailPage({
             editable={canEditCapa}
             rows={correctiveRows.map(toRowView)}
           />
-
-          <div className="space-y-3">
-            <h4 className="text-sm font-semibold">All CAPA Items</h4>
-            <CapaSummaryTable
-              rows={allCapaRows.map(toSummaryRowView)}
-              editable={canEditCapa}
-            />
-          </div>
         </CardContent>
       </Card>
 

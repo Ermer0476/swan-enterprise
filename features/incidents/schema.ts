@@ -1,5 +1,21 @@
 import { z } from "zod";
 import {
+  HeartPulse,
+  Stethoscope,
+  Leaf,
+  Wrench,
+  Droplet,
+  Flame,
+  Compass,
+  Package,
+  Anchor,
+  Lock,
+  Cpu,
+  Scale,
+  Settings,
+  type LucideIcon,
+} from "lucide-react";
+import {
   ROOT_CAUSE_CATEGORIES,
   ROOT_CAUSE_LABELS,
   ROOT_CAUSE_SUBCATEGORIES,
@@ -53,10 +69,32 @@ export const INCIDENT_TYPE_LABELS: Record<IncidentTypeValue, string> = {
   OPERATIONAL: "Operational Incident",
 };
 
+// Icon per type for the Incident Type Trends donut on the KPI page — a
+// fixed, meaningful badge per type rather than a generic dot.
+export const INCIDENT_TYPE_ICONS: Record<IncidentTypeValue, LucideIcon> = {
+  PERSONAL_INJURY: HeartPulse,
+  OCCUPATIONAL_ILLNESS: Stethoscope,
+  ENVIRONMENTAL: Leaf,
+  PROPERTY_EQUIPMENT_DAMAGE: Wrench,
+  LOSS_OF_CONTAINMENT: Droplet,
+  FIRE_EXPLOSION: Flame,
+  NAVIGATION_MARINE: Compass,
+  CARGO_OPERATION: Package,
+  MOORING_OPERATION: Anchor,
+  SECURITY: Lock,
+  CYBER_SECURITY: Cpu,
+  REGULATORY_COMPLIANCE: Scale,
+  OPERATIONAL: Settings,
+};
+
 // Each Type of incident has its own sub-category list (shown as a dropdown
 // once its checkbox is checked in the report form).
 export const INCIDENT_SUBCATEGORIES: Record<IncidentTypeValue, readonly string[]> = {
-  PERSONAL_INJURY: ["FAC", "MTC", "RWC", "LTI", "FATALITY"],
+  // LTI and TRC are deliberately NOT selectable here — they're derived
+  // classifications (LTI = FAT+PTD+PPD+LWC, TRC = LTI+RWC+MTC), computed from
+  // whichever of these seven codes the injury actually is. See
+  // features/exposure-hours/schema.ts for the shared formula.
+  PERSONAL_INJURY: ["FAC", "MTC", "RWC", "LWC", "PPD", "PTD", "FAT"],
   OCCUPATIONAL_ILLNESS: [
     "HEAT_STRESS",
     "CHEMICAL_EXPOSURE",
@@ -142,8 +180,10 @@ export const INCIDENT_SUBCATEGORY_LABELS: Record<IncidentTypeValue, Record<strin
     FAC: "First Aid Case (FAC)",
     MTC: "Medical Treatment Case (MTC)",
     RWC: "Restricted Work Case (RWC)",
-    LTI: "Lost Time Injury (LTI)",
-    FATALITY: "Fatality",
+    LWC: "Lost Workday Case (LWC)",
+    PPD: "Permanent Partial Disability (PPD)",
+    PTD: "Permanent Total Disability (PTD)",
+    FAT: "Fatality (FAT)",
   },
   OCCUPATIONAL_ILLNESS: {
     HEAT_STRESS: "Heat Stress",
@@ -243,7 +283,14 @@ export const INCIDENT_SUBCATEGORY_LABELS: Record<IncidentTypeValue, Record<strin
 };
 
 export const INCIDENT_SEVERITIES = ["LOW", "MEDIUM", "HIGH"] as const;
+// DRAFT is the reporter's own work-in-progress — invisible to everyone else
+// until "Report Incident" moves it to REPORTED (see queries.ts). It's first
+// in this list for humanize()/filter-dropdown ordering only; the actual
+// DRAFT -> REPORTED transition always goes through the dedicated
+// reportDraftIncidentAction, never the generic nextStatus() progression
+// below it (REPORTED -> UNDER_INVESTIGATION -> ACTION_PENDING -> CLOSED).
 export const INCIDENT_STATUSES = [
+  "DRAFT",
   "REPORTED",
   "UNDER_INVESTIGATION",
   "ACTION_PENDING",

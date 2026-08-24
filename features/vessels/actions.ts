@@ -35,6 +35,7 @@ function parseVesselForm(formData: FormData) {
     breadth: formData.get("breadth"),
     depth: formData.get("depth"),
     status: formData.get("status"),
+    archivedAt: formData.get("archivedAt"),
     capacityCbm: formData.get("capacityCbm"),
     netTonnage: formData.get("netTonnage"),
     deadweight: formData.get("deadweight"),
@@ -51,6 +52,8 @@ function parseVesselForm(formData: FormData) {
     draft: formData.get("draft"),
     mainEngine: formData.get("mainEngine"),
     serviceSpeed: formData.get("serviceSpeed"),
+    stdFoConsumptionMt: formData.get("stdFoConsumptionMt"),
+    stdDoConsumptionMt: formData.get("stdDoConsumptionMt"),
     navigationArea: formData.get("navigationArea"),
     classNotation: formData.get("classNotation"),
     ownerAddress: formData.get("ownerAddress"),
@@ -87,7 +90,7 @@ export async function createVesselAction(
     data: {
       companyId: user.companyId,
       name: d.name,
-      code: d.code || null,
+      code: d.code,
       imo: d.imo || null,
       officialNumber: d.officialNumber || null,
       callSign: d.callSign || null,
@@ -117,6 +120,8 @@ export async function createVesselAction(
       draft: d.draft ?? null,
       mainEngine: d.mainEngine || null,
       serviceSpeed: d.serviceSpeed ?? null,
+      stdFoConsumptionMt: d.stdFoConsumptionMt ?? null,
+      stdDoConsumptionMt: d.stdDoConsumptionMt ?? null,
       navigationArea: d.navigationArea || null,
       classNotation: d.classNotation || null,
       ownerAddress: d.ownerAddress || null,
@@ -127,7 +132,7 @@ export async function createVesselAction(
       totalComplement: d.totalComplement ?? null,
       satPhone: d.satPhone || null,
       vesselEmail: d.vesselEmail || null,
-      archivedAt: d.status === "SOLD" ? new Date() : null,
+      archivedAt: d.status === "SOLD" ? (d.archivedAt ?? new Date()) : null,
       createdBy: user.id,
       updatedBy: user.id,
     },
@@ -175,15 +180,17 @@ export async function updateVesselAction(
   if (codeClash) return fail(`Vessel code "${d.code}" is already in use`);
 
   // Track exactly when a vessel leaves the fleet (needed for the "under
-  // management by year" history chart, not just its current status).
+  // management by year" history chart and to cap Exposure Hours accrual,
+  // not just its current status). The office can enter the real sale date
+  // explicitly; otherwise keep what's already on file, or default to today.
   const archivedAt =
-    d.status === "SOLD" ? (vessel.archivedAt ?? new Date()) : null;
+    d.status === "SOLD" ? (d.archivedAt ?? vessel.archivedAt ?? new Date()) : null;
 
   await prisma.vessel.update({
     where: { id: vessel.id },
     data: {
       name: d.name,
-      code: d.code || null,
+      code: d.code,
       imo: d.imo || null,
       officialNumber: d.officialNumber || null,
       callSign: d.callSign || null,
@@ -213,6 +220,8 @@ export async function updateVesselAction(
       draft: d.draft ?? null,
       mainEngine: d.mainEngine || null,
       serviceSpeed: d.serviceSpeed ?? null,
+      stdFoConsumptionMt: d.stdFoConsumptionMt ?? null,
+      stdDoConsumptionMt: d.stdDoConsumptionMt ?? null,
       navigationArea: d.navigationArea || null,
       classNotation: d.classNotation || null,
       ownerAddress: d.ownerAddress || null,

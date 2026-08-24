@@ -41,10 +41,17 @@ export default async function PscDetailPage({
 }) {
   const user = await requirePermission("psc:read");
   const { id } = await params;
-  const insp = await getPsc(user.companyId, id);
+  const isShipboard = user.department === "SHIPBOARD";
+  const vesselId = isShipboard ? user.vesselId ?? "__no-vessel-assigned__" : undefined;
+  const insp = await getPsc(user.companyId, id, vesselId);
   if (!insp) notFound();
 
   const editable = can(user, "psc:update") && insp.status !== "CLOSED";
+  // The vessel can mark its own deficiencies' corrective actions done/not
+  // done (status + closed date only) without the full office edit permission
+  // — getPsc already scoped `insp` to their own vessel above, so reaching
+  // here at all means it's theirs.
+  const canRespond = isShipboard && can(user, "capa:respond") && insp.status !== "CLOSED";
   const canClose = can(user, "psc:close");
   const canDelete = can(user, "psc:delete");
   const canCreateNcr = can(user, "ncr:create");
@@ -187,6 +194,7 @@ export default async function PscDetailPage({
           <DeficienciesPanel
             inspectionId={insp.id}
             editable={editable}
+            canRespond={canRespond}
             deficiencies={insp.deficiencies.map((d) => ({
               id: d.id,
               natureCode: d.natureCode,

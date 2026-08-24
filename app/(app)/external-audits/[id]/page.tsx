@@ -49,10 +49,16 @@ export default async function ExternalAuditDetailPage({
 }) {
   const user = await requirePermission("eaudit:read");
   const { id } = await params;
-  const audit = await getExternalAudit(user.companyId, id);
+  const isShipboard = user.department === "SHIPBOARD";
+  const vesselId = isShipboard ? user.vesselId ?? "__no-vessel-assigned__" : undefined;
+  const audit = await getExternalAudit(user.companyId, id, vesselId);
   if (!audit) notFound();
 
   const editable = can(user, "eaudit:update") && audit.status !== "CLOSED";
+  // The vessel can mark its own findings' corrective actions done/not done
+  // (status + closed date only) without the full office edit permission —
+  // the audit was already fetched scoped to their own vessel above.
+  const canRespond = isShipboard && can(user, "capa:respond") && audit.status !== "CLOSED";
   const canClose = can(user, "eaudit:close");
   const canDelete = can(user, "eaudit:delete");
   const canCreateNcr = can(user, "ncr:create");
@@ -191,6 +197,7 @@ export default async function ExternalAuditDetailPage({
           <AuditFindingsPanel
             auditId={audit.id}
             editable={editable}
+            canRespond={canRespond}
             addAction={addFindingAction}
             deleteAction={deleteFindingAction}
             saveRootCauseAction={saveFindingRootCauseAction}

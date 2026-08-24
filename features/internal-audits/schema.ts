@@ -5,8 +5,26 @@ import {
   type RootCauseCategoryValue,
 } from "@/lib/root-cause";
 
-export const INSPECTION_STATUSES = ["OPEN", "IN_PROGRESS", "CLOSED"] as const;
+// DRAFT → OPEN always goes through reportDraftInternalAuditAction (assigns
+// refNo), never a generic advance path — findings can't be added to a draft
+// (see the DRAFT guard in addFindingAction).
+export const INSPECTION_STATUSES = ["DRAFT", "OPEN", "IN_PROGRESS", "CLOSED"] as const;
 export const FINDING_CATEGORIES = ["MAJOR_NC", "MINOR_NC", "OBSERVATION"] as const;
+
+// ISM requires an internal audit of every vessel at least once every 12
+// months — unlike SIRE (which schedules a buffer month ahead of a hard
+// validity expiry), an internal audit doesn't "expire," so there's no
+// separate validity window here, just the recurrence interval itself.
+export const INTERNAL_AUDIT_SCHEDULE_MONTHS = 12;
+
+export const INTERNAL_AUDIT_SCHEDULE_URGENCIES = ["NOT_YET_AUDITED", "OVERDUE", "DUE_SOON", "ON_TRACK"] as const;
+export type InternalAuditScheduleUrgency = (typeof INTERNAL_AUDIT_SCHEDULE_URGENCIES)[number];
+export const INTERNAL_AUDIT_SCHEDULE_URGENCY_LABELS: Record<InternalAuditScheduleUrgency, string> = {
+  NOT_YET_AUDITED: "Not Yet Audited",
+  OVERDUE: "Overdue",
+  DUE_SOON: "Due Soon",
+  ON_TRACK: "On Track",
+};
 
 export const createInternalAuditSchema = z.object({
   vesselId: z.string().uuid().optional().or(z.literal("")),

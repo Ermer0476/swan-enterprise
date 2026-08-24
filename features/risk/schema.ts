@@ -97,7 +97,6 @@ export const createDocumentSchema = z.object({
   title: z.string().trim().min(3, "Title is required").max(200),
   category: z.string().trim().min(2, "Category is required").max(80),
   description: z.string().trim().max(2000).optional().or(z.literal("")),
-  vesselId: z.string().uuid().optional().or(z.literal("")),
   applicableVesselType: z.string().trim().max(80).optional().or(z.literal("")),
   reviewFrequencyMonths: z.coerce.number().int().min(1).max(120),
   smsProcedureRefs: z.string().trim().max(500).optional().or(z.literal("")),
@@ -134,6 +133,23 @@ export const hazardRowSchema = z.object({
   responsible: z.string().trim().max(200).optional().or(z.literal("")),
   isNew: z.coerce.boolean().optional(),
   ratingChangeNote: z.string().trim().max(1000).optional().or(z.literal("")),
+});
+
+/** One reviewer-confirmed row from a parsed revised-RA document upload —
+ * same shape as hazardRowSchema minus revisionId (the whole batch shares
+ * one, passed separately) and coercing from parsed JSON rather than
+ * FormData, so numbers/booleans arrive typed instead of as strings. */
+export const bulkHazardRowDraftSchema = z.object({
+  phase: z.string().trim().max(120).nullable(),
+  consequence: z.string().trim().min(3, "Describe the unwanted consequence").max(300),
+  causes: z.string().trim().min(3, "Describe the possible causes / hazard factors").max(2000),
+  severity: z.number().int().min(1).max(5),
+  likelihood: z.number().int().min(1).max(5),
+  existingControls: z.string().trim().min(3, "Existing controls are required").max(3000),
+  additionalControls: z.string().trim().max(3000).nullable(),
+  resLikelihood: z.number().int().min(1).max(5).nullable(),
+  responsible: z.string().trim().max(200).nullable(),
+  isNew: z.boolean(),
 });
 
 export const deleteHazardRowSchema = z.object({

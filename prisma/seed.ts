@@ -5,7 +5,7 @@
  *
  * Idempotent: safe to re-run. Uses upserts keyed on natural keys.
  */
-import { PrismaClient, type DepartmentType } from "../lib/generated/prisma";
+import { PrismaClient, type DepartmentType, type StoresCategory } from "../lib/generated/prisma";
 import bcrypt from "bcryptjs";
 import { ALL_PERMISSION_KEYS, PERMISSIONS, permissionModule } from "../lib/permissions";
 
@@ -107,6 +107,74 @@ const SCHEDULE_ITEMS: ScheduleItemSeed[] = [
   { kind: "FAMILIARIZATION", category: null, itemNo: "19", name: "Reflective Learning", smsReference: null, frequencyLabel: "Monthly", frequencyDays: 30 },
 ];
 
+// Per-crew LSA/FFE induction catalog (SMS CK-047(a)) — transcribed verbatim
+// from the company's own form. TRN-10 4.3(5): every item here must be
+// covered with a new crew member within 2 months (8 weeks) of joining.
+// `week` is a suggested pacing (both LSA and FFE spread evenly across all 8
+// weeks so no single week is overloaded) — not enforced; every item just
+// needs a completedDate somewhere within the 8-week cycle.
+type LsaFfeItemSeed = { category: "LSA" | "FFE"; itemNo: number; name: string; week: number };
+
+const LSA_FFE_ITEMS: LsaFfeItemSeed[] = [
+  // ── LIFE SAVING APPLIANCES (29 items over 8 weeks) ──────────────────────
+  { category: "LSA", itemNo: 1, name: "Lifeboat", week: 1 },
+  { category: "LSA", itemNo: 2, name: "Rescue Boat other than Lifeboats used as Rescue boat", week: 1 },
+  { category: "LSA", itemNo: 3, name: "Liferaft (including forecastle if fitted)", week: 1 },
+  { category: "LSA", itemNo: 4, name: "Lifejacket (including safety working vest)", week: 1 },
+  { category: "LSA", itemNo: 5, name: "Lifebouy", week: 2 },
+  { category: "LSA", itemNo: 6, name: "Immersion Suit", week: 2 },
+  { category: "LSA", itemNo: 7, name: "Protective Equipment (including Gas Tight Suits)", week: 2 },
+  { category: "LSA", itemNo: 8, name: "Thermal Protective Aid", week: 2 },
+  { category: "LSA", itemNo: 9, name: "Pyrotechnics", week: 3 },
+  { category: "LSA", itemNo: 10, name: "Line Throwing Apparatus", week: 3 },
+  { category: "LSA", itemNo: 11, name: "EPIRB", week: 3 },
+  { category: "LSA", itemNo: 12, name: "VDR-EPIRB (If applicable)", week: 3 },
+  { category: "LSA", itemNo: 13, name: "SART", week: 4 },
+  { category: "LSA", itemNo: 14, name: "VHF Radio (including spare batteries)", week: 4 },
+  { category: "LSA", itemNo: 15, name: "Emergency Lights", week: 4 },
+  { category: "LSA", itemNo: 16, name: "IMO Symbols", week: 4 },
+  { category: "LSA", itemNo: 17, name: "Marine Distress Signals / Rescue Signal Table", week: 5 },
+  { category: "LSA", itemNo: 18, name: "Safety Equipment (IGC)", week: 5 },
+  { category: "LSA", itemNo: 19, name: "Strecher", week: 5 },
+  { category: "LSA", itemNo: 20, name: "First Aid Kit (including AED, if present onboard)", week: 5 },
+  { category: "LSA", itemNo: 21, name: "Decontamination Shower & Eywash", week: 6 },
+  { category: "LSA", itemNo: 22, name: "Medical Oxygen (40L @ Hospital)", week: 6 },
+  { category: "LSA", itemNo: 23, name: "Emergency Resuscitator", week: 6 },
+  { category: "LSA", itemNo: 24, name: "SCABA (including scaba compressor)", week: 7 },
+  { category: "LSA", itemNo: 25, name: "Combustible Fixed Gas Detector System", week: 7 },
+  { category: "LSA", itemNo: 26, name: "Portable Multi Gas Detector", week: 7 },
+  { category: "LSA", itemNo: 27, name: "Personal Multi Gas Detector", week: 8 },
+  { category: "LSA", itemNo: 28, name: "Toxic Gas Detector including toxic tubes", week: 8 },
+  { category: "LSA", itemNo: 29, name: "Others (specify vessel-specific equipment)", week: 8 },
+  // ── FIRE FIGHTING EQUIPMENT (26 items over 8 weeks) ─────────────────────
+  { category: "FFE", itemNo: 1, name: "Fixed Dry Chemical Extinguishing System", week: 1 },
+  { category: "FFE", itemNo: 2, name: "Fixed CO2 Extinguishing System", week: 1 },
+  { category: "FFE", itemNo: 3, name: "Hi-Fog Mist Extinguishing System", week: 1 },
+  { category: "FFE", itemNo: 4, name: "Fixed Foam Extinguishing System (if fitted)", week: 2 },
+  { category: "FFE", itemNo: 5, name: "Water Spray System", week: 2 },
+  { category: "FFE", itemNo: 6, name: "Portable Fire Extinguishers", week: 2 },
+  { category: "FFE", itemNo: 7, name: "Wheeled Type Fire Extinguishers", week: 3 },
+  { category: "FFE", itemNo: 8, name: "Foam Applicator", week: 3 },
+  { category: "FFE", itemNo: 9, name: "Fire Hydrant and Fire Hoses", week: 3 },
+  { category: "FFE", itemNo: 10, name: "International Shore Connection", week: 4 },
+  { category: "FFE", itemNo: 11, name: "Emergency Fire Pump", week: 4 },
+  { category: "FFE", itemNo: 12, name: "Fire and General Service Pump", week: 4 },
+  { category: "FFE", itemNo: 13, name: "Water Spray Pump", week: 5 },
+  { category: "FFE", itemNo: 14, name: "Fire Detection and Alarm System", week: 5 },
+  { category: "FFE", itemNo: 15, name: "Testing of Smoke & Heat Detector and Manual Call Points", week: 5 },
+  { category: "FFE", itemNo: 16, name: "Fire and General Alarm System", week: 6 },
+  { category: "FFE", itemNo: 17, name: "Emergency Switch Board", week: 6 },
+  { category: "FFE", itemNo: 18, name: "Firemans Outfit (including accessories)", week: 6 },
+  { category: "FFE", itemNo: 19, name: "EEBD (purpose and donning)", week: 7 },
+  { category: "FFE", itemNo: 20, name: "Fire Blanket", week: 7 },
+  { category: "FFE", itemNo: 21, name: "Fire Dampers", week: 7 },
+  { category: "FFE", itemNo: 22, name: "Emergency Generator", week: 8 },
+  { category: "FFE", itemNo: 23, name: "Marine Oil Tank Emergency Shut Off Valve", week: 8 },
+  { category: "FFE", itemNo: 24, name: "Deck and Engine Part Emergency Stop", week: 8 },
+  { category: "FFE", itemNo: 25, name: "Classes of Fire Doors", week: 8 },
+  { category: "FFE", itemNo: 26, name: "Others (specify vessel-specific equipment)", week: 8 },
+];
+
 // Role → permission grants. Roles are data; adjust freely.
 const ROLE_GRANTS: Record<string, { desc: string; perms: string[] }> = {
   Administrator: {
@@ -121,11 +189,14 @@ const ROLE_GRANTS: Record<string, { desc: string; perms: string[] }> = {
       "nm:read", "nm:create", "nm:update", "nm:close", "nm:delete",
       // ncr:close is DPA / General Manager only — NCR verification authority.
       "ncr:read", "ncr:create", "ncr:update", "ncr:delete",
-      "sire:read", "sire:create", "sire:update", "sire:close", "sire:delete",
+      "sire:read", "sire:create", "sire:update", "sire:close", "sire:delete", "sire:manage-targets",
       "psc:read", "psc:create", "psc:update", "psc:close", "psc:delete",
       "cdi:read", "cdi:create", "cdi:update", "cdi:close", "cdi:delete",
       "iaudit:read", "iaudit:create", "iaudit:update", "iaudit:close", "iaudit:delete",
       "eaudit:read", "eaudit:create", "eaudit:update", "eaudit:close", "eaudit:delete",
+      "cinsp:read", "cinsp:create", "cinsp:update", "cinsp:close", "cinsp:delete", "cinsp:manage-targets",
+      "sire-questionnaire:manage",
+      "exposure:read", "exposure:create", "exposure:update", "exposure:delete", "exposure:manage-targets",
       "meeting:read", "meeting:create", "meeting:update", "meeting:close", "meeting:delete",
       "drill:read", "drill:create", "drill:update", "drill:close", "drill:delete",
       "doc:read", "doc:create", "doc:update", "doc:delete",
@@ -133,6 +204,11 @@ const ROLE_GRANTS: Record<string, { desc: string; perms: string[] }> = {
       "risk-doc:read", "risk-doc:create", "risk-doc:update", "risk-doc:approve", "risk-doc:archive",
       "defect:read", "defect:create", "defect:update", "defect:delete",
       "vessel:read",
+      "vtracker:read", "vtracker:create", "vtracker:update", "vtracker:delete",
+      "environment:read", "environment:create", "environment:update", "environment:delete", "environment:manage-units",
+      "vesseldoc:read", "vesseldoc:create", "vesseldoc:update", "vesseldoc:delete",
+      "tmsa:read", "tmsa:update-kpi", "tmsa:manage-cap",
+      "procurement:read", "procurement:manage-catalogue", "procurement:manage-thresholds",
     ],
   },
   "Marine Superintendent": {
@@ -147,6 +223,8 @@ const ROLE_GRANTS: Record<string, { desc: string; perms: string[] }> = {
       "cdi:read", "cdi:create", "cdi:update",
       "iaudit:read", "iaudit:create", "iaudit:update",
       "eaudit:read", "eaudit:create", "eaudit:update",
+      "cinsp:read", "cinsp:create", "cinsp:update",
+      "exposure:read", "exposure:create", "exposure:update",
       "meeting:read", "meeting:create", "meeting:update", "meeting:close",
       "drill:read", "drill:create", "drill:update", "drill:close",
       "doc:read", "doc:create", "doc:update",
@@ -154,6 +232,11 @@ const ROLE_GRANTS: Record<string, { desc: string; perms: string[] }> = {
       "risk-doc:read", "risk-doc:create", "risk-doc:update", "risk-doc:approve", "risk-doc:archive",
       "defect:read", "defect:create", "defect:update",
       "vessel:read", "vessel:create", "vessel:update", "vessel:delete",
+      "vtracker:read", "vtracker:create", "vtracker:update",
+      "environment:read", "environment:create", "environment:update",
+      "vesseldoc:read", "vesseldoc:create", "vesseldoc:update", "vesseldoc:delete",
+      "tmsa:read", "tmsa:update-kpi", "tmsa:manage-cap",
+      "procurement:read", "procurement:manage-catalogue", "procurement:manage-thresholds", "procurement:office-review",
     ],
   },
   "Ship Officer": {
@@ -165,8 +248,13 @@ const ROLE_GRANTS: Record<string, { desc: string; perms: string[] }> = {
       // ncr:create is further gated to senior ranks (Master/C.Off/C.Engr) at
       // the action level — see createNcrAction.
       "ncr:read", "ncr:create",
-      "sire:read", "psc:read", "cdi:read",
-      "iaudit:read", "eaudit:read",
+      "sire:read", "psc:read", "cdi:read", "cdi:respond",
+      "iaudit:read", "eaudit:read", "cinsp:read",
+      // Vessel can mark an existing corrective/preventive action done/not
+      // done once office has raised it — adding/editing/deleting CAPA items
+      // stays with {psc,iaudit,eaudit,cinsp}:update (office-only).
+      "capa:respond",
+      "exposure:read", "exposure:create", "exposure:update",
       // Meetings/Drills/Defects/Risk are logged onboard by any officer;
       // Documents/Circulars are office-issued, so ship side is read-only.
       "meeting:read", "meeting:create", "meeting:update",
@@ -175,15 +263,21 @@ const ROLE_GRANTS: Record<string, { desc: string; perms: string[] }> = {
       "risk-doc:read", "risk-doc:execute", "risk-doc:request-revision",
       "defect:read", "defect:create", "defect:update",
       "vessel:read",
+      "vtracker:read", "vtracker:create", "vtracker:update",
+      "environment:read", "environment:create", "environment:update",
+      "vesseldoc:read",
+      // procurement:approve is further gated to rank === "Master" at the
+      // action level — see masterApproveRequisitionAction.
+      "procurement:read", "procurement:create", "procurement:opening-stock-take", "procurement:approve",
     ],
   },
   DPA: {
     desc: "Designated Person Ashore — verifies and closes out non-conformities",
-    perms: ["ncr:read", "ncr:update", "ncr:close", "risk-doc:read", "risk-doc:approve", "vessel:read"],
+    perms: ["ncr:read", "ncr:update", "ncr:close", "risk-doc:read", "risk-doc:approve", "vessel:read", "vtracker:read", "environment:read", "vesseldoc:read", "tmsa:read", "procurement:read"],
   },
   "General Manager": {
     desc: "Top management — verifies and closes out non-conformities",
-    perms: ["ncr:read", "ncr:update", "ncr:close", "risk-doc:read", "risk-doc:approve", "vessel:read"],
+    perms: ["ncr:read", "ncr:update", "ncr:close", "risk-doc:read", "risk-doc:approve", "vessel:read", "vtracker:read", "environment:read", "vesseldoc:read", "tmsa:read", "procurement:read"],
   },
 };
 
@@ -302,6 +396,32 @@ async function main() {
     });
     await prisma.rolePermission.createMany({
       data: perms_.map((p) => ({ roleId: role.id, permissionId: p.id })),
+    });
+  }
+
+  // Unit Master — controlled conversion factors for Environmental Records'
+  // Sewage/Cargo unit pickers. Seeded with sensible starting values so the
+  // feature works out of the box; the CARGO→CBM factor is a generic
+  // placeholder (density varies by cargo) and should be reviewed by QHSE
+  // against this fleet's actual cargo grades before relying on it.
+  const UNIT_MASTER_DEFAULTS: {
+    metric: "SEWAGE" | "CARGO";
+    unit: string;
+    unitLabel: string;
+    standardUnit: string;
+    toStandardFactor: number;
+    isDefault: boolean;
+  }[] = [
+    { metric: "SEWAGE", unit: "m3", unitLabel: "Cubic Metres (m³)", standardUnit: "m3", toStandardFactor: 1, isDefault: true },
+    { metric: "SEWAGE", unit: "L", unitLabel: "Litres (L)", standardUnit: "m3", toStandardFactor: 0.001, isDefault: false },
+    { metric: "CARGO", unit: "MT", unitLabel: "Metric Tonnes (MT)", standardUnit: "MT", toStandardFactor: 1, isDefault: true },
+    { metric: "CARGO", unit: "CBM", unitLabel: "Cubic Metres (CBM)", standardUnit: "MT", toStandardFactor: 0.5, isDefault: false },
+  ];
+  for (const u of UNIT_MASTER_DEFAULTS) {
+    await prisma.unitMaster.upsert({
+      where: { companyId_metric_unit: { companyId: company.id, metric: u.metric, unit: u.unit } },
+      update: {},
+      create: { companyId: company.id, ...u },
     });
   }
 
@@ -633,6 +753,8 @@ async function main() {
   }
 
   // Sample Hazard Observation (HOR) — merged into the Near Miss/HOR module.
+  // Carries a Stop Work Authority exercise + reporter name so the KPI
+  // dashboard's "by Reporter" leaderboard has something to rank.
   if (!(await prisma.nearMiss.findFirst({ where: { companyId: company.id, refNo: "HOR-2026-0001" } }))) {
     await prisma.nearMiss.create({
       data: {
@@ -641,6 +763,9 @@ async function main() {
         title: "Missing gratings guard near engine room walkway",
         kind: "HOR",
         horCategory: "UNSAFE_CONDITION",
+        stopAuthorityExercised: true,
+        reporterName: "Reyes, J.",
+        reporterPosition: "3/Off",
         vesselId: firstVessel?.id ?? null,
         occurredAt: new Date(),
         location: "Engine room",
@@ -651,6 +776,62 @@ async function main() {
         immediateAction: "Area barriered off and warning sign posted.",
         rootCauseCategory: "EQUIPMENT_SOFTWARE",
         rootCauseSubCategory: "EQUIPMENT_FAILURE",
+        status: "REPORTED",
+        reportedById: adminId || null,
+        createdBy: adminId || null,
+      },
+    });
+  }
+
+  if (!(await prisma.nearMiss.findFirst({ where: { companyId: company.id, refNo: "HOR-2026-0002" } }))) {
+    await prisma.nearMiss.create({
+      data: {
+        companyId: company.id,
+        refNo: "HOR-2026-0002",
+        title: "Frayed mooring line spotted before departure",
+        kind: "HOR",
+        horCategory: "UNSAFE_CONDITION",
+        stopAuthorityExercised: true,
+        reporterName: "Reyes, J.",
+        reporterPosition: "3/Off",
+        vesselId: firstVessel?.id ?? null,
+        occurredAt: new Date(),
+        location: "Forecastle deck",
+        description:
+          "A mooring line showed significant fraying near the bitts; departure operations were paused pending replacement.",
+        potentialConsequence: "PROPERTY_DAMAGE",
+        potentialSeverity: "MEDIUM",
+        immediateAction: "Mooring operation halted; line replaced before proceeding.",
+        rootCauseCategory: "EQUIPMENT_SOFTWARE",
+        rootCauseSubCategory: "EQUIPMENT_FAILURE",
+        status: "REPORTED",
+        reportedById: adminId || null,
+        createdBy: adminId || null,
+      },
+    });
+  }
+
+  if (!(await prisma.nearMiss.findFirst({ where: { companyId: company.id, refNo: "HOR-2026-0003" } }))) {
+    await prisma.nearMiss.create({
+      data: {
+        companyId: company.id,
+        refNo: "HOR-2026-0003",
+        title: "Hot work permit missing fire watch signature",
+        kind: "HOR",
+        horCategory: "UNSAFE_ACT",
+        stopAuthorityExercised: true,
+        reporterName: "Santos, B.",
+        reporterPosition: "Master",
+        vesselId: firstVessel?.id ?? null,
+        occurredAt: new Date(),
+        location: "Engine room workshop",
+        description:
+          "Hot work was about to commence without the fire watch's signature on the permit; work was stopped until the permit was completed correctly.",
+        potentialConsequence: "FIRE_EXPLOSION",
+        potentialSeverity: "HIGH",
+        immediateAction: "Hot work halted until permit properly completed and fire watch confirmed.",
+        rootCauseCategory: "HUMAN_FACTORS",
+        rootCauseSubCategory: "SITUATIONAL_AWARENESS_REDUCED",
         status: "REPORTED",
         reportedById: adminId || null,
         createdBy: adminId || null,
@@ -1019,6 +1200,43 @@ async function main() {
         remarks: "Reviewed with deck & engine officers.",
         createdBy: adminId || null,
       },
+    });
+  }
+
+  // Per-crew LSA/FFE induction catalog (SMS CK-047(a))
+  const lsaFfeItemIds: Record<string, string> = {};
+  for (const s of LSA_FFE_ITEMS) {
+    const item = await prisma.lsaFfeItem.upsert({
+      where: { companyId_category_itemNo: { companyId: company.id, category: s.category, itemNo: s.itemNo } },
+      update: { name: s.name, suggestedWeek: s.week },
+      create: { companyId: company.id, category: s.category, itemNo: s.itemNo, name: s.name, suggestedWeek: s.week },
+    });
+    lsaFfeItemIds[`${s.category}:${s.itemNo}`] = item.id;
+  }
+
+  // Sample crew induction — a group session, a few items checked off, most
+  // still pending.
+  if (!(await prisma.crewFamiliarization.findFirst({ where: { companyId: company.id, refNo: "CF-2026-0001" } }))) {
+    const cf = await prisma.crewFamiliarization.create({
+      data: {
+        companyId: company.id,
+        refNo: "CF-2026-0001",
+        vesselId: firstVessel!.id,
+        attendees: "AB Ronel Santos, OS Miguel Bautista, Deck Cadet Jerome Lim",
+        cycleStartDate: new Date("2026-07-13"),
+        supervisedBy: "C/O Ferdinand Cruz",
+        createdBy: adminId || null,
+        updatedBy: adminId || null,
+      },
+    });
+    await prisma.crewFamiliarizationRecord.createMany({
+      data: [
+        { companyId: company.id, crewFamiliarizationId: cf.id, lsaFfeItemId: lsaFfeItemIds["LSA:1"]!, completedDate: new Date("2026-07-13"), createdBy: adminId || null, updatedBy: adminId || null },
+        { companyId: company.id, crewFamiliarizationId: cf.id, lsaFfeItemId: lsaFfeItemIds["LSA:4"]!, completedDate: new Date("2026-07-13"), createdBy: adminId || null, updatedBy: adminId || null },
+        { companyId: company.id, crewFamiliarizationId: cf.id, lsaFfeItemId: lsaFfeItemIds["LSA:11"]!, completedDate: new Date("2026-07-20"), createdBy: adminId || null, updatedBy: adminId || null },
+        { companyId: company.id, crewFamiliarizationId: cf.id, lsaFfeItemId: lsaFfeItemIds["FFE:6"]!, completedDate: new Date("2026-07-13"), createdBy: adminId || null, updatedBy: adminId || null },
+        { companyId: company.id, crewFamiliarizationId: cf.id, lsaFfeItemId: lsaFfeItemIds["FFE:9"]!, completedDate: new Date("2026-07-20"), createdBy: adminId || null, updatedBy: adminId || null },
+      ],
     });
   }
 
@@ -1785,6 +2003,110 @@ async function main() {
         createdBy: adminId || null,
       },
     });
+  }
+
+  // Procurement — illustrative Stores + Spares catalogue seed data. Real
+  // fleet catalogues (24-month purchase history / per-vessel machinery
+  // lists) are a data-entry task for the user via the admin CRUD UI — this
+  // is just enough to exercise the module end to end.
+  const STORES_ITEMS: {
+    impaCode?: string;
+    name: string;
+    category: StoresCategory;
+    unit: string;
+    subGroup?: string;
+    remarks?: string;
+    requiresExpiryTracking?: boolean;
+    medicalChestCompliance?: boolean;
+    imoHazardClass?: string;
+    shelfLifeMonths?: number;
+  }[] = [
+    { name: "Manila Rope 24mm", category: "DECK", unit: "mtr", subGroup: "Mooring Ropes" },
+    { name: "Cotton Waste", category: "DECK", unit: "kg", subGroup: "General Deck Stores" },
+    { name: "Engine Oil SAE 40", category: "ENGINE", unit: "ltr", subGroup: "Lube Oils" },
+    { name: "Fuel Filter Element", category: "ENGINE", unit: "pc", subGroup: "Filters" },
+    { name: "Adjustable Wrench 12\"", category: "TOOLS", unit: "pc", subGroup: "Hand Tools" },
+    { name: "Socket Wrench Set", category: "TOOLS", unit: "set", subGroup: "Hand Tools" },
+    { name: "Dish Washing Liquid", category: "GALLEY", unit: "ltr", subGroup: "Cleaning Supplies" },
+    { name: "Stainless Steel Cookware Set", category: "GALLEY", unit: "set", subGroup: "Cookware" },
+    { name: "A4 Bond Paper", category: "STATIONERY", unit: "ream", subGroup: "Office Supplies" },
+    { name: "Ballpoint Pen Black", category: "STATIONERY", unit: "box", subGroup: "Office Supplies" },
+    { name: "Anti-Corrosive Primer Red", category: "PAINTS", unit: "ltr", subGroup: "Primers", shelfLifeMonths: 24 },
+    { name: "Antifouling Paint", category: "PAINTS", unit: "ltr", subGroup: "Antifouling", shelfLifeMonths: 18 },
+    { name: "Boiler Water Treatment Chemical", category: "CHEMICALS", unit: "ltr", subGroup: "Water Treatment", imoHazardClass: "8" },
+    { name: "Descaling Chemical", category: "CHEMICALS", unit: "ltr", subGroup: "Water Treatment", imoHazardClass: "8" },
+    { name: "Paracetamol 500mg", category: "MEDICINE", unit: "box", subGroup: "Medical Chest", requiresExpiryTracking: true, medicalChestCompliance: true },
+    { name: "Adrenaline Injection", category: "MEDICINE", unit: "amp", subGroup: "Medical Chest", requiresExpiryTracking: true, medicalChestCompliance: true },
+    { name: "Rice", category: "PROVISIONS", unit: "kg", subGroup: "Dry Stores" },
+    { name: "Canned Corned Beef", category: "PROVISIONS", unit: "can", subGroup: "Dry Stores" },
+  ];
+  for (const vesselCode of ["ASE", "ESM", "SI"]) {
+    const v = await prisma.vessel.findFirst({ where: { companyId: company.id, code: vesselCode } });
+    if (!v) continue;
+    for (const item of STORES_ITEMS) {
+      const existing = item.impaCode
+        ? await prisma.storesCatalogueItem.findFirst({ where: { companyId: company.id, vesselId: v.id, impaCode: item.impaCode } })
+        : await prisma.storesCatalogueItem.findFirst({ where: { companyId: company.id, vesselId: v.id, name: item.name, category: item.category } });
+      const data = {
+        subGroup: item.subGroup,
+        remarks: item.remarks,
+        updatedBy: adminId || null,
+      };
+      if (existing) {
+        await prisma.storesCatalogueItem.update({ where: { id: existing.id }, data });
+        continue;
+      }
+      await prisma.storesCatalogueItem.create({
+        data: {
+          companyId: company.id,
+          vesselId: v.id,
+          impaCode: item.impaCode ?? null,
+          name: item.name,
+          category: item.category,
+          unit: item.unit,
+          ...data,
+          requiresExpiryTracking: item.requiresExpiryTracking ?? false,
+          medicalChestCompliance: item.medicalChestCompliance ?? false,
+          imoHazardClass: item.imoHazardClass,
+          shelfLifeMonths: item.shelfLifeMonths,
+          createdBy: adminId || null,
+        },
+      });
+    }
+  }
+
+  const SPARES_TEMPLATE: { makerName: string; equipmentName: string; partNo: string; description: string; unit: string; location?: string; criticalSpare: boolean }[] = [
+    { makerName: "MAN B&W", equipmentName: "Main Engine", partNo: "ME-INJ-001", description: "Fuel Injector Assembly", unit: "pc", location: "Engine Room Spares Locker", criticalSpare: true },
+    { makerName: "MAN B&W", equipmentName: "Main Engine", partNo: "ME-PST-014", description: "Piston Ring Set", unit: "set", location: "Engine Room Spares Locker", criticalSpare: true },
+    { makerName: "Caterpillar", equipmentName: "Auxiliary Engine No.1", partNo: "AE-FLT-022", description: "Lube Oil Filter", unit: "pc", location: "Engine Room Spares Locker", criticalSpare: false },
+    { makerName: "Yanmar", equipmentName: "Emergency Generator", partNo: "EG-STR-007", description: "Starter Motor", unit: "pc", location: "Emergency Generator Room", criticalSpare: true },
+    { makerName: "Alfa Laval", equipmentName: "Fuel Oil Purifier", partNo: "FOP-BWL-003", description: "Bowl Assembly Gasket Kit", unit: "kit", location: "Engine Room Spares Locker", criticalSpare: false },
+    { makerName: "Framo", equipmentName: "Cargo Pump", partNo: "CP-SEAL-011", description: "Shaft Seal Kit", unit: "kit", location: "CCR", criticalSpare: true },
+    { makerName: "Rolls-Royce", equipmentName: "Steering Gear", partNo: "SG-RAM-005", description: "Hydraulic Ram Seal Kit", unit: "kit", location: "Steering Gear Room", criticalSpare: true },
+    { makerName: "Aalborg", equipmentName: "Exhaust Gas Boiler", partNo: "EGB-TUBE-019", description: "Boiler Tube", unit: "pc", location: "Engine Room Spares Locker", criticalSpare: false },
+  ];
+  for (const vesselCode of ["ASE", "ESM", "SI"]) {
+    const v = await prisma.vessel.findFirst({ where: { companyId: company.id, code: vesselCode } });
+    if (!v) continue;
+    for (const item of SPARES_TEMPLATE) {
+      await prisma.sparesCatalogueItem.upsert({
+        where: { companyId_vesselId_makerName_partNo: { companyId: company.id, vesselId: v.id, makerName: item.makerName, partNo: item.partNo } },
+        update: { location: item.location },
+        create: {
+          companyId: company.id,
+          vesselId: v.id,
+          makerName: item.makerName,
+          equipmentName: item.equipmentName,
+          partNo: item.partNo,
+          description: item.description,
+          unit: item.unit,
+          location: item.location,
+          criticalSpare: item.criticalSpare,
+          createdBy: adminId || null,
+          updatedBy: adminId || null,
+        },
+      });
+    }
   }
 
   console.log("\n✔ Seed complete.");

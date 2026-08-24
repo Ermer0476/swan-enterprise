@@ -306,7 +306,7 @@ export function NewMeetingForm({
           {state.error && <p className="text-sm text-danger" role="alert">{state.error}</p>}
           <div className="flex items-center gap-2">
             <ReportSubmitButton />
-            {isShipboard && <DraftSubmitButton />}
+            <DraftSubmitButton />
             <Link href="/meetings"><Button type="button" variant="ghost">Cancel</Button></Link>
           </div>
         </form>

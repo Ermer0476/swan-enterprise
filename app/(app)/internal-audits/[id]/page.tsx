@@ -25,6 +25,9 @@ import type { AuditFindingCategory, RootCauseValue, CapaEntityRef } from "@/comp
 import type { CapaRowView, CapaSummaryRowView } from "@/components/capa/capa-tracker";
 import { Button } from "@/components/ui/button";
 import { FileText } from "lucide-react";
+import { DeleteDraftInternalAuditButton, ReportDraftInternalAuditButton } from "./draft-actions";
+import { EditDraftInternalAuditForm } from "./edit-draft-form";
+import { listVesselOptions } from "@/features/internal-audits/queries";
 
 function toRowView(r: {
   id: string;
@@ -49,10 +52,56 @@ export default async function InternalAuditDetailPage({
 }) {
   const user = await requirePermission("iaudit:read");
   const { id } = await params;
-  const audit = await getInternalAudit(user.companyId, id);
+  const isShipboard = user.department === "SHIPBOARD";
+  const vesselId = isShipboard ? user.vesselId ?? "__no-vessel-assigned__" : undefined;
+  const audit = await getInternalAudit(user.companyId, id, user.id, vesselId);
   if (!audit) notFound();
 
+  const isOwnDraft = audit.status === "DRAFT" && can(user, "iaudit:create") && audit.createdBy === user.id;
+
+  if (audit.status === "DRAFT") {
+    const vessels = await listVesselOptions(user.companyId);
+    return (
+      <div className="mx-auto max-w-7xl">
+        <Link href="/internal-audits" className="mb-3 inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground">
+          <ArrowLeft className="h-4 w-4" /> Back to Internal Audits
+        </Link>
+        <PageHeader
+          title={`Draft — ${audit.scope}`}
+          actions={
+            <div className="flex items-center gap-2">
+              <Badge tone={lifecycleStatusTone(audit.status)}>{humanize(audit.status)}</Badge>
+              {isOwnDraft && <DeleteDraftInternalAuditButton auditId={audit.id} />}
+              {isOwnDraft && <ReportDraftInternalAuditButton auditId={audit.id} />}
+            </div>
+          }
+        />
+        {isOwnDraft ? (
+          <EditDraftInternalAuditForm
+            audit={{
+              id: audit.id,
+              vesselId: audit.vesselId,
+              scope: audit.scope,
+              standard: audit.standard,
+              auditorName: audit.auditorName ?? "",
+              auditBody: audit.auditBody ?? "",
+              auditDate: audit.auditDate.toISOString().slice(0, 10),
+              summary: audit.summary ?? "",
+            }}
+            vessels={vessels}
+          />
+        ) : (
+          <p className="text-sm text-muted-foreground">You don&apos;t have access to edit this draft.</p>
+        )}
+      </div>
+    );
+  }
+
   const editable = can(user, "iaudit:update") && audit.status !== "CLOSED";
+  // The vessel can mark its own findings' corrective actions done/not done
+  // (status + closed date only) without the full office edit permission —
+  // the audit was already fetched scoped to their own vessel above.
+  const canRespond = isShipboard && can(user, "capa:respond") && audit.status !== "CLOSED";
   const canClose = can(user, "iaudit:close");
   const canDelete = can(user, "iaudit:delete");
   const canCreateNcr = can(user, "ncr:create");
@@ -191,6 +240,7 @@ export default async function InternalAuditDetailPage({
           <AuditFindingsPanel
             auditId={audit.id}
             editable={editable}
+            canRespond={canRespond}
             addAction={addFindingAction}
             deleteAction={deleteFindingAction}
             saveRootCauseAction={saveFindingRootCauseAction}
@@ -205,7 +255,7 @@ export default async function InternalAuditDetailPage({
             ncrBySourceId={ncrBySourceId}
             ncrContext={{
               vesselId: audit.vesselId,
-              reportRefNo: audit.refNo,
+              reportRefNo: audit.refNo ?? "",
               raisedAt: audit.auditDate.toISOString().slice(0, 10),
               source: "INTERNAL_AUDIT",
             }}

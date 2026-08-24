@@ -96,7 +96,40 @@ const REGISTRY: Record<
       return `/cdi/${obs?.inspectionId ?? ""}`;
     },
   },
+  CompanyInspectionObservation: {
+    permission: "cinsp:update",
+    pagePath: async (observationId) => {
+      const obs = await prisma.companyInspectionObservation.findUnique({
+        where: { id: observationId },
+        select: { inspectionId: true },
+      });
+      return `/company-inspections/${obs?.inspectionId ?? ""}`;
+    },
+  },
   Circular: { permission: "circular:update", pagePath: (id) => `/circulars/${id}` },
+  VesselDocument: {
+    permission: "vesseldoc:update",
+    pagePath: async (id) => {
+      const doc = await prisma.vesselDocument.findUnique({
+        where: { id },
+        select: { vesselId: true },
+      });
+      return doc?.vesselId ? "/documents/vessel" : "/documents/company";
+    },
+  },
+  // A superseded/old version of a VesselDocument's certificate — a second,
+  // separate attachment slot on the same record (entityId), not a revision
+  // history of the "VesselDocument" slot above.
+  VesselDocumentArchive: {
+    permission: "vesseldoc:update",
+    pagePath: async (id) => {
+      const doc = await prisma.vesselDocument.findUnique({
+        where: { id },
+        select: { vesselId: true },
+      });
+      return doc?.vesselId ? "/documents/vessel" : "/documents/company";
+    },
+  },
 };
 
 function registryFor(entityType: string) {
@@ -136,6 +169,22 @@ export async function uploadAttachmentAction(
   }
   if (!ALLOWED_MIME_TYPES.has(file.type)) {
     return fail("File type is not supported");
+  }
+  // Certificate registers scan/file PDFs only — a Word/Excel/zip here can't
+  // be previewed inline like the rest of the register expects.
+  if ((entityType === "VesselDocument" || entityType === "VesselDocumentArchive") && file.type !== "application/pdf") {
+    return fail("Only PDF files are allowed for certificate attachments");
+  }
+
+  // A VesselDocument's "current" slot holds exactly one file — uploading a
+  // replacement pushes whatever was there into the Archived slot instead of
+  // just piling up, so the register's Attachment column always shows the
+  // live certificate and Archived accumulates the superseded ones.
+  if (entityType === "VesselDocument") {
+    await prisma.attachment.updateMany({
+      where: { companyId: user.companyId, entityType: "VesselDocument", entityId, deletedAt: null },
+      data: { entityType: "VesselDocumentArchive" },
+    });
   }
 
   const ext = nodePath.extname(file.name).slice(0, 20);

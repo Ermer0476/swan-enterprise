@@ -1,6 +1,8 @@
 import { z } from "zod";
 
-export const DRILL_STATUSES = ["OPEN", "CLOSED"] as const;
+// DRAFT → OPEN always goes through reportDraftDrillAction (assigns refNo),
+// never the generic closeDrillAction path (see the DRAFT guard there).
+export const DRILL_STATUSES = ["DRAFT", "OPEN", "CLOSED"] as const;
 
 // Mirrors SMS form R-AS-021 "Report of Drill / Training onboard" (Appendix 6).
 export const createDrillSchema = z.object({

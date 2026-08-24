@@ -16,8 +16,17 @@ import { Button } from "@/components/ui/button";
 function SubmitButton() {
   const { pending } = useFormStatus();
   return (
-    <Button type="submit" disabled={pending}>
+    <Button type="submit" name="intent" value="report" disabled={pending}>
       {pending ? "Raising…" : "Raise NCR"}
+    </Button>
+  );
+}
+
+function DraftSubmitButton() {
+  const { pending } = useFormStatus();
+  return (
+    <Button type="submit" name="intent" value="draft" variant="outline" disabled={pending}>
+      {pending ? "Saving…" : "Save as Draft"}
     </Button>
   );
 }
@@ -190,6 +199,7 @@ export function NewNcrForm({
           {state.error && <p className="text-sm text-danger" role="alert">{state.error}</p>}
           <div className="flex items-center gap-2">
             <SubmitButton />
+            <DraftSubmitButton />
             <Link href="/non-conformities"><Button type="button" variant="ghost">Cancel</Button></Link>
           </div>
         </form>

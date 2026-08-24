@@ -5,19 +5,15 @@ import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { requirePermission } from "@/lib/rbac";
 import { writeAudit } from "@/lib/audit";
+import { allocateRefNo } from "@/lib/ref-sequence";
 import { createDefectSchema, updateDefectSchema } from "./schema";
 
 export type ActionResult = { ok: boolean; error: string | null };
 const OK: ActionResult = { ok: true, error: null };
 const fail = (error: string): ActionResult => ({ ok: false, error });
 
-async function nextRefNo(companyId: string): Promise<string> {
-  const year = new Date().getFullYear();
-  const prefix = `DEF-${year}-`;
-  const count = await prisma.defect.count({
-    where: { companyId, refNo: { startsWith: prefix } },
-  });
-  return `${prefix}${String(count + 1).padStart(4, "0")}`;
+async function nextRefNo(companyId: string, vesselCode: string): Promise<string> {
+  return allocateRefNo(companyId, `${vesselCode}-DEF-${new Date().getFullYear()}`);
 }
 
 export async function createDefectAction(
@@ -37,10 +33,16 @@ export async function createDefectAction(
   if (!parsed.success) return fail(parsed.error.issues[0]?.message ?? "Invalid input");
   const d = parsed.data;
 
+  const vessel = await prisma.vessel.findFirst({
+    where: { id: d.vesselId, companyId: user.companyId },
+    select: { code: true },
+  });
+  if (!vessel) return fail("Vessel not found");
+
   const defect = await prisma.defect.create({
     data: {
       companyId: user.companyId,
-      refNo: await nextRefNo(user.companyId),
+      refNo: await nextRefNo(user.companyId, vessel.code),
       vesselId: d.vesselId,
       equipment: d.equipment,
       description: d.description,

@@ -55,7 +55,7 @@ export default async function NcrReportPage({
 }) {
   const user = await requirePermission("ncr:read");
   const { id } = await params;
-  const ncr = await getNcr(user.companyId, id);
+  const ncr = await getNcr(user.companyId, id, user.department === "SHIPBOARD", user.id, user.vesselId);
   if (!ncr) notFound();
 
   const [correctiveRows, allCapaRows] = await Promise.all([

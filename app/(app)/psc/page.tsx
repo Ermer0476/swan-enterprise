@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Plus, Anchor } from "lucide-react";
+import { Plus, Anchor, BarChart3 } from "lucide-react";
 import { requirePermission, can } from "@/lib/rbac";
 import { listPsc } from "@/features/psc/queries";
 import { INSPECTION_STATUSES } from "@/features/psc/schema";
@@ -8,6 +8,8 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input, Select } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Pager } from "@/components/ui/pager";
+import { readPage } from "@/lib/pagination";
 import { formatDate, humanize } from "@/lib/utils";
 import { lifecycleStatusTone } from "@/lib/status";
 import type { InspectionStatus } from "@/lib/generated/prisma";
@@ -19,11 +21,18 @@ export default async function PscPage({
 }) {
   const user = await requirePermission("psc:read");
   const sp = await searchParams;
-  const rows = await listPsc(user.companyId, {
-    search: sp.q || undefined,
-    status: (sp.status as InspectionStatus) || undefined,
-    detained: sp.detained === "1" ? true : undefined,
-  });
+  const isShipboard = user.department === "SHIPBOARD";
+  const vesselId = isShipboard ? user.vesselId ?? "__no-vessel-assigned__" : sp.vesselId || undefined;
+  const { rows, total, page, totalPages } = await listPsc(
+    user.companyId,
+    {
+      search: sp.q || undefined,
+      status: (sp.status as InspectionStatus) || undefined,
+      detained: sp.detained === "1" ? true : undefined,
+      vesselId,
+    },
+    readPage(sp),
+  );
   const canCreate = can(user, "psc:create");
 
   return (
@@ -32,11 +41,20 @@ export default async function PscPage({
         title="PSC Inspections"
         description="Port State Control inspections, deficiencies and detention tracking."
         actions={
-          canCreate ? (
-            <Link href="/psc/new">
-              <Button><Plus className="h-4 w-4" /> Record Inspection</Button>
+          <div className="flex items-center gap-2">
+            <Link href="/psc/kpi">
+              <Button variant="warning">
+                <BarChart3 className="h-4 w-4" /> PSC KPIs
+              </Button>
             </Link>
-          ) : undefined
+            {canCreate && (
+              <Link href="/psc/new">
+                <Button>
+                  <Plus className="h-4 w-4" /> Record Inspection
+                </Button>
+              </Link>
+            )}
+          </div>
         }
       />
 
@@ -75,6 +93,7 @@ export default async function PscPage({
                   <th className="px-4 py-2.5 font-medium">Port</th>
                   <th className="px-4 py-2.5 font-medium">Date</th>
                   <th className="px-4 py-2.5 font-medium">Def.</th>
+                  <th className="px-4 py-2.5 font-medium">CAPA Tracker</th>
                   <th className="px-4 py-2.5 font-medium">Outcome</th>
                   <th className="px-4 py-2.5 font-medium">Status</th>
                 </tr>
@@ -91,7 +110,19 @@ export default async function PscPage({
                     <td className="px-4 py-2.5 text-muted-foreground">{r.vessel?.name ?? "—"}</td>
                     <td className="px-4 py-2.5 text-muted-foreground">{r.port ?? "—"}</td>
                     <td className="px-4 py-2.5 text-muted-foreground">{formatDate(r.inspectionDate)}</td>
-                    <td className="px-4 py-2.5 tabular-nums text-muted-foreground">{r._count.deficiencies}</td>
+                    <td className="px-4 py-2.5 tabular-nums text-muted-foreground">{r.deficiencyCount}</td>
+                    <td className="px-4 py-2.5">
+                      {r.capaPending === 0 ? (
+                        <span className="text-muted-foreground">—</span>
+                      ) : (
+                        <div className="flex flex-col gap-0.5">
+                          <span>{r.capaPending} Pending</span>
+                          {r.capaOverdue > 0 && (
+                            <span className="text-xs font-medium text-danger">{r.capaOverdue} Overdue</span>
+                          )}
+                        </div>
+                      )}
+                    </td>
                     <td className="px-4 py-2.5">
                       {r.detained ? <Badge tone="danger">Detained</Badge> : <Badge tone="success">Not detained</Badge>}
                     </td>
@@ -101,6 +132,7 @@ export default async function PscPage({
               </tbody>
             </table>
           </div>
+          <Pager page={page} totalPages={totalPages} total={total} basePath="/psc" searchParams={sp} />
         </Card>
       )}
     </>

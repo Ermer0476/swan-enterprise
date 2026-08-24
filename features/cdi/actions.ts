@@ -4,7 +4,9 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { requirePermission } from "@/lib/rbac";
+import { requireUser } from "@/lib/auth";
 import { writeAudit } from "@/lib/audit";
+import { allocateRefNo } from "@/lib/ref-sequence";
 import {
   createCdiSchema,
   addObservationSchema,
@@ -15,13 +17,9 @@ export type ActionResult = { ok: boolean; error: string | null };
 const OK: ActionResult = { ok: true, error: null };
 const fail = (error: string): ActionResult => ({ ok: false, error });
 
-async function nextRefNo(companyId: string): Promise<string> {
+async function nextRefNo(companyId: string, vesselCode: string | null): Promise<string> {
   const year = new Date().getFullYear();
-  const prefix = `CDI-${year}-`;
-  const count = await prisma.cdiInspection.count({
-    where: { companyId, refNo: { startsWith: prefix } },
-  });
-  return `${prefix}${String(count + 1).padStart(4, "0")}`;
+  return allocateRefNo(companyId, vesselCode ? `${vesselCode}-CDI-${year}` : `CDI-${year}`);
 }
 
 export async function createCdiAction(
@@ -42,10 +40,20 @@ export async function createCdiAction(
   }
   const d = parsed.data;
 
+  let vesselCode: string | null = null;
+  if (d.vesselId) {
+    const vessel = await prisma.vessel.findFirst({
+      where: { id: d.vesselId, companyId: user.companyId },
+      select: { code: true },
+    });
+    if (!vessel) return fail("Vessel not found");
+    vesselCode = vessel.code;
+  }
+
   const insp = await prisma.cdiInspection.create({
     data: {
       companyId: user.companyId,
-      refNo: await nextRefNo(user.companyId),
+      refNo: await nextRefNo(user.companyId, vesselCode),
       vesselId: d.vesselId || null,
       inspectorName: d.inspectorName || null,
       scheme: d.scheme || "CDI-M",
@@ -131,7 +139,7 @@ export async function addObservationAction(
 export async function updateObservationAction(
   formData: FormData,
 ): Promise<ActionResult> {
-  const user = await requirePermission("cdi:update");
+  const user = await requireUser();
   const parsed = updateObservationSchema.safeParse({
     observationId: formData.get("observationId"),
     response: formData.get("response"),
@@ -146,19 +154,46 @@ export async function updateObservationAction(
 
   const obs = await prisma.cdiObservation.findFirst({
     where: { id: d.observationId, companyId: user.companyId, deletedAt: null },
+    include: { inspection: { select: { vesselId: true } } },
   });
   if (!obs) return fail("Observation not found");
 
+  const hasFullAccess = user.permissions.has("cdi:update");
+  // Narrower path: the vessel can respond to and close its own inspection's
+  // observations (response + status only) without the full office edit
+  // permission — category/root-cause classification stay office-authored.
+  const hasRespondAccess =
+    !hasFullAccess &&
+    user.permissions.has("cdi:respond") &&
+    obs.inspection.vesselId !== null &&
+    obs.inspection.vesselId === user.vesselId;
+  if (!hasFullAccess && !hasRespondAccess) {
+    return fail("You don't have permission to edit this observation");
+  }
+
   await prisma.cdiObservation.update({
     where: { id: obs.id },
-    data: {
-      response: d.response || null,
-      status: d.status,
-      category: d.category,
-      rootCauseCategory: d.rootCauseCategory,
-      rootCauseSubCategory: d.rootCauseSubCategory || null,
-      rootCause: d.rootCause || null,
-    },
+    data: hasFullAccess
+      ? {
+          response: d.response || null,
+          status: d.status,
+          category: d.category,
+          rootCauseCategory: d.rootCauseCategory,
+          rootCauseSubCategory: d.rootCauseSubCategory || null,
+          rootCause: d.rootCause || null,
+        }
+      : {
+          response: d.response || null,
+          status: d.status,
+        },
+  });
+
+  await writeAudit({
+    actor: user,
+    action: "UPDATE",
+    entityType: "CdiObservation",
+    entityId: obs.id,
+    summary: `Updated CDI observation (status: ${d.status})`,
   });
 
   revalidatePath(`/cdi/${obs.inspectionId}`);
@@ -178,6 +213,15 @@ export async function deleteObservationAction(
     where: { id: obs.id },
     data: { deletedAt: new Date() },
   });
+
+  await writeAudit({
+    actor: user,
+    action: "DELETE",
+    entityType: "CdiObservation",
+    entityId: obs.id,
+    summary: `Deleted CDI observation`,
+  });
+
   revalidatePath(`/cdi/${obs.inspectionId}`);
   return OK;
 }

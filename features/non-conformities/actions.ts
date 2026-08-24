@@ -24,13 +24,16 @@ export async function createNcrAction(
 ): Promise<ActionResult> {
   const user = await requirePermission("ncr:create");
   // Shipboard NCR creation is restricted to senior officers — office roles
-  // with ncr:create are already manager-tier, so no extra check there.
+  // with ncr:create are already manager-tier, so no extra check there. This
+  // also gates Draft creation: a draft is still "raising an NCR", just not
+  // finalized yet.
   if (
     user.department === "SHIPBOARD" &&
     !(user.rank && (NCR_SHIP_CREATOR_RANKS as readonly string[]).includes(user.rank))
   ) {
     return fail("Only Master, Chief Officer, or Chief Engineer may raise an NCR onboard");
   }
+  const status: NcrStatus = formData.get("intent") === "draft" ? "DRAFT" : "OPEN";
   const parsed = createNcrSchema.safeParse({
     title: formData.get("title"),
     vesselId: formData.get("vesselId"),
@@ -68,10 +71,11 @@ export async function createNcrAction(
   // just raised. The unique constraint on (companyId, refNo) is the real
   // guard against a race with a concurrent submission; on that rare
   // conflict, re-derive (the other submission is committed by now, so this
-  // naturally advances) and retry.
+  // naturally advances) and retry. A Draft never burns a number — it stays
+  // null until the draft is actually reported (see reportDraftNcrAction).
   let ncr;
   for (let attempt = 0; ; attempt++) {
-    const refNo = await suggestNextRefNo(user.companyId, vesselCode);
+    const refNo = status === "OPEN" ? await suggestNextRefNo(user.companyId, vesselCode) : null;
 
     try {
       ncr = await prisma.nonConformity.create({
@@ -88,7 +92,7 @@ export async function createNcrAction(
           targetDate: d.targetDate ? new Date(d.targetDate) : null,
           description: d.description,
           personInCharge: d.personInCharge,
-          status: "OPEN",
+          status,
           raisedById: user.id,
           createdBy: user.id,
           updatedBy: user.id,
@@ -152,7 +156,8 @@ export async function createNcrAction(
     action: "CREATE",
     entityType: "NonConformity",
     entityId: ncr.id,
-    summary: `Raised NCR ${ncr.refNo} — ${ncr.title}`,
+    summary:
+      status === "OPEN" ? `Raised NCR ${ncr.refNo} — ${ncr.title}` : `Saved draft — ${ncr.title}`,
   });
 
   revalidatePath("/non-conformities");
@@ -253,6 +258,9 @@ export async function advanceNcrAction(
     where: { id, companyId: user.companyId, deletedAt: null },
   });
   if (!ncr) return fail("Non-conformity not found");
+  // A draft never advances through this generic path — it has no refNo yet,
+  // and this action doesn't assign one. Use reportDraftNcrAction.
+  if (ncr.status === "DRAFT") return fail("Report this draft first");
 
   const next = nextStatus(ncr.status);
   if (!next) return fail("NCR is already closed");
@@ -322,6 +330,162 @@ export async function deleteNcrAction(
     entityType: "NonConformity",
     entityId: ncr.id,
     summary: `Deleted NCR ${ncr.refNo}`,
+  });
+
+  revalidatePath("/non-conformities");
+  redirect("/non-conformities");
+}
+
+/**
+ * Submits a Draft — assigns its refNo (never done at draft-save time) and
+ * moves it to OPEN. Available to the same senior-officer ranks as raising
+ * one in the first place, since this IS the act of actually raising it.
+ */
+export async function reportDraftNcrAction(formData: FormData): Promise<ActionResult> {
+  const user = await requirePermission("ncr:create");
+  if (
+    user.department === "SHIPBOARD" &&
+    !(user.rank && (NCR_SHIP_CREATOR_RANKS as readonly string[]).includes(user.rank))
+  ) {
+    return fail("Only Master, Chief Officer, or Chief Engineer may raise an NCR onboard");
+  }
+  const id = String(formData.get("ncrId") ?? "");
+  const ncr = await prisma.nonConformity.findFirst({
+    where: { id, companyId: user.companyId, deletedAt: null, status: "DRAFT" },
+  });
+  if (!ncr) return fail("Draft not found");
+  if (user.department !== "SHIPBOARD" && ncr.createdBy !== user.id) {
+    return fail("Only the draft's creator (or the vessel) can report this draft");
+  }
+
+  let vesselCode: string | null = null;
+  if (ncr.vesselId) {
+    const vessel = await prisma.vessel.findFirst({
+      where: { id: ncr.vesselId, companyId: user.companyId },
+      select: { code: true },
+    });
+    vesselCode = vessel?.code ?? null;
+  }
+
+  let refNo: string | undefined;
+  for (let attempt = 0; ; attempt++) {
+    refNo = await suggestNextRefNo(user.companyId, vesselCode);
+    try {
+      await prisma.nonConformity.update({
+        where: { id: ncr.id },
+        data: { status: "OPEN", refNo, updatedBy: user.id },
+      });
+      break;
+    } catch (err) {
+      const isDuplicate = err instanceof Prisma.PrismaClientKnownRequestError && err.code === "P2002";
+      if (!isDuplicate || attempt >= 5) throw err;
+    }
+  }
+
+  await writeAudit({
+    actor: user,
+    action: "UPDATE",
+    entityType: "NonConformity",
+    entityId: ncr.id,
+    summary: `Raised NCR ${refNo} — ${ncr.title}`,
+  });
+
+  revalidatePath("/non-conformities");
+  revalidatePath(`/non-conformities/${ncr.id}`);
+  return OK;
+}
+
+/** Full edit of a Draft's own report fields — locked to DRAFT status only. */
+export async function updateDraftNcrAction(
+  ncrId: string,
+  _prev: ActionResult,
+  formData: FormData,
+): Promise<ActionResult> {
+  const user = await requirePermission("ncr:create");
+  const ncr = await prisma.nonConformity.findFirst({
+    where: { id: ncrId, companyId: user.companyId, deletedAt: null, status: "DRAFT" },
+  });
+  if (!ncr) return fail("Draft not found");
+  if (user.department !== "SHIPBOARD" && ncr.createdBy !== user.id) {
+    return fail("Only the draft's creator (or the vessel) can edit this draft");
+  }
+
+  const parsed = createNcrSchema.safeParse({
+    title: formData.get("title"),
+    vesselId: formData.get("vesselId"),
+    source: formData.get("source"),
+    sourceEntityId: formData.get("sourceEntityId"),
+    requirement: formData.get("requirement"),
+    severity: formData.get("severity"),
+    raisedAt: formData.get("raisedAt"),
+    targetDate: formData.get("targetDate"),
+    description: formData.get("description"),
+    personInCharge: formData.get("personInCharge"),
+  });
+  if (!parsed.success) {
+    return fail(parsed.error.issues[0]?.message ?? "Invalid input");
+  }
+  const d = parsed.data;
+
+  if (d.vesselId) {
+    const vessel = await prisma.vessel.findFirst({
+      where: { id: d.vesselId, companyId: user.companyId },
+      select: { id: true },
+    });
+    if (!vessel) return fail("Vessel not found");
+  }
+
+  await prisma.nonConformity.update({
+    where: { id: ncr.id },
+    data: {
+      title: d.title,
+      vesselId: d.vesselId || null,
+      source: d.source,
+      sourceEntityId: d.sourceEntityId || null,
+      requirement: d.requirement,
+      severity: d.severity,
+      raisedAt: new Date(d.raisedAt),
+      targetDate: d.targetDate ? new Date(d.targetDate) : null,
+      description: d.description,
+      personInCharge: d.personInCharge,
+      updatedBy: user.id,
+    },
+  });
+
+  await writeAudit({
+    actor: user,
+    action: "UPDATE",
+    entityType: "NonConformity",
+    entityId: ncr.id,
+    summary: `Updated draft — ${d.title}`,
+  });
+
+  revalidatePath(`/non-conformities/${ncr.id}`);
+  return OK;
+}
+
+/** Deletes its own Draft — soft delete, DRAFT status only. */
+export async function deleteDraftNcrAction(formData: FormData): Promise<ActionResult> {
+  const user = await requirePermission("ncr:create");
+  const id = String(formData.get("ncrId") ?? "");
+  const ncr = await prisma.nonConformity.findFirst({
+    where: { id, companyId: user.companyId, deletedAt: null, status: "DRAFT" },
+  });
+  if (!ncr) return fail("Draft not found");
+  if (user.department !== "SHIPBOARD" && ncr.createdBy !== user.id) {
+    return fail("Only the draft's creator (or the vessel) can delete this draft");
+  }
+
+  await prisma.nonConformity.update({
+    where: { id: ncr.id },
+    data: { deletedAt: new Date(), deletedBy: user.id },
+  });
+  await writeAudit({
+    actor: user,
+    action: "DELETE",
+    entityType: "NonConformity",
+    entityId: ncr.id,
+    summary: `Deleted draft — ${ncr.title}`,
   });
 
   revalidatePath("/non-conformities");

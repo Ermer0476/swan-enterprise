@@ -1,16 +1,18 @@
 import Link from "next/link";
-import { Plus, Flame, LayoutGrid } from "lucide-react";
+import { Flame, LayoutGrid } from "lucide-react";
 import { requirePermission, can } from "@/lib/rbac";
-import { listDrills } from "@/features/drills/queries";
+import { listDrills, listVesselOptions } from "@/features/drills/queries";
 import { listScheduleItems } from "@/features/schedule/queries";
 import { PageHeader } from "@/components/ui/page-header";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input, Select } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Pager } from "@/components/ui/pager";
+import { readPage } from "@/lib/pagination";
 import { formatDate, humanize } from "@/lib/utils";
 import { lifecycleStatusTone } from "@/lib/status";
-import type { FindingStatus } from "@/lib/generated/prisma";
+import type { DrillStatus } from "@/lib/generated/prisma";
 
 export default async function DrillsPage({
   searchParams,
@@ -19,15 +21,31 @@ export default async function DrillsPage({
 }) {
   const user = await requirePermission("drill:read");
   const sp = await searchParams;
-  const [rows, scheduleItems] = await Promise.all([
-    listDrills(user.companyId, {
-      search: sp.q || undefined,
-      status: (sp.status as FindingStatus) || undefined,
-      scheduleItemId: sp.scheduleItemId || undefined,
-    }),
+  const isShipboard = user.department === "SHIPBOARD";
+  const vesselId = isShipboard ? (user.vesselId ?? "__no-vessel-assigned__") : (sp.vesselId || undefined);
+
+  const [{ rows, total, page, totalPages }, scheduleItems, vessels] = await Promise.all([
+    listDrills(
+      user.companyId,
+      {
+        search: sp.q || undefined,
+        status: (sp.status as DrillStatus) || undefined,
+        scheduleItemId: sp.scheduleItemId || undefined,
+        vesselId,
+      },
+      isShipboard,
+      user.id,
+      readPage(sp),
+    ),
     listScheduleItems(user.companyId, "DRILL"),
+    isShipboard ? Promise.resolve([]) : listVesselOptions(user.companyId),
   ]);
   const canCreate = can(user, "drill:create");
+
+  // Carries the selected vessel across to the Matrix view — an office user
+  // who's just narrowed this list to one ship expects it to open already
+  // scoped to that same ship, not the first vessel alphabetically.
+  const matrixHref = vesselId ? `/drills/matrix?vesselId=${vesselId}` : "/drills/matrix";
 
   return (
     <>
@@ -36,14 +54,9 @@ export default async function DrillsPage({
         description="Fire, abandon ship, man overboard and other SOLAS/ISM drill records."
         actions={
           <div className="flex items-center gap-2">
-            <Link href="/drills/matrix">
+            <Link href={matrixHref}>
               <Button variant="outline"><LayoutGrid className="h-4 w-4" /> Drill Matrix</Button>
             </Link>
-            {canCreate && (
-              <Link href="/drills/new">
-                <Button><Plus className="h-4 w-4" /> Record Drill</Button>
-              </Link>
-            )}
           </div>
         }
       />
@@ -52,6 +65,14 @@ export default async function DrillsPage({
         <div className="min-w-52 flex-1">
           <Input name="q" placeholder="Search by ref or conducted by…" defaultValue={sp.q ?? ""} />
         </div>
+        {!isShipboard && (
+          <Select name="vesselId" defaultValue={sp.vesselId ?? ""} className="w-56">
+            <option value="">All vessels</option>
+            {vessels.map((v) => (
+              <option key={v.id} value={v.id}>{v.name}</option>
+            ))}
+          </Select>
+        )}
         <Select name="scheduleItemId" defaultValue={sp.scheduleItemId ?? ""} className="w-64">
           <option value="">Any drill item</option>
           {scheduleItems.map((item) => (
@@ -62,6 +83,7 @@ export default async function DrillsPage({
         </Select>
         <Select name="status" defaultValue={sp.status ?? ""} className="w-36">
           <option value="">All statuses</option>
+          {canCreate && <option value="DRAFT">Draft</option>}
           <option value="OPEN">Open</option>
           <option value="CLOSED">Closed</option>
         </Select>
@@ -94,7 +116,7 @@ export default async function DrillsPage({
                 {rows.map((r) => (
                   <tr key={r.id} className="border-b border-border last:border-0 hover:bg-muted/30">
                     <td className="px-4 py-2.5 font-mono text-xs">
-                      <Link href={`/drills/${r.id}`} className="text-accent hover:underline">{r.refNo}</Link>
+                      <Link href={`/drills/${r.id}`} className="text-accent hover:underline">{r.refNo ?? "Draft"}</Link>
                     </td>
                     <td className="px-4 py-2.5 text-muted-foreground">
                       {r.scheduleItem ? `${r.scheduleItem.itemNo ? `${r.scheduleItem.itemNo} — ` : ""}${r.scheduleItem.name}` : "—"}
@@ -110,6 +132,7 @@ export default async function DrillsPage({
               </tbody>
             </table>
           </div>
+          <Pager page={page} totalPages={totalPages} total={total} basePath="/drills" searchParams={sp} />
         </Card>
       )}
     </>

@@ -22,9 +22,11 @@ export const NCR_SOURCES = [
   "FLAG_STATE",
   "OTHER",
 ] as const;
-// Lifecycle: OPEN → SUBMITTED_TO_OFFICE → CLOSED. Closing IS the
-// verification act — only DPA / General Manager hold ncr:close.
-export const NCR_STATUSES = ["OPEN", "SUBMITTED_TO_OFFICE", "CLOSED"] as const;
+// Lifecycle: DRAFT → OPEN → SUBMITTED_TO_OFFICE → CLOSED. Closing IS the
+// verification act — only DPA / General Manager hold ncr:close. DRAFT →
+// OPEN always goes through reportDraftNcrAction (assigns refNo), never the
+// generic advanceNcrAction — see the DRAFT guard there.
+export const NCR_STATUSES = ["DRAFT", "OPEN", "SUBMITTED_TO_OFFICE", "CLOSED"] as const;
 
 // Person In Charge — a single owner, but flexible: a named title (shipboard)
 // or a whole department (common for office-raised NCRs).

@@ -92,10 +92,7 @@ export const AutoGrowInput = React.forwardRef<
         onInput?.(e);
       }}
       className={cn(
-        // Capped at ~4 lines (max-h-24) so a long paste doesn't balloon a
-        // compact table row — grows freely up to that, then scrolls inside
-        // itself instead of pushing the rest of the page down.
-        "flex min-h-9 max-h-24 w-full resize-none overflow-y-auto rounded-md border border-input bg-background px-3 py-1.5 text-sm leading-[1.375rem] shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50",
+        "flex min-h-9 w-full resize-none overflow-y-hidden rounded-md border border-input bg-background px-3 py-1.5 text-sm leading-[1.375rem] shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50",
         className,
       )}
       {...props}

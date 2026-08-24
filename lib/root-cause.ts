@@ -5,6 +5,8 @@
 //  list (5M+E style — matches how ECFA/RCA forms are filled in practice: one
 //  root cause category, one sub-cause, no nested primary/contributing tiers).
 
+import { Cog, Users, Cpu, Package, BarChart3, HardHat, ShieldCheck, type LucideIcon } from "lucide-react";
+
 export const ROOT_CAUSE_CATEGORIES = [
   "PROCESS_METHODS",
   "HUMAN_FACTORS",
@@ -25,6 +27,19 @@ export const ROOT_CAUSE_LABELS: Record<RootCauseCategoryValue, string> = {
   MEASUREMENT_INFORMATION: "Measurement / Information",
   ENVIRONMENT_WORK_CONDITIONS: "Environment / Work Conditions",
   MANAGEMENT_GOVERNANCE: "Management / Governance",
+};
+
+// Icon per category for the "By Root Cause" breakdown charts (SIRE/CDI/
+// Company Inspections KPI pages) — a fixed, meaningful badge per category
+// rather than a generic dot, so the chart reads at a glance.
+export const ROOT_CAUSE_ICONS: Record<RootCauseCategoryValue, LucideIcon> = {
+  PROCESS_METHODS: Cog,
+  HUMAN_FACTORS: Users,
+  EQUIPMENT_SOFTWARE: Cpu,
+  MATERIALS: Package,
+  MEASUREMENT_INFORMATION: BarChart3,
+  ENVIRONMENT_WORK_CONDITIONS: HardHat,
+  MANAGEMENT_GOVERNANCE: ShieldCheck,
 };
 
 // One-line description of what drives each category — the "is this the

@@ -48,7 +48,15 @@ function AddButton() {
   );
 }
 
-function ObservationRow({ obs, editable }: { obs: ObservationView; editable: boolean }) {
+function ObservationRow({
+  obs,
+  editable,
+  canRespond,
+}: {
+  obs: ObservationView;
+  editable: boolean;
+  canRespond: boolean;
+}) {
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
   const [response, setResponse] = useState(obs.response ?? "");
@@ -165,7 +173,7 @@ function ObservationRow({ obs, editable }: { obs: ObservationView; editable: boo
         )}
       </div>
 
-      {editable ? (
+      {editable || canRespond ? (
         <div className="grid grid-cols-1 gap-2 sm:grid-cols-[1fr_auto_auto] sm:items-end">
           <div className="space-y-1">
             <Label className="text-xs">Response / corrective action</Label>
@@ -283,10 +291,12 @@ export function ObservationsPanel({
   inspectionId,
   observations,
   editable,
+  canRespond,
 }: {
   inspectionId: string;
   observations: ObservationView[];
   editable: boolean;
+  canRespond: boolean;
 }) {
   return (
     <div className="space-y-4">
@@ -294,7 +304,7 @@ export function ObservationsPanel({
         <p className="text-sm text-muted-foreground">No observations recorded.</p>
       ) : (
         <ul className="divide-y divide-border rounded-md border border-border">
-          {observations.map((o) => <ObservationRow key={o.id} obs={o} editable={editable} />)}
+          {observations.map((o) => <ObservationRow key={o.id} obs={o} editable={editable} canRespond={canRespond} />)}
         </ul>
       )}
 

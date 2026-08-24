@@ -5,6 +5,8 @@ import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { requirePermission } from "@/lib/rbac";
 import { writeAudit } from "@/lib/audit";
+import { allocateRefNo } from "@/lib/ref-sequence";
+import type { InternalAuditStatus } from "@/lib/generated/prisma";
 import {
   createInternalAuditSchema,
   addFindingSchema,
@@ -15,13 +17,9 @@ export type ActionResult = { ok: boolean; error: string | null };
 const OK: ActionResult = { ok: true, error: null };
 const fail = (error: string): ActionResult => ({ ok: false, error });
 
-async function nextRefNo(companyId: string): Promise<string> {
+async function nextRefNo(companyId: string, vesselCode: string | null): Promise<string> {
   const year = new Date().getFullYear();
-  const prefix = `IA-${year}-`;
-  const count = await prisma.internalAudit.count({
-    where: { companyId, refNo: { startsWith: prefix } },
-  });
-  return `${prefix}${String(count + 1).padStart(4, "0")}`;
+  return allocateRefNo(companyId, vesselCode ? `${vesselCode}-IA-${year}` : `IA-${year}`);
 }
 
 export async function createInternalAuditAction(
@@ -43,10 +41,21 @@ export async function createInternalAuditAction(
   }
   const d = parsed.data;
 
+  let vesselCode: string | null = null;
+  if (d.vesselId) {
+    const vessel = await prisma.vessel.findFirst({
+      where: { id: d.vesselId, companyId: user.companyId },
+      select: { code: true },
+    });
+    if (!vessel) return fail("Vessel not found");
+    vesselCode = vessel.code;
+  }
+
+  const status: InternalAuditStatus = formData.get("intent") === "draft" ? "DRAFT" : "OPEN";
   const audit = await prisma.internalAudit.create({
     data: {
       companyId: user.companyId,
-      refNo: await nextRefNo(user.companyId),
+      refNo: status === "OPEN" ? await nextRefNo(user.companyId, vesselCode) : null,
       vesselId: d.vesselId || null,
       scope: d.scope,
       standard: d.standard,
@@ -54,7 +63,7 @@ export async function createInternalAuditAction(
       auditBody: d.auditBody || null,
       auditDate: new Date(d.auditDate),
       summary: d.summary || null,
-      status: "OPEN",
+      status,
       createdBy: user.id,
       updatedBy: user.id,
     },
@@ -65,7 +74,8 @@ export async function createInternalAuditAction(
     action: "CREATE",
     entityType: "InternalAudit",
     entityId: audit.id,
-    summary: `Recorded internal audit ${audit.refNo}`,
+    summary:
+      status === "OPEN" ? `Recorded internal audit ${audit.refNo}` : `Saved draft — ${audit.scope}`,
   });
 
   revalidatePath("/internal-audits");
@@ -92,6 +102,7 @@ export async function addFindingAction(
     where: { id: d.auditId, companyId: user.companyId, deletedAt: null },
   });
   if (!audit) return fail("Audit not found");
+  if (audit.status === "DRAFT") return fail("Report this draft first");
   if (audit.status === "CLOSED") return fail("Audit is closed");
 
   await prisma.internalAuditFinding.create({
@@ -183,6 +194,7 @@ export async function closeInternalAuditAction(
     where: { id, companyId: user.companyId, deletedAt: null },
   });
   if (!audit) return fail("Audit not found");
+  if (audit.status === "DRAFT") return fail("This audit is still a draft");
   if (audit.status === "CLOSED") return fail("Audit is already closed");
 
   const findings = await prisma.internalAuditFinding.findMany({
@@ -252,6 +264,137 @@ export async function deleteInternalAuditAction(
     entityId: audit.id,
     summary: `Deleted internal audit ${audit.refNo}`,
   });
+  revalidatePath("/internal-audits");
+  redirect("/internal-audits");
+}
+
+/** Submits a Draft — assigns its refNo (never done at draft-save time). */
+export async function reportDraftInternalAuditAction(formData: FormData): Promise<ActionResult> {
+  const user = await requirePermission("iaudit:create");
+  const id = String(formData.get("auditId") ?? "");
+  const audit = await prisma.internalAudit.findFirst({
+    where: { id, companyId: user.companyId, deletedAt: null, status: "DRAFT" },
+  });
+  if (!audit) return fail("Draft not found");
+  if (audit.createdBy !== user.id) {
+    return fail("Only the draft's creator can report this draft");
+  }
+
+  let vesselCode: string | null = null;
+  if (audit.vesselId) {
+    const vessel = await prisma.vessel.findFirst({
+      where: { id: audit.vesselId, companyId: user.companyId },
+      select: { code: true },
+    });
+    vesselCode = vessel?.code ?? null;
+  }
+  const refNo = await nextRefNo(user.companyId, vesselCode);
+
+  await prisma.internalAudit.update({
+    where: { id: audit.id },
+    data: { status: "OPEN", refNo, updatedBy: user.id },
+  });
+
+  await writeAudit({
+    actor: user,
+    action: "UPDATE",
+    entityType: "InternalAudit",
+    entityId: audit.id,
+    summary: `Recorded internal audit ${refNo}`,
+  });
+
+  revalidatePath("/internal-audits");
+  revalidatePath(`/internal-audits/${audit.id}`);
+  return OK;
+}
+
+/** Full edit of a Draft's own header fields — locked to DRAFT status only. */
+export async function updateDraftInternalAuditAction(
+  auditId: string,
+  _prev: ActionResult,
+  formData: FormData,
+): Promise<ActionResult> {
+  const user = await requirePermission("iaudit:create");
+  const audit = await prisma.internalAudit.findFirst({
+    where: { id: auditId, companyId: user.companyId, deletedAt: null, status: "DRAFT" },
+  });
+  if (!audit) return fail("Draft not found");
+  if (audit.createdBy !== user.id) {
+    return fail("Only the draft's creator can edit this draft");
+  }
+
+  const parsed = createInternalAuditSchema.safeParse({
+    vesselId: formData.get("vesselId"),
+    scope: formData.get("scope"),
+    standard: formData.get("standard"),
+    auditorName: formData.get("auditorName"),
+    auditBody: formData.get("auditBody"),
+    auditDate: formData.get("auditDate"),
+    summary: formData.get("summary"),
+  });
+  if (!parsed.success) {
+    return fail(parsed.error.issues[0]?.message ?? "Invalid input");
+  }
+  const d = parsed.data;
+
+  if (d.vesselId) {
+    const vessel = await prisma.vessel.findFirst({
+      where: { id: d.vesselId, companyId: user.companyId },
+      select: { id: true },
+    });
+    if (!vessel) return fail("Vessel not found");
+  }
+
+  await prisma.internalAudit.update({
+    where: { id: audit.id },
+    data: {
+      vesselId: d.vesselId || null,
+      scope: d.scope,
+      standard: d.standard,
+      auditorName: d.auditorName || null,
+      auditBody: d.auditBody || null,
+      auditDate: new Date(d.auditDate),
+      summary: d.summary || null,
+      updatedBy: user.id,
+    },
+  });
+
+  await writeAudit({
+    actor: user,
+    action: "UPDATE",
+    entityType: "InternalAudit",
+    entityId: audit.id,
+    summary: `Updated draft — ${d.scope}`,
+  });
+
+  revalidatePath(`/internal-audits/${audit.id}`);
+  return OK;
+}
+
+/** Deletes its own Draft — soft delete, DRAFT status only. */
+export async function deleteDraftInternalAuditAction(formData: FormData): Promise<ActionResult> {
+  const user = await requirePermission("iaudit:create");
+  const id = String(formData.get("auditId") ?? "");
+  const audit = await prisma.internalAudit.findFirst({
+    where: { id, companyId: user.companyId, deletedAt: null, status: "DRAFT" },
+  });
+  if (!audit) return fail("Draft not found");
+  if (audit.createdBy !== user.id) {
+    return fail("Only the draft's creator can delete this draft");
+  }
+
+  await prisma.internalAudit.update({
+    where: { id: audit.id },
+    data: { deletedAt: new Date(), deletedBy: user.id },
+  });
+  await writeAudit({
+    actor: user,
+    action: "DELETE",
+    entityType: "InternalAudit",
+    entityId: audit.id,
+    summary: `Deleted draft — ${audit.scope}`,
+  });
+
   revalidatePath("/internal-audits");
   redirect("/internal-audits");
 }

@@ -2,15 +2,10 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { requirePermission, can } from "@/lib/rbac";
-import { getNcr } from "@/features/non-conformities/queries";
-import { NCR_STATUSES } from "@/features/non-conformities/schema";
-import { listCapaActions, listAllCapaActions } from "@/features/capa/queries";
-import {
-  CapaTracker,
-  CapaSummaryTable,
-  type CapaRowView,
-  type CapaSummaryRowView,
-} from "@/components/capa/capa-tracker";
+import { getNcr, listVesselOptions } from "@/features/non-conformities/queries";
+import { NCR_STATUSES, PERSON_IN_CHARGE_OPTIONS } from "@/features/non-conformities/schema";
+import { listCapaActions } from "@/features/capa/queries";
+import { CapaTracker, type CapaRowView } from "@/components/capa/capa-tracker";
 import { formatRootCause } from "@/lib/root-cause";
 import { listAttachments } from "@/features/attachments/queries";
 import { AttachmentList } from "@/components/attachments/attachment-list";
@@ -21,7 +16,8 @@ import { formatDate, humanize, severityTone } from "@/lib/utils";
 import { ncrStatusTone } from "@/features/non-conformities/ui";
 import { RootCauseForm } from "./root-cause-form";
 import { ShoreRemarksForm } from "./shore-remarks-form";
-import { NcrActions } from "./ncr-actions";
+import { NcrActions, DeleteDraftNcrButton, ReportDraftNcrButton } from "./ncr-actions";
+import { EditDraftNcrForm } from "./edit-draft-form";
 import { Button } from "@/components/ui/button";
 import { FileText } from "lucide-react";
 import type { NcrStatus } from "@/lib/generated/prisma";
@@ -42,12 +38,6 @@ function toRowView(r: {
   };
 }
 
-function toSummaryRowView(
-  r: Parameters<typeof toRowView>[0] & { kind: "CORRECTIVE" | "PREVENTIVE" },
-): CapaSummaryRowView {
-  return { ...toRowView(r), kind: r.kind };
-}
-
 function nextOf(status: NcrStatus): NcrStatus | null {
   const i = NCR_STATUSES.indexOf(status);
   return (NCR_STATUSES[i + 1] as NcrStatus | undefined) ?? null;
@@ -60,7 +50,8 @@ export default async function NcrDetailPage({
 }) {
   const user = await requirePermission("ncr:read");
   const { id } = await params;
-  const ncr = await getNcr(user.companyId, id);
+  const isShipboard = user.department === "SHIPBOARD";
+  const ncr = await getNcr(user.companyId, id, isShipboard, user.id, user.vesselId);
   if (!ncr) notFound();
 
   const canUpdate = can(user, "ncr:update");
@@ -71,9 +62,55 @@ export default async function NcrDetailPage({
     canUpdate && !!next && (next === "CLOSED" ? canClose : true);
   const editable = canUpdate && ncr.status !== "CLOSED";
 
-  const [correctiveRows, allCapaRows, attachments] = await Promise.all([
+  const isOwnDraft =
+    ncr.status === "DRAFT" && can(user, "ncr:create") && (isShipboard || ncr.createdBy === user.id);
+
+  if (ncr.status === "DRAFT") {
+    const vessels = await listVesselOptions(user.companyId);
+    const ownVesselName = vessels.find((v) => v.id === user.vesselId)?.name ?? null;
+    return (
+      <div className="mx-auto max-w-7xl">
+        <Link href="/non-conformities" className="mb-3 inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground">
+          <ArrowLeft className="h-4 w-4" /> Back to Non-Conformities
+        </Link>
+        <PageHeader
+          title={`Draft — ${ncr.title}`}
+          actions={
+            <div className="flex items-center gap-2">
+              <Badge tone={ncrStatusTone(ncr.status)}>{humanize(ncr.status)}</Badge>
+              {isOwnDraft && <DeleteDraftNcrButton ncrId={ncr.id} />}
+              {isOwnDraft && <ReportDraftNcrButton ncrId={ncr.id} />}
+            </div>
+          }
+        />
+        {isOwnDraft ? (
+          <EditDraftNcrForm
+            ncr={{
+              id: ncr.id,
+              title: ncr.title,
+              vesselId: ncr.vesselId,
+              source: ncr.source,
+              sourceEntityId: ncr.sourceEntityId,
+              requirement: ncr.requirement,
+              severity: ncr.severity,
+              raisedAt: ncr.raisedAt.toISOString().slice(0, 10),
+              targetDate: ncr.targetDate ? ncr.targetDate.toISOString().slice(0, 10) : "",
+              description: ncr.description,
+              personInCharge: ncr.personInCharge ?? PERSON_IN_CHARGE_OPTIONS[0],
+            }}
+            vessels={vessels}
+            isShipboard={isShipboard}
+            ownVesselName={ownVesselName}
+          />
+        ) : (
+          <p className="text-sm text-muted-foreground">You don&apos;t have access to edit this draft.</p>
+        )}
+      </div>
+    );
+  }
+
+  const [correctiveRows, attachments] = await Promise.all([
     listCapaActions(user.companyId, "NonConformity", ncr.id, "CORRECTIVE"),
-    listAllCapaActions(user.companyId, "NonConformity", ncr.id),
     listAttachments(user.companyId, "NonConformity", ncr.id),
   ]);
 
@@ -159,14 +196,6 @@ export default async function NcrDetailPage({
             editable={editable}
             rows={correctiveRows.map(toRowView)}
           />
-
-          <div className="space-y-3">
-            <h4 className="text-sm font-semibold">All CAPA Tracker</h4>
-            <CapaSummaryTable
-              rows={allCapaRows.map(toSummaryRowView)}
-              editable={editable}
-            />
-          </div>
         </CardContent>
       </Card>
 

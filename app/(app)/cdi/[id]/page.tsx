@@ -18,10 +18,16 @@ export default async function CdiDetailPage({
 }) {
   const user = await requirePermission("cdi:read");
   const { id } = await params;
-  const insp = await getCdi(user.companyId, id);
+  const isShipboard = user.department === "SHIPBOARD";
+  const vesselId = isShipboard ? user.vesselId ?? "__no-vessel-assigned__" : undefined;
+  const insp = await getCdi(user.companyId, id, vesselId);
   if (!insp) notFound();
 
   const editable = can(user, "cdi:update") && insp.status !== "CLOSED";
+  // The vessel can respond to and close its own observations (response +
+  // status only) without the full office edit permission — `insp` was
+  // already fetched scoped to their own vessel above.
+  const canRespond = isShipboard && can(user, "cdi:respond") && insp.status !== "CLOSED";
   const canClose = can(user, "cdi:close");
   const canDelete = can(user, "cdi:delete");
 
@@ -67,6 +73,7 @@ export default async function CdiDetailPage({
           <ObservationsPanel
             inspectionId={insp.id}
             editable={editable}
+            canRespond={canRespond}
             observations={insp.observations.map((o) => ({
               id: o.id,
               questionRef: o.questionRef,

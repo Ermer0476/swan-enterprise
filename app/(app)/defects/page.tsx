@@ -8,6 +8,8 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input, Select } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Pager } from "@/components/ui/pager";
+import { readPage } from "@/lib/pagination";
 import { formatDate, humanize, severityTone } from "@/lib/utils";
 import { defectStatusTone } from "@/features/defects/ui";
 import type { DefectStatus, DefectSeverity } from "@/lib/generated/prisma";
@@ -19,11 +21,18 @@ export default async function DefectsPage({
 }) {
   const user = await requirePermission("defect:read");
   const sp = await searchParams;
-  const rows = await listDefects(user.companyId, {
-    search: sp.q || undefined,
-    status: (sp.status as DefectStatus) || undefined,
-    severity: (sp.severity as DefectSeverity) || undefined,
-  });
+  const isShipboard = user.department === "SHIPBOARD";
+  const vesselId = isShipboard ? (user.vesselId ?? "__no-vessel-assigned__") : (sp.vesselId || undefined);
+  const { rows, total, page, totalPages } = await listDefects(
+    user.companyId,
+    {
+      search: sp.q || undefined,
+      status: (sp.status as DefectStatus) || undefined,
+      severity: (sp.severity as DefectSeverity) || undefined,
+      vesselId,
+    },
+    readPage(sp),
+  );
   const canCreate = can(user, "defect:create");
 
   return (
@@ -95,6 +104,7 @@ export default async function DefectsPage({
               </tbody>
             </table>
           </div>
+          <Pager page={page} totalPages={totalPages} total={total} basePath="/defects" searchParams={sp} />
         </Card>
       )}
     </>

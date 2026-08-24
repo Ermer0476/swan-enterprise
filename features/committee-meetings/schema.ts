@@ -1,14 +1,22 @@
 import { z } from "zod";
 import { LIFECYCLE_TONE } from "@/lib/status";
+import { humanize } from "@/lib/utils";
 
 export const MEETING_STATUSES = ["DRAFT", "REPORTED", "CLOSED"] as const;
 
 /** App-wide OPEN/UNDER_REVIEW/CLOSED color standard — DRAFT (still being
  * edited by the vessel) is OPEN; REPORTED (awaiting the office) is UNDER_REVIEW. */
-export function meetingStatusTone(status: string): "success" | "warning" | "neutral" {
+export function meetingStatusTone(status: string): "success" | "warning" | "danger" {
   if (status === "CLOSED") return LIFECYCLE_TONE.CLOSED;
   if (status === "DRAFT") return LIFECYCLE_TONE.OPEN;
   return LIFECYCLE_TONE.UNDER_REVIEW; // REPORTED — awaiting the office's review/close
+}
+
+/** Status badge text — REPORTED reads as "Waiting for Response" so it flags
+ * the office that the vessel is waiting on them, not just a neutral state name. */
+export function meetingStatusLabel(status: string): string {
+  if (status === "REPORTED") return "Waiting for Response";
+  return humanize(status);
 }
 
 export const COMMITTEE_TYPES = [

@@ -22,11 +22,14 @@ export function AppShell({
   fullName,
   roles,
   permissions,
+  counts = {},
   children,
 }: {
   fullName: string;
   roles: string[];
   permissions: string[];
+  /** Sidebar badge counts by nav href — see lib/nav-counts.ts. */
+  counts?: Record<string, number>;
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
@@ -122,6 +125,12 @@ export function AppShell({
                 const active = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
                 const Icon = item.icon;
                 const base = "flex items-center gap-2.5 rounded-md px-2 py-1.5 text-sm transition-colors";
+                const count = counts[item.href] ?? 0;
+                const badge = count > 0 && (
+                  <span className="ml-auto flex h-5 min-w-5 items-center justify-center rounded-full bg-warning px-1.5 text-[11px] font-semibold text-sidebar">
+                    {count}
+                  </span>
+                );
                 if (item.soon) {
                   return (
                     <li key={item.href}>
@@ -162,6 +171,7 @@ export function AppShell({
                       >
                         <Icon className="h-4 w-4 shrink-0" />
                         <span className="min-w-0 flex-1 truncate text-left">{item.label}</span>
+                        {badge}
                         <ChevronRight className={cn("h-3.5 w-3.5 shrink-0 transition-transform", submenuOpen && "rotate-90")} />
                       </button>
                       {submenuOpen && submenuPos && typeof document !== "undefined" && createPortal(
@@ -208,6 +218,7 @@ export function AppShell({
                     >
                       <Icon className="h-4 w-4 shrink-0" />
                       <span className="truncate">{item.label}</span>
+                      {badge}
                     </Link>
                   </li>
                 );

@@ -57,7 +57,7 @@ export default async function IncidentReportPage({
 }) {
   const user = await requirePermission("incident:read");
   const { id } = await params;
-  const inc = await getIncident(user.companyId, id);
+  const inc = await getIncident(user.companyId, id, user.department === "SHIPBOARD", user.id, user.vesselId);
   if (!inc) notFound();
 
   const [correctiveRows, preventiveRows, allCapaRows, attachments] = await Promise.all([
@@ -70,7 +70,7 @@ export default async function IncidentReportPage({
   const meta = [
     { label: "Vessel", value: inc.vessel?.name ?? "Shore / N/A" },
     { label: "Occurred", value: formatDate(inc.occurredAt) },
-    { label: "Location", value: inc.location ?? "—" },
+    { label: "Vessel Position", value: inc.location ?? "—" },
     {
       label: "Root cause",
       value: inc.rootCauseCategory

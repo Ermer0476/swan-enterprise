@@ -24,6 +24,7 @@ export default async function NewInternalAuditPage() {
         isShipboard={isShipboard}
         ownVesselId={user.vesselId}
         ownVesselName={ownVesselName}
+        supportsDraft
       />
     </div>
   );

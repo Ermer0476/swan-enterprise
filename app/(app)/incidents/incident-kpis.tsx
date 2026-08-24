@@ -1,8 +1,5 @@
 import {
   BarChart3,
-  HeartPulse,
-  ClipboardList,
-  AlertOctagon,
   FolderOpen,
   Clock,
   CheckCircle2,
@@ -54,18 +51,14 @@ function KpiCard({
 // shape of evidence: injury counts by OCIMF classification, an investigation
 // backlog that isn't growing stale, and corrective actions tracked to
 // close-out — not just a raw incident count.
-export function IncidentKpiStrip({ kpis }: { kpis: IncidentKpis }) {
-  const year = new Date().getFullYear();
+export function IncidentKpiStrip({ kpis, periodLabel }: { kpis: IncidentKpis; periodLabel: string }) {
   const capaLabel = kpis.capaClosureRate === null ? "—" : `${kpis.capaClosureRate}%`;
   const capaTone = kpis.capaClosureRate === null ? "neutral" : kpis.capaClosureRate >= 80 ? "success" : kpis.capaClosureRate >= 50 ? "warning" : "danger";
   const avgDaysLabel = kpis.avgDaysToClose === null ? "—" : `${kpis.avgDaysToClose}d`;
 
   return (
-    <div className="mb-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
-      <KpiCard label={`Total Incidents (${year})`} value={kpis.totalYtd} icon={BarChart3} />
-      <KpiCard label={`Lost Time Injuries (${year})`} value={kpis.lti} icon={HeartPulse} tone={kpis.lti > 0 ? "warning" : "success"} />
-      <KpiCard label={`Total Recordable Cases (${year})`} value={kpis.trc} icon={ClipboardList} />
-      <KpiCard label={`Fatalities (${year})`} value={kpis.fatalities} icon={AlertOctagon} tone={kpis.fatalities > 0 ? "danger" : "success"} />
+    <div className="mb-6 grid grid-cols-2 gap-3 sm:grid-cols-5">
+      <KpiCard label={`Total Incidents (${periodLabel})`} value={kpis.totalYtd} icon={BarChart3} />
       <KpiCard label="Open Investigations" value={kpis.openCount} icon={FolderOpen} />
       <KpiCard
         label={`Overdue (>${30}d open)`}
@@ -74,7 +67,7 @@ export function IncidentKpiStrip({ kpis }: { kpis: IncidentKpis }) {
         tone={kpis.overdueCount > 0 ? "danger" : "success"}
       />
       <KpiCard label="CAPA Closure Rate" value={capaLabel} icon={CheckCircle2} tone={capaTone} />
-      <KpiCard label={`Avg. Days to Close (${year})`} value={avgDaysLabel} icon={Timer} />
+      <KpiCard label={`Avg. Days to Close (${periodLabel})`} value={avgDaysLabel} icon={Timer} />
     </div>
   );
 }

@@ -9,19 +9,16 @@ import { requirePermission } from "@/lib/rbac";
 import { writeAudit } from "@/lib/audit";
 import { saveAttachmentFile } from "@/features/attachments/storage";
 import { ALLOWED_MIME_TYPES, MAX_ATTACHMENT_SIZE } from "@/features/attachments/schema";
+import { allocateRefNo } from "@/lib/ref-sequence";
 import { createCircularSchema } from "./schema";
 
 export type ActionResult = { ok: boolean; error: string | null };
 const OK: ActionResult = { ok: true, error: null };
 const fail = (error: string): ActionResult => ({ ok: false, error });
 
-async function nextRefNo(companyId: string): Promise<string> {
+async function nextRefNo(companyId: string, vesselCode: string | null): Promise<string> {
   const year = new Date().getFullYear();
-  const prefix = `CIR-${year}-`;
-  const count = await prisma.circular.count({
-    where: { companyId, refNo: { startsWith: prefix } },
-  });
-  return `${prefix}${String(count + 1).padStart(4, "0")}`;
+  return allocateRefNo(companyId, vesselCode ? `${vesselCode}-CIR-${year}` : `CIR-${year}`);
 }
 
 export async function createCircularAction(
@@ -65,8 +62,9 @@ export async function createCircularAction(
   // read). Recipients aren't recomputed on edit; this is a snapshot of who
   // needed to see it at the time it was issued.
   const targetVessels = d.vesselId
-    ? await prisma.vessel.findMany({ where: { id: d.vesselId, companyId: user.companyId }, select: { id: true, name: true } })
-    : await prisma.vessel.findMany({ where: { companyId: user.companyId, deletedAt: null, status: "ACTIVE" }, select: { id: true, name: true } });
+    ? await prisma.vessel.findMany({ where: { id: d.vesselId, companyId: user.companyId }, select: { id: true, name: true, code: true } })
+    : await prisma.vessel.findMany({ where: { companyId: user.companyId, deletedAt: null, status: "ACTIVE" }, select: { id: true, name: true, code: true } });
+  const vesselCode = d.vesselId ? targetVessels[0]?.code ?? null : null;
 
   const notifyUsers = d.notifyUserIds.length
     ? await prisma.user.findMany({ where: { id: { in: d.notifyUserIds }, companyId: user.companyId }, select: { id: true, fullName: true } })
@@ -75,7 +73,7 @@ export async function createCircularAction(
   const circular = await prisma.circular.create({
     data: {
       companyId: user.companyId,
-      refNo: await nextRefNo(user.companyId),
+      refNo: await nextRefNo(user.companyId, vesselCode),
       title: d.title,
       vesselId: d.vesselId || null,
       source: d.source,

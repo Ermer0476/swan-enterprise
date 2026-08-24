@@ -1,7 +1,7 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
 
-type Variant = "default" | "outline" | "ghost" | "danger" | "success";
+type Variant = "default" | "outline" | "ghost" | "danger" | "success" | "warning" | "accent";
 type Size = "sm" | "md" | "lg" | "icon";
 
 const variants: Record<Variant, string> = {
@@ -14,6 +14,15 @@ const variants: Record<Variant, string> = {
     "bg-danger text-white hover:opacity-90 focus-visible:ring-danger",
   success:
     "bg-success text-white hover:opacity-90 focus-visible:ring-success",
+  // Solid amber — reserved for KPI dashboard entry points so they stand out
+  // consistently from every module's other outline-styled actions.
+  warning:
+    "bg-warning text-white hover:opacity-90 focus-visible:ring-warning",
+  // Solid blue — same hue as --accent (links/highlights), for a primary
+  // action that isn't the page's single "most important" button (that's
+  // `default`) but still needs to read as filled/prominent, not outline.
+  accent:
+    "bg-accent text-accent-foreground hover:opacity-90 focus-visible:ring-accent",
 };
 
 const sizes: Record<Size, string> = {

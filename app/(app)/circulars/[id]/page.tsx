@@ -20,7 +20,10 @@ export default async function CircularDetailPage({
 }) {
   const user = await requirePermission("circular:read");
   const { id } = await params;
-  const circular = await getCircular(user.companyId, id);
+  // SHIPBOARD may open a fleet-wide circular or one targeted at their own
+  // vessel — not another vessel's. OFFICE is unrestricted.
+  const isShipboard = user.department === "SHIPBOARD";
+  const circular = await getCircular(user.companyId, id, isShipboard ? user.vesselId : undefined);
   if (!circular) notFound();
 
   const canDelete = can(user, "circular:delete");

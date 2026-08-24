@@ -27,16 +27,25 @@ type Row = {
   responsible: string | null;
   isNew: boolean;
   ratingChangeNote: string | null;
+  vesselId: string | null;
+  vesselName: string | null;
 };
 
 export function HazardRowItem({
   row,
   documentId,
   editable,
+  showActionsColumn = editable,
 }: {
   row: Row;
   documentId: string;
+  /** Can THIS row's edit/delete buttons be used by the current viewer. */
   editable: boolean;
+  /** Does the table this row lives in have an actions column at all — a
+   * table can mix office-editable master rows with a vessel's own editable
+   * addendum rows, so some rows are editable and others aren't; every row
+   * still needs to render the column (even empty) to keep them aligned. */
+  showActionsColumn?: boolean;
 }) {
   const [isEditing, setIsEditing] = useState(false);
   const [pending, startTransition] = useTransition();
@@ -174,10 +183,12 @@ export function HazardRowItem({
   const resBand = riskBand(resRf);
 
   return (
-    <tr className="border-b border-border align-top last:border-0">
+    <tr className={`border-b border-border align-top last:border-0 ${row.vesselId ? "bg-accent/[0.03]" : ""}`}>
       <td className="px-3 py-2 tabular-nums text-muted-foreground">
         {row.rowNo}
-        {row.isNew ? (
+        {row.vesselId ? (
+          <Badge tone="accent" className="ml-1">{row.vesselName ?? "Vessel"}-added</Badge>
+        ) : row.isNew ? (
           <Badge tone="accent" className="ml-1">★ New</Badge>
         ) : row.ratingChangeNote ? (
           <Badge tone="warning" className="ml-1">↻ Revised</Badge>
@@ -197,19 +208,21 @@ export function HazardRowItem({
         <Badge tone={bandTone(resBand)}>{resRf}</Badge>
       </td>
       <td className="px-3 py-2 text-muted-foreground">{row.responsible || "—"}</td>
-      {editable && (
+      {showActionsColumn && (
         <td className="px-3 py-2">
-          <div className="flex flex-col items-end gap-1">
-            <div className="flex gap-1">
-              <Button size="sm" variant="ghost" onClick={() => setIsEditing(true)} disabled={pending}>
-                <Pencil className="h-3.5 w-3.5" />
-              </Button>
-              <Button size="sm" variant="ghost" onClick={remove} disabled={pending}>
-                <Trash2 className="h-3.5 w-3.5" />
-              </Button>
+          {editable && (
+            <div className="flex flex-col items-end gap-1">
+              <div className="flex gap-1">
+                <Button size="sm" variant="ghost" onClick={() => setIsEditing(true)} disabled={pending}>
+                  <Pencil className="h-3.5 w-3.5" />
+                </Button>
+                <Button size="sm" variant="ghost" onClick={remove} disabled={pending}>
+                  <Trash2 className="h-3.5 w-3.5" />
+                </Button>
+              </div>
+              {error && <p className="text-xs text-danger">{error}</p>}
             </div>
-            {error && <p className="text-xs text-danger">{error}</p>}
-          </div>
+          )}
         </td>
       )}
     </tr>

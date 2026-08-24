@@ -1,13 +1,12 @@
 import Link from "next/link";
-import { ArrowLeft, Plus } from "lucide-react";
+import { ArrowLeft, Plus, ClipboardList } from "lucide-react";
 import { requirePermission, can } from "@/lib/rbac";
 import { listVesselOptions } from "@/features/drills/queries";
-import { listScheduleItems, buildScheduleMatrix } from "@/features/schedule/queries";
+import { buildScheduleMatrix } from "@/features/schedule/queries";
 import { PageHeader } from "@/components/ui/page-header";
 import { Select } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { MatrixTable } from "@/components/schedule/matrix-table";
-import { LogFamiliarizationForm } from "./log-familiarization-form";
 import type { ScheduleItemKind } from "@/lib/generated/prisma";
 
 export default async function DrillMatrixPage({
@@ -20,6 +19,7 @@ export default async function DrillMatrixPage({
   const isShipboard = user.department === "SHIPBOARD";
   const canCreate = can(user, "drill:create");
   const canEditApplicability = can(user, "drill:close");
+  const canEditFrequency = can(user, "schedule:manage");
 
   const vessels = await listVesselOptions(user.companyId);
   const vesselId = isShipboard ? user.vesselId : (sp.vesselId || vessels[0]?.id || null);
@@ -30,8 +30,6 @@ export default async function DrillMatrixPage({
   const tab: ScheduleItemKind = sp.tab === "familiarization" ? "FAMILIARIZATION" : "DRILL";
 
   const rows = vesselId ? await buildScheduleMatrix(user.companyId, vesselId, tab, year) : [];
-  const familiarizationItems =
-    tab === "FAMILIARIZATION" && vesselId ? await listScheduleItems(user.companyId, "FAMILIARIZATION") : [];
 
   const tabHref = (t: "drill" | "familiarization") => {
     const params = new URLSearchParams();
@@ -83,19 +81,39 @@ export default async function DrillMatrixPage({
           <Link href={tabHref("familiarization")}>
             <Button type="button" variant={tab === "FAMILIARIZATION" ? "default" : "outline"} size="sm">Familiarization</Button>
           </Link>
-        </div>
-        {canCreate && tab === "DRILL" && vesselId && (
-          <Link href="/drills/new">
-            <Button size="sm"><Plus className="h-4 w-4" /> Record Drill</Button>
+          <Link href={vesselId ? `/drills/crew-familiarization/matrix?vesselId=${vesselId}` : "/drills/crew-familiarization/matrix"}>
+            <Button type="button" variant="outline" size="sm">LSA/FFE Familiarization</Button>
           </Link>
+        </div>
+        {tab === "DRILL" && (
+          <div className="flex items-center gap-2">
+            <Link href="/drills">
+              <Button type="button" variant="outline" size="sm">
+                <ClipboardList className="h-4 w-4" /> See Records
+              </Button>
+            </Link>
+            {canCreate && vesselId && (
+              <Link href="/drills/new">
+                <Button size="sm"><Plus className="h-4 w-4" /> Record Drill</Button>
+              </Link>
+            )}
+          </div>
+        )}
+        {tab === "FAMILIARIZATION" && (
+          <div className="flex items-center gap-2">
+            <Link href={vesselId ? `/drills/familiarization?vesselId=${vesselId}` : "/drills/familiarization"}>
+              <Button type="button" variant="outline" size="sm">
+                <ClipboardList className="h-4 w-4" /> See Records
+              </Button>
+            </Link>
+            {canCreate && vesselId && (
+              <Link href={`/drills/matrix/log-familiarization?vesselId=${vesselId}`}>
+                <Button size="sm"><Plus className="h-4 w-4" /> Log Familiarization</Button>
+              </Link>
+            )}
+          </div>
         )}
       </div>
-
-      {canCreate && tab === "FAMILIARIZATION" && vesselId && (
-        <div className="mb-4">
-          <LogFamiliarizationForm vesselId={vesselId} scheduleItems={familiarizationItems} />
-        </div>
-      )}
 
       {!vesselId ? (
         <p className="text-sm text-muted-foreground">No vessel available.</p>
@@ -107,6 +125,7 @@ export default async function DrillMatrixPage({
             year={year}
             vesselId={vesselId ?? undefined}
             canEditApplicability={canEditApplicability}
+            canEditFrequency={canEditFrequency}
             recordHref={tab === "DRILL" ? (id) => `/drills/${id}` : undefined}
           />
         </>

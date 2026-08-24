@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { requirePermission } from "@/lib/rbac";
 import { writeAudit } from "@/lib/audit";
+import { allocateRefNo } from "@/lib/ref-sequence";
 import {
   createCommitteeMeetingSchema,
   updateDraftMeetingSchema,
@@ -16,13 +17,9 @@ export type ActionResult = { ok: boolean; error: string | null };
 const OK: ActionResult = { ok: true, error: null };
 const fail = (error: string): ActionResult => ({ ok: false, error });
 
-async function nextRefNo(companyId: string): Promise<string> {
+async function nextRefNo(companyId: string, vesselCode: string | null): Promise<string> {
   const year = new Date().getFullYear();
-  const prefix = `CM-${year}-`;
-  const count = await prisma.committeeMeeting.count({
-    where: { companyId, refNo: { startsWith: prefix } },
-  });
-  return `${prefix}${String(count + 1).padStart(4, "0")}`;
+  return allocateRefNo(companyId, vesselCode ? `${vesselCode}-CM-${year}` : `CM-${year}`);
 }
 
 /** Zips the parallel agenda arrays into row objects, dropping blank rows
@@ -86,20 +83,30 @@ export async function createCommitteeMeetingAction(
   const rows = zipShipAgendaRows(d);
   if (rows.length === 0) return fail("Add at least one agenda item");
 
-  // "Save as Draft" is a vessel-only workflow step — same rule as Near Miss:
-  // honoring it for an office-originated record would orphan it, since only
-  // its own SHIPBOARD login can ever see/report a draft.
+  // "Save as Draft" is available to anyone who can create a meeting —
+  // shipboard AND office (own drafts stay visible to their creator, see
+  // queries.ts).
   const isShipboard = user.department === "SHIPBOARD";
-  const status = formData.get("intent") === "draft" && isShipboard ? "DRAFT" : "REPORTED";
+  const status = formData.get("intent") === "draft" ? "DRAFT" : "REPORTED";
+  const meetingVesselId = isShipboard ? user.vesselId : d.vesselId || null;
+
+  let vesselCode: string | null = null;
+  if (meetingVesselId) {
+    const vessel = await prisma.vessel.findFirst({
+      where: { id: meetingVesselId, companyId: user.companyId },
+      select: { code: true },
+    });
+    vesselCode = vessel?.code ?? null;
+  }
 
   const meeting = await prisma.committeeMeeting.create({
     data: {
       companyId: user.companyId,
       // A draft hasn't been reported yet, so it doesn't burn a ref number.
-      refNo: status === "REPORTED" ? await nextRefNo(user.companyId) : null,
+      refNo: status === "REPORTED" ? await nextRefNo(user.companyId, vesselCode) : null,
       status,
       reportedAt: status === "REPORTED" ? new Date() : null,
-      vesselId: isShipboard ? user.vesselId : d.vesselId || null,
+      vesselId: meetingVesselId,
       position: d.position || null,
       meetingDate: new Date(d.meetingDate),
       meetingTime: d.meetingTime || null,
@@ -139,21 +146,23 @@ export async function createCommitteeMeetingAction(
   redirect(`/meetings/${meeting.id}`);
 }
 
-/** Vessel-only: full edit of its own meeting — only ever while status = DRAFT. */
+/** Full edit of its own meeting — only ever while status = DRAFT. Any
+ * shipboard user may edit their vessel's draft; an office-raised draft can
+ * only be edited by the office user who created it. */
 export async function updateDraftMeetingAction(
   meetingId: string,
   _prev: ActionResult,
   formData: FormData,
 ): Promise<ActionResult> {
   const user = await requirePermission("meeting:update");
-  if (user.department !== "SHIPBOARD") {
-    return fail("Only the vessel can edit its own draft");
-  }
   const meeting = await prisma.committeeMeeting.findFirst({
     where: { id: meetingId, companyId: user.companyId, deletedAt: null, status: "DRAFT" },
     include: { agendaItems: { select: { id: true, seq: true } } },
   });
   if (!meeting) return fail("Draft not found");
+  if (user.department !== "SHIPBOARD" && meeting.createdBy !== user.id) {
+    return fail("Only the report's creator (or the vessel) can edit this draft");
+  }
 
   const parsed = updateDraftMeetingSchema.safeParse({
     meetingId,
@@ -232,24 +241,35 @@ export async function updateDraftMeetingAction(
   return OK;
 }
 
-/** Vessel-only: submits a Draft (or a reverted, revised meeting) for office review — DRAFT → REPORTED. */
+/** Submits a Draft (or a reverted, revised meeting) for office review —
+ * DRAFT → REPORTED. Any shipboard user may report their vessel's draft; an
+ * office-raised draft can only be reported by its creator. */
 export async function reportMeetingAction(formData: FormData): Promise<ActionResult> {
   const user = await requirePermission("meeting:create");
-  if (user.department !== "SHIPBOARD") {
-    return fail("Only the vessel can report a meeting to the office");
-  }
   const id = String(formData.get("meetingId") ?? "");
   const meeting = await prisma.committeeMeeting.findFirst({
     where: { id, companyId: user.companyId, deletedAt: null, status: "DRAFT" },
   });
   if (!meeting) return fail("Draft not found");
+  if (user.department !== "SHIPBOARD" && meeting.createdBy !== user.id) {
+    return fail("Only the report's creator (or the vessel) can report this draft");
+  }
+
+  let vesselCode: string | null = null;
+  if (meeting.vesselId) {
+    const vessel = await prisma.vessel.findFirst({
+      where: { id: meeting.vesselId, companyId: user.companyId },
+      select: { code: true },
+    });
+    vesselCode = vessel?.code ?? null;
+  }
 
   await prisma.committeeMeeting.update({
     where: { id: meeting.id },
     data: {
       status: "REPORTED",
       // Assigned once, kept forever — a revert-and-resend never burns a new one.
-      refNo: meeting.refNo ?? (await nextRefNo(user.companyId)),
+      refNo: meeting.refNo ?? (await nextRefNo(user.companyId, vesselCode)),
       reportedAt: new Date(),
       // Already has office remarks on file? This is a revised resend after a
       // prior close — flag it so the office notices without losing what they
@@ -273,23 +293,23 @@ export async function reportMeetingAction(formData: FormData): Promise<ActionRes
 }
 
 /**
- * Vessel-only: pulls a Reported or Closed meeting back into full edit —
- * "just in case may gusto silang idagdag." Never touches refNo, shoreRemarks,
- * or any agenda shoreComments already on file; the office's prior review
- * stays exactly as it was until they close it again.
+ * Pulls a Reported or Closed meeting back into full edit — "just in case may
+ * gusto silang idagdag." Never touches refNo, shoreRemarks, or any agenda
+ * shoreComments already on file; the office's prior review stays exactly as
+ * it was until they close it again. Any shipboard user may revert their own
+ * vessel's meeting; an office-raised meeting can only be reverted by its
+ * creator.
  */
 export async function revertMeetingToDraftAction(formData: FormData): Promise<ActionResult> {
   const user = await requirePermission("meeting:update");
-  if (user.department !== "SHIPBOARD") {
-    return fail("Only the vessel can revert its own meeting");
-  }
   const id = String(formData.get("meetingId") ?? "");
+  const isShipboard = user.department === "SHIPBOARD";
   const meeting = await prisma.committeeMeeting.findFirst({
     where: {
       id,
       companyId: user.companyId,
       deletedAt: null,
-      vesselId: user.vesselId ?? "__no-vessel-assigned__",
+      ...(isShipboard ? { vesselId: user.vesselId ?? "__no-vessel-assigned__" } : { createdBy: user.id }),
       status: { in: ["REPORTED", "CLOSED"] },
     },
   });

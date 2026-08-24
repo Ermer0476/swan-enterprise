@@ -1,0 +1,342 @@
+{
+  "date": "2026-08-06T00:00:00",
+  "preparedBy": "2/O Albia N. M.",
+  "items": [
+    {
+      "description": "Securline Surgical Skin Marker, Taper tip with ruler",
+      "unit": "set",
+      "qtyRequired": 1.0,
+      "remarks": null
+    },
+    {
+      "description": "Scalpel #10 & Handle #3",
+      "unit": "pc",
+      "qtyRequired": 3.0,
+      "remarks": null
+    },
+    {
+      "description": "Rectal Catheter 26CH/40cm (Rectal Tube)",
+      "unit": "pc",
+      "qtyRequired": 3.0,
+      "remarks": null
+    },
+    {
+      "description": "IV Cannula 16G x 45mm (Grey) \"Heinz\"",
+      "unit": "pc",
+      "qtyRequired": 5.0,
+      "remarks": null
+    },
+    {
+      "description": "Non Adherent pads 10cm x 10m 10's",
+      "unit": "pkt",
+      "qtyRequired": 5.0,
+      "remarks": null
+    },
+    {
+      "description": "Nelaton Catheter 16G and Lubricating Jelly",
+      "unit": "set",
+      "qtyRequired": 2.0,
+      "remarks": null
+    },
+    {
+      "description": "Oral Rehydration Salts 20.5gm, 15's",
+      "unit": "box",
+      "qtyRequired": 2.0,
+      "remarks": null
+    },
+    {
+      "description": "IBUPROFEN 400MG (YSP) 10's",
+      "unit": "strip",
+      "qtyRequired": 10.0,
+      "remarks": null
+    },
+    {
+      "description": "Zinc Oxide Ointment 20%, 50gm",
+      "unit": "pc",
+      "qtyRequired": 7.0,
+      "remarks": null
+    },
+    {
+      "description": "URINE COLLECTING BAG AND TUBE 2000ML",
+      "unit": "pc",
+      "qtyRequired": 2.0,
+      "remarks": null
+    },
+    {
+      "description": "Nipro Syringe 10ml + 21g x 38mm, 10's",
+      "unit": "pkt",
+      "qtyRequired": 2.0,
+      "remarks": null
+    },
+    {
+      "description": "Triangular Bandage, Compressed",
+      "unit": "pc",
+      "qtyRequired": 3.0,
+      "remarks": null
+    },
+    {
+      "description": "Elastic Bandage 5cm x 5m",
+      "unit": "roll",
+      "qtyRequired": 2.0,
+      "remarks": null
+    },
+    {
+      "description": "Cohesive Elastic Bandage 3E 10cm x 4.5m",
+      "unit": "roll",
+      "qtyRequired": 4.0,
+      "remarks": null
+    },
+    {
+      "description": "IV Infusion Set, 20 drops/ml",
+      "unit": "set",
+      "qtyRequired": 9.0,
+      "remarks": null
+    },
+    {
+      "description": "AZITHROMYCIN 500MG 3's",
+      "unit": "box",
+      "qtyRequired": 2.0,
+      "remarks": null
+    },
+    {
+      "description": "Metropolol Tab 100mg, 30's",
+      "unit": "box",
+      "qtyRequired": 2.0,
+      "remarks": null
+    },
+    {
+      "description": "Lamivudine & Zidovudine Tablets \"LAZID\" 0.1g, 14 tablets 60's",
+      "unit": "box",
+      "qtyRequired": 1.0,
+      "remarks": null
+    },
+    {
+      "description": "Latex Foley Catheter 14FG",
+      "unit": "pc",
+      "qtyRequired": 2.0,
+      "remarks": null
+    },
+    {
+      "description": "Guedel Airway No. 4 (100mm) Red",
+      "unit": "pc",
+      "qtyRequired": 1.0,
+      "remarks": null
+    },
+    {
+      "description": "Dimenhydrinate Tablets 50mg, 100's",
+      "unit": "box",
+      "qtyRequired": 2.0,
+      "remarks": null
+    },
+    {
+      "description": "PARACETAMOL TABLET 500MG (ACTIMOL) (PHARMANIAGA) 10'S/tab",
+      "unit": "strip",
+      "qtyRequired": 30.0,
+      "remarks": null
+    },
+    {
+      "description": "EYE PAD ADHESIVE 6CMx 8CM",
+      "unit": "pc",
+      "qtyRequired": 3.0,
+      "remarks": null
+    },
+    {
+      "description": "Catgut 4/0 & 1/2 Circle 16mm Needle",
+      "unit": "pc",
+      "qtyRequired": 15.0,
+      "remarks": null
+    },
+    {
+      "description": "Catgut 3/0 & 1/2 Circle 26mm Needle",
+      "unit": "pcs",
+      "qtyRequired": 10.0,
+      "remarks": null
+    },
+    {
+      "description": "SKIN ADHESIVE (2-OCTYL CYANOACRYLATE LIQUID) (GLUSTITCH 1ML)",
+      "unit": "pc",
+      "qtyRequired": 1.0,
+      "remarks": null
+    },
+    {
+      "description": "Standard Dressing No. 14 (medium)",
+      "unit": "pc",
+      "qtyRequired": 5.0,
+      "remarks": null
+    },
+    {
+      "description": "Standard Dressing No. 15 (large)",
+      "unit": "pc",
+      "qtyRequired": 5.0,
+      "remarks": null
+    },
+    {
+      "description": "Oxygen Mask, Venturi Variable, Adult",
+      "unit": "set",
+      "qtyRequired": 10.0,
+      "remarks": null
+    },
+    {
+      "description": "Nelaton Catheter 12G and Lubricating Jelly",
+      "unit": "set",
+      "qtyRequired": 2.0,
+      "remarks": null
+    },
+    {
+      "description": "Surgical tape 1.25cmx9.1m",
+      "unit": "box",
+      "qtyRequired": 10.0,
+      "remarks": null
+    },
+    {
+      "description": "Elastic Bandage 7.5cm x 4.5cm",
+      "unit": "roll",
+      "qtyRequired": 5.0,
+      "remarks": null
+    },
+    {
+      "description": "Sterile Urine Specimen Bottle, 100ml",
+      "unit": "pc",
+      "qtyRequired": 20.0,
+      "remarks": null
+    },
+    {
+      "description": "Oxygen Mask Medium Concentration, Adult, Large",
+      "unit": "set",
+      "qtyRequired": 19.0,
+      "remarks": null
+    },
+    {
+      "description": "Sterile Paraffin Gauze Dressing 10x10cm, 10's",
+      "unit": "box",
+      "qtyRequired": 1.0,
+      "remarks": null
+    },
+    {
+      "description": "Sterile Paraffin Gauze 10x10cm, 10's",
+      "unit": "box",
+      "qtyRequired": 1.0,
+      "remarks": null
+    },
+    {
+      "description": "3 Ply Medical Face Mask, 50's/box",
+      "unit": "box",
+      "qtyRequired": 30.0,
+      "remarks": null
+    },
+    {
+      "description": "IPA 75% Medical Alcohol, 500ML",
+      "unit": "bot",
+      "qtyRequired": 15.0,
+      "remarks": null
+    },
+    {
+      "description": "Foaming Hand Sanitizer, 250ml",
+      "unit": "bot",
+      "qtyRequired": 4.0,
+      "remarks": null
+    },
+    {
+      "description": "Salbutamol Inhaler 100mcg 200 dos",
+      "unit": "box",
+      "qtyRequired": 8.0,
+      "remarks": null
+    },
+    {
+      "description": "Beclomethasone Inhaler 50mcg, 200dos(DagerousCargo)",
+      "unit": "box",
+      "qtyRequired": 7.0,
+      "remarks": null
+    },
+    {
+      "description": "ATROPINE 1.2MG/ML (ACIPAN)",
+      "unit": "amp",
+      "qtyRequired": 1.0,
+      "remarks": null
+    },
+    {
+      "description": "Tramadol Inj \"Tramadon\" 100mg/2ml (10's amp/box)",
+      "unit": "box",
+      "qtyRequired": 2.0,
+      "remarks": null
+    },
+    {
+      "description": "Tramadol Capsules 50mg (30's/box)",
+      "unit": "box",
+      "qtyRequired": 1.0,
+      "remarks": null
+    },
+    {
+      "description": "Vitamin K1 Injection 10mg/ml (2's amp/box)",
+      "unit": "box",
+      "qtyRequired": 3.0,
+      "remarks": null
+    },
+    {
+      "description": "VITAMIN K 1MG/ML/KISAN INJECTION",
+      "unit": "amp",
+      "qtyRequired": 5.0,
+      "remarks": null
+    },
+    {
+      "description": "Ceftriaxone IV/im Injection 1gm",
+      "unit": "btl",
+      "qtyRequired": 1.0,
+      "remarks": null
+    },
+    {
+      "description": "Frusemide Injection 20mg/2ml (5's amp/box)",
+      "unit": "box",
+      "qtyRequired": 1.0,
+      "remarks": null
+    },
+    {
+      "description": "Omeprazole Capsules 20mg (20's/box)",
+      "unit": "box",
+      "qtyRequired": 2.0,
+      "remarks": null
+    },
+    {
+      "description": "NALOXONE 0.4MG/1ML (MAPIN)",
+      "unit": "amp",
+      "qtyRequired": 2.0,
+      "remarks": null
+    },
+    {
+      "description": "Aciclover Tabs 400mg (100)",
+      "unit": "box",
+      "qtyRequired": 1.0,
+      "remarks": null
+    },
+    {
+      "description": "Amoxycillin tablets 500mg (100)",
+      "unit": "box",
+      "qtyRequired": 1.0,
+      "remarks": null
+    },
+    {
+      "description": "Antiseptic Disinfectant liquid 250ml",
+      "unit": "Bot",
+      "qtyRequired": 5.0,
+      "remarks": null
+    },
+    {
+      "description": "Non-Bevelled Drawing-up Needle 18g, 10's",
+      "unit": "pkt",
+      "qtyRequired": 2.0,
+      "remarks": null
+    },
+    {
+      "description": "Oxygen Mask, Venturi Variable, Adult",
+      "unit": "set",
+      "qtyRequired": 5.0,
+      "remarks": null
+    },
+    {
+      "description": "Oxygen Mask Non Rebreathing 80%, Adult",
+      "unit": "set",
+      "qtyRequired": 10.0,
+      "remarks": null
+    }
+  ]
+}

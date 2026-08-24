@@ -3,13 +3,8 @@ import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { requirePermission, can } from "@/lib/rbac";
 import { getIncident } from "@/features/incidents/queries";
-import { listCapaActions, listAllCapaActions } from "@/features/capa/queries";
-import {
-  CapaTracker,
-  CapaSummaryTable,
-  type CapaRowView,
-  type CapaSummaryRowView,
-} from "@/components/capa/capa-tracker";
+import { listCapaActions } from "@/features/capa/queries";
+import { CapaTracker, type CapaRowView } from "@/components/capa/capa-tracker";
 import { listAttachments } from "@/features/attachments/queries";
 import { AttachmentList } from "@/components/attachments/attachment-list";
 import {
@@ -17,6 +12,7 @@ import {
   INCIDENT_TYPE_LABELS,
   INCIDENT_SUBCATEGORY_LABELS,
   humanize,
+  positionsFor,
 } from "@/features/incidents/schema";
 import { formatRootCause } from "@/lib/root-cause";
 import { severityTone, incidentStatusTone } from "@/features/incidents/ui";
@@ -25,7 +21,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { formatDate } from "@/lib/utils";
 import { InvestigationForm } from "./investigation-form";
-import { IncidentActions } from "./incident-actions";
+import { IncidentActions, ReportDraftIncidentButton, DeleteDraftIncidentButton } from "./incident-actions";
+import { EditDraftIncidentForm } from "./edit-draft-form";
 import { Button } from "@/components/ui/button";
 import { FileText } from "lucide-react";
 import type { IncidentStatus } from "@/lib/generated/prisma";
@@ -51,12 +48,6 @@ function toRowView(r: {
   };
 }
 
-function toSummaryRowView(
-  r: Parameters<typeof toRowView>[0] & { kind: "CORRECTIVE" | "PREVENTIVE" },
-): CapaSummaryRowView {
-  return { ...toRowView(r), kind: r.kind };
-}
-
 export default async function IncidentDetailPage({
   params,
 }: {
@@ -64,8 +55,61 @@ export default async function IncidentDetailPage({
 }) {
   const user = await requirePermission("incident:read");
   const { id } = await params;
-  const inc = await getIncident(user.companyId, id);
+  const isShipboard = user.department === "SHIPBOARD";
+  const inc = await getIncident(user.companyId, id, isShipboard, user.id, user.vesselId);
   if (!inc) notFound();
+
+  // A draft is only ever visible to a shipboard user (any vessel account) or
+  // to the specific office user who created it (see queries.ts) — so
+  // reaching this page while it's still DRAFT already means "mine to act
+  // on." Nothing below this (investigation, CAPA, attachments) applies yet
+  // to a report that hasn't gone out, so drafts get their own short-circuit
+  // view instead of the full page.
+  const isOwnDraft =
+    inc.status === "DRAFT" && can(user, "incident:create") && (isShipboard || inc.createdBy === user.id);
+
+  if (inc.status === "DRAFT") {
+    return (
+      <div className="mx-auto max-w-7xl">
+        <Link
+          href="/incidents"
+          className="mb-3 inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground"
+        >
+          <ArrowLeft className="h-4 w-4" /> Back to Incidents
+        </Link>
+        <PageHeader
+          title={`Draft — ${inc.title}`}
+          actions={
+            <div className="flex items-center gap-2">
+              <Badge tone={incidentStatusTone(inc.status)}>{humanize(inc.status)}</Badge>
+              {isOwnDraft && <DeleteDraftIncidentButton incidentId={inc.id} />}
+              {isOwnDraft && <ReportDraftIncidentButton incidentId={inc.id} />}
+            </div>
+          }
+        />
+        {isOwnDraft ? (
+          <EditDraftIncidentForm
+            incident={{
+              id: inc.id,
+              title: inc.title,
+              reporterName: inc.reporterName ?? "",
+              reporterPosition: inc.reporterPosition ?? "",
+              occurredAt: inc.occurredAt.toISOString().slice(0, 10),
+              location: inc.location,
+              description: inc.description,
+              immediateAction: inc.immediateAction,
+              typeEntries: inc.typeEntries.map((e) => ({ type: e.type, subCategory: e.subCategory })),
+              sofEntries: inc.sofEntries.map((s) => ({ time: s.time, event: s.event })),
+            }}
+            positions={positionsFor(user.department)}
+            ownVesselName={inc.vessel?.name ?? null}
+          />
+        ) : (
+          <p className="text-sm text-muted-foreground">You don't have access to edit this draft.</p>
+        )}
+      </div>
+    );
+  }
 
   const canUpdate = can(user, "incident:update");
   const canClose = can(user, "incident:close");
@@ -75,17 +119,16 @@ export default async function IncidentDetailPage({
     canUpdate && !!next && (next !== "CLOSED" || canClose);
   const editable = canUpdate && inc.status !== "CLOSED";
 
-  const [correctiveRows, preventiveRows, allCapaRows, attachments] = await Promise.all([
+  const [correctiveRows, preventiveRows, attachments] = await Promise.all([
     listCapaActions(user.companyId, "Incident", inc.id, "CORRECTIVE"),
     listCapaActions(user.companyId, "Incident", inc.id, "PREVENTIVE"),
-    listAllCapaActions(user.companyId, "Incident", inc.id),
     listAttachments(user.companyId, "Incident", inc.id),
   ]);
 
   const meta = [
     { label: "Vessel", value: inc.vessel?.name ?? "Shore / N/A" },
     { label: "Occurred", value: formatDate(inc.occurredAt) },
-    { label: "Location", value: inc.location ?? "—" },
+    { label: "Vessel Position", value: inc.location ?? "—" },
     {
       label: "Root cause",
       value: inc.rootCauseCategory
@@ -283,11 +326,15 @@ export default async function IncidentDetailPage({
         <CardContent>
           {editable ? (
             <InvestigationForm
-              // Remounts whenever the saved investigation actually changes —
+              // Remounts only when navigating to a *different* incident —
               // otherwise this client component's own useState(prop) initial
-              // values go stale (they only run once, at first mount) and the
-              // selects silently drift back to defaults on a later visit.
-              key={inc.updatedAt.getTime()}
+              // values would go stale across a client-side incident-to-
+              // incident navigation (they only run once, at first mount).
+              // Deliberately NOT keyed on inc.updatedAt: that fired a
+              // remount on every save round-trip (including failed ones),
+              // wiping whatever the user had just typed before they could
+              // fix a validation error.
+              key={inc.id}
               incidentId={inc.id}
               investigationDetails={inc.investigationDetails ?? ""}
               severity={inc.severity ?? ""}
@@ -338,8 +385,6 @@ export default async function IncidentDetailPage({
         </CardContent>
       </Card>
 
-      {/* Corrective & preventive action plan — the merged CAPA Tracker
-          register at the bottom is where progress is actually monitored. */}
       <Card className="mb-6">
         <CardHeader>
           <CardTitle>Corrective &amp; Preventive Actions</CardTitle>
@@ -361,17 +406,6 @@ export default async function IncidentDetailPage({
             editable={editable}
             rows={preventiveRows.map(toRowView)}
           />
-
-          {/* Merged, read-only register of every CAPA item — corrective and
-              preventive together, identified by their CA-/PA- ID so both stay
-              easy to track from one place. */}
-          <div className="space-y-3">
-            <h4 className="text-sm font-semibold">CAPA Tracker</h4>
-            <CapaSummaryTable
-              rows={allCapaRows.map(toSummaryRowView)}
-              editable={editable}
-            />
-          </div>
         </CardContent>
       </Card>
 

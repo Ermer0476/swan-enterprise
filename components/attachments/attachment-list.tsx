@@ -127,11 +127,15 @@ export function AttachmentList({
   entityId,
   attachments,
   editable,
+  accept = ".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.jpg,.jpeg,.png,.gif,.mp4,.zip",
 }: {
   entityType: string;
   entityId: string;
   attachments: AttachmentView[];
   editable: boolean;
+  /** File picker filter — narrow this for entity types that only accept
+   * certain file types server-side (e.g. VesselDocument is PDF-only). */
+  accept?: string;
 }) {
   const [state, formAction] = useActionState<ActionResult, FormData>(
     uploadAttachmentAction,
@@ -171,7 +175,7 @@ export function AttachmentList({
             type="file"
             name="file"
             required
-            accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.jpg,.jpeg,.png,.gif,.mp4,.zip"
+            accept={accept}
             className="max-w-full text-sm file:mr-3 file:rounded-md file:border-0 file:bg-muted file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-foreground hover:file:bg-muted/70"
           />
           <UploadButton />

@@ -1,35 +1,60 @@
 import "server-only";
 import { prisma } from "@/lib/prisma";
+import { getKpiPeriod, quarterEndDate } from "@/lib/kpi-period";
+import { paginationArgs, paginate } from "@/lib/pagination";
 import type { InspectionStatus } from "@/lib/generated/prisma";
 
-export type CdiFilters = { search?: string; status?: InspectionStatus };
+export type CdiFilters = { search?: string; status?: InspectionStatus; vesselId?: string };
 
-export async function listCdi(companyId: string, filters: CdiFilters = {}) {
-  return prisma.cdiInspection.findMany({
-    where: {
-      companyId,
-      deletedAt: null,
-      status: filters.status,
-      ...(filters.search
-        ? {
-            OR: [
-              { refNo: { contains: filters.search } },
-              { inspectorName: { contains: filters.search } },
-            ],
-          }
-        : {}),
-    },
-    include: {
-      vessel: { select: { name: true } },
-      _count: { select: { observations: { where: { deletedAt: null } } } },
-    },
-    orderBy: [{ inspectionDate: "desc" }],
+/**
+ * Each row carries `capaClosed`/`capaTotal` — a CDI observation tracks its
+ * own corrective-action lifecycle directly (CdiObservation.status: OPEN/
+ * CLOSED), unlike PSC/Internal/External Audit findings, which route through
+ * the shared CapaAction tracker. So "closed" here means observations whose
+ * own status is CLOSED, not a count of CapaAction rows (CDI never creates
+ * any — querying that table always returned 0). Mirrors the same fix in
+ * features/sire/queries.ts's listSire.
+ */
+export async function listCdi(companyId: string, filters: CdiFilters = {}, page = 1) {
+  const where = {
+    companyId,
+    deletedAt: null,
+    status: filters.status,
+    vesselId: filters.vesselId,
+    ...(filters.search
+      ? {
+          OR: [
+            { refNo: { contains: filters.search } },
+            { inspectorName: { contains: filters.search } },
+          ],
+        }
+      : {}),
+  };
+
+  const [inspections, total] = await Promise.all([
+    prisma.cdiInspection.findMany({
+      where,
+      include: {
+        vessel: { select: { name: true } },
+        observations: { where: { deletedAt: null }, select: { status: true } },
+      },
+      orderBy: [{ inspectionDate: "desc" }],
+      ...paginationArgs(page),
+    }),
+    prisma.cdiInspection.count({ where }),
+  ]);
+
+  const rows = inspections.map((insp) => {
+    const capaTotal = insp.observations.length;
+    const capaClosed = insp.observations.filter((o) => o.status === "CLOSED").length;
+    return { ...insp, obsTotal: capaTotal, capaClosed, capaTotal };
   });
+  return paginate(rows, total, page);
 }
 
-export async function getCdi(companyId: string, id: string) {
+export async function getCdi(companyId: string, id: string, vesselId?: string) {
   const insp = await prisma.cdiInspection.findFirst({
-    where: { id, companyId, deletedAt: null },
+    where: { id, companyId, deletedAt: null, vesselId },
     include: {
       vessel: { select: { name: true } },
       observations: { where: { deletedAt: null }, orderBy: { createdAt: "asc" } },
@@ -54,16 +79,22 @@ export async function getCdi(companyId: string, id: string) {
   };
 }
 
-/** Resolve an (optional) year + quarter to a date range for filtering
- * CdiInspection.inspectionDate. No year = all time (quarter is ignored in
- * that case too). Year with no quarter = the whole year. */
+/** Resolve an (optional) year + quarter to an INCLUSIVE date range for
+ * filtering CdiInspection.inspectionDate. No year = all time (quarter is
+ * ignored in that case too). Year with no quarter = the whole year.
+ * Year+quarter uses the shared KPI Period Service with measurementPeriod
+ * "YTD" — TMSA/OCIMF cumulative reporting, so Q2 means Jan–Jun, not just
+ * Apr–Jun (see lib/kpi-period.ts). */
 export function resolveCdiPeriod(year?: number, quarter?: number): { from?: Date; to?: Date } {
   if (!year) return {};
   if (!quarter || quarter < 1 || quarter > 4) {
-    return { from: new Date(year, 0, 1), to: new Date(year + 1, 0, 1) };
+    return { from: new Date(Date.UTC(year, 0, 1)), to: new Date(Date.UTC(year, 11, 31)) };
   }
-  const startMonth = (quarter - 1) * 3;
-  return { from: new Date(year, startMonth, 1), to: new Date(year, startMonth + 3, 1) };
+  const period = getKpiPeriod({
+    measurementPeriod: "YTD",
+    reportingDate: quarterEndDate(year, quarter as 1 | 2 | 3 | 4),
+  });
+  return { from: period.periodStart, to: period.periodEnd };
 }
 
 /** Fleet-wide CDI KPIs for a date range — mirrors features/sire/queries.ts
@@ -76,7 +107,7 @@ export async function cdiAnalytics(companyId: string, range: { from?: Date; to?:
       companyId,
       deletedAt: null,
       ...(range.from || range.to
-        ? { inspectionDate: { gte: range.from, lt: range.to } }
+        ? { inspectionDate: { gte: range.from, lte: range.to } }
         : {}),
     },
     select: {
@@ -111,15 +142,18 @@ export async function cdiAnalytics(companyId: string, range: { from?: Date; to?:
 
       if (obs.rootCauseCategory) {
         byRootCause[obs.rootCauseCategory] = (byRootCause[obs.rootCauseCategory] ?? 0) + 1;
-        if (obs.rootCauseSubCategory) {
-          const key = `${obs.rootCauseCategory}::${obs.rootCauseSubCategory}`;
-          bySubRootCause[key] ??= {
-            category: obs.rootCauseCategory,
-            subCategory: obs.rootCauseSubCategory,
-            count: 0,
-          };
-          bySubRootCause[key]!.count += 1;
-        }
+        // Bucketed under "" (Unspecified) when the sub-category hasn't been
+        // filled in yet, so this always sums to byRootCause[category] — the
+        // sub-cause donut's total previously fell short of the bar chart's
+        // count whenever a root cause was tagged without its sub-category.
+        const subCategory = obs.rootCauseSubCategory ?? "";
+        const key = `${obs.rootCauseCategory}::${subCategory}`;
+        bySubRootCause[key] ??= {
+          category: obs.rootCauseCategory,
+          subCategory,
+          count: 0,
+        };
+        bySubRootCause[key]!.count += 1;
       }
     }
   }

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Plus, ShieldAlert } from "lucide-react";
+import { Plus, ShieldAlert, BarChart3 } from "lucide-react";
 import { requirePermission, can } from "@/lib/rbac";
 import { listNearMisses } from "@/features/near-miss/queries";
 import { NM_STATUSES, SEVERITIES, nearMissStatusLabel, nearMissStatusTone } from "@/features/near-miss/schema";
@@ -7,6 +7,8 @@ import { PageHeader } from "@/components/ui/page-header";
 import { Card } from "@/components/ui/card";
 import { Input, Select } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Pager } from "@/components/ui/pager";
+import { readPage } from "@/lib/pagination";
 import { humanize } from "@/lib/utils";
 import { NearMissTable } from "./near-miss-table";
 import type { NearMissStatus, Severity } from "@/lib/generated/prisma";
@@ -18,7 +20,7 @@ export default async function NearMissPage({
 }) {
   const user = await requirePermission("nm:read");
   const sp = await searchParams;
-  const rows = await listNearMisses(
+  const { rows, total, page, totalPages } = await listNearMisses(
     user.companyId,
     {
       search: sp.q || undefined,
@@ -26,6 +28,9 @@ export default async function NearMissPage({
       potentialSeverity: (sp.sev as Severity) || undefined,
     },
     user.department === "SHIPBOARD",
+    user.id,
+    user.vesselId,
+    readPage(sp),
   );
   const canCreate = can(user, "nm:create");
 
@@ -36,11 +41,18 @@ export default async function NearMissPage({
         description="Report near misses and hazard observations — captured by potential severity."
         actions={
           canCreate ? (
-            <Link href="/near-miss/new">
-              <Button>
-                <Plus className="h-4 w-4" /> Report Near Miss/HOR
-              </Button>
-            </Link>
+            <div className="flex items-center gap-2">
+              <Link href="/near-miss/kpi">
+                <Button variant="warning">
+                  <BarChart3 className="h-4 w-4" /> Near Miss/HOR KPIs
+                </Button>
+              </Link>
+              <Link href="/near-miss/new">
+                <Button>
+                  <Plus className="h-4 w-4" /> Report Near Miss/HOR
+                </Button>
+              </Link>
+            </div>
           ) : undefined
         }
       />
@@ -51,7 +63,7 @@ export default async function NearMissPage({
         </div>
         <Select name="status" defaultValue={sp.status ?? ""} className="w-44">
           <option value="">All statuses</option>
-          {NM_STATUSES.filter((s) => s !== "DRAFT" || user.department === "SHIPBOARD").map((s) => (
+          {NM_STATUSES.filter((s) => s !== "DRAFT" || canCreate).map((s) => (
             <option key={s} value={s}>{humanize(s)}</option>
           ))}
         </Select>
@@ -92,6 +104,7 @@ export default async function NearMissPage({
               }))}
             />
           </div>
+          <Pager page={page} totalPages={totalPages} total={total} basePath="/near-miss" searchParams={sp} />
         </Card>
       )}
     </>

@@ -1,5 +1,6 @@
 import "server-only";
 import { prisma } from "@/lib/prisma";
+import { paginationArgs, paginate } from "@/lib/pagination";
 import type { NcrStatus, NcrSource } from "@/lib/generated/prisma";
 
 export type NcrFilters = {
@@ -8,33 +9,84 @@ export type NcrFilters = {
   source?: NcrSource;
 };
 
-export async function listNcrs(companyId: string, filters: NcrFilters = {}) {
-  return prisma.nonConformity.findMany({
-    where: {
-      companyId,
-      deletedAt: null,
-      status: filters.status,
-      source: filters.source,
-      ...(filters.search
-        ? {
-            OR: [
-              { refNo: { contains: filters.search } },
-              { title: { contains: filters.search } },
-            ],
-          }
-        : {}),
-    },
-    include: {
-      vessel: { select: { name: true } },
-      raisedBy: { select: { fullName: true } },
-    },
-    orderBy: [{ raisedAt: "desc" }],
-  });
+/**
+ * Vessel accounts are shared logins (multiple crew use the same shipboard
+ * account), so a shipboard user sees every draft fleet-wide. An office user
+ * only sees drafts they themselves created — everyone else's drafts are
+ * invisible to them until reported. AND-ed into the caller's where clause,
+ * never a bare top-level OR, so a status filter can't be used to bypass it.
+ */
+function draftVisibilityClause(isShipboard: boolean, userId?: string) {
+  if (isShipboard) return {};
+  return {
+    OR: [
+      { status: { not: "DRAFT" as const } },
+      ...(userId ? [{ status: "DRAFT" as const, createdBy: userId }] : []),
+    ],
+  };
 }
 
-export async function getNcr(companyId: string, id: string) {
+export async function listNcrs(
+  companyId: string,
+  filters: NcrFilters = {},
+  isShipboard = false,
+  userId?: string,
+  vesselId?: string | null,
+  page = 1,
+) {
+  const where = {
+    companyId,
+    deletedAt: null,
+    status: filters.status,
+    source: filters.source,
+    AND: [
+      draftVisibilityClause(isShipboard, userId),
+      // Shipboard accounts must only ever see their own vessel's NCRs —
+      // forced here (never from a client-supplied filter). The sentinel
+      // guarantees zero rows rather than an accidental fleet-wide match if a
+      // shipboard user somehow has no vesselId assigned.
+      isShipboard ? { vesselId: vesselId ?? "__no-vessel-assigned__" } : {},
+    ],
+    ...(filters.search
+      ? {
+          OR: [
+            { refNo: { contains: filters.search } },
+            { title: { contains: filters.search } },
+          ],
+        }
+      : {}),
+  };
+
+  const [rows, total] = await Promise.all([
+    prisma.nonConformity.findMany({
+      where,
+      include: {
+        vessel: { select: { name: true } },
+        raisedBy: { select: { fullName: true } },
+      },
+      orderBy: [{ raisedAt: "desc" }],
+      ...paginationArgs(page),
+    }),
+    prisma.nonConformity.count({ where }),
+  ]);
+  return paginate(rows, total, page);
+}
+
+export async function getNcr(
+  companyId: string,
+  id: string,
+  isShipboard = false,
+  userId?: string,
+  vesselId?: string | null,
+) {
   return prisma.nonConformity.findFirst({
-    where: { id, companyId, deletedAt: null },
+    where: {
+      id,
+      companyId,
+      deletedAt: null,
+      AND: [draftVisibilityClause(isShipboard, userId)],
+      ...(isShipboard ? { vesselId: vesselId ?? "__no-vessel-assigned__" } : {}),
+    },
     include: {
       vessel: { select: { name: true } },
       raisedBy: { select: { fullName: true } },
@@ -63,7 +115,10 @@ export async function listNcrsBySourceEntityIds(companyId: string, sourceEntityI
   });
   const map: Record<string, { id: string; refNo: string }> = {};
   for (const r of rows) {
-    if (r.sourceEntityId) map[r.sourceEntityId] = { id: r.id, refNo: r.refNo };
+    // A Draft has no refNo yet — leave it out of the map so its source
+    // finding still shows "Raise NCR" rather than a broken "View NCR" link;
+    // it naturally starts appearing once the draft is actually reported.
+    if (r.sourceEntityId && r.refNo) map[r.sourceEntityId] = { id: r.id, refNo: r.refNo };
   }
   return map;
 }
@@ -111,7 +166,7 @@ export async function suggestNextRefNo(companyId: string, vesselCode: string | n
   });
   let maxNum = 0;
   for (const r of rows) {
-    const n = parseInt(r.refNo.slice(prefix.length), 10);
+    const n = parseInt((r.refNo ?? "").slice(prefix.length), 10);
     if (!Number.isNaN(n) && n > maxNum) maxNum = n;
   }
   return `${prefix}${String(maxNum + 1).padStart(4, "0")}`;

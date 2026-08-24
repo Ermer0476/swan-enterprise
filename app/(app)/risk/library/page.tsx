@@ -44,7 +44,6 @@ export default async function RiskAssessmentsPage({
     refNo: r.refNo,
     title: r.title,
     category: r.category,
-    vesselName: r.vessel?.name ?? null,
     status: r.status,
     riskLevel: r.currentRevision ? overallRiskBand(r.currentRevision.hazardRows) : null,
     nextReviewDate: r.nextReviewDate ? r.nextReviewDate.toISOString() : null,

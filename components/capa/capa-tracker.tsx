@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { Plus, Trash2 } from "lucide-react";
+import { Plus, Trash2, X } from "lucide-react";
 import {
   addCapaAction,
   updateCapaAction,
@@ -44,27 +44,50 @@ function toDateInput(v: string | null): string {
   return v.slice(0, 10);
 }
 
-function statusTone(s: string): "neutral" | "warning" | "success" {
+function statusTone(s: string): "danger" | "warning" | "success" {
   if (s === "CLOSED") return "success";
   if (s === "IN_PROGRESS") return "warning";
-  return "neutral";
+  return "danger";
 }
 
-type CapaRowEdit = { action: string; responsible: string; targetDate: string };
+// Colors the Status <select> itself (not just the read-only pill) so Open
+// reads as red / In Progress as amber / Closed as green at a glance, even
+// while editing — matches the traffic-light convention used everywhere else
+// in the app (lifecycleStatusTone, Badge tones).
+function statusSelectClassName(s: CapaRowView["status"]): string {
+  if (s === "CLOSED") return "text-success font-medium";
+  if (s === "IN_PROGRESS") return "text-warning font-medium";
+  return "text-danger font-medium";
+}
+
+type CapaDraft = { action: string; responsible: string; targetDate: string };
+type CapaRowEdit = CapaDraft & { status: CapaRowView["status"]; closedDate: string };
 
 function rowValues(row: CapaRowView): CapaRowEdit {
-  return { action: row.action, responsible: row.responsible ?? "", targetDate: toDateInput(row.targetDate) };
+  return {
+    action: row.action,
+    responsible: row.responsible ?? "",
+    targetDate: toDateInput(row.targetDate),
+    status: row.status,
+    closedDate: toDateInput(row.closedDate),
+  };
 }
 
 function CapaRow({
   row,
-  editable,
+  canEditDetails,
+  canEditStatus,
+  canDelete,
   values,
   onChange,
   onDelete,
 }: {
   row: CapaRowView;
-  editable: boolean;
+  /** Action/Responsible/Target date — office-authored, full-edit only. */
+  canEditDetails: boolean;
+  /** Status/Closed date — full-edit OR respond-only (vessel marking done/not done). */
+  canEditStatus: boolean;
+  canDelete: boolean;
   values: CapaRowEdit;
   onChange: (field: keyof CapaRowEdit, value: string) => void;
   onDelete: () => void;
@@ -76,6 +99,16 @@ function CapaRow({
     startDeleting(onDelete);
   }
 
+  // Auto-capture today's date the moment an item is marked Closed — relying
+  // on someone to separately remember to also type the date is exactly how
+  // "Closed with no Closed Out Date" gaps slip through to an audit.
+  function handleStatusChange(next: CapaRowView["status"]) {
+    onChange("status", next);
+    if (next === "CLOSED" && !values.closedDate) {
+      onChange("closedDate", new Date().toISOString().slice(0, 10));
+    }
+  }
+
   const cellClass = "px-2 py-1.5 align-top";
 
   return (
@@ -84,7 +117,7 @@ function CapaRow({
         {row.code}
       </td>
       <td className={cellClass}>
-        {editable ? (
+        {canEditDetails ? (
           <AutoGrowInput
             value={values.action}
             onChange={(e) => onChange("action", e.target.value)}
@@ -95,7 +128,7 @@ function CapaRow({
         )}
       </td>
       <td className={cellClass}>
-        {editable ? (
+        {canEditDetails ? (
           <AutoGrowInput
             value={values.responsible}
             onChange={(e) => onChange("responsible", e.target.value)}
@@ -107,7 +140,7 @@ function CapaRow({
         )}
       </td>
       <td className={cellClass}>
-        {editable ? (
+        {canEditDetails ? (
           <Input
             type="date"
             value={values.targetDate}
@@ -118,7 +151,34 @@ function CapaRow({
           <span className="text-sm text-muted-foreground">{toDateInput(row.targetDate) || "—"}</span>
         )}
       </td>
-      {editable && (
+      <td className={cellClass}>
+        {canEditStatus ? (
+          <Select
+            value={values.status}
+            onChange={(e) => handleStatusChange(e.target.value as CapaRowView["status"])}
+            className={`w-full px-1.5 ${statusSelectClassName(values.status)}`}
+          >
+            {CAPA_STATUSES.map((s) => (
+              <option key={s} value={s}>{humanize(s)}</option>
+            ))}
+          </Select>
+        ) : (
+          <Badge tone={statusTone(row.status)}>{humanize(row.status)}</Badge>
+        )}
+      </td>
+      <td className={cellClass}>
+        {canEditStatus ? (
+          <Input
+            type="date"
+            value={values.closedDate}
+            onChange={(e) => onChange("closedDate", e.target.value)}
+            className="w-full px-1.5"
+          />
+        ) : (
+          <span className="text-sm text-muted-foreground">{toDateInput(row.closedDate) || "—"}</span>
+        )}
+      </td>
+      {canDelete && (
         <td className={`${cellClass} whitespace-nowrap print:hidden`}>
           <button
             type="button"
@@ -135,7 +195,7 @@ function CapaRow({
   );
 }
 
-const emptyDraft: CapaRowEdit = { action: "", responsible: "", targetDate: "" };
+const emptyDraft: CapaDraft = { action: "", responsible: "", targetDate: "" };
 
 export function CapaTracker({
   entityType,
@@ -144,14 +204,19 @@ export function CapaTracker({
   title,
   rows,
   editable,
+  canRespond = false,
 }: {
   entityType: string;
   entityId: string;
   kind: "CORRECTIVE" | "PREVENTIVE";
   title: string;
   rows: CapaRowView[];
+  /** Full edit: add/delete items, edit action/responsible/target date/status/closed date. Office-only. */
   editable: boolean;
+  /** Narrower: mark an EXISTING item's status/closed date only — no add, no delete, no action-text edit. Vessel, own inspections only. */
+  canRespond?: boolean;
 }) {
+  const canEditStatus = editable || canRespond;
   // Edits to existing rows (Action/Responsible/Target date) accumulate here
   // instead of saving per row — one "Save changes" button below the table
   // covers everything at once, so there's a single, unmissable save control
@@ -160,10 +225,18 @@ export function CapaTracker({
   // unsaved change, not a separate submit action, so there's exactly one
   // mental model for "I typed something, now I click Save".
   const [edits, setEdits] = useState<Record<string, CapaRowEdit>>({});
-  const [addDraft, setAddDraft] = useState<CapaRowEdit>(emptyDraft);
+  const [addDraft, setAddDraft] = useState<CapaDraft>(emptyDraft);
+  const [showAddRow, setShowAddRow] = useState(false);
   const [saveErrors, setSaveErrors] = useState<Record<string, string>>({});
   const [addError, setAddError] = useState<string | null>(null);
   const [isSaving, startSaving] = useTransition();
+  const addLabel = kind === "CORRECTIVE" ? "corrective action" : "preventive action";
+
+  function cancelAdd() {
+    setShowAddRow(false);
+    setAddDraft(emptyDraft);
+    setAddError(null);
+  }
 
   function valuesFor(row: CapaRowView): CapaRowEdit {
     return edits[row.id] ?? rowValues(row);
@@ -172,7 +245,13 @@ export function CapaTracker({
     const e = edits[row.id];
     if (!e) return false;
     const base = rowValues(row);
-    return e.action !== base.action || e.responsible !== base.responsible || e.targetDate !== base.targetDate;
+    return (
+      e.action !== base.action ||
+      e.responsible !== base.responsible ||
+      e.targetDate !== base.targetDate ||
+      e.status !== base.status ||
+      e.closedDate !== base.closedDate
+    );
   }
   function setField(row: CapaRowView, field: keyof CapaRowEdit, value: string) {
     // Read the base values from `prev`, not the render-closure `valuesFor` —
@@ -184,7 +263,7 @@ export function CapaTracker({
       [row.id]: { ...(prev[row.id] ?? rowValues(row)), [field]: value },
     }));
   }
-  function setDraftField(field: keyof CapaRowEdit, value: string) {
+  function setDraftField(field: keyof CapaDraft, value: string) {
     setAddDraft((prev) => ({ ...prev, [field]: value }));
   }
   async function deleteRow(id: string) {
@@ -219,10 +298,8 @@ export function CapaTracker({
           fd.set("action", v.action);
           fd.set("responsible", v.responsible);
           fd.set("targetDate", v.targetDate);
-          // Status and Closed Out Date are tracked in the combined CAPA
-          // Tracker below, not here — resend the row's current values unchanged.
-          fd.set("status", row.status);
-          fd.set("closedDate", toDateInput(row.closedDate));
+          fd.set("status", v.status);
+          fd.set("closedDate", v.closedDate);
           const res = await updateCapaAction(fd);
           return { row, res };
         }),
@@ -231,6 +308,7 @@ export function CapaTracker({
         if (addResult.ok) {
           setAddDraft(emptyDraft);
           setAddError(null);
+          setShowAddRow(false);
         } else {
           setAddError(addResult.error ?? "Failed to add");
         }
@@ -248,11 +326,16 @@ export function CapaTracker({
     });
   }
 
-  if (!editable && rows.length === 0) {
+  if (rows.length === 0 && !showAddRow) {
     return (
       <div className="space-y-3">
         <h4 className="text-sm font-semibold">{title}</h4>
         <p className="text-sm text-muted-foreground">No {title.toLowerCase()} recorded yet.</p>
+        {editable && (
+          <Button type="button" variant="outline" size="sm" onClick={() => setShowAddRow(true)}>
+            <Plus className="h-4 w-4" /> Add {addLabel}
+          </Button>
+        )}
       </div>
     );
   }
@@ -272,7 +355,9 @@ export function CapaTracker({
             <col className="min-w-40" />
             <col className="w-20" />
             <col className="w-28" />
-            {editable && <col className="w-16" />}
+            <col className="w-28" />
+            <col className="w-28" />
+            {editable && <col className="w-10" />}
           </colgroup>
           <thead className="bg-muted/40 text-left text-xs uppercase tracking-wide text-muted-foreground">
             <tr>
@@ -280,6 +365,8 @@ export function CapaTracker({
               <th className="truncate px-2 py-2 font-medium">Action</th>
               <th className="truncate px-2 py-2 font-medium">Responsible</th>
               <th className="truncate px-2 py-2 font-medium">Target Date</th>
+              <th className="truncate px-2 py-2 font-medium">Status</th>
+              <th className="truncate px-2 py-2 font-medium">Closed Out</th>
               {editable && <th className="px-2 py-2 font-medium" />}
             </tr>
           </thead>
@@ -288,13 +375,15 @@ export function CapaTracker({
               <CapaRow
                 key={r.id}
                 row={r}
-                editable={editable}
+                canEditDetails={editable}
+                canEditStatus={canEditStatus}
+                canDelete={editable}
                 values={valuesFor(r)}
                 onChange={(field, value) => setField(r, field, value)}
                 onDelete={() => deleteRow(r.id)}
               />
             ))}
-            {editable && (
+            {editable && showAddRow && (
               <tr className="border-t border-border bg-primary/[0.03] print:hidden">
                 <td className="px-2 py-1.5 align-top text-xs text-muted-foreground">
                   <Plus className="h-4 w-4" />
@@ -305,6 +394,7 @@ export function CapaTracker({
                     onChange={(e) => setDraftField("action", e.target.value)}
                     placeholder="Describe the action"
                     className="w-full min-w-40"
+                    autoFocus
                   />
                 </td>
                 <td className="px-2 py-1.5 align-top">
@@ -323,7 +413,18 @@ export function CapaTracker({
                     className="w-full px-1.5"
                   />
                 </td>
-                <td className="px-2 py-1.5 align-top" />
+                <td className="px-2 py-1.5 align-top text-xs text-muted-foreground">—</td>
+                <td className="px-2 py-1.5 align-top text-xs text-muted-foreground">—</td>
+                <td className="px-2 py-1.5 align-top">
+                  <button
+                    type="button"
+                    onClick={cancelAdd}
+                    aria-label="Cancel add"
+                    className="rounded p-1.5 text-muted-foreground hover:bg-muted hover:text-danger"
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+                </td>
               </tr>
             )}
           </tbody>
@@ -335,8 +436,13 @@ export function CapaTracker({
           Couldn&apos;t save {Object.keys(saveErrors).join(", ")} — try again.
         </p>
       )}
-      {editable && (
-        <div className="flex justify-end print:hidden">
+      {(editable || canRespond) && (
+        <div className={`flex items-center gap-2 print:hidden ${editable && !showAddRow ? "justify-between" : "justify-end"}`}>
+          {editable && !showAddRow && (
+            <Button type="button" variant="outline" size="sm" onClick={() => setShowAddRow(true)}>
+              <Plus className="h-4 w-4" /> Add {addLabel}
+            </Button>
+          )}
           <Button
             type="button"
             variant={isDirty ? "success" : "outline"}
@@ -416,25 +522,14 @@ function CapaSummaryRow({
           <Select
             value={values.status}
             onChange={(e) => handleStatusChange(e.target.value as CapaRowView["status"])}
-            className="w-full px-1.5"
+            className={`w-full px-1.5 ${statusSelectClassName(values.status)}`}
           >
             {CAPA_STATUSES.map((s) => (
               <option key={s} value={s}>{humanize(s)}</option>
             ))}
           </Select>
         ) : (
-          <span
-            className={
-              "inline-flex rounded-full px-2 py-0.5 text-xs font-medium " +
-              (statusTone(row.status) === "success"
-                ? "bg-success/10 text-success"
-                : statusTone(row.status) === "warning"
-                  ? "bg-warning/10 text-warning"
-                  : "bg-muted text-muted-foreground")
-            }
-          >
-            {humanize(row.status)}
-          </span>
+          <Badge tone={statusTone(row.status)}>{humanize(row.status)}</Badge>
         )}
       </td>
       <td className={cellClass}>
