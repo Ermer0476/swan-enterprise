@@ -59,6 +59,13 @@ export async function createSireAction(
     vesselCode = vessel.code;
   }
 
+  // SIRE version falls back to the company default, then the literal "2.0"
+  // (the version column no longer carries a DB default).
+  const company = await prisma.company.findUnique({
+    where: { id: user.companyId },
+    select: { defaultSireVersion: true },
+  });
+
   const insp = await prisma.sireInspection.create({
     data: {
       companyId: user.companyId,
@@ -70,7 +77,7 @@ export async function createSireAction(
       inspectionDate: new Date(d.inspectionDate),
       inspectionType: d.inspectionType || null,
       overallResult: d.overallResult || null,
-      sireVersion: d.sireVersion || "2.0",
+      sireVersion: d.sireVersion || company?.defaultSireVersion || "2.0",
       summary: d.summary || null,
       status: "OPEN",
       createdBy: user.id,

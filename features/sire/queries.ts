@@ -173,7 +173,13 @@ export async function listSireSchedule(companyId: string): Promise<SireScheduleR
   }
 
   const today = startOfToday();
-  const DUE_SOON_DAYS = 30;
+  // "Due soon" lead time in days — office-configurable, falling back to 30 when
+  // the company hasn't set its own Company.sireDueSoonDays window.
+  const company = await prisma.company.findUnique({
+    where: { id: companyId },
+    select: { sireDueSoonDays: true },
+  });
+  const dueSoonDays = company?.sireDueSoonDays ?? 30;
 
   const rows: SireScheduleRow[] = vessels.map((v) => {
     const last = latestByVessel.get(v.id);
@@ -193,7 +199,7 @@ export async function listSireSchedule(companyId: string): Promise<SireScheduleR
     const validityExpires = addMonthsUTC(last.date, SIRE_VALIDITY_MONTHS);
     const daysUntilDue = Math.round((scheduledDue.getTime() - today.getTime()) / 86_400_000);
     const urgency: SireScheduleUrgency =
-      daysUntilDue < 0 ? "OVERDUE" : daysUntilDue <= DUE_SOON_DAYS ? "DUE_SOON" : "ON_TRACK";
+      daysUntilDue < 0 ? "OVERDUE" : daysUntilDue <= dueSoonDays ? "DUE_SOON" : "ON_TRACK";
     const dueThisMonth =
       scheduledDue <= today ||
       (scheduledDue.getUTCFullYear() === today.getUTCFullYear() && scheduledDue.getUTCMonth() === today.getUTCMonth());

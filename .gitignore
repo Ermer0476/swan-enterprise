@@ -36,3 +36,9 @@ backup_refdata_step0.dump
 step0.sql
 apply0.sql
 diff.err
+
+# Reference-data live-DB migration artifacts (Steps 7-8) — never commit
+backup_step7.dump
+backup_step8.dump
+step7.sql
+step8.sql

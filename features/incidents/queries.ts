@@ -205,8 +205,9 @@ export type IncidentKpis = {
 
 // Investigations still open past this many days are flagged "overdue" — a
 // stand-in for TMSA's expectation that investigations close out within a
-// defined target time, not left open indefinitely.
-const OVERDUE_DAYS = 30;
+// defined target time, not left open indefinitely. This is the fallback when
+// the company hasn't set its own Company.incidentOverdueDays window.
+const DEFAULT_OVERDUE_DAYS = 30;
 
 /**
  * TMSA Element 6 (Incident Investigation & Analysis) style KPIs: injury
@@ -230,7 +231,7 @@ export async function getIncidentKpis(
   const asOf = reportingDate < today ? reportingDate : today;
   const period = getKpiPeriod({ measurementPeriod: "ROLLING_12", reportingDate: asOf });
 
-  const [inPeriod, open, injuryEntriesInPeriod, capaRows] = await Promise.all([
+  const [inPeriod, open, injuryEntriesInPeriod, capaRows, company] = await Promise.all([
     // Bounded to the rolling-12 window at the DB level — this used to fetch
     // every incident the company has ever had and filter in JS, which grows
     // unbounded with fleet history instead of with the (fixed-size) window.
@@ -261,7 +262,13 @@ export async function getIncidentKpis(
       where: { companyId, entityType: "Incident", deletedAt: null },
       select: { status: true },
     }),
+    prisma.company.findUnique({
+      where: { id: companyId },
+      select: { incidentOverdueDays: true },
+    }),
   ]);
+
+  const overdueDays = company?.incidentOverdueDays ?? DEFAULT_OVERDUE_DAYS;
 
   const lti = injuryEntriesInPeriod.filter((t) => LTI_CODES.has(t.subCategory)).length;
   const trc = injuryEntriesInPeriod.filter((t) => TRC_CODES.has(t.subCategory)).length;
@@ -269,7 +276,7 @@ export async function getIncidentKpis(
 
   const now = Date.now();
   const overdueCount = open.filter(
-    (i) => now - i.occurredAt.getTime() > OVERDUE_DAYS * 24 * 60 * 60 * 1000,
+    (i) => now - i.occurredAt.getTime() > overdueDays * 24 * 60 * 60 * 1000,
   ).length;
 
   const openBySeverity = {

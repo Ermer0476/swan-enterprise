@@ -201,7 +201,13 @@ export async function listInternalAuditSchedule(companyId: string): Promise<Inte
   }
 
   const today = startOfToday();
-  const DUE_SOON_DAYS = 30;
+  // "Due soon" lead time in days — office-configurable, falling back to 30 when
+  // the company hasn't set its own Company.internalAuditDueSoonDays window.
+  const company = await prisma.company.findUnique({
+    where: { id: companyId },
+    select: { internalAuditDueSoonDays: true },
+  });
+  const dueSoonDays = company?.internalAuditDueSoonDays ?? 30;
 
   const rows: InternalAuditScheduleRow[] = vessels.map((v) => {
     const last = latestByVessel.get(v.id);
@@ -219,7 +225,7 @@ export async function listInternalAuditSchedule(companyId: string): Promise<Inte
     const scheduledDue = addMonthsUTC(last.date, INTERNAL_AUDIT_SCHEDULE_MONTHS);
     const daysUntilDue = Math.round((scheduledDue.getTime() - today.getTime()) / 86_400_000);
     const urgency: InternalAuditScheduleUrgency =
-      daysUntilDue < 0 ? "OVERDUE" : daysUntilDue <= DUE_SOON_DAYS ? "DUE_SOON" : "ON_TRACK";
+      daysUntilDue < 0 ? "OVERDUE" : daysUntilDue <= dueSoonDays ? "DUE_SOON" : "ON_TRACK";
     const dueThisMonth =
       scheduledDue <= today ||
       (scheduledDue.getUTCFullYear() === today.getUTCFullYear() && scheduledDue.getUTCMonth() === today.getUTCMonth());
