@@ -10713,6 +10713,9 @@ export namespace Prisma {
     procurementThresholdSupt: number | null
     procurementThresholdTechManager: number | null
     documentExpiryWarningMonths: number | null
+    incidentOverdueDays: number | null
+    sireDueSoonDays: number | null
+    internalAuditDueSoonDays: number | null
   }
 
   export type CompanySumAggregateOutputType = {
@@ -10723,6 +10726,9 @@ export namespace Prisma {
     procurementThresholdSupt: number | null
     procurementThresholdTechManager: number | null
     documentExpiryWarningMonths: number | null
+    incidentOverdueDays: number | null
+    sireDueSoonDays: number | null
+    internalAuditDueSoonDays: number | null
   }
 
   export type CompanyMinAggregateOutputType = {
@@ -10738,6 +10744,10 @@ export namespace Prisma {
     procurementThresholdSupt: number | null
     procurementThresholdTechManager: number | null
     documentExpiryWarningMonths: number | null
+    incidentOverdueDays: number | null
+    sireDueSoonDays: number | null
+    internalAuditDueSoonDays: number | null
+    defaultSireVersion: string | null
   }
 
   export type CompanyMaxAggregateOutputType = {
@@ -10753,6 +10763,10 @@ export namespace Prisma {
     procurementThresholdSupt: number | null
     procurementThresholdTechManager: number | null
     documentExpiryWarningMonths: number | null
+    incidentOverdueDays: number | null
+    sireDueSoonDays: number | null
+    internalAuditDueSoonDays: number | null
+    defaultSireVersion: string | null
   }
 
   export type CompanyCountAggregateOutputType = {
@@ -10768,6 +10782,10 @@ export namespace Prisma {
     procurementThresholdSupt: number
     procurementThresholdTechManager: number
     documentExpiryWarningMonths: number
+    incidentOverdueDays: number
+    sireDueSoonDays: number
+    internalAuditDueSoonDays: number
+    defaultSireVersion: number
     _all: number
   }
 
@@ -10780,6 +10798,9 @@ export namespace Prisma {
     procurementThresholdSupt?: true
     procurementThresholdTechManager?: true
     documentExpiryWarningMonths?: true
+    incidentOverdueDays?: true
+    sireDueSoonDays?: true
+    internalAuditDueSoonDays?: true
   }
 
   export type CompanySumAggregateInputType = {
@@ -10790,6 +10811,9 @@ export namespace Prisma {
     procurementThresholdSupt?: true
     procurementThresholdTechManager?: true
     documentExpiryWarningMonths?: true
+    incidentOverdueDays?: true
+    sireDueSoonDays?: true
+    internalAuditDueSoonDays?: true
   }
 
   export type CompanyMinAggregateInputType = {
@@ -10805,6 +10829,10 @@ export namespace Prisma {
     procurementThresholdSupt?: true
     procurementThresholdTechManager?: true
     documentExpiryWarningMonths?: true
+    incidentOverdueDays?: true
+    sireDueSoonDays?: true
+    internalAuditDueSoonDays?: true
+    defaultSireVersion?: true
   }
 
   export type CompanyMaxAggregateInputType = {
@@ -10820,6 +10848,10 @@ export namespace Prisma {
     procurementThresholdSupt?: true
     procurementThresholdTechManager?: true
     documentExpiryWarningMonths?: true
+    incidentOverdueDays?: true
+    sireDueSoonDays?: true
+    internalAuditDueSoonDays?: true
+    defaultSireVersion?: true
   }
 
   export type CompanyCountAggregateInputType = {
@@ -10835,6 +10867,10 @@ export namespace Prisma {
     procurementThresholdSupt?: true
     procurementThresholdTechManager?: true
     documentExpiryWarningMonths?: true
+    incidentOverdueDays?: true
+    sireDueSoonDays?: true
+    internalAuditDueSoonDays?: true
+    defaultSireVersion?: true
     _all?: true
   }
 
@@ -10937,6 +10973,10 @@ export namespace Prisma {
     procurementThresholdSupt: number
     procurementThresholdTechManager: number
     documentExpiryWarningMonths: number
+    incidentOverdueDays: number
+    sireDueSoonDays: number
+    internalAuditDueSoonDays: number
+    defaultSireVersion: string | null
     _count: CompanyCountAggregateOutputType | null
     _avg: CompanyAvgAggregateOutputType | null
     _sum: CompanySumAggregateOutputType | null
@@ -10971,6 +11011,10 @@ export namespace Prisma {
     procurementThresholdSupt?: boolean
     procurementThresholdTechManager?: boolean
     documentExpiryWarningMonths?: boolean
+    incidentOverdueDays?: boolean
+    sireDueSoonDays?: boolean
+    internalAuditDueSoonDays?: boolean
+    defaultSireVersion?: boolean
     users?: boolean | Company$usersArgs<ExtArgs>
     roles?: boolean | Company$rolesArgs<ExtArgs>
     vessels?: boolean | Company$vesselsArgs<ExtArgs>
@@ -11031,6 +11075,10 @@ export namespace Prisma {
     procurementThresholdSupt?: boolean
     procurementThresholdTechManager?: boolean
     documentExpiryWarningMonths?: boolean
+    incidentOverdueDays?: boolean
+    sireDueSoonDays?: boolean
+    internalAuditDueSoonDays?: boolean
+    defaultSireVersion?: boolean
   }, ExtArgs["result"]["company"]>
 
   export type CompanySelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -11046,6 +11094,10 @@ export namespace Prisma {
     procurementThresholdSupt?: boolean
     procurementThresholdTechManager?: boolean
     documentExpiryWarningMonths?: boolean
+    incidentOverdueDays?: boolean
+    sireDueSoonDays?: boolean
+    internalAuditDueSoonDays?: boolean
+    defaultSireVersion?: boolean
   }, ExtArgs["result"]["company"]>
 
   export type CompanySelectScalar = {
@@ -11061,9 +11113,13 @@ export namespace Prisma {
     procurementThresholdSupt?: boolean
     procurementThresholdTechManager?: boolean
     documentExpiryWarningMonths?: boolean
+    incidentOverdueDays?: boolean
+    sireDueSoonDays?: boolean
+    internalAuditDueSoonDays?: boolean
+    defaultSireVersion?: boolean
   }
 
-  export type CompanyOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "code" | "createdAt" | "updatedAt" | "ltifTarget" | "trcfTarget" | "sireAvgObservationTarget" | "cinspAvgObservationTarget" | "procurementThresholdSupt" | "procurementThresholdTechManager" | "documentExpiryWarningMonths", ExtArgs["result"]["company"]>
+  export type CompanyOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "code" | "createdAt" | "updatedAt" | "ltifTarget" | "trcfTarget" | "sireAvgObservationTarget" | "cinspAvgObservationTarget" | "procurementThresholdSupt" | "procurementThresholdTechManager" | "documentExpiryWarningMonths" | "incidentOverdueDays" | "sireDueSoonDays" | "internalAuditDueSoonDays" | "defaultSireVersion", ExtArgs["result"]["company"]>
   export type CompanyInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     users?: boolean | Company$usersArgs<ExtArgs>
     roles?: boolean | Company$rolesArgs<ExtArgs>
@@ -11175,6 +11231,10 @@ export namespace Prisma {
       procurementThresholdSupt: number
       procurementThresholdTechManager: number
       documentExpiryWarningMonths: number
+      incidentOverdueDays: number
+      sireDueSoonDays: number
+      internalAuditDueSoonDays: number
+      defaultSireVersion: string | null
     }, ExtArgs["result"]["company"]>
     composites: {}
   }
@@ -11654,6 +11714,10 @@ export namespace Prisma {
     readonly procurementThresholdSupt: FieldRef<"Company", 'Float'>
     readonly procurementThresholdTechManager: FieldRef<"Company", 'Float'>
     readonly documentExpiryWarningMonths: FieldRef<"Company", 'Int'>
+    readonly incidentOverdueDays: FieldRef<"Company", 'Int'>
+    readonly sireDueSoonDays: FieldRef<"Company", 'Int'>
+    readonly internalAuditDueSoonDays: FieldRef<"Company", 'Int'>
+    readonly defaultSireVersion: FieldRef<"Company", 'String'>
   }
     
 
@@ -109941,7 +110005,11 @@ export namespace Prisma {
     cinspAvgObservationTarget: 'cinspAvgObservationTarget',
     procurementThresholdSupt: 'procurementThresholdSupt',
     procurementThresholdTechManager: 'procurementThresholdTechManager',
-    documentExpiryWarningMonths: 'documentExpiryWarningMonths'
+    documentExpiryWarningMonths: 'documentExpiryWarningMonths',
+    incidentOverdueDays: 'incidentOverdueDays',
+    sireDueSoonDays: 'sireDueSoonDays',
+    internalAuditDueSoonDays: 'internalAuditDueSoonDays',
+    defaultSireVersion: 'defaultSireVersion'
   };
 
   export type CompanyScalarFieldEnum = (typeof CompanyScalarFieldEnum)[keyof typeof CompanyScalarFieldEnum]
@@ -112732,6 +112800,10 @@ export namespace Prisma {
     procurementThresholdSupt?: FloatFilter<"Company"> | number
     procurementThresholdTechManager?: FloatFilter<"Company"> | number
     documentExpiryWarningMonths?: IntFilter<"Company"> | number
+    incidentOverdueDays?: IntFilter<"Company"> | number
+    sireDueSoonDays?: IntFilter<"Company"> | number
+    internalAuditDueSoonDays?: IntFilter<"Company"> | number
+    defaultSireVersion?: StringNullableFilter<"Company"> | string | null
     users?: UserListRelationFilter
     roles?: RoleListRelationFilter
     vessels?: VesselListRelationFilter
@@ -112791,6 +112863,10 @@ export namespace Prisma {
     procurementThresholdSupt?: SortOrder
     procurementThresholdTechManager?: SortOrder
     documentExpiryWarningMonths?: SortOrder
+    incidentOverdueDays?: SortOrder
+    sireDueSoonDays?: SortOrder
+    internalAuditDueSoonDays?: SortOrder
+    defaultSireVersion?: SortOrderInput | SortOrder
     users?: UserOrderByRelationAggregateInput
     roles?: RoleOrderByRelationAggregateInput
     vessels?: VesselOrderByRelationAggregateInput
@@ -112853,6 +112929,10 @@ export namespace Prisma {
     procurementThresholdSupt?: FloatFilter<"Company"> | number
     procurementThresholdTechManager?: FloatFilter<"Company"> | number
     documentExpiryWarningMonths?: IntFilter<"Company"> | number
+    incidentOverdueDays?: IntFilter<"Company"> | number
+    sireDueSoonDays?: IntFilter<"Company"> | number
+    internalAuditDueSoonDays?: IntFilter<"Company"> | number
+    defaultSireVersion?: StringNullableFilter<"Company"> | string | null
     users?: UserListRelationFilter
     roles?: RoleListRelationFilter
     vessels?: VesselListRelationFilter
@@ -112912,6 +112992,10 @@ export namespace Prisma {
     procurementThresholdSupt?: SortOrder
     procurementThresholdTechManager?: SortOrder
     documentExpiryWarningMonths?: SortOrder
+    incidentOverdueDays?: SortOrder
+    sireDueSoonDays?: SortOrder
+    internalAuditDueSoonDays?: SortOrder
+    defaultSireVersion?: SortOrderInput | SortOrder
     _count?: CompanyCountOrderByAggregateInput
     _avg?: CompanyAvgOrderByAggregateInput
     _max?: CompanyMaxOrderByAggregateInput
@@ -112935,6 +113019,10 @@ export namespace Prisma {
     procurementThresholdSupt?: FloatWithAggregatesFilter<"Company"> | number
     procurementThresholdTechManager?: FloatWithAggregatesFilter<"Company"> | number
     documentExpiryWarningMonths?: IntWithAggregatesFilter<"Company"> | number
+    incidentOverdueDays?: IntWithAggregatesFilter<"Company"> | number
+    sireDueSoonDays?: IntWithAggregatesFilter<"Company"> | number
+    internalAuditDueSoonDays?: IntWithAggregatesFilter<"Company"> | number
+    defaultSireVersion?: StringNullableWithAggregatesFilter<"Company"> | string | null
   }
 
   export type UserWhereInput = {
@@ -121867,6 +121955,10 @@ export namespace Prisma {
     procurementThresholdSupt?: number
     procurementThresholdTechManager?: number
     documentExpiryWarningMonths?: number
+    incidentOverdueDays?: number
+    sireDueSoonDays?: number
+    internalAuditDueSoonDays?: number
+    defaultSireVersion?: string | null
     users?: UserCreateNestedManyWithoutCompanyInput
     roles?: RoleCreateNestedManyWithoutCompanyInput
     vessels?: VesselCreateNestedManyWithoutCompanyInput
@@ -121926,6 +122018,10 @@ export namespace Prisma {
     procurementThresholdSupt?: number
     procurementThresholdTechManager?: number
     documentExpiryWarningMonths?: number
+    incidentOverdueDays?: number
+    sireDueSoonDays?: number
+    internalAuditDueSoonDays?: number
+    defaultSireVersion?: string | null
     users?: UserUncheckedCreateNestedManyWithoutCompanyInput
     roles?: RoleUncheckedCreateNestedManyWithoutCompanyInput
     vessels?: VesselUncheckedCreateNestedManyWithoutCompanyInput
@@ -121985,6 +122081,10 @@ export namespace Prisma {
     procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
     procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
     documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    incidentOverdueDays?: IntFieldUpdateOperationsInput | number
+    sireDueSoonDays?: IntFieldUpdateOperationsInput | number
+    internalAuditDueSoonDays?: IntFieldUpdateOperationsInput | number
+    defaultSireVersion?: NullableStringFieldUpdateOperationsInput | string | null
     users?: UserUpdateManyWithoutCompanyNestedInput
     roles?: RoleUpdateManyWithoutCompanyNestedInput
     vessels?: VesselUpdateManyWithoutCompanyNestedInput
@@ -122044,6 +122144,10 @@ export namespace Prisma {
     procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
     procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
     documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    incidentOverdueDays?: IntFieldUpdateOperationsInput | number
+    sireDueSoonDays?: IntFieldUpdateOperationsInput | number
+    internalAuditDueSoonDays?: IntFieldUpdateOperationsInput | number
+    defaultSireVersion?: NullableStringFieldUpdateOperationsInput | string | null
     users?: UserUncheckedUpdateManyWithoutCompanyNestedInput
     roles?: RoleUncheckedUpdateManyWithoutCompanyNestedInput
     vessels?: VesselUncheckedUpdateManyWithoutCompanyNestedInput
@@ -122103,6 +122207,10 @@ export namespace Prisma {
     procurementThresholdSupt?: number
     procurementThresholdTechManager?: number
     documentExpiryWarningMonths?: number
+    incidentOverdueDays?: number
+    sireDueSoonDays?: number
+    internalAuditDueSoonDays?: number
+    defaultSireVersion?: string | null
   }
 
   export type CompanyUpdateManyMutationInput = {
@@ -122118,6 +122226,10 @@ export namespace Prisma {
     procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
     procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
     documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    incidentOverdueDays?: IntFieldUpdateOperationsInput | number
+    sireDueSoonDays?: IntFieldUpdateOperationsInput | number
+    internalAuditDueSoonDays?: IntFieldUpdateOperationsInput | number
+    defaultSireVersion?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type CompanyUncheckedUpdateManyInput = {
@@ -122133,6 +122245,10 @@ export namespace Prisma {
     procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
     procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
     documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    incidentOverdueDays?: IntFieldUpdateOperationsInput | number
+    sireDueSoonDays?: IntFieldUpdateOperationsInput | number
+    internalAuditDueSoonDays?: IntFieldUpdateOperationsInput | number
+    defaultSireVersion?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type UserCreateInput = {
@@ -122509,7 +122625,7 @@ export namespace Prisma {
     callSign?: string | null
     mmsi?: string | null
     flag?: string | null
-    type?: string
+    type: string
     classificationSociety?: string | null
     yearBuilt?: number | null
     grossTonnage?: number | null
@@ -122598,7 +122714,7 @@ export namespace Prisma {
     callSign?: string | null
     mmsi?: string | null
     flag?: string | null
-    type?: string
+    type: string
     classificationSociety?: string | null
     yearBuilt?: number | null
     grossTonnage?: number | null
@@ -122862,7 +122978,7 @@ export namespace Prisma {
     callSign?: string | null
     mmsi?: string | null
     flag?: string | null
-    type?: string
+    type: string
     classificationSociety?: string | null
     yearBuilt?: number | null
     grossTonnage?: number | null
@@ -131267,7 +131383,7 @@ export namespace Prisma {
     id?: string
     code: string
     seq: number
-    auditYear?: number
+    auditYear: number
     elementCode: string
     elementBase: number
     stageQ: string
@@ -131294,7 +131410,7 @@ export namespace Prisma {
     companyId: string
     code: string
     seq: number
-    auditYear?: number
+    auditYear: number
     elementCode: string
     elementBase: number
     stageQ: string
@@ -131372,7 +131488,7 @@ export namespace Prisma {
     companyId: string
     code: string
     seq: number
-    auditYear?: number
+    auditYear: number
     elementCode: string
     elementBase: number
     stageQ: string
@@ -132555,6 +132671,21 @@ export namespace Prisma {
     not?: NestedIntFilter<$PrismaModel> | number
   }
 
+  export type StringNullableFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
+    not?: NestedStringNullableFilter<$PrismaModel> | string | null
+  }
+
   export type UserListRelationFilter = {
     every?: UserWhereInput
     some?: UserWhereInput
@@ -132819,6 +132950,11 @@ export namespace Prisma {
     none?: ReferenceListItemWhereInput
   }
 
+  export type SortOrderInput = {
+    sort: SortOrder
+    nulls?: NullsOrder
+  }
+
   export type UserOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
@@ -133008,6 +133144,10 @@ export namespace Prisma {
     procurementThresholdSupt?: SortOrder
     procurementThresholdTechManager?: SortOrder
     documentExpiryWarningMonths?: SortOrder
+    incidentOverdueDays?: SortOrder
+    sireDueSoonDays?: SortOrder
+    internalAuditDueSoonDays?: SortOrder
+    defaultSireVersion?: SortOrder
   }
 
   export type CompanyAvgOrderByAggregateInput = {
@@ -133018,6 +133158,9 @@ export namespace Prisma {
     procurementThresholdSupt?: SortOrder
     procurementThresholdTechManager?: SortOrder
     documentExpiryWarningMonths?: SortOrder
+    incidentOverdueDays?: SortOrder
+    sireDueSoonDays?: SortOrder
+    internalAuditDueSoonDays?: SortOrder
   }
 
   export type CompanyMaxOrderByAggregateInput = {
@@ -133033,6 +133176,10 @@ export namespace Prisma {
     procurementThresholdSupt?: SortOrder
     procurementThresholdTechManager?: SortOrder
     documentExpiryWarningMonths?: SortOrder
+    incidentOverdueDays?: SortOrder
+    sireDueSoonDays?: SortOrder
+    internalAuditDueSoonDays?: SortOrder
+    defaultSireVersion?: SortOrder
   }
 
   export type CompanyMinOrderByAggregateInput = {
@@ -133048,6 +133195,10 @@ export namespace Prisma {
     procurementThresholdSupt?: SortOrder
     procurementThresholdTechManager?: SortOrder
     documentExpiryWarningMonths?: SortOrder
+    incidentOverdueDays?: SortOrder
+    sireDueSoonDays?: SortOrder
+    internalAuditDueSoonDays?: SortOrder
+    defaultSireVersion?: SortOrder
   }
 
   export type CompanySumOrderByAggregateInput = {
@@ -133058,6 +133209,9 @@ export namespace Prisma {
     procurementThresholdSupt?: SortOrder
     procurementThresholdTechManager?: SortOrder
     documentExpiryWarningMonths?: SortOrder
+    incidentOverdueDays?: SortOrder
+    sireDueSoonDays?: SortOrder
+    internalAuditDueSoonDays?: SortOrder
   }
 
   export type StringWithAggregatesFilter<$PrismaModel = never> = {
@@ -133124,14 +133278,7 @@ export namespace Prisma {
     _max?: NestedIntFilter<$PrismaModel>
   }
 
-  export type EnumDepartmentTypeFilter<$PrismaModel = never> = {
-    equals?: $Enums.DepartmentType | EnumDepartmentTypeFieldRefInput<$PrismaModel>
-    in?: $Enums.DepartmentType[] | ListEnumDepartmentTypeFieldRefInput<$PrismaModel>
-    notIn?: $Enums.DepartmentType[] | ListEnumDepartmentTypeFieldRefInput<$PrismaModel>
-    not?: NestedEnumDepartmentTypeFilter<$PrismaModel> | $Enums.DepartmentType
-  }
-
-  export type StringNullableFilter<$PrismaModel = never> = {
+  export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
     in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
     notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
@@ -133143,7 +133290,17 @@ export namespace Prisma {
     startsWith?: string | StringFieldRefInput<$PrismaModel>
     endsWith?: string | StringFieldRefInput<$PrismaModel>
     mode?: QueryMode
-    not?: NestedStringNullableFilter<$PrismaModel> | string | null
+    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedStringNullableFilter<$PrismaModel>
+    _max?: NestedStringNullableFilter<$PrismaModel>
+  }
+
+  export type EnumDepartmentTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.DepartmentType | EnumDepartmentTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.DepartmentType[] | ListEnumDepartmentTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.DepartmentType[] | ListEnumDepartmentTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumDepartmentTypeFilter<$PrismaModel> | $Enums.DepartmentType
   }
 
   export type BoolFilter<$PrismaModel = never> = {
@@ -133194,11 +133351,6 @@ export namespace Prisma {
     every?: SireObservationCommentWhereInput
     some?: SireObservationCommentWhereInput
     none?: SireObservationCommentWhereInput
-  }
-
-  export type SortOrderInput = {
-    sort: SortOrder
-    nulls?: NullsOrder
   }
 
   export type UserRoleOrderByRelationAggregateInput = {
@@ -133282,24 +133434,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumDepartmentTypeFilter<$PrismaModel>
     _max?: NestedEnumDepartmentTypeFilter<$PrismaModel>
-  }
-
-  export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    mode?: QueryMode
-    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedStringNullableFilter<$PrismaModel>
-    _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
   export type BoolWithAggregatesFilter<$PrismaModel = never> = {
@@ -140763,6 +140897,10 @@ export namespace Prisma {
     divide?: number
   }
 
+  export type NullableStringFieldUpdateOperationsInput = {
+    set?: string | null
+  }
+
   export type UserUpdateManyWithoutCompanyNestedInput = {
     create?: XOR<UserCreateWithoutCompanyInput, UserUncheckedCreateWithoutCompanyInput> | UserCreateWithoutCompanyInput[] | UserUncheckedCreateWithoutCompanyInput[]
     connectOrCreate?: UserCreateOrConnectWithoutCompanyInput | UserCreateOrConnectWithoutCompanyInput[]
@@ -142135,10 +142273,6 @@ export namespace Prisma {
 
   export type EnumDepartmentTypeFieldUpdateOperationsInput = {
     set?: $Enums.DepartmentType
-  }
-
-  export type NullableStringFieldUpdateOperationsInput = {
-    set?: string | null
   }
 
   export type BoolFieldUpdateOperationsInput = {
@@ -147538,6 +147672,20 @@ export namespace Prisma {
     not?: NestedIntFilter<$PrismaModel> | number
   }
 
+  export type NestedStringNullableFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    not?: NestedStringNullableFilter<$PrismaModel> | string | null
+  }
+
   export type NestedStringWithAggregatesFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -147601,53 +147749,6 @@ export namespace Prisma {
     _max?: NestedIntFilter<$PrismaModel>
   }
 
-  export type NestedEnumDepartmentTypeFilter<$PrismaModel = never> = {
-    equals?: $Enums.DepartmentType | EnumDepartmentTypeFieldRefInput<$PrismaModel>
-    in?: $Enums.DepartmentType[] | ListEnumDepartmentTypeFieldRefInput<$PrismaModel>
-    notIn?: $Enums.DepartmentType[] | ListEnumDepartmentTypeFieldRefInput<$PrismaModel>
-    not?: NestedEnumDepartmentTypeFilter<$PrismaModel> | $Enums.DepartmentType
-  }
-
-  export type NestedStringNullableFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    not?: NestedStringNullableFilter<$PrismaModel> | string | null
-  }
-
-  export type NestedBoolFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolFilter<$PrismaModel> | boolean
-  }
-
-  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
-  }
-
-  export type NestedEnumDepartmentTypeWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.DepartmentType | EnumDepartmentTypeFieldRefInput<$PrismaModel>
-    in?: $Enums.DepartmentType[] | ListEnumDepartmentTypeFieldRefInput<$PrismaModel>
-    notIn?: $Enums.DepartmentType[] | ListEnumDepartmentTypeFieldRefInput<$PrismaModel>
-    not?: NestedEnumDepartmentTypeWithAggregatesFilter<$PrismaModel> | $Enums.DepartmentType
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumDepartmentTypeFilter<$PrismaModel>
-    _max?: NestedEnumDepartmentTypeFilter<$PrismaModel>
-  }
-
   export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
     in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
@@ -147674,6 +147775,39 @@ export namespace Prisma {
     gt?: number | IntFieldRefInput<$PrismaModel>
     gte?: number | IntFieldRefInput<$PrismaModel>
     not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type NestedEnumDepartmentTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.DepartmentType | EnumDepartmentTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.DepartmentType[] | ListEnumDepartmentTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.DepartmentType[] | ListEnumDepartmentTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumDepartmentTypeFilter<$PrismaModel> | $Enums.DepartmentType
+  }
+
+  export type NestedBoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
+  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
+  export type NestedEnumDepartmentTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.DepartmentType | EnumDepartmentTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.DepartmentType[] | ListEnumDepartmentTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.DepartmentType[] | ListEnumDepartmentTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumDepartmentTypeWithAggregatesFilter<$PrismaModel> | $Enums.DepartmentType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumDepartmentTypeFilter<$PrismaModel>
+    _max?: NestedEnumDepartmentTypeFilter<$PrismaModel>
   }
 
   export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
@@ -149133,7 +149267,7 @@ export namespace Prisma {
     callSign?: string | null
     mmsi?: string | null
     flag?: string | null
-    type?: string
+    type: string
     classificationSociety?: string | null
     yearBuilt?: number | null
     grossTonnage?: number | null
@@ -149220,7 +149354,7 @@ export namespace Prisma {
     callSign?: string | null
     mmsi?: string | null
     flag?: string | null
-    type?: string
+    type: string
     classificationSociety?: string | null
     yearBuilt?: number | null
     grossTonnage?: number | null
@@ -151044,7 +151178,7 @@ export namespace Prisma {
     id?: string
     code: string
     seq: number
-    auditYear?: number
+    auditYear: number
     elementCode: string
     elementBase: number
     stageQ: string
@@ -151069,7 +151203,7 @@ export namespace Prisma {
     id?: string
     code: string
     seq: number
-    auditYear?: number
+    auditYear: number
     elementCode: string
     elementBase: number
     stageQ: string
@@ -153345,6 +153479,10 @@ export namespace Prisma {
     procurementThresholdSupt?: number
     procurementThresholdTechManager?: number
     documentExpiryWarningMonths?: number
+    incidentOverdueDays?: number
+    sireDueSoonDays?: number
+    internalAuditDueSoonDays?: number
+    defaultSireVersion?: string | null
     roles?: RoleCreateNestedManyWithoutCompanyInput
     vessels?: VesselCreateNestedManyWithoutCompanyInput
     smsDocuments?: SmsDocumentCreateNestedManyWithoutCompanyInput
@@ -153403,6 +153541,10 @@ export namespace Prisma {
     procurementThresholdSupt?: number
     procurementThresholdTechManager?: number
     documentExpiryWarningMonths?: number
+    incidentOverdueDays?: number
+    sireDueSoonDays?: number
+    internalAuditDueSoonDays?: number
+    defaultSireVersion?: string | null
     roles?: RoleUncheckedCreateNestedManyWithoutCompanyInput
     vessels?: VesselUncheckedCreateNestedManyWithoutCompanyInput
     smsDocuments?: SmsDocumentUncheckedCreateNestedManyWithoutCompanyInput
@@ -153462,7 +153604,7 @@ export namespace Prisma {
     callSign?: string | null
     mmsi?: string | null
     flag?: string | null
-    type?: string
+    type: string
     classificationSociety?: string | null
     yearBuilt?: number | null
     grossTonnage?: number | null
@@ -153550,7 +153692,7 @@ export namespace Prisma {
     callSign?: string | null
     mmsi?: string | null
     flag?: string | null
-    type?: string
+    type: string
     classificationSociety?: string | null
     yearBuilt?: number | null
     grossTonnage?: number | null
@@ -154118,6 +154260,10 @@ export namespace Prisma {
     procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
     procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
     documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    incidentOverdueDays?: IntFieldUpdateOperationsInput | number
+    sireDueSoonDays?: IntFieldUpdateOperationsInput | number
+    internalAuditDueSoonDays?: IntFieldUpdateOperationsInput | number
+    defaultSireVersion?: NullableStringFieldUpdateOperationsInput | string | null
     roles?: RoleUpdateManyWithoutCompanyNestedInput
     vessels?: VesselUpdateManyWithoutCompanyNestedInput
     smsDocuments?: SmsDocumentUpdateManyWithoutCompanyNestedInput
@@ -154176,6 +154322,10 @@ export namespace Prisma {
     procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
     procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
     documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    incidentOverdueDays?: IntFieldUpdateOperationsInput | number
+    sireDueSoonDays?: IntFieldUpdateOperationsInput | number
+    internalAuditDueSoonDays?: IntFieldUpdateOperationsInput | number
+    defaultSireVersion?: NullableStringFieldUpdateOperationsInput | string | null
     roles?: RoleUncheckedUpdateManyWithoutCompanyNestedInput
     vessels?: VesselUncheckedUpdateManyWithoutCompanyNestedInput
     smsDocuments?: SmsDocumentUncheckedUpdateManyWithoutCompanyNestedInput
@@ -154627,6 +154777,10 @@ export namespace Prisma {
     procurementThresholdSupt?: number
     procurementThresholdTechManager?: number
     documentExpiryWarningMonths?: number
+    incidentOverdueDays?: number
+    sireDueSoonDays?: number
+    internalAuditDueSoonDays?: number
+    defaultSireVersion?: string | null
     users?: UserCreateNestedManyWithoutCompanyInput
     vessels?: VesselCreateNestedManyWithoutCompanyInput
     smsDocuments?: SmsDocumentCreateNestedManyWithoutCompanyInput
@@ -154685,6 +154839,10 @@ export namespace Prisma {
     procurementThresholdSupt?: number
     procurementThresholdTechManager?: number
     documentExpiryWarningMonths?: number
+    incidentOverdueDays?: number
+    sireDueSoonDays?: number
+    internalAuditDueSoonDays?: number
+    defaultSireVersion?: string | null
     users?: UserUncheckedCreateNestedManyWithoutCompanyInput
     vessels?: VesselUncheckedCreateNestedManyWithoutCompanyInput
     smsDocuments?: SmsDocumentUncheckedCreateNestedManyWithoutCompanyInput
@@ -154795,6 +154953,10 @@ export namespace Prisma {
     procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
     procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
     documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    incidentOverdueDays?: IntFieldUpdateOperationsInput | number
+    sireDueSoonDays?: IntFieldUpdateOperationsInput | number
+    internalAuditDueSoonDays?: IntFieldUpdateOperationsInput | number
+    defaultSireVersion?: NullableStringFieldUpdateOperationsInput | string | null
     users?: UserUpdateManyWithoutCompanyNestedInput
     vessels?: VesselUpdateManyWithoutCompanyNestedInput
     smsDocuments?: SmsDocumentUpdateManyWithoutCompanyNestedInput
@@ -154853,6 +155015,10 @@ export namespace Prisma {
     procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
     procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
     documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    incidentOverdueDays?: IntFieldUpdateOperationsInput | number
+    sireDueSoonDays?: IntFieldUpdateOperationsInput | number
+    internalAuditDueSoonDays?: IntFieldUpdateOperationsInput | number
+    defaultSireVersion?: NullableStringFieldUpdateOperationsInput | string | null
     users?: UserUncheckedUpdateManyWithoutCompanyNestedInput
     vessels?: VesselUncheckedUpdateManyWithoutCompanyNestedInput
     smsDocuments?: SmsDocumentUncheckedUpdateManyWithoutCompanyNestedInput
@@ -155273,6 +155439,10 @@ export namespace Prisma {
     procurementThresholdSupt?: number
     procurementThresholdTechManager?: number
     documentExpiryWarningMonths?: number
+    incidentOverdueDays?: number
+    sireDueSoonDays?: number
+    internalAuditDueSoonDays?: number
+    defaultSireVersion?: string | null
     users?: UserCreateNestedManyWithoutCompanyInput
     roles?: RoleCreateNestedManyWithoutCompanyInput
     smsDocuments?: SmsDocumentCreateNestedManyWithoutCompanyInput
@@ -155331,6 +155501,10 @@ export namespace Prisma {
     procurementThresholdSupt?: number
     procurementThresholdTechManager?: number
     documentExpiryWarningMonths?: number
+    incidentOverdueDays?: number
+    sireDueSoonDays?: number
+    internalAuditDueSoonDays?: number
+    defaultSireVersion?: string | null
     users?: UserUncheckedCreateNestedManyWithoutCompanyInput
     roles?: RoleUncheckedCreateNestedManyWithoutCompanyInput
     smsDocuments?: SmsDocumentUncheckedCreateNestedManyWithoutCompanyInput
@@ -157274,6 +157448,10 @@ export namespace Prisma {
     procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
     procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
     documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    incidentOverdueDays?: IntFieldUpdateOperationsInput | number
+    sireDueSoonDays?: IntFieldUpdateOperationsInput | number
+    internalAuditDueSoonDays?: IntFieldUpdateOperationsInput | number
+    defaultSireVersion?: NullableStringFieldUpdateOperationsInput | string | null
     users?: UserUpdateManyWithoutCompanyNestedInput
     roles?: RoleUpdateManyWithoutCompanyNestedInput
     smsDocuments?: SmsDocumentUpdateManyWithoutCompanyNestedInput
@@ -157332,6 +157510,10 @@ export namespace Prisma {
     procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
     procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
     documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    incidentOverdueDays?: IntFieldUpdateOperationsInput | number
+    sireDueSoonDays?: IntFieldUpdateOperationsInput | number
+    internalAuditDueSoonDays?: IntFieldUpdateOperationsInput | number
+    defaultSireVersion?: NullableStringFieldUpdateOperationsInput | string | null
     users?: UserUncheckedUpdateManyWithoutCompanyNestedInput
     roles?: RoleUncheckedUpdateManyWithoutCompanyNestedInput
     smsDocuments?: SmsDocumentUncheckedUpdateManyWithoutCompanyNestedInput
@@ -158127,6 +158309,10 @@ export namespace Prisma {
     procurementThresholdSupt?: number
     procurementThresholdTechManager?: number
     documentExpiryWarningMonths?: number
+    incidentOverdueDays?: number
+    sireDueSoonDays?: number
+    internalAuditDueSoonDays?: number
+    defaultSireVersion?: string | null
     users?: UserCreateNestedManyWithoutCompanyInput
     roles?: RoleCreateNestedManyWithoutCompanyInput
     vessels?: VesselCreateNestedManyWithoutCompanyInput
@@ -158185,6 +158371,10 @@ export namespace Prisma {
     procurementThresholdSupt?: number
     procurementThresholdTechManager?: number
     documentExpiryWarningMonths?: number
+    incidentOverdueDays?: number
+    sireDueSoonDays?: number
+    internalAuditDueSoonDays?: number
+    defaultSireVersion?: string | null
     users?: UserUncheckedCreateNestedManyWithoutCompanyInput
     roles?: RoleUncheckedCreateNestedManyWithoutCompanyInput
     vessels?: VesselUncheckedCreateNestedManyWithoutCompanyInput
@@ -158327,6 +158517,10 @@ export namespace Prisma {
     procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
     procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
     documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    incidentOverdueDays?: IntFieldUpdateOperationsInput | number
+    sireDueSoonDays?: IntFieldUpdateOperationsInput | number
+    internalAuditDueSoonDays?: IntFieldUpdateOperationsInput | number
+    defaultSireVersion?: NullableStringFieldUpdateOperationsInput | string | null
     users?: UserUpdateManyWithoutCompanyNestedInput
     roles?: RoleUpdateManyWithoutCompanyNestedInput
     vessels?: VesselUpdateManyWithoutCompanyNestedInput
@@ -158385,6 +158579,10 @@ export namespace Prisma {
     procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
     procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
     documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    incidentOverdueDays?: IntFieldUpdateOperationsInput | number
+    sireDueSoonDays?: IntFieldUpdateOperationsInput | number
+    internalAuditDueSoonDays?: IntFieldUpdateOperationsInput | number
+    defaultSireVersion?: NullableStringFieldUpdateOperationsInput | string | null
     users?: UserUncheckedUpdateManyWithoutCompanyNestedInput
     roles?: RoleUncheckedUpdateManyWithoutCompanyNestedInput
     vessels?: VesselUncheckedUpdateManyWithoutCompanyNestedInput
@@ -158875,6 +159073,10 @@ export namespace Prisma {
     procurementThresholdSupt?: number
     procurementThresholdTechManager?: number
     documentExpiryWarningMonths?: number
+    incidentOverdueDays?: number
+    sireDueSoonDays?: number
+    internalAuditDueSoonDays?: number
+    defaultSireVersion?: string | null
     users?: UserCreateNestedManyWithoutCompanyInput
     roles?: RoleCreateNestedManyWithoutCompanyInput
     vessels?: VesselCreateNestedManyWithoutCompanyInput
@@ -158933,6 +159135,10 @@ export namespace Prisma {
     procurementThresholdSupt?: number
     procurementThresholdTechManager?: number
     documentExpiryWarningMonths?: number
+    incidentOverdueDays?: number
+    sireDueSoonDays?: number
+    internalAuditDueSoonDays?: number
+    defaultSireVersion?: string | null
     users?: UserUncheckedCreateNestedManyWithoutCompanyInput
     roles?: RoleUncheckedCreateNestedManyWithoutCompanyInput
     vessels?: VesselUncheckedCreateNestedManyWithoutCompanyInput
@@ -159051,7 +159257,7 @@ export namespace Prisma {
     callSign?: string | null
     mmsi?: string | null
     flag?: string | null
-    type?: string
+    type: string
     classificationSociety?: string | null
     yearBuilt?: number | null
     grossTonnage?: number | null
@@ -159139,7 +159345,7 @@ export namespace Prisma {
     callSign?: string | null
     mmsi?: string | null
     flag?: string | null
-    type?: string
+    type: string
     classificationSociety?: string | null
     yearBuilt?: number | null
     grossTonnage?: number | null
@@ -159324,6 +159530,10 @@ export namespace Prisma {
     procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
     procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
     documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    incidentOverdueDays?: IntFieldUpdateOperationsInput | number
+    sireDueSoonDays?: IntFieldUpdateOperationsInput | number
+    internalAuditDueSoonDays?: IntFieldUpdateOperationsInput | number
+    defaultSireVersion?: NullableStringFieldUpdateOperationsInput | string | null
     users?: UserUpdateManyWithoutCompanyNestedInput
     roles?: RoleUpdateManyWithoutCompanyNestedInput
     vessels?: VesselUpdateManyWithoutCompanyNestedInput
@@ -159382,6 +159592,10 @@ export namespace Prisma {
     procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
     procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
     documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    incidentOverdueDays?: IntFieldUpdateOperationsInput | number
+    sireDueSoonDays?: IntFieldUpdateOperationsInput | number
+    internalAuditDueSoonDays?: IntFieldUpdateOperationsInput | number
+    defaultSireVersion?: NullableStringFieldUpdateOperationsInput | string | null
     users?: UserUncheckedUpdateManyWithoutCompanyNestedInput
     roles?: RoleUncheckedUpdateManyWithoutCompanyNestedInput
     vessels?: VesselUncheckedUpdateManyWithoutCompanyNestedInput
@@ -159960,6 +160174,10 @@ export namespace Prisma {
     procurementThresholdSupt?: number
     procurementThresholdTechManager?: number
     documentExpiryWarningMonths?: number
+    incidentOverdueDays?: number
+    sireDueSoonDays?: number
+    internalAuditDueSoonDays?: number
+    defaultSireVersion?: string | null
     users?: UserCreateNestedManyWithoutCompanyInput
     roles?: RoleCreateNestedManyWithoutCompanyInput
     vessels?: VesselCreateNestedManyWithoutCompanyInput
@@ -160018,6 +160236,10 @@ export namespace Prisma {
     procurementThresholdSupt?: number
     procurementThresholdTechManager?: number
     documentExpiryWarningMonths?: number
+    incidentOverdueDays?: number
+    sireDueSoonDays?: number
+    internalAuditDueSoonDays?: number
+    defaultSireVersion?: string | null
     users?: UserUncheckedCreateNestedManyWithoutCompanyInput
     roles?: RoleUncheckedCreateNestedManyWithoutCompanyInput
     vessels?: VesselUncheckedCreateNestedManyWithoutCompanyInput
@@ -160077,7 +160299,7 @@ export namespace Prisma {
     callSign?: string | null
     mmsi?: string | null
     flag?: string | null
-    type?: string
+    type: string
     classificationSociety?: string | null
     yearBuilt?: number | null
     grossTonnage?: number | null
@@ -160165,7 +160387,7 @@ export namespace Prisma {
     callSign?: string | null
     mmsi?: string | null
     flag?: string | null
-    type?: string
+    type: string
     classificationSociety?: string | null
     yearBuilt?: number | null
     grossTonnage?: number | null
@@ -160382,6 +160604,10 @@ export namespace Prisma {
     procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
     procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
     documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    incidentOverdueDays?: IntFieldUpdateOperationsInput | number
+    sireDueSoonDays?: IntFieldUpdateOperationsInput | number
+    internalAuditDueSoonDays?: IntFieldUpdateOperationsInput | number
+    defaultSireVersion?: NullableStringFieldUpdateOperationsInput | string | null
     users?: UserUpdateManyWithoutCompanyNestedInput
     roles?: RoleUpdateManyWithoutCompanyNestedInput
     vessels?: VesselUpdateManyWithoutCompanyNestedInput
@@ -160440,6 +160666,10 @@ export namespace Prisma {
     procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
     procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
     documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    incidentOverdueDays?: IntFieldUpdateOperationsInput | number
+    sireDueSoonDays?: IntFieldUpdateOperationsInput | number
+    internalAuditDueSoonDays?: IntFieldUpdateOperationsInput | number
+    defaultSireVersion?: NullableStringFieldUpdateOperationsInput | string | null
     users?: UserUncheckedUpdateManyWithoutCompanyNestedInput
     roles?: RoleUncheckedUpdateManyWithoutCompanyNestedInput
     vessels?: VesselUncheckedUpdateManyWithoutCompanyNestedInput
@@ -161092,6 +161322,10 @@ export namespace Prisma {
     procurementThresholdSupt?: number
     procurementThresholdTechManager?: number
     documentExpiryWarningMonths?: number
+    incidentOverdueDays?: number
+    sireDueSoonDays?: number
+    internalAuditDueSoonDays?: number
+    defaultSireVersion?: string | null
     users?: UserCreateNestedManyWithoutCompanyInput
     roles?: RoleCreateNestedManyWithoutCompanyInput
     vessels?: VesselCreateNestedManyWithoutCompanyInput
@@ -161150,6 +161384,10 @@ export namespace Prisma {
     procurementThresholdSupt?: number
     procurementThresholdTechManager?: number
     documentExpiryWarningMonths?: number
+    incidentOverdueDays?: number
+    sireDueSoonDays?: number
+    internalAuditDueSoonDays?: number
+    defaultSireVersion?: string | null
     users?: UserUncheckedCreateNestedManyWithoutCompanyInput
     roles?: RoleUncheckedCreateNestedManyWithoutCompanyInput
     vessels?: VesselUncheckedCreateNestedManyWithoutCompanyInput
@@ -161209,7 +161447,7 @@ export namespace Prisma {
     callSign?: string | null
     mmsi?: string | null
     flag?: string | null
-    type?: string
+    type: string
     classificationSociety?: string | null
     yearBuilt?: number | null
     grossTonnage?: number | null
@@ -161297,7 +161535,7 @@ export namespace Prisma {
     callSign?: string | null
     mmsi?: string | null
     flag?: string | null
-    type?: string
+    type: string
     classificationSociety?: string | null
     yearBuilt?: number | null
     grossTonnage?: number | null
@@ -161462,6 +161700,10 @@ export namespace Prisma {
     procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
     procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
     documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    incidentOverdueDays?: IntFieldUpdateOperationsInput | number
+    sireDueSoonDays?: IntFieldUpdateOperationsInput | number
+    internalAuditDueSoonDays?: IntFieldUpdateOperationsInput | number
+    defaultSireVersion?: NullableStringFieldUpdateOperationsInput | string | null
     users?: UserUpdateManyWithoutCompanyNestedInput
     roles?: RoleUpdateManyWithoutCompanyNestedInput
     vessels?: VesselUpdateManyWithoutCompanyNestedInput
@@ -161520,6 +161762,10 @@ export namespace Prisma {
     procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
     procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
     documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    incidentOverdueDays?: IntFieldUpdateOperationsInput | number
+    sireDueSoonDays?: IntFieldUpdateOperationsInput | number
+    internalAuditDueSoonDays?: IntFieldUpdateOperationsInput | number
+    defaultSireVersion?: NullableStringFieldUpdateOperationsInput | string | null
     users?: UserUncheckedUpdateManyWithoutCompanyNestedInput
     roles?: RoleUncheckedUpdateManyWithoutCompanyNestedInput
     vessels?: VesselUncheckedUpdateManyWithoutCompanyNestedInput
@@ -161828,6 +162074,10 @@ export namespace Prisma {
     procurementThresholdSupt?: number
     procurementThresholdTechManager?: number
     documentExpiryWarningMonths?: number
+    incidentOverdueDays?: number
+    sireDueSoonDays?: number
+    internalAuditDueSoonDays?: number
+    defaultSireVersion?: string | null
     users?: UserCreateNestedManyWithoutCompanyInput
     roles?: RoleCreateNestedManyWithoutCompanyInput
     vessels?: VesselCreateNestedManyWithoutCompanyInput
@@ -161886,6 +162136,10 @@ export namespace Prisma {
     procurementThresholdSupt?: number
     procurementThresholdTechManager?: number
     documentExpiryWarningMonths?: number
+    incidentOverdueDays?: number
+    sireDueSoonDays?: number
+    internalAuditDueSoonDays?: number
+    defaultSireVersion?: string | null
     users?: UserUncheckedCreateNestedManyWithoutCompanyInput
     roles?: RoleUncheckedCreateNestedManyWithoutCompanyInput
     vessels?: VesselUncheckedCreateNestedManyWithoutCompanyInput
@@ -161945,7 +162199,7 @@ export namespace Prisma {
     callSign?: string | null
     mmsi?: string | null
     flag?: string | null
-    type?: string
+    type: string
     classificationSociety?: string | null
     yearBuilt?: number | null
     grossTonnage?: number | null
@@ -162033,7 +162287,7 @@ export namespace Prisma {
     callSign?: string | null
     mmsi?: string | null
     flag?: string | null
-    type?: string
+    type: string
     classificationSociety?: string | null
     yearBuilt?: number | null
     grossTonnage?: number | null
@@ -162198,6 +162452,10 @@ export namespace Prisma {
     procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
     procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
     documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    incidentOverdueDays?: IntFieldUpdateOperationsInput | number
+    sireDueSoonDays?: IntFieldUpdateOperationsInput | number
+    internalAuditDueSoonDays?: IntFieldUpdateOperationsInput | number
+    defaultSireVersion?: NullableStringFieldUpdateOperationsInput | string | null
     users?: UserUpdateManyWithoutCompanyNestedInput
     roles?: RoleUpdateManyWithoutCompanyNestedInput
     vessels?: VesselUpdateManyWithoutCompanyNestedInput
@@ -162256,6 +162514,10 @@ export namespace Prisma {
     procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
     procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
     documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    incidentOverdueDays?: IntFieldUpdateOperationsInput | number
+    sireDueSoonDays?: IntFieldUpdateOperationsInput | number
+    internalAuditDueSoonDays?: IntFieldUpdateOperationsInput | number
+    defaultSireVersion?: NullableStringFieldUpdateOperationsInput | string | null
     users?: UserUncheckedUpdateManyWithoutCompanyNestedInput
     roles?: RoleUncheckedUpdateManyWithoutCompanyNestedInput
     vessels?: VesselUncheckedUpdateManyWithoutCompanyNestedInput
@@ -162564,6 +162826,10 @@ export namespace Prisma {
     procurementThresholdSupt?: number
     procurementThresholdTechManager?: number
     documentExpiryWarningMonths?: number
+    incidentOverdueDays?: number
+    sireDueSoonDays?: number
+    internalAuditDueSoonDays?: number
+    defaultSireVersion?: string | null
     users?: UserCreateNestedManyWithoutCompanyInput
     roles?: RoleCreateNestedManyWithoutCompanyInput
     vessels?: VesselCreateNestedManyWithoutCompanyInput
@@ -162622,6 +162888,10 @@ export namespace Prisma {
     procurementThresholdSupt?: number
     procurementThresholdTechManager?: number
     documentExpiryWarningMonths?: number
+    incidentOverdueDays?: number
+    sireDueSoonDays?: number
+    internalAuditDueSoonDays?: number
+    defaultSireVersion?: string | null
     users?: UserUncheckedCreateNestedManyWithoutCompanyInput
     roles?: RoleUncheckedCreateNestedManyWithoutCompanyInput
     vessels?: VesselUncheckedCreateNestedManyWithoutCompanyInput
@@ -162681,7 +162951,7 @@ export namespace Prisma {
     callSign?: string | null
     mmsi?: string | null
     flag?: string | null
-    type?: string
+    type: string
     classificationSociety?: string | null
     yearBuilt?: number | null
     grossTonnage?: number | null
@@ -162769,7 +163039,7 @@ export namespace Prisma {
     callSign?: string | null
     mmsi?: string | null
     flag?: string | null
-    type?: string
+    type: string
     classificationSociety?: string | null
     yearBuilt?: number | null
     grossTonnage?: number | null
@@ -162937,6 +163207,10 @@ export namespace Prisma {
     procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
     procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
     documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    incidentOverdueDays?: IntFieldUpdateOperationsInput | number
+    sireDueSoonDays?: IntFieldUpdateOperationsInput | number
+    internalAuditDueSoonDays?: IntFieldUpdateOperationsInput | number
+    defaultSireVersion?: NullableStringFieldUpdateOperationsInput | string | null
     users?: UserUpdateManyWithoutCompanyNestedInput
     roles?: RoleUpdateManyWithoutCompanyNestedInput
     vessels?: VesselUpdateManyWithoutCompanyNestedInput
@@ -162995,6 +163269,10 @@ export namespace Prisma {
     procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
     procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
     documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    incidentOverdueDays?: IntFieldUpdateOperationsInput | number
+    sireDueSoonDays?: IntFieldUpdateOperationsInput | number
+    internalAuditDueSoonDays?: IntFieldUpdateOperationsInput | number
+    defaultSireVersion?: NullableStringFieldUpdateOperationsInput | string | null
     users?: UserUncheckedUpdateManyWithoutCompanyNestedInput
     roles?: RoleUncheckedUpdateManyWithoutCompanyNestedInput
     vessels?: VesselUncheckedUpdateManyWithoutCompanyNestedInput
@@ -163896,6 +164174,10 @@ export namespace Prisma {
     procurementThresholdSupt?: number
     procurementThresholdTechManager?: number
     documentExpiryWarningMonths?: number
+    incidentOverdueDays?: number
+    sireDueSoonDays?: number
+    internalAuditDueSoonDays?: number
+    defaultSireVersion?: string | null
     users?: UserCreateNestedManyWithoutCompanyInput
     roles?: RoleCreateNestedManyWithoutCompanyInput
     vessels?: VesselCreateNestedManyWithoutCompanyInput
@@ -163954,6 +164236,10 @@ export namespace Prisma {
     procurementThresholdSupt?: number
     procurementThresholdTechManager?: number
     documentExpiryWarningMonths?: number
+    incidentOverdueDays?: number
+    sireDueSoonDays?: number
+    internalAuditDueSoonDays?: number
+    defaultSireVersion?: string | null
     users?: UserUncheckedCreateNestedManyWithoutCompanyInput
     roles?: RoleUncheckedCreateNestedManyWithoutCompanyInput
     vessels?: VesselUncheckedCreateNestedManyWithoutCompanyInput
@@ -164062,6 +164348,10 @@ export namespace Prisma {
     procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
     procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
     documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    incidentOverdueDays?: IntFieldUpdateOperationsInput | number
+    sireDueSoonDays?: IntFieldUpdateOperationsInput | number
+    internalAuditDueSoonDays?: IntFieldUpdateOperationsInput | number
+    defaultSireVersion?: NullableStringFieldUpdateOperationsInput | string | null
     users?: UserUpdateManyWithoutCompanyNestedInput
     roles?: RoleUpdateManyWithoutCompanyNestedInput
     vessels?: VesselUpdateManyWithoutCompanyNestedInput
@@ -164120,6 +164410,10 @@ export namespace Prisma {
     procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
     procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
     documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    incidentOverdueDays?: IntFieldUpdateOperationsInput | number
+    sireDueSoonDays?: IntFieldUpdateOperationsInput | number
+    internalAuditDueSoonDays?: IntFieldUpdateOperationsInput | number
+    defaultSireVersion?: NullableStringFieldUpdateOperationsInput | string | null
     users?: UserUncheckedUpdateManyWithoutCompanyNestedInput
     roles?: RoleUncheckedUpdateManyWithoutCompanyNestedInput
     vessels?: VesselUncheckedUpdateManyWithoutCompanyNestedInput
@@ -164274,6 +164568,10 @@ export namespace Prisma {
     procurementThresholdSupt?: number
     procurementThresholdTechManager?: number
     documentExpiryWarningMonths?: number
+    incidentOverdueDays?: number
+    sireDueSoonDays?: number
+    internalAuditDueSoonDays?: number
+    defaultSireVersion?: string | null
     users?: UserCreateNestedManyWithoutCompanyInput
     roles?: RoleCreateNestedManyWithoutCompanyInput
     vessels?: VesselCreateNestedManyWithoutCompanyInput
@@ -164332,6 +164630,10 @@ export namespace Prisma {
     procurementThresholdSupt?: number
     procurementThresholdTechManager?: number
     documentExpiryWarningMonths?: number
+    incidentOverdueDays?: number
+    sireDueSoonDays?: number
+    internalAuditDueSoonDays?: number
+    defaultSireVersion?: string | null
     users?: UserUncheckedCreateNestedManyWithoutCompanyInput
     roles?: RoleUncheckedCreateNestedManyWithoutCompanyInput
     vessels?: VesselUncheckedCreateNestedManyWithoutCompanyInput
@@ -164391,7 +164693,7 @@ export namespace Prisma {
     callSign?: string | null
     mmsi?: string | null
     flag?: string | null
-    type?: string
+    type: string
     classificationSociety?: string | null
     yearBuilt?: number | null
     grossTonnage?: number | null
@@ -164479,7 +164781,7 @@ export namespace Prisma {
     callSign?: string | null
     mmsi?: string | null
     flag?: string | null
-    type?: string
+    type: string
     classificationSociety?: string | null
     yearBuilt?: number | null
     grossTonnage?: number | null
@@ -164625,6 +164927,10 @@ export namespace Prisma {
     procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
     procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
     documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    incidentOverdueDays?: IntFieldUpdateOperationsInput | number
+    sireDueSoonDays?: IntFieldUpdateOperationsInput | number
+    internalAuditDueSoonDays?: IntFieldUpdateOperationsInput | number
+    defaultSireVersion?: NullableStringFieldUpdateOperationsInput | string | null
     users?: UserUpdateManyWithoutCompanyNestedInput
     roles?: RoleUpdateManyWithoutCompanyNestedInput
     vessels?: VesselUpdateManyWithoutCompanyNestedInput
@@ -164683,6 +164989,10 @@ export namespace Prisma {
     procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
     procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
     documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    incidentOverdueDays?: IntFieldUpdateOperationsInput | number
+    sireDueSoonDays?: IntFieldUpdateOperationsInput | number
+    internalAuditDueSoonDays?: IntFieldUpdateOperationsInput | number
+    defaultSireVersion?: NullableStringFieldUpdateOperationsInput | string | null
     users?: UserUncheckedUpdateManyWithoutCompanyNestedInput
     roles?: RoleUncheckedUpdateManyWithoutCompanyNestedInput
     vessels?: VesselUncheckedUpdateManyWithoutCompanyNestedInput
@@ -165061,6 +165371,10 @@ export namespace Prisma {
     procurementThresholdSupt?: number
     procurementThresholdTechManager?: number
     documentExpiryWarningMonths?: number
+    incidentOverdueDays?: number
+    sireDueSoonDays?: number
+    internalAuditDueSoonDays?: number
+    defaultSireVersion?: string | null
     users?: UserCreateNestedManyWithoutCompanyInput
     roles?: RoleCreateNestedManyWithoutCompanyInput
     vessels?: VesselCreateNestedManyWithoutCompanyInput
@@ -165119,6 +165433,10 @@ export namespace Prisma {
     procurementThresholdSupt?: number
     procurementThresholdTechManager?: number
     documentExpiryWarningMonths?: number
+    incidentOverdueDays?: number
+    sireDueSoonDays?: number
+    internalAuditDueSoonDays?: number
+    defaultSireVersion?: string | null
     users?: UserUncheckedCreateNestedManyWithoutCompanyInput
     roles?: RoleUncheckedCreateNestedManyWithoutCompanyInput
     vessels?: VesselUncheckedCreateNestedManyWithoutCompanyInput
@@ -165178,7 +165496,7 @@ export namespace Prisma {
     callSign?: string | null
     mmsi?: string | null
     flag?: string | null
-    type?: string
+    type: string
     classificationSociety?: string | null
     yearBuilt?: number | null
     grossTonnage?: number | null
@@ -165266,7 +165584,7 @@ export namespace Prisma {
     callSign?: string | null
     mmsi?: string | null
     flag?: string | null
-    type?: string
+    type: string
     classificationSociety?: string | null
     yearBuilt?: number | null
     grossTonnage?: number | null
@@ -165414,6 +165732,10 @@ export namespace Prisma {
     procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
     procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
     documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    incidentOverdueDays?: IntFieldUpdateOperationsInput | number
+    sireDueSoonDays?: IntFieldUpdateOperationsInput | number
+    internalAuditDueSoonDays?: IntFieldUpdateOperationsInput | number
+    defaultSireVersion?: NullableStringFieldUpdateOperationsInput | string | null
     users?: UserUpdateManyWithoutCompanyNestedInput
     roles?: RoleUpdateManyWithoutCompanyNestedInput
     vessels?: VesselUpdateManyWithoutCompanyNestedInput
@@ -165472,6 +165794,10 @@ export namespace Prisma {
     procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
     procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
     documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    incidentOverdueDays?: IntFieldUpdateOperationsInput | number
+    sireDueSoonDays?: IntFieldUpdateOperationsInput | number
+    internalAuditDueSoonDays?: IntFieldUpdateOperationsInput | number
+    defaultSireVersion?: NullableStringFieldUpdateOperationsInput | string | null
     users?: UserUncheckedUpdateManyWithoutCompanyNestedInput
     roles?: RoleUncheckedUpdateManyWithoutCompanyNestedInput
     vessels?: VesselUncheckedUpdateManyWithoutCompanyNestedInput
@@ -165847,6 +166173,10 @@ export namespace Prisma {
     procurementThresholdSupt?: number
     procurementThresholdTechManager?: number
     documentExpiryWarningMonths?: number
+    incidentOverdueDays?: number
+    sireDueSoonDays?: number
+    internalAuditDueSoonDays?: number
+    defaultSireVersion?: string | null
     users?: UserCreateNestedManyWithoutCompanyInput
     roles?: RoleCreateNestedManyWithoutCompanyInput
     vessels?: VesselCreateNestedManyWithoutCompanyInput
@@ -165905,6 +166235,10 @@ export namespace Prisma {
     procurementThresholdSupt?: number
     procurementThresholdTechManager?: number
     documentExpiryWarningMonths?: number
+    incidentOverdueDays?: number
+    sireDueSoonDays?: number
+    internalAuditDueSoonDays?: number
+    defaultSireVersion?: string | null
     users?: UserUncheckedCreateNestedManyWithoutCompanyInput
     roles?: RoleUncheckedCreateNestedManyWithoutCompanyInput
     vessels?: VesselUncheckedCreateNestedManyWithoutCompanyInput
@@ -165964,7 +166298,7 @@ export namespace Prisma {
     callSign?: string | null
     mmsi?: string | null
     flag?: string | null
-    type?: string
+    type: string
     classificationSociety?: string | null
     yearBuilt?: number | null
     grossTonnage?: number | null
@@ -166052,7 +166386,7 @@ export namespace Prisma {
     callSign?: string | null
     mmsi?: string | null
     flag?: string | null
-    type?: string
+    type: string
     classificationSociety?: string | null
     yearBuilt?: number | null
     grossTonnage?: number | null
@@ -166196,6 +166530,10 @@ export namespace Prisma {
     procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
     procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
     documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    incidentOverdueDays?: IntFieldUpdateOperationsInput | number
+    sireDueSoonDays?: IntFieldUpdateOperationsInput | number
+    internalAuditDueSoonDays?: IntFieldUpdateOperationsInput | number
+    defaultSireVersion?: NullableStringFieldUpdateOperationsInput | string | null
     users?: UserUpdateManyWithoutCompanyNestedInput
     roles?: RoleUpdateManyWithoutCompanyNestedInput
     vessels?: VesselUpdateManyWithoutCompanyNestedInput
@@ -166254,6 +166592,10 @@ export namespace Prisma {
     procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
     procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
     documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    incidentOverdueDays?: IntFieldUpdateOperationsInput | number
+    sireDueSoonDays?: IntFieldUpdateOperationsInput | number
+    internalAuditDueSoonDays?: IntFieldUpdateOperationsInput | number
+    defaultSireVersion?: NullableStringFieldUpdateOperationsInput | string | null
     users?: UserUncheckedUpdateManyWithoutCompanyNestedInput
     roles?: RoleUncheckedUpdateManyWithoutCompanyNestedInput
     vessels?: VesselUncheckedUpdateManyWithoutCompanyNestedInput
@@ -166631,6 +166973,10 @@ export namespace Prisma {
     procurementThresholdSupt?: number
     procurementThresholdTechManager?: number
     documentExpiryWarningMonths?: number
+    incidentOverdueDays?: number
+    sireDueSoonDays?: number
+    internalAuditDueSoonDays?: number
+    defaultSireVersion?: string | null
     users?: UserCreateNestedManyWithoutCompanyInput
     roles?: RoleCreateNestedManyWithoutCompanyInput
     vessels?: VesselCreateNestedManyWithoutCompanyInput
@@ -166689,6 +167035,10 @@ export namespace Prisma {
     procurementThresholdSupt?: number
     procurementThresholdTechManager?: number
     documentExpiryWarningMonths?: number
+    incidentOverdueDays?: number
+    sireDueSoonDays?: number
+    internalAuditDueSoonDays?: number
+    defaultSireVersion?: string | null
     users?: UserUncheckedCreateNestedManyWithoutCompanyInput
     roles?: RoleUncheckedCreateNestedManyWithoutCompanyInput
     vessels?: VesselUncheckedCreateNestedManyWithoutCompanyInput
@@ -166748,7 +167098,7 @@ export namespace Prisma {
     callSign?: string | null
     mmsi?: string | null
     flag?: string | null
-    type?: string
+    type: string
     classificationSociety?: string | null
     yearBuilt?: number | null
     grossTonnage?: number | null
@@ -166836,7 +167186,7 @@ export namespace Prisma {
     callSign?: string | null
     mmsi?: string | null
     flag?: string | null
-    type?: string
+    type: string
     classificationSociety?: string | null
     yearBuilt?: number | null
     grossTonnage?: number | null
@@ -166980,6 +167330,10 @@ export namespace Prisma {
     procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
     procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
     documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    incidentOverdueDays?: IntFieldUpdateOperationsInput | number
+    sireDueSoonDays?: IntFieldUpdateOperationsInput | number
+    internalAuditDueSoonDays?: IntFieldUpdateOperationsInput | number
+    defaultSireVersion?: NullableStringFieldUpdateOperationsInput | string | null
     users?: UserUpdateManyWithoutCompanyNestedInput
     roles?: RoleUpdateManyWithoutCompanyNestedInput
     vessels?: VesselUpdateManyWithoutCompanyNestedInput
@@ -167038,6 +167392,10 @@ export namespace Prisma {
     procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
     procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
     documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    incidentOverdueDays?: IntFieldUpdateOperationsInput | number
+    sireDueSoonDays?: IntFieldUpdateOperationsInput | number
+    internalAuditDueSoonDays?: IntFieldUpdateOperationsInput | number
+    defaultSireVersion?: NullableStringFieldUpdateOperationsInput | string | null
     users?: UserUncheckedUpdateManyWithoutCompanyNestedInput
     roles?: RoleUncheckedUpdateManyWithoutCompanyNestedInput
     vessels?: VesselUncheckedUpdateManyWithoutCompanyNestedInput
@@ -167415,6 +167773,10 @@ export namespace Prisma {
     procurementThresholdSupt?: number
     procurementThresholdTechManager?: number
     documentExpiryWarningMonths?: number
+    incidentOverdueDays?: number
+    sireDueSoonDays?: number
+    internalAuditDueSoonDays?: number
+    defaultSireVersion?: string | null
     users?: UserCreateNestedManyWithoutCompanyInput
     roles?: RoleCreateNestedManyWithoutCompanyInput
     vessels?: VesselCreateNestedManyWithoutCompanyInput
@@ -167473,6 +167835,10 @@ export namespace Prisma {
     procurementThresholdSupt?: number
     procurementThresholdTechManager?: number
     documentExpiryWarningMonths?: number
+    incidentOverdueDays?: number
+    sireDueSoonDays?: number
+    internalAuditDueSoonDays?: number
+    defaultSireVersion?: string | null
     users?: UserUncheckedCreateNestedManyWithoutCompanyInput
     roles?: RoleUncheckedCreateNestedManyWithoutCompanyInput
     vessels?: VesselUncheckedCreateNestedManyWithoutCompanyInput
@@ -167532,7 +167898,7 @@ export namespace Prisma {
     callSign?: string | null
     mmsi?: string | null
     flag?: string | null
-    type?: string
+    type: string
     classificationSociety?: string | null
     yearBuilt?: number | null
     grossTonnage?: number | null
@@ -167620,7 +167986,7 @@ export namespace Prisma {
     callSign?: string | null
     mmsi?: string | null
     flag?: string | null
-    type?: string
+    type: string
     classificationSociety?: string | null
     yearBuilt?: number | null
     grossTonnage?: number | null
@@ -167772,6 +168138,10 @@ export namespace Prisma {
     procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
     procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
     documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    incidentOverdueDays?: IntFieldUpdateOperationsInput | number
+    sireDueSoonDays?: IntFieldUpdateOperationsInput | number
+    internalAuditDueSoonDays?: IntFieldUpdateOperationsInput | number
+    defaultSireVersion?: NullableStringFieldUpdateOperationsInput | string | null
     users?: UserUpdateManyWithoutCompanyNestedInput
     roles?: RoleUpdateManyWithoutCompanyNestedInput
     vessels?: VesselUpdateManyWithoutCompanyNestedInput
@@ -167830,6 +168200,10 @@ export namespace Prisma {
     procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
     procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
     documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    incidentOverdueDays?: IntFieldUpdateOperationsInput | number
+    sireDueSoonDays?: IntFieldUpdateOperationsInput | number
+    internalAuditDueSoonDays?: IntFieldUpdateOperationsInput | number
+    defaultSireVersion?: NullableStringFieldUpdateOperationsInput | string | null
     users?: UserUncheckedUpdateManyWithoutCompanyNestedInput
     roles?: RoleUncheckedUpdateManyWithoutCompanyNestedInput
     vessels?: VesselUncheckedUpdateManyWithoutCompanyNestedInput
@@ -168211,6 +168585,10 @@ export namespace Prisma {
     procurementThresholdSupt?: number
     procurementThresholdTechManager?: number
     documentExpiryWarningMonths?: number
+    incidentOverdueDays?: number
+    sireDueSoonDays?: number
+    internalAuditDueSoonDays?: number
+    defaultSireVersion?: string | null
     users?: UserCreateNestedManyWithoutCompanyInput
     roles?: RoleCreateNestedManyWithoutCompanyInput
     vessels?: VesselCreateNestedManyWithoutCompanyInput
@@ -168269,6 +168647,10 @@ export namespace Prisma {
     procurementThresholdSupt?: number
     procurementThresholdTechManager?: number
     documentExpiryWarningMonths?: number
+    incidentOverdueDays?: number
+    sireDueSoonDays?: number
+    internalAuditDueSoonDays?: number
+    defaultSireVersion?: string | null
     users?: UserUncheckedCreateNestedManyWithoutCompanyInput
     roles?: RoleUncheckedCreateNestedManyWithoutCompanyInput
     vessels?: VesselUncheckedCreateNestedManyWithoutCompanyInput
@@ -168328,7 +168710,7 @@ export namespace Prisma {
     callSign?: string | null
     mmsi?: string | null
     flag?: string | null
-    type?: string
+    type: string
     classificationSociety?: string | null
     yearBuilt?: number | null
     grossTonnage?: number | null
@@ -168416,7 +168798,7 @@ export namespace Prisma {
     callSign?: string | null
     mmsi?: string | null
     flag?: string | null
-    type?: string
+    type: string
     classificationSociety?: string | null
     yearBuilt?: number | null
     grossTonnage?: number | null
@@ -168556,6 +168938,10 @@ export namespace Prisma {
     procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
     procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
     documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    incidentOverdueDays?: IntFieldUpdateOperationsInput | number
+    sireDueSoonDays?: IntFieldUpdateOperationsInput | number
+    internalAuditDueSoonDays?: IntFieldUpdateOperationsInput | number
+    defaultSireVersion?: NullableStringFieldUpdateOperationsInput | string | null
     users?: UserUpdateManyWithoutCompanyNestedInput
     roles?: RoleUpdateManyWithoutCompanyNestedInput
     vessels?: VesselUpdateManyWithoutCompanyNestedInput
@@ -168614,6 +169000,10 @@ export namespace Prisma {
     procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
     procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
     documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    incidentOverdueDays?: IntFieldUpdateOperationsInput | number
+    sireDueSoonDays?: IntFieldUpdateOperationsInput | number
+    internalAuditDueSoonDays?: IntFieldUpdateOperationsInput | number
+    defaultSireVersion?: NullableStringFieldUpdateOperationsInput | string | null
     users?: UserUncheckedUpdateManyWithoutCompanyNestedInput
     roles?: RoleUncheckedUpdateManyWithoutCompanyNestedInput
     vessels?: VesselUncheckedUpdateManyWithoutCompanyNestedInput
@@ -169013,6 +169403,10 @@ export namespace Prisma {
     procurementThresholdSupt?: number
     procurementThresholdTechManager?: number
     documentExpiryWarningMonths?: number
+    incidentOverdueDays?: number
+    sireDueSoonDays?: number
+    internalAuditDueSoonDays?: number
+    defaultSireVersion?: string | null
     users?: UserCreateNestedManyWithoutCompanyInput
     roles?: RoleCreateNestedManyWithoutCompanyInput
     vessels?: VesselCreateNestedManyWithoutCompanyInput
@@ -169071,6 +169465,10 @@ export namespace Prisma {
     procurementThresholdSupt?: number
     procurementThresholdTechManager?: number
     documentExpiryWarningMonths?: number
+    incidentOverdueDays?: number
+    sireDueSoonDays?: number
+    internalAuditDueSoonDays?: number
+    defaultSireVersion?: string | null
     users?: UserUncheckedCreateNestedManyWithoutCompanyInput
     roles?: RoleUncheckedCreateNestedManyWithoutCompanyInput
     vessels?: VesselUncheckedCreateNestedManyWithoutCompanyInput
@@ -169279,6 +169677,10 @@ export namespace Prisma {
     procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
     procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
     documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    incidentOverdueDays?: IntFieldUpdateOperationsInput | number
+    sireDueSoonDays?: IntFieldUpdateOperationsInput | number
+    internalAuditDueSoonDays?: IntFieldUpdateOperationsInput | number
+    defaultSireVersion?: NullableStringFieldUpdateOperationsInput | string | null
     users?: UserUpdateManyWithoutCompanyNestedInput
     roles?: RoleUpdateManyWithoutCompanyNestedInput
     vessels?: VesselUpdateManyWithoutCompanyNestedInput
@@ -169337,6 +169739,10 @@ export namespace Prisma {
     procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
     procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
     documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    incidentOverdueDays?: IntFieldUpdateOperationsInput | number
+    sireDueSoonDays?: IntFieldUpdateOperationsInput | number
+    internalAuditDueSoonDays?: IntFieldUpdateOperationsInput | number
+    defaultSireVersion?: NullableStringFieldUpdateOperationsInput | string | null
     users?: UserUncheckedUpdateManyWithoutCompanyNestedInput
     roles?: RoleUncheckedUpdateManyWithoutCompanyNestedInput
     vessels?: VesselUncheckedUpdateManyWithoutCompanyNestedInput
@@ -169443,6 +169849,10 @@ export namespace Prisma {
     procurementThresholdSupt?: number
     procurementThresholdTechManager?: number
     documentExpiryWarningMonths?: number
+    incidentOverdueDays?: number
+    sireDueSoonDays?: number
+    internalAuditDueSoonDays?: number
+    defaultSireVersion?: string | null
     users?: UserCreateNestedManyWithoutCompanyInput
     roles?: RoleCreateNestedManyWithoutCompanyInput
     vessels?: VesselCreateNestedManyWithoutCompanyInput
@@ -169501,6 +169911,10 @@ export namespace Prisma {
     procurementThresholdSupt?: number
     procurementThresholdTechManager?: number
     documentExpiryWarningMonths?: number
+    incidentOverdueDays?: number
+    sireDueSoonDays?: number
+    internalAuditDueSoonDays?: number
+    defaultSireVersion?: string | null
     users?: UserUncheckedCreateNestedManyWithoutCompanyInput
     roles?: RoleUncheckedCreateNestedManyWithoutCompanyInput
     vessels?: VesselUncheckedCreateNestedManyWithoutCompanyInput
@@ -169560,7 +169974,7 @@ export namespace Prisma {
     callSign?: string | null
     mmsi?: string | null
     flag?: string | null
-    type?: string
+    type: string
     classificationSociety?: string | null
     yearBuilt?: number | null
     grossTonnage?: number | null
@@ -169648,7 +170062,7 @@ export namespace Prisma {
     callSign?: string | null
     mmsi?: string | null
     flag?: string | null
-    type?: string
+    type: string
     classificationSociety?: string | null
     yearBuilt?: number | null
     grossTonnage?: number | null
@@ -169797,6 +170211,10 @@ export namespace Prisma {
     procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
     procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
     documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    incidentOverdueDays?: IntFieldUpdateOperationsInput | number
+    sireDueSoonDays?: IntFieldUpdateOperationsInput | number
+    internalAuditDueSoonDays?: IntFieldUpdateOperationsInput | number
+    defaultSireVersion?: NullableStringFieldUpdateOperationsInput | string | null
     users?: UserUpdateManyWithoutCompanyNestedInput
     roles?: RoleUpdateManyWithoutCompanyNestedInput
     vessels?: VesselUpdateManyWithoutCompanyNestedInput
@@ -169855,6 +170273,10 @@ export namespace Prisma {
     procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
     procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
     documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    incidentOverdueDays?: IntFieldUpdateOperationsInput | number
+    sireDueSoonDays?: IntFieldUpdateOperationsInput | number
+    internalAuditDueSoonDays?: IntFieldUpdateOperationsInput | number
+    defaultSireVersion?: NullableStringFieldUpdateOperationsInput | string | null
     users?: UserUncheckedUpdateManyWithoutCompanyNestedInput
     roles?: RoleUncheckedUpdateManyWithoutCompanyNestedInput
     vessels?: VesselUncheckedUpdateManyWithoutCompanyNestedInput
@@ -170147,6 +170569,10 @@ export namespace Prisma {
     procurementThresholdSupt?: number
     procurementThresholdTechManager?: number
     documentExpiryWarningMonths?: number
+    incidentOverdueDays?: number
+    sireDueSoonDays?: number
+    internalAuditDueSoonDays?: number
+    defaultSireVersion?: string | null
     users?: UserCreateNestedManyWithoutCompanyInput
     roles?: RoleCreateNestedManyWithoutCompanyInput
     vessels?: VesselCreateNestedManyWithoutCompanyInput
@@ -170205,6 +170631,10 @@ export namespace Prisma {
     procurementThresholdSupt?: number
     procurementThresholdTechManager?: number
     documentExpiryWarningMonths?: number
+    incidentOverdueDays?: number
+    sireDueSoonDays?: number
+    internalAuditDueSoonDays?: number
+    defaultSireVersion?: string | null
     users?: UserUncheckedCreateNestedManyWithoutCompanyInput
     roles?: RoleUncheckedCreateNestedManyWithoutCompanyInput
     vessels?: VesselUncheckedCreateNestedManyWithoutCompanyInput
@@ -170264,7 +170694,7 @@ export namespace Prisma {
     callSign?: string | null
     mmsi?: string | null
     flag?: string | null
-    type?: string
+    type: string
     classificationSociety?: string | null
     yearBuilt?: number | null
     grossTonnage?: number | null
@@ -170352,7 +170782,7 @@ export namespace Prisma {
     callSign?: string | null
     mmsi?: string | null
     flag?: string | null
-    type?: string
+    type: string
     classificationSociety?: string | null
     yearBuilt?: number | null
     grossTonnage?: number | null
@@ -170501,6 +170931,10 @@ export namespace Prisma {
     procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
     procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
     documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    incidentOverdueDays?: IntFieldUpdateOperationsInput | number
+    sireDueSoonDays?: IntFieldUpdateOperationsInput | number
+    internalAuditDueSoonDays?: IntFieldUpdateOperationsInput | number
+    defaultSireVersion?: NullableStringFieldUpdateOperationsInput | string | null
     users?: UserUpdateManyWithoutCompanyNestedInput
     roles?: RoleUpdateManyWithoutCompanyNestedInput
     vessels?: VesselUpdateManyWithoutCompanyNestedInput
@@ -170559,6 +170993,10 @@ export namespace Prisma {
     procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
     procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
     documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    incidentOverdueDays?: IntFieldUpdateOperationsInput | number
+    sireDueSoonDays?: IntFieldUpdateOperationsInput | number
+    internalAuditDueSoonDays?: IntFieldUpdateOperationsInput | number
+    defaultSireVersion?: NullableStringFieldUpdateOperationsInput | string | null
     users?: UserUncheckedUpdateManyWithoutCompanyNestedInput
     roles?: RoleUncheckedUpdateManyWithoutCompanyNestedInput
     vessels?: VesselUncheckedUpdateManyWithoutCompanyNestedInput
@@ -170851,6 +171289,10 @@ export namespace Prisma {
     procurementThresholdSupt?: number
     procurementThresholdTechManager?: number
     documentExpiryWarningMonths?: number
+    incidentOverdueDays?: number
+    sireDueSoonDays?: number
+    internalAuditDueSoonDays?: number
+    defaultSireVersion?: string | null
     users?: UserCreateNestedManyWithoutCompanyInput
     roles?: RoleCreateNestedManyWithoutCompanyInput
     vessels?: VesselCreateNestedManyWithoutCompanyInput
@@ -170909,6 +171351,10 @@ export namespace Prisma {
     procurementThresholdSupt?: number
     procurementThresholdTechManager?: number
     documentExpiryWarningMonths?: number
+    incidentOverdueDays?: number
+    sireDueSoonDays?: number
+    internalAuditDueSoonDays?: number
+    defaultSireVersion?: string | null
     users?: UserUncheckedCreateNestedManyWithoutCompanyInput
     roles?: RoleUncheckedCreateNestedManyWithoutCompanyInput
     vessels?: VesselUncheckedCreateNestedManyWithoutCompanyInput
@@ -170968,7 +171414,7 @@ export namespace Prisma {
     callSign?: string | null
     mmsi?: string | null
     flag?: string | null
-    type?: string
+    type: string
     classificationSociety?: string | null
     yearBuilt?: number | null
     grossTonnage?: number | null
@@ -171056,7 +171502,7 @@ export namespace Prisma {
     callSign?: string | null
     mmsi?: string | null
     flag?: string | null
-    type?: string
+    type: string
     classificationSociety?: string | null
     yearBuilt?: number | null
     grossTonnage?: number | null
@@ -171242,6 +171688,10 @@ export namespace Prisma {
     procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
     procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
     documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    incidentOverdueDays?: IntFieldUpdateOperationsInput | number
+    sireDueSoonDays?: IntFieldUpdateOperationsInput | number
+    internalAuditDueSoonDays?: IntFieldUpdateOperationsInput | number
+    defaultSireVersion?: NullableStringFieldUpdateOperationsInput | string | null
     users?: UserUpdateManyWithoutCompanyNestedInput
     roles?: RoleUpdateManyWithoutCompanyNestedInput
     vessels?: VesselUpdateManyWithoutCompanyNestedInput
@@ -171300,6 +171750,10 @@ export namespace Prisma {
     procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
     procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
     documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    incidentOverdueDays?: IntFieldUpdateOperationsInput | number
+    sireDueSoonDays?: IntFieldUpdateOperationsInput | number
+    internalAuditDueSoonDays?: IntFieldUpdateOperationsInput | number
+    defaultSireVersion?: NullableStringFieldUpdateOperationsInput | string | null
     users?: UserUncheckedUpdateManyWithoutCompanyNestedInput
     roles?: RoleUncheckedUpdateManyWithoutCompanyNestedInput
     vessels?: VesselUncheckedUpdateManyWithoutCompanyNestedInput
@@ -171635,6 +172089,10 @@ export namespace Prisma {
     procurementThresholdSupt?: number
     procurementThresholdTechManager?: number
     documentExpiryWarningMonths?: number
+    incidentOverdueDays?: number
+    sireDueSoonDays?: number
+    internalAuditDueSoonDays?: number
+    defaultSireVersion?: string | null
     users?: UserCreateNestedManyWithoutCompanyInput
     roles?: RoleCreateNestedManyWithoutCompanyInput
     vessels?: VesselCreateNestedManyWithoutCompanyInput
@@ -171693,6 +172151,10 @@ export namespace Prisma {
     procurementThresholdSupt?: number
     procurementThresholdTechManager?: number
     documentExpiryWarningMonths?: number
+    incidentOverdueDays?: number
+    sireDueSoonDays?: number
+    internalAuditDueSoonDays?: number
+    defaultSireVersion?: string | null
     users?: UserUncheckedCreateNestedManyWithoutCompanyInput
     roles?: RoleUncheckedCreateNestedManyWithoutCompanyInput
     vessels?: VesselUncheckedCreateNestedManyWithoutCompanyInput
@@ -171752,7 +172214,7 @@ export namespace Prisma {
     callSign?: string | null
     mmsi?: string | null
     flag?: string | null
-    type?: string
+    type: string
     classificationSociety?: string | null
     yearBuilt?: number | null
     grossTonnage?: number | null
@@ -171840,7 +172302,7 @@ export namespace Prisma {
     callSign?: string | null
     mmsi?: string | null
     flag?: string | null
-    type?: string
+    type: string
     classificationSociety?: string | null
     yearBuilt?: number | null
     grossTonnage?: number | null
@@ -171988,6 +172450,10 @@ export namespace Prisma {
     procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
     procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
     documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    incidentOverdueDays?: IntFieldUpdateOperationsInput | number
+    sireDueSoonDays?: IntFieldUpdateOperationsInput | number
+    internalAuditDueSoonDays?: IntFieldUpdateOperationsInput | number
+    defaultSireVersion?: NullableStringFieldUpdateOperationsInput | string | null
     users?: UserUpdateManyWithoutCompanyNestedInput
     roles?: RoleUpdateManyWithoutCompanyNestedInput
     vessels?: VesselUpdateManyWithoutCompanyNestedInput
@@ -172046,6 +172512,10 @@ export namespace Prisma {
     procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
     procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
     documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    incidentOverdueDays?: IntFieldUpdateOperationsInput | number
+    sireDueSoonDays?: IntFieldUpdateOperationsInput | number
+    internalAuditDueSoonDays?: IntFieldUpdateOperationsInput | number
+    defaultSireVersion?: NullableStringFieldUpdateOperationsInput | string | null
     users?: UserUncheckedUpdateManyWithoutCompanyNestedInput
     roles?: RoleUncheckedUpdateManyWithoutCompanyNestedInput
     vessels?: VesselUncheckedUpdateManyWithoutCompanyNestedInput
@@ -172305,6 +172775,10 @@ export namespace Prisma {
     procurementThresholdSupt?: number
     procurementThresholdTechManager?: number
     documentExpiryWarningMonths?: number
+    incidentOverdueDays?: number
+    sireDueSoonDays?: number
+    internalAuditDueSoonDays?: number
+    defaultSireVersion?: string | null
     users?: UserCreateNestedManyWithoutCompanyInput
     roles?: RoleCreateNestedManyWithoutCompanyInput
     vessels?: VesselCreateNestedManyWithoutCompanyInput
@@ -172363,6 +172837,10 @@ export namespace Prisma {
     procurementThresholdSupt?: number
     procurementThresholdTechManager?: number
     documentExpiryWarningMonths?: number
+    incidentOverdueDays?: number
+    sireDueSoonDays?: number
+    internalAuditDueSoonDays?: number
+    defaultSireVersion?: string | null
     users?: UserUncheckedCreateNestedManyWithoutCompanyInput
     roles?: RoleUncheckedCreateNestedManyWithoutCompanyInput
     vessels?: VesselUncheckedCreateNestedManyWithoutCompanyInput
@@ -172469,6 +172947,10 @@ export namespace Prisma {
     procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
     procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
     documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    incidentOverdueDays?: IntFieldUpdateOperationsInput | number
+    sireDueSoonDays?: IntFieldUpdateOperationsInput | number
+    internalAuditDueSoonDays?: IntFieldUpdateOperationsInput | number
+    defaultSireVersion?: NullableStringFieldUpdateOperationsInput | string | null
     users?: UserUpdateManyWithoutCompanyNestedInput
     roles?: RoleUpdateManyWithoutCompanyNestedInput
     vessels?: VesselUpdateManyWithoutCompanyNestedInput
@@ -172527,6 +173009,10 @@ export namespace Prisma {
     procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
     procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
     documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    incidentOverdueDays?: IntFieldUpdateOperationsInput | number
+    sireDueSoonDays?: IntFieldUpdateOperationsInput | number
+    internalAuditDueSoonDays?: IntFieldUpdateOperationsInput | number
+    defaultSireVersion?: NullableStringFieldUpdateOperationsInput | string | null
     users?: UserUncheckedUpdateManyWithoutCompanyNestedInput
     roles?: RoleUncheckedUpdateManyWithoutCompanyNestedInput
     vessels?: VesselUncheckedUpdateManyWithoutCompanyNestedInput
@@ -172601,6 +173087,10 @@ export namespace Prisma {
     procurementThresholdSupt?: number
     procurementThresholdTechManager?: number
     documentExpiryWarningMonths?: number
+    incidentOverdueDays?: number
+    sireDueSoonDays?: number
+    internalAuditDueSoonDays?: number
+    defaultSireVersion?: string | null
     users?: UserCreateNestedManyWithoutCompanyInput
     roles?: RoleCreateNestedManyWithoutCompanyInput
     vessels?: VesselCreateNestedManyWithoutCompanyInput
@@ -172659,6 +173149,10 @@ export namespace Prisma {
     procurementThresholdSupt?: number
     procurementThresholdTechManager?: number
     documentExpiryWarningMonths?: number
+    incidentOverdueDays?: number
+    sireDueSoonDays?: number
+    internalAuditDueSoonDays?: number
+    defaultSireVersion?: string | null
     users?: UserUncheckedCreateNestedManyWithoutCompanyInput
     roles?: RoleUncheckedCreateNestedManyWithoutCompanyInput
     vessels?: VesselUncheckedCreateNestedManyWithoutCompanyInput
@@ -172718,7 +173212,7 @@ export namespace Prisma {
     callSign?: string | null
     mmsi?: string | null
     flag?: string | null
-    type?: string
+    type: string
     classificationSociety?: string | null
     yearBuilt?: number | null
     grossTonnage?: number | null
@@ -172806,7 +173300,7 @@ export namespace Prisma {
     callSign?: string | null
     mmsi?: string | null
     flag?: string | null
-    type?: string
+    type: string
     classificationSociety?: string | null
     yearBuilt?: number | null
     grossTonnage?: number | null
@@ -172944,6 +173438,10 @@ export namespace Prisma {
     procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
     procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
     documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    incidentOverdueDays?: IntFieldUpdateOperationsInput | number
+    sireDueSoonDays?: IntFieldUpdateOperationsInput | number
+    internalAuditDueSoonDays?: IntFieldUpdateOperationsInput | number
+    defaultSireVersion?: NullableStringFieldUpdateOperationsInput | string | null
     users?: UserUpdateManyWithoutCompanyNestedInput
     roles?: RoleUpdateManyWithoutCompanyNestedInput
     vessels?: VesselUpdateManyWithoutCompanyNestedInput
@@ -173002,6 +173500,10 @@ export namespace Prisma {
     procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
     procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
     documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    incidentOverdueDays?: IntFieldUpdateOperationsInput | number
+    sireDueSoonDays?: IntFieldUpdateOperationsInput | number
+    internalAuditDueSoonDays?: IntFieldUpdateOperationsInput | number
+    defaultSireVersion?: NullableStringFieldUpdateOperationsInput | string | null
     users?: UserUncheckedUpdateManyWithoutCompanyNestedInput
     roles?: RoleUncheckedUpdateManyWithoutCompanyNestedInput
     vessels?: VesselUncheckedUpdateManyWithoutCompanyNestedInput
@@ -173261,6 +173763,10 @@ export namespace Prisma {
     procurementThresholdSupt?: number
     procurementThresholdTechManager?: number
     documentExpiryWarningMonths?: number
+    incidentOverdueDays?: number
+    sireDueSoonDays?: number
+    internalAuditDueSoonDays?: number
+    defaultSireVersion?: string | null
     users?: UserCreateNestedManyWithoutCompanyInput
     roles?: RoleCreateNestedManyWithoutCompanyInput
     vessels?: VesselCreateNestedManyWithoutCompanyInput
@@ -173319,6 +173825,10 @@ export namespace Prisma {
     procurementThresholdSupt?: number
     procurementThresholdTechManager?: number
     documentExpiryWarningMonths?: number
+    incidentOverdueDays?: number
+    sireDueSoonDays?: number
+    internalAuditDueSoonDays?: number
+    defaultSireVersion?: string | null
     users?: UserUncheckedCreateNestedManyWithoutCompanyInput
     roles?: RoleUncheckedCreateNestedManyWithoutCompanyInput
     vessels?: VesselUncheckedCreateNestedManyWithoutCompanyInput
@@ -173463,6 +173973,10 @@ export namespace Prisma {
     procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
     procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
     documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    incidentOverdueDays?: IntFieldUpdateOperationsInput | number
+    sireDueSoonDays?: IntFieldUpdateOperationsInput | number
+    internalAuditDueSoonDays?: IntFieldUpdateOperationsInput | number
+    defaultSireVersion?: NullableStringFieldUpdateOperationsInput | string | null
     users?: UserUpdateManyWithoutCompanyNestedInput
     roles?: RoleUpdateManyWithoutCompanyNestedInput
     vessels?: VesselUpdateManyWithoutCompanyNestedInput
@@ -173521,6 +174035,10 @@ export namespace Prisma {
     procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
     procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
     documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    incidentOverdueDays?: IntFieldUpdateOperationsInput | number
+    sireDueSoonDays?: IntFieldUpdateOperationsInput | number
+    internalAuditDueSoonDays?: IntFieldUpdateOperationsInput | number
+    defaultSireVersion?: NullableStringFieldUpdateOperationsInput | string | null
     users?: UserUncheckedUpdateManyWithoutCompanyNestedInput
     roles?: RoleUncheckedUpdateManyWithoutCompanyNestedInput
     vessels?: VesselUncheckedUpdateManyWithoutCompanyNestedInput
@@ -173661,6 +174179,10 @@ export namespace Prisma {
     procurementThresholdSupt?: number
     procurementThresholdTechManager?: number
     documentExpiryWarningMonths?: number
+    incidentOverdueDays?: number
+    sireDueSoonDays?: number
+    internalAuditDueSoonDays?: number
+    defaultSireVersion?: string | null
     users?: UserCreateNestedManyWithoutCompanyInput
     roles?: RoleCreateNestedManyWithoutCompanyInput
     vessels?: VesselCreateNestedManyWithoutCompanyInput
@@ -173719,6 +174241,10 @@ export namespace Prisma {
     procurementThresholdSupt?: number
     procurementThresholdTechManager?: number
     documentExpiryWarningMonths?: number
+    incidentOverdueDays?: number
+    sireDueSoonDays?: number
+    internalAuditDueSoonDays?: number
+    defaultSireVersion?: string | null
     users?: UserUncheckedCreateNestedManyWithoutCompanyInput
     roles?: RoleUncheckedCreateNestedManyWithoutCompanyInput
     vessels?: VesselUncheckedCreateNestedManyWithoutCompanyInput
@@ -173778,7 +174304,7 @@ export namespace Prisma {
     callSign?: string | null
     mmsi?: string | null
     flag?: string | null
-    type?: string
+    type: string
     classificationSociety?: string | null
     yearBuilt?: number | null
     grossTonnage?: number | null
@@ -173866,7 +174392,7 @@ export namespace Prisma {
     callSign?: string | null
     mmsi?: string | null
     flag?: string | null
-    type?: string
+    type: string
     classificationSociety?: string | null
     yearBuilt?: number | null
     grossTonnage?: number | null
@@ -173972,6 +174498,10 @@ export namespace Prisma {
     procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
     procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
     documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    incidentOverdueDays?: IntFieldUpdateOperationsInput | number
+    sireDueSoonDays?: IntFieldUpdateOperationsInput | number
+    internalAuditDueSoonDays?: IntFieldUpdateOperationsInput | number
+    defaultSireVersion?: NullableStringFieldUpdateOperationsInput | string | null
     users?: UserUpdateManyWithoutCompanyNestedInput
     roles?: RoleUpdateManyWithoutCompanyNestedInput
     vessels?: VesselUpdateManyWithoutCompanyNestedInput
@@ -174030,6 +174560,10 @@ export namespace Prisma {
     procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
     procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
     documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    incidentOverdueDays?: IntFieldUpdateOperationsInput | number
+    sireDueSoonDays?: IntFieldUpdateOperationsInput | number
+    internalAuditDueSoonDays?: IntFieldUpdateOperationsInput | number
+    defaultSireVersion?: NullableStringFieldUpdateOperationsInput | string | null
     users?: UserUncheckedUpdateManyWithoutCompanyNestedInput
     roles?: RoleUncheckedUpdateManyWithoutCompanyNestedInput
     vessels?: VesselUncheckedUpdateManyWithoutCompanyNestedInput
@@ -174273,6 +174807,10 @@ export namespace Prisma {
     procurementThresholdSupt?: number
     procurementThresholdTechManager?: number
     documentExpiryWarningMonths?: number
+    incidentOverdueDays?: number
+    sireDueSoonDays?: number
+    internalAuditDueSoonDays?: number
+    defaultSireVersion?: string | null
     users?: UserCreateNestedManyWithoutCompanyInput
     roles?: RoleCreateNestedManyWithoutCompanyInput
     vessels?: VesselCreateNestedManyWithoutCompanyInput
@@ -174331,6 +174869,10 @@ export namespace Prisma {
     procurementThresholdSupt?: number
     procurementThresholdTechManager?: number
     documentExpiryWarningMonths?: number
+    incidentOverdueDays?: number
+    sireDueSoonDays?: number
+    internalAuditDueSoonDays?: number
+    defaultSireVersion?: string | null
     users?: UserUncheckedCreateNestedManyWithoutCompanyInput
     roles?: RoleUncheckedCreateNestedManyWithoutCompanyInput
     vessels?: VesselUncheckedCreateNestedManyWithoutCompanyInput
@@ -174390,7 +174932,7 @@ export namespace Prisma {
     callSign?: string | null
     mmsi?: string | null
     flag?: string | null
-    type?: string
+    type: string
     classificationSociety?: string | null
     yearBuilt?: number | null
     grossTonnage?: number | null
@@ -174478,7 +175020,7 @@ export namespace Prisma {
     callSign?: string | null
     mmsi?: string | null
     flag?: string | null
-    type?: string
+    type: string
     classificationSociety?: string | null
     yearBuilt?: number | null
     grossTonnage?: number | null
@@ -174584,6 +175126,10 @@ export namespace Prisma {
     procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
     procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
     documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    incidentOverdueDays?: IntFieldUpdateOperationsInput | number
+    sireDueSoonDays?: IntFieldUpdateOperationsInput | number
+    internalAuditDueSoonDays?: IntFieldUpdateOperationsInput | number
+    defaultSireVersion?: NullableStringFieldUpdateOperationsInput | string | null
     users?: UserUpdateManyWithoutCompanyNestedInput
     roles?: RoleUpdateManyWithoutCompanyNestedInput
     vessels?: VesselUpdateManyWithoutCompanyNestedInput
@@ -174642,6 +175188,10 @@ export namespace Prisma {
     procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
     procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
     documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    incidentOverdueDays?: IntFieldUpdateOperationsInput | number
+    sireDueSoonDays?: IntFieldUpdateOperationsInput | number
+    internalAuditDueSoonDays?: IntFieldUpdateOperationsInput | number
+    defaultSireVersion?: NullableStringFieldUpdateOperationsInput | string | null
     users?: UserUncheckedUpdateManyWithoutCompanyNestedInput
     roles?: RoleUncheckedUpdateManyWithoutCompanyNestedInput
     vessels?: VesselUncheckedUpdateManyWithoutCompanyNestedInput
@@ -174885,6 +175435,10 @@ export namespace Prisma {
     procurementThresholdSupt?: number
     procurementThresholdTechManager?: number
     documentExpiryWarningMonths?: number
+    incidentOverdueDays?: number
+    sireDueSoonDays?: number
+    internalAuditDueSoonDays?: number
+    defaultSireVersion?: string | null
     users?: UserCreateNestedManyWithoutCompanyInput
     roles?: RoleCreateNestedManyWithoutCompanyInput
     vessels?: VesselCreateNestedManyWithoutCompanyInput
@@ -174943,6 +175497,10 @@ export namespace Prisma {
     procurementThresholdSupt?: number
     procurementThresholdTechManager?: number
     documentExpiryWarningMonths?: number
+    incidentOverdueDays?: number
+    sireDueSoonDays?: number
+    internalAuditDueSoonDays?: number
+    defaultSireVersion?: string | null
     users?: UserUncheckedCreateNestedManyWithoutCompanyInput
     roles?: RoleUncheckedCreateNestedManyWithoutCompanyInput
     vessels?: VesselUncheckedCreateNestedManyWithoutCompanyInput
@@ -175002,7 +175560,7 @@ export namespace Prisma {
     callSign?: string | null
     mmsi?: string | null
     flag?: string | null
-    type?: string
+    type: string
     classificationSociety?: string | null
     yearBuilt?: number | null
     grossTonnage?: number | null
@@ -175090,7 +175648,7 @@ export namespace Prisma {
     callSign?: string | null
     mmsi?: string | null
     flag?: string | null
-    type?: string
+    type: string
     classificationSociety?: string | null
     yearBuilt?: number | null
     grossTonnage?: number | null
@@ -175230,6 +175788,10 @@ export namespace Prisma {
     procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
     procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
     documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    incidentOverdueDays?: IntFieldUpdateOperationsInput | number
+    sireDueSoonDays?: IntFieldUpdateOperationsInput | number
+    internalAuditDueSoonDays?: IntFieldUpdateOperationsInput | number
+    defaultSireVersion?: NullableStringFieldUpdateOperationsInput | string | null
     users?: UserUpdateManyWithoutCompanyNestedInput
     roles?: RoleUpdateManyWithoutCompanyNestedInput
     vessels?: VesselUpdateManyWithoutCompanyNestedInput
@@ -175288,6 +175850,10 @@ export namespace Prisma {
     procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
     procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
     documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    incidentOverdueDays?: IntFieldUpdateOperationsInput | number
+    sireDueSoonDays?: IntFieldUpdateOperationsInput | number
+    internalAuditDueSoonDays?: IntFieldUpdateOperationsInput | number
+    defaultSireVersion?: NullableStringFieldUpdateOperationsInput | string | null
     users?: UserUncheckedUpdateManyWithoutCompanyNestedInput
     roles?: RoleUncheckedUpdateManyWithoutCompanyNestedInput
     vessels?: VesselUncheckedUpdateManyWithoutCompanyNestedInput
@@ -175659,6 +176225,10 @@ export namespace Prisma {
     procurementThresholdSupt?: number
     procurementThresholdTechManager?: number
     documentExpiryWarningMonths?: number
+    incidentOverdueDays?: number
+    sireDueSoonDays?: number
+    internalAuditDueSoonDays?: number
+    defaultSireVersion?: string | null
     users?: UserCreateNestedManyWithoutCompanyInput
     roles?: RoleCreateNestedManyWithoutCompanyInput
     vessels?: VesselCreateNestedManyWithoutCompanyInput
@@ -175717,6 +176287,10 @@ export namespace Prisma {
     procurementThresholdSupt?: number
     procurementThresholdTechManager?: number
     documentExpiryWarningMonths?: number
+    incidentOverdueDays?: number
+    sireDueSoonDays?: number
+    internalAuditDueSoonDays?: number
+    defaultSireVersion?: string | null
     users?: UserUncheckedCreateNestedManyWithoutCompanyInput
     roles?: RoleUncheckedCreateNestedManyWithoutCompanyInput
     vessels?: VesselUncheckedCreateNestedManyWithoutCompanyInput
@@ -175776,7 +176350,7 @@ export namespace Prisma {
     callSign?: string | null
     mmsi?: string | null
     flag?: string | null
-    type?: string
+    type: string
     classificationSociety?: string | null
     yearBuilt?: number | null
     grossTonnage?: number | null
@@ -175864,7 +176438,7 @@ export namespace Prisma {
     callSign?: string | null
     mmsi?: string | null
     flag?: string | null
-    type?: string
+    type: string
     classificationSociety?: string | null
     yearBuilt?: number | null
     grossTonnage?: number | null
@@ -176153,6 +176727,10 @@ export namespace Prisma {
     procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
     procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
     documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    incidentOverdueDays?: IntFieldUpdateOperationsInput | number
+    sireDueSoonDays?: IntFieldUpdateOperationsInput | number
+    internalAuditDueSoonDays?: IntFieldUpdateOperationsInput | number
+    defaultSireVersion?: NullableStringFieldUpdateOperationsInput | string | null
     users?: UserUpdateManyWithoutCompanyNestedInput
     roles?: RoleUpdateManyWithoutCompanyNestedInput
     vessels?: VesselUpdateManyWithoutCompanyNestedInput
@@ -176211,6 +176789,10 @@ export namespace Prisma {
     procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
     procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
     documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    incidentOverdueDays?: IntFieldUpdateOperationsInput | number
+    sireDueSoonDays?: IntFieldUpdateOperationsInput | number
+    internalAuditDueSoonDays?: IntFieldUpdateOperationsInput | number
+    defaultSireVersion?: NullableStringFieldUpdateOperationsInput | string | null
     users?: UserUncheckedUpdateManyWithoutCompanyNestedInput
     roles?: RoleUncheckedUpdateManyWithoutCompanyNestedInput
     vessels?: VesselUncheckedUpdateManyWithoutCompanyNestedInput
@@ -176988,7 +177570,7 @@ export namespace Prisma {
     callSign?: string | null
     mmsi?: string | null
     flag?: string | null
-    type?: string
+    type: string
     classificationSociety?: string | null
     yearBuilt?: number | null
     grossTonnage?: number | null
@@ -177076,7 +177658,7 @@ export namespace Prisma {
     callSign?: string | null
     mmsi?: string | null
     flag?: string | null
-    type?: string
+    type: string
     classificationSociety?: string | null
     yearBuilt?: number | null
     grossTonnage?: number | null
@@ -177509,7 +178091,7 @@ export namespace Prisma {
     callSign?: string | null
     mmsi?: string | null
     flag?: string | null
-    type?: string
+    type: string
     classificationSociety?: string | null
     yearBuilt?: number | null
     grossTonnage?: number | null
@@ -177597,7 +178179,7 @@ export namespace Prisma {
     callSign?: string | null
     mmsi?: string | null
     flag?: string | null
-    type?: string
+    type: string
     classificationSociety?: string | null
     yearBuilt?: number | null
     grossTonnage?: number | null
@@ -178046,7 +178628,7 @@ export namespace Prisma {
     callSign?: string | null
     mmsi?: string | null
     flag?: string | null
-    type?: string
+    type: string
     classificationSociety?: string | null
     yearBuilt?: number | null
     grossTonnage?: number | null
@@ -178134,7 +178716,7 @@ export namespace Prisma {
     callSign?: string | null
     mmsi?: string | null
     flag?: string | null
-    type?: string
+    type: string
     classificationSociety?: string | null
     yearBuilt?: number | null
     grossTonnage?: number | null
@@ -178477,6 +179059,10 @@ export namespace Prisma {
     procurementThresholdSupt?: number
     procurementThresholdTechManager?: number
     documentExpiryWarningMonths?: number
+    incidentOverdueDays?: number
+    sireDueSoonDays?: number
+    internalAuditDueSoonDays?: number
+    defaultSireVersion?: string | null
     users?: UserCreateNestedManyWithoutCompanyInput
     roles?: RoleCreateNestedManyWithoutCompanyInput
     vessels?: VesselCreateNestedManyWithoutCompanyInput
@@ -178535,6 +179121,10 @@ export namespace Prisma {
     procurementThresholdSupt?: number
     procurementThresholdTechManager?: number
     documentExpiryWarningMonths?: number
+    incidentOverdueDays?: number
+    sireDueSoonDays?: number
+    internalAuditDueSoonDays?: number
+    defaultSireVersion?: string | null
     users?: UserUncheckedCreateNestedManyWithoutCompanyInput
     roles?: RoleUncheckedCreateNestedManyWithoutCompanyInput
     vessels?: VesselUncheckedCreateNestedManyWithoutCompanyInput
@@ -178594,7 +179184,7 @@ export namespace Prisma {
     callSign?: string | null
     mmsi?: string | null
     flag?: string | null
-    type?: string
+    type: string
     classificationSociety?: string | null
     yearBuilt?: number | null
     grossTonnage?: number | null
@@ -178682,7 +179272,7 @@ export namespace Prisma {
     callSign?: string | null
     mmsi?: string | null
     flag?: string | null
-    type?: string
+    type: string
     classificationSociety?: string | null
     yearBuilt?: number | null
     grossTonnage?: number | null
@@ -178788,6 +179378,10 @@ export namespace Prisma {
     procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
     procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
     documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    incidentOverdueDays?: IntFieldUpdateOperationsInput | number
+    sireDueSoonDays?: IntFieldUpdateOperationsInput | number
+    internalAuditDueSoonDays?: IntFieldUpdateOperationsInput | number
+    defaultSireVersion?: NullableStringFieldUpdateOperationsInput | string | null
     users?: UserUpdateManyWithoutCompanyNestedInput
     roles?: RoleUpdateManyWithoutCompanyNestedInput
     vessels?: VesselUpdateManyWithoutCompanyNestedInput
@@ -178846,6 +179440,10 @@ export namespace Prisma {
     procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
     procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
     documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    incidentOverdueDays?: IntFieldUpdateOperationsInput | number
+    sireDueSoonDays?: IntFieldUpdateOperationsInput | number
+    internalAuditDueSoonDays?: IntFieldUpdateOperationsInput | number
+    defaultSireVersion?: NullableStringFieldUpdateOperationsInput | string | null
     users?: UserUncheckedUpdateManyWithoutCompanyNestedInput
     roles?: RoleUncheckedUpdateManyWithoutCompanyNestedInput
     vessels?: VesselUncheckedUpdateManyWithoutCompanyNestedInput
@@ -179089,6 +179687,10 @@ export namespace Prisma {
     procurementThresholdSupt?: number
     procurementThresholdTechManager?: number
     documentExpiryWarningMonths?: number
+    incidentOverdueDays?: number
+    sireDueSoonDays?: number
+    internalAuditDueSoonDays?: number
+    defaultSireVersion?: string | null
     users?: UserCreateNestedManyWithoutCompanyInput
     roles?: RoleCreateNestedManyWithoutCompanyInput
     vessels?: VesselCreateNestedManyWithoutCompanyInput
@@ -179147,6 +179749,10 @@ export namespace Prisma {
     procurementThresholdSupt?: number
     procurementThresholdTechManager?: number
     documentExpiryWarningMonths?: number
+    incidentOverdueDays?: number
+    sireDueSoonDays?: number
+    internalAuditDueSoonDays?: number
+    defaultSireVersion?: string | null
     users?: UserUncheckedCreateNestedManyWithoutCompanyInput
     roles?: RoleUncheckedCreateNestedManyWithoutCompanyInput
     vessels?: VesselUncheckedCreateNestedManyWithoutCompanyInput
@@ -179206,7 +179812,7 @@ export namespace Prisma {
     callSign?: string | null
     mmsi?: string | null
     flag?: string | null
-    type?: string
+    type: string
     classificationSociety?: string | null
     yearBuilt?: number | null
     grossTonnage?: number | null
@@ -179294,7 +179900,7 @@ export namespace Prisma {
     callSign?: string | null
     mmsi?: string | null
     flag?: string | null
-    type?: string
+    type: string
     classificationSociety?: string | null
     yearBuilt?: number | null
     grossTonnage?: number | null
@@ -179430,6 +180036,10 @@ export namespace Prisma {
     procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
     procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
     documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    incidentOverdueDays?: IntFieldUpdateOperationsInput | number
+    sireDueSoonDays?: IntFieldUpdateOperationsInput | number
+    internalAuditDueSoonDays?: IntFieldUpdateOperationsInput | number
+    defaultSireVersion?: NullableStringFieldUpdateOperationsInput | string | null
     users?: UserUpdateManyWithoutCompanyNestedInput
     roles?: RoleUpdateManyWithoutCompanyNestedInput
     vessels?: VesselUpdateManyWithoutCompanyNestedInput
@@ -179488,6 +180098,10 @@ export namespace Prisma {
     procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
     procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
     documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    incidentOverdueDays?: IntFieldUpdateOperationsInput | number
+    sireDueSoonDays?: IntFieldUpdateOperationsInput | number
+    internalAuditDueSoonDays?: IntFieldUpdateOperationsInput | number
+    defaultSireVersion?: NullableStringFieldUpdateOperationsInput | string | null
     users?: UserUncheckedUpdateManyWithoutCompanyNestedInput
     roles?: RoleUncheckedUpdateManyWithoutCompanyNestedInput
     vessels?: VesselUncheckedUpdateManyWithoutCompanyNestedInput
@@ -180049,6 +180663,10 @@ export namespace Prisma {
     procurementThresholdSupt?: number
     procurementThresholdTechManager?: number
     documentExpiryWarningMonths?: number
+    incidentOverdueDays?: number
+    sireDueSoonDays?: number
+    internalAuditDueSoonDays?: number
+    defaultSireVersion?: string | null
     users?: UserCreateNestedManyWithoutCompanyInput
     roles?: RoleCreateNestedManyWithoutCompanyInput
     vessels?: VesselCreateNestedManyWithoutCompanyInput
@@ -180107,6 +180725,10 @@ export namespace Prisma {
     procurementThresholdSupt?: number
     procurementThresholdTechManager?: number
     documentExpiryWarningMonths?: number
+    incidentOverdueDays?: number
+    sireDueSoonDays?: number
+    internalAuditDueSoonDays?: number
+    defaultSireVersion?: string | null
     users?: UserUncheckedCreateNestedManyWithoutCompanyInput
     roles?: RoleUncheckedCreateNestedManyWithoutCompanyInput
     vessels?: VesselUncheckedCreateNestedManyWithoutCompanyInput
@@ -180181,6 +180803,10 @@ export namespace Prisma {
     procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
     procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
     documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    incidentOverdueDays?: IntFieldUpdateOperationsInput | number
+    sireDueSoonDays?: IntFieldUpdateOperationsInput | number
+    internalAuditDueSoonDays?: IntFieldUpdateOperationsInput | number
+    defaultSireVersion?: NullableStringFieldUpdateOperationsInput | string | null
     users?: UserUpdateManyWithoutCompanyNestedInput
     roles?: RoleUpdateManyWithoutCompanyNestedInput
     vessels?: VesselUpdateManyWithoutCompanyNestedInput
@@ -180239,6 +180865,10 @@ export namespace Prisma {
     procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
     procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
     documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    incidentOverdueDays?: IntFieldUpdateOperationsInput | number
+    sireDueSoonDays?: IntFieldUpdateOperationsInput | number
+    internalAuditDueSoonDays?: IntFieldUpdateOperationsInput | number
+    defaultSireVersion?: NullableStringFieldUpdateOperationsInput | string | null
     users?: UserUncheckedUpdateManyWithoutCompanyNestedInput
     roles?: RoleUncheckedUpdateManyWithoutCompanyNestedInput
     vessels?: VesselUncheckedUpdateManyWithoutCompanyNestedInput
@@ -180297,6 +180927,10 @@ export namespace Prisma {
     procurementThresholdSupt?: number
     procurementThresholdTechManager?: number
     documentExpiryWarningMonths?: number
+    incidentOverdueDays?: number
+    sireDueSoonDays?: number
+    internalAuditDueSoonDays?: number
+    defaultSireVersion?: string | null
     users?: UserCreateNestedManyWithoutCompanyInput
     roles?: RoleCreateNestedManyWithoutCompanyInput
     vessels?: VesselCreateNestedManyWithoutCompanyInput
@@ -180355,6 +180989,10 @@ export namespace Prisma {
     procurementThresholdSupt?: number
     procurementThresholdTechManager?: number
     documentExpiryWarningMonths?: number
+    incidentOverdueDays?: number
+    sireDueSoonDays?: number
+    internalAuditDueSoonDays?: number
+    defaultSireVersion?: string | null
     users?: UserUncheckedCreateNestedManyWithoutCompanyInput
     roles?: RoleUncheckedCreateNestedManyWithoutCompanyInput
     vessels?: VesselUncheckedCreateNestedManyWithoutCompanyInput
@@ -180429,6 +181067,10 @@ export namespace Prisma {
     procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
     procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
     documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    incidentOverdueDays?: IntFieldUpdateOperationsInput | number
+    sireDueSoonDays?: IntFieldUpdateOperationsInput | number
+    internalAuditDueSoonDays?: IntFieldUpdateOperationsInput | number
+    defaultSireVersion?: NullableStringFieldUpdateOperationsInput | string | null
     users?: UserUpdateManyWithoutCompanyNestedInput
     roles?: RoleUpdateManyWithoutCompanyNestedInput
     vessels?: VesselUpdateManyWithoutCompanyNestedInput
@@ -180487,6 +181129,10 @@ export namespace Prisma {
     procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
     procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
     documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    incidentOverdueDays?: IntFieldUpdateOperationsInput | number
+    sireDueSoonDays?: IntFieldUpdateOperationsInput | number
+    internalAuditDueSoonDays?: IntFieldUpdateOperationsInput | number
+    defaultSireVersion?: NullableStringFieldUpdateOperationsInput | string | null
     users?: UserUncheckedUpdateManyWithoutCompanyNestedInput
     roles?: RoleUncheckedUpdateManyWithoutCompanyNestedInput
     vessels?: VesselUncheckedUpdateManyWithoutCompanyNestedInput
@@ -180545,6 +181191,10 @@ export namespace Prisma {
     procurementThresholdSupt?: number
     procurementThresholdTechManager?: number
     documentExpiryWarningMonths?: number
+    incidentOverdueDays?: number
+    sireDueSoonDays?: number
+    internalAuditDueSoonDays?: number
+    defaultSireVersion?: string | null
     users?: UserCreateNestedManyWithoutCompanyInput
     roles?: RoleCreateNestedManyWithoutCompanyInput
     vessels?: VesselCreateNestedManyWithoutCompanyInput
@@ -180603,6 +181253,10 @@ export namespace Prisma {
     procurementThresholdSupt?: number
     procurementThresholdTechManager?: number
     documentExpiryWarningMonths?: number
+    incidentOverdueDays?: number
+    sireDueSoonDays?: number
+    internalAuditDueSoonDays?: number
+    defaultSireVersion?: string | null
     users?: UserUncheckedCreateNestedManyWithoutCompanyInput
     roles?: RoleUncheckedCreateNestedManyWithoutCompanyInput
     vessels?: VesselUncheckedCreateNestedManyWithoutCompanyInput
@@ -180662,7 +181316,7 @@ export namespace Prisma {
     callSign?: string | null
     mmsi?: string | null
     flag?: string | null
-    type?: string
+    type: string
     classificationSociety?: string | null
     yearBuilt?: number | null
     grossTonnage?: number | null
@@ -180750,7 +181404,7 @@ export namespace Prisma {
     callSign?: string | null
     mmsi?: string | null
     flag?: string | null
-    type?: string
+    type: string
     classificationSociety?: string | null
     yearBuilt?: number | null
     grossTonnage?: number | null
@@ -180884,6 +181538,10 @@ export namespace Prisma {
     procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
     procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
     documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    incidentOverdueDays?: IntFieldUpdateOperationsInput | number
+    sireDueSoonDays?: IntFieldUpdateOperationsInput | number
+    internalAuditDueSoonDays?: IntFieldUpdateOperationsInput | number
+    defaultSireVersion?: NullableStringFieldUpdateOperationsInput | string | null
     users?: UserUpdateManyWithoutCompanyNestedInput
     roles?: RoleUpdateManyWithoutCompanyNestedInput
     vessels?: VesselUpdateManyWithoutCompanyNestedInput
@@ -180942,6 +181600,10 @@ export namespace Prisma {
     procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
     procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
     documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    incidentOverdueDays?: IntFieldUpdateOperationsInput | number
+    sireDueSoonDays?: IntFieldUpdateOperationsInput | number
+    internalAuditDueSoonDays?: IntFieldUpdateOperationsInput | number
+    defaultSireVersion?: NullableStringFieldUpdateOperationsInput | string | null
     users?: UserUncheckedUpdateManyWithoutCompanyNestedInput
     roles?: RoleUncheckedUpdateManyWithoutCompanyNestedInput
     vessels?: VesselUncheckedUpdateManyWithoutCompanyNestedInput
@@ -181478,6 +182140,10 @@ export namespace Prisma {
     procurementThresholdSupt?: number
     procurementThresholdTechManager?: number
     documentExpiryWarningMonths?: number
+    incidentOverdueDays?: number
+    sireDueSoonDays?: number
+    internalAuditDueSoonDays?: number
+    defaultSireVersion?: string | null
     users?: UserCreateNestedManyWithoutCompanyInput
     roles?: RoleCreateNestedManyWithoutCompanyInput
     vessels?: VesselCreateNestedManyWithoutCompanyInput
@@ -181536,6 +182202,10 @@ export namespace Prisma {
     procurementThresholdSupt?: number
     procurementThresholdTechManager?: number
     documentExpiryWarningMonths?: number
+    incidentOverdueDays?: number
+    sireDueSoonDays?: number
+    internalAuditDueSoonDays?: number
+    defaultSireVersion?: string | null
     users?: UserUncheckedCreateNestedManyWithoutCompanyInput
     roles?: RoleUncheckedCreateNestedManyWithoutCompanyInput
     vessels?: VesselUncheckedCreateNestedManyWithoutCompanyInput
@@ -181610,6 +182280,10 @@ export namespace Prisma {
     procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
     procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
     documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    incidentOverdueDays?: IntFieldUpdateOperationsInput | number
+    sireDueSoonDays?: IntFieldUpdateOperationsInput | number
+    internalAuditDueSoonDays?: IntFieldUpdateOperationsInput | number
+    defaultSireVersion?: NullableStringFieldUpdateOperationsInput | string | null
     users?: UserUpdateManyWithoutCompanyNestedInput
     roles?: RoleUpdateManyWithoutCompanyNestedInput
     vessels?: VesselUpdateManyWithoutCompanyNestedInput
@@ -181668,6 +182342,10 @@ export namespace Prisma {
     procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
     procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
     documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    incidentOverdueDays?: IntFieldUpdateOperationsInput | number
+    sireDueSoonDays?: IntFieldUpdateOperationsInput | number
+    internalAuditDueSoonDays?: IntFieldUpdateOperationsInput | number
+    defaultSireVersion?: NullableStringFieldUpdateOperationsInput | string | null
     users?: UserUncheckedUpdateManyWithoutCompanyNestedInput
     roles?: RoleUncheckedUpdateManyWithoutCompanyNestedInput
     vessels?: VesselUncheckedUpdateManyWithoutCompanyNestedInput
@@ -181726,6 +182404,10 @@ export namespace Prisma {
     procurementThresholdSupt?: number
     procurementThresholdTechManager?: number
     documentExpiryWarningMonths?: number
+    incidentOverdueDays?: number
+    sireDueSoonDays?: number
+    internalAuditDueSoonDays?: number
+    defaultSireVersion?: string | null
     users?: UserCreateNestedManyWithoutCompanyInput
     roles?: RoleCreateNestedManyWithoutCompanyInput
     vessels?: VesselCreateNestedManyWithoutCompanyInput
@@ -181784,6 +182466,10 @@ export namespace Prisma {
     procurementThresholdSupt?: number
     procurementThresholdTechManager?: number
     documentExpiryWarningMonths?: number
+    incidentOverdueDays?: number
+    sireDueSoonDays?: number
+    internalAuditDueSoonDays?: number
+    defaultSireVersion?: string | null
     users?: UserUncheckedCreateNestedManyWithoutCompanyInput
     roles?: RoleUncheckedCreateNestedManyWithoutCompanyInput
     vessels?: VesselUncheckedCreateNestedManyWithoutCompanyInput
@@ -181858,6 +182544,10 @@ export namespace Prisma {
     procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
     procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
     documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    incidentOverdueDays?: IntFieldUpdateOperationsInput | number
+    sireDueSoonDays?: IntFieldUpdateOperationsInput | number
+    internalAuditDueSoonDays?: IntFieldUpdateOperationsInput | number
+    defaultSireVersion?: NullableStringFieldUpdateOperationsInput | string | null
     users?: UserUpdateManyWithoutCompanyNestedInput
     roles?: RoleUpdateManyWithoutCompanyNestedInput
     vessels?: VesselUpdateManyWithoutCompanyNestedInput
@@ -181916,6 +182606,10 @@ export namespace Prisma {
     procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
     procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
     documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    incidentOverdueDays?: IntFieldUpdateOperationsInput | number
+    sireDueSoonDays?: IntFieldUpdateOperationsInput | number
+    internalAuditDueSoonDays?: IntFieldUpdateOperationsInput | number
+    defaultSireVersion?: NullableStringFieldUpdateOperationsInput | string | null
     users?: UserUncheckedUpdateManyWithoutCompanyNestedInput
     roles?: RoleUncheckedUpdateManyWithoutCompanyNestedInput
     vessels?: VesselUncheckedUpdateManyWithoutCompanyNestedInput
@@ -181974,6 +182668,10 @@ export namespace Prisma {
     procurementThresholdSupt?: number
     procurementThresholdTechManager?: number
     documentExpiryWarningMonths?: number
+    incidentOverdueDays?: number
+    sireDueSoonDays?: number
+    internalAuditDueSoonDays?: number
+    defaultSireVersion?: string | null
     users?: UserCreateNestedManyWithoutCompanyInput
     roles?: RoleCreateNestedManyWithoutCompanyInput
     vessels?: VesselCreateNestedManyWithoutCompanyInput
@@ -182032,6 +182730,10 @@ export namespace Prisma {
     procurementThresholdSupt?: number
     procurementThresholdTechManager?: number
     documentExpiryWarningMonths?: number
+    incidentOverdueDays?: number
+    sireDueSoonDays?: number
+    internalAuditDueSoonDays?: number
+    defaultSireVersion?: string | null
     users?: UserUncheckedCreateNestedManyWithoutCompanyInput
     roles?: RoleUncheckedCreateNestedManyWithoutCompanyInput
     vessels?: VesselUncheckedCreateNestedManyWithoutCompanyInput
@@ -182106,6 +182808,10 @@ export namespace Prisma {
     procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
     procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
     documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    incidentOverdueDays?: IntFieldUpdateOperationsInput | number
+    sireDueSoonDays?: IntFieldUpdateOperationsInput | number
+    internalAuditDueSoonDays?: IntFieldUpdateOperationsInput | number
+    defaultSireVersion?: NullableStringFieldUpdateOperationsInput | string | null
     users?: UserUpdateManyWithoutCompanyNestedInput
     roles?: RoleUpdateManyWithoutCompanyNestedInput
     vessels?: VesselUpdateManyWithoutCompanyNestedInput
@@ -182164,6 +182870,10 @@ export namespace Prisma {
     procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
     procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
     documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    incidentOverdueDays?: IntFieldUpdateOperationsInput | number
+    sireDueSoonDays?: IntFieldUpdateOperationsInput | number
+    internalAuditDueSoonDays?: IntFieldUpdateOperationsInput | number
+    defaultSireVersion?: NullableStringFieldUpdateOperationsInput | string | null
     users?: UserUncheckedUpdateManyWithoutCompanyNestedInput
     roles?: RoleUncheckedUpdateManyWithoutCompanyNestedInput
     vessels?: VesselUncheckedUpdateManyWithoutCompanyNestedInput
@@ -182222,6 +182932,10 @@ export namespace Prisma {
     procurementThresholdSupt?: number
     procurementThresholdTechManager?: number
     documentExpiryWarningMonths?: number
+    incidentOverdueDays?: number
+    sireDueSoonDays?: number
+    internalAuditDueSoonDays?: number
+    defaultSireVersion?: string | null
     users?: UserCreateNestedManyWithoutCompanyInput
     roles?: RoleCreateNestedManyWithoutCompanyInput
     vessels?: VesselCreateNestedManyWithoutCompanyInput
@@ -182280,6 +182994,10 @@ export namespace Prisma {
     procurementThresholdSupt?: number
     procurementThresholdTechManager?: number
     documentExpiryWarningMonths?: number
+    incidentOverdueDays?: number
+    sireDueSoonDays?: number
+    internalAuditDueSoonDays?: number
+    defaultSireVersion?: string | null
     users?: UserUncheckedCreateNestedManyWithoutCompanyInput
     roles?: RoleUncheckedCreateNestedManyWithoutCompanyInput
     vessels?: VesselUncheckedCreateNestedManyWithoutCompanyInput
@@ -182354,6 +183072,10 @@ export namespace Prisma {
     procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
     procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
     documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    incidentOverdueDays?: IntFieldUpdateOperationsInput | number
+    sireDueSoonDays?: IntFieldUpdateOperationsInput | number
+    internalAuditDueSoonDays?: IntFieldUpdateOperationsInput | number
+    defaultSireVersion?: NullableStringFieldUpdateOperationsInput | string | null
     users?: UserUpdateManyWithoutCompanyNestedInput
     roles?: RoleUpdateManyWithoutCompanyNestedInput
     vessels?: VesselUpdateManyWithoutCompanyNestedInput
@@ -182412,6 +183134,10 @@ export namespace Prisma {
     procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
     procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
     documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    incidentOverdueDays?: IntFieldUpdateOperationsInput | number
+    sireDueSoonDays?: IntFieldUpdateOperationsInput | number
+    internalAuditDueSoonDays?: IntFieldUpdateOperationsInput | number
+    defaultSireVersion?: NullableStringFieldUpdateOperationsInput | string | null
     users?: UserUncheckedUpdateManyWithoutCompanyNestedInput
     roles?: RoleUncheckedUpdateManyWithoutCompanyNestedInput
     vessels?: VesselUncheckedUpdateManyWithoutCompanyNestedInput
@@ -182470,6 +183196,10 @@ export namespace Prisma {
     procurementThresholdSupt?: number
     procurementThresholdTechManager?: number
     documentExpiryWarningMonths?: number
+    incidentOverdueDays?: number
+    sireDueSoonDays?: number
+    internalAuditDueSoonDays?: number
+    defaultSireVersion?: string | null
     users?: UserCreateNestedManyWithoutCompanyInput
     roles?: RoleCreateNestedManyWithoutCompanyInput
     vessels?: VesselCreateNestedManyWithoutCompanyInput
@@ -182528,6 +183258,10 @@ export namespace Prisma {
     procurementThresholdSupt?: number
     procurementThresholdTechManager?: number
     documentExpiryWarningMonths?: number
+    incidentOverdueDays?: number
+    sireDueSoonDays?: number
+    internalAuditDueSoonDays?: number
+    defaultSireVersion?: string | null
     users?: UserUncheckedCreateNestedManyWithoutCompanyInput
     roles?: RoleUncheckedCreateNestedManyWithoutCompanyInput
     vessels?: VesselUncheckedCreateNestedManyWithoutCompanyInput
@@ -182587,7 +183321,7 @@ export namespace Prisma {
     callSign?: string | null
     mmsi?: string | null
     flag?: string | null
-    type?: string
+    type: string
     classificationSociety?: string | null
     yearBuilt?: number | null
     grossTonnage?: number | null
@@ -182675,7 +183409,7 @@ export namespace Prisma {
     callSign?: string | null
     mmsi?: string | null
     flag?: string | null
-    type?: string
+    type: string
     classificationSociety?: string | null
     yearBuilt?: number | null
     grossTonnage?: number | null
@@ -182781,6 +183515,10 @@ export namespace Prisma {
     procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
     procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
     documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    incidentOverdueDays?: IntFieldUpdateOperationsInput | number
+    sireDueSoonDays?: IntFieldUpdateOperationsInput | number
+    internalAuditDueSoonDays?: IntFieldUpdateOperationsInput | number
+    defaultSireVersion?: NullableStringFieldUpdateOperationsInput | string | null
     users?: UserUpdateManyWithoutCompanyNestedInput
     roles?: RoleUpdateManyWithoutCompanyNestedInput
     vessels?: VesselUpdateManyWithoutCompanyNestedInput
@@ -182839,6 +183577,10 @@ export namespace Prisma {
     procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
     procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
     documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    incidentOverdueDays?: IntFieldUpdateOperationsInput | number
+    sireDueSoonDays?: IntFieldUpdateOperationsInput | number
+    internalAuditDueSoonDays?: IntFieldUpdateOperationsInput | number
+    defaultSireVersion?: NullableStringFieldUpdateOperationsInput | string | null
     users?: UserUncheckedUpdateManyWithoutCompanyNestedInput
     roles?: RoleUncheckedUpdateManyWithoutCompanyNestedInput
     vessels?: VesselUncheckedUpdateManyWithoutCompanyNestedInput
@@ -183082,6 +183824,10 @@ export namespace Prisma {
     procurementThresholdSupt?: number
     procurementThresholdTechManager?: number
     documentExpiryWarningMonths?: number
+    incidentOverdueDays?: number
+    sireDueSoonDays?: number
+    internalAuditDueSoonDays?: number
+    defaultSireVersion?: string | null
     users?: UserCreateNestedManyWithoutCompanyInput
     roles?: RoleCreateNestedManyWithoutCompanyInput
     vessels?: VesselCreateNestedManyWithoutCompanyInput
@@ -183140,6 +183886,10 @@ export namespace Prisma {
     procurementThresholdSupt?: number
     procurementThresholdTechManager?: number
     documentExpiryWarningMonths?: number
+    incidentOverdueDays?: number
+    sireDueSoonDays?: number
+    internalAuditDueSoonDays?: number
+    defaultSireVersion?: string | null
     users?: UserUncheckedCreateNestedManyWithoutCompanyInput
     roles?: RoleUncheckedCreateNestedManyWithoutCompanyInput
     vessels?: VesselUncheckedCreateNestedManyWithoutCompanyInput
@@ -183199,7 +183949,7 @@ export namespace Prisma {
     callSign?: string | null
     mmsi?: string | null
     flag?: string | null
-    type?: string
+    type: string
     classificationSociety?: string | null
     yearBuilt?: number | null
     grossTonnage?: number | null
@@ -183287,7 +184037,7 @@ export namespace Prisma {
     callSign?: string | null
     mmsi?: string | null
     flag?: string | null
-    type?: string
+    type: string
     classificationSociety?: string | null
     yearBuilt?: number | null
     grossTonnage?: number | null
@@ -183393,6 +184143,10 @@ export namespace Prisma {
     procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
     procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
     documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    incidentOverdueDays?: IntFieldUpdateOperationsInput | number
+    sireDueSoonDays?: IntFieldUpdateOperationsInput | number
+    internalAuditDueSoonDays?: IntFieldUpdateOperationsInput | number
+    defaultSireVersion?: NullableStringFieldUpdateOperationsInput | string | null
     users?: UserUpdateManyWithoutCompanyNestedInput
     roles?: RoleUpdateManyWithoutCompanyNestedInput
     vessels?: VesselUpdateManyWithoutCompanyNestedInput
@@ -183451,6 +184205,10 @@ export namespace Prisma {
     procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
     procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
     documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    incidentOverdueDays?: IntFieldUpdateOperationsInput | number
+    sireDueSoonDays?: IntFieldUpdateOperationsInput | number
+    internalAuditDueSoonDays?: IntFieldUpdateOperationsInput | number
+    defaultSireVersion?: NullableStringFieldUpdateOperationsInput | string | null
     users?: UserUncheckedUpdateManyWithoutCompanyNestedInput
     roles?: RoleUncheckedUpdateManyWithoutCompanyNestedInput
     vessels?: VesselUncheckedUpdateManyWithoutCompanyNestedInput
@@ -183694,6 +184452,10 @@ export namespace Prisma {
     procurementThresholdSupt?: number
     procurementThresholdTechManager?: number
     documentExpiryWarningMonths?: number
+    incidentOverdueDays?: number
+    sireDueSoonDays?: number
+    internalAuditDueSoonDays?: number
+    defaultSireVersion?: string | null
     users?: UserCreateNestedManyWithoutCompanyInput
     roles?: RoleCreateNestedManyWithoutCompanyInput
     vessels?: VesselCreateNestedManyWithoutCompanyInput
@@ -183752,6 +184514,10 @@ export namespace Prisma {
     procurementThresholdSupt?: number
     procurementThresholdTechManager?: number
     documentExpiryWarningMonths?: number
+    incidentOverdueDays?: number
+    sireDueSoonDays?: number
+    internalAuditDueSoonDays?: number
+    defaultSireVersion?: string | null
     users?: UserUncheckedCreateNestedManyWithoutCompanyInput
     roles?: RoleUncheckedCreateNestedManyWithoutCompanyInput
     vessels?: VesselUncheckedCreateNestedManyWithoutCompanyInput
@@ -183811,7 +184577,7 @@ export namespace Prisma {
     callSign?: string | null
     mmsi?: string | null
     flag?: string | null
-    type?: string
+    type: string
     classificationSociety?: string | null
     yearBuilt?: number | null
     grossTonnage?: number | null
@@ -183899,7 +184665,7 @@ export namespace Prisma {
     callSign?: string | null
     mmsi?: string | null
     flag?: string | null
-    type?: string
+    type: string
     classificationSociety?: string | null
     yearBuilt?: number | null
     grossTonnage?: number | null
@@ -184053,6 +184819,10 @@ export namespace Prisma {
     procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
     procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
     documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    incidentOverdueDays?: IntFieldUpdateOperationsInput | number
+    sireDueSoonDays?: IntFieldUpdateOperationsInput | number
+    internalAuditDueSoonDays?: IntFieldUpdateOperationsInput | number
+    defaultSireVersion?: NullableStringFieldUpdateOperationsInput | string | null
     users?: UserUpdateManyWithoutCompanyNestedInput
     roles?: RoleUpdateManyWithoutCompanyNestedInput
     vessels?: VesselUpdateManyWithoutCompanyNestedInput
@@ -184111,6 +184881,10 @@ export namespace Prisma {
     procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
     procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
     documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    incidentOverdueDays?: IntFieldUpdateOperationsInput | number
+    sireDueSoonDays?: IntFieldUpdateOperationsInput | number
+    internalAuditDueSoonDays?: IntFieldUpdateOperationsInput | number
+    defaultSireVersion?: NullableStringFieldUpdateOperationsInput | string | null
     users?: UserUncheckedUpdateManyWithoutCompanyNestedInput
     roles?: RoleUncheckedUpdateManyWithoutCompanyNestedInput
     vessels?: VesselUncheckedUpdateManyWithoutCompanyNestedInput
@@ -184370,6 +185144,10 @@ export namespace Prisma {
     procurementThresholdSupt?: number
     procurementThresholdTechManager?: number
     documentExpiryWarningMonths?: number
+    incidentOverdueDays?: number
+    sireDueSoonDays?: number
+    internalAuditDueSoonDays?: number
+    defaultSireVersion?: string | null
     users?: UserCreateNestedManyWithoutCompanyInput
     roles?: RoleCreateNestedManyWithoutCompanyInput
     vessels?: VesselCreateNestedManyWithoutCompanyInput
@@ -184428,6 +185206,10 @@ export namespace Prisma {
     procurementThresholdSupt?: number
     procurementThresholdTechManager?: number
     documentExpiryWarningMonths?: number
+    incidentOverdueDays?: number
+    sireDueSoonDays?: number
+    internalAuditDueSoonDays?: number
+    defaultSireVersion?: string | null
     users?: UserUncheckedCreateNestedManyWithoutCompanyInput
     roles?: RoleUncheckedCreateNestedManyWithoutCompanyInput
     vessels?: VesselUncheckedCreateNestedManyWithoutCompanyInput
@@ -184487,7 +185269,7 @@ export namespace Prisma {
     callSign?: string | null
     mmsi?: string | null
     flag?: string | null
-    type?: string
+    type: string
     classificationSociety?: string | null
     yearBuilt?: number | null
     grossTonnage?: number | null
@@ -184575,7 +185357,7 @@ export namespace Prisma {
     callSign?: string | null
     mmsi?: string | null
     flag?: string | null
-    type?: string
+    type: string
     classificationSociety?: string | null
     yearBuilt?: number | null
     grossTonnage?: number | null
@@ -184712,6 +185494,10 @@ export namespace Prisma {
     procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
     procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
     documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    incidentOverdueDays?: IntFieldUpdateOperationsInput | number
+    sireDueSoonDays?: IntFieldUpdateOperationsInput | number
+    internalAuditDueSoonDays?: IntFieldUpdateOperationsInput | number
+    defaultSireVersion?: NullableStringFieldUpdateOperationsInput | string | null
     users?: UserUpdateManyWithoutCompanyNestedInput
     roles?: RoleUpdateManyWithoutCompanyNestedInput
     vessels?: VesselUpdateManyWithoutCompanyNestedInput
@@ -184770,6 +185556,10 @@ export namespace Prisma {
     procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
     procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
     documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    incidentOverdueDays?: IntFieldUpdateOperationsInput | number
+    sireDueSoonDays?: IntFieldUpdateOperationsInput | number
+    internalAuditDueSoonDays?: IntFieldUpdateOperationsInput | number
+    defaultSireVersion?: NullableStringFieldUpdateOperationsInput | string | null
     users?: UserUncheckedUpdateManyWithoutCompanyNestedInput
     roles?: RoleUncheckedUpdateManyWithoutCompanyNestedInput
     vessels?: VesselUncheckedUpdateManyWithoutCompanyNestedInput
@@ -185050,6 +185840,10 @@ export namespace Prisma {
     procurementThresholdSupt?: number
     procurementThresholdTechManager?: number
     documentExpiryWarningMonths?: number
+    incidentOverdueDays?: number
+    sireDueSoonDays?: number
+    internalAuditDueSoonDays?: number
+    defaultSireVersion?: string | null
     users?: UserCreateNestedManyWithoutCompanyInput
     roles?: RoleCreateNestedManyWithoutCompanyInput
     vessels?: VesselCreateNestedManyWithoutCompanyInput
@@ -185108,6 +185902,10 @@ export namespace Prisma {
     procurementThresholdSupt?: number
     procurementThresholdTechManager?: number
     documentExpiryWarningMonths?: number
+    incidentOverdueDays?: number
+    sireDueSoonDays?: number
+    internalAuditDueSoonDays?: number
+    defaultSireVersion?: string | null
     users?: UserUncheckedCreateNestedManyWithoutCompanyInput
     roles?: RoleUncheckedCreateNestedManyWithoutCompanyInput
     vessels?: VesselUncheckedCreateNestedManyWithoutCompanyInput
@@ -185167,7 +185965,7 @@ export namespace Prisma {
     callSign?: string | null
     mmsi?: string | null
     flag?: string | null
-    type?: string
+    type: string
     classificationSociety?: string | null
     yearBuilt?: number | null
     grossTonnage?: number | null
@@ -185255,7 +186053,7 @@ export namespace Prisma {
     callSign?: string | null
     mmsi?: string | null
     flag?: string | null
-    type?: string
+    type: string
     classificationSociety?: string | null
     yearBuilt?: number | null
     grossTonnage?: number | null
@@ -185361,6 +186159,10 @@ export namespace Prisma {
     procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
     procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
     documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    incidentOverdueDays?: IntFieldUpdateOperationsInput | number
+    sireDueSoonDays?: IntFieldUpdateOperationsInput | number
+    internalAuditDueSoonDays?: IntFieldUpdateOperationsInput | number
+    defaultSireVersion?: NullableStringFieldUpdateOperationsInput | string | null
     users?: UserUpdateManyWithoutCompanyNestedInput
     roles?: RoleUpdateManyWithoutCompanyNestedInput
     vessels?: VesselUpdateManyWithoutCompanyNestedInput
@@ -185419,6 +186221,10 @@ export namespace Prisma {
     procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
     procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
     documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    incidentOverdueDays?: IntFieldUpdateOperationsInput | number
+    sireDueSoonDays?: IntFieldUpdateOperationsInput | number
+    internalAuditDueSoonDays?: IntFieldUpdateOperationsInput | number
+    defaultSireVersion?: NullableStringFieldUpdateOperationsInput | string | null
     users?: UserUncheckedUpdateManyWithoutCompanyNestedInput
     roles?: RoleUncheckedUpdateManyWithoutCompanyNestedInput
     vessels?: VesselUncheckedUpdateManyWithoutCompanyNestedInput
@@ -185662,6 +186468,10 @@ export namespace Prisma {
     procurementThresholdSupt?: number
     procurementThresholdTechManager?: number
     documentExpiryWarningMonths?: number
+    incidentOverdueDays?: number
+    sireDueSoonDays?: number
+    internalAuditDueSoonDays?: number
+    defaultSireVersion?: string | null
     users?: UserCreateNestedManyWithoutCompanyInput
     roles?: RoleCreateNestedManyWithoutCompanyInput
     vessels?: VesselCreateNestedManyWithoutCompanyInput
@@ -185720,6 +186530,10 @@ export namespace Prisma {
     procurementThresholdSupt?: number
     procurementThresholdTechManager?: number
     documentExpiryWarningMonths?: number
+    incidentOverdueDays?: number
+    sireDueSoonDays?: number
+    internalAuditDueSoonDays?: number
+    defaultSireVersion?: string | null
     users?: UserUncheckedCreateNestedManyWithoutCompanyInput
     roles?: RoleUncheckedCreateNestedManyWithoutCompanyInput
     vessels?: VesselUncheckedCreateNestedManyWithoutCompanyInput
@@ -185779,7 +186593,7 @@ export namespace Prisma {
     callSign?: string | null
     mmsi?: string | null
     flag?: string | null
-    type?: string
+    type: string
     classificationSociety?: string | null
     yearBuilt?: number | null
     grossTonnage?: number | null
@@ -185867,7 +186681,7 @@ export namespace Prisma {
     callSign?: string | null
     mmsi?: string | null
     flag?: string | null
-    type?: string
+    type: string
     classificationSociety?: string | null
     yearBuilt?: number | null
     grossTonnage?: number | null
@@ -186084,6 +186898,10 @@ export namespace Prisma {
     procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
     procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
     documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    incidentOverdueDays?: IntFieldUpdateOperationsInput | number
+    sireDueSoonDays?: IntFieldUpdateOperationsInput | number
+    internalAuditDueSoonDays?: IntFieldUpdateOperationsInput | number
+    defaultSireVersion?: NullableStringFieldUpdateOperationsInput | string | null
     users?: UserUpdateManyWithoutCompanyNestedInput
     roles?: RoleUpdateManyWithoutCompanyNestedInput
     vessels?: VesselUpdateManyWithoutCompanyNestedInput
@@ -186142,6 +186960,10 @@ export namespace Prisma {
     procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
     procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
     documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    incidentOverdueDays?: IntFieldUpdateOperationsInput | number
+    sireDueSoonDays?: IntFieldUpdateOperationsInput | number
+    internalAuditDueSoonDays?: IntFieldUpdateOperationsInput | number
+    defaultSireVersion?: NullableStringFieldUpdateOperationsInput | string | null
     users?: UserUncheckedUpdateManyWithoutCompanyNestedInput
     roles?: RoleUncheckedUpdateManyWithoutCompanyNestedInput
     vessels?: VesselUncheckedUpdateManyWithoutCompanyNestedInput
@@ -186460,6 +187282,10 @@ export namespace Prisma {
     procurementThresholdSupt?: number
     procurementThresholdTechManager?: number
     documentExpiryWarningMonths?: number
+    incidentOverdueDays?: number
+    sireDueSoonDays?: number
+    internalAuditDueSoonDays?: number
+    defaultSireVersion?: string | null
     users?: UserCreateNestedManyWithoutCompanyInput
     roles?: RoleCreateNestedManyWithoutCompanyInput
     vessels?: VesselCreateNestedManyWithoutCompanyInput
@@ -186518,6 +187344,10 @@ export namespace Prisma {
     procurementThresholdSupt?: number
     procurementThresholdTechManager?: number
     documentExpiryWarningMonths?: number
+    incidentOverdueDays?: number
+    sireDueSoonDays?: number
+    internalAuditDueSoonDays?: number
+    defaultSireVersion?: string | null
     users?: UserUncheckedCreateNestedManyWithoutCompanyInput
     roles?: RoleUncheckedCreateNestedManyWithoutCompanyInput
     vessels?: VesselUncheckedCreateNestedManyWithoutCompanyInput
@@ -186708,6 +187538,10 @@ export namespace Prisma {
     procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
     procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
     documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    incidentOverdueDays?: IntFieldUpdateOperationsInput | number
+    sireDueSoonDays?: IntFieldUpdateOperationsInput | number
+    internalAuditDueSoonDays?: IntFieldUpdateOperationsInput | number
+    defaultSireVersion?: NullableStringFieldUpdateOperationsInput | string | null
     users?: UserUpdateManyWithoutCompanyNestedInput
     roles?: RoleUpdateManyWithoutCompanyNestedInput
     vessels?: VesselUpdateManyWithoutCompanyNestedInput
@@ -186766,6 +187600,10 @@ export namespace Prisma {
     procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
     procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
     documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    incidentOverdueDays?: IntFieldUpdateOperationsInput | number
+    sireDueSoonDays?: IntFieldUpdateOperationsInput | number
+    internalAuditDueSoonDays?: IntFieldUpdateOperationsInput | number
+    defaultSireVersion?: NullableStringFieldUpdateOperationsInput | string | null
     users?: UserUncheckedUpdateManyWithoutCompanyNestedInput
     roles?: RoleUncheckedUpdateManyWithoutCompanyNestedInput
     vessels?: VesselUncheckedUpdateManyWithoutCompanyNestedInput
@@ -187077,7 +187915,7 @@ export namespace Prisma {
     callSign?: string | null
     mmsi?: string | null
     flag?: string | null
-    type?: string
+    type: string
     classificationSociety?: string | null
     yearBuilt?: number | null
     grossTonnage?: number | null
@@ -187812,7 +188650,7 @@ export namespace Prisma {
     id?: string
     code: string
     seq: number
-    auditYear?: number
+    auditYear: number
     elementCode: string
     elementBase: number
     stageQ: string
