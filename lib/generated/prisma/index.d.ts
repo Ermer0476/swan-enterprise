@@ -366,6 +366,11 @@ export type VoyageLogBunker = $Result.DefaultSelection<Prisma.$VoyageLogBunkerPa
  */
 export type UnitMaster = $Result.DefaultSelection<Prisma.$UnitMasterPayload>
 /**
+ * Model ReferenceListItem
+ * 
+ */
+export type ReferenceListItem = $Result.DefaultSelection<Prisma.$ReferenceListItemPayload>
+/**
  * Model EnvironmentRecord
  * 
  */
@@ -2203,6 +2208,16 @@ export class PrismaClient<
   get unitMaster(): Prisma.UnitMasterDelegate<ExtArgs, ClientOptions>;
 
   /**
+   * `prisma.referenceListItem`: Exposes CRUD operations for the **ReferenceListItem** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ReferenceListItems
+    * const referenceListItems = await prisma.referenceListItem.findMany()
+    * ```
+    */
+  get referenceListItem(): Prisma.ReferenceListItemDelegate<ExtArgs, ClientOptions>;
+
+  /**
    * `prisma.environmentRecord`: Exposes CRUD operations for the **EnvironmentRecord** model.
     * Example usage:
     * ```ts
@@ -2845,6 +2860,7 @@ export namespace Prisma {
     VoyageLog: 'VoyageLog',
     VoyageLogBunker: 'VoyageLogBunker',
     UnitMaster: 'UnitMaster',
+    ReferenceListItem: 'ReferenceListItem',
     EnvironmentRecord: 'EnvironmentRecord',
     GarbageLedgerEntry: 'GarbageLedgerEntry',
     RefSequence: 'RefSequence',
@@ -2877,7 +2893,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "company" | "user" | "role" | "permission" | "rolePermission" | "userRole" | "vessel" | "auditLog" | "attachment" | "comment" | "capaAction" | "notification" | "workflowDefinition" | "workflowStep" | "workflowInstance" | "workflowAction" | "smsDocument" | "smsRevision" | "incident" | "incidentSofEntry" | "incidentTypeEntry" | "nearMiss" | "nonConformity" | "sireInspection" | "sireObservation" | "sireObservationComment" | "sireQuestionnaireVersion" | "sireQuestionnaireItem" | "pscInspection" | "pscDeficiency" | "cdiInspection" | "cdiObservation" | "internalAudit" | "internalAuditFinding" | "externalAudit" | "externalAuditFinding" | "companyInspection" | "companyInspectionObservation" | "exposureCrewEntry" | "exposureInjuryCase" | "committeeMeeting" | "committeeMeetingAgenda" | "scheduleItem" | "scheduleApplicability" | "emergencyDrill" | "familiarizationRecord" | "familiarizationSession" | "lsaFfeItem" | "crewFamiliarization" | "crewFamiliarizationRecord" | "controlledDocument" | "vesselDocument" | "circular" | "circularAcknowledgement" | "riskAssessmentDocument" | "riskAssessmentRevision" | "riskHazardRow" | "riskAssessmentExecution" | "riskAssessmentRevisionRequest" | "defect" | "voyageLog" | "voyageLogBunker" | "unitMaster" | "environmentRecord" | "garbageLedgerEntry" | "refSequence" | "tmsaAssessment" | "tmsaScore" | "tmsaFinding" | "storesCatalogueItem" | "sparesCatalogueItem" | "openingStockTake" | "inventoryEvent" | "inventoryUpdateDraft" | "requisition" | "requisitionRevision" | "requisitionLine"
+      modelProps: "company" | "user" | "role" | "permission" | "rolePermission" | "userRole" | "vessel" | "auditLog" | "attachment" | "comment" | "capaAction" | "notification" | "workflowDefinition" | "workflowStep" | "workflowInstance" | "workflowAction" | "smsDocument" | "smsRevision" | "incident" | "incidentSofEntry" | "incidentTypeEntry" | "nearMiss" | "nonConformity" | "sireInspection" | "sireObservation" | "sireObservationComment" | "sireQuestionnaireVersion" | "sireQuestionnaireItem" | "pscInspection" | "pscDeficiency" | "cdiInspection" | "cdiObservation" | "internalAudit" | "internalAuditFinding" | "externalAudit" | "externalAuditFinding" | "companyInspection" | "companyInspectionObservation" | "exposureCrewEntry" | "exposureInjuryCase" | "committeeMeeting" | "committeeMeetingAgenda" | "scheduleItem" | "scheduleApplicability" | "emergencyDrill" | "familiarizationRecord" | "familiarizationSession" | "lsaFfeItem" | "crewFamiliarization" | "crewFamiliarizationRecord" | "controlledDocument" | "vesselDocument" | "circular" | "circularAcknowledgement" | "riskAssessmentDocument" | "riskAssessmentRevision" | "riskHazardRow" | "riskAssessmentExecution" | "riskAssessmentRevisionRequest" | "defect" | "voyageLog" | "voyageLogBunker" | "unitMaster" | "referenceListItem" | "environmentRecord" | "garbageLedgerEntry" | "refSequence" | "tmsaAssessment" | "tmsaScore" | "tmsaFinding" | "storesCatalogueItem" | "sparesCatalogueItem" | "openingStockTake" | "inventoryEvent" | "inventoryUpdateDraft" | "requisition" | "requisitionRevision" | "requisitionLine"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -7543,6 +7559,80 @@ export namespace Prisma {
           }
         }
       }
+      ReferenceListItem: {
+        payload: Prisma.$ReferenceListItemPayload<ExtArgs>
+        fields: Prisma.ReferenceListItemFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ReferenceListItemFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReferenceListItemPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ReferenceListItemFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReferenceListItemPayload>
+          }
+          findFirst: {
+            args: Prisma.ReferenceListItemFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReferenceListItemPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ReferenceListItemFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReferenceListItemPayload>
+          }
+          findMany: {
+            args: Prisma.ReferenceListItemFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReferenceListItemPayload>[]
+          }
+          create: {
+            args: Prisma.ReferenceListItemCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReferenceListItemPayload>
+          }
+          createMany: {
+            args: Prisma.ReferenceListItemCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ReferenceListItemCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReferenceListItemPayload>[]
+          }
+          delete: {
+            args: Prisma.ReferenceListItemDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReferenceListItemPayload>
+          }
+          update: {
+            args: Prisma.ReferenceListItemUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReferenceListItemPayload>
+          }
+          deleteMany: {
+            args: Prisma.ReferenceListItemDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ReferenceListItemUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ReferenceListItemUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReferenceListItemPayload>[]
+          }
+          upsert: {
+            args: Prisma.ReferenceListItemUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReferenceListItemPayload>
+          }
+          aggregate: {
+            args: Prisma.ReferenceListItemAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateReferenceListItem>
+          }
+          groupBy: {
+            args: Prisma.ReferenceListItemGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ReferenceListItemGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ReferenceListItemCountArgs<ExtArgs>
+            result: $Utils.Optional<ReferenceListItemCountAggregateOutputType> | number
+          }
+        }
+      }
       EnvironmentRecord: {
         payload: Prisma.$EnvironmentRecordPayload<ExtArgs>
         fields: Prisma.EnvironmentRecordFieldRefs
@@ -8738,6 +8828,7 @@ export namespace Prisma {
     voyageLog?: VoyageLogOmit
     voyageLogBunker?: VoyageLogBunkerOmit
     unitMaster?: UnitMasterOmit
+    referenceListItem?: ReferenceListItemOmit
     environmentRecord?: EnvironmentRecordOmit
     garbageLedgerEntry?: GarbageLedgerEntryOmit
     refSequence?: RefSequenceOmit
@@ -8875,6 +8966,7 @@ export namespace Prisma {
     requisitions: number
     requisitionRevisions: number
     unitMasters: number
+    referenceListItems: number
   }
 
   export type CompanyCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -8921,6 +9013,7 @@ export namespace Prisma {
     requisitions?: boolean | CompanyCountOutputTypeCountRequisitionsArgs
     requisitionRevisions?: boolean | CompanyCountOutputTypeCountRequisitionRevisionsArgs
     unitMasters?: boolean | CompanyCountOutputTypeCountUnitMastersArgs
+    referenceListItems?: boolean | CompanyCountOutputTypeCountReferenceListItemsArgs
   }
 
   // Custom InputTypes
@@ -9233,6 +9326,13 @@ export namespace Prisma {
    */
   export type CompanyCountOutputTypeCountUnitMastersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: UnitMasterWhereInput
+  }
+
+  /**
+   * CompanyCountOutputType without action
+   */
+  export type CompanyCountOutputTypeCountReferenceListItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ReferenceListItemWhereInput
   }
 
 
@@ -10914,6 +11014,7 @@ export namespace Prisma {
     requisitions?: boolean | Company$requisitionsArgs<ExtArgs>
     requisitionRevisions?: boolean | Company$requisitionRevisionsArgs<ExtArgs>
     unitMasters?: boolean | Company$unitMastersArgs<ExtArgs>
+    referenceListItems?: boolean | Company$referenceListItemsArgs<ExtArgs>
     _count?: boolean | CompanyCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["company"]>
 
@@ -11007,6 +11108,7 @@ export namespace Prisma {
     requisitions?: boolean | Company$requisitionsArgs<ExtArgs>
     requisitionRevisions?: boolean | Company$requisitionRevisionsArgs<ExtArgs>
     unitMasters?: boolean | Company$unitMastersArgs<ExtArgs>
+    referenceListItems?: boolean | Company$referenceListItemsArgs<ExtArgs>
     _count?: boolean | CompanyCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type CompanyIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -11058,6 +11160,7 @@ export namespace Prisma {
       requisitions: Prisma.$RequisitionPayload<ExtArgs>[]
       requisitionRevisions: Prisma.$RequisitionRevisionPayload<ExtArgs>[]
       unitMasters: Prisma.$UnitMasterPayload<ExtArgs>[]
+      referenceListItems: Prisma.$ReferenceListItemPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -11509,6 +11612,7 @@ export namespace Prisma {
     requisitions<T extends Company$requisitionsArgs<ExtArgs> = {}>(args?: Subset<T, Company$requisitionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RequisitionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     requisitionRevisions<T extends Company$requisitionRevisionsArgs<ExtArgs> = {}>(args?: Subset<T, Company$requisitionRevisionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RequisitionRevisionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     unitMasters<T extends Company$unitMastersArgs<ExtArgs> = {}>(args?: Subset<T, Company$unitMastersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UnitMasterPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    referenceListItems<T extends Company$referenceListItemsArgs<ExtArgs> = {}>(args?: Subset<T, Company$referenceListItemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReferenceListItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -12967,6 +13071,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: UnitMasterScalarFieldEnum | UnitMasterScalarFieldEnum[]
+  }
+
+  /**
+   * Company.referenceListItems
+   */
+  export type Company$referenceListItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ReferenceListItem
+     */
+    select?: ReferenceListItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ReferenceListItem
+     */
+    omit?: ReferenceListItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReferenceListItemInclude<ExtArgs> | null
+    where?: ReferenceListItemWhereInput
+    orderBy?: ReferenceListItemOrderByWithRelationInput | ReferenceListItemOrderByWithRelationInput[]
+    cursor?: ReferenceListItemWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ReferenceListItemScalarFieldEnum | ReferenceListItemScalarFieldEnum[]
   }
 
   /**
@@ -90398,6 +90526,1215 @@ export namespace Prisma {
 
 
   /**
+   * Model ReferenceListItem
+   */
+
+  export type AggregateReferenceListItem = {
+    _count: ReferenceListItemCountAggregateOutputType | null
+    _avg: ReferenceListItemAvgAggregateOutputType | null
+    _sum: ReferenceListItemSumAggregateOutputType | null
+    _min: ReferenceListItemMinAggregateOutputType | null
+    _max: ReferenceListItemMaxAggregateOutputType | null
+  }
+
+  export type ReferenceListItemAvgAggregateOutputType = {
+    sortOrder: number | null
+  }
+
+  export type ReferenceListItemSumAggregateOutputType = {
+    sortOrder: number | null
+  }
+
+  export type ReferenceListItemMinAggregateOutputType = {
+    id: string | null
+    companyId: string | null
+    listKey: string | null
+    value: string | null
+    label: string | null
+    sortOrder: number | null
+    active: boolean | null
+    isSystem: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    createdBy: string | null
+    updatedBy: string | null
+    deletedAt: Date | null
+    deletedBy: string | null
+  }
+
+  export type ReferenceListItemMaxAggregateOutputType = {
+    id: string | null
+    companyId: string | null
+    listKey: string | null
+    value: string | null
+    label: string | null
+    sortOrder: number | null
+    active: boolean | null
+    isSystem: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    createdBy: string | null
+    updatedBy: string | null
+    deletedAt: Date | null
+    deletedBy: string | null
+  }
+
+  export type ReferenceListItemCountAggregateOutputType = {
+    id: number
+    companyId: number
+    listKey: number
+    value: number
+    label: number
+    sortOrder: number
+    active: number
+    isSystem: number
+    createdAt: number
+    updatedAt: number
+    createdBy: number
+    updatedBy: number
+    deletedAt: number
+    deletedBy: number
+    _all: number
+  }
+
+
+  export type ReferenceListItemAvgAggregateInputType = {
+    sortOrder?: true
+  }
+
+  export type ReferenceListItemSumAggregateInputType = {
+    sortOrder?: true
+  }
+
+  export type ReferenceListItemMinAggregateInputType = {
+    id?: true
+    companyId?: true
+    listKey?: true
+    value?: true
+    label?: true
+    sortOrder?: true
+    active?: true
+    isSystem?: true
+    createdAt?: true
+    updatedAt?: true
+    createdBy?: true
+    updatedBy?: true
+    deletedAt?: true
+    deletedBy?: true
+  }
+
+  export type ReferenceListItemMaxAggregateInputType = {
+    id?: true
+    companyId?: true
+    listKey?: true
+    value?: true
+    label?: true
+    sortOrder?: true
+    active?: true
+    isSystem?: true
+    createdAt?: true
+    updatedAt?: true
+    createdBy?: true
+    updatedBy?: true
+    deletedAt?: true
+    deletedBy?: true
+  }
+
+  export type ReferenceListItemCountAggregateInputType = {
+    id?: true
+    companyId?: true
+    listKey?: true
+    value?: true
+    label?: true
+    sortOrder?: true
+    active?: true
+    isSystem?: true
+    createdAt?: true
+    updatedAt?: true
+    createdBy?: true
+    updatedBy?: true
+    deletedAt?: true
+    deletedBy?: true
+    _all?: true
+  }
+
+  export type ReferenceListItemAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ReferenceListItem to aggregate.
+     */
+    where?: ReferenceListItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ReferenceListItems to fetch.
+     */
+    orderBy?: ReferenceListItemOrderByWithRelationInput | ReferenceListItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ReferenceListItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ReferenceListItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ReferenceListItems.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ReferenceListItems
+    **/
+    _count?: true | ReferenceListItemCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: ReferenceListItemAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ReferenceListItemSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ReferenceListItemMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ReferenceListItemMaxAggregateInputType
+  }
+
+  export type GetReferenceListItemAggregateType<T extends ReferenceListItemAggregateArgs> = {
+        [P in keyof T & keyof AggregateReferenceListItem]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateReferenceListItem[P]>
+      : GetScalarType<T[P], AggregateReferenceListItem[P]>
+  }
+
+
+
+
+  export type ReferenceListItemGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ReferenceListItemWhereInput
+    orderBy?: ReferenceListItemOrderByWithAggregationInput | ReferenceListItemOrderByWithAggregationInput[]
+    by: ReferenceListItemScalarFieldEnum[] | ReferenceListItemScalarFieldEnum
+    having?: ReferenceListItemScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ReferenceListItemCountAggregateInputType | true
+    _avg?: ReferenceListItemAvgAggregateInputType
+    _sum?: ReferenceListItemSumAggregateInputType
+    _min?: ReferenceListItemMinAggregateInputType
+    _max?: ReferenceListItemMaxAggregateInputType
+  }
+
+  export type ReferenceListItemGroupByOutputType = {
+    id: string
+    companyId: string
+    listKey: string
+    value: string
+    label: string
+    sortOrder: number
+    active: boolean
+    isSystem: boolean
+    createdAt: Date
+    updatedAt: Date
+    createdBy: string | null
+    updatedBy: string | null
+    deletedAt: Date | null
+    deletedBy: string | null
+    _count: ReferenceListItemCountAggregateOutputType | null
+    _avg: ReferenceListItemAvgAggregateOutputType | null
+    _sum: ReferenceListItemSumAggregateOutputType | null
+    _min: ReferenceListItemMinAggregateOutputType | null
+    _max: ReferenceListItemMaxAggregateOutputType | null
+  }
+
+  type GetReferenceListItemGroupByPayload<T extends ReferenceListItemGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ReferenceListItemGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ReferenceListItemGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ReferenceListItemGroupByOutputType[P]>
+            : GetScalarType<T[P], ReferenceListItemGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ReferenceListItemSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    companyId?: boolean
+    listKey?: boolean
+    value?: boolean
+    label?: boolean
+    sortOrder?: boolean
+    active?: boolean
+    isSystem?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    createdBy?: boolean
+    updatedBy?: boolean
+    deletedAt?: boolean
+    deletedBy?: boolean
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["referenceListItem"]>
+
+  export type ReferenceListItemSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    companyId?: boolean
+    listKey?: boolean
+    value?: boolean
+    label?: boolean
+    sortOrder?: boolean
+    active?: boolean
+    isSystem?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    createdBy?: boolean
+    updatedBy?: boolean
+    deletedAt?: boolean
+    deletedBy?: boolean
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["referenceListItem"]>
+
+  export type ReferenceListItemSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    companyId?: boolean
+    listKey?: boolean
+    value?: boolean
+    label?: boolean
+    sortOrder?: boolean
+    active?: boolean
+    isSystem?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    createdBy?: boolean
+    updatedBy?: boolean
+    deletedAt?: boolean
+    deletedBy?: boolean
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["referenceListItem"]>
+
+  export type ReferenceListItemSelectScalar = {
+    id?: boolean
+    companyId?: boolean
+    listKey?: boolean
+    value?: boolean
+    label?: boolean
+    sortOrder?: boolean
+    active?: boolean
+    isSystem?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    createdBy?: boolean
+    updatedBy?: boolean
+    deletedAt?: boolean
+    deletedBy?: boolean
+  }
+
+  export type ReferenceListItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "companyId" | "listKey" | "value" | "label" | "sortOrder" | "active" | "isSystem" | "createdAt" | "updatedAt" | "createdBy" | "updatedBy" | "deletedAt" | "deletedBy", ExtArgs["result"]["referenceListItem"]>
+  export type ReferenceListItemInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+  }
+  export type ReferenceListItemIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+  }
+  export type ReferenceListItemIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+  }
+
+  export type $ReferenceListItemPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ReferenceListItem"
+    objects: {
+      company: Prisma.$CompanyPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      companyId: string
+      listKey: string
+      value: string
+      label: string
+      sortOrder: number
+      active: boolean
+      isSystem: boolean
+      createdAt: Date
+      updatedAt: Date
+      createdBy: string | null
+      updatedBy: string | null
+      deletedAt: Date | null
+      deletedBy: string | null
+    }, ExtArgs["result"]["referenceListItem"]>
+    composites: {}
+  }
+
+  type ReferenceListItemGetPayload<S extends boolean | null | undefined | ReferenceListItemDefaultArgs> = $Result.GetResult<Prisma.$ReferenceListItemPayload, S>
+
+  type ReferenceListItemCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ReferenceListItemFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ReferenceListItemCountAggregateInputType | true
+    }
+
+  export interface ReferenceListItemDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ReferenceListItem'], meta: { name: 'ReferenceListItem' } }
+    /**
+     * Find zero or one ReferenceListItem that matches the filter.
+     * @param {ReferenceListItemFindUniqueArgs} args - Arguments to find a ReferenceListItem
+     * @example
+     * // Get one ReferenceListItem
+     * const referenceListItem = await prisma.referenceListItem.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ReferenceListItemFindUniqueArgs>(args: SelectSubset<T, ReferenceListItemFindUniqueArgs<ExtArgs>>): Prisma__ReferenceListItemClient<$Result.GetResult<Prisma.$ReferenceListItemPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ReferenceListItem that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ReferenceListItemFindUniqueOrThrowArgs} args - Arguments to find a ReferenceListItem
+     * @example
+     * // Get one ReferenceListItem
+     * const referenceListItem = await prisma.referenceListItem.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ReferenceListItemFindUniqueOrThrowArgs>(args: SelectSubset<T, ReferenceListItemFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ReferenceListItemClient<$Result.GetResult<Prisma.$ReferenceListItemPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ReferenceListItem that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ReferenceListItemFindFirstArgs} args - Arguments to find a ReferenceListItem
+     * @example
+     * // Get one ReferenceListItem
+     * const referenceListItem = await prisma.referenceListItem.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ReferenceListItemFindFirstArgs>(args?: SelectSubset<T, ReferenceListItemFindFirstArgs<ExtArgs>>): Prisma__ReferenceListItemClient<$Result.GetResult<Prisma.$ReferenceListItemPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ReferenceListItem that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ReferenceListItemFindFirstOrThrowArgs} args - Arguments to find a ReferenceListItem
+     * @example
+     * // Get one ReferenceListItem
+     * const referenceListItem = await prisma.referenceListItem.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ReferenceListItemFindFirstOrThrowArgs>(args?: SelectSubset<T, ReferenceListItemFindFirstOrThrowArgs<ExtArgs>>): Prisma__ReferenceListItemClient<$Result.GetResult<Prisma.$ReferenceListItemPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ReferenceListItems that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ReferenceListItemFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ReferenceListItems
+     * const referenceListItems = await prisma.referenceListItem.findMany()
+     * 
+     * // Get first 10 ReferenceListItems
+     * const referenceListItems = await prisma.referenceListItem.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const referenceListItemWithIdOnly = await prisma.referenceListItem.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ReferenceListItemFindManyArgs>(args?: SelectSubset<T, ReferenceListItemFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReferenceListItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ReferenceListItem.
+     * @param {ReferenceListItemCreateArgs} args - Arguments to create a ReferenceListItem.
+     * @example
+     * // Create one ReferenceListItem
+     * const ReferenceListItem = await prisma.referenceListItem.create({
+     *   data: {
+     *     // ... data to create a ReferenceListItem
+     *   }
+     * })
+     * 
+     */
+    create<T extends ReferenceListItemCreateArgs>(args: SelectSubset<T, ReferenceListItemCreateArgs<ExtArgs>>): Prisma__ReferenceListItemClient<$Result.GetResult<Prisma.$ReferenceListItemPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ReferenceListItems.
+     * @param {ReferenceListItemCreateManyArgs} args - Arguments to create many ReferenceListItems.
+     * @example
+     * // Create many ReferenceListItems
+     * const referenceListItem = await prisma.referenceListItem.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ReferenceListItemCreateManyArgs>(args?: SelectSubset<T, ReferenceListItemCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ReferenceListItems and returns the data saved in the database.
+     * @param {ReferenceListItemCreateManyAndReturnArgs} args - Arguments to create many ReferenceListItems.
+     * @example
+     * // Create many ReferenceListItems
+     * const referenceListItem = await prisma.referenceListItem.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ReferenceListItems and only return the `id`
+     * const referenceListItemWithIdOnly = await prisma.referenceListItem.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ReferenceListItemCreateManyAndReturnArgs>(args?: SelectSubset<T, ReferenceListItemCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReferenceListItemPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a ReferenceListItem.
+     * @param {ReferenceListItemDeleteArgs} args - Arguments to delete one ReferenceListItem.
+     * @example
+     * // Delete one ReferenceListItem
+     * const ReferenceListItem = await prisma.referenceListItem.delete({
+     *   where: {
+     *     // ... filter to delete one ReferenceListItem
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ReferenceListItemDeleteArgs>(args: SelectSubset<T, ReferenceListItemDeleteArgs<ExtArgs>>): Prisma__ReferenceListItemClient<$Result.GetResult<Prisma.$ReferenceListItemPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ReferenceListItem.
+     * @param {ReferenceListItemUpdateArgs} args - Arguments to update one ReferenceListItem.
+     * @example
+     * // Update one ReferenceListItem
+     * const referenceListItem = await prisma.referenceListItem.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ReferenceListItemUpdateArgs>(args: SelectSubset<T, ReferenceListItemUpdateArgs<ExtArgs>>): Prisma__ReferenceListItemClient<$Result.GetResult<Prisma.$ReferenceListItemPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ReferenceListItems.
+     * @param {ReferenceListItemDeleteManyArgs} args - Arguments to filter ReferenceListItems to delete.
+     * @example
+     * // Delete a few ReferenceListItems
+     * const { count } = await prisma.referenceListItem.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ReferenceListItemDeleteManyArgs>(args?: SelectSubset<T, ReferenceListItemDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ReferenceListItems.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ReferenceListItemUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ReferenceListItems
+     * const referenceListItem = await prisma.referenceListItem.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ReferenceListItemUpdateManyArgs>(args: SelectSubset<T, ReferenceListItemUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ReferenceListItems and returns the data updated in the database.
+     * @param {ReferenceListItemUpdateManyAndReturnArgs} args - Arguments to update many ReferenceListItems.
+     * @example
+     * // Update many ReferenceListItems
+     * const referenceListItem = await prisma.referenceListItem.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more ReferenceListItems and only return the `id`
+     * const referenceListItemWithIdOnly = await prisma.referenceListItem.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ReferenceListItemUpdateManyAndReturnArgs>(args: SelectSubset<T, ReferenceListItemUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReferenceListItemPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one ReferenceListItem.
+     * @param {ReferenceListItemUpsertArgs} args - Arguments to update or create a ReferenceListItem.
+     * @example
+     * // Update or create a ReferenceListItem
+     * const referenceListItem = await prisma.referenceListItem.upsert({
+     *   create: {
+     *     // ... data to create a ReferenceListItem
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ReferenceListItem we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ReferenceListItemUpsertArgs>(args: SelectSubset<T, ReferenceListItemUpsertArgs<ExtArgs>>): Prisma__ReferenceListItemClient<$Result.GetResult<Prisma.$ReferenceListItemPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ReferenceListItems.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ReferenceListItemCountArgs} args - Arguments to filter ReferenceListItems to count.
+     * @example
+     * // Count the number of ReferenceListItems
+     * const count = await prisma.referenceListItem.count({
+     *   where: {
+     *     // ... the filter for the ReferenceListItems we want to count
+     *   }
+     * })
+    **/
+    count<T extends ReferenceListItemCountArgs>(
+      args?: Subset<T, ReferenceListItemCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ReferenceListItemCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ReferenceListItem.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ReferenceListItemAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ReferenceListItemAggregateArgs>(args: Subset<T, ReferenceListItemAggregateArgs>): Prisma.PrismaPromise<GetReferenceListItemAggregateType<T>>
+
+    /**
+     * Group by ReferenceListItem.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ReferenceListItemGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ReferenceListItemGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ReferenceListItemGroupByArgs['orderBy'] }
+        : { orderBy?: ReferenceListItemGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ReferenceListItemGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetReferenceListItemGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ReferenceListItem model
+   */
+  readonly fields: ReferenceListItemFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ReferenceListItem.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ReferenceListItemClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    company<T extends CompanyDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CompanyDefaultArgs<ExtArgs>>): Prisma__CompanyClient<$Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ReferenceListItem model
+   */
+  interface ReferenceListItemFieldRefs {
+    readonly id: FieldRef<"ReferenceListItem", 'String'>
+    readonly companyId: FieldRef<"ReferenceListItem", 'String'>
+    readonly listKey: FieldRef<"ReferenceListItem", 'String'>
+    readonly value: FieldRef<"ReferenceListItem", 'String'>
+    readonly label: FieldRef<"ReferenceListItem", 'String'>
+    readonly sortOrder: FieldRef<"ReferenceListItem", 'Int'>
+    readonly active: FieldRef<"ReferenceListItem", 'Boolean'>
+    readonly isSystem: FieldRef<"ReferenceListItem", 'Boolean'>
+    readonly createdAt: FieldRef<"ReferenceListItem", 'DateTime'>
+    readonly updatedAt: FieldRef<"ReferenceListItem", 'DateTime'>
+    readonly createdBy: FieldRef<"ReferenceListItem", 'String'>
+    readonly updatedBy: FieldRef<"ReferenceListItem", 'String'>
+    readonly deletedAt: FieldRef<"ReferenceListItem", 'DateTime'>
+    readonly deletedBy: FieldRef<"ReferenceListItem", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ReferenceListItem findUnique
+   */
+  export type ReferenceListItemFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ReferenceListItem
+     */
+    select?: ReferenceListItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ReferenceListItem
+     */
+    omit?: ReferenceListItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReferenceListItemInclude<ExtArgs> | null
+    /**
+     * Filter, which ReferenceListItem to fetch.
+     */
+    where: ReferenceListItemWhereUniqueInput
+  }
+
+  /**
+   * ReferenceListItem findUniqueOrThrow
+   */
+  export type ReferenceListItemFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ReferenceListItem
+     */
+    select?: ReferenceListItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ReferenceListItem
+     */
+    omit?: ReferenceListItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReferenceListItemInclude<ExtArgs> | null
+    /**
+     * Filter, which ReferenceListItem to fetch.
+     */
+    where: ReferenceListItemWhereUniqueInput
+  }
+
+  /**
+   * ReferenceListItem findFirst
+   */
+  export type ReferenceListItemFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ReferenceListItem
+     */
+    select?: ReferenceListItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ReferenceListItem
+     */
+    omit?: ReferenceListItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReferenceListItemInclude<ExtArgs> | null
+    /**
+     * Filter, which ReferenceListItem to fetch.
+     */
+    where?: ReferenceListItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ReferenceListItems to fetch.
+     */
+    orderBy?: ReferenceListItemOrderByWithRelationInput | ReferenceListItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ReferenceListItems.
+     */
+    cursor?: ReferenceListItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ReferenceListItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ReferenceListItems.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ReferenceListItems.
+     */
+    distinct?: ReferenceListItemScalarFieldEnum | ReferenceListItemScalarFieldEnum[]
+  }
+
+  /**
+   * ReferenceListItem findFirstOrThrow
+   */
+  export type ReferenceListItemFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ReferenceListItem
+     */
+    select?: ReferenceListItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ReferenceListItem
+     */
+    omit?: ReferenceListItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReferenceListItemInclude<ExtArgs> | null
+    /**
+     * Filter, which ReferenceListItem to fetch.
+     */
+    where?: ReferenceListItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ReferenceListItems to fetch.
+     */
+    orderBy?: ReferenceListItemOrderByWithRelationInput | ReferenceListItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ReferenceListItems.
+     */
+    cursor?: ReferenceListItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ReferenceListItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ReferenceListItems.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ReferenceListItems.
+     */
+    distinct?: ReferenceListItemScalarFieldEnum | ReferenceListItemScalarFieldEnum[]
+  }
+
+  /**
+   * ReferenceListItem findMany
+   */
+  export type ReferenceListItemFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ReferenceListItem
+     */
+    select?: ReferenceListItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ReferenceListItem
+     */
+    omit?: ReferenceListItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReferenceListItemInclude<ExtArgs> | null
+    /**
+     * Filter, which ReferenceListItems to fetch.
+     */
+    where?: ReferenceListItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ReferenceListItems to fetch.
+     */
+    orderBy?: ReferenceListItemOrderByWithRelationInput | ReferenceListItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ReferenceListItems.
+     */
+    cursor?: ReferenceListItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ReferenceListItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ReferenceListItems.
+     */
+    skip?: number
+    distinct?: ReferenceListItemScalarFieldEnum | ReferenceListItemScalarFieldEnum[]
+  }
+
+  /**
+   * ReferenceListItem create
+   */
+  export type ReferenceListItemCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ReferenceListItem
+     */
+    select?: ReferenceListItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ReferenceListItem
+     */
+    omit?: ReferenceListItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReferenceListItemInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ReferenceListItem.
+     */
+    data: XOR<ReferenceListItemCreateInput, ReferenceListItemUncheckedCreateInput>
+  }
+
+  /**
+   * ReferenceListItem createMany
+   */
+  export type ReferenceListItemCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ReferenceListItems.
+     */
+    data: ReferenceListItemCreateManyInput | ReferenceListItemCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ReferenceListItem createManyAndReturn
+   */
+  export type ReferenceListItemCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ReferenceListItem
+     */
+    select?: ReferenceListItemSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ReferenceListItem
+     */
+    omit?: ReferenceListItemOmit<ExtArgs> | null
+    /**
+     * The data used to create many ReferenceListItems.
+     */
+    data: ReferenceListItemCreateManyInput | ReferenceListItemCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReferenceListItemIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ReferenceListItem update
+   */
+  export type ReferenceListItemUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ReferenceListItem
+     */
+    select?: ReferenceListItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ReferenceListItem
+     */
+    omit?: ReferenceListItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReferenceListItemInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ReferenceListItem.
+     */
+    data: XOR<ReferenceListItemUpdateInput, ReferenceListItemUncheckedUpdateInput>
+    /**
+     * Choose, which ReferenceListItem to update.
+     */
+    where: ReferenceListItemWhereUniqueInput
+  }
+
+  /**
+   * ReferenceListItem updateMany
+   */
+  export type ReferenceListItemUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ReferenceListItems.
+     */
+    data: XOR<ReferenceListItemUpdateManyMutationInput, ReferenceListItemUncheckedUpdateManyInput>
+    /**
+     * Filter which ReferenceListItems to update
+     */
+    where?: ReferenceListItemWhereInput
+    /**
+     * Limit how many ReferenceListItems to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ReferenceListItem updateManyAndReturn
+   */
+  export type ReferenceListItemUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ReferenceListItem
+     */
+    select?: ReferenceListItemSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ReferenceListItem
+     */
+    omit?: ReferenceListItemOmit<ExtArgs> | null
+    /**
+     * The data used to update ReferenceListItems.
+     */
+    data: XOR<ReferenceListItemUpdateManyMutationInput, ReferenceListItemUncheckedUpdateManyInput>
+    /**
+     * Filter which ReferenceListItems to update
+     */
+    where?: ReferenceListItemWhereInput
+    /**
+     * Limit how many ReferenceListItems to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReferenceListItemIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ReferenceListItem upsert
+   */
+  export type ReferenceListItemUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ReferenceListItem
+     */
+    select?: ReferenceListItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ReferenceListItem
+     */
+    omit?: ReferenceListItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReferenceListItemInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ReferenceListItem to update in case it exists.
+     */
+    where: ReferenceListItemWhereUniqueInput
+    /**
+     * In case the ReferenceListItem found by the `where` argument doesn't exist, create a new ReferenceListItem with this data.
+     */
+    create: XOR<ReferenceListItemCreateInput, ReferenceListItemUncheckedCreateInput>
+    /**
+     * In case the ReferenceListItem was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ReferenceListItemUpdateInput, ReferenceListItemUncheckedUpdateInput>
+  }
+
+  /**
+   * ReferenceListItem delete
+   */
+  export type ReferenceListItemDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ReferenceListItem
+     */
+    select?: ReferenceListItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ReferenceListItem
+     */
+    omit?: ReferenceListItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReferenceListItemInclude<ExtArgs> | null
+    /**
+     * Filter which ReferenceListItem to delete.
+     */
+    where: ReferenceListItemWhereUniqueInput
+  }
+
+  /**
+   * ReferenceListItem deleteMany
+   */
+  export type ReferenceListItemDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ReferenceListItems to delete
+     */
+    where?: ReferenceListItemWhereInput
+    /**
+     * Limit how many ReferenceListItems to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ReferenceListItem without action
+   */
+  export type ReferenceListItemDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ReferenceListItem
+     */
+    select?: ReferenceListItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ReferenceListItem
+     */
+    omit?: ReferenceListItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReferenceListItemInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Model EnvironmentRecord
    */
 
@@ -109924,6 +111261,26 @@ export namespace Prisma {
   export type UnitMasterScalarFieldEnum = (typeof UnitMasterScalarFieldEnum)[keyof typeof UnitMasterScalarFieldEnum]
 
 
+  export const ReferenceListItemScalarFieldEnum: {
+    id: 'id',
+    companyId: 'companyId',
+    listKey: 'listKey',
+    value: 'value',
+    label: 'label',
+    sortOrder: 'sortOrder',
+    active: 'active',
+    isSystem: 'isSystem',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+    createdBy: 'createdBy',
+    updatedBy: 'updatedBy',
+    deletedAt: 'deletedAt',
+    deletedBy: 'deletedBy'
+  };
+
+  export type ReferenceListItemScalarFieldEnum = (typeof ReferenceListItemScalarFieldEnum)[keyof typeof ReferenceListItemScalarFieldEnum]
+
+
   export const EnvironmentRecordScalarFieldEnum: {
     id: 'id',
     companyId: 'companyId',
@@ -111418,6 +112775,7 @@ export namespace Prisma {
     requisitions?: RequisitionListRelationFilter
     requisitionRevisions?: RequisitionRevisionListRelationFilter
     unitMasters?: UnitMasterListRelationFilter
+    referenceListItems?: ReferenceListItemListRelationFilter
   }
 
   export type CompanyOrderByWithRelationInput = {
@@ -111476,6 +112834,7 @@ export namespace Prisma {
     requisitions?: RequisitionOrderByRelationAggregateInput
     requisitionRevisions?: RequisitionRevisionOrderByRelationAggregateInput
     unitMasters?: UnitMasterOrderByRelationAggregateInput
+    referenceListItems?: ReferenceListItemOrderByRelationAggregateInput
   }
 
   export type CompanyWhereUniqueInput = Prisma.AtLeast<{
@@ -111537,6 +112896,7 @@ export namespace Prisma {
     requisitions?: RequisitionListRelationFilter
     requisitionRevisions?: RequisitionRevisionListRelationFilter
     unitMasters?: UnitMasterListRelationFilter
+    referenceListItems?: ReferenceListItemListRelationFilter
   }, "id" | "code">
 
   export type CompanyOrderByWithAggregationInput = {
@@ -118566,6 +119926,109 @@ export namespace Prisma {
     updatedBy?: StringNullableWithAggregatesFilter<"UnitMaster"> | string | null
   }
 
+  export type ReferenceListItemWhereInput = {
+    AND?: ReferenceListItemWhereInput | ReferenceListItemWhereInput[]
+    OR?: ReferenceListItemWhereInput[]
+    NOT?: ReferenceListItemWhereInput | ReferenceListItemWhereInput[]
+    id?: StringFilter<"ReferenceListItem"> | string
+    companyId?: StringFilter<"ReferenceListItem"> | string
+    listKey?: StringFilter<"ReferenceListItem"> | string
+    value?: StringFilter<"ReferenceListItem"> | string
+    label?: StringFilter<"ReferenceListItem"> | string
+    sortOrder?: IntFilter<"ReferenceListItem"> | number
+    active?: BoolFilter<"ReferenceListItem"> | boolean
+    isSystem?: BoolFilter<"ReferenceListItem"> | boolean
+    createdAt?: DateTimeFilter<"ReferenceListItem"> | Date | string
+    updatedAt?: DateTimeFilter<"ReferenceListItem"> | Date | string
+    createdBy?: StringNullableFilter<"ReferenceListItem"> | string | null
+    updatedBy?: StringNullableFilter<"ReferenceListItem"> | string | null
+    deletedAt?: DateTimeNullableFilter<"ReferenceListItem"> | Date | string | null
+    deletedBy?: StringNullableFilter<"ReferenceListItem"> | string | null
+    company?: XOR<CompanyScalarRelationFilter, CompanyWhereInput>
+  }
+
+  export type ReferenceListItemOrderByWithRelationInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    listKey?: SortOrder
+    value?: SortOrder
+    label?: SortOrder
+    sortOrder?: SortOrder
+    active?: SortOrder
+    isSystem?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    createdBy?: SortOrderInput | SortOrder
+    updatedBy?: SortOrderInput | SortOrder
+    deletedAt?: SortOrderInput | SortOrder
+    deletedBy?: SortOrderInput | SortOrder
+    company?: CompanyOrderByWithRelationInput
+  }
+
+  export type ReferenceListItemWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    companyId_listKey_value?: ReferenceListItemCompanyIdListKeyValueCompoundUniqueInput
+    AND?: ReferenceListItemWhereInput | ReferenceListItemWhereInput[]
+    OR?: ReferenceListItemWhereInput[]
+    NOT?: ReferenceListItemWhereInput | ReferenceListItemWhereInput[]
+    companyId?: StringFilter<"ReferenceListItem"> | string
+    listKey?: StringFilter<"ReferenceListItem"> | string
+    value?: StringFilter<"ReferenceListItem"> | string
+    label?: StringFilter<"ReferenceListItem"> | string
+    sortOrder?: IntFilter<"ReferenceListItem"> | number
+    active?: BoolFilter<"ReferenceListItem"> | boolean
+    isSystem?: BoolFilter<"ReferenceListItem"> | boolean
+    createdAt?: DateTimeFilter<"ReferenceListItem"> | Date | string
+    updatedAt?: DateTimeFilter<"ReferenceListItem"> | Date | string
+    createdBy?: StringNullableFilter<"ReferenceListItem"> | string | null
+    updatedBy?: StringNullableFilter<"ReferenceListItem"> | string | null
+    deletedAt?: DateTimeNullableFilter<"ReferenceListItem"> | Date | string | null
+    deletedBy?: StringNullableFilter<"ReferenceListItem"> | string | null
+    company?: XOR<CompanyScalarRelationFilter, CompanyWhereInput>
+  }, "id" | "companyId_listKey_value">
+
+  export type ReferenceListItemOrderByWithAggregationInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    listKey?: SortOrder
+    value?: SortOrder
+    label?: SortOrder
+    sortOrder?: SortOrder
+    active?: SortOrder
+    isSystem?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    createdBy?: SortOrderInput | SortOrder
+    updatedBy?: SortOrderInput | SortOrder
+    deletedAt?: SortOrderInput | SortOrder
+    deletedBy?: SortOrderInput | SortOrder
+    _count?: ReferenceListItemCountOrderByAggregateInput
+    _avg?: ReferenceListItemAvgOrderByAggregateInput
+    _max?: ReferenceListItemMaxOrderByAggregateInput
+    _min?: ReferenceListItemMinOrderByAggregateInput
+    _sum?: ReferenceListItemSumOrderByAggregateInput
+  }
+
+  export type ReferenceListItemScalarWhereWithAggregatesInput = {
+    AND?: ReferenceListItemScalarWhereWithAggregatesInput | ReferenceListItemScalarWhereWithAggregatesInput[]
+    OR?: ReferenceListItemScalarWhereWithAggregatesInput[]
+    NOT?: ReferenceListItemScalarWhereWithAggregatesInput | ReferenceListItemScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"ReferenceListItem"> | string
+    companyId?: StringWithAggregatesFilter<"ReferenceListItem"> | string
+    listKey?: StringWithAggregatesFilter<"ReferenceListItem"> | string
+    value?: StringWithAggregatesFilter<"ReferenceListItem"> | string
+    label?: StringWithAggregatesFilter<"ReferenceListItem"> | string
+    sortOrder?: IntWithAggregatesFilter<"ReferenceListItem"> | number
+    active?: BoolWithAggregatesFilter<"ReferenceListItem"> | boolean
+    isSystem?: BoolWithAggregatesFilter<"ReferenceListItem"> | boolean
+    createdAt?: DateTimeWithAggregatesFilter<"ReferenceListItem"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"ReferenceListItem"> | Date | string
+    createdBy?: StringNullableWithAggregatesFilter<"ReferenceListItem"> | string | null
+    updatedBy?: StringNullableWithAggregatesFilter<"ReferenceListItem"> | string | null
+    deletedAt?: DateTimeNullableWithAggregatesFilter<"ReferenceListItem"> | Date | string | null
+    deletedBy?: StringNullableWithAggregatesFilter<"ReferenceListItem"> | string | null
+  }
+
   export type EnvironmentRecordWhereInput = {
     AND?: EnvironmentRecordWhereInput | EnvironmentRecordWhereInput[]
     OR?: EnvironmentRecordWhereInput[]
@@ -120447,6 +121910,7 @@ export namespace Prisma {
     requisitions?: RequisitionCreateNestedManyWithoutCompanyInput
     requisitionRevisions?: RequisitionRevisionCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterCreateNestedManyWithoutCompanyInput
+    referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateInput = {
@@ -120505,6 +121969,7 @@ export namespace Prisma {
     requisitions?: RequisitionUncheckedCreateNestedManyWithoutCompanyInput
     requisitionRevisions?: RequisitionRevisionUncheckedCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterUncheckedCreateNestedManyWithoutCompanyInput
+    referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUpdateInput = {
@@ -120563,6 +122028,7 @@ export namespace Prisma {
     requisitions?: RequisitionUpdateManyWithoutCompanyNestedInput
     requisitionRevisions?: RequisitionRevisionUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUpdateManyWithoutCompanyNestedInput
+    referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateInput = {
@@ -120621,6 +122087,7 @@ export namespace Prisma {
     requisitions?: RequisitionUncheckedUpdateManyWithoutCompanyNestedInput
     requisitionRevisions?: RequisitionRevisionUncheckedUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUncheckedUpdateManyWithoutCompanyNestedInput
+    referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyCreateManyInput = {
@@ -128770,6 +130237,124 @@ export namespace Prisma {
     updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
+  export type ReferenceListItemCreateInput = {
+    id?: string
+    listKey: string
+    value: string
+    label: string
+    sortOrder?: number
+    active?: boolean
+    isSystem?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    company: CompanyCreateNestedOneWithoutReferenceListItemsInput
+  }
+
+  export type ReferenceListItemUncheckedCreateInput = {
+    id?: string
+    companyId: string
+    listKey: string
+    value: string
+    label: string
+    sortOrder?: number
+    active?: boolean
+    isSystem?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+  }
+
+  export type ReferenceListItemUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    listKey?: StringFieldUpdateOperationsInput | string
+    value?: StringFieldUpdateOperationsInput | string
+    label?: StringFieldUpdateOperationsInput | string
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    active?: BoolFieldUpdateOperationsInput | boolean
+    isSystem?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    company?: CompanyUpdateOneRequiredWithoutReferenceListItemsNestedInput
+  }
+
+  export type ReferenceListItemUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    listKey?: StringFieldUpdateOperationsInput | string
+    value?: StringFieldUpdateOperationsInput | string
+    label?: StringFieldUpdateOperationsInput | string
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    active?: BoolFieldUpdateOperationsInput | boolean
+    isSystem?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type ReferenceListItemCreateManyInput = {
+    id?: string
+    companyId: string
+    listKey: string
+    value: string
+    label: string
+    sortOrder?: number
+    active?: boolean
+    isSystem?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+  }
+
+  export type ReferenceListItemUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    listKey?: StringFieldUpdateOperationsInput | string
+    value?: StringFieldUpdateOperationsInput | string
+    label?: StringFieldUpdateOperationsInput | string
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    active?: BoolFieldUpdateOperationsInput | boolean
+    isSystem?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type ReferenceListItemUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    listKey?: StringFieldUpdateOperationsInput | string
+    value?: StringFieldUpdateOperationsInput | string
+    label?: StringFieldUpdateOperationsInput | string
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    active?: BoolFieldUpdateOperationsInput | boolean
+    isSystem?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
   export type EnvironmentRecordCreateInput = {
     id?: string
     year: number
@@ -131228,6 +132813,12 @@ export namespace Prisma {
     none?: UnitMasterWhereInput
   }
 
+  export type ReferenceListItemListRelationFilter = {
+    every?: ReferenceListItemWhereInput
+    some?: ReferenceListItemWhereInput
+    none?: ReferenceListItemWhereInput
+  }
+
   export type UserOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
@@ -131397,6 +132988,10 @@ export namespace Prisma {
   }
 
   export type UnitMasterOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ReferenceListItemOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -136928,6 +138523,71 @@ export namespace Prisma {
     _max?: NestedEnumUnitMasterMetricFilter<$PrismaModel>
   }
 
+  export type ReferenceListItemCompanyIdListKeyValueCompoundUniqueInput = {
+    companyId: string
+    listKey: string
+    value: string
+  }
+
+  export type ReferenceListItemCountOrderByAggregateInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    listKey?: SortOrder
+    value?: SortOrder
+    label?: SortOrder
+    sortOrder?: SortOrder
+    active?: SortOrder
+    isSystem?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    createdBy?: SortOrder
+    updatedBy?: SortOrder
+    deletedAt?: SortOrder
+    deletedBy?: SortOrder
+  }
+
+  export type ReferenceListItemAvgOrderByAggregateInput = {
+    sortOrder?: SortOrder
+  }
+
+  export type ReferenceListItemMaxOrderByAggregateInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    listKey?: SortOrder
+    value?: SortOrder
+    label?: SortOrder
+    sortOrder?: SortOrder
+    active?: SortOrder
+    isSystem?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    createdBy?: SortOrder
+    updatedBy?: SortOrder
+    deletedAt?: SortOrder
+    deletedBy?: SortOrder
+  }
+
+  export type ReferenceListItemMinOrderByAggregateInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    listKey?: SortOrder
+    value?: SortOrder
+    label?: SortOrder
+    sortOrder?: SortOrder
+    active?: SortOrder
+    isSystem?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    createdBy?: SortOrder
+    updatedBy?: SortOrder
+    deletedAt?: SortOrder
+    deletedBy?: SortOrder
+  }
+
+  export type ReferenceListItemSumOrderByAggregateInput = {
+    sortOrder?: SortOrder
+  }
+
   export type GarbageLedgerEntryListRelationFilter = {
     every?: GarbageLedgerEntryWhereInput
     some?: GarbageLedgerEntryWhereInput
@@ -138764,6 +140424,13 @@ export namespace Prisma {
     connect?: UnitMasterWhereUniqueInput | UnitMasterWhereUniqueInput[]
   }
 
+  export type ReferenceListItemCreateNestedManyWithoutCompanyInput = {
+    create?: XOR<ReferenceListItemCreateWithoutCompanyInput, ReferenceListItemUncheckedCreateWithoutCompanyInput> | ReferenceListItemCreateWithoutCompanyInput[] | ReferenceListItemUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: ReferenceListItemCreateOrConnectWithoutCompanyInput | ReferenceListItemCreateOrConnectWithoutCompanyInput[]
+    createMany?: ReferenceListItemCreateManyCompanyInputEnvelope
+    connect?: ReferenceListItemWhereUniqueInput | ReferenceListItemWhereUniqueInput[]
+  }
+
   export type UserUncheckedCreateNestedManyWithoutCompanyInput = {
     create?: XOR<UserCreateWithoutCompanyInput, UserUncheckedCreateWithoutCompanyInput> | UserCreateWithoutCompanyInput[] | UserUncheckedCreateWithoutCompanyInput[]
     connectOrCreate?: UserCreateOrConnectWithoutCompanyInput | UserCreateOrConnectWithoutCompanyInput[]
@@ -139063,6 +140730,13 @@ export namespace Prisma {
     connectOrCreate?: UnitMasterCreateOrConnectWithoutCompanyInput | UnitMasterCreateOrConnectWithoutCompanyInput[]
     createMany?: UnitMasterCreateManyCompanyInputEnvelope
     connect?: UnitMasterWhereUniqueInput | UnitMasterWhereUniqueInput[]
+  }
+
+  export type ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput = {
+    create?: XOR<ReferenceListItemCreateWithoutCompanyInput, ReferenceListItemUncheckedCreateWithoutCompanyInput> | ReferenceListItemCreateWithoutCompanyInput[] | ReferenceListItemUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: ReferenceListItemCreateOrConnectWithoutCompanyInput | ReferenceListItemCreateOrConnectWithoutCompanyInput[]
+    createMany?: ReferenceListItemCreateManyCompanyInputEnvelope
+    connect?: ReferenceListItemWhereUniqueInput | ReferenceListItemWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -139691,6 +141365,20 @@ export namespace Prisma {
     deleteMany?: UnitMasterScalarWhereInput | UnitMasterScalarWhereInput[]
   }
 
+  export type ReferenceListItemUpdateManyWithoutCompanyNestedInput = {
+    create?: XOR<ReferenceListItemCreateWithoutCompanyInput, ReferenceListItemUncheckedCreateWithoutCompanyInput> | ReferenceListItemCreateWithoutCompanyInput[] | ReferenceListItemUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: ReferenceListItemCreateOrConnectWithoutCompanyInput | ReferenceListItemCreateOrConnectWithoutCompanyInput[]
+    upsert?: ReferenceListItemUpsertWithWhereUniqueWithoutCompanyInput | ReferenceListItemUpsertWithWhereUniqueWithoutCompanyInput[]
+    createMany?: ReferenceListItemCreateManyCompanyInputEnvelope
+    set?: ReferenceListItemWhereUniqueInput | ReferenceListItemWhereUniqueInput[]
+    disconnect?: ReferenceListItemWhereUniqueInput | ReferenceListItemWhereUniqueInput[]
+    delete?: ReferenceListItemWhereUniqueInput | ReferenceListItemWhereUniqueInput[]
+    connect?: ReferenceListItemWhereUniqueInput | ReferenceListItemWhereUniqueInput[]
+    update?: ReferenceListItemUpdateWithWhereUniqueWithoutCompanyInput | ReferenceListItemUpdateWithWhereUniqueWithoutCompanyInput[]
+    updateMany?: ReferenceListItemUpdateManyWithWhereWithoutCompanyInput | ReferenceListItemUpdateManyWithWhereWithoutCompanyInput[]
+    deleteMany?: ReferenceListItemScalarWhereInput | ReferenceListItemScalarWhereInput[]
+  }
+
   export type UserUncheckedUpdateManyWithoutCompanyNestedInput = {
     create?: XOR<UserCreateWithoutCompanyInput, UserUncheckedCreateWithoutCompanyInput> | UserCreateWithoutCompanyInput[] | UserUncheckedCreateWithoutCompanyInput[]
     connectOrCreate?: UserCreateOrConnectWithoutCompanyInput | UserCreateOrConnectWithoutCompanyInput[]
@@ -140291,6 +141979,20 @@ export namespace Prisma {
     update?: UnitMasterUpdateWithWhereUniqueWithoutCompanyInput | UnitMasterUpdateWithWhereUniqueWithoutCompanyInput[]
     updateMany?: UnitMasterUpdateManyWithWhereWithoutCompanyInput | UnitMasterUpdateManyWithWhereWithoutCompanyInput[]
     deleteMany?: UnitMasterScalarWhereInput | UnitMasterScalarWhereInput[]
+  }
+
+  export type ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput = {
+    create?: XOR<ReferenceListItemCreateWithoutCompanyInput, ReferenceListItemUncheckedCreateWithoutCompanyInput> | ReferenceListItemCreateWithoutCompanyInput[] | ReferenceListItemUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: ReferenceListItemCreateOrConnectWithoutCompanyInput | ReferenceListItemCreateOrConnectWithoutCompanyInput[]
+    upsert?: ReferenceListItemUpsertWithWhereUniqueWithoutCompanyInput | ReferenceListItemUpsertWithWhereUniqueWithoutCompanyInput[]
+    createMany?: ReferenceListItemCreateManyCompanyInputEnvelope
+    set?: ReferenceListItemWhereUniqueInput | ReferenceListItemWhereUniqueInput[]
+    disconnect?: ReferenceListItemWhereUniqueInput | ReferenceListItemWhereUniqueInput[]
+    delete?: ReferenceListItemWhereUniqueInput | ReferenceListItemWhereUniqueInput[]
+    connect?: ReferenceListItemWhereUniqueInput | ReferenceListItemWhereUniqueInput[]
+    update?: ReferenceListItemUpdateWithWhereUniqueWithoutCompanyInput | ReferenceListItemUpdateWithWhereUniqueWithoutCompanyInput[]
+    updateMany?: ReferenceListItemUpdateManyWithWhereWithoutCompanyInput | ReferenceListItemUpdateManyWithWhereWithoutCompanyInput[]
+    deleteMany?: ReferenceListItemScalarWhereInput | ReferenceListItemScalarWhereInput[]
   }
 
   export type CompanyCreateNestedOneWithoutUsersInput = {
@@ -145171,6 +146873,20 @@ export namespace Prisma {
     update?: XOR<XOR<CompanyUpdateToOneWithWhereWithoutUnitMastersInput, CompanyUpdateWithoutUnitMastersInput>, CompanyUncheckedUpdateWithoutUnitMastersInput>
   }
 
+  export type CompanyCreateNestedOneWithoutReferenceListItemsInput = {
+    create?: XOR<CompanyCreateWithoutReferenceListItemsInput, CompanyUncheckedCreateWithoutReferenceListItemsInput>
+    connectOrCreate?: CompanyCreateOrConnectWithoutReferenceListItemsInput
+    connect?: CompanyWhereUniqueInput
+  }
+
+  export type CompanyUpdateOneRequiredWithoutReferenceListItemsNestedInput = {
+    create?: XOR<CompanyCreateWithoutReferenceListItemsInput, CompanyUncheckedCreateWithoutReferenceListItemsInput>
+    connectOrCreate?: CompanyCreateOrConnectWithoutReferenceListItemsInput
+    upsert?: CompanyUpsertWithoutReferenceListItemsInput
+    connect?: CompanyWhereUniqueInput
+    update?: XOR<XOR<CompanyUpdateToOneWithWhereWithoutReferenceListItemsInput, CompanyUpdateWithoutReferenceListItemsInput>, CompanyUncheckedUpdateWithoutReferenceListItemsInput>
+  }
+
   export type CompanyCreateNestedOneWithoutEnvironmentRecordsInput = {
     create?: XOR<CompanyCreateWithoutEnvironmentRecordsInput, CompanyUncheckedCreateWithoutEnvironmentRecordsInput>
     connectOrCreate?: CompanyCreateOrConnectWithoutEnvironmentRecordsInput
@@ -149748,6 +151464,48 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type ReferenceListItemCreateWithoutCompanyInput = {
+    id?: string
+    listKey: string
+    value: string
+    label: string
+    sortOrder?: number
+    active?: boolean
+    isSystem?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+  }
+
+  export type ReferenceListItemUncheckedCreateWithoutCompanyInput = {
+    id?: string
+    listKey: string
+    value: string
+    label: string
+    sortOrder?: number
+    active?: boolean
+    isSystem?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+  }
+
+  export type ReferenceListItemCreateOrConnectWithoutCompanyInput = {
+    where: ReferenceListItemWhereUniqueInput
+    create: XOR<ReferenceListItemCreateWithoutCompanyInput, ReferenceListItemUncheckedCreateWithoutCompanyInput>
+  }
+
+  export type ReferenceListItemCreateManyCompanyInputEnvelope = {
+    data: ReferenceListItemCreateManyCompanyInput | ReferenceListItemCreateManyCompanyInput[]
+    skipDuplicates?: boolean
+  }
+
   export type UserUpsertWithWhereUniqueWithoutCompanyInput = {
     where: UserWhereUniqueInput
     update: XOR<UserUpdateWithoutCompanyInput, UserUncheckedUpdateWithoutCompanyInput>
@@ -151538,6 +153296,42 @@ export namespace Prisma {
     updatedBy?: StringNullableFilter<"UnitMaster"> | string | null
   }
 
+  export type ReferenceListItemUpsertWithWhereUniqueWithoutCompanyInput = {
+    where: ReferenceListItemWhereUniqueInput
+    update: XOR<ReferenceListItemUpdateWithoutCompanyInput, ReferenceListItemUncheckedUpdateWithoutCompanyInput>
+    create: XOR<ReferenceListItemCreateWithoutCompanyInput, ReferenceListItemUncheckedCreateWithoutCompanyInput>
+  }
+
+  export type ReferenceListItemUpdateWithWhereUniqueWithoutCompanyInput = {
+    where: ReferenceListItemWhereUniqueInput
+    data: XOR<ReferenceListItemUpdateWithoutCompanyInput, ReferenceListItemUncheckedUpdateWithoutCompanyInput>
+  }
+
+  export type ReferenceListItemUpdateManyWithWhereWithoutCompanyInput = {
+    where: ReferenceListItemScalarWhereInput
+    data: XOR<ReferenceListItemUpdateManyMutationInput, ReferenceListItemUncheckedUpdateManyWithoutCompanyInput>
+  }
+
+  export type ReferenceListItemScalarWhereInput = {
+    AND?: ReferenceListItemScalarWhereInput | ReferenceListItemScalarWhereInput[]
+    OR?: ReferenceListItemScalarWhereInput[]
+    NOT?: ReferenceListItemScalarWhereInput | ReferenceListItemScalarWhereInput[]
+    id?: StringFilter<"ReferenceListItem"> | string
+    companyId?: StringFilter<"ReferenceListItem"> | string
+    listKey?: StringFilter<"ReferenceListItem"> | string
+    value?: StringFilter<"ReferenceListItem"> | string
+    label?: StringFilter<"ReferenceListItem"> | string
+    sortOrder?: IntFilter<"ReferenceListItem"> | number
+    active?: BoolFilter<"ReferenceListItem"> | boolean
+    isSystem?: BoolFilter<"ReferenceListItem"> | boolean
+    createdAt?: DateTimeFilter<"ReferenceListItem"> | Date | string
+    updatedAt?: DateTimeFilter<"ReferenceListItem"> | Date | string
+    createdBy?: StringNullableFilter<"ReferenceListItem"> | string | null
+    updatedBy?: StringNullableFilter<"ReferenceListItem"> | string | null
+    deletedAt?: DateTimeNullableFilter<"ReferenceListItem"> | Date | string | null
+    deletedBy?: StringNullableFilter<"ReferenceListItem"> | string | null
+  }
+
   export type CompanyCreateWithoutUsersInput = {
     id?: string
     name: string
@@ -151593,6 +153387,7 @@ export namespace Prisma {
     requisitions?: RequisitionCreateNestedManyWithoutCompanyInput
     requisitionRevisions?: RequisitionRevisionCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterCreateNestedManyWithoutCompanyInput
+    referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutUsersInput = {
@@ -151650,6 +153445,7 @@ export namespace Prisma {
     requisitions?: RequisitionUncheckedCreateNestedManyWithoutCompanyInput
     requisitionRevisions?: RequisitionRevisionUncheckedCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterUncheckedCreateNestedManyWithoutCompanyInput
+    referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutUsersInput = {
@@ -152364,6 +154160,7 @@ export namespace Prisma {
     requisitions?: RequisitionUpdateManyWithoutCompanyNestedInput
     requisitionRevisions?: RequisitionRevisionUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUpdateManyWithoutCompanyNestedInput
+    referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutUsersInput = {
@@ -152421,6 +154218,7 @@ export namespace Prisma {
     requisitions?: RequisitionUncheckedUpdateManyWithoutCompanyNestedInput
     requisitionRevisions?: RequisitionRevisionUncheckedUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUncheckedUpdateManyWithoutCompanyNestedInput
+    referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type VesselUpsertWithoutUsersInput = {
@@ -152871,6 +154669,7 @@ export namespace Prisma {
     requisitions?: RequisitionCreateNestedManyWithoutCompanyInput
     requisitionRevisions?: RequisitionRevisionCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterCreateNestedManyWithoutCompanyInput
+    referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutRolesInput = {
@@ -152928,6 +154727,7 @@ export namespace Prisma {
     requisitions?: RequisitionUncheckedCreateNestedManyWithoutCompanyInput
     requisitionRevisions?: RequisitionRevisionUncheckedCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterUncheckedCreateNestedManyWithoutCompanyInput
+    referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutRolesInput = {
@@ -153037,6 +154837,7 @@ export namespace Prisma {
     requisitions?: RequisitionUpdateManyWithoutCompanyNestedInput
     requisitionRevisions?: RequisitionRevisionUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUpdateManyWithoutCompanyNestedInput
+    referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutRolesInput = {
@@ -153094,6 +154895,7 @@ export namespace Prisma {
     requisitions?: RequisitionUncheckedUpdateManyWithoutCompanyNestedInput
     requisitionRevisions?: RequisitionRevisionUncheckedUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUncheckedUpdateManyWithoutCompanyNestedInput
+    referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type UserRoleUpsertWithWhereUniqueWithoutRoleInput = {
@@ -153513,6 +155315,7 @@ export namespace Prisma {
     requisitions?: RequisitionCreateNestedManyWithoutCompanyInput
     requisitionRevisions?: RequisitionRevisionCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterCreateNestedManyWithoutCompanyInput
+    referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutVesselsInput = {
@@ -153570,6 +155373,7 @@ export namespace Prisma {
     requisitions?: RequisitionUncheckedCreateNestedManyWithoutCompanyInput
     requisitionRevisions?: RequisitionRevisionUncheckedCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterUncheckedCreateNestedManyWithoutCompanyInput
+    referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutVesselsInput = {
@@ -155512,6 +157316,7 @@ export namespace Prisma {
     requisitions?: RequisitionUpdateManyWithoutCompanyNestedInput
     requisitionRevisions?: RequisitionRevisionUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUpdateManyWithoutCompanyNestedInput
+    referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutVesselsInput = {
@@ -155569,6 +157374,7 @@ export namespace Prisma {
     requisitions?: RequisitionUncheckedUpdateManyWithoutCompanyNestedInput
     requisitionRevisions?: RequisitionRevisionUncheckedUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUncheckedUpdateManyWithoutCompanyNestedInput
+    referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type SmsDocumentUpsertWithWhereUniqueWithoutVesselInput = {
@@ -156363,6 +158169,7 @@ export namespace Prisma {
     requisitions?: RequisitionCreateNestedManyWithoutCompanyInput
     requisitionRevisions?: RequisitionRevisionCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterCreateNestedManyWithoutCompanyInput
+    referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutWorkflowsInput = {
@@ -156420,6 +158227,7 @@ export namespace Prisma {
     requisitions?: RequisitionUncheckedCreateNestedManyWithoutCompanyInput
     requisitionRevisions?: RequisitionRevisionUncheckedCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterUncheckedCreateNestedManyWithoutCompanyInput
+    referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutWorkflowsInput = {
@@ -156561,6 +158369,7 @@ export namespace Prisma {
     requisitions?: RequisitionUpdateManyWithoutCompanyNestedInput
     requisitionRevisions?: RequisitionRevisionUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUpdateManyWithoutCompanyNestedInput
+    referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutWorkflowsInput = {
@@ -156618,6 +158427,7 @@ export namespace Prisma {
     requisitions?: RequisitionUncheckedUpdateManyWithoutCompanyNestedInput
     requisitionRevisions?: RequisitionRevisionUncheckedUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUncheckedUpdateManyWithoutCompanyNestedInput
+    referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type WorkflowStepUpsertWithWhereUniqueWithoutDefinitionInput = {
@@ -157107,6 +158917,7 @@ export namespace Prisma {
     requisitions?: RequisitionCreateNestedManyWithoutCompanyInput
     requisitionRevisions?: RequisitionRevisionCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterCreateNestedManyWithoutCompanyInput
+    referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutSmsDocumentsInput = {
@@ -157164,6 +158975,7 @@ export namespace Prisma {
     requisitions?: RequisitionUncheckedCreateNestedManyWithoutCompanyInput
     requisitionRevisions?: RequisitionRevisionUncheckedCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterUncheckedCreateNestedManyWithoutCompanyInput
+    referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutSmsDocumentsInput = {
@@ -157554,6 +159366,7 @@ export namespace Prisma {
     requisitions?: RequisitionUpdateManyWithoutCompanyNestedInput
     requisitionRevisions?: RequisitionRevisionUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUpdateManyWithoutCompanyNestedInput
+    referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutSmsDocumentsInput = {
@@ -157611,6 +159424,7 @@ export namespace Prisma {
     requisitions?: RequisitionUncheckedUpdateManyWithoutCompanyNestedInput
     requisitionRevisions?: RequisitionRevisionUncheckedUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUncheckedUpdateManyWithoutCompanyNestedInput
+    referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type UserUpsertWithoutOwnedDocsInput = {
@@ -158188,6 +160002,7 @@ export namespace Prisma {
     requisitions?: RequisitionCreateNestedManyWithoutCompanyInput
     requisitionRevisions?: RequisitionRevisionCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterCreateNestedManyWithoutCompanyInput
+    referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutIncidentsInput = {
@@ -158245,6 +160060,7 @@ export namespace Prisma {
     requisitions?: RequisitionUncheckedCreateNestedManyWithoutCompanyInput
     requisitionRevisions?: RequisitionRevisionUncheckedCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterUncheckedCreateNestedManyWithoutCompanyInput
+    referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutIncidentsInput = {
@@ -158608,6 +160424,7 @@ export namespace Prisma {
     requisitions?: RequisitionUpdateManyWithoutCompanyNestedInput
     requisitionRevisions?: RequisitionRevisionUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUpdateManyWithoutCompanyNestedInput
+    referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutIncidentsInput = {
@@ -158665,6 +160482,7 @@ export namespace Prisma {
     requisitions?: RequisitionUncheckedUpdateManyWithoutCompanyNestedInput
     requisitionRevisions?: RequisitionRevisionUncheckedUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUncheckedUpdateManyWithoutCompanyNestedInput
+    referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type VesselUpsertWithoutIncidentsInput = {
@@ -159316,6 +161134,7 @@ export namespace Prisma {
     requisitions?: RequisitionCreateNestedManyWithoutCompanyInput
     requisitionRevisions?: RequisitionRevisionCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterCreateNestedManyWithoutCompanyInput
+    referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutNearMissesInput = {
@@ -159373,6 +161192,7 @@ export namespace Prisma {
     requisitions?: RequisitionUncheckedCreateNestedManyWithoutCompanyInput
     requisitionRevisions?: RequisitionRevisionUncheckedCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterUncheckedCreateNestedManyWithoutCompanyInput
+    referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutNearMissesInput = {
@@ -159684,6 +161504,7 @@ export namespace Prisma {
     requisitions?: RequisitionUpdateManyWithoutCompanyNestedInput
     requisitionRevisions?: RequisitionRevisionUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUpdateManyWithoutCompanyNestedInput
+    referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutNearMissesInput = {
@@ -159741,6 +161562,7 @@ export namespace Prisma {
     requisitions?: RequisitionUncheckedUpdateManyWithoutCompanyNestedInput
     requisitionRevisions?: RequisitionRevisionUncheckedUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUncheckedUpdateManyWithoutCompanyNestedInput
+    referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type VesselUpsertWithoutNearMissesInput = {
@@ -160048,6 +161870,7 @@ export namespace Prisma {
     requisitions?: RequisitionCreateNestedManyWithoutCompanyInput
     requisitionRevisions?: RequisitionRevisionCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterCreateNestedManyWithoutCompanyInput
+    referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutNonConformitiesInput = {
@@ -160105,6 +161928,7 @@ export namespace Prisma {
     requisitions?: RequisitionUncheckedCreateNestedManyWithoutCompanyInput
     requisitionRevisions?: RequisitionRevisionUncheckedCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterUncheckedCreateNestedManyWithoutCompanyInput
+    referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutNonConformitiesInput = {
@@ -160416,6 +162240,7 @@ export namespace Prisma {
     requisitions?: RequisitionUpdateManyWithoutCompanyNestedInput
     requisitionRevisions?: RequisitionRevisionUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUpdateManyWithoutCompanyNestedInput
+    referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutNonConformitiesInput = {
@@ -160473,6 +162298,7 @@ export namespace Prisma {
     requisitions?: RequisitionUncheckedUpdateManyWithoutCompanyNestedInput
     requisitionRevisions?: RequisitionRevisionUncheckedUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUncheckedUpdateManyWithoutCompanyNestedInput
+    referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type VesselUpsertWithoutNonConformitiesInput = {
@@ -160780,6 +162606,7 @@ export namespace Prisma {
     requisitions?: RequisitionCreateNestedManyWithoutCompanyInput
     requisitionRevisions?: RequisitionRevisionCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterCreateNestedManyWithoutCompanyInput
+    referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutSireInspectionsInput = {
@@ -160837,6 +162664,7 @@ export namespace Prisma {
     requisitions?: RequisitionUncheckedCreateNestedManyWithoutCompanyInput
     requisitionRevisions?: RequisitionRevisionUncheckedCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterUncheckedCreateNestedManyWithoutCompanyInput
+    referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutSireInspectionsInput = {
@@ -161151,6 +162979,7 @@ export namespace Prisma {
     requisitions?: RequisitionUpdateManyWithoutCompanyNestedInput
     requisitionRevisions?: RequisitionRevisionUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUpdateManyWithoutCompanyNestedInput
+    referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutSireInspectionsInput = {
@@ -161208,6 +163037,7 @@ export namespace Prisma {
     requisitions?: RequisitionUncheckedUpdateManyWithoutCompanyNestedInput
     requisitionRevisions?: RequisitionRevisionUncheckedUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUncheckedUpdateManyWithoutCompanyNestedInput
+    referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type VesselUpsertWithoutSireInspectionsInput = {
@@ -162108,6 +163938,7 @@ export namespace Prisma {
     requisitions?: RequisitionCreateNestedManyWithoutCompanyInput
     requisitionRevisions?: RequisitionRevisionCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterCreateNestedManyWithoutCompanyInput
+    referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutSireQuestionnaireVersionsInput = {
@@ -162165,6 +163996,7 @@ export namespace Prisma {
     requisitions?: RequisitionUncheckedCreateNestedManyWithoutCompanyInput
     requisitionRevisions?: RequisitionRevisionUncheckedCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterUncheckedCreateNestedManyWithoutCompanyInput
+    referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutSireQuestionnaireVersionsInput = {
@@ -162272,6 +164104,7 @@ export namespace Prisma {
     requisitions?: RequisitionUpdateManyWithoutCompanyNestedInput
     requisitionRevisions?: RequisitionRevisionUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUpdateManyWithoutCompanyNestedInput
+    referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutSireQuestionnaireVersionsInput = {
@@ -162329,6 +164162,7 @@ export namespace Prisma {
     requisitions?: RequisitionUncheckedUpdateManyWithoutCompanyNestedInput
     requisitionRevisions?: RequisitionRevisionUncheckedUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUncheckedUpdateManyWithoutCompanyNestedInput
+    referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type SireQuestionnaireItemUpsertWithWhereUniqueWithoutVersionInput = {
@@ -162482,6 +164316,7 @@ export namespace Prisma {
     requisitions?: RequisitionCreateNestedManyWithoutCompanyInput
     requisitionRevisions?: RequisitionRevisionCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterCreateNestedManyWithoutCompanyInput
+    referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutPscInspectionsInput = {
@@ -162539,6 +164374,7 @@ export namespace Prisma {
     requisitions?: RequisitionUncheckedCreateNestedManyWithoutCompanyInput
     requisitionRevisions?: RequisitionRevisionUncheckedCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterUncheckedCreateNestedManyWithoutCompanyInput
+    referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutPscInspectionsInput = {
@@ -162831,6 +164667,7 @@ export namespace Prisma {
     requisitions?: RequisitionUpdateManyWithoutCompanyNestedInput
     requisitionRevisions?: RequisitionRevisionUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUpdateManyWithoutCompanyNestedInput
+    referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutPscInspectionsInput = {
@@ -162888,6 +164725,7 @@ export namespace Prisma {
     requisitions?: RequisitionUncheckedUpdateManyWithoutCompanyNestedInput
     requisitionRevisions?: RequisitionRevisionUncheckedUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUncheckedUpdateManyWithoutCompanyNestedInput
+    referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type VesselUpsertWithoutPscInspectionsInput = {
@@ -163265,6 +165103,7 @@ export namespace Prisma {
     requisitions?: RequisitionCreateNestedManyWithoutCompanyInput
     requisitionRevisions?: RequisitionRevisionCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterCreateNestedManyWithoutCompanyInput
+    referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutCdiInspectionsInput = {
@@ -163322,6 +165161,7 @@ export namespace Prisma {
     requisitions?: RequisitionUncheckedCreateNestedManyWithoutCompanyInput
     requisitionRevisions?: RequisitionRevisionUncheckedCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterUncheckedCreateNestedManyWithoutCompanyInput
+    referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutCdiInspectionsInput = {
@@ -163616,6 +165456,7 @@ export namespace Prisma {
     requisitions?: RequisitionUpdateManyWithoutCompanyNestedInput
     requisitionRevisions?: RequisitionRevisionUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUpdateManyWithoutCompanyNestedInput
+    referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutCdiInspectionsInput = {
@@ -163673,6 +165514,7 @@ export namespace Prisma {
     requisitions?: RequisitionUncheckedUpdateManyWithoutCompanyNestedInput
     requisitionRevisions?: RequisitionRevisionUncheckedUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUncheckedUpdateManyWithoutCompanyNestedInput
+    referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type VesselUpsertWithoutCdiInspectionsInput = {
@@ -164047,6 +165889,7 @@ export namespace Prisma {
     requisitions?: RequisitionCreateNestedManyWithoutCompanyInput
     requisitionRevisions?: RequisitionRevisionCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterCreateNestedManyWithoutCompanyInput
+    referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutInternalAuditsInput = {
@@ -164104,6 +165947,7 @@ export namespace Prisma {
     requisitions?: RequisitionUncheckedCreateNestedManyWithoutCompanyInput
     requisitionRevisions?: RequisitionRevisionUncheckedCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterUncheckedCreateNestedManyWithoutCompanyInput
+    referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutInternalAuditsInput = {
@@ -164394,6 +166238,7 @@ export namespace Prisma {
     requisitions?: RequisitionUpdateManyWithoutCompanyNestedInput
     requisitionRevisions?: RequisitionRevisionUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUpdateManyWithoutCompanyNestedInput
+    referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutInternalAuditsInput = {
@@ -164451,6 +166296,7 @@ export namespace Prisma {
     requisitions?: RequisitionUncheckedUpdateManyWithoutCompanyNestedInput
     requisitionRevisions?: RequisitionRevisionUncheckedUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUncheckedUpdateManyWithoutCompanyNestedInput
+    referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type VesselUpsertWithoutInternalAuditsInput = {
@@ -164827,6 +166673,7 @@ export namespace Prisma {
     requisitions?: RequisitionCreateNestedManyWithoutCompanyInput
     requisitionRevisions?: RequisitionRevisionCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterCreateNestedManyWithoutCompanyInput
+    referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutExternalAuditsInput = {
@@ -164884,6 +166731,7 @@ export namespace Prisma {
     requisitions?: RequisitionUncheckedCreateNestedManyWithoutCompanyInput
     requisitionRevisions?: RequisitionRevisionUncheckedCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterUncheckedCreateNestedManyWithoutCompanyInput
+    referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutExternalAuditsInput = {
@@ -165174,6 +167022,7 @@ export namespace Prisma {
     requisitions?: RequisitionUpdateManyWithoutCompanyNestedInput
     requisitionRevisions?: RequisitionRevisionUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUpdateManyWithoutCompanyNestedInput
+    referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutExternalAuditsInput = {
@@ -165231,6 +167080,7 @@ export namespace Prisma {
     requisitions?: RequisitionUncheckedUpdateManyWithoutCompanyNestedInput
     requisitionRevisions?: RequisitionRevisionUncheckedUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUncheckedUpdateManyWithoutCompanyNestedInput
+    referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type VesselUpsertWithoutExternalAuditsInput = {
@@ -165607,6 +167457,7 @@ export namespace Prisma {
     requisitions?: RequisitionCreateNestedManyWithoutCompanyInput
     requisitionRevisions?: RequisitionRevisionCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterCreateNestedManyWithoutCompanyInput
+    referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutCompanyInspectionsInput = {
@@ -165664,6 +167515,7 @@ export namespace Prisma {
     requisitions?: RequisitionUncheckedCreateNestedManyWithoutCompanyInput
     requisitionRevisions?: RequisitionRevisionUncheckedCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterUncheckedCreateNestedManyWithoutCompanyInput
+    referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutCompanyInspectionsInput = {
@@ -165962,6 +167814,7 @@ export namespace Prisma {
     requisitions?: RequisitionUpdateManyWithoutCompanyNestedInput
     requisitionRevisions?: RequisitionRevisionUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUpdateManyWithoutCompanyNestedInput
+    referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutCompanyInspectionsInput = {
@@ -166019,6 +167872,7 @@ export namespace Prisma {
     requisitions?: RequisitionUncheckedUpdateManyWithoutCompanyNestedInput
     requisitionRevisions?: RequisitionRevisionUncheckedUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUncheckedUpdateManyWithoutCompanyNestedInput
+    referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type VesselUpsertWithoutCompanyInspectionsInput = {
@@ -166399,6 +168253,7 @@ export namespace Prisma {
     requisitions?: RequisitionCreateNestedManyWithoutCompanyInput
     requisitionRevisions?: RequisitionRevisionCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterCreateNestedManyWithoutCompanyInput
+    referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutCommitteeMeetingsInput = {
@@ -166456,6 +168311,7 @@ export namespace Prisma {
     requisitions?: RequisitionUncheckedCreateNestedManyWithoutCompanyInput
     requisitionRevisions?: RequisitionRevisionUncheckedCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterUncheckedCreateNestedManyWithoutCompanyInput
+    referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutCommitteeMeetingsInput = {
@@ -166742,6 +168598,7 @@ export namespace Prisma {
     requisitions?: RequisitionUpdateManyWithoutCompanyNestedInput
     requisitionRevisions?: RequisitionRevisionUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUpdateManyWithoutCompanyNestedInput
+    referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutCommitteeMeetingsInput = {
@@ -166799,6 +168656,7 @@ export namespace Prisma {
     requisitions?: RequisitionUncheckedUpdateManyWithoutCompanyNestedInput
     requisitionRevisions?: RequisitionRevisionUncheckedUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUncheckedUpdateManyWithoutCompanyNestedInput
+    referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type VesselUpsertWithoutCommitteeMeetingsInput = {
@@ -167197,6 +169055,7 @@ export namespace Prisma {
     requisitions?: RequisitionCreateNestedManyWithoutCompanyInput
     requisitionRevisions?: RequisitionRevisionCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterCreateNestedManyWithoutCompanyInput
+    referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutScheduleItemsInput = {
@@ -167254,6 +169113,7 @@ export namespace Prisma {
     requisitions?: RequisitionUncheckedCreateNestedManyWithoutCompanyInput
     requisitionRevisions?: RequisitionRevisionUncheckedCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterUncheckedCreateNestedManyWithoutCompanyInput
+    referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutScheduleItemsInput = {
@@ -167461,6 +169321,7 @@ export namespace Prisma {
     requisitions?: RequisitionUpdateManyWithoutCompanyNestedInput
     requisitionRevisions?: RequisitionRevisionUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUpdateManyWithoutCompanyNestedInput
+    referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutScheduleItemsInput = {
@@ -167518,6 +169379,7 @@ export namespace Prisma {
     requisitions?: RequisitionUncheckedUpdateManyWithoutCompanyNestedInput
     requisitionRevisions?: RequisitionRevisionUncheckedUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUncheckedUpdateManyWithoutCompanyNestedInput
+    referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type EmergencyDrillUpsertWithWhereUniqueWithoutScheduleItemInput = {
@@ -167623,6 +169485,7 @@ export namespace Prisma {
     requisitions?: RequisitionCreateNestedManyWithoutCompanyInput
     requisitionRevisions?: RequisitionRevisionCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterCreateNestedManyWithoutCompanyInput
+    referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutScheduleApplicabilityInput = {
@@ -167680,6 +169543,7 @@ export namespace Prisma {
     requisitions?: RequisitionUncheckedCreateNestedManyWithoutCompanyInput
     requisitionRevisions?: RequisitionRevisionUncheckedCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterUncheckedCreateNestedManyWithoutCompanyInput
+    referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutScheduleApplicabilityInput = {
@@ -167975,6 +169839,7 @@ export namespace Prisma {
     requisitions?: RequisitionUpdateManyWithoutCompanyNestedInput
     requisitionRevisions?: RequisitionRevisionUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUpdateManyWithoutCompanyNestedInput
+    referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutScheduleApplicabilityInput = {
@@ -168032,6 +169897,7 @@ export namespace Prisma {
     requisitions?: RequisitionUncheckedUpdateManyWithoutCompanyNestedInput
     requisitionRevisions?: RequisitionRevisionUncheckedUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUncheckedUpdateManyWithoutCompanyNestedInput
+    referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type VesselUpsertWithoutScheduleApplicabilityInput = {
@@ -168323,6 +170189,7 @@ export namespace Prisma {
     requisitions?: RequisitionCreateNestedManyWithoutCompanyInput
     requisitionRevisions?: RequisitionRevisionCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterCreateNestedManyWithoutCompanyInput
+    referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutEmergencyDrillsInput = {
@@ -168380,6 +170247,7 @@ export namespace Prisma {
     requisitions?: RequisitionUncheckedCreateNestedManyWithoutCompanyInput
     requisitionRevisions?: RequisitionRevisionUncheckedCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterUncheckedCreateNestedManyWithoutCompanyInput
+    referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutEmergencyDrillsInput = {
@@ -168675,6 +170543,7 @@ export namespace Prisma {
     requisitions?: RequisitionUpdateManyWithoutCompanyNestedInput
     requisitionRevisions?: RequisitionRevisionUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUpdateManyWithoutCompanyNestedInput
+    referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutEmergencyDrillsInput = {
@@ -168732,6 +170601,7 @@ export namespace Prisma {
     requisitions?: RequisitionUncheckedUpdateManyWithoutCompanyNestedInput
     requisitionRevisions?: RequisitionRevisionUncheckedUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUncheckedUpdateManyWithoutCompanyNestedInput
+    referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type VesselUpsertWithoutEmergencyDrillsInput = {
@@ -169023,6 +170893,7 @@ export namespace Prisma {
     requisitions?: RequisitionCreateNestedManyWithoutCompanyInput
     requisitionRevisions?: RequisitionRevisionCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterCreateNestedManyWithoutCompanyInput
+    referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutFamiliarizationRecordsInput = {
@@ -169080,6 +170951,7 @@ export namespace Prisma {
     requisitions?: RequisitionUncheckedCreateNestedManyWithoutCompanyInput
     requisitionRevisions?: RequisitionRevisionUncheckedCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterUncheckedCreateNestedManyWithoutCompanyInput
+    referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutFamiliarizationRecordsInput = {
@@ -169412,6 +171284,7 @@ export namespace Prisma {
     requisitions?: RequisitionUpdateManyWithoutCompanyNestedInput
     requisitionRevisions?: RequisitionRevisionUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUpdateManyWithoutCompanyNestedInput
+    referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutFamiliarizationRecordsInput = {
@@ -169469,6 +171342,7 @@ export namespace Prisma {
     requisitions?: RequisitionUncheckedUpdateManyWithoutCompanyNestedInput
     requisitionRevisions?: RequisitionRevisionUncheckedUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUncheckedUpdateManyWithoutCompanyNestedInput
+    referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type VesselUpsertWithoutFamiliarizationRecordsInput = {
@@ -169803,6 +171677,7 @@ export namespace Prisma {
     requisitions?: RequisitionCreateNestedManyWithoutCompanyInput
     requisitionRevisions?: RequisitionRevisionCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterCreateNestedManyWithoutCompanyInput
+    referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutFamiliarizationSessionsInput = {
@@ -169860,6 +171735,7 @@ export namespace Prisma {
     requisitions?: RequisitionUncheckedCreateNestedManyWithoutCompanyInput
     requisitionRevisions?: RequisitionRevisionUncheckedCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterUncheckedCreateNestedManyWithoutCompanyInput
+    referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutFamiliarizationSessionsInput = {
@@ -170154,6 +172030,7 @@ export namespace Prisma {
     requisitions?: RequisitionUpdateManyWithoutCompanyNestedInput
     requisitionRevisions?: RequisitionRevisionUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUpdateManyWithoutCompanyNestedInput
+    referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutFamiliarizationSessionsInput = {
@@ -170211,6 +172088,7 @@ export namespace Prisma {
     requisitions?: RequisitionUncheckedUpdateManyWithoutCompanyNestedInput
     requisitionRevisions?: RequisitionRevisionUncheckedUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUncheckedUpdateManyWithoutCompanyNestedInput
+    referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type VesselUpsertWithoutFamiliarizationSessionsInput = {
@@ -170469,6 +172347,7 @@ export namespace Prisma {
     requisitions?: RequisitionCreateNestedManyWithoutCompanyInput
     requisitionRevisions?: RequisitionRevisionCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterCreateNestedManyWithoutCompanyInput
+    referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutLsaFfeItemsInput = {
@@ -170526,6 +172405,7 @@ export namespace Prisma {
     requisitions?: RequisitionUncheckedCreateNestedManyWithoutCompanyInput
     requisitionRevisions?: RequisitionRevisionUncheckedCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterUncheckedCreateNestedManyWithoutCompanyInput
+    referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutLsaFfeItemsInput = {
@@ -170631,6 +172511,7 @@ export namespace Prisma {
     requisitions?: RequisitionUpdateManyWithoutCompanyNestedInput
     requisitionRevisions?: RequisitionRevisionUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUpdateManyWithoutCompanyNestedInput
+    referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutLsaFfeItemsInput = {
@@ -170688,6 +172569,7 @@ export namespace Prisma {
     requisitions?: RequisitionUncheckedUpdateManyWithoutCompanyNestedInput
     requisitionRevisions?: RequisitionRevisionUncheckedUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUncheckedUpdateManyWithoutCompanyNestedInput
+    referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type CrewFamiliarizationRecordUpsertWithWhereUniqueWithoutLsaFfeItemInput = {
@@ -170761,6 +172643,7 @@ export namespace Prisma {
     requisitions?: RequisitionCreateNestedManyWithoutCompanyInput
     requisitionRevisions?: RequisitionRevisionCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterCreateNestedManyWithoutCompanyInput
+    referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutCrewFamiliarizationsInput = {
@@ -170818,6 +172701,7 @@ export namespace Prisma {
     requisitions?: RequisitionUncheckedCreateNestedManyWithoutCompanyInput
     requisitionRevisions?: RequisitionRevisionUncheckedCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterUncheckedCreateNestedManyWithoutCompanyInput
+    referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutCrewFamiliarizationsInput = {
@@ -171102,6 +172986,7 @@ export namespace Prisma {
     requisitions?: RequisitionUpdateManyWithoutCompanyNestedInput
     requisitionRevisions?: RequisitionRevisionUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUpdateManyWithoutCompanyNestedInput
+    referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutCrewFamiliarizationsInput = {
@@ -171159,6 +173044,7 @@ export namespace Prisma {
     requisitions?: RequisitionUncheckedUpdateManyWithoutCompanyNestedInput
     requisitionRevisions?: RequisitionRevisionUncheckedUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUncheckedUpdateManyWithoutCompanyNestedInput
+    referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type VesselUpsertWithoutCrewFamiliarizationsInput = {
@@ -171417,6 +173303,7 @@ export namespace Prisma {
     requisitions?: RequisitionCreateNestedManyWithoutCompanyInput
     requisitionRevisions?: RequisitionRevisionCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterCreateNestedManyWithoutCompanyInput
+    referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutCrewFamiliarizationRecordsInput = {
@@ -171474,6 +173361,7 @@ export namespace Prisma {
     requisitions?: RequisitionUncheckedCreateNestedManyWithoutCompanyInput
     requisitionRevisions?: RequisitionRevisionUncheckedCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterUncheckedCreateNestedManyWithoutCompanyInput
+    referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutCrewFamiliarizationRecordsInput = {
@@ -171617,6 +173505,7 @@ export namespace Prisma {
     requisitions?: RequisitionUpdateManyWithoutCompanyNestedInput
     requisitionRevisions?: RequisitionRevisionUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUpdateManyWithoutCompanyNestedInput
+    referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutCrewFamiliarizationRecordsInput = {
@@ -171674,6 +173563,7 @@ export namespace Prisma {
     requisitions?: RequisitionUncheckedUpdateManyWithoutCompanyNestedInput
     requisitionRevisions?: RequisitionRevisionUncheckedUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUncheckedUpdateManyWithoutCompanyNestedInput
+    referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type CrewFamiliarizationUpsertWithoutRecordsInput = {
@@ -171813,6 +173703,7 @@ export namespace Prisma {
     requisitions?: RequisitionCreateNestedManyWithoutCompanyInput
     requisitionRevisions?: RequisitionRevisionCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterCreateNestedManyWithoutCompanyInput
+    referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutControlledDocumentsInput = {
@@ -171870,6 +173761,7 @@ export namespace Prisma {
     requisitions?: RequisitionUncheckedCreateNestedManyWithoutCompanyInput
     requisitionRevisions?: RequisitionRevisionUncheckedCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterUncheckedCreateNestedManyWithoutCompanyInput
+    referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutControlledDocumentsInput = {
@@ -172122,6 +174014,7 @@ export namespace Prisma {
     requisitions?: RequisitionUpdateManyWithoutCompanyNestedInput
     requisitionRevisions?: RequisitionRevisionUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUpdateManyWithoutCompanyNestedInput
+    referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutControlledDocumentsInput = {
@@ -172179,6 +174072,7 @@ export namespace Prisma {
     requisitions?: RequisitionUncheckedUpdateManyWithoutCompanyNestedInput
     requisitionRevisions?: RequisitionRevisionUncheckedUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUncheckedUpdateManyWithoutCompanyNestedInput
+    referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type VesselUpsertWithoutControlledDocumentsInput = {
@@ -172421,6 +174315,7 @@ export namespace Prisma {
     requisitions?: RequisitionCreateNestedManyWithoutCompanyInput
     requisitionRevisions?: RequisitionRevisionCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterCreateNestedManyWithoutCompanyInput
+    referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutVesselDocumentsInput = {
@@ -172478,6 +174373,7 @@ export namespace Prisma {
     requisitions?: RequisitionUncheckedCreateNestedManyWithoutCompanyInput
     requisitionRevisions?: RequisitionRevisionUncheckedCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterUncheckedCreateNestedManyWithoutCompanyInput
+    referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutVesselDocumentsInput = {
@@ -172730,6 +174626,7 @@ export namespace Prisma {
     requisitions?: RequisitionUpdateManyWithoutCompanyNestedInput
     requisitionRevisions?: RequisitionRevisionUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUpdateManyWithoutCompanyNestedInput
+    referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutVesselDocumentsInput = {
@@ -172787,6 +174684,7 @@ export namespace Prisma {
     requisitions?: RequisitionUncheckedUpdateManyWithoutCompanyNestedInput
     requisitionRevisions?: RequisitionRevisionUncheckedUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUncheckedUpdateManyWithoutCompanyNestedInput
+    referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type VesselUpsertWithoutVesselDocumentsInput = {
@@ -173029,6 +174927,7 @@ export namespace Prisma {
     requisitions?: RequisitionCreateNestedManyWithoutCompanyInput
     requisitionRevisions?: RequisitionRevisionCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterCreateNestedManyWithoutCompanyInput
+    referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutCircularsInput = {
@@ -173086,6 +174985,7 @@ export namespace Prisma {
     requisitions?: RequisitionUncheckedCreateNestedManyWithoutCompanyInput
     requisitionRevisions?: RequisitionRevisionUncheckedCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterUncheckedCreateNestedManyWithoutCompanyInput
+    referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutCircularsInput = {
@@ -173372,6 +175272,7 @@ export namespace Prisma {
     requisitions?: RequisitionUpdateManyWithoutCompanyNestedInput
     requisitionRevisions?: RequisitionRevisionUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUpdateManyWithoutCompanyNestedInput
+    referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutCircularsInput = {
@@ -173429,6 +175330,7 @@ export namespace Prisma {
     requisitions?: RequisitionUncheckedUpdateManyWithoutCompanyNestedInput
     requisitionRevisions?: RequisitionRevisionUncheckedUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUncheckedUpdateManyWithoutCompanyNestedInput
+    referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type VesselUpsertWithoutCircularsInput = {
@@ -173799,6 +175701,7 @@ export namespace Prisma {
     requisitions?: RequisitionCreateNestedManyWithoutCompanyInput
     requisitionRevisions?: RequisitionRevisionCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterCreateNestedManyWithoutCompanyInput
+    referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutRiskAssessmentDocumentsInput = {
@@ -173856,6 +175759,7 @@ export namespace Prisma {
     requisitions?: RequisitionUncheckedCreateNestedManyWithoutCompanyInput
     requisitionRevisions?: RequisitionRevisionUncheckedCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterUncheckedCreateNestedManyWithoutCompanyInput
+    referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutRiskAssessmentDocumentsInput = {
@@ -174291,6 +176195,7 @@ export namespace Prisma {
     requisitions?: RequisitionUpdateManyWithoutCompanyNestedInput
     requisitionRevisions?: RequisitionRevisionUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUpdateManyWithoutCompanyNestedInput
+    referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutRiskAssessmentDocumentsInput = {
@@ -174348,6 +176253,7 @@ export namespace Prisma {
     requisitions?: RequisitionUncheckedUpdateManyWithoutCompanyNestedInput
     requisitionRevisions?: RequisitionRevisionUncheckedUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUncheckedUpdateManyWithoutCompanyNestedInput
+    referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type VesselUpsertWithoutRiskAssessmentDocumentsInput = {
@@ -176613,6 +178519,7 @@ export namespace Prisma {
     requisitions?: RequisitionCreateNestedManyWithoutCompanyInput
     requisitionRevisions?: RequisitionRevisionCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterCreateNestedManyWithoutCompanyInput
+    referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutDefectsInput = {
@@ -176670,6 +178577,7 @@ export namespace Prisma {
     requisitions?: RequisitionUncheckedCreateNestedManyWithoutCompanyInput
     requisitionRevisions?: RequisitionRevisionUncheckedCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterUncheckedCreateNestedManyWithoutCompanyInput
+    referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutDefectsInput = {
@@ -176922,6 +178830,7 @@ export namespace Prisma {
     requisitions?: RequisitionUpdateManyWithoutCompanyNestedInput
     requisitionRevisions?: RequisitionRevisionUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUpdateManyWithoutCompanyNestedInput
+    referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutDefectsInput = {
@@ -176979,6 +178888,7 @@ export namespace Prisma {
     requisitions?: RequisitionUncheckedUpdateManyWithoutCompanyNestedInput
     requisitionRevisions?: RequisitionRevisionUncheckedUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUncheckedUpdateManyWithoutCompanyNestedInput
+    referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type VesselUpsertWithoutDefectsInput = {
@@ -177221,6 +179131,7 @@ export namespace Prisma {
     requisitions?: RequisitionCreateNestedManyWithoutCompanyInput
     requisitionRevisions?: RequisitionRevisionCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterCreateNestedManyWithoutCompanyInput
+    referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutVoyageLogsInput = {
@@ -177278,6 +179189,7 @@ export namespace Prisma {
     requisitions?: RequisitionUncheckedCreateNestedManyWithoutCompanyInput
     requisitionRevisions?: RequisitionRevisionUncheckedCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterUncheckedCreateNestedManyWithoutCompanyInput
+    referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutVoyageLogsInput = {
@@ -177560,6 +179472,7 @@ export namespace Prisma {
     requisitions?: RequisitionUpdateManyWithoutCompanyNestedInput
     requisitionRevisions?: RequisitionRevisionUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUpdateManyWithoutCompanyNestedInput
+    referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutVoyageLogsInput = {
@@ -177617,6 +179530,7 @@ export namespace Prisma {
     requisitions?: RequisitionUncheckedUpdateManyWithoutCompanyNestedInput
     requisitionRevisions?: RequisitionRevisionUncheckedUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUncheckedUpdateManyWithoutCompanyNestedInput
+    referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type VesselUpsertWithoutVoyageLogsInput = {
@@ -178177,6 +180091,7 @@ export namespace Prisma {
     inventoryUpdateDrafts?: InventoryUpdateDraftCreateNestedManyWithoutCompanyInput
     requisitions?: RequisitionCreateNestedManyWithoutCompanyInput
     requisitionRevisions?: RequisitionRevisionCreateNestedManyWithoutCompanyInput
+    referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutUnitMastersInput = {
@@ -178234,6 +180149,7 @@ export namespace Prisma {
     inventoryUpdateDrafts?: InventoryUpdateDraftUncheckedCreateNestedManyWithoutCompanyInput
     requisitions?: RequisitionUncheckedCreateNestedManyWithoutCompanyInput
     requisitionRevisions?: RequisitionRevisionUncheckedCreateNestedManyWithoutCompanyInput
+    referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutUnitMastersInput = {
@@ -178307,6 +180223,7 @@ export namespace Prisma {
     inventoryUpdateDrafts?: InventoryUpdateDraftUpdateManyWithoutCompanyNestedInput
     requisitions?: RequisitionUpdateManyWithoutCompanyNestedInput
     requisitionRevisions?: RequisitionRevisionUpdateManyWithoutCompanyNestedInput
+    referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutUnitMastersInput = {
@@ -178364,6 +180281,255 @@ export namespace Prisma {
     inventoryUpdateDrafts?: InventoryUpdateDraftUncheckedUpdateManyWithoutCompanyNestedInput
     requisitions?: RequisitionUncheckedUpdateManyWithoutCompanyNestedInput
     requisitionRevisions?: RequisitionRevisionUncheckedUpdateManyWithoutCompanyNestedInput
+    referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
+  }
+
+  export type CompanyCreateWithoutReferenceListItemsInput = {
+    id?: string
+    name: string
+    code: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    ltifTarget?: number
+    trcfTarget?: number
+    sireAvgObservationTarget?: number
+    cinspAvgObservationTarget?: number
+    procurementThresholdSupt?: number
+    procurementThresholdTechManager?: number
+    documentExpiryWarningMonths?: number
+    users?: UserCreateNestedManyWithoutCompanyInput
+    roles?: RoleCreateNestedManyWithoutCompanyInput
+    vessels?: VesselCreateNestedManyWithoutCompanyInput
+    smsDocuments?: SmsDocumentCreateNestedManyWithoutCompanyInput
+    workflows?: WorkflowDefinitionCreateNestedManyWithoutCompanyInput
+    incidents?: IncidentCreateNestedManyWithoutCompanyInput
+    nearMisses?: NearMissCreateNestedManyWithoutCompanyInput
+    nonConformities?: NonConformityCreateNestedManyWithoutCompanyInput
+    sireInspections?: SireInspectionCreateNestedManyWithoutCompanyInput
+    sireQuestionnaireVersions?: SireQuestionnaireVersionCreateNestedManyWithoutCompanyInput
+    pscInspections?: PscInspectionCreateNestedManyWithoutCompanyInput
+    cdiInspections?: CdiInspectionCreateNestedManyWithoutCompanyInput
+    internalAudits?: InternalAuditCreateNestedManyWithoutCompanyInput
+    externalAudits?: ExternalAuditCreateNestedManyWithoutCompanyInput
+    companyInspections?: CompanyInspectionCreateNestedManyWithoutCompanyInput
+    committeeMeetings?: CommitteeMeetingCreateNestedManyWithoutCompanyInput
+    scheduleItems?: ScheduleItemCreateNestedManyWithoutCompanyInput
+    emergencyDrills?: EmergencyDrillCreateNestedManyWithoutCompanyInput
+    familiarizationRecords?: FamiliarizationRecordCreateNestedManyWithoutCompanyInput
+    familiarizationSessions?: FamiliarizationSessionCreateNestedManyWithoutCompanyInput
+    scheduleApplicability?: ScheduleApplicabilityCreateNestedManyWithoutCompanyInput
+    lsaFfeItems?: LsaFfeItemCreateNestedManyWithoutCompanyInput
+    crewFamiliarizations?: CrewFamiliarizationCreateNestedManyWithoutCompanyInput
+    refSequences?: RefSequenceCreateNestedManyWithoutCompanyInput
+    controlledDocuments?: ControlledDocumentCreateNestedManyWithoutCompanyInput
+    circulars?: CircularCreateNestedManyWithoutCompanyInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentCreateNestedManyWithoutCompanyInput
+    defects?: DefectCreateNestedManyWithoutCompanyInput
+    crewFamiliarizationRecords?: CrewFamiliarizationRecordCreateNestedManyWithoutCompanyInput
+    vesselDocuments?: VesselDocumentCreateNestedManyWithoutCompanyInput
+    voyageLogs?: VoyageLogCreateNestedManyWithoutCompanyInput
+    environmentRecords?: EnvironmentRecordCreateNestedManyWithoutCompanyInput
+    tmsaAssessments?: TmsaAssessmentCreateNestedManyWithoutCompanyInput
+    tmsaScores?: TmsaScoreCreateNestedManyWithoutCompanyInput
+    tmsaFindings?: TmsaFindingCreateNestedManyWithoutCompanyInput
+    storesCatalogueItems?: StoresCatalogueItemCreateNestedManyWithoutCompanyInput
+    sparesCatalogueItems?: SparesCatalogueItemCreateNestedManyWithoutCompanyInput
+    openingStockTakes?: OpeningStockTakeCreateNestedManyWithoutCompanyInput
+    inventoryEvents?: InventoryEventCreateNestedManyWithoutCompanyInput
+    inventoryUpdateDrafts?: InventoryUpdateDraftCreateNestedManyWithoutCompanyInput
+    requisitions?: RequisitionCreateNestedManyWithoutCompanyInput
+    requisitionRevisions?: RequisitionRevisionCreateNestedManyWithoutCompanyInput
+    unitMasters?: UnitMasterCreateNestedManyWithoutCompanyInput
+  }
+
+  export type CompanyUncheckedCreateWithoutReferenceListItemsInput = {
+    id?: string
+    name: string
+    code: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    ltifTarget?: number
+    trcfTarget?: number
+    sireAvgObservationTarget?: number
+    cinspAvgObservationTarget?: number
+    procurementThresholdSupt?: number
+    procurementThresholdTechManager?: number
+    documentExpiryWarningMonths?: number
+    users?: UserUncheckedCreateNestedManyWithoutCompanyInput
+    roles?: RoleUncheckedCreateNestedManyWithoutCompanyInput
+    vessels?: VesselUncheckedCreateNestedManyWithoutCompanyInput
+    smsDocuments?: SmsDocumentUncheckedCreateNestedManyWithoutCompanyInput
+    workflows?: WorkflowDefinitionUncheckedCreateNestedManyWithoutCompanyInput
+    incidents?: IncidentUncheckedCreateNestedManyWithoutCompanyInput
+    nearMisses?: NearMissUncheckedCreateNestedManyWithoutCompanyInput
+    nonConformities?: NonConformityUncheckedCreateNestedManyWithoutCompanyInput
+    sireInspections?: SireInspectionUncheckedCreateNestedManyWithoutCompanyInput
+    sireQuestionnaireVersions?: SireQuestionnaireVersionUncheckedCreateNestedManyWithoutCompanyInput
+    pscInspections?: PscInspectionUncheckedCreateNestedManyWithoutCompanyInput
+    cdiInspections?: CdiInspectionUncheckedCreateNestedManyWithoutCompanyInput
+    internalAudits?: InternalAuditUncheckedCreateNestedManyWithoutCompanyInput
+    externalAudits?: ExternalAuditUncheckedCreateNestedManyWithoutCompanyInput
+    companyInspections?: CompanyInspectionUncheckedCreateNestedManyWithoutCompanyInput
+    committeeMeetings?: CommitteeMeetingUncheckedCreateNestedManyWithoutCompanyInput
+    scheduleItems?: ScheduleItemUncheckedCreateNestedManyWithoutCompanyInput
+    emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutCompanyInput
+    familiarizationRecords?: FamiliarizationRecordUncheckedCreateNestedManyWithoutCompanyInput
+    familiarizationSessions?: FamiliarizationSessionUncheckedCreateNestedManyWithoutCompanyInput
+    scheduleApplicability?: ScheduleApplicabilityUncheckedCreateNestedManyWithoutCompanyInput
+    lsaFfeItems?: LsaFfeItemUncheckedCreateNestedManyWithoutCompanyInput
+    crewFamiliarizations?: CrewFamiliarizationUncheckedCreateNestedManyWithoutCompanyInput
+    refSequences?: RefSequenceUncheckedCreateNestedManyWithoutCompanyInput
+    controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutCompanyInput
+    circulars?: CircularUncheckedCreateNestedManyWithoutCompanyInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedCreateNestedManyWithoutCompanyInput
+    defects?: DefectUncheckedCreateNestedManyWithoutCompanyInput
+    crewFamiliarizationRecords?: CrewFamiliarizationRecordUncheckedCreateNestedManyWithoutCompanyInput
+    vesselDocuments?: VesselDocumentUncheckedCreateNestedManyWithoutCompanyInput
+    voyageLogs?: VoyageLogUncheckedCreateNestedManyWithoutCompanyInput
+    environmentRecords?: EnvironmentRecordUncheckedCreateNestedManyWithoutCompanyInput
+    tmsaAssessments?: TmsaAssessmentUncheckedCreateNestedManyWithoutCompanyInput
+    tmsaScores?: TmsaScoreUncheckedCreateNestedManyWithoutCompanyInput
+    tmsaFindings?: TmsaFindingUncheckedCreateNestedManyWithoutCompanyInput
+    storesCatalogueItems?: StoresCatalogueItemUncheckedCreateNestedManyWithoutCompanyInput
+    sparesCatalogueItems?: SparesCatalogueItemUncheckedCreateNestedManyWithoutCompanyInput
+    openingStockTakes?: OpeningStockTakeUncheckedCreateNestedManyWithoutCompanyInput
+    inventoryEvents?: InventoryEventUncheckedCreateNestedManyWithoutCompanyInput
+    inventoryUpdateDrafts?: InventoryUpdateDraftUncheckedCreateNestedManyWithoutCompanyInput
+    requisitions?: RequisitionUncheckedCreateNestedManyWithoutCompanyInput
+    requisitionRevisions?: RequisitionRevisionUncheckedCreateNestedManyWithoutCompanyInput
+    unitMasters?: UnitMasterUncheckedCreateNestedManyWithoutCompanyInput
+  }
+
+  export type CompanyCreateOrConnectWithoutReferenceListItemsInput = {
+    where: CompanyWhereUniqueInput
+    create: XOR<CompanyCreateWithoutReferenceListItemsInput, CompanyUncheckedCreateWithoutReferenceListItemsInput>
+  }
+
+  export type CompanyUpsertWithoutReferenceListItemsInput = {
+    update: XOR<CompanyUpdateWithoutReferenceListItemsInput, CompanyUncheckedUpdateWithoutReferenceListItemsInput>
+    create: XOR<CompanyCreateWithoutReferenceListItemsInput, CompanyUncheckedCreateWithoutReferenceListItemsInput>
+    where?: CompanyWhereInput
+  }
+
+  export type CompanyUpdateToOneWithWhereWithoutReferenceListItemsInput = {
+    where?: CompanyWhereInput
+    data: XOR<CompanyUpdateWithoutReferenceListItemsInput, CompanyUncheckedUpdateWithoutReferenceListItemsInput>
+  }
+
+  export type CompanyUpdateWithoutReferenceListItemsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ltifTarget?: FloatFieldUpdateOperationsInput | number
+    trcfTarget?: FloatFieldUpdateOperationsInput | number
+    sireAvgObservationTarget?: FloatFieldUpdateOperationsInput | number
+    cinspAvgObservationTarget?: FloatFieldUpdateOperationsInput | number
+    procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
+    procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
+    documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    users?: UserUpdateManyWithoutCompanyNestedInput
+    roles?: RoleUpdateManyWithoutCompanyNestedInput
+    vessels?: VesselUpdateManyWithoutCompanyNestedInput
+    smsDocuments?: SmsDocumentUpdateManyWithoutCompanyNestedInput
+    workflows?: WorkflowDefinitionUpdateManyWithoutCompanyNestedInput
+    incidents?: IncidentUpdateManyWithoutCompanyNestedInput
+    nearMisses?: NearMissUpdateManyWithoutCompanyNestedInput
+    nonConformities?: NonConformityUpdateManyWithoutCompanyNestedInput
+    sireInspections?: SireInspectionUpdateManyWithoutCompanyNestedInput
+    sireQuestionnaireVersions?: SireQuestionnaireVersionUpdateManyWithoutCompanyNestedInput
+    pscInspections?: PscInspectionUpdateManyWithoutCompanyNestedInput
+    cdiInspections?: CdiInspectionUpdateManyWithoutCompanyNestedInput
+    internalAudits?: InternalAuditUpdateManyWithoutCompanyNestedInput
+    externalAudits?: ExternalAuditUpdateManyWithoutCompanyNestedInput
+    companyInspections?: CompanyInspectionUpdateManyWithoutCompanyNestedInput
+    committeeMeetings?: CommitteeMeetingUpdateManyWithoutCompanyNestedInput
+    scheduleItems?: ScheduleItemUpdateManyWithoutCompanyNestedInput
+    emergencyDrills?: EmergencyDrillUpdateManyWithoutCompanyNestedInput
+    familiarizationRecords?: FamiliarizationRecordUpdateManyWithoutCompanyNestedInput
+    familiarizationSessions?: FamiliarizationSessionUpdateManyWithoutCompanyNestedInput
+    scheduleApplicability?: ScheduleApplicabilityUpdateManyWithoutCompanyNestedInput
+    lsaFfeItems?: LsaFfeItemUpdateManyWithoutCompanyNestedInput
+    crewFamiliarizations?: CrewFamiliarizationUpdateManyWithoutCompanyNestedInput
+    refSequences?: RefSequenceUpdateManyWithoutCompanyNestedInput
+    controlledDocuments?: ControlledDocumentUpdateManyWithoutCompanyNestedInput
+    circulars?: CircularUpdateManyWithoutCompanyNestedInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUpdateManyWithoutCompanyNestedInput
+    defects?: DefectUpdateManyWithoutCompanyNestedInput
+    crewFamiliarizationRecords?: CrewFamiliarizationRecordUpdateManyWithoutCompanyNestedInput
+    vesselDocuments?: VesselDocumentUpdateManyWithoutCompanyNestedInput
+    voyageLogs?: VoyageLogUpdateManyWithoutCompanyNestedInput
+    environmentRecords?: EnvironmentRecordUpdateManyWithoutCompanyNestedInput
+    tmsaAssessments?: TmsaAssessmentUpdateManyWithoutCompanyNestedInput
+    tmsaScores?: TmsaScoreUpdateManyWithoutCompanyNestedInput
+    tmsaFindings?: TmsaFindingUpdateManyWithoutCompanyNestedInput
+    storesCatalogueItems?: StoresCatalogueItemUpdateManyWithoutCompanyNestedInput
+    sparesCatalogueItems?: SparesCatalogueItemUpdateManyWithoutCompanyNestedInput
+    openingStockTakes?: OpeningStockTakeUpdateManyWithoutCompanyNestedInput
+    inventoryEvents?: InventoryEventUpdateManyWithoutCompanyNestedInput
+    inventoryUpdateDrafts?: InventoryUpdateDraftUpdateManyWithoutCompanyNestedInput
+    requisitions?: RequisitionUpdateManyWithoutCompanyNestedInput
+    requisitionRevisions?: RequisitionRevisionUpdateManyWithoutCompanyNestedInput
+    unitMasters?: UnitMasterUpdateManyWithoutCompanyNestedInput
+  }
+
+  export type CompanyUncheckedUpdateWithoutReferenceListItemsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ltifTarget?: FloatFieldUpdateOperationsInput | number
+    trcfTarget?: FloatFieldUpdateOperationsInput | number
+    sireAvgObservationTarget?: FloatFieldUpdateOperationsInput | number
+    cinspAvgObservationTarget?: FloatFieldUpdateOperationsInput | number
+    procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
+    procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
+    documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    users?: UserUncheckedUpdateManyWithoutCompanyNestedInput
+    roles?: RoleUncheckedUpdateManyWithoutCompanyNestedInput
+    vessels?: VesselUncheckedUpdateManyWithoutCompanyNestedInput
+    smsDocuments?: SmsDocumentUncheckedUpdateManyWithoutCompanyNestedInput
+    workflows?: WorkflowDefinitionUncheckedUpdateManyWithoutCompanyNestedInput
+    incidents?: IncidentUncheckedUpdateManyWithoutCompanyNestedInput
+    nearMisses?: NearMissUncheckedUpdateManyWithoutCompanyNestedInput
+    nonConformities?: NonConformityUncheckedUpdateManyWithoutCompanyNestedInput
+    sireInspections?: SireInspectionUncheckedUpdateManyWithoutCompanyNestedInput
+    sireQuestionnaireVersions?: SireQuestionnaireVersionUncheckedUpdateManyWithoutCompanyNestedInput
+    pscInspections?: PscInspectionUncheckedUpdateManyWithoutCompanyNestedInput
+    cdiInspections?: CdiInspectionUncheckedUpdateManyWithoutCompanyNestedInput
+    internalAudits?: InternalAuditUncheckedUpdateManyWithoutCompanyNestedInput
+    externalAudits?: ExternalAuditUncheckedUpdateManyWithoutCompanyNestedInput
+    companyInspections?: CompanyInspectionUncheckedUpdateManyWithoutCompanyNestedInput
+    committeeMeetings?: CommitteeMeetingUncheckedUpdateManyWithoutCompanyNestedInput
+    scheduleItems?: ScheduleItemUncheckedUpdateManyWithoutCompanyNestedInput
+    emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutCompanyNestedInput
+    familiarizationRecords?: FamiliarizationRecordUncheckedUpdateManyWithoutCompanyNestedInput
+    familiarizationSessions?: FamiliarizationSessionUncheckedUpdateManyWithoutCompanyNestedInput
+    scheduleApplicability?: ScheduleApplicabilityUncheckedUpdateManyWithoutCompanyNestedInput
+    lsaFfeItems?: LsaFfeItemUncheckedUpdateManyWithoutCompanyNestedInput
+    crewFamiliarizations?: CrewFamiliarizationUncheckedUpdateManyWithoutCompanyNestedInput
+    refSequences?: RefSequenceUncheckedUpdateManyWithoutCompanyNestedInput
+    controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutCompanyNestedInput
+    circulars?: CircularUncheckedUpdateManyWithoutCompanyNestedInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedUpdateManyWithoutCompanyNestedInput
+    defects?: DefectUncheckedUpdateManyWithoutCompanyNestedInput
+    crewFamiliarizationRecords?: CrewFamiliarizationRecordUncheckedUpdateManyWithoutCompanyNestedInput
+    vesselDocuments?: VesselDocumentUncheckedUpdateManyWithoutCompanyNestedInput
+    voyageLogs?: VoyageLogUncheckedUpdateManyWithoutCompanyNestedInput
+    environmentRecords?: EnvironmentRecordUncheckedUpdateManyWithoutCompanyNestedInput
+    tmsaAssessments?: TmsaAssessmentUncheckedUpdateManyWithoutCompanyNestedInput
+    tmsaScores?: TmsaScoreUncheckedUpdateManyWithoutCompanyNestedInput
+    tmsaFindings?: TmsaFindingUncheckedUpdateManyWithoutCompanyNestedInput
+    storesCatalogueItems?: StoresCatalogueItemUncheckedUpdateManyWithoutCompanyNestedInput
+    sparesCatalogueItems?: SparesCatalogueItemUncheckedUpdateManyWithoutCompanyNestedInput
+    openingStockTakes?: OpeningStockTakeUncheckedUpdateManyWithoutCompanyNestedInput
+    inventoryEvents?: InventoryEventUncheckedUpdateManyWithoutCompanyNestedInput
+    inventoryUpdateDrafts?: InventoryUpdateDraftUncheckedUpdateManyWithoutCompanyNestedInput
+    requisitions?: RequisitionUncheckedUpdateManyWithoutCompanyNestedInput
+    requisitionRevisions?: RequisitionRevisionUncheckedUpdateManyWithoutCompanyNestedInput
+    unitMasters?: UnitMasterUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyCreateWithoutEnvironmentRecordsInput = {
@@ -178421,6 +180587,7 @@ export namespace Prisma {
     requisitions?: RequisitionCreateNestedManyWithoutCompanyInput
     requisitionRevisions?: RequisitionRevisionCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterCreateNestedManyWithoutCompanyInput
+    referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutEnvironmentRecordsInput = {
@@ -178478,6 +180645,7 @@ export namespace Prisma {
     requisitions?: RequisitionUncheckedCreateNestedManyWithoutCompanyInput
     requisitionRevisions?: RequisitionRevisionUncheckedCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterUncheckedCreateNestedManyWithoutCompanyInput
+    referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutEnvironmentRecordsInput = {
@@ -178758,6 +180926,7 @@ export namespace Prisma {
     requisitions?: RequisitionUpdateManyWithoutCompanyNestedInput
     requisitionRevisions?: RequisitionRevisionUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUpdateManyWithoutCompanyNestedInput
+    referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutEnvironmentRecordsInput = {
@@ -178815,6 +180984,7 @@ export namespace Prisma {
     requisitions?: RequisitionUncheckedUpdateManyWithoutCompanyNestedInput
     requisitionRevisions?: RequisitionRevisionUncheckedUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUncheckedUpdateManyWithoutCompanyNestedInput
+    referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type VesselUpsertWithoutEnvironmentRecordsInput = {
@@ -179350,6 +181520,7 @@ export namespace Prisma {
     requisitions?: RequisitionCreateNestedManyWithoutCompanyInput
     requisitionRevisions?: RequisitionRevisionCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterCreateNestedManyWithoutCompanyInput
+    referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutRefSequencesInput = {
@@ -179407,6 +181578,7 @@ export namespace Prisma {
     requisitions?: RequisitionUncheckedCreateNestedManyWithoutCompanyInput
     requisitionRevisions?: RequisitionRevisionUncheckedCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterUncheckedCreateNestedManyWithoutCompanyInput
+    referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutRefSequencesInput = {
@@ -179480,6 +181652,7 @@ export namespace Prisma {
     requisitions?: RequisitionUpdateManyWithoutCompanyNestedInput
     requisitionRevisions?: RequisitionRevisionUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUpdateManyWithoutCompanyNestedInput
+    referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutRefSequencesInput = {
@@ -179537,6 +181710,7 @@ export namespace Prisma {
     requisitions?: RequisitionUncheckedUpdateManyWithoutCompanyNestedInput
     requisitionRevisions?: RequisitionRevisionUncheckedUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUncheckedUpdateManyWithoutCompanyNestedInput
+    referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyCreateWithoutTmsaAssessmentsInput = {
@@ -179594,6 +181768,7 @@ export namespace Prisma {
     requisitions?: RequisitionCreateNestedManyWithoutCompanyInput
     requisitionRevisions?: RequisitionRevisionCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterCreateNestedManyWithoutCompanyInput
+    referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutTmsaAssessmentsInput = {
@@ -179651,6 +181826,7 @@ export namespace Prisma {
     requisitions?: RequisitionUncheckedCreateNestedManyWithoutCompanyInput
     requisitionRevisions?: RequisitionRevisionUncheckedCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterUncheckedCreateNestedManyWithoutCompanyInput
+    referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutTmsaAssessmentsInput = {
@@ -179724,6 +181900,7 @@ export namespace Prisma {
     requisitions?: RequisitionUpdateManyWithoutCompanyNestedInput
     requisitionRevisions?: RequisitionRevisionUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUpdateManyWithoutCompanyNestedInput
+    referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutTmsaAssessmentsInput = {
@@ -179781,6 +181958,7 @@ export namespace Prisma {
     requisitions?: RequisitionUncheckedUpdateManyWithoutCompanyNestedInput
     requisitionRevisions?: RequisitionRevisionUncheckedUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUncheckedUpdateManyWithoutCompanyNestedInput
+    referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyCreateWithoutTmsaScoresInput = {
@@ -179838,6 +182016,7 @@ export namespace Prisma {
     requisitions?: RequisitionCreateNestedManyWithoutCompanyInput
     requisitionRevisions?: RequisitionRevisionCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterCreateNestedManyWithoutCompanyInput
+    referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutTmsaScoresInput = {
@@ -179895,6 +182074,7 @@ export namespace Prisma {
     requisitions?: RequisitionUncheckedCreateNestedManyWithoutCompanyInput
     requisitionRevisions?: RequisitionRevisionUncheckedCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterUncheckedCreateNestedManyWithoutCompanyInput
+    referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutTmsaScoresInput = {
@@ -179968,6 +182148,7 @@ export namespace Prisma {
     requisitions?: RequisitionUpdateManyWithoutCompanyNestedInput
     requisitionRevisions?: RequisitionRevisionUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUpdateManyWithoutCompanyNestedInput
+    referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutTmsaScoresInput = {
@@ -180025,6 +182206,7 @@ export namespace Prisma {
     requisitions?: RequisitionUncheckedUpdateManyWithoutCompanyNestedInput
     requisitionRevisions?: RequisitionRevisionUncheckedUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUncheckedUpdateManyWithoutCompanyNestedInput
+    referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyCreateWithoutTmsaFindingsInput = {
@@ -180082,6 +182264,7 @@ export namespace Prisma {
     requisitions?: RequisitionCreateNestedManyWithoutCompanyInput
     requisitionRevisions?: RequisitionRevisionCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterCreateNestedManyWithoutCompanyInput
+    referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutTmsaFindingsInput = {
@@ -180139,6 +182322,7 @@ export namespace Prisma {
     requisitions?: RequisitionUncheckedCreateNestedManyWithoutCompanyInput
     requisitionRevisions?: RequisitionRevisionUncheckedCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterUncheckedCreateNestedManyWithoutCompanyInput
+    referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutTmsaFindingsInput = {
@@ -180212,6 +182396,7 @@ export namespace Prisma {
     requisitions?: RequisitionUpdateManyWithoutCompanyNestedInput
     requisitionRevisions?: RequisitionRevisionUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUpdateManyWithoutCompanyNestedInput
+    referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutTmsaFindingsInput = {
@@ -180269,6 +182454,7 @@ export namespace Prisma {
     requisitions?: RequisitionUncheckedUpdateManyWithoutCompanyNestedInput
     requisitionRevisions?: RequisitionRevisionUncheckedUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUncheckedUpdateManyWithoutCompanyNestedInput
+    referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyCreateWithoutStoresCatalogueItemsInput = {
@@ -180326,6 +182512,7 @@ export namespace Prisma {
     requisitions?: RequisitionCreateNestedManyWithoutCompanyInput
     requisitionRevisions?: RequisitionRevisionCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterCreateNestedManyWithoutCompanyInput
+    referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutStoresCatalogueItemsInput = {
@@ -180383,6 +182570,7 @@ export namespace Prisma {
     requisitions?: RequisitionUncheckedCreateNestedManyWithoutCompanyInput
     requisitionRevisions?: RequisitionRevisionUncheckedCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterUncheckedCreateNestedManyWithoutCompanyInput
+    referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutStoresCatalogueItemsInput = {
@@ -180635,6 +182823,7 @@ export namespace Prisma {
     requisitions?: RequisitionUpdateManyWithoutCompanyNestedInput
     requisitionRevisions?: RequisitionRevisionUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUpdateManyWithoutCompanyNestedInput
+    referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutStoresCatalogueItemsInput = {
@@ -180692,6 +182881,7 @@ export namespace Prisma {
     requisitions?: RequisitionUncheckedUpdateManyWithoutCompanyNestedInput
     requisitionRevisions?: RequisitionRevisionUncheckedUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUncheckedUpdateManyWithoutCompanyNestedInput
+    referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type VesselUpsertWithoutStoresCatalogueItemsInput = {
@@ -180934,6 +183124,7 @@ export namespace Prisma {
     requisitions?: RequisitionCreateNestedManyWithoutCompanyInput
     requisitionRevisions?: RequisitionRevisionCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterCreateNestedManyWithoutCompanyInput
+    referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutSparesCatalogueItemsInput = {
@@ -180991,6 +183182,7 @@ export namespace Prisma {
     requisitions?: RequisitionUncheckedCreateNestedManyWithoutCompanyInput
     requisitionRevisions?: RequisitionRevisionUncheckedCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterUncheckedCreateNestedManyWithoutCompanyInput
+    referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutSparesCatalogueItemsInput = {
@@ -181243,6 +183435,7 @@ export namespace Prisma {
     requisitions?: RequisitionUpdateManyWithoutCompanyNestedInput
     requisitionRevisions?: RequisitionRevisionUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUpdateManyWithoutCompanyNestedInput
+    referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutSparesCatalogueItemsInput = {
@@ -181300,6 +183493,7 @@ export namespace Prisma {
     requisitions?: RequisitionUncheckedUpdateManyWithoutCompanyNestedInput
     requisitionRevisions?: RequisitionRevisionUncheckedUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUncheckedUpdateManyWithoutCompanyNestedInput
+    referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type VesselUpsertWithoutSparesCatalogueItemsInput = {
@@ -181542,6 +183736,7 @@ export namespace Prisma {
     requisitions?: RequisitionCreateNestedManyWithoutCompanyInput
     requisitionRevisions?: RequisitionRevisionCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterCreateNestedManyWithoutCompanyInput
+    referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutOpeningStockTakesInput = {
@@ -181599,6 +183794,7 @@ export namespace Prisma {
     requisitions?: RequisitionUncheckedCreateNestedManyWithoutCompanyInput
     requisitionRevisions?: RequisitionRevisionUncheckedCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterUncheckedCreateNestedManyWithoutCompanyInput
+    referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutOpeningStockTakesInput = {
@@ -181899,6 +184095,7 @@ export namespace Prisma {
     requisitions?: RequisitionUpdateManyWithoutCompanyNestedInput
     requisitionRevisions?: RequisitionRevisionUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUpdateManyWithoutCompanyNestedInput
+    referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutOpeningStockTakesInput = {
@@ -181956,6 +184153,7 @@ export namespace Prisma {
     requisitions?: RequisitionUncheckedUpdateManyWithoutCompanyNestedInput
     requisitionRevisions?: RequisitionRevisionUncheckedUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUncheckedUpdateManyWithoutCompanyNestedInput
+    referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type VesselUpsertWithoutOpeningStockTakeInput = {
@@ -182214,6 +184412,7 @@ export namespace Prisma {
     requisitions?: RequisitionCreateNestedManyWithoutCompanyInput
     requisitionRevisions?: RequisitionRevisionCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterCreateNestedManyWithoutCompanyInput
+    referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutInventoryEventsInput = {
@@ -182271,6 +184470,7 @@ export namespace Prisma {
     requisitions?: RequisitionUncheckedCreateNestedManyWithoutCompanyInput
     requisitionRevisions?: RequisitionRevisionUncheckedCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterUncheckedCreateNestedManyWithoutCompanyInput
+    referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutInventoryEventsInput = {
@@ -182554,6 +184754,7 @@ export namespace Prisma {
     requisitions?: RequisitionUpdateManyWithoutCompanyNestedInput
     requisitionRevisions?: RequisitionRevisionUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUpdateManyWithoutCompanyNestedInput
+    referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutInventoryEventsInput = {
@@ -182611,6 +184812,7 @@ export namespace Prisma {
     requisitions?: RequisitionUncheckedUpdateManyWithoutCompanyNestedInput
     requisitionRevisions?: RequisitionRevisionUncheckedUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUncheckedUpdateManyWithoutCompanyNestedInput
+    referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type VesselUpsertWithoutInventoryEventsInput = {
@@ -182890,6 +185092,7 @@ export namespace Prisma {
     requisitions?: RequisitionCreateNestedManyWithoutCompanyInput
     requisitionRevisions?: RequisitionRevisionCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterCreateNestedManyWithoutCompanyInput
+    referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutInventoryUpdateDraftsInput = {
@@ -182947,6 +185150,7 @@ export namespace Prisma {
     requisitions?: RequisitionUncheckedCreateNestedManyWithoutCompanyInput
     requisitionRevisions?: RequisitionRevisionUncheckedCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterUncheckedCreateNestedManyWithoutCompanyInput
+    referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutInventoryUpdateDraftsInput = {
@@ -183199,6 +185403,7 @@ export namespace Prisma {
     requisitions?: RequisitionUpdateManyWithoutCompanyNestedInput
     requisitionRevisions?: RequisitionRevisionUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUpdateManyWithoutCompanyNestedInput
+    referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutInventoryUpdateDraftsInput = {
@@ -183256,6 +185461,7 @@ export namespace Prisma {
     requisitions?: RequisitionUncheckedUpdateManyWithoutCompanyNestedInput
     requisitionRevisions?: RequisitionRevisionUncheckedUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUncheckedUpdateManyWithoutCompanyNestedInput
+    referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type VesselUpsertWithoutInventoryUpdateDraftsInput = {
@@ -183498,6 +185704,7 @@ export namespace Prisma {
     inventoryUpdateDrafts?: InventoryUpdateDraftCreateNestedManyWithoutCompanyInput
     requisitionRevisions?: RequisitionRevisionCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterCreateNestedManyWithoutCompanyInput
+    referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutRequisitionsInput = {
@@ -183555,6 +185762,7 @@ export namespace Prisma {
     inventoryUpdateDrafts?: InventoryUpdateDraftUncheckedCreateNestedManyWithoutCompanyInput
     requisitionRevisions?: RequisitionRevisionUncheckedCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterUncheckedCreateNestedManyWithoutCompanyInput
+    referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutRequisitionsInput = {
@@ -183918,6 +186126,7 @@ export namespace Prisma {
     inventoryUpdateDrafts?: InventoryUpdateDraftUpdateManyWithoutCompanyNestedInput
     requisitionRevisions?: RequisitionRevisionUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUpdateManyWithoutCompanyNestedInput
+    referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutRequisitionsInput = {
@@ -183975,6 +186184,7 @@ export namespace Prisma {
     inventoryUpdateDrafts?: InventoryUpdateDraftUncheckedUpdateManyWithoutCompanyNestedInput
     requisitionRevisions?: RequisitionRevisionUncheckedUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUncheckedUpdateManyWithoutCompanyNestedInput
+    referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type VesselUpsertWithoutRequisitionsInput = {
@@ -184292,6 +186502,7 @@ export namespace Prisma {
     inventoryUpdateDrafts?: InventoryUpdateDraftCreateNestedManyWithoutCompanyInput
     requisitions?: RequisitionCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterCreateNestedManyWithoutCompanyInput
+    referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutRequisitionRevisionsInput = {
@@ -184349,6 +186560,7 @@ export namespace Prisma {
     inventoryUpdateDrafts?: InventoryUpdateDraftUncheckedCreateNestedManyWithoutCompanyInput
     requisitions?: RequisitionUncheckedCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterUncheckedCreateNestedManyWithoutCompanyInput
+    referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutRequisitionRevisionsInput = {
@@ -184538,6 +186750,7 @@ export namespace Prisma {
     inventoryUpdateDrafts?: InventoryUpdateDraftUpdateManyWithoutCompanyNestedInput
     requisitions?: RequisitionUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUpdateManyWithoutCompanyNestedInput
+    referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutRequisitionRevisionsInput = {
@@ -184595,6 +186808,7 @@ export namespace Prisma {
     inventoryUpdateDrafts?: InventoryUpdateDraftUncheckedUpdateManyWithoutCompanyNestedInput
     requisitions?: RequisitionUncheckedUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUncheckedUpdateManyWithoutCompanyNestedInput
+    referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type RequisitionUpsertWithoutRevisionsInput = {
@@ -185755,6 +187969,22 @@ export namespace Prisma {
     updatedAt?: Date | string
     createdBy?: string | null
     updatedBy?: string | null
+  }
+
+  export type ReferenceListItemCreateManyCompanyInput = {
+    id?: string
+    listKey: string
+    value: string
+    label: string
+    sortOrder?: number
+    active?: boolean
+    isSystem?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
   }
 
   export type UserUpdateWithoutCompanyInput = {
@@ -188691,6 +190921,54 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
     updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type ReferenceListItemUpdateWithoutCompanyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    listKey?: StringFieldUpdateOperationsInput | string
+    value?: StringFieldUpdateOperationsInput | string
+    label?: StringFieldUpdateOperationsInput | string
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    active?: BoolFieldUpdateOperationsInput | boolean
+    isSystem?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type ReferenceListItemUncheckedUpdateWithoutCompanyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    listKey?: StringFieldUpdateOperationsInput | string
+    value?: StringFieldUpdateOperationsInput | string
+    label?: StringFieldUpdateOperationsInput | string
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    active?: BoolFieldUpdateOperationsInput | boolean
+    isSystem?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type ReferenceListItemUncheckedUpdateManyWithoutCompanyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    listKey?: StringFieldUpdateOperationsInput | string
+    value?: StringFieldUpdateOperationsInput | string
+    label?: StringFieldUpdateOperationsInput | string
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    active?: BoolFieldUpdateOperationsInput | boolean
+    isSystem?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type UserRoleCreateManyUserInput = {

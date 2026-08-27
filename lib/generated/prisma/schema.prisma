@@ -392,6 +392,7 @@ model Company {
   requisitions               Requisition[]
   requisitionRevisions       RequisitionRevision[]
   unitMasters                UnitMaster[]
+  referenceListItems         ReferenceListItem[]
 
   // How far ahead of its Expired date a certificate is flagged with a
   // warning icon on the Vessel Documentation / Company Documents registers.
@@ -2693,6 +2694,37 @@ model UnitMaster {
 
   @@unique([companyId, metric, unit])
   @@index([companyId, metric])
+}
+
+// Office-editable reference data — the controlled option lists behind pickers
+// that used to be hard-coded constants in feature schemas (e.g. Vessel
+// Documentation's document-type dropdown). One row per option, scoped per
+// company and per `listKey` (the registry key in lib/reference-registry.ts).
+// When a company has zero rows for a key, readers fall back to the registry's
+// built-in constant list, so a picker never renders empty. `isSystem` marks
+// rows seeded from those constants — they are deactivated (active=false), not
+// hard-deleted, to preserve the fallback parity guarantee.
+model ReferenceListItem {
+  id        String  @id @default(uuid())
+  companyId String
+  company   Company @relation(fields: [companyId], references: [id])
+
+  listKey   String // registry key, e.g. "vessel-document-type"
+  value     String // stored value written onto records (value == label for flat lists)
+  label     String // display label shown in the picker
+  sortOrder Int     @default(0)
+  active    Boolean @default(true)
+  isSystem  Boolean @default(false) // seeded from a registry fallback constant
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  createdBy String?
+  updatedBy String?
+  deletedAt DateTime?
+  deletedBy String?
+
+  @@unique([companyId, listKey, value])
+  @@index([companyId, listKey])
 }
 
 model EnvironmentRecord {

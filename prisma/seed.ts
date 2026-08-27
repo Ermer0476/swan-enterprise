@@ -8,6 +8,7 @@
 import { PrismaClient, type DepartmentType, type StoresCategory } from "../lib/generated/prisma";
 import bcrypt from "bcryptjs";
 import { ALL_PERMISSION_KEYS, PERMISSIONS, permissionModule } from "../lib/permissions";
+import { REFERENCE_REGISTRY, REFERENCE_LIST_KEYS } from "../lib/reference-registry";
 
 const prisma = new PrismaClient();
 
@@ -423,6 +424,28 @@ async function main() {
       update: {},
       create: { companyId: company.id, ...u },
     });
+  }
+
+  // Reference lists — the office-editable option lists behind pickers that
+  // used to be hard-coded constants. Seeded from the registry fallback so the
+  // seeded default is byte-identical to the old constant. isSystem: true marks
+  // these as built-ins (deactivated rather than deleted in the UI). update: {}
+  // so a re-seed never rewrites an office-edited row.
+  for (const listKey of REFERENCE_LIST_KEYS) {
+    for (const opt of REFERENCE_REGISTRY[listKey].fallback) {
+      await prisma.referenceListItem.upsert({
+        where: { companyId_listKey_value: { companyId: company.id, listKey, value: opt.value } },
+        update: {},
+        create: {
+          companyId: company.id,
+          listKey,
+          value: opt.value,
+          label: opt.label,
+          sortOrder: opt.sortOrder,
+          isSystem: true,
+        },
+      });
+    }
   }
 
   // Users
