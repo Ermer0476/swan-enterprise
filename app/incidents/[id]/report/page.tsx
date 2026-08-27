@@ -169,7 +169,7 @@ export default async function IncidentReportPage({
               ) : (
                 inc.typeEntries.map((e) => (
                   <Badge key={e.id} tone="accent">
-                    {INCIDENT_TYPE_LABELS[e.type]} — {INCIDENT_SUBCATEGORY_LABELS[e.type][e.subCategory]}
+                    {INCIDENT_TYPE_LABELS[e.type]} — {INCIDENT_SUBCATEGORY_LABELS[e.type][e.subCategory] ?? e.subCategory}
                   </Badge>
                 ))
               )}
