@@ -13864,6 +13864,8 @@ export namespace Prisma {
     rank: string | null
     active: boolean | null
     lastLoginAt: Date | null
+    mustChangePassword: boolean | null
+    sessionsValidFrom: Date | null
     vesselId: string | null
     accessLevelId: string | null
     departmentRefId: string | null
@@ -13885,6 +13887,8 @@ export namespace Prisma {
     rank: string | null
     active: boolean | null
     lastLoginAt: Date | null
+    mustChangePassword: boolean | null
+    sessionsValidFrom: Date | null
     vesselId: string | null
     accessLevelId: string | null
     departmentRefId: string | null
@@ -13906,6 +13910,8 @@ export namespace Prisma {
     rank: number
     active: number
     lastLoginAt: number
+    mustChangePassword: number
+    sessionsValidFrom: number
     vesselId: number
     accessLevelId: number
     departmentRefId: number
@@ -13929,6 +13935,8 @@ export namespace Prisma {
     rank?: true
     active?: true
     lastLoginAt?: true
+    mustChangePassword?: true
+    sessionsValidFrom?: true
     vesselId?: true
     accessLevelId?: true
     departmentRefId?: true
@@ -13950,6 +13958,8 @@ export namespace Prisma {
     rank?: true
     active?: true
     lastLoginAt?: true
+    mustChangePassword?: true
+    sessionsValidFrom?: true
     vesselId?: true
     accessLevelId?: true
     departmentRefId?: true
@@ -13971,6 +13981,8 @@ export namespace Prisma {
     rank?: true
     active?: true
     lastLoginAt?: true
+    mustChangePassword?: true
+    sessionsValidFrom?: true
     vesselId?: true
     accessLevelId?: true
     departmentRefId?: true
@@ -14065,6 +14077,8 @@ export namespace Prisma {
     rank: string | null
     active: boolean
     lastLoginAt: Date | null
+    mustChangePassword: boolean
+    sessionsValidFrom: Date | null
     vesselId: string | null
     accessLevelId: string | null
     departmentRefId: string | null
@@ -14103,6 +14117,8 @@ export namespace Prisma {
     rank?: boolean
     active?: boolean
     lastLoginAt?: boolean
+    mustChangePassword?: boolean
+    sessionsValidFrom?: boolean
     vesselId?: boolean
     accessLevelId?: boolean
     departmentRefId?: boolean
@@ -14138,6 +14154,8 @@ export namespace Prisma {
     rank?: boolean
     active?: boolean
     lastLoginAt?: boolean
+    mustChangePassword?: boolean
+    sessionsValidFrom?: boolean
     vesselId?: boolean
     accessLevelId?: boolean
     departmentRefId?: boolean
@@ -14163,6 +14181,8 @@ export namespace Prisma {
     rank?: boolean
     active?: boolean
     lastLoginAt?: boolean
+    mustChangePassword?: boolean
+    sessionsValidFrom?: boolean
     vesselId?: boolean
     accessLevelId?: boolean
     departmentRefId?: boolean
@@ -14188,6 +14208,8 @@ export namespace Prisma {
     rank?: boolean
     active?: boolean
     lastLoginAt?: boolean
+    mustChangePassword?: boolean
+    sessionsValidFrom?: boolean
     vesselId?: boolean
     accessLevelId?: boolean
     departmentRefId?: boolean
@@ -14199,7 +14221,7 @@ export namespace Prisma {
     deletedBy?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "companyId" | "fullName" | "email" | "passwordHash" | "department" | "rank" | "active" | "lastLoginAt" | "vesselId" | "accessLevelId" | "departmentRefId" | "createdAt" | "updatedAt" | "createdBy" | "updatedBy" | "deletedAt" | "deletedBy", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "companyId" | "fullName" | "email" | "passwordHash" | "department" | "rank" | "active" | "lastLoginAt" | "mustChangePassword" | "sessionsValidFrom" | "vesselId" | "accessLevelId" | "departmentRefId" | "createdAt" | "updatedAt" | "createdBy" | "updatedBy" | "deletedAt" | "deletedBy", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     company?: boolean | CompanyDefaultArgs<ExtArgs>
     vessel?: boolean | User$vesselArgs<ExtArgs>
@@ -14256,6 +14278,8 @@ export namespace Prisma {
       rank: string | null
       active: boolean
       lastLoginAt: Date | null
+      mustChangePassword: boolean
+      sessionsValidFrom: Date | null
       vesselId: string | null
       accessLevelId: string | null
       departmentRefId: string | null
@@ -14710,6 +14734,8 @@ export namespace Prisma {
     readonly rank: FieldRef<"User", 'String'>
     readonly active: FieldRef<"User", 'Boolean'>
     readonly lastLoginAt: FieldRef<"User", 'DateTime'>
+    readonly mustChangePassword: FieldRef<"User", 'Boolean'>
+    readonly sessionsValidFrom: FieldRef<"User", 'DateTime'>
     readonly vesselId: FieldRef<"User", 'String'>
     readonly accessLevelId: FieldRef<"User", 'String'>
     readonly departmentRefId: FieldRef<"User", 'String'>
@@ -115940,6 +115966,8 @@ export namespace Prisma {
     rank: 'rank',
     active: 'active',
     lastLoginAt: 'lastLoginAt',
+    mustChangePassword: 'mustChangePassword',
+    sessionsValidFrom: 'sessionsValidFrom',
     vesselId: 'vesselId',
     accessLevelId: 'accessLevelId',
     departmentRefId: 'departmentRefId',
@@ -119073,6 +119101,8 @@ export namespace Prisma {
     rank?: StringNullableFilter<"User"> | string | null
     active?: BoolFilter<"User"> | boolean
     lastLoginAt?: DateTimeNullableFilter<"User"> | Date | string | null
+    mustChangePassword?: BoolFilter<"User"> | boolean
+    sessionsValidFrom?: DateTimeNullableFilter<"User"> | Date | string | null
     vesselId?: StringNullableFilter<"User"> | string | null
     accessLevelId?: StringNullableFilter<"User"> | string | null
     departmentRefId?: StringNullableFilter<"User"> | string | null
@@ -119107,6 +119137,8 @@ export namespace Prisma {
     rank?: SortOrderInput | SortOrder
     active?: SortOrder
     lastLoginAt?: SortOrderInput | SortOrder
+    mustChangePassword?: SortOrder
+    sessionsValidFrom?: SortOrderInput | SortOrder
     vesselId?: SortOrderInput | SortOrder
     accessLevelId?: SortOrderInput | SortOrder
     departmentRefId?: SortOrderInput | SortOrder
@@ -119144,6 +119176,8 @@ export namespace Prisma {
     rank?: StringNullableFilter<"User"> | string | null
     active?: BoolFilter<"User"> | boolean
     lastLoginAt?: DateTimeNullableFilter<"User"> | Date | string | null
+    mustChangePassword?: BoolFilter<"User"> | boolean
+    sessionsValidFrom?: DateTimeNullableFilter<"User"> | Date | string | null
     vesselId?: StringNullableFilter<"User"> | string | null
     accessLevelId?: StringNullableFilter<"User"> | string | null
     departmentRefId?: StringNullableFilter<"User"> | string | null
@@ -119178,6 +119212,8 @@ export namespace Prisma {
     rank?: SortOrderInput | SortOrder
     active?: SortOrder
     lastLoginAt?: SortOrderInput | SortOrder
+    mustChangePassword?: SortOrder
+    sessionsValidFrom?: SortOrderInput | SortOrder
     vesselId?: SortOrderInput | SortOrder
     accessLevelId?: SortOrderInput | SortOrder
     departmentRefId?: SortOrderInput | SortOrder
@@ -119205,6 +119241,8 @@ export namespace Prisma {
     rank?: StringNullableWithAggregatesFilter<"User"> | string | null
     active?: BoolWithAggregatesFilter<"User"> | boolean
     lastLoginAt?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
+    mustChangePassword?: BoolWithAggregatesFilter<"User"> | boolean
+    sessionsValidFrom?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
     vesselId?: StringNullableWithAggregatesFilter<"User"> | string | null
     accessLevelId?: StringNullableWithAggregatesFilter<"User"> | string | null
     departmentRefId?: StringNullableWithAggregatesFilter<"User"> | string | null
@@ -128815,6 +128853,8 @@ export namespace Prisma {
     rank?: string | null
     active?: boolean
     lastLoginAt?: Date | string | null
+    mustChangePassword?: boolean
+    sessionsValidFrom?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -128846,6 +128886,8 @@ export namespace Prisma {
     rank?: string | null
     active?: boolean
     lastLoginAt?: Date | string | null
+    mustChangePassword?: boolean
+    sessionsValidFrom?: Date | string | null
     vesselId?: string | null
     accessLevelId?: string | null
     departmentRefId?: string | null
@@ -128875,6 +128917,8 @@ export namespace Prisma {
     rank?: NullableStringFieldUpdateOperationsInput | string | null
     active?: BoolFieldUpdateOperationsInput | boolean
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    sessionsValidFrom?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -128906,6 +128950,8 @@ export namespace Prisma {
     rank?: NullableStringFieldUpdateOperationsInput | string | null
     active?: BoolFieldUpdateOperationsInput | boolean
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    sessionsValidFrom?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     vesselId?: NullableStringFieldUpdateOperationsInput | string | null
     accessLevelId?: NullableStringFieldUpdateOperationsInput | string | null
     departmentRefId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -128936,6 +128982,8 @@ export namespace Prisma {
     rank?: string | null
     active?: boolean
     lastLoginAt?: Date | string | null
+    mustChangePassword?: boolean
+    sessionsValidFrom?: Date | string | null
     vesselId?: string | null
     accessLevelId?: string | null
     departmentRefId?: string | null
@@ -128956,6 +129004,8 @@ export namespace Prisma {
     rank?: NullableStringFieldUpdateOperationsInput | string | null
     active?: BoolFieldUpdateOperationsInput | boolean
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    sessionsValidFrom?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -128974,6 +129024,8 @@ export namespace Prisma {
     rank?: NullableStringFieldUpdateOperationsInput | string | null
     active?: BoolFieldUpdateOperationsInput | boolean
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    sessionsValidFrom?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     vesselId?: NullableStringFieldUpdateOperationsInput | string | null
     accessLevelId?: NullableStringFieldUpdateOperationsInput | string | null
     departmentRefId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -140569,6 +140621,8 @@ export namespace Prisma {
     rank?: SortOrder
     active?: SortOrder
     lastLoginAt?: SortOrder
+    mustChangePassword?: SortOrder
+    sessionsValidFrom?: SortOrder
     vesselId?: SortOrder
     accessLevelId?: SortOrder
     departmentRefId?: SortOrder
@@ -140590,6 +140644,8 @@ export namespace Prisma {
     rank?: SortOrder
     active?: SortOrder
     lastLoginAt?: SortOrder
+    mustChangePassword?: SortOrder
+    sessionsValidFrom?: SortOrder
     vesselId?: SortOrder
     accessLevelId?: SortOrder
     departmentRefId?: SortOrder
@@ -140611,6 +140667,8 @@ export namespace Prisma {
     rank?: SortOrder
     active?: SortOrder
     lastLoginAt?: SortOrder
+    mustChangePassword?: SortOrder
+    sessionsValidFrom?: SortOrder
     vesselId?: SortOrder
     accessLevelId?: SortOrder
     departmentRefId?: SortOrder
@@ -157183,6 +157241,8 @@ export namespace Prisma {
     rank?: string | null
     active?: boolean
     lastLoginAt?: Date | string | null
+    mustChangePassword?: boolean
+    sessionsValidFrom?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -157212,6 +157272,8 @@ export namespace Prisma {
     rank?: string | null
     active?: boolean
     lastLoginAt?: Date | string | null
+    mustChangePassword?: boolean
+    sessionsValidFrom?: Date | string | null
     vesselId?: string | null
     accessLevelId?: string | null
     departmentRefId?: string | null
@@ -159887,6 +159949,8 @@ export namespace Prisma {
     rank?: StringNullableFilter<"User"> | string | null
     active?: BoolFilter<"User"> | boolean
     lastLoginAt?: DateTimeNullableFilter<"User"> | Date | string | null
+    mustChangePassword?: BoolFilter<"User"> | boolean
+    sessionsValidFrom?: DateTimeNullableFilter<"User"> | Date | string | null
     vesselId?: StringNullableFilter<"User"> | string | null
     accessLevelId?: StringNullableFilter<"User"> | string | null
     departmentRefId?: StringNullableFilter<"User"> | string | null
@@ -163815,6 +163879,8 @@ export namespace Prisma {
     rank?: string | null
     active?: boolean
     lastLoginAt?: Date | string | null
+    mustChangePassword?: boolean
+    sessionsValidFrom?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -163845,6 +163911,8 @@ export namespace Prisma {
     rank?: string | null
     active?: boolean
     lastLoginAt?: Date | string | null
+    mustChangePassword?: boolean
+    sessionsValidFrom?: Date | string | null
     vesselId?: string | null
     accessLevelId?: string | null
     departmentRefId?: string | null
@@ -163916,6 +163984,8 @@ export namespace Prisma {
     rank?: NullableStringFieldUpdateOperationsInput | string | null
     active?: BoolFieldUpdateOperationsInput | boolean
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    sessionsValidFrom?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -163946,6 +164016,8 @@ export namespace Prisma {
     rank?: NullableStringFieldUpdateOperationsInput | string | null
     active?: BoolFieldUpdateOperationsInput | boolean
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    sessionsValidFrom?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     vesselId?: NullableStringFieldUpdateOperationsInput | string | null
     accessLevelId?: NullableStringFieldUpdateOperationsInput | string | null
     departmentRefId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -164144,6 +164216,8 @@ export namespace Prisma {
     rank?: string | null
     active?: boolean
     lastLoginAt?: Date | string | null
+    mustChangePassword?: boolean
+    sessionsValidFrom?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -164174,6 +164248,8 @@ export namespace Prisma {
     rank?: string | null
     active?: boolean
     lastLoginAt?: Date | string | null
+    mustChangePassword?: boolean
+    sessionsValidFrom?: Date | string | null
     vesselId?: string | null
     departmentRefId?: string | null
     createdAt?: Date | string
@@ -164508,6 +164584,8 @@ export namespace Prisma {
     rank?: string | null
     active?: boolean
     lastLoginAt?: Date | string | null
+    mustChangePassword?: boolean
+    sessionsValidFrom?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -164538,6 +164616,8 @@ export namespace Prisma {
     rank?: string | null
     active?: boolean
     lastLoginAt?: Date | string | null
+    mustChangePassword?: boolean
+    sessionsValidFrom?: Date | string | null
     vesselId?: string | null
     accessLevelId?: string | null
     createdAt?: Date | string
@@ -166134,6 +166214,8 @@ export namespace Prisma {
     rank?: string | null
     active?: boolean
     lastLoginAt?: Date | string | null
+    mustChangePassword?: boolean
+    sessionsValidFrom?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -166164,6 +166246,8 @@ export namespace Prisma {
     rank?: string | null
     active?: boolean
     lastLoginAt?: Date | string | null
+    mustChangePassword?: boolean
+    sessionsValidFrom?: Date | string | null
     accessLevelId?: string | null
     departmentRefId?: string | null
     createdAt?: Date | string
@@ -167575,6 +167659,8 @@ export namespace Prisma {
     rank?: string | null
     active?: boolean
     lastLoginAt?: Date | string | null
+    mustChangePassword?: boolean
+    sessionsValidFrom?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -167605,6 +167691,8 @@ export namespace Prisma {
     rank?: string | null
     active?: boolean
     lastLoginAt?: Date | string | null
+    mustChangePassword?: boolean
+    sessionsValidFrom?: Date | string | null
     vesselId?: string | null
     accessLevelId?: string | null
     departmentRefId?: string | null
@@ -167649,6 +167737,8 @@ export namespace Prisma {
     rank?: NullableStringFieldUpdateOperationsInput | string | null
     active?: BoolFieldUpdateOperationsInput | boolean
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    sessionsValidFrom?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -167679,6 +167769,8 @@ export namespace Prisma {
     rank?: NullableStringFieldUpdateOperationsInput | string | null
     active?: BoolFieldUpdateOperationsInput | boolean
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    sessionsValidFrom?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     vesselId?: NullableStringFieldUpdateOperationsInput | string | null
     accessLevelId?: NullableStringFieldUpdateOperationsInput | string | null
     departmentRefId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -168624,6 +168716,8 @@ export namespace Prisma {
     rank?: string | null
     active?: boolean
     lastLoginAt?: Date | string | null
+    mustChangePassword?: boolean
+    sessionsValidFrom?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -168654,6 +168748,8 @@ export namespace Prisma {
     rank?: string | null
     active?: boolean
     lastLoginAt?: Date | string | null
+    mustChangePassword?: boolean
+    sessionsValidFrom?: Date | string | null
     vesselId?: string | null
     accessLevelId?: string | null
     departmentRefId?: string | null
@@ -169101,6 +169197,8 @@ export namespace Prisma {
     rank?: NullableStringFieldUpdateOperationsInput | string | null
     active?: BoolFieldUpdateOperationsInput | boolean
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    sessionsValidFrom?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -169131,6 +169229,8 @@ export namespace Prisma {
     rank?: NullableStringFieldUpdateOperationsInput | string | null
     active?: BoolFieldUpdateOperationsInput | boolean
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    sessionsValidFrom?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     vesselId?: NullableStringFieldUpdateOperationsInput | string | null
     accessLevelId?: NullableStringFieldUpdateOperationsInput | string | null
     departmentRefId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -169960,6 +170060,8 @@ export namespace Prisma {
     rank?: string | null
     active?: boolean
     lastLoginAt?: Date | string | null
+    mustChangePassword?: boolean
+    sessionsValidFrom?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -169990,6 +170092,8 @@ export namespace Prisma {
     rank?: string | null
     active?: boolean
     lastLoginAt?: Date | string | null
+    mustChangePassword?: boolean
+    sessionsValidFrom?: Date | string | null
     vesselId?: string | null
     accessLevelId?: string | null
     departmentRefId?: string | null
@@ -170418,6 +170522,8 @@ export namespace Prisma {
     rank?: NullableStringFieldUpdateOperationsInput | string | null
     active?: BoolFieldUpdateOperationsInput | boolean
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    sessionsValidFrom?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -170448,6 +170554,8 @@ export namespace Prisma {
     rank?: NullableStringFieldUpdateOperationsInput | string | null
     active?: BoolFieldUpdateOperationsInput | boolean
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    sessionsValidFrom?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     vesselId?: NullableStringFieldUpdateOperationsInput | string | null
     accessLevelId?: NullableStringFieldUpdateOperationsInput | string | null
     departmentRefId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -171110,6 +171218,8 @@ export namespace Prisma {
     rank?: string | null
     active?: boolean
     lastLoginAt?: Date | string | null
+    mustChangePassword?: boolean
+    sessionsValidFrom?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -171140,6 +171250,8 @@ export namespace Prisma {
     rank?: string | null
     active?: boolean
     lastLoginAt?: Date | string | null
+    mustChangePassword?: boolean
+    sessionsValidFrom?: Date | string | null
     vesselId?: string | null
     accessLevelId?: string | null
     departmentRefId?: string | null
@@ -171514,6 +171626,8 @@ export namespace Prisma {
     rank?: NullableStringFieldUpdateOperationsInput | string | null
     active?: BoolFieldUpdateOperationsInput | boolean
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    sessionsValidFrom?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -171544,6 +171658,8 @@ export namespace Prisma {
     rank?: NullableStringFieldUpdateOperationsInput | string | null
     active?: BoolFieldUpdateOperationsInput | boolean
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    sessionsValidFrom?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     vesselId?: NullableStringFieldUpdateOperationsInput | string | null
     accessLevelId?: NullableStringFieldUpdateOperationsInput | string | null
     departmentRefId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -171890,6 +172006,8 @@ export namespace Prisma {
     rank?: string | null
     active?: boolean
     lastLoginAt?: Date | string | null
+    mustChangePassword?: boolean
+    sessionsValidFrom?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -171920,6 +172038,8 @@ export namespace Prisma {
     rank?: string | null
     active?: boolean
     lastLoginAt?: Date | string | null
+    mustChangePassword?: boolean
+    sessionsValidFrom?: Date | string | null
     vesselId?: string | null
     accessLevelId?: string | null
     departmentRefId?: string | null
@@ -172294,6 +172414,8 @@ export namespace Prisma {
     rank?: NullableStringFieldUpdateOperationsInput | string | null
     active?: BoolFieldUpdateOperationsInput | boolean
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    sessionsValidFrom?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -172324,6 +172446,8 @@ export namespace Prisma {
     rank?: NullableStringFieldUpdateOperationsInput | string | null
     active?: BoolFieldUpdateOperationsInput | boolean
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    sessionsValidFrom?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     vesselId?: NullableStringFieldUpdateOperationsInput | string | null
     accessLevelId?: NullableStringFieldUpdateOperationsInput | string | null
     departmentRefId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -173129,6 +173253,8 @@ export namespace Prisma {
     rank?: string | null
     active?: boolean
     lastLoginAt?: Date | string | null
+    mustChangePassword?: boolean
+    sessionsValidFrom?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -173159,6 +173285,8 @@ export namespace Prisma {
     rank?: string | null
     active?: boolean
     lastLoginAt?: Date | string | null
+    mustChangePassword?: boolean
+    sessionsValidFrom?: Date | string | null
     vesselId?: string | null
     accessLevelId?: string | null
     departmentRefId?: string | null
@@ -173192,6 +173320,8 @@ export namespace Prisma {
     rank?: string | null
     active?: boolean
     lastLoginAt?: Date | string | null
+    mustChangePassword?: boolean
+    sessionsValidFrom?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -173222,6 +173352,8 @@ export namespace Prisma {
     rank?: string | null
     active?: boolean
     lastLoginAt?: Date | string | null
+    mustChangePassword?: boolean
+    sessionsValidFrom?: Date | string | null
     vesselId?: string | null
     accessLevelId?: string | null
     departmentRefId?: string | null
@@ -173349,6 +173481,8 @@ export namespace Prisma {
     rank?: NullableStringFieldUpdateOperationsInput | string | null
     active?: BoolFieldUpdateOperationsInput | boolean
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    sessionsValidFrom?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -173379,6 +173513,8 @@ export namespace Prisma {
     rank?: NullableStringFieldUpdateOperationsInput | string | null
     active?: BoolFieldUpdateOperationsInput | boolean
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    sessionsValidFrom?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     vesselId?: NullableStringFieldUpdateOperationsInput | string | null
     accessLevelId?: NullableStringFieldUpdateOperationsInput | string | null
     departmentRefId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -173418,6 +173554,8 @@ export namespace Prisma {
     rank?: NullableStringFieldUpdateOperationsInput | string | null
     active?: BoolFieldUpdateOperationsInput | boolean
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    sessionsValidFrom?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -173448,6 +173586,8 @@ export namespace Prisma {
     rank?: NullableStringFieldUpdateOperationsInput | string | null
     active?: BoolFieldUpdateOperationsInput | boolean
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    sessionsValidFrom?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     vesselId?: NullableStringFieldUpdateOperationsInput | string | null
     accessLevelId?: NullableStringFieldUpdateOperationsInput | string | null
     departmentRefId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -173549,6 +173689,8 @@ export namespace Prisma {
     rank?: string | null
     active?: boolean
     lastLoginAt?: Date | string | null
+    mustChangePassword?: boolean
+    sessionsValidFrom?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -173579,6 +173721,8 @@ export namespace Prisma {
     rank?: string | null
     active?: boolean
     lastLoginAt?: Date | string | null
+    mustChangePassword?: boolean
+    sessionsValidFrom?: Date | string | null
     vesselId?: string | null
     accessLevelId?: string | null
     departmentRefId?: string | null
@@ -173686,6 +173830,8 @@ export namespace Prisma {
     rank?: NullableStringFieldUpdateOperationsInput | string | null
     active?: BoolFieldUpdateOperationsInput | boolean
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    sessionsValidFrom?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -173716,6 +173862,8 @@ export namespace Prisma {
     rank?: NullableStringFieldUpdateOperationsInput | string | null
     active?: BoolFieldUpdateOperationsInput | boolean
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    sessionsValidFrom?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     vesselId?: NullableStringFieldUpdateOperationsInput | string | null
     accessLevelId?: NullableStringFieldUpdateOperationsInput | string | null
     departmentRefId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -199438,6 +199586,8 @@ export namespace Prisma {
     rank?: string | null
     active?: boolean
     lastLoginAt?: Date | string | null
+    mustChangePassword?: boolean
+    sessionsValidFrom?: Date | string | null
     vesselId?: string | null
     accessLevelId?: string | null
     departmentRefId?: string | null
@@ -200462,6 +200612,8 @@ export namespace Prisma {
     rank?: NullableStringFieldUpdateOperationsInput | string | null
     active?: BoolFieldUpdateOperationsInput | boolean
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    sessionsValidFrom?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -200491,6 +200643,8 @@ export namespace Prisma {
     rank?: NullableStringFieldUpdateOperationsInput | string | null
     active?: BoolFieldUpdateOperationsInput | boolean
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    sessionsValidFrom?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     vesselId?: NullableStringFieldUpdateOperationsInput | string | null
     accessLevelId?: NullableStringFieldUpdateOperationsInput | string | null
     departmentRefId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -200520,6 +200674,8 @@ export namespace Prisma {
     rank?: NullableStringFieldUpdateOperationsInput | string | null
     active?: BoolFieldUpdateOperationsInput | boolean
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    sessionsValidFrom?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     vesselId?: NullableStringFieldUpdateOperationsInput | string | null
     accessLevelId?: NullableStringFieldUpdateOperationsInput | string | null
     departmentRefId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -204473,6 +204629,8 @@ export namespace Prisma {
     rank?: string | null
     active?: boolean
     lastLoginAt?: Date | string | null
+    mustChangePassword?: boolean
+    sessionsValidFrom?: Date | string | null
     vesselId?: string | null
     departmentRefId?: string | null
     createdAt?: Date | string
@@ -204492,6 +204650,8 @@ export namespace Prisma {
     rank?: NullableStringFieldUpdateOperationsInput | string | null
     active?: BoolFieldUpdateOperationsInput | boolean
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    sessionsValidFrom?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -204522,6 +204682,8 @@ export namespace Prisma {
     rank?: NullableStringFieldUpdateOperationsInput | string | null
     active?: BoolFieldUpdateOperationsInput | boolean
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    sessionsValidFrom?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     vesselId?: NullableStringFieldUpdateOperationsInput | string | null
     departmentRefId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -204551,6 +204713,8 @@ export namespace Prisma {
     rank?: NullableStringFieldUpdateOperationsInput | string | null
     active?: BoolFieldUpdateOperationsInput | boolean
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    sessionsValidFrom?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     vesselId?: NullableStringFieldUpdateOperationsInput | string | null
     departmentRefId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -204571,6 +204735,8 @@ export namespace Prisma {
     rank?: string | null
     active?: boolean
     lastLoginAt?: Date | string | null
+    mustChangePassword?: boolean
+    sessionsValidFrom?: Date | string | null
     vesselId?: string | null
     accessLevelId?: string | null
     createdAt?: Date | string
@@ -204590,6 +204756,8 @@ export namespace Prisma {
     rank?: NullableStringFieldUpdateOperationsInput | string | null
     active?: BoolFieldUpdateOperationsInput | boolean
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    sessionsValidFrom?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -204620,6 +204788,8 @@ export namespace Prisma {
     rank?: NullableStringFieldUpdateOperationsInput | string | null
     active?: BoolFieldUpdateOperationsInput | boolean
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    sessionsValidFrom?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     vesselId?: NullableStringFieldUpdateOperationsInput | string | null
     accessLevelId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -204649,6 +204819,8 @@ export namespace Prisma {
     rank?: NullableStringFieldUpdateOperationsInput | string | null
     active?: BoolFieldUpdateOperationsInput | boolean
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    sessionsValidFrom?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     vesselId?: NullableStringFieldUpdateOperationsInput | string | null
     accessLevelId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -205164,6 +205336,8 @@ export namespace Prisma {
     rank?: string | null
     active?: boolean
     lastLoginAt?: Date | string | null
+    mustChangePassword?: boolean
+    sessionsValidFrom?: Date | string | null
     accessLevelId?: string | null
     departmentRefId?: string | null
     createdAt?: Date | string
@@ -206941,6 +207115,8 @@ export namespace Prisma {
     rank?: NullableStringFieldUpdateOperationsInput | string | null
     active?: BoolFieldUpdateOperationsInput | boolean
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    sessionsValidFrom?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -206971,6 +207147,8 @@ export namespace Prisma {
     rank?: NullableStringFieldUpdateOperationsInput | string | null
     active?: BoolFieldUpdateOperationsInput | boolean
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    sessionsValidFrom?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     accessLevelId?: NullableStringFieldUpdateOperationsInput | string | null
     departmentRefId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -207000,6 +207178,8 @@ export namespace Prisma {
     rank?: NullableStringFieldUpdateOperationsInput | string | null
     active?: BoolFieldUpdateOperationsInput | boolean
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    sessionsValidFrom?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     accessLevelId?: NullableStringFieldUpdateOperationsInput | string | null
     departmentRefId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
