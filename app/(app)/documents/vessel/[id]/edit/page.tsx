@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { requirePermission, can } from "@/lib/rbac";
 import { getVesselDocument, listVesselDocumentNamesByType } from "@/features/vessel-documents/queries";
+import { getReferenceList } from "@/lib/reference-list";
 import { listAttachments } from "@/features/attachments/queries";
 import { PageHeader } from "@/components/ui/page-header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -19,10 +20,11 @@ export default async function EditVesselDocumentPage({
   const doc = await getVesselDocument(user.companyId, id);
   if (!doc) notFound();
 
-  const [attachments, archivedAttachments, namesByType] = await Promise.all([
+  const [attachments, archivedAttachments, namesByType, vesselDocTypes] = await Promise.all([
     listAttachments(user.companyId, "VesselDocument", doc.id),
     listAttachments(user.companyId, "VesselDocumentArchive", doc.id),
     listVesselDocumentNamesByType(user.companyId),
+    getReferenceList(user.companyId, "vessel-document-type"),
   ]);
   const editable = can(user, "vesseldoc:update");
   const backHref = doc.vesselId ? `/documents/vessel?vesselId=${doc.vesselId}` : "/documents/vessel";
@@ -39,6 +41,7 @@ export default async function EditVesselDocumentPage({
       <DocumentForm
         origin="vessel"
         cancelHref={backHref}
+        vesselDocTypes={vesselDocTypes}
         namesByType={namesByType}
         initial={{
           id: doc.id,

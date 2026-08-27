@@ -30,3 +30,9 @@ next-env.d.ts
 npm-debug.log*
 .vercel
 /coverage
+
+# Reference-data live-DB migration artifacts (Step 0) — never commit
+backup_refdata_step0.dump
+step0.sql
+apply0.sql
+diff.err

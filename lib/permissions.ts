@@ -192,6 +192,10 @@ export const PERMISSIONS = {
   "exposure:update": "Edit exposure hours records",
   "exposure:delete": "Delete exposure hours records",
   "exposure:manage-targets": "Set LTIF/TRCF KPI dashboard targets",
+
+  // Reference Lists (office-editable option lists behind pickers)
+  "reference:read": "View the office-editable reference lists",
+  "reference:manage": "Add, edit, reorder and deactivate reference list options",
 } as const;
 
 export type PermissionKey = keyof typeof PERMISSIONS;

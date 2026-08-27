@@ -8,7 +8,7 @@ import {
   computeWarningStatus,
 } from "@/features/vessel-documents/queries";
 import { listAttachmentsForEntities } from "@/features/attachments/queries";
-import { VESSEL_DOCUMENT_TYPES } from "@/features/vessel-documents/schema";
+import { getReferenceList } from "@/lib/reference-list";
 import { PageHeader } from "@/components/ui/page-header";
 import { Card } from "@/components/ui/card";
 import { Select } from "@/components/ui/input";
@@ -27,9 +27,10 @@ export default async function VesselDocumentationPage({
   const isShipboard = user.department === "SHIPBOARD";
   const vesselId = isShipboard ? user.vesselId : sp.vesselId || undefined;
 
-  const [vessels, warningMonths] = await Promise.all([
+  const [vessels, warningMonths, docTypes] = await Promise.all([
     isShipboard ? [] : listVesselOptions(user.companyId),
     getExpiryWarningMonths(user.companyId),
+    getReferenceList(user.companyId, "vessel-document-type"),
   ]);
 
   const docs = vesselId
@@ -94,8 +95,8 @@ export default async function VesselDocumentationPage({
           )}
           <Select name="type" defaultValue={sp.type ?? ""} className="w-64">
             <option value="">Show all certificates</option>
-            {VESSEL_DOCUMENT_TYPES.map((t) => (
-              <option key={t} value={t}>{t}</option>
+            {docTypes.map((t) => (
+              <option key={t.value} value={t.value}>{t.label}</option>
             ))}
           </Select>
           <Button type="submit" variant="outline">Filter</Button>

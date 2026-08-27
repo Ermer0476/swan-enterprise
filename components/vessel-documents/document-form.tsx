@@ -49,6 +49,7 @@ export type DocumentFormValues = {
 export function DocumentForm({
   origin,
   vessels,
+  vesselDocTypes,
   companyDocTypes,
   namesByType,
   initial,
@@ -58,6 +59,11 @@ export function DocumentForm({
   origin: "vessel" | "company";
   /** Only used when origin === "vessel". */
   vessels?: { id: string; name: string }[];
+  /** Controlled Document Type options for the vessel picker, read from the
+   * office-editable reference list by the server page. Falls back to the
+   * built-in VESSEL_DOCUMENT_TYPES constant when not provided, so the picker
+   * renders the identical options it always did. */
+  vesselDocTypes?: { value: string; label: string }[];
   /** Extra free-text types already used for Company Documents — merged into
    * the datalist alongside a blank option, since there's no fixed list. */
   companyDocTypes?: string[];
@@ -81,6 +87,7 @@ export function DocumentForm({
     error: null,
   });
   const [type, setType] = useState(initial?.type ?? "");
+  const typeOptions = vesselDocTypes ?? VESSEL_DOCUMENT_TYPES.map((t) => ({ value: t, label: t }));
   const [refNo, setRefNo] = useState(initial?.refNo ?? "");
   const typeSuggestions = namesByType?.[type] ?? [];
   const nameSuggestions = typeSuggestions.map((s) => s.name);
@@ -127,8 +134,8 @@ export function DocumentForm({
                   required
                 >
                   <option value="" disabled>Select type…</option>
-                  {VESSEL_DOCUMENT_TYPES.map((t) => (
-                    <option key={t} value={t}>{t}</option>
+                  {typeOptions.map((t) => (
+                    <option key={t.value} value={t.value}>{t.label}</option>
                   ))}
                 </Select>
               ) : (

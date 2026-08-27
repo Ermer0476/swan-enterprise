@@ -169,6 +169,12 @@ export const NAV: NavGroup[] = [
         icon: Ruler,
         permission: "environment:manage-units",
       },
+      {
+        label: "Reference Lists",
+        href: "/settings/reference-lists",
+        icon: ListChecks,
+        permission: "reference:manage",
+      },
     ],
   },
 ];
