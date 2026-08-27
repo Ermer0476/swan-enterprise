@@ -78,3 +78,35 @@ export const RANK_LABELS: Record<string, string> = {
 export function rankLabel(code: string): string {
   return RANK_LABELS[code] ?? code;
 }
+
+/**
+ * Deck before engine before catering, senior first — the crew list's order and
+ * the order the rank dropdowns present.
+ *
+ * Sort order only. It is NOT an authority ranking and nothing enforces anything
+ * with it; the numbers are spaced so a rank can be inserted between two others
+ * without renumbering the rest. An unknown code sorts LAST (see rankSeniority),
+ * so a legacy or mis-typed value never displaces the Master from the top.
+ */
+export const RANK_SENIORITY: Record<string, number> = {
+  Master: 10,
+  "C/Off": 20,
+  "2/Off": 30,
+  "3/Off": 40,
+  AB: 60,
+  OS: 70,
+  Cadet: 75,
+  "C/Engr": 100,
+  "2/Engr": 110,
+  "3/Engr": 120,
+  "4/Engr": 130,
+  Olr: 160,
+  "M/M": 165,
+  Wiper: 170,
+  "C/Ck": 200,
+};
+
+/** Sort key for a rank code; unknown codes sort last. */
+export function rankSeniority(code: string): number {
+  return RANK_SENIORITY[code] ?? Number.MAX_SAFE_INTEGER;
+}
