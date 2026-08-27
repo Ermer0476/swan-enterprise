@@ -9,6 +9,7 @@ import { execFile } from "child_process";
 import { promisify } from "util";
 import mammoth from "mammoth";
 import { prisma } from "@/lib/prisma";
+import { Prisma } from "@/lib/generated/prisma";
 import { requirePermission } from "@/lib/rbac";
 import { writeAudit } from "@/lib/audit";
 import { vesselSchema } from "./schema";
@@ -22,6 +23,28 @@ const fail = (error: string): ActionResult => ({ ok: false, error });
 // and shelling out to pdftotext/tesseract — mirrors MAX_ATTACHMENT_SIZE in
 // features/attachments/schema.ts.
 const MAX_DOCUMENT_SIZE = 100 * 1024 * 1024; // 100MB
+
+// imo and code are both DB-@unique. They're pre-checked with findFirst above,
+// but a concurrent insert between that check and the write still trips the
+// unique index (P2002). Run the write through here so that race produces the
+// same clean message as the pre-check instead of an uncaught 500. Any other
+// error is re-thrown untouched. The write closure keeps the caller's data
+// object exactly as written.
+async function runVesselWrite<T>(
+  code: string | null,
+  write: () => Promise<T>,
+): Promise<{ ok: true; value: T } | { ok: false; error: string }> {
+  try {
+    return { ok: true, value: await write() };
+  } catch (err) {
+    if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === "P2002") {
+      const target = err.meta?.target;
+      const onImo = Array.isArray(target) ? target.includes("imo") : String(target ?? "").includes("imo");
+      return { ok: false, error: onImo ? "A vessel with this IMO number already exists" : `Vessel code "${code}" is already in use` };
+    }
+    throw err;
+  }
+}
 
 function parseVesselForm(formData: FormData) {
   return vesselSchema.safeParse({
@@ -91,7 +114,7 @@ export async function createVesselAction(
     : null;
   if (codeClash) return fail(`Vessel code "${d.code}" is already in use`);
 
-  const vessel = await prisma.vessel.create({
+  const created = await runVesselWrite(d.code, () => prisma.vessel.create({
     data: {
       companyId: user.companyId,
       name: d.name,
@@ -141,7 +164,9 @@ export async function createVesselAction(
       createdBy: user.id,
       updatedBy: user.id,
     },
-  });
+  }));
+  if (!created.ok) return fail(created.error);
+  const vessel = created.value;
 
   await writeAudit({
     actor: user,
@@ -191,7 +216,7 @@ export async function updateVesselAction(
   const archivedAt =
     d.status === "SOLD" ? (d.archivedAt ?? vessel.archivedAt ?? new Date()) : null;
 
-  await prisma.vessel.update({
+  const updated = await runVesselWrite(d.code, () => prisma.vessel.update({
     where: { id: vessel.id },
     data: {
       name: d.name,
@@ -240,7 +265,8 @@ export async function updateVesselAction(
       archivedAt,
       updatedBy: user.id,
     },
-  });
+  }));
+  if (!updated.ok) return fail(updated.error);
 
   await writeAudit({
     actor: user,
