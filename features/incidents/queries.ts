@@ -8,7 +8,30 @@ import {
   ROOT_CAUSE_SUBCATEGORY_LABELS,
   type RootCauseCategoryValue,
 } from "@/lib/root-cause";
-import { INCIDENT_TYPE_LABELS, INCIDENT_SUBCATEGORY_LABELS, type IncidentTypeValue } from "./schema";
+import {
+  INCIDENT_TYPES,
+  INCIDENT_TYPE_LABELS,
+  INCIDENT_SUBCATEGORY_LABELS,
+  type IncidentTypeValue,
+} from "./schema";
+import { getReferenceList } from "@/lib/reference-list";
+import { incidentSubcategoryKey, type ReferenceOption } from "@/lib/reference-registry";
+
+/** Per-incident-type sub-category options for the report/edit pickers, read
+ * from the office-editable reference list (registry fallback when a company
+ * has no rows). One entry per INCIDENT_TYPE, in the same order. */
+export type IncidentSubcategoryOptions = Record<IncidentTypeValue, ReferenceOption[]>;
+
+export async function getIncidentSubcategoryOptions(
+  companyId: string,
+): Promise<IncidentSubcategoryOptions> {
+  const lists = await Promise.all(
+    INCIDENT_TYPES.map((t) => getReferenceList(companyId, incidentSubcategoryKey(t))),
+  );
+  return Object.fromEntries(
+    INCIDENT_TYPES.map((t, i) => [t, lists[i] ?? []]),
+  ) as IncidentSubcategoryOptions;
+}
 
 // LTI = FAT + PTD + PPD + LWC; TRC = LTI + RWC + MTC (i.e. every Personal
 // Injury sub-category except FAC) — same OCIMF-style formula as

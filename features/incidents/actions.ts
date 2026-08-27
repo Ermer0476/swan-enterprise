@@ -11,12 +11,13 @@ import {
   createIncidentSchema,
   investigationSchema,
   INCIDENT_STATUSES,
-  INCIDENT_SUBCATEGORIES,
   INCIDENT_TYPE_LABELS,
   buildSofRows,
   positionsFor,
   type IncidentTypeValue,
 } from "./schema";
+import { getReferenceListValues } from "@/lib/reference-list";
+import { incidentSubcategoryKey } from "@/lib/reference-registry";
 
 export type ActionResult = { ok: boolean; error: string | null };
 const OK: ActionResult = { ok: true, error: null };
@@ -72,7 +73,8 @@ export async function createIncidentAction(
   for (const t of d.types) {
     const type = t as IncidentTypeValue;
     const subCategory = String(formData.get(`sub_${type}`) ?? "").trim();
-    if (!subCategory || !INCIDENT_SUBCATEGORIES[type].includes(subCategory)) {
+    const allowed = await getReferenceListValues(user.companyId, incidentSubcategoryKey(type));
+    if (!subCategory || !allowed.has(subCategory)) {
       return fail(`Select the sub-category for ${INCIDENT_TYPE_LABELS[type]}`);
     }
     typeEntries.push({ type, subCategory });
@@ -387,11 +389,21 @@ export async function updateDraftIncidentAction(
     return fail("Select a valid position for your department");
   }
 
+  // Load the sub-category already persisted per type so re-saving a draft that
+  // holds a value the office has since hidden never fails validation.
+  const existingEntries = await prisma.incidentTypeEntry.findMany({
+    where: { incidentId: incident.id },
+    select: { type: true, subCategory: true },
+  });
+  const persistedByType = new Map(existingEntries.map((e) => [e.type, e.subCategory]));
+
   const typeEntries: { type: IncidentTypeValue; subCategory: string }[] = [];
   for (const t of d.types) {
     const type = t as IncidentTypeValue;
     const subCategory = String(formData.get(`sub_${type}`) ?? "").trim();
-    if (!subCategory || !INCIDENT_SUBCATEGORIES[type].includes(subCategory)) {
+    const allowed = await getReferenceListValues(user.companyId, incidentSubcategoryKey(type));
+    const persisted = persistedByType.get(type);
+    if (!subCategory || (!allowed.has(subCategory) && subCategory !== persisted)) {
       return fail(`Select the sub-category for ${INCIDENT_TYPE_LABELS[type]}`);
     }
     typeEntries.push({ type, subCategory });

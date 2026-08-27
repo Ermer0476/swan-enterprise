@@ -11,10 +11,9 @@ import {
 import {
   INCIDENT_TYPES,
   INCIDENT_TYPE_LABELS,
-  INCIDENT_SUBCATEGORIES,
-  INCIDENT_SUBCATEGORY_LABELS,
   type IncidentTypeValue,
 } from "@/features/incidents/schema";
+import type { IncidentSubcategoryOptions } from "@/features/incidents/queries";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { AutoGrowInput, Input, Label, Select } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -51,10 +50,12 @@ export type EditableIncident = {
 export function EditDraftIncidentForm({
   incident,
   positions,
+  subcategoryOptions,
   ownVesselName,
 }: {
   incident: EditableIncident;
   positions: readonly string[];
+  subcategoryOptions: IncidentSubcategoryOptions;
   ownVesselName: string | null;
 }) {
   const formRef = useRef<HTMLFormElement>(null);
@@ -128,12 +129,26 @@ export function EditDraftIncidentForm({
                     {checked && (
                       <div className="space-y-1.5 border-t border-border bg-muted/40 p-3">
                         <Label htmlFor={`sub_${t}`}>{INCIDENT_TYPE_LABELS[t]} sub-category</Label>
-                        <Select id={`sub_${t}`} name={`sub_${t}`} defaultValue={subCategoryByType.get(t) ?? ""}>
-                          <option value="" disabled>— Select sub-category —</option>
-                          {INCIDENT_SUBCATEGORIES[t].map((s) => (
-                            <option key={s} value={s}>{INCIDENT_SUBCATEGORY_LABELS[t][s]}</option>
-                          ))}
-                        </Select>
+                        {(() => {
+                          const persisted = subCategoryByType.get(t);
+                          const opts = subcategoryOptions[t];
+                          // Keep the record's saved value selectable even if
+                          // the office has since hidden it, so re-saving the
+                          // draft never silently drops it.
+                          const showPersisted =
+                            !!persisted && !opts.some((o) => o.value === persisted);
+                          return (
+                            <Select id={`sub_${t}`} name={`sub_${t}`} defaultValue={persisted ?? ""}>
+                              <option value="" disabled>— Select sub-category —</option>
+                              {showPersisted && (
+                                <option value={persisted}>{persisted} (hidden)</option>
+                              )}
+                              {opts.map((s) => (
+                                <option key={s.value} value={s.value}>{s.label}</option>
+                              ))}
+                            </Select>
+                          );
+                        })()}
                       </div>
                     )}
                   </div>

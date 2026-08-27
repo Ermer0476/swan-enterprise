@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { requirePermission, can } from "@/lib/rbac";
-import { getIncident } from "@/features/incidents/queries";
+import { getIncident, getIncidentSubcategoryOptions } from "@/features/incidents/queries";
 import { listCapaActions } from "@/features/capa/queries";
 import { CapaTracker, type CapaRowView } from "@/components/capa/capa-tracker";
 import { listAttachments } from "@/features/attachments/queries";
@@ -69,6 +69,7 @@ export default async function IncidentDetailPage({
     inc.status === "DRAFT" && can(user, "incident:create") && (isShipboard || inc.createdBy === user.id);
 
   if (inc.status === "DRAFT") {
+    const subcategoryOptions = await getIncidentSubcategoryOptions(user.companyId);
     return (
       <div className="mx-auto max-w-7xl">
         <Link
@@ -102,6 +103,7 @@ export default async function IncidentDetailPage({
               sofEntries: inc.sofEntries.map((s) => ({ time: s.time, event: s.event })),
             }}
             positions={positionsFor(user.department)}
+            subcategoryOptions={subcategoryOptions}
             ownVesselName={inc.vessel?.name ?? null}
           />
         ) : (
