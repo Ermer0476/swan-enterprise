@@ -18,6 +18,11 @@ function ownVesselError(userDepartment: string, userVesselId: string | null, ves
   return null;
 }
 
+// Cap the upload before buffering the whole workbook into memory — mirrors
+// MAX_ATTACHMENT_SIZE in features/attachments/schema.ts (duplicated rather
+// than reaching across module boundaries for one constant).
+const MAX_IMPORT_FILE_SIZE = 100 * 1024 * 1024; // 100MB
+
 export type ParseImportResult = {
   ok: boolean;
   error: string | null;
@@ -45,6 +50,9 @@ export async function parseInventoryImportAction(_prev: ParseImportResult, formD
   if (!(file instanceof File) || file.size === 0) return { ok: false, error: "Choose a file to upload", ...EMPTY_PARSE };
   if (!/\.(xlsx|xls|xlsm)$/i.test(file.name)) {
     return { ok: false, error: "Only Excel files (.xlsx, .xls, .xlsm) are supported", ...EMPTY_PARSE };
+  }
+  if (file.size > MAX_IMPORT_FILE_SIZE) {
+    return { ok: false, error: "File is too large (maximum 100 MB)", ...EMPTY_PARSE };
   }
 
   const buffer = Buffer.from(await file.arrayBuffer());
