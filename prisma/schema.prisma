@@ -405,6 +405,8 @@ model Company {
   referenceListItems         ReferenceListItem[]
   accessLevels               AccessLevel[]
   departments                Department[]
+  seafarers                  Seafarer[]
+  crewAssignments            CrewAssignment[]
 
   // How far ahead of its Expired date a certificate is flagged with a
   // warning icon on the Vessel Documentation / Company Documents registers.
@@ -692,6 +694,7 @@ model Vessel {
   inventoryEvents                InventoryEvent[]
   inventoryUpdateDrafts           InventoryUpdateDraft[]
   requisitions                   Requisition[]
+  crewAssignments                CrewAssignment[]
 
   @@unique([companyId, code])
   @@index([companyId])
@@ -3514,4 +3517,162 @@ model RequisitionLine {
   createdBy String?
 
   @@index([companyId, revisionId])
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+//  Crewing — Seafarer register + crew assignments (User Management Phase 3)
+//  Additive port from swan-enterprise-next. See features/crewing/*.
+// ═══════════════════════════════════════════════════════════════════════════
+
+/// One seafarer in the manning register. The office's write surface; the crew
+/// list is a query over CrewAssignment, never a column on this table (§5.1).
+model Seafarer {
+  id        String  @id @default(uuid())
+  companyId String
+  company   Company @relation(fields: [companyId], references: [id])
+
+  /// The client's own crew/employee number, if they use one — but now a
+  /// first-class identity minted by the register (features/crewing/crew-id.ts,
+  /// `YYYY-99999`) rather than free text.
+  ///
+  /// No @@unique, ON PURPOSE: rows are soft deleted and Postgres unique indexes
+  /// ignore deletedAt, so deleting a seafarer and re-registering him would fail
+  /// with a P2002 against a row nobody can see. "One live seafarer per crew
+  /// code" is enforced in the action against deletedAt: null (crewCodeTaken).
+  /// Technically racy; the worst outcome is a duplicate list row, not
+  /// corruption, at a create rate of one human click.
+  crewCode String?
+
+  /// Four columns, not one `fullName`. Philippine names are surname-first on
+  /// every official document (POEA/DMW contract, SIRB, flag-state crew list),
+  /// the middle name is the mother's maiden surname and is load-bearing for
+  /// identification, and the suffix (Jr./Sr./III) distinguishes father from
+  /// son — who genuinely do sail for the same company.
+  lastName   String
+  firstName  String
+  middleName String?
+  suffix     String?
+
+  /// SENSITIVE — RA 10173 §3(l)(1) names race and ethnic origin; treated as
+  /// sensitive on the conservative reading (§3.1).
+  nationality String?
+
+  /// SENSITIVE — §3(l)(1) names AGE explicitly. Held because certificate and
+  /// contract validity turn on it; never rendered to a shipboard caller.
+  dateOfBirth DateTime?
+
+  /// SENSITIVE — the individual's own contact detail, not the company's.
+  contactPhone String?
+  contactEmail String?
+
+  /// SENSITIVE, and the next of kin is a SEPARATE DATA SUBJECT who never dealt
+  /// with this company (§3.6). Emergency use only. Never on a ship's list.
+  nextOfKinName         String?
+  nextOfKinRelationship String?
+  nextOfKinPhone        String?
+
+  /// In the manning pool. False = no longer employed, kept for the MLC record
+  /// of service. NOT the same thing as deletedAt, and not the same thing as
+  /// redactedAt — three different states with three different meanings (§3.5).
+  active Boolean @default(true)
+
+  /// Set by redactSeafarerAction (§3.5, a later batch): the sensitive tier
+  /// above has been nulled in place under RA 10173 §16(e) / the retention
+  /// policy, while the employment skeleton survives. IRREVERSIBLE. Null = never
+  /// redacted. The columns land now, with the table, because a second migration
+  /// window against this live database is the expensive part.
+  redactedAt DateTime?
+  redactedBy String?
+
+  assignments CrewAssignment[]
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  createdBy String?
+  updatedBy String?
+  deletedAt DateTime?
+  deletedBy String?
+
+  @@index([companyId, lastName, firstName])
+  @@index([companyId, crewCode])
+  @@index([companyId, active])
+}
+
+/// One tour of duty: this seafarer, on this ship, from this date to that one.
+/// The crew list is a query over this table, not over Seafarer (§5.1).
+///
+/// ── NO STATUS COLUMN, AND DO NOT ADD ONE ──
+/// PLANNED / ABOARD / COMPLETED are DERIVED from the two actual-date columns on
+/// every read (features/crewing/status.ts). A stored status is wrong the
+/// morning after it is written, and silently.
+model CrewAssignment {
+  id        String  @id @default(uuid())
+  companyId String
+  company   Company @relation(fields: [companyId], references: [id])
+
+  seafarerId String
+  seafarer   Seafarer @relation(fields: [seafarerId], references: [id])
+
+  /// REQUIRED, not nullable. Every assignment is to exactly one ship; there is
+  /// no shore-side or fleet-wide variant, so there is no null case. This is
+  /// what makes the vessel boundary apply uniformly with no null branch on the
+  /// security path.
+  vesselId String
+  vessel   Vessel @relation(fields: [vesselId], references: [id])
+
+  /// A code from SHIP_POSITIONS (lib/crew-ranks.ts) — the app's ONE rank
+  /// vocabulary. Zod-validated, never free text.
+  rankCode String
+
+  /// Four date columns, two pairs, and the split is the module's whole point.
+  /// PLANNED is what the crewing desk intends; ACTUAL is what happened.
+  ///
+  /// plannedSignOnDate  — required: a relief always has an intended date.
+  /// actualSignOnDate   — null = has not joined yet. THE PLANNED/ABOARD
+  ///                      discriminator.
+  /// plannedSignOffDate — null = open-ended / contract end not yet fixed.
+  /// actualSignOffDate  — null = STILL ABOARD. This one column is what every
+  ///                      "current crew" query filters on.
+  plannedSignOnDate  DateTime
+  actualSignOnDate   DateTime?
+  plannedSignOffDate DateTime?
+  actualSignOffDate  DateTime?
+
+  /// Free text, like VoyageReport.port and for the same reason: real-world data
+  /// is inconsistent ("LUANDA, ANGOLA", "OPL Cape Town") and a port master is a
+  /// separate feature. Do not normalise.
+  signOnPort  String?
+  signOffPort String?
+
+  /// A value from SIGN_OFF_REASONS (features/crewing/schema.ts). The list is
+  /// CONSTRAINED ON PURPOSE and excludes MEDICAL_REPATRIATION and DISMISSAL —
+  /// health data and disciplinary data respectively. Adding either RECLASSIFIES
+  /// this column as sensitive and every list that renders it.
+  signOffReason String?
+
+  /// This assignment relieves that one — how "who replaces whom" is recorded
+  /// rather than guessed from dates. Self-relation, nullable.
+  /// null = not a relief of a specific person: an additional berth, a first
+  /// manning, or simply a link the desk never recorded.
+  reliefForAssignmentId String?
+  reliefFor             CrewAssignment?  @relation("CrewRelief", fields: [reliefForAssignmentId], references: [id])
+  reliefs               CrewAssignment[] @relation("CrewRelief")
+
+  /// Two remark columns, two owners — the app-wide split. The ship writes
+  /// vesselRemarks, the office writes shoreRemarks, and neither overwrites the
+  /// other. BOTH ARE RESTRICTED TIER (§5.4): operational notes only — no
+  /// medical, no disciplinary content.
+  vesselRemarks String?
+  shoreRemarks  String?
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  createdBy String?
+  updatedBy String?
+  deletedAt DateTime?
+  deletedBy String?
+
+  @@index([companyId, vesselId, actualSignOffDate])
+  @@index([companyId, seafarerId])
+  @@index([companyId, plannedSignOffDate])
 }
