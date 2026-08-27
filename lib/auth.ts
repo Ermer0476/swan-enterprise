@@ -21,6 +21,13 @@ export type SessionUser = {
   vesselId: string | null;
   roles: string[];
   permissions: Set<PermissionKey>;
+  /**
+   * True while the account still holds an admin-issued one-time password. The
+   * authenticated layout (app/(app)/layout.tsx) reads this and forces the user
+   * to /change-password before any other page renders. A plain column, not a
+   * permission, so it lives on the session object rather than in the set.
+   */
+  mustChangePassword: boolean;
 };
 
 // ─── Passwords ──────────────────────────────────────────────────────────────
@@ -65,9 +72,16 @@ export async function getCurrentUser(): Promise<SessionUser | null> {
   if (!token) return null;
 
   let uid: string;
+  let iat: number;
   try {
     const { payload } = await jwtVerify(token, secret);
     uid = payload.uid as string;
+    // signToken has always called .setIssuedAt(), so every token this app has
+    // ever minted carries an `iat`. Refusing one without it is the safe
+    // reading: it is the claim the revocation guard below compares against, and
+    // a token that lacks it could not be evaluated at all.
+    if (typeof payload.iat !== "number") return null;
+    iat = payload.iat;
   } catch {
     return null;
   }
@@ -84,6 +98,22 @@ export async function getCurrentUser(): Promise<SessionUser | null> {
     },
   });
   if (!user) return null;
+
+  // Session revocation ("sign out everywhere" / password reset). Sessions
+  // issued before this instant are refused. Null (every row until something
+  // bumps it) means no constraint — a Date is always truthy, so only null
+  // short-circuits and existing behavior is unchanged.
+  //
+  // Compared in WHOLE SECONDS with a STRICT `<`, flooring the millisecond DB
+  // value: `iat` is whole seconds, sessionsValidFrom is millisecond-precision.
+  // The deliberate consequence is that a token issued in the SAME second as
+  // the bump SURVIVES — so a user who resets their password and the freshly
+  // re-minted session (its `iat` >= the bump's second) is not logged straight
+  // back out. Do NOT tighten to `<=` or compare `iat * 1000` against
+  // getTime(): either edit kills every same-second login.
+  if (user.sessionsValidFrom && iat < Math.floor(user.sessionsValidFrom.getTime() / 1000)) {
+    return null;
+  }
 
   const permissions = new Set<PermissionKey>();
   const roleNames: string[] = [];
@@ -104,6 +134,7 @@ export async function getCurrentUser(): Promise<SessionUser | null> {
     vesselId: user.vesselId,
     roles: roleNames,
     permissions,
+    mustChangePassword: user.mustChangePassword,
   };
 }
 
