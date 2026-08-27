@@ -441,6 +441,16 @@ model User {
   active       Boolean        @default(true)
   lastLoginAt  DateTime?
 
+  // ── First-login / forced password change + session revocation (ADDITIVE) ──
+  // `mustChangePassword` gates the account into /change-password before any
+  // other page renders (set true by admin-issued one-time passwords). Default
+  // false, so no existing account is affected.
+  // `sessionsValidFrom` is the "sign out everywhere" stamp: sessions whose JWT
+  // `iat` predates it are refused. Nullable and unset, so no live session is
+  // revoked by adding it.
+  mustChangePassword Boolean   @default(false)
+  sessionsValidFrom  DateTime?
+
   // Which vessel this account represents — only meaningful for
   // department = SHIPBOARD (one account per ship, e.g. the Master's login).
   // Null for office accounts, which aren't tied to a single vessel.
