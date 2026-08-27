@@ -1,0 +1,504 @@
+"use client";
+
+import Link from "next/link";
+import * as React from "react";
+import { useActionState, useEffect, useState } from "react";
+import { useFormStatus } from "react-dom";
+import { DEPARTMENTS } from "@/features/sms-manual/schema";
+import { MIN_PASSWORD_LENGTH } from "@/features/users/schema";
+import { humanize } from "@/lib/utils";
+import { Card, CardContent } from "@/components/ui/card";
+import { Input, Label, Select } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+
+// Same shape as every other module's, including the per-field breakdown.
+export type { ActionResult } from "@/features/shared/action-result";
+import type { ActionResult } from "@/features/shared/action-result";
+
+/**
+ * A required-field asterisk, and a labelled field wrapper — Capt's
+ * `space-y-1.5` + `<Label>` markup gathered behind one name for this form the
+ * same way app/(app)/crewing/seafarers/field.tsx does for the crewing forms.
+ * Local on purpose: not a new app-wide primitive, and it avoids importing the
+ * reference's @/components/ui/field, which Capt does not have. The control is
+ * passed as children so it keeps its own name/value/onChange.
+ */
+function RequiredMark() {
+  return <span className="ml-0.5 text-danger">*</span>;
+}
+
+function Field({
+  id,
+  label,
+  required,
+  hint,
+  error,
+  children,
+}: {
+  id: string;
+  label: string;
+  required?: boolean;
+  hint?: string;
+  error?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="space-y-1.5">
+      <Label htmlFor={id}>
+        {label}
+        {required && <RequiredMark />}
+      </Label>
+      {children}
+      {hint && !error && <p className="text-xs leading-snug text-muted-foreground">{hint}</p>}
+      {error && (
+        <p className="text-xs font-medium leading-snug text-danger" role="alert">
+          {error}
+        </p>
+      )}
+    </div>
+  );
+}
+
+export type UserFormValues = {
+  id?: string;
+  fullName: string;
+  email: string;
+  department: string;
+  rank: string;
+  employeeId: string;
+  crewId: string;
+  vesselId: string;
+  accessLevelId: string;
+  departmentRefId: string;
+  roleIds: string[];
+};
+
+export type RoleOption = { id: string; name: string; description: string | null };
+export type AccessLevelOption = { id: string; name: string };
+export type DepartmentOption = { id: string; name: string; side: "SHIP" | "SHORE" };
+
+const EMPTY: UserFormValues = {
+  fullName: "",
+  email: "",
+  department: "MARINE",
+  rank: "",
+  employeeId: "",
+  crewId: "",
+  vesselId: "",
+  accessLevelId: "",
+  departmentRefId: "",
+  roleIds: [],
+};
+
+/**
+ * Create/edit form for a user account, shared by both pages.
+ *
+ * Every field is controlled. A Server Action resolving makes the browser
+ * reset the <form>, which on a rejected submission would otherwise wipe
+ * everything the admin just typed; holding the values in state instead makes
+ * that reset a no-op.
+ *
+ * Saving is two-step — "Save" then "Yes, save" — a confirmation before an
+ * account is created or changed.
+ */
+export function UserForm({
+  action,
+  roles,
+  vessels,
+  accessLevels,
+  departments,
+  values = EMPTY,
+  submitLabel,
+  pendingLabel,
+  confirmPrompt,
+  passwordRequired,
+  passwordHint,
+  rolesLockedReason,
+  cancelHref,
+}: {
+  action: (prev: ActionResult, formData: FormData) => Promise<ActionResult>;
+  roles: RoleOption[];
+  vessels: { id: string; name: string }[];
+  accessLevels: AccessLevelOption[];
+  departments: DepartmentOption[];
+  values?: UserFormValues;
+  submitLabel: string;
+  pendingLabel: string;
+  confirmPrompt: string;
+  passwordRequired: boolean;
+  passwordHint: string;
+  /** Set when the admin is editing their own account — see SELF_ROLE_CHANGE. */
+  rolesLockedReason?: string;
+  cancelHref: string;
+}) {
+  const [form, setForm] = useState<UserFormValues>(values);
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [confirming, setConfirming] = useState(false);
+  const [state, formAction] = useActionState<ActionResult, FormData>(action, {
+    ok: false,
+    error: null,
+  });
+
+  // Drop back out of the confirmation step once the action has answered, so a
+  // refused save can be corrected and re-confirmed.
+  useEffect(() => {
+    setConfirming(false);
+    if (state.ok) setPassword("");
+  }, [state]);
+
+  const rolesLocked = Boolean(rolesLockedReason);
+  const fieldErrors = state.fieldErrors;
+
+  const shipDepartments = departments.filter((d) => d.side === "SHIP");
+  const shoreDepartments = departments.filter((d) => d.side === "SHORE");
+
+  function toggleRole(roleId: string, checked: boolean) {
+    setForm((f) => ({
+      ...f,
+      roleIds: checked
+        ? [...f.roleIds, roleId]
+        : f.roleIds.filter((id) => id !== roleId),
+    }));
+  }
+
+  return (
+    <Card>
+      <CardContent className="pt-5">
+        <form action={formAction} className="space-y-5">
+          {form.id && <input type="hidden" name="userId" value={form.id} />}
+
+          {/* ── 1. User details ── */}
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <Field
+              id="fullName"
+              label="Full name"
+              required
+              error={fieldErrors?.fullName}
+              hint="As it should appear on reports this person files."
+            >
+              <Input
+                id="fullName"
+                name="fullName"
+                value={form.fullName}
+                onChange={(e) => setForm({ ...form, fullName: e.target.value })}
+                placeholder="e.g. Capt. Ramon Reyes"
+                autoComplete="off"
+              />
+            </Field>
+            <Field
+              id="email"
+              label="Email (sign-in name)"
+              required
+              error={fieldErrors?.email}
+              hint="This is what they type to sign in, so it has to be one they can reach."
+            >
+              <Input
+                id="email"
+                name="email"
+                type="email"
+                inputMode="email"
+                value={form.email}
+                onChange={(e) => setForm({ ...form, email: e.target.value })}
+                placeholder="e.g. rreyes@swanshipping.com"
+                autoComplete="off"
+              />
+            </Field>
+            <Field
+              id="department"
+              label="Department"
+              error={fieldErrors?.department}
+              hint="Drives which rank list they see when filing a report. Nobody can change their own."
+            >
+              <Select
+                id="department"
+                name="department"
+                value={form.department}
+                onChange={(e) => setForm({ ...form, department: e.target.value })}
+              >
+                {DEPARTMENTS.map((d) => (
+                  <option key={d} value={d}>{humanize(d)}</option>
+                ))}
+              </Select>
+            </Field>
+            <Field
+              id="rank"
+              label="Rank / position"
+              error={fieldErrors?.rank}
+              hint="Their rank on board or title ashore — shown next to their name on the records they raise."
+            >
+              <Input
+                id="rank"
+                name="rank"
+                value={form.rank}
+                onChange={(e) => setForm({ ...form, rank: e.target.value })}
+                placeholder="e.g. Master, Marine Supt"
+                autoComplete="off"
+              />
+            </Field>
+            <Field
+              id="employeeId"
+              label="Employee / Shore ID"
+              error={fieldErrors?.employeeId}
+              hint="The company's own staff number for this person. Must be unique."
+            >
+              <Input
+                id="employeeId"
+                name="employeeId"
+                value={form.employeeId}
+                onChange={(e) => setForm({ ...form, employeeId: e.target.value })}
+                placeholder="e.g. SW-0142"
+                autoComplete="off"
+              />
+            </Field>
+            <Field
+              id="crewId"
+              label="Crew ID"
+              error={fieldErrors?.crewId}
+              hint="For a shore staff member who came from the ships. Format 2026-00042. Leave blank for non-seafarers."
+            >
+              <Input
+                id="crewId"
+                name="crewId"
+                value={form.crewId}
+                onChange={(e) => setForm({ ...form, crewId: e.target.value })}
+                placeholder="e.g. 2026-00042"
+                autoComplete="off"
+              />
+            </Field>
+          </div>
+
+          {/* ── 2. System accesses ──
+              A checkbox group, so its required marker and its "at least one"
+              error hang off the group rather than any single checkbox. */}
+          <div className="space-y-2">
+            <Label>
+              System accesses
+              {!rolesLocked && <RequiredMark />}
+            </Label>
+            <p className="text-xs leading-snug text-muted-foreground">
+              {rolesLockedReason ??
+                "At least one — an account with no access can sign in but reach nothing. Roles are shown in full under Settings › Access Levels / Roles."}
+            </p>
+            {fieldErrors?.roleIds && (
+              <p className="text-xs font-medium leading-snug text-danger" role="alert">
+                {fieldErrors.roleIds}
+              </p>
+            )}
+            <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+              {roles.map((r) => {
+                const checked = form.roleIds.includes(r.id);
+                return (
+                  <label
+                    key={r.id}
+                    className="flex cursor-pointer items-start gap-2 rounded-md border border-border p-2.5 hover:bg-muted/40"
+                  >
+                    <input
+                      type="checkbox"
+                      // A disabled checkbox posts nothing, which would submit
+                      // an empty access list; the hidden inputs below keep the
+                      // current roles in the payload when they're locked.
+                      name={rolesLocked ? undefined : "roleIds"}
+                      value={r.id}
+                      checked={checked}
+                      disabled={rolesLocked}
+                      onChange={(e) => toggleRole(r.id, e.target.checked)}
+                      className="mt-0.5 h-4 w-4 shrink-0 rounded border-input"
+                    />
+                    <span className="text-sm">
+                      <span className="font-medium">{r.name}</span>
+                      {r.description && (
+                        <span className="block text-xs text-muted-foreground">
+                          {r.description}
+                        </span>
+                      )}
+                    </span>
+                  </label>
+                );
+              })}
+            </div>
+            {rolesLocked &&
+              form.roleIds.map((id) => (
+                <input key={id} type="hidden" name="roleIds" value={id} />
+              ))}
+          </div>
+
+          {/* ── 3. Access level & department (data-driven) ──
+              Both optional. The Department here is the editable org
+              department from Settings › Departments — separate from the
+              legacy "Department" enum above, which drives rank lists and
+              security (lib/user-access.ts) and is unchanged. */}
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <Field
+              id="accessLevelId"
+              label="Access level"
+              error={fieldErrors?.accessLevelId}
+              hint="The user's level from Settings › Access Levels. Optional."
+            >
+              <Select
+                id="accessLevelId"
+                name="accessLevelId"
+                value={form.accessLevelId}
+                onChange={(e) => setForm({ ...form, accessLevelId: e.target.value })}
+              >
+                <option value="">— None —</option>
+                {accessLevels.map((a) => (
+                  <option key={a.id} value={a.id}>{a.name}</option>
+                ))}
+              </Select>
+            </Field>
+            <Field
+              id="departmentRefId"
+              label="Department (Ship / Shore)"
+              error={fieldErrors?.departmentRefId}
+              hint="The editable department from Settings › Departments. Optional, and separate from the security/rank Department above."
+            >
+              <Select
+                id="departmentRefId"
+                name="departmentRefId"
+                value={form.departmentRefId}
+                onChange={(e) => setForm({ ...form, departmentRefId: e.target.value })}
+              >
+                <option value="">— None —</option>
+                {shipDepartments.length > 0 && (
+                  <optgroup label="Ship">
+                    {shipDepartments.map((d) => (
+                      <option key={d.id} value={d.id}>{d.name}</option>
+                    ))}
+                  </optgroup>
+                )}
+                {shoreDepartments.length > 0 && (
+                  <optgroup label="Shore">
+                    {shoreDepartments.map((d) => (
+                      <option key={d.id} value={d.id}>{d.name}</option>
+                    ))}
+                  </optgroup>
+                )}
+              </Select>
+            </Field>
+          </div>
+
+          {/* ── 4. Vessel access ── */}
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <Field
+              id="vesselId"
+              label="Vessel access"
+              error={fieldErrors?.vesselId}
+              hint="The vessel this account represents. A shipboard account is tied to its own ship; an office account files against any vessel."
+            >
+              <Select
+                id="vesselId"
+                name="vesselId"
+                value={form.vesselId}
+                onChange={(e) => setForm({ ...form, vesselId: e.target.value })}
+              >
+                <option value="">— Office account (all vessels) —</option>
+                {vessels.map((v) => (
+                  <option key={v.id} value={v.id}>{v.name}</option>
+                ))}
+              </Select>
+            </Field>
+
+            {/* ── 5. Password ──
+                Two controls on one row (the box and its Show toggle), so this
+                one stays hand-wired rather than going through <Field>, which
+                takes a single child. */}
+            <div className="space-y-1.5">
+              <Label htmlFor="password">
+                {passwordRequired ? "Temporary password" : "New password"}
+                {passwordRequired && <RequiredMark />}
+              </Label>
+              <div className="flex gap-2">
+                <Input
+                  id="password"
+                  name="password"
+                  type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  autoComplete="new-password"
+                  minLength={passwordRequired ? MIN_PASSWORD_LENGTH : undefined}
+                  required={passwordRequired}
+                  aria-describedby={fieldErrors?.password ? "password-hint password-error" : "password-hint"}
+                  aria-invalid={fieldErrors?.password ? true : undefined}
+                />
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setShowPassword((s) => !s)}
+                >
+                  {showPassword ? "Hide" : "Show"}
+                </Button>
+              </div>
+              <p id="password-hint" className="text-xs leading-snug text-muted-foreground">
+                {passwordHint} At least {MIN_PASSWORD_LENGTH} characters — keep it something you can
+                read out over the phone or radio.
+              </p>
+              {fieldErrors?.password && (
+                <p id="password-error" className="text-xs font-medium leading-snug text-danger" role="alert">
+                  {fieldErrors.password}
+                </p>
+              )}
+            </div>
+          </div>
+
+          {state.error && (
+            <p className="text-sm text-danger" role="alert">{state.error}</p>
+          )}
+          {state.ok && !confirming && (
+            <p className="text-sm text-success" role="status">Saved.</p>
+          )}
+
+          {/* ── 6 & 7. Save, then confirm ── */}
+          {confirming ? (
+            <ConfirmRow
+              prompt={confirmPrompt}
+              submitLabel={submitLabel}
+              pendingLabel={pendingLabel}
+              onCancel={() => setConfirming(false)}
+            />
+          ) : (
+            <div className="flex items-center gap-2">
+              <Button type="button" onClick={() => setConfirming(true)}>
+                {submitLabel}
+              </Button>
+              <Link href={cancelHref}>
+                <Button type="button" variant="ghost">Cancel</Button>
+              </Link>
+            </div>
+          )}
+        </form>
+      </CardContent>
+    </Card>
+  );
+}
+
+function ConfirmRow({
+  prompt,
+  submitLabel,
+  pendingLabel,
+  onCancel,
+}: {
+  prompt: string;
+  submitLabel: string;
+  pendingLabel: string;
+  onCancel: () => void;
+}) {
+  const { pending } = useFormStatus();
+  return (
+    <div className="flex flex-wrap items-center gap-2 rounded-md border border-border bg-muted/40 p-3 text-sm">
+      <span>{prompt}</span>
+      <Button type="submit" size="sm" disabled={pending}>
+        {pending ? pendingLabel : `Yes, ${submitLabel.toLowerCase()}`}
+      </Button>
+      <Button
+        type="button"
+        variant="outline"
+        size="sm"
+        onClick={onCancel}
+        disabled={pending}
+      >
+        Cancel
+      </Button>
+    </div>
+  );
+}
