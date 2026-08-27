@@ -13,7 +13,7 @@ import {
   INCIDENT_SUBCATEGORY_LABELS,
   humanize,
 } from "@/features/incidents/schema";
-import { getReporterPositionOptions } from "@/lib/reference-list";
+import { getReporterPositionOptions, getRootCauseSubcategoryOptions } from "@/lib/reference-list";
 import { formatRootCause } from "@/lib/root-cause";
 import { severityTone, incidentStatusTone } from "@/features/incidents/ui";
 import { PageHeader } from "@/components/ui/page-header";
@@ -114,6 +114,7 @@ export default async function IncidentDetailPage({
     );
   }
 
+  const rootCauseSubOptions = await getRootCauseSubcategoryOptions(user.companyId);
   const canUpdate = can(user, "incident:update");
   const canClose = can(user, "incident:close");
   const canDelete = can(user, "incident:delete");
@@ -344,6 +345,7 @@ export default async function IncidentDetailPage({
               rootCauseCategory={inc.rootCauseCategory ?? ""}
               rootCauseSubCategory={inc.rootCauseSubCategory ?? ""}
               rootCause={inc.rootCause ?? ""}
+              subcategoryOptions={rootCauseSubOptions}
             />
           ) : inc.rootCauseCategory ? (
             <div className="space-y-4">

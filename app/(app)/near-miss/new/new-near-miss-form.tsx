@@ -17,13 +17,12 @@ import {
   HOR_CATEGORIES,
   HOR_CATEGORY_LABELS,
 } from "@/features/near-miss/schema";
-import type { ReferenceOption } from "@/lib/reference-registry";
+import type { ReferenceOption, RootCauseSubcategoryOptions } from "@/lib/reference-registry";
 import { CAPA_STATUSES } from "@/features/capa/schema";
 import {
   ROOT_CAUSE_CATEGORIES,
   ROOT_CAUSE_LABELS,
-  ROOT_CAUSE_SUBCATEGORIES,
-  ROOT_CAUSE_SUBCATEGORY_LABELS,
+  type RootCauseCategoryValue,
 } from "@/lib/root-cause";
 import { humanize } from "@/lib/utils";
 import { Card, CardContent } from "@/components/ui/card";
@@ -58,12 +57,14 @@ function DraftSubmitButton() {
 export function NewNearMissForm({
   vessels,
   positions,
+  subcategoryOptions,
   isShipboard,
   ownVesselId,
   ownVesselName,
 }: {
   vessels: { id: string; name: string }[];
   positions: ReferenceOption[];
+  subcategoryOptions: RootCauseSubcategoryOptions;
   isShipboard: boolean;
   ownVesselId: string | null;
   ownVesselName: string | null;
@@ -92,8 +93,9 @@ export function NewNearMissForm({
   );
   const [rootCause, setRootCause] = useState("");
   const [rootCauseSub, setRootCauseSub] = useState("");
-  const rootCauseSubOptions =
-    rootCause && (ROOT_CAUSE_SUBCATEGORIES as Record<string, readonly string[]>)[rootCause];
+  const rootCauseSubOptions = rootCause
+    ? subcategoryOptions[rootCause as RootCauseCategoryValue]
+    : undefined;
   const [isHor, setIsHor] = useState(false);
 
   type CapaRowState = { action: string; responsible: string; targetDate: string; status: string; closedDate: string };
@@ -334,9 +336,13 @@ export function NewNearMissForm({
                 onChange={(e) => setRootCauseSub(e.target.value)}
               >
                 <option value="" disabled>— Select sub-category —</option>
-                {rootCauseSubOptions.map((s) => (
-                  <option key={s} value={s}>
-                    {ROOT_CAUSE_SUBCATEGORY_LABELS[rootCause as keyof typeof ROOT_CAUSE_SUBCATEGORY_LABELS][s]}
+                {/* Keep a restored-but-now-hidden sub-category selectable. */}
+                {rootCauseSub && !rootCauseSubOptions.some((o) => o.value === rootCauseSub) && (
+                  <option value={rootCauseSub}>{rootCauseSub} (hidden)</option>
+                )}
+                {rootCauseSubOptions.map((o) => (
+                  <option key={o.value} value={o.value}>
+                    {o.label}
                   </option>
                 ))}
               </Select>

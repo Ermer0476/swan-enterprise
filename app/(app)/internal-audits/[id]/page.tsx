@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { requirePermission, can } from "@/lib/rbac";
+import { getRootCauseSubcategoryOptions } from "@/lib/reference-list";
 import { getInternalAudit } from "@/features/internal-audits/queries";
 import { listNcrsBySourceEntityIds, listNcrRootCauses } from "@/features/non-conformities/queries";
 import { listAllCapaActionsForEntities } from "@/features/capa/queries";
@@ -114,11 +115,12 @@ export default async function InternalAuditDetailPage({
   // and write through to it directly instead of a separate copy.
   const unlinkedIds = findingIds.filter((fid) => !ncrBySourceId[fid]);
   const linkedNcrIds = Object.values(ncrBySourceId).map((n) => n.id);
-  const [ownCapaRows, ncrCapaRows, ncrRootCauses, reportAttachments] = await Promise.all([
+  const [ownCapaRows, ncrCapaRows, ncrRootCauses, reportAttachments, rootCauseSubOptions] = await Promise.all([
     listAllCapaActionsForEntities(user.companyId, "InternalAuditFinding", unlinkedIds),
     listAllCapaActionsForEntities(user.companyId, "NonConformity", linkedNcrIds),
     listNcrRootCauses(user.companyId, linkedNcrIds),
     listAttachments(user.companyId, "InternalAudit", audit.id),
+    getRootCauseSubcategoryOptions(user.companyId),
   ]);
 
   const correctiveRowsByFinding: Record<string, CapaRowView[]> = {};
@@ -265,6 +267,7 @@ export default async function InternalAuditDetailPage({
             capaEntityByFinding={capaEntityByFinding}
             entityType="InternalAuditFinding"
             attachmentsByFinding={attachmentsByFinding}
+            subcategoryOptions={rootCauseSubOptions}
           />
         </CardContent>
       </Card>

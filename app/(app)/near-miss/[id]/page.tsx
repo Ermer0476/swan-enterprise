@@ -11,7 +11,7 @@ import {
   nearMissStatusLabel,
   nearMissStatusTone,
 } from "@/features/near-miss/schema";
-import { getReporterPositionOptions } from "@/lib/reference-list";
+import { getReporterPositionOptions, getRootCauseSubcategoryOptions } from "@/lib/reference-list";
 import { listCapaActions, listAllCapaActions } from "@/features/capa/queries";
 import { CapaTracker, type CapaRowView } from "@/components/capa/capa-tracker";
 import { formatRootCause } from "@/lib/root-cause";
@@ -107,6 +107,7 @@ export default async function NearMissDetailPage({
   const positions = isOwnDraft
     ? await getReporterPositionOptions(user.companyId, user.department)
     : [];
+  const rootCauseSubOptions = await getRootCauseSubcategoryOptions(user.companyId);
 
   return (
     <div className="mx-auto max-w-7xl">
@@ -152,6 +153,7 @@ export default async function NearMissDetailPage({
             rootCauseSubCategory: nm.rootCauseSubCategory,
           }}
           positions={positions}
+          subcategoryOptions={rootCauseSubOptions}
           ownVesselName={nm.vessel?.name ?? null}
         />
       ) : (

@@ -14,6 +14,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { formatDate, humanize, severityTone } from "@/lib/utils";
 import { ncrStatusTone } from "@/features/non-conformities/ui";
+import { getRootCauseSubcategoryOptions } from "@/lib/reference-list";
 import { RootCauseForm } from "./root-cause-form";
 import { ShoreRemarksForm } from "./shore-remarks-form";
 import { NcrActions, DeleteDraftNcrButton, ReportDraftNcrButton } from "./ncr-actions";
@@ -109,9 +110,10 @@ export default async function NcrDetailPage({
     );
   }
 
-  const [correctiveRows, attachments] = await Promise.all([
+  const [correctiveRows, attachments, rootCauseSubOptions] = await Promise.all([
     listCapaActions(user.companyId, "NonConformity", ncr.id, "CORRECTIVE"),
     listAttachments(user.companyId, "NonConformity", ncr.id),
+    getRootCauseSubcategoryOptions(user.companyId),
   ]);
 
   const meta = [
@@ -171,6 +173,7 @@ export default async function NcrDetailPage({
               rootCauseCategory={ncr.rootCauseCategory ?? ""}
               rootCauseSubCategory={ncr.rootCauseSubCategory ?? ""}
               rootCause={ncr.rootCause ?? ""}
+              subcategoryOptions={rootCauseSubOptions}
             />
           ) : ncr.rootCauseCategory ? (
             <div className="space-y-4">

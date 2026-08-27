@@ -25,11 +25,10 @@ import {
 import {
   ROOT_CAUSE_CATEGORIES,
   ROOT_CAUSE_LABELS,
-  ROOT_CAUSE_SUBCATEGORIES,
-  ROOT_CAUSE_SUBCATEGORY_LABELS,
   formatRootCause,
   type RootCauseCategoryValue,
 } from "@/lib/root-cause";
+import type { RootCauseSubcategoryOptions } from "@/lib/reference-registry";
 import { AutoGrowInput, Input, Label, Select } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -220,8 +219,10 @@ function ObservationCard({
   obs,
   editable,
   personnel,
+  subcategoryOptions,
 }: {
   obs: ObservationView;
+  subcategoryOptions: RootCauseSubcategoryOptions;
   editable: boolean;
   personnel: PersonnelOption[];
 }) {
@@ -364,8 +365,13 @@ function ObservationCard({
                   onChange={(e) => setField("rootCauseSubCategory", e.target.value)}
                 >
                   <option value="">— Select —</option>
-                  {ROOT_CAUSE_SUBCATEGORIES[values.rootCauseCategory].map((s) => (
-                    <option key={s} value={s}>{ROOT_CAUSE_SUBCATEGORY_LABELS[values.rootCauseCategory as RootCauseCategoryValue][s]}</option>
+                  {/* Keep a persisted-but-now-hidden sub-category selectable. */}
+                  {values.rootCauseSubCategory &&
+                    !subcategoryOptions[values.rootCauseCategory].some((o) => o.value === values.rootCauseSubCategory) && (
+                      <option value={values.rootCauseSubCategory}>{values.rootCauseSubCategory} (hidden)</option>
+                    )}
+                  {subcategoryOptions[values.rootCauseCategory].map((o) => (
+                    <option key={o.value} value={o.value}>{o.label}</option>
                   ))}
                 </Select>
               </div>
@@ -524,11 +530,13 @@ function DraftCard({
   index,
   onChange,
   onRemove,
+  subcategoryOptions,
 }: {
   draft: ParsedObservationDraft;
   index: number;
   onChange: (index: number, next: ParsedObservationDraft) => void;
   onRemove: (index: number) => void;
+  subcategoryOptions: RootCauseSubcategoryOptions;
 }) {
   function setField<K extends keyof ParsedObservationDraft>(field: K, value: ParsedObservationDraft[K]) {
     onChange(index, { ...draft, [field]: value });
@@ -618,8 +626,8 @@ function DraftCard({
               onChange={(e) => setField("rootCauseSubCategory", e.target.value || null)}
             >
               <option value="">— Select —</option>
-              {ROOT_CAUSE_SUBCATEGORIES[draft.rootCauseCategory].map((s) => (
-                <option key={s} value={s}>{ROOT_CAUSE_SUBCATEGORY_LABELS[draft.rootCauseCategory!][s]}</option>
+              {subcategoryOptions[draft.rootCauseCategory].map((o) => (
+                <option key={o.value} value={o.value}>{o.label}</option>
               ))}
             </Select>
           </div>
@@ -641,7 +649,7 @@ function DraftCard({
   );
 }
 
-function ImportDraftsPanel({ inspectionId, onImported }: { inspectionId: string; onImported: () => void }) {
+function ImportDraftsPanel({ inspectionId, onImported, subcategoryOptions }: { inspectionId: string; onImported: () => void; subcategoryOptions: RootCauseSubcategoryOptions }) {
   const [parseState, parseAction] = useActionState<ParseDocumentResult, FormData>(
     parseSireDocumentAction,
     { ok: false, error: null, drafts: [] },
@@ -709,7 +717,7 @@ function ImportDraftsPanel({ inspectionId, onImported }: { inspectionId: string;
         </p>
         <div className="space-y-3">
           {drafts.map((d, i) => (
-            <DraftCard key={i} draft={d} index={i} onChange={updateDraft} onRemove={removeDraft} />
+            <DraftCard key={i} draft={d} index={i} onChange={updateDraft} onRemove={removeDraft} subcategoryOptions={subcategoryOptions} />
           ))}
         </div>
         {confirmError && <p className="text-sm text-danger">{confirmError}</p>}
@@ -752,11 +760,13 @@ export function ObservationsPanel({
   observations,
   personnel,
   editable,
+  subcategoryOptions,
 }: {
   inspectionId: string;
   observations: ObservationView[];
   personnel: PersonnelOption[];
   editable: boolean;
+  subcategoryOptions: RootCauseSubcategoryOptions;
 }) {
   const [addState, addAction] = useActionState<ActionResult, FormData>(
     addObservationAction,
@@ -775,14 +785,14 @@ export function ObservationsPanel({
 
   return (
     <div className="space-y-4">
-      {editable && <ImportDraftsPanel inspectionId={inspectionId} onImported={() => {}} />}
+      {editable && <ImportDraftsPanel inspectionId={inspectionId} onImported={() => {}} subcategoryOptions={subcategoryOptions} />}
 
       {observations.length === 0 ? (
         <p className="text-sm text-muted-foreground">No observations recorded.</p>
       ) : (
         <div className="space-y-4">
           {observations.map((o) => (
-            <ObservationCard key={o.id} obs={o} editable={editable} personnel={personnel} />
+            <ObservationCard key={o.id} obs={o} editable={editable} personnel={personnel} subcategoryOptions={subcategoryOptions} />
           ))}
         </div>
       )}
@@ -851,8 +861,8 @@ export function ObservationsPanel({
                 <Label className="text-xs">Sub-category</Label>
                 <Select name="rootCauseSubCategory" defaultValue="">
                   <option value="">— Select —</option>
-                  {ROOT_CAUSE_SUBCATEGORIES[addRootCauseCategory].map((s) => (
-                    <option key={s} value={s}>{ROOT_CAUSE_SUBCATEGORY_LABELS[addRootCauseCategory][s]}</option>
+                  {subcategoryOptions[addRootCauseCategory].map((o) => (
+                    <option key={o.value} value={o.value}>{o.label}</option>
                   ))}
                 </Select>
               </div>

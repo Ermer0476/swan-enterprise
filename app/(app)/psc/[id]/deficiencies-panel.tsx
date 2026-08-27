@@ -22,6 +22,7 @@ import { Badge } from "@/components/ui/badge";
 import { AttachmentList, type AttachmentView } from "@/components/attachments/attachment-list";
 import { DeficiencyRootCauseForm } from "./deficiency-root-cause-form";
 import { RootCauseForm as NcrRootCauseForm } from "@/app/(app)/non-conformities/[id]/root-cause-form";
+import type { RootCauseSubcategoryOptions } from "@/lib/reference-registry";
 
 export type NcrContext = {
   vesselId: string | null;
@@ -63,12 +64,14 @@ function DeficiencyRow({
   rootCause,
   capaEntity,
   attachments,
+  subcategoryOptions,
 }: {
   def: DeficiencyView;
   editable: boolean;
   canRespond: boolean;
   canCreateNcr: boolean;
   canUpdateNcr: boolean;
+  subcategoryOptions: RootCauseSubcategoryOptions;
   existingNcr?: { id: string; refNo: string };
   ncrContext: NcrContext;
   correctiveRows: CapaRowView[];
@@ -151,6 +154,7 @@ function DeficiencyRow({
               rootCauseCategory={rootCause.category ?? ""}
               rootCauseSubCategory={rootCause.subCategory ?? ""}
               rootCause={rootCause.description ?? ""}
+              subcategoryOptions={subcategoryOptions}
             />
           ) : rootCause.category ? (
             <div className="space-y-1">
@@ -167,6 +171,7 @@ function DeficiencyRow({
             rootCauseCategory={rootCause.category ?? ""}
             rootCauseSubCategory={rootCause.subCategory ?? ""}
             rootCause={rootCause.description ?? ""}
+            subcategoryOptions={subcategoryOptions}
           />
         ) : rootCause.category ? (
           <div className="space-y-1">
@@ -225,9 +230,11 @@ export function DeficienciesPanel({
   rootCauseByDeficiency,
   capaEntityByDeficiency,
   attachmentsByDeficiency,
+  subcategoryOptions,
 }: {
   inspectionId: string;
   deficiencies: DeficiencyView[];
+  subcategoryOptions: RootCauseSubcategoryOptions;
   editable: boolean;
   canRespond: boolean;
   canCreateNcr: boolean;
@@ -270,6 +277,7 @@ export function DeficienciesPanel({
               rootCause={rootCauseByDeficiency[d.id] ?? { category: null, subCategory: null, description: null }}
               capaEntity={capaEntityByDeficiency[d.id] ?? { entityType: "PscDeficiency", entityId: d.id }}
               attachments={attachmentsByDeficiency[d.id] ?? []}
+              subcategoryOptions={subcategoryOptions}
             />
           ))}
         </ul>

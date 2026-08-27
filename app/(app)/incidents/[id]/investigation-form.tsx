@@ -8,11 +8,11 @@ import {
 import {
   ROOT_CAUSE_CATEGORIES,
   ROOT_CAUSE_LABELS,
-  ROOT_CAUSE_SUBCATEGORIES,
-  ROOT_CAUSE_SUBCATEGORY_LABELS,
   INCIDENT_SEVERITIES,
   humanize,
 } from "@/features/incidents/schema";
+import type { RootCauseCategoryValue } from "@/lib/root-cause";
+import type { RootCauseSubcategoryOptions } from "@/lib/reference-registry";
 import { AutoGrowInput, Label, Select } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
@@ -23,6 +23,7 @@ export function InvestigationForm({
   rootCauseCategory,
   rootCauseSubCategory,
   rootCause,
+  subcategoryOptions,
 }: {
   incidentId: string;
   investigationDetails: string;
@@ -30,6 +31,7 @@ export function InvestigationForm({
   rootCauseCategory: string;
   rootCauseSubCategory: string;
   rootCause: string;
+  subcategoryOptions: RootCauseSubcategoryOptions;
 }) {
   const [state, formAction, isPending] = useActionState<ActionResult, FormData>(
     saveInvestigationAction,
@@ -49,8 +51,7 @@ export function InvestigationForm({
     setSubCategory(""); // sub-category list differs per category — reset on change
   }
 
-  const subOptions =
-    category && (ROOT_CAUSE_SUBCATEGORIES as Record<string, readonly string[]>)[category];
+  const subOptions = category ? subcategoryOptions[category as RootCauseCategoryValue] : undefined;
 
   // Submitting via a plain FormData built from this component's own state —
   // not the browser's native form-submission collection — because a native
@@ -128,9 +129,13 @@ export function InvestigationForm({
             onChange={(e) => setSubCategory(e.target.value)}
           >
             <option value="" disabled>— Select sub-category —</option>
-            {subOptions.map((s) => (
-              <option key={s} value={s}>
-                {ROOT_CAUSE_SUBCATEGORY_LABELS[category as keyof typeof ROOT_CAUSE_SUBCATEGORY_LABELS][s]}
+            {/* Keep a persisted-but-now-hidden sub-category selectable. */}
+            {subCategory && !subOptions.some((o) => o.value === subCategory) && (
+              <option value={subCategory}>{subCategory} (hidden)</option>
+            )}
+            {subOptions.map((o) => (
+              <option key={o.value} value={o.value}>
+                {o.label}
               </option>
             ))}
           </Select>

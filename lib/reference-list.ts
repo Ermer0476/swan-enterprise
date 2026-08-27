@@ -2,9 +2,12 @@ import "server-only";
 import { prisma } from "@/lib/prisma";
 import {
   REFERENCE_REGISTRY,
+  rootCauseSubcategoryKey,
   type ReferenceListKey,
   type ReferenceOption,
+  type RootCauseSubcategoryOptions,
 } from "@/lib/reference-registry";
+import { ROOT_CAUSE_CATEGORIES } from "@/lib/root-cause";
 
 /**
  * The controlled options for one company's reference list. Reads the active,
@@ -54,4 +57,22 @@ export async function getReporterPositionOptions(
     companyId,
     department === "SHIPBOARD" ? "ship-position" : "office-position",
   );
+}
+
+/**
+ * Root-cause sub-category options for every category, for a picker whose
+ * category selection is reactive (the client indexes this by the chosen
+ * category). Reads the office-editable list per category (registry fallback
+ * when the company has no rows). Shared by every module that classifies root
+ * cause — Incident, Near Miss, NCR, PSC, audits, SIRE, CDI.
+ */
+export async function getRootCauseSubcategoryOptions(
+  companyId: string,
+): Promise<RootCauseSubcategoryOptions> {
+  const lists = await Promise.all(
+    ROOT_CAUSE_CATEGORIES.map((c) => getReferenceList(companyId, rootCauseSubcategoryKey(c))),
+  );
+  return Object.fromEntries(
+    ROOT_CAUSE_CATEGORIES.map((c, i) => [c, lists[i] ?? []]),
+  ) as RootCauseSubcategoryOptions;
 }

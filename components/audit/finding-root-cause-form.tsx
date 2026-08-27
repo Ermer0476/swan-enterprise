@@ -6,9 +6,9 @@ import { useFormStatus } from "react-dom";
 import {
   ROOT_CAUSE_CATEGORIES,
   ROOT_CAUSE_LABELS,
-  ROOT_CAUSE_SUBCATEGORIES,
-  ROOT_CAUSE_SUBCATEGORY_LABELS,
+  type RootCauseCategoryValue,
 } from "@/lib/root-cause";
+import type { RootCauseSubcategoryOptions } from "@/lib/reference-registry";
 import { AutoGrowInput, Label, Select } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import type { AuditActionResult } from "./types";
@@ -32,12 +32,14 @@ export function FindingRootCauseForm({
   rootCauseSubCategory,
   rootCause,
   saveAction,
+  subcategoryOptions,
 }: {
   findingId: string;
   rootCauseCategory: string;
   rootCauseSubCategory: string;
   rootCause: string;
   saveAction: (prev: AuditActionResult, fd: FormData) => Promise<AuditActionResult>;
+  subcategoryOptions: RootCauseSubcategoryOptions;
 }) {
   const [state, formAction] = useActionState<AuditActionResult, FormData>(
     saveAction,
@@ -51,8 +53,7 @@ export function FindingRootCauseForm({
     setSubCategory("");
   }
 
-  const subOptions =
-    category && (ROOT_CAUSE_SUBCATEGORIES as Record<string, readonly string[]>)[category];
+  const subOptions = category ? subcategoryOptions[category as RootCauseCategoryValue] : undefined;
 
   return (
     <form action={formAction} className="space-y-3">
@@ -84,9 +85,13 @@ export function FindingRootCauseForm({
               onChange={(e) => setSubCategory(e.target.value)}
             >
               <option value="" disabled>— Select sub-category —</option>
-              {subOptions.map((s) => (
-                <option key={s} value={s}>
-                  {ROOT_CAUSE_SUBCATEGORY_LABELS[category as keyof typeof ROOT_CAUSE_SUBCATEGORY_LABELS][s]}
+              {/* Keep a persisted-but-now-hidden sub-category selectable. */}
+              {subCategory && !subOptions.some((o) => o.value === subCategory) && (
+                <option value={subCategory}>{subCategory} (hidden)</option>
+              )}
+              {subOptions.map((o) => (
+                <option key={o.value} value={o.value}>
+                  {o.label}
                 </option>
               ))}
             </Select>

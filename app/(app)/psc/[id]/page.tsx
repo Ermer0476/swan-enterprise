@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { requirePermission, can } from "@/lib/rbac";
+import { getRootCauseSubcategoryOptions } from "@/lib/reference-list";
 import { getPsc } from "@/features/psc/queries";
 import { listNcrsBySourceEntityIds, listNcrRootCauses } from "@/features/non-conformities/queries";
 import { listAllCapaActionsForEntities } from "@/features/capa/queries";
@@ -65,11 +66,12 @@ export default async function PscDetailPage({
   // from either PSC or the NCR page updates the same record.
   const unlinkedIds = deficiencyIds.filter((did) => !ncrBySourceId[did]);
   const linkedNcrIds = Object.values(ncrBySourceId).map((n) => n.id);
-  const [pscCapaRows, ncrCapaRows, ncrRootCauses, reportAttachments] = await Promise.all([
+  const [pscCapaRows, ncrCapaRows, ncrRootCauses, reportAttachments, rootCauseSubOptions] = await Promise.all([
     listAllCapaActionsForEntities(user.companyId, "PscDeficiency", unlinkedIds),
     listAllCapaActionsForEntities(user.companyId, "NonConformity", linkedNcrIds),
     listNcrRootCauses(user.companyId, linkedNcrIds),
     listAttachments(user.companyId, "PscInspection", insp.id),
+    getRootCauseSubcategoryOptions(user.companyId),
   ]);
 
   const correctiveRowsByDeficiency: Record<string, CapaRowView[]> = {};
@@ -216,6 +218,7 @@ export default async function PscDetailPage({
             rootCauseByDeficiency={rootCauseByDeficiency}
             capaEntityByDeficiency={capaEntityByDeficiency}
             attachmentsByDeficiency={attachmentsByDeficiency}
+            subcategoryOptions={rootCauseSubOptions}
           />
         </CardContent>
       </Card>

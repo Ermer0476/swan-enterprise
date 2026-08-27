@@ -20,7 +20,6 @@ import {
   ROOT_CAUSE_LABELS,
   ROOT_CAUSE_SUBCATEGORIES,
   ROOT_CAUSE_SUBCATEGORY_LABELS,
-  type RootCauseCategoryValue,
 } from "@/lib/root-cause";
 import { REPORTER_POSITIONS, SHIP_POSITIONS, OFFICE_POSITIONS, positionsFor } from "@/lib/crew-ranks";
 
@@ -339,25 +338,18 @@ export const createIncidentSchema = z.object({
   // single static Zod field).
 });
 
-export const investigationSchema = z
-  .object({
-    incidentId: z.string().uuid(),
-    investigationDetails: z.string().trim().min(10, "Describe what happened, based on the investigation"),
-    severity: z.enum(INCIDENT_SEVERITIES),
-    rootCauseCategory: z.enum(ROOT_CAUSE_CATEGORIES),
-    rootCauseSubCategory: z.string().trim().min(1, "Select the root cause sub-category"),
-    rootCause: z.string().trim().max(10000).optional().or(z.literal("")),
-  })
-  .superRefine((v, ctx) => {
-    const allowed = ROOT_CAUSE_SUBCATEGORIES[v.rootCauseCategory as RootCauseCategoryValue];
-    if (!allowed.includes(v.rootCauseSubCategory)) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: "Select a valid sub-category for the chosen root cause",
-        path: ["rootCauseSubCategory"],
-      });
-    }
-  });
+// The root-cause sub-category membership check is NOT a superRefine here: the
+// allowed set is the office-editable reference list (root-cause-subcategory:
+// <CATEGORY>), which needs the company id and a DB read, so it lives in
+// saveInvestigationAction (∪ the value already persisted on the incident).
+export const investigationSchema = z.object({
+  incidentId: z.string().uuid(),
+  investigationDetails: z.string().trim().min(10, "Describe what happened, based on the investigation"),
+  severity: z.enum(INCIDENT_SEVERITIES),
+  rootCauseCategory: z.enum(ROOT_CAUSE_CATEGORIES),
+  rootCauseSubCategory: z.string().trim().min(1, "Select the root cause sub-category"),
+  rootCause: z.string().trim().max(10000).optional().or(z.literal("")),
+});
 
 export type SofRow = { time: string; event: string };
 

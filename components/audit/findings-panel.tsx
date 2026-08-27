@@ -17,6 +17,7 @@ import {
 } from "@/components/capa/capa-tracker";
 import { RootCauseForm as NcrRootCauseForm } from "@/app/(app)/non-conformities/[id]/root-cause-form";
 import { FindingRootCauseForm } from "./finding-root-cause-form";
+import type { RootCauseSubcategoryOptions } from "@/lib/reference-registry";
 import {
   AUDIT_FINDING_CATEGORIES,
   auditCategoryLabel,
@@ -69,12 +70,14 @@ function FindingRow({
   capaEntity,
   entityType,
   attachments,
+  subcategoryOptions,
 }: {
   finding: AuditFindingView;
   editable: boolean;
   canRespond: boolean;
   deleteAction: FindingAction;
   saveRootCauseAction: SaveRootCauseAction;
+  subcategoryOptions: RootCauseSubcategoryOptions;
   canCreateNcr: boolean;
   canUpdateNcr: boolean;
   existingNcr?: { id: string; refNo: string };
@@ -164,6 +167,7 @@ function FindingRow({
                 rootCauseCategory={rootCause.category ?? ""}
                 rootCauseSubCategory={rootCause.subCategory ?? ""}
                 rootCause={rootCause.description ?? ""}
+                subcategoryOptions={subcategoryOptions}
               />
             ) : rootCause.category ? (
               <div className="space-y-1">
@@ -181,6 +185,7 @@ function FindingRow({
               rootCauseSubCategory={rootCause.subCategory ?? ""}
               rootCause={rootCause.description ?? ""}
               saveAction={saveRootCauseAction}
+              subcategoryOptions={subcategoryOptions}
             />
           ) : rootCause.category ? (
             <div className="space-y-1">
@@ -244,9 +249,11 @@ export function AuditFindingsPanel({
   capaEntityByFinding,
   entityType,
   attachmentsByFinding,
+  subcategoryOptions,
 }: {
   auditId: string;
   findings: AuditFindingView[];
+  subcategoryOptions: RootCauseSubcategoryOptions;
   editable: boolean;
   canRespond: boolean;
   addAction: AddAction;
@@ -296,6 +303,7 @@ export function AuditFindingsPanel({
               capaEntity={capaEntityByFinding[f.id] ?? { entityType: "", entityId: f.id }}
               entityType={entityType}
               attachments={attachmentsByFinding[f.id] ?? []}
+              subcategoryOptions={subcategoryOptions}
             />
           ))}
         </ul>

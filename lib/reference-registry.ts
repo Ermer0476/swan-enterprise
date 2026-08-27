@@ -44,6 +44,11 @@ export type ReferenceOption = {
   sortOrder: number;
 };
 
+/** Root-cause sub-category options per category — the shape threaded to every
+ * root-cause sub-category picker (Incident, Near Miss, NCR, PSC, audits, SIRE,
+ * CDI). One list per category, so a client can index by the selected one. */
+export type RootCauseSubcategoryOptions = Record<RootCauseCategoryValue, ReferenceOption[]>;
+
 export type ReferenceListDefinition = {
   /** Human label for the list section on the settings page. */
   label: string;

@@ -16,7 +16,7 @@ import {
   type IncidentTypeValue,
 } from "./schema";
 import { getReferenceListValues } from "@/lib/reference-list";
-import { incidentSubcategoryKey } from "@/lib/reference-registry";
+import { incidentSubcategoryKey, rootCauseSubcategoryKey } from "@/lib/reference-registry";
 
 export type ActionResult = { ok: boolean; error: string | null };
 const OK: ActionResult = { ok: true, error: null };
@@ -180,6 +180,17 @@ export async function saveInvestigationAction(
   });
   if (!incident) return fail("Incident not found");
   if (incident.status === "CLOSED") return fail("Closed incidents are read-only");
+
+  // Root-cause sub-category must be a live option for the chosen category —
+  // checked against the office-editable list ∪ the value already persisted, so
+  // re-saving an investigation that holds a now-hidden sub-category never fails.
+  const allowedSub = await getReferenceListValues(
+    user.companyId,
+    rootCauseSubcategoryKey(d.rootCauseCategory),
+  );
+  if (!allowedSub.has(d.rootCauseSubCategory) && d.rootCauseSubCategory !== incident.rootCauseSubCategory) {
+    return fail("Select a valid sub-category for the chosen root cause");
+  }
 
   await prisma.incident.update({
     where: { id: incident.id },

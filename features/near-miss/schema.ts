@@ -1,9 +1,5 @@
 import { z } from "zod";
-import {
-  ROOT_CAUSE_CATEGORIES,
-  ROOT_CAUSE_SUBCATEGORIES,
-  type RootCauseCategoryValue,
-} from "@/lib/root-cause";
+import { ROOT_CAUSE_CATEGORIES } from "@/lib/root-cause";
 import { REPORTER_POSITIONS, SHIP_POSITIONS, OFFICE_POSITIONS, positionsFor } from "@/lib/crew-ranks";
 import { humanize } from "@/lib/utils";
 import { LIFECYCLE_TONE } from "@/lib/status";
@@ -126,15 +122,12 @@ export const createNearMissSchema = z
     caStatus: z.array(z.string().max(200)).max(100).default([]),
     caClosedDate: z.array(z.string().max(200)).max(100).default([]),
   })
+  // The root-cause sub-category membership check moved OUT of this superRefine
+  // into the create/update-draft actions: the allowed set is the office-editable
+  // reference list (root-cause-subcategory:<CATEGORY>), which needs the company
+  // id and a DB read (∪ the value already persisted when editing). The HOR
+  // cross-field rule below is pure and stays here.
   .superRefine((v, ctx) => {
-    const allowed = ROOT_CAUSE_SUBCATEGORIES[v.rootCauseCategory as RootCauseCategoryValue];
-    if (!allowed.includes(v.rootCauseSubCategory)) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: "Select a valid sub-category for the chosen root cause",
-        path: ["rootCauseSubCategory"],
-      });
-    }
     if (v.kind === "HOR" && !v.horCategory) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,

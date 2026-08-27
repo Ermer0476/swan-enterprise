@@ -15,6 +15,7 @@ import {
   NM_STATUSES,
 } from "./schema";
 import { getReferenceListValues } from "@/lib/reference-list";
+import { rootCauseSubcategoryKey } from "@/lib/reference-registry";
 
 export type ActionResult = { ok: boolean; error: string | null };
 const OK: ActionResult = { ok: true, error: null };
@@ -78,6 +79,16 @@ export async function createNearMissAction(
   );
   if (!allowedPositions.has(d.reporterPosition)) {
     return fail("Select a valid position for your department");
+  }
+
+  // Root-cause sub-category must be a live option for the chosen category
+  // (office-editable list). No persisted value on create.
+  const allowedSub = await getReferenceListValues(
+    user.companyId,
+    rootCauseSubcategoryKey(d.rootCauseCategory),
+  );
+  if (!allowedSub.has(d.rootCauseSubCategory)) {
+    return fail("Select a valid sub-category for the chosen root cause");
   }
 
   // "Save as Draft" is available to anyone who can create a near miss —
@@ -396,6 +407,16 @@ export async function updateDraftNearMissAction(
   );
   if (!allowedPositions.has(d.reporterPosition) && d.reporterPosition !== nm.reporterPosition) {
     return fail("Select a valid position for your department");
+  }
+
+  // Root-cause sub-category — office-editable list ∪ the value already
+  // persisted, so re-saving a draft holding a now-hidden sub-category works.
+  const allowedSub = await getReferenceListValues(
+    user.companyId,
+    rootCauseSubcategoryKey(d.rootCauseCategory),
+  );
+  if (!allowedSub.has(d.rootCauseSubCategory) && d.rootCauseSubCategory !== nm.rootCauseSubCategory) {
+    return fail("Select a valid sub-category for the chosen root cause");
   }
 
   await prisma.nearMiss.update({

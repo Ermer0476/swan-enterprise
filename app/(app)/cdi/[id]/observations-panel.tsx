@@ -13,11 +13,10 @@ import { CDI_OBSERVATION_CATEGORIES, CDI_OBSERVATION_CATEGORY_LABELS } from "@/f
 import {
   ROOT_CAUSE_CATEGORIES,
   ROOT_CAUSE_LABELS,
-  ROOT_CAUSE_SUBCATEGORIES,
-  ROOT_CAUSE_SUBCATEGORY_LABELS,
   formatRootCause,
   type RootCauseCategoryValue,
 } from "@/lib/root-cause";
+import type { RootCauseSubcategoryOptions } from "@/lib/reference-registry";
 import { AutoGrowInput, Label, Select } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -52,10 +51,12 @@ function ObservationRow({
   obs,
   editable,
   canRespond,
+  subcategoryOptions,
 }: {
   obs: ObservationView;
   editable: boolean;
   canRespond: boolean;
+  subcategoryOptions: RootCauseSubcategoryOptions;
 }) {
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
@@ -89,7 +90,7 @@ function ObservationRow({
     });
   }
 
-  const subOptions = rcCategory ? ROOT_CAUSE_SUBCATEGORIES[rcCategory] : null;
+  const subOptions = rcCategory ? subcategoryOptions[rcCategory] : null;
 
   return (
     <li className="space-y-2 p-3">
@@ -147,8 +148,12 @@ function ObservationRow({
                 <Label className="text-xs">Sub-category</Label>
                 <Select value={rcSubCategory} onChange={(e) => setRcSubCategory(e.target.value)}>
                   <option value="" disabled>— Select sub-category —</option>
-                  {subOptions.map((s) => (
-                    <option key={s} value={s}>{ROOT_CAUSE_SUBCATEGORY_LABELS[rcCategory as RootCauseCategoryValue][s]}</option>
+                  {/* Keep a persisted-but-now-hidden sub-category selectable. */}
+                  {rcSubCategory && !subOptions.some((o) => o.value === rcSubCategory) && (
+                    <option value={rcSubCategory}>{rcSubCategory} (hidden)</option>
+                  )}
+                  {subOptions.map((o) => (
+                    <option key={o.value} value={o.value}>{o.label}</option>
                   ))}
                 </Select>
               </div>
@@ -204,7 +209,7 @@ function ObservationRow({
   );
 }
 
-function AddObservationForm({ inspectionId }: { inspectionId: string }) {
+function AddObservationForm({ inspectionId, subcategoryOptions }: { inspectionId: string; subcategoryOptions: RootCauseSubcategoryOptions }) {
   const [addState, addAction] = useActionState<ActionResult, FormData>(
     addObservationAction,
     { ok: false, error: null },
@@ -221,7 +226,7 @@ function AddObservationForm({ inspectionId }: { inspectionId: string }) {
     }
   }, [addState.ok]);
 
-  const subOptions = rcCategory ? ROOT_CAUSE_SUBCATEGORIES[rcCategory] : null;
+  const subOptions = rcCategory ? subcategoryOptions[rcCategory] : null;
 
   return (
     <form ref={formRef} action={addAction} className="space-y-3 rounded-md border border-dashed border-border p-3">
@@ -268,8 +273,8 @@ function AddObservationForm({ inspectionId }: { inspectionId: string }) {
             <Label className="text-xs">Sub-category</Label>
             <Select name="rootCauseSubCategory" value={rcSubCategory} onChange={(e) => setRcSubCategory(e.target.value)}>
               <option value="" disabled>— Select sub-category —</option>
-              {subOptions.map((s) => (
-                <option key={s} value={s}>{ROOT_CAUSE_SUBCATEGORY_LABELS[rcCategory as RootCauseCategoryValue][s]}</option>
+              {subOptions.map((o) => (
+                <option key={o.value} value={o.value}>{o.label}</option>
               ))}
             </Select>
           </div>
@@ -292,11 +297,13 @@ export function ObservationsPanel({
   observations,
   editable,
   canRespond,
+  subcategoryOptions,
 }: {
   inspectionId: string;
   observations: ObservationView[];
   editable: boolean;
   canRespond: boolean;
+  subcategoryOptions: RootCauseSubcategoryOptions;
 }) {
   return (
     <div className="space-y-4">
@@ -304,11 +311,11 @@ export function ObservationsPanel({
         <p className="text-sm text-muted-foreground">No observations recorded.</p>
       ) : (
         <ul className="divide-y divide-border rounded-md border border-border">
-          {observations.map((o) => <ObservationRow key={o.id} obs={o} editable={editable} canRespond={canRespond} />)}
+          {observations.map((o) => <ObservationRow key={o.id} obs={o} editable={editable} canRespond={canRespond} subcategoryOptions={subcategoryOptions} />)}
         </ul>
       )}
 
-      {editable && <AddObservationForm inspectionId={inspectionId} />}
+      {editable && <AddObservationForm inspectionId={inspectionId} subcategoryOptions={subcategoryOptions} />}
     </div>
   );
 }
