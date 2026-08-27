@@ -11,6 +11,11 @@ export default async function AppLayout({
   const user = await getCurrentUser();
   if (!user) redirect("/login");
 
+  // Forced first-login / password reset. /change-password lives in the (auth)
+  // group, so it never renders through this layout — no redirect loop. Inert
+  // until something sets mustChangePassword=true (Phase 5's createUserAction).
+  if (user.mustChangePassword) redirect("/change-password");
+
   const isShipboard = user.department === "SHIPBOARD";
   const counts = await getNavCounts(user.companyId, isShipboard ? user.vesselId : null);
 
