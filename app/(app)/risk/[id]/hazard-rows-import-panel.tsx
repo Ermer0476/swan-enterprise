@@ -9,6 +9,7 @@ import {
   type ParseRaDocumentResult,
 } from "@/features/risk/actions";
 import type { ParsedHazardRowDraft } from "@/features/risk/document-parser";
+import type { RiskScaleLabels } from "@/features/risk/schema";
 import { DraftCard } from "../hazard-row-draft-card";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/input";
@@ -22,7 +23,7 @@ function ParseButton() {
   );
 }
 
-export function HazardRowsImportPanel({ revisionId }: { revisionId: string }) {
+export function HazardRowsImportPanel({ revisionId, scaleLabels }: { revisionId: string; scaleLabels: RiskScaleLabels }) {
   const [parseState, parseAction] = useActionState<ParseRaDocumentResult, FormData>(
     parseRaDocumentAction,
     { ok: false, error: null, rows: [], metadata: { title: null, smsProcedureRefs: null, riskMatrixRef: null, checklistsRequired: null } },
@@ -80,7 +81,7 @@ export function HazardRowsImportPanel({ revisionId }: { revisionId: string }) {
         </p>
         <div className="space-y-3">
           {drafts.map((d, i) => (
-            <DraftCard key={i} draft={d} index={i} onChange={updateDraft} onRemove={removeDraft} />
+            <DraftCard key={i} draft={d} index={i} scaleLabels={scaleLabels} onChange={updateDraft} onRemove={removeDraft} />
           ))}
         </div>
         {confirmError && <p className="text-sm text-danger">{confirmError}</p>}

@@ -12,6 +12,7 @@ import {
 } from "@/features/risk/actions";
 import { RISK_CATEGORIES, REVIEW_FREQUENCY_MONTHS, APPROVAL_LEVELS, APPROVAL_LEVEL_LABELS } from "@/features/risk/schema";
 import type { ParsedHazardRowDraft } from "@/features/risk/document-parser";
+import type { RiskScaleLabels } from "@/features/risk/schema";
 import { DraftCard } from "../hazard-row-draft-card";
 import { Card, CardContent } from "@/components/ui/card";
 import { AutoGrowInput, Input, Label, Select } from "@/components/ui/input";
@@ -42,7 +43,7 @@ const EMPTY_PARSE: ParseRaDocumentResult = {
   metadata: { title: null, smsProcedureRefs: null, riskMatrixRef: null, checklistsRequired: null },
 };
 
-export function NewRiskAssessmentForm() {
+export function NewRiskAssessmentForm({ scaleLabels }: { scaleLabels: RiskScaleLabels }) {
   const formRef = useRef<HTMLFormElement>(null);
   const uploadFormRef = useRef<HTMLFormElement>(null);
   const lastSubmittedFormData = useRef<FormData | null>(null);
@@ -239,7 +240,7 @@ export function NewRiskAssessmentForm() {
                 </p>
                 <div className="space-y-3">
                   {drafts.map((d, i) => (
-                    <DraftCard key={i} draft={d} index={i} onChange={updateDraft} onRemove={removeDraft} />
+                    <DraftCard key={i} draft={d} index={i} scaleLabels={scaleLabels} onChange={updateDraft} onRemove={removeDraft} />
                   ))}
                 </div>
               </div>

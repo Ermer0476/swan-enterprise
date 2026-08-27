@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, History, PlayCircle, FilePlus2, ChevronDown, FileText } from "lucide-react";
 import { requirePermission, can } from "@/lib/rbac";
-import { getRiskDocument, userNameMap, overallRiskBand } from "@/features/risk/queries";
+import { getRiskDocument, userNameMap, overallRiskBand, getRiskScaleLabels } from "@/features/risk/queries";
 import {
   REVIEW_TRIGGER_LABELS,
   APPROVAL_LEVEL_LABELS,
@@ -80,6 +80,7 @@ export default async function RiskDocumentDetailPage({
   const review = reviewStatusTone(doc.nextReviewDate);
   const pendingRequests = doc.revisionRequests.filter((r) => r.status === "PENDING");
   const attachments = await listAttachments(user.companyId, "RiskAssessmentDocument", doc.id);
+  const scaleLabels = await getRiskScaleLabels(user.companyId);
 
   // Group hazard rows by phase, preserving row order within each phase.
   const phases = new Map<string, typeof visibleHazardRows>();
@@ -250,9 +251,9 @@ export default async function RiskDocumentDetailPage({
             ))
           )}
 
-          {editableRows && displayed && <HazardRowsImportPanel revisionId={displayed.id} />}
-          {editableRows && displayed && <HazardRowForm revisionId={displayed.id} />}
-          {canAddVesselRow && inForce && <VesselHazardRowForm revisionId={inForce.id} />}
+          {editableRows && displayed && <HazardRowsImportPanel revisionId={displayed.id} scaleLabels={scaleLabels} />}
+          {editableRows && displayed && <HazardRowForm revisionId={displayed.id} scaleLabels={scaleLabels} />}
+          {canAddVesselRow && inForce && <VesselHazardRowForm revisionId={inForce.id} scaleLabels={scaleLabels} />}
         </CardContent>
       </Card>
 

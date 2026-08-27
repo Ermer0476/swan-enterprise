@@ -3,10 +3,9 @@
 import { X } from "lucide-react";
 import {
   RA_LEVELS,
-  SEVERITY_SCALE_LABELS,
-  LIKELIHOOD_SCALE_LABELS,
   computeRF,
   riskBand,
+  type RiskScaleLabels,
 } from "@/features/risk/schema";
 import type { ParsedHazardRowDraft } from "@/features/risk/document-parser";
 import { bandTone } from "@/features/risk/ui";
@@ -21,11 +20,13 @@ import { humanize } from "@/lib/utils";
 export function DraftCard({
   draft,
   index,
+  scaleLabels,
   onChange,
   onRemove,
 }: {
   draft: ParsedHazardRowDraft;
   index: number;
+  scaleLabels: RiskScaleLabels;
   onChange: (index: number, next: ParsedHazardRowDraft) => void;
   onRemove: (index: number) => void;
 }) {
@@ -74,13 +75,13 @@ export function DraftCard({
         <div className="space-y-1.5">
           <Label className="text-xs">Severity</Label>
           <Select value={draft.severity} onChange={(e) => setField("severity", Number(e.target.value))}>
-            {RA_LEVELS.map((l) => <option key={l} value={l}>{SEVERITY_SCALE_LABELS[l]}</option>)}
+            {RA_LEVELS.map((l) => <option key={l} value={l}>{scaleLabels.severity[l]}</option>)}
           </Select>
         </div>
         <div className="space-y-1.5">
           <Label className="text-xs">Likelihood</Label>
           <Select value={draft.likelihood} onChange={(e) => setField("likelihood", Number(e.target.value))}>
-            {RA_LEVELS.map((l) => <option key={l} value={l}>{LIKELIHOOD_SCALE_LABELS[l]}</option>)}
+            {RA_LEVELS.map((l) => <option key={l} value={l}>{scaleLabels.likelihood[l]}</option>)}
           </Select>
         </div>
         <div className="space-y-1.5">
@@ -106,7 +107,7 @@ export function DraftCard({
         <div className="space-y-1.5 col-span-2 sm:col-span-1">
           <Label className="text-xs">Residual Likelihood</Label>
           <Select value={resL} onChange={(e) => setField("resLikelihood", Number(e.target.value))}>
-            {RA_LEVELS.map((l) => <option key={l} value={l}>{LIKELIHOOD_SCALE_LABELS[l]}</option>)}
+            {RA_LEVELS.map((l) => <option key={l} value={l}>{scaleLabels.likelihood[l]}</option>)}
           </Select>
         </div>
         <div className="space-y-1.5">
