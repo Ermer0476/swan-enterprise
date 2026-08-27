@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { requirePermission } from "@/lib/rbac";
 import { listVesselOptions, listVesselDocumentNamesByType } from "@/features/vessel-documents/queries";
+import { getReferenceList } from "@/lib/reference-list";
 import { PageHeader } from "@/components/ui/page-header";
 import { DocumentForm } from "@/components/vessel-documents/document-form";
 
@@ -12,9 +13,10 @@ export default async function NewVesselDocumentPage({
 }) {
   const user = await requirePermission("vesseldoc:create");
   const sp = await searchParams;
-  const [vessels, namesByType] = await Promise.all([
+  const [vessels, namesByType, vesselDocTypes] = await Promise.all([
     listVesselOptions(user.companyId),
     listVesselDocumentNamesByType(user.companyId),
+    getReferenceList(user.companyId, "vessel-document-type"),
   ]);
   const backHref = sp.vesselId ? `/documents/vessel?vesselId=${sp.vesselId}` : "/documents/vessel";
 
@@ -30,6 +32,7 @@ export default async function NewVesselDocumentPage({
       <DocumentForm
         origin="vessel"
         vessels={vessels}
+        vesselDocTypes={vesselDocTypes}
         namesByType={namesByType}
         initialVesselId={sp.vesselId}
         cancelHref={backHref}
