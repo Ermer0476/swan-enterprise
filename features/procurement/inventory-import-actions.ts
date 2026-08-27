@@ -38,6 +38,9 @@ export async function parseInventoryImportAction(_prev: ParseImportResult, formD
   const vesselErr = ownVesselError(user.department, user.vesselId, vesselId);
   if (vesselErr) return { ok: false, error: vesselErr, ...EMPTY_PARSE };
 
+  const vessel = await prisma.vessel.findFirst({ where: { id: vesselId, companyId: user.companyId, deletedAt: null } });
+  if (!vessel) return { ok: false, error: "Vessel not found", ...EMPTY_PARSE };
+
   const file = formData.get("file");
   if (!(file instanceof File) || file.size === 0) return { ok: false, error: "Choose a file to upload", ...EMPTY_PARSE };
   if (!/\.(xlsx|xls|xlsm)$/i.test(file.name)) {
@@ -82,6 +85,9 @@ export async function commitInventoryImportAction(_prev: CommitImportResult, for
   const vesselId = String(formData.get("vesselId") ?? "");
   const vesselErr = ownVesselError(user.department, user.vesselId, vesselId);
   if (vesselErr) return commitFail(vesselErr);
+
+  const vessel = await prisma.vessel.findFirst({ where: { id: vesselId, companyId: user.companyId, deletedAt: null } });
+  if (!vessel) return commitFail("Vessel not found");
 
   const department = z.enum(REQUISITION_DEPARTMENTS).safeParse(formData.get("department"));
   if (!department.success) return commitFail("Choose a department");

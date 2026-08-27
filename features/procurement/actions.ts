@@ -56,6 +56,9 @@ export async function addStoresItemAction(_prev: ActionResult, formData: FormDat
   if (!parsed.success) return fail(parsed.error.issues[0]?.message ?? "Invalid input");
   const d = parsed.data;
 
+  const vessel = await prisma.vessel.findFirst({ where: { id: d.vesselId, companyId: user.companyId, deletedAt: null } });
+  if (!vessel) return fail("Vessel not found");
+
   if (d.impaCode) {
     const existing = await prisma.storesCatalogueItem.findFirst({
       where: { companyId: user.companyId, vesselId: d.vesselId, impaCode: d.impaCode, deletedAt: null },
@@ -220,6 +223,9 @@ export async function addSparesItemAction(_prev: ActionResult, formData: FormDat
   if (!parsed.success) return fail(parsed.error.issues[0]?.message ?? "Invalid input");
   const d = parsed.data;
 
+  const vessel = await prisma.vessel.findFirst({ where: { id: d.vesselId, companyId: user.companyId, deletedAt: null } });
+  if (!vessel) return fail("Vessel not found");
+
   const existing = await prisma.sparesCatalogueItem.findFirst({
     where: { companyId: user.companyId, vesselId: d.vesselId, makerName: d.makerName, partNo: d.partNo, deletedAt: null },
   });
@@ -347,6 +353,9 @@ export async function saveInventoryUpdateDraftAction(formData: FormData): Promis
   if (!vesselId) return fail("Vessel is required");
   const vesselErr = ownVesselError(user.department, user.vesselId, vesselId);
   if (vesselErr) return fail(vesselErr);
+
+  const vessel = await prisma.vessel.findFirst({ where: { id: vesselId, companyId: user.companyId, deletedAt: null } });
+  if (!vessel) return fail("Vessel not found");
 
   const department = (String(formData.get("department") ?? "") || null) as RequisitionDepartmentValue | null;
   const category = (String(formData.get("category") ?? "") || null) as StoresCategoryValue | null;
