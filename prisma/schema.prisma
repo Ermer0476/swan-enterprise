@@ -409,6 +409,10 @@ model Company {
   incidentOverdueDays      Int @default(30)
   sireDueSoonDays          Int @default(30)
   internalAuditDueSoonDays Int @default(30)
+
+  // Default OCIMF SIRE programme version pre-filled on a new SIRE inspection
+  // when the form leaves it blank (was a dead @default on the inspection row).
+  defaultSireVersion String? @default("2.0")
 }
 
 model User {
@@ -518,7 +522,7 @@ model Vessel {
   callSign              String?
   mmsi                  String?
   flag                  String?
-  type                  String       @default("LPG Carrier")
+  type                  String
   classificationSociety String?
   yearBuilt             Int?
   grossTonnage          Float?
@@ -1114,7 +1118,7 @@ model SireInspection {
   port              String?
   inspectionDate    DateTime
   inspectionType    SireInspectionType?
-  sireVersion       String?             @default("2.0")
+  sireVersion       String?
   overallResult     SireOverallResult?
   summary           String? // "Remarks" in the UI
 
@@ -2980,7 +2984,7 @@ model TmsaFinding {
 
   code        String // e.g. "TMSA-001"
   seq         Int // numeric order parsed from code, for stable sorting
-  auditYear   Int    @default(2024)
+  auditYear   Int
   elementCode String // "1", "1A", ... "13"
   elementBase Int // numeric base element (1..13) for grouping
   stageQ      String // raw "Stage/Q" from the report, e.g. "2.0"
