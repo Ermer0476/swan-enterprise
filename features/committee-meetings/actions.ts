@@ -96,7 +96,10 @@ export async function createCommitteeMeetingAction(
       where: { id: meetingVesselId, companyId: user.companyId },
       select: { code: true },
     });
-    vesselCode = vessel?.code ?? null;
+    // Don't attach a vessel that isn't owned by the caller's company — a
+    // foreign/stale vesselId from the form would otherwise be persisted.
+    if (!vessel) return fail("Vessel not found");
+    vesselCode = vessel.code;
   }
 
   const meeting = await prisma.committeeMeeting.create({
