@@ -175,6 +175,12 @@ export const NAV: NavGroup[] = [
         icon: ListChecks,
         permission: "reference:manage",
       },
+      {
+        label: "Operational Windows",
+        href: "/settings/operational-windows",
+        icon: CalendarClock,
+        permission: "settings:manage-windows",
+      },
     ],
   },
 ];

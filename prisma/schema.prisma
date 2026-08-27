@@ -397,6 +397,18 @@ model Company {
   // How far ahead of its Expired date a certificate is flagged with a
   // warning icon on the Vessel Documentation / Company Documents registers.
   documentExpiryWarningMonths Int @default(3)
+
+  // Operational timing windows (days). Editable at /settings/operational-windows
+  // — see settings:manage-windows. Defaults match the constants they replaced.
+  //   incidentOverdueDays      — an open investigation past this many days is
+  //                              flagged "overdue" on the Incidents KPI.
+  //   sireDueSoonDays          — a SIRE inspection due within this many days is
+  //                              flagged "due soon" on the SIRE schedule.
+  //   internalAuditDueSoonDays — an internal audit due within this many days is
+  //                              flagged "due soon" on the internal-audit schedule.
+  incidentOverdueDays      Int @default(30)
+  sireDueSoonDays          Int @default(30)
+  internalAuditDueSoonDays Int @default(30)
 }
 
 model User {

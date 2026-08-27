@@ -208,6 +208,7 @@ const ROLE_GRANTS: Record<string, { desc: string; perms: string[] }> = {
       "vtracker:read", "vtracker:create", "vtracker:update", "vtracker:delete",
       "environment:read", "environment:create", "environment:update", "environment:delete", "environment:manage-units",
       "reference:read", "reference:manage",
+      "settings:manage-windows",
       "vesseldoc:read", "vesseldoc:create", "vesseldoc:update", "vesseldoc:delete",
       "tmsa:read", "tmsa:update-kpi", "tmsa:manage-cap",
       "procurement:read", "procurement:manage-catalogue", "procurement:manage-thresholds",

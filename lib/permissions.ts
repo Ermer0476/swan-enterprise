@@ -196,6 +196,9 @@ export const PERMISSIONS = {
   // Reference Lists (office-editable option lists behind pickers)
   "reference:read": "View the office-editable reference lists",
   "reference:manage": "Add, edit, reorder and deactivate reference list options",
+
+  // Operational settings (company-wide timing windows and defaults)
+  "settings:manage-windows": "Set operational timing windows (overdue / due-soon days)",
 } as const;
 
 export type PermissionKey = keyof typeof PERMISSIONS;
