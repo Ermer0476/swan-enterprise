@@ -120,7 +120,7 @@ export const NAV: NavGroup[] = [
     items: [
       { label: "Planned Maintenance", href: "/pms", icon: Wrench, soon: true },
       { label: "Procurement", href: "/procurement", icon: ShoppingCart, permission: "procurement:read" },
-      { label: "Crewing", href: "/crewing", icon: Users, soon: true },
+      { label: "Crewing", href: "/crewing", icon: Users, permission: "crew:read" },
     ],
   },
   {

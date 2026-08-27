@@ -207,6 +207,17 @@ export const PERMISSIONS = {
   // Departments (data-driven ship/shore departments)
   "department:read": "View the office-editable departments",
   "department:manage": "Add, edit and deactivate departments",
+
+  // Crewing module (seafarer register + crew assignments). read/read-sensitive
+  // are two tiers: the operational list vs. the personal-data (DPA) fields on a
+  // man's own record. assign is a separate key from create — adding a person to
+  // the register is not the same act as putting him on a ship.
+  "crew:read": "View the crew list and seafarer register",
+  "crew:create": "Add seafarers to the register",
+  "crew:update": "Edit seafarers and their employment status",
+  "crew:delete": "Delete a seafarer record created in error",
+  "crew:assign": "Record sign-on / sign-off / transfer crew changes",
+  "crew:read-sensitive": "View a seafarer's personal (Data Privacy Act) details",
 } as const;
 
 export type PermissionKey = keyof typeof PERMISSIONS;
