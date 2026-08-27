@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 import mammoth from "mammoth";
 import { prisma } from "@/lib/prisma";
+import { Prisma } from "@/lib/generated/prisma";
 import { requirePermission } from "@/lib/rbac";
 import { requireUser } from "@/lib/auth";
 import { writeAudit } from "@/lib/audit";
@@ -212,22 +213,40 @@ export async function addRevisionAction(
   if (doc.status === "IN_REVIEW") return fail("A revision is already awaiting approval");
   const latest = doc.revisions[0];
 
-  const nextNo = (latest?.revisionNo ?? 0) + 1;
-  const revision = await prisma.riskAssessmentRevision.create({
-    data: {
-      companyId: user.companyId,
-      documentId: doc.id,
-      revisionNo: nextNo,
-      changeSummary: d.changeSummary,
-      reviewTrigger: d.reviewTrigger,
-      smsProcedureRefs: d.smsProcedureRefs || null,
-      riskMatrixRef: d.riskMatrixRef || null,
-      checklistsRequired: d.checklistsRequired || null,
-      approvalLevel: d.approvalLevel,
-      status: "DRAFT",
-      createdBy: user.id,
-    },
-  });
+  // revisionNo is read-then-write; @@unique([documentId, revisionNo]) is the
+  // real guard against a concurrent add racing us to the same number. On that
+  // rare P2002, re-derive the next number (the other insert is committed by
+  // now, so this naturally advances) and retry.
+  let nextNo = (latest?.revisionNo ?? 0) + 1;
+  let revision;
+  for (let attempt = 0; ; attempt++) {
+    try {
+      revision = await prisma.riskAssessmentRevision.create({
+        data: {
+          companyId: user.companyId,
+          documentId: doc.id,
+          revisionNo: nextNo,
+          changeSummary: d.changeSummary,
+          reviewTrigger: d.reviewTrigger,
+          smsProcedureRefs: d.smsProcedureRefs || null,
+          riskMatrixRef: d.riskMatrixRef || null,
+          checklistsRequired: d.checklistsRequired || null,
+          approvalLevel: d.approvalLevel,
+          status: "DRAFT",
+          createdBy: user.id,
+        },
+      });
+      break;
+    } catch (err) {
+      const isDuplicate = err instanceof Prisma.PrismaClientKnownRequestError && err.code === "P2002";
+      if (!isDuplicate || attempt >= 5) throw err;
+      const max = await prisma.riskAssessmentRevision.aggregate({
+        where: { documentId: doc.id },
+        _max: { revisionNo: true },
+      });
+      nextNo = (max._max.revisionNo ?? 0) + 1;
+    }
+  }
   if (latest) await copyForwardHazardRows(user.companyId, latest.id, revision.id, user.id);
 
   await prisma.riskAssessmentDocument.update({
@@ -842,7 +861,7 @@ export async function decideRevisionRequestAction(formData: FormData): Promise<A
     if (doc.status === "IN_REVIEW") {
       return fail("A revision is already awaiting approval — decide that first");
     }
-    const nextNo = (latest?.revisionNo ?? 0) + 1;
+    let nextNo = (latest?.revisionNo ?? 0) + 1;
 
     await prisma.riskAssessmentRevisionRequest.update({
       where: { id: request.id },
@@ -854,21 +873,37 @@ export async function decideRevisionRequestAction(formData: FormData): Promise<A
       },
     });
 
-    const revision = await prisma.riskAssessmentRevision.create({
-      data: {
-        companyId: user.companyId,
-        documentId: doc.id,
-        revisionNo: nextNo,
-        changeSummary: `Revision request approved: ${request.reason}`,
-        reviewTrigger: request.reviewTrigger,
-        smsProcedureRefs: latest?.smsProcedureRefs ?? null,
-        riskMatrixRef: latest?.riskMatrixRef ?? null,
-        checklistsRequired: latest?.checklistsRequired ?? null,
-        approvalLevel: latest?.approvalLevel ?? "LOCAL",
-        status: "DRAFT",
-        createdBy: user.id,
-      },
-    });
+    // revisionNo is read-then-write; @@unique([documentId, revisionNo]) guards
+    // against a concurrent add. On a P2002, re-derive the next number and retry.
+    let revision;
+    for (let attempt = 0; ; attempt++) {
+      try {
+        revision = await prisma.riskAssessmentRevision.create({
+          data: {
+            companyId: user.companyId,
+            documentId: doc.id,
+            revisionNo: nextNo,
+            changeSummary: `Revision request approved: ${request.reason}`,
+            reviewTrigger: request.reviewTrigger,
+            smsProcedureRefs: latest?.smsProcedureRefs ?? null,
+            riskMatrixRef: latest?.riskMatrixRef ?? null,
+            checklistsRequired: latest?.checklistsRequired ?? null,
+            approvalLevel: latest?.approvalLevel ?? "LOCAL",
+            status: "DRAFT",
+            createdBy: user.id,
+          },
+        });
+        break;
+      } catch (err) {
+        const isDuplicate = err instanceof Prisma.PrismaClientKnownRequestError && err.code === "P2002";
+        if (!isDuplicate || attempt >= 5) throw err;
+        const max = await prisma.riskAssessmentRevision.aggregate({
+          where: { documentId: doc.id },
+          _max: { revisionNo: true },
+        });
+        nextNo = (max._max.revisionNo ?? 0) + 1;
+      }
+    }
     if (latest) await copyForwardHazardRows(user.companyId, latest.id, revision.id, user.id);
 
     await prisma.riskAssessmentDocument.update({
