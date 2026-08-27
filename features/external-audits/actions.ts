@@ -5,6 +5,8 @@ import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { requirePermission } from "@/lib/rbac";
 import { writeAudit } from "@/lib/audit";
+import { getReferenceListValues } from "@/lib/reference-list";
+import { rootCauseSubcategoryKey } from "@/lib/reference-registry";
 import { allocateRefNo } from "@/lib/ref-sequence";
 import {
   createExternalAuditSchema,
@@ -150,6 +152,17 @@ export async function saveFindingRootCauseAction(
     where: { id: d.findingId, companyId: user.companyId, deletedAt: null },
   });
   if (!finding) return fail("Finding not found");
+
+  // Root-cause sub-category must be a live option for the chosen category —
+  // checked against the office-editable list ∪ the value already persisted, so
+  // re-saving a root cause that holds a now-hidden sub-category never fails.
+  const allowedSub = await getReferenceListValues(
+    user.companyId,
+    rootCauseSubcategoryKey(d.rootCauseCategory),
+  );
+  if (!allowedSub.has(d.rootCauseSubCategory) && d.rootCauseSubCategory !== finding.rootCauseSubCategory) {
+    return fail("Select a valid sub-category for the chosen root cause");
+  }
 
   await prisma.externalAuditFinding.update({
     where: { id: finding.id },

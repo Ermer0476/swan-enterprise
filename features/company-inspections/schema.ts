@@ -1,9 +1,5 @@
 import { z } from "zod";
-import {
-  ROOT_CAUSE_CATEGORIES,
-  ROOT_CAUSE_SUBCATEGORIES,
-  type RootCauseCategoryValue,
-} from "@/lib/root-cause";
+import { ROOT_CAUSE_CATEGORIES } from "@/lib/root-cause";
 import { SIRE_OBSERVATION_CATEGORIES } from "@/features/sire/schema";
 
 export {
@@ -85,20 +81,14 @@ export const updateCinspTargetSchema = z.object({
   avgObservationTarget: z.coerce.number().positive("Target must be greater than 0"),
 });
 
+// The sub-category membership check is NOT a superRefine here: the allowed set
+// is the office-editable reference list (root-cause-subcategory:<CATEGORY>), which
+// needs the company id and a DB read, so it lives in the save action (∪ the
+// value already persisted on the row being edited).
 export const observationRootCauseSchema = z
   .object({
     observationId: z.string().uuid(),
     rootCauseCategory: z.enum(ROOT_CAUSE_CATEGORIES),
     rootCauseSubCategory: z.string().trim().min(1, "Select the root cause sub-category"),
     rootCause: z.string().trim().max(10000).optional().or(z.literal("")),
-  })
-  .superRefine((v, ctx) => {
-    const allowed = ROOT_CAUSE_SUBCATEGORIES[v.rootCauseCategory as RootCauseCategoryValue];
-    if (!allowed.includes(v.rootCauseSubCategory)) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: "Select a valid sub-category for the chosen category",
-        path: ["rootCauseSubCategory"],
-      });
-    }
   });

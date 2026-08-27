@@ -5,6 +5,8 @@ import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { requirePermission } from "@/lib/rbac";
 import { writeAudit } from "@/lib/audit";
+import { getReferenceListValues } from "@/lib/reference-list";
+import { rootCauseSubcategoryKey } from "@/lib/reference-registry";
 import { Prisma, type NcrStatus, type RootCauseCategory } from "@/lib/generated/prisma";
 import { createNcrSchema, rootCauseSchema, shoreRemarksSchema, NCR_STATUSES, NCR_SHIP_CREATOR_RANKS } from "./schema";
 import { suggestNextRefNo } from "./queries";
@@ -185,6 +187,17 @@ export async function saveRootCauseAction(
   });
   if (!ncr) return fail("Non-conformity not found");
   if (ncr.status === "CLOSED") return fail("Closed NCRs are read-only");
+
+  // Root-cause sub-category must be a live option for the chosen category —
+  // checked against the office-editable list ∪ the value already persisted, so
+  // re-saving a root cause that holds a now-hidden sub-category never fails.
+  const allowedSub = await getReferenceListValues(
+    user.companyId,
+    rootCauseSubcategoryKey(d.rootCauseCategory),
+  );
+  if (!allowedSub.has(d.rootCauseSubCategory) && d.rootCauseSubCategory !== ncr.rootCauseSubCategory) {
+    return fail("Select a valid sub-category for the chosen root cause");
+  }
 
   await prisma.nonConformity.update({
     where: { id: ncr.id },
