@@ -2,6 +2,42 @@ import "server-only";
 import { prisma } from "@/lib/prisma";
 import type { DocumentStatus } from "@/lib/generated/prisma";
 import { computeRF, riskBand, type RiskBand } from "./schema";
+import {
+  RA_LEVELS,
+  LIKELIHOOD_SCALE_LABELS,
+  SEVERITY_SCALE_LABELS,
+  type RaLevel,
+  type RiskScaleLabels,
+} from "./schema";
+import { getReferenceList } from "@/lib/reference-list";
+import type { ReferenceOption } from "@/lib/reference-registry";
+
+/** Fill a level→label map for all five levels from a reference list, falling
+ * back to the built-in scale label for any level the office has hidden, so the
+ * 1–5 picker always renders every level. */
+function toLevelMap(
+  options: ReferenceOption[],
+  fallback: Record<RaLevel, string>,
+): Record<RaLevel, string> {
+  const byValue = new Map(options.map((o) => [o.value, o.label]));
+  return Object.fromEntries(
+    RA_LEVELS.map((l) => [l, byValue.get(String(l)) ?? fallback[l]]),
+  ) as Record<RaLevel, string>;
+}
+
+/** Office-editable likelihood/severity scale labels for the hazard-row
+ * pickers and matrix rendering (registry fallback when a company has no
+ * rows). Values 1–5 are fixed; only the labels vary. */
+export async function getRiskScaleLabels(companyId: string): Promise<RiskScaleLabels> {
+  const [likelihood, severity] = await Promise.all([
+    getReferenceList(companyId, "risk-likelihood-label"),
+    getReferenceList(companyId, "risk-severity-label"),
+  ]);
+  return {
+    likelihood: toLevelMap(likelihood, LIKELIHOOD_SCALE_LABELS),
+    severity: toLevelMap(severity, SEVERITY_SCALE_LABELS),
+  };
+}
 
 export type RiskDocFilters = { search?: string; status?: DocumentStatus };
 

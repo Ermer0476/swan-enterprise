@@ -15,11 +15,11 @@ import {
   HOR_CATEGORIES,
   HOR_CATEGORY_LABELS,
 } from "@/features/near-miss/schema";
+import type { ReferenceOption, RootCauseSubcategoryOptions } from "@/lib/reference-registry";
 import {
   ROOT_CAUSE_CATEGORIES,
   ROOT_CAUSE_LABELS,
-  ROOT_CAUSE_SUBCATEGORIES,
-  ROOT_CAUSE_SUBCATEGORY_LABELS,
+  type RootCauseCategoryValue,
 } from "@/lib/root-cause";
 import { humanize } from "@/lib/utils";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -65,10 +65,12 @@ export type EditableNearMiss = {
 export function EditDraftNearMissForm({
   nearMiss,
   positions,
+  subcategoryOptions,
   ownVesselName,
 }: {
   nearMiss: EditableNearMiss;
-  positions: readonly string[];
+  positions: ReferenceOption[];
+  subcategoryOptions: RootCauseSubcategoryOptions;
   ownVesselName: string | null;
 }) {
   const formRef = useRef<HTMLFormElement>(null);
@@ -94,8 +96,9 @@ export function EditDraftNearMissForm({
 
   const [rootCause, setRootCause] = useState(nearMiss.rootCauseCategory);
   const [rootCauseSub, setRootCauseSub] = useState(nearMiss.rootCauseSubCategory ?? "");
-  const rootCauseSubOptions =
-    rootCause && (ROOT_CAUSE_SUBCATEGORIES as Record<string, readonly string[]>)[rootCause];
+  const rootCauseSubOptions = rootCause
+    ? subcategoryOptions[rootCause as RootCauseCategoryValue]
+    : undefined;
   const [isHor, setIsHor] = useState(nearMiss.kind === "HOR");
 
   useEffect(() => {
@@ -161,8 +164,14 @@ export function EditDraftNearMissForm({
               <Label htmlFor="reporterPosition">Position / Rank</Label>
               <Select id="reporterPosition" name="reporterPosition" defaultValue={nearMiss.reporterPosition} required>
                 <option value="" disabled>— Select position —</option>
+                {/* Keep a persisted-but-now-hidden position selectable so
+                    re-saving the draft never drops it. */}
+                {nearMiss.reporterPosition &&
+                  !positions.some((p) => p.value === nearMiss.reporterPosition) && (
+                    <option value={nearMiss.reporterPosition}>{nearMiss.reporterPosition} (hidden)</option>
+                  )}
                 {positions.map((p) => (
-                  <option key={p} value={p}>{p}</option>
+                  <option key={p.value} value={p.value}>{p.label}</option>
                 ))}
               </Select>
             </div>
@@ -279,9 +288,13 @@ export function EditDraftNearMissForm({
                 onChange={(e) => setRootCauseSub(e.target.value)}
               >
                 <option value="" disabled>— Select sub-category —</option>
-                {rootCauseSubOptions.map((s) => (
-                  <option key={s} value={s}>
-                    {ROOT_CAUSE_SUBCATEGORY_LABELS[rootCause as keyof typeof ROOT_CAUSE_SUBCATEGORY_LABELS][s]}
+                {/* Keep a persisted-but-now-hidden sub-category selectable. */}
+                {rootCauseSub && !rootCauseSubOptions.some((o) => o.value === rootCauseSub) && (
+                  <option value={rootCauseSub}>{rootCauseSub} (hidden)</option>
+                )}
+                {rootCauseSubOptions.map((o) => (
+                  <option key={o.value} value={o.value}>
+                    {o.label}
                   </option>
                 ))}
               </Select>

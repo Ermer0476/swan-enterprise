@@ -12,9 +12,9 @@ import {
   CIRCULAR_SOURCES,
   CIRCULAR_SOURCE_LABELS,
   CIRCULAR_CATEGORIES,
-  ISSUING_BODY_SUGGESTIONS,
   type CircularSourceValue,
 } from "@/features/circulars/schema";
+import type { IssuingBodySuggestions } from "@/features/circulars/queries";
 import { humanize } from "@/lib/utils";
 import { Card, CardContent } from "@/components/ui/card";
 import { AutoGrowInput, Input, Label, Select } from "@/components/ui/input";
@@ -32,16 +32,18 @@ function SubmitButton() {
 export function NewCircularForm({
   vessels,
   officeUsers,
+  issuingBodySuggestions,
 }: {
   vessels: { id: string; name: string }[];
   officeUsers: { id: string; fullName: string; department: string }[];
+  issuingBodySuggestions: IssuingBodySuggestions;
 }) {
   const [state, formAction] = useActionState<ActionResult, FormData>(
     createCircularAction,
     { ok: false, error: null },
   );
   const [source, setSource] = useState<CircularSourceValue>("FLAG");
-  const suggestions = useMemo(() => ISSUING_BODY_SUGGESTIONS[source], [source]);
+  const suggestions = useMemo(() => issuingBodySuggestions[source], [issuingBodySuggestions, source]);
 
   return (
     <Card>

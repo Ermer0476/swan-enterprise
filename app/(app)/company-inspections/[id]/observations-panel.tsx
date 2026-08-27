@@ -9,11 +9,10 @@ import {
   deleteObservationAction,
   type ActionResult,
 } from "@/features/company-inspections/actions";
+import type { RootCauseSubcategoryOptions } from "@/lib/reference-registry";
 import {
   ROOT_CAUSE_CATEGORIES,
   ROOT_CAUSE_LABELS,
-  ROOT_CAUSE_SUBCATEGORIES,
-  ROOT_CAUSE_SUBCATEGORY_LABELS,
   formatRootCause,
   type RootCauseCategoryValue,
 } from "@/lib/root-cause";
@@ -79,6 +78,7 @@ function ObservationCard({
   correctiveRows,
   attachments,
   questionnaireItems,
+  subcategoryOptions,
 }: {
   obs: ObservationView;
   editable: boolean;
@@ -86,6 +86,7 @@ function ObservationCard({
   correctiveRows: CapaRowView[];
   attachments: AttachmentView[];
   questionnaireItems: QuestionnaireSuggestItem[];
+  subcategoryOptions: RootCauseSubcategoryOptions;
 }) {
   const [values, setValues] = useState<ObservationEdit>(() => editValues(obs));
   const [pending, startTransition] = useTransition();
@@ -211,8 +212,13 @@ function ObservationCard({
                   onChange={(e) => setField("rootCauseSubCategory", e.target.value)}
                 >
                   <option value="">— Select —</option>
-                  {ROOT_CAUSE_SUBCATEGORIES[values.rootCauseCategory].map((s) => (
-                    <option key={s} value={s}>{ROOT_CAUSE_SUBCATEGORY_LABELS[values.rootCauseCategory as RootCauseCategoryValue][s]}</option>
+                  {/* Keep a persisted-but-now-hidden sub-category selectable. */}
+                  {values.rootCauseSubCategory &&
+                    !subcategoryOptions[values.rootCauseCategory].some((o) => o.value === values.rootCauseSubCategory) && (
+                      <option value={values.rootCauseSubCategory}>{values.rootCauseSubCategory} (hidden)</option>
+                    )}
+                  {subcategoryOptions[values.rootCauseCategory].map((o) => (
+                    <option key={o.value} value={o.value}>{o.label}</option>
                   ))}
                 </Select>
               </div>
@@ -333,6 +339,7 @@ export function ObservationsPanel({
   editable,
   canRespond,
   questionnaireItems,
+  subcategoryOptions,
 }: {
   inspectionId: string;
   observations: ObservationView[];
@@ -341,6 +348,7 @@ export function ObservationsPanel({
   editable: boolean;
   canRespond: boolean;
   questionnaireItems: QuestionnaireSuggestItem[];
+  subcategoryOptions: RootCauseSubcategoryOptions;
 }) {
   const [addState, addAction] = useActionState<ActionResult, FormData>(
     addObservationAction,
@@ -378,6 +386,7 @@ export function ObservationsPanel({
               correctiveRows={correctiveRowsByObservation[o.id] ?? []}
               attachments={attachmentsByObservation[o.id] ?? []}
               questionnaireItems={questionnaireItems}
+              subcategoryOptions={subcategoryOptions}
             />
           ))}
         </div>
@@ -461,8 +470,8 @@ export function ObservationsPanel({
                 <Label className="text-xs">Sub-category</Label>
                 <Select name="rootCauseSubCategory" defaultValue="">
                   <option value="">— Select —</option>
-                  {ROOT_CAUSE_SUBCATEGORIES[addRootCauseCategory].map((s) => (
-                    <option key={s} value={s}>{ROOT_CAUSE_SUBCATEGORY_LABELS[addRootCauseCategory][s]}</option>
+                  {subcategoryOptions[addRootCauseCategory].map((o) => (
+                    <option key={o.value} value={o.value}>{o.label}</option>
                   ))}
                 </Select>
               </div>

@@ -23,6 +23,14 @@ export const SEVERITY_SCALE_LABELS: Record<RaLevel, string> = {
   5: "5 — Catastrophic",
 };
 
+/** Office-editable display labels for the 1–5 likelihood/severity scales,
+ * keyed by level. The numeric 1–5 values themselves are fixed (see the zod
+ * bound); only the descriptive labels are office-editable. */
+export type RiskScaleLabels = {
+  likelihood: Record<RaLevel, string>;
+  severity: Record<RaLevel, string>;
+};
+
 /** RF = Severity × Likelihood. */
 export function computeRF(severity: number, likelihood: number): number {
   return severity * likelihood;

@@ -12,12 +12,12 @@ import {
 import {
   INCIDENT_TYPES,
   INCIDENT_TYPE_LABELS,
-  INCIDENT_SUBCATEGORIES,
-  INCIDENT_SUBCATEGORY_LABELS,
   parseSofPasteText,
   type IncidentTypeValue,
   type SofRow,
 } from "@/features/incidents/schema";
+import type { IncidentSubcategoryOptions } from "@/features/incidents/queries";
+import type { ReferenceOption } from "@/lib/reference-registry";
 import { Card, CardContent } from "@/components/ui/card";
 import { AutoGrowInput, Input, Label, Select } from "@/components/ui/input";
 import { VesselField } from "@/components/ui/vessel-field";
@@ -44,12 +44,14 @@ function DraftSubmitButton() {
 export function NewIncidentForm({
   vessels,
   positions,
+  subcategoryOptions,
   isShipboard,
   ownVesselId,
   ownVesselName,
 }: {
   vessels: { id: string; name: string }[];
-  positions: readonly string[];
+  positions: ReferenceOption[];
+  subcategoryOptions: IncidentSubcategoryOptions;
   isShipboard: boolean;
   ownVesselId: string | null;
   ownVesselName: string | null;
@@ -206,7 +208,7 @@ export function NewIncidentForm({
               <Select id="reporterPosition" name="reporterPosition" defaultValue="" required>
                 <option value="" disabled>— Select position —</option>
                 {positions.map((p) => (
-                  <option key={p} value={p}>{p}</option>
+                  <option key={p.value} value={p.value}>{p.label}</option>
                 ))}
               </Select>
             </div>
@@ -239,8 +241,8 @@ export function NewIncidentForm({
                         <Label htmlFor={`sub_${t}`}>{INCIDENT_TYPE_LABELS[t]} sub-category</Label>
                         <Select id={`sub_${t}`} name={`sub_${t}`} defaultValue="">
                           <option value="" disabled>— Select sub-category —</option>
-                          {INCIDENT_SUBCATEGORIES[t].map((s) => (
-                            <option key={s} value={s}>{INCIDENT_SUBCATEGORY_LABELS[t][s]}</option>
+                          {subcategoryOptions[t].map((s) => (
+                            <option key={s.value} value={s.value}>{s.label}</option>
                           ))}
                         </Select>
                       </div>

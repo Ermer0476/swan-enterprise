@@ -9,10 +9,9 @@ import {
 } from "@/features/risk/actions";
 import {
   RA_LEVELS,
-  SEVERITY_SCALE_LABELS,
-  LIKELIHOOD_SCALE_LABELS,
   computeRF,
   riskBand,
+  type RiskScaleLabels,
 } from "@/features/risk/schema";
 import { bandTone } from "@/features/risk/ui";
 import { Badge } from "@/components/ui/badge";
@@ -34,7 +33,7 @@ function SubmitButton() {
 // their own ship. Only that vessel (and office) will see it; it never
 // touches the fleet-wide master table. If it's something every vessel
 // should have, "Request a revision" is the right button instead.
-export function VesselHazardRowForm({ revisionId }: { revisionId: string }) {
+export function VesselHazardRowForm({ revisionId, scaleLabels }: { revisionId: string; scaleLabels: RiskScaleLabels }) {
   const [showForm, setShowForm] = useState(false);
   const [state, formAction] = useActionState<ActionResult, FormData>(
     addVesselHazardRowAction,
@@ -99,13 +98,13 @@ export function VesselHazardRowForm({ revisionId }: { revisionId: string }) {
         <div className="space-y-1.5">
           <Label htmlFor="v-severity">Severity</Label>
           <Select id="v-severity" name="severity" value={severity} onChange={(e) => setSeverity(Number(e.target.value))}>
-            {RA_LEVELS.map((l) => <option key={l} value={l}>{SEVERITY_SCALE_LABELS[l]}</option>)}
+            {RA_LEVELS.map((l) => <option key={l} value={l}>{scaleLabels.severity[l]}</option>)}
           </Select>
         </div>
         <div className="space-y-1.5">
           <Label htmlFor="v-likelihood">Likelihood</Label>
           <Select id="v-likelihood" name="likelihood" value={likelihood} onChange={(e) => setLikelihood(Number(e.target.value))}>
-            {RA_LEVELS.map((l) => <option key={l} value={l}>{LIKELIHOOD_SCALE_LABELS[l]}</option>)}
+            {RA_LEVELS.map((l) => <option key={l} value={l}>{scaleLabels.likelihood[l]}</option>)}
           </Select>
         </div>
         <div className="space-y-1.5">
@@ -136,7 +135,7 @@ export function VesselHazardRowForm({ revisionId }: { revisionId: string }) {
             value={resLikelihood}
             onChange={(e) => setResLikelihood(Number(e.target.value))}
           >
-            {RA_LEVELS.map((l) => <option key={l} value={l}>{LIKELIHOOD_SCALE_LABELS[l]}</option>)}
+            {RA_LEVELS.map((l) => <option key={l} value={l}>{scaleLabels.likelihood[l]}</option>)}
           </Select>
         </div>
         <div className="space-y-1.5">

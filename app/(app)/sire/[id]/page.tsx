@@ -9,6 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { formatDate, humanize } from "@/lib/utils";
 import { lifecycleStatusTone } from "@/lib/status";
+import { getRootCauseSubcategoryOptions } from "@/lib/reference-list";
 import { ObservationsPanel } from "./observations-panel";
 import { SireActions } from "./sire-actions";
 
@@ -22,6 +23,7 @@ export default async function SireDetailPage({
   const insp = await getSire(user.companyId, id, user.department === "SHIPBOARD", user.vesselId);
   if (!insp) notFound();
   const personnel = await listPersonnelOptions(user.companyId);
+  const rootCauseSubOptions = await getRootCauseSubcategoryOptions(user.companyId);
 
   const editable = can(user, "sire:update") && insp.status !== "CLOSED";
   const canClose = can(user, "sire:close");
@@ -74,6 +76,7 @@ export default async function SireDetailPage({
             inspectionId={insp.id}
             editable={editable}
             personnel={personnel}
+            subcategoryOptions={rootCauseSubOptions}
             observations={insp.observations.map((o) => ({
               id: o.id,
               seq: o.seq,

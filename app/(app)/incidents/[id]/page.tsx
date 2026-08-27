@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { requirePermission, can } from "@/lib/rbac";
-import { getIncident } from "@/features/incidents/queries";
+import { getIncident, getIncidentSubcategoryOptions } from "@/features/incidents/queries";
 import { listCapaActions } from "@/features/capa/queries";
 import { CapaTracker, type CapaRowView } from "@/components/capa/capa-tracker";
 import { listAttachments } from "@/features/attachments/queries";
@@ -12,8 +12,8 @@ import {
   INCIDENT_TYPE_LABELS,
   INCIDENT_SUBCATEGORY_LABELS,
   humanize,
-  positionsFor,
 } from "@/features/incidents/schema";
+import { getReporterPositionOptions, getRootCauseSubcategoryOptions } from "@/lib/reference-list";
 import { formatRootCause } from "@/lib/root-cause";
 import { severityTone, incidentStatusTone } from "@/features/incidents/ui";
 import { PageHeader } from "@/components/ui/page-header";
@@ -69,6 +69,8 @@ export default async function IncidentDetailPage({
     inc.status === "DRAFT" && can(user, "incident:create") && (isShipboard || inc.createdBy === user.id);
 
   if (inc.status === "DRAFT") {
+    const subcategoryOptions = await getIncidentSubcategoryOptions(user.companyId);
+    const positions = await getReporterPositionOptions(user.companyId, user.department);
     return (
       <div className="mx-auto max-w-7xl">
         <Link
@@ -101,7 +103,8 @@ export default async function IncidentDetailPage({
               typeEntries: inc.typeEntries.map((e) => ({ type: e.type, subCategory: e.subCategory })),
               sofEntries: inc.sofEntries.map((s) => ({ time: s.time, event: s.event })),
             }}
-            positions={positionsFor(user.department)}
+            positions={positions}
+            subcategoryOptions={subcategoryOptions}
             ownVesselName={inc.vessel?.name ?? null}
           />
         ) : (
@@ -111,6 +114,7 @@ export default async function IncidentDetailPage({
     );
   }
 
+  const rootCauseSubOptions = await getRootCauseSubcategoryOptions(user.companyId);
   const canUpdate = can(user, "incident:update");
   const canClose = can(user, "incident:close");
   const canDelete = can(user, "incident:delete");
@@ -341,6 +345,7 @@ export default async function IncidentDetailPage({
               rootCauseCategory={inc.rootCauseCategory ?? ""}
               rootCauseSubCategory={inc.rootCauseSubCategory ?? ""}
               rootCause={inc.rootCause ?? ""}
+              subcategoryOptions={rootCauseSubOptions}
             />
           ) : inc.rootCauseCategory ? (
             <div className="space-y-4">

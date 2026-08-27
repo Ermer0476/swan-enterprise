@@ -13,8 +13,9 @@ import {
   officeReviewSchema,
   buildCapaRows,
   NM_STATUSES,
-  positionsFor,
 } from "./schema";
+import { getReferenceListValues } from "@/lib/reference-list";
+import { rootCauseSubcategoryKey } from "@/lib/reference-registry";
 
 export type ActionResult = { ok: boolean; error: string | null };
 const OK: ActionResult = { ok: true, error: null };
@@ -70,9 +71,24 @@ export async function createNearMissAction(
   const d = parsed.data;
 
   // Position options are department-scoped (ship ranks vs office positions —
-  // never mixed); re-check server-side since the client list is just the UI.
-  if (!positionsFor(user.department).includes(d.reporterPosition)) {
+  // never mixed); re-check server-side against the office-editable list since
+  // the client list is just the UI.
+  const allowedPositions = await getReferenceListValues(
+    user.companyId,
+    user.department === "SHIPBOARD" ? "ship-position" : "office-position",
+  );
+  if (!allowedPositions.has(d.reporterPosition)) {
     return fail("Select a valid position for your department");
+  }
+
+  // Root-cause sub-category must be a live option for the chosen category
+  // (office-editable list). No persisted value on create.
+  const allowedSub = await getReferenceListValues(
+    user.companyId,
+    rootCauseSubcategoryKey(d.rootCauseCategory),
+  );
+  if (!allowedSub.has(d.rootCauseSubCategory)) {
+    return fail("Select a valid sub-category for the chosen root cause");
   }
 
   // "Save as Draft" is available to anyone who can create a near miss —
@@ -385,8 +401,22 @@ export async function updateDraftNearMissAction(
   }
   const d = parsed.data;
 
-  if (!positionsFor(user.department).includes(d.reporterPosition)) {
+  const allowedPositions = await getReferenceListValues(
+    user.companyId,
+    user.department === "SHIPBOARD" ? "ship-position" : "office-position",
+  );
+  if (!allowedPositions.has(d.reporterPosition) && d.reporterPosition !== nm.reporterPosition) {
     return fail("Select a valid position for your department");
+  }
+
+  // Root-cause sub-category — office-editable list ∪ the value already
+  // persisted, so re-saving a draft holding a now-hidden sub-category works.
+  const allowedSub = await getReferenceListValues(
+    user.companyId,
+    rootCauseSubcategoryKey(d.rootCauseCategory),
+  );
+  if (!allowedSub.has(d.rootCauseSubCategory) && d.rootCauseSubCategory !== nm.rootCauseSubCategory) {
+    return fail("Select a valid sub-category for the chosen root cause");
   }
 
   await prisma.nearMiss.update({

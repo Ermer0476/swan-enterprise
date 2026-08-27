@@ -2,6 +2,25 @@ import "server-only";
 import { prisma } from "@/lib/prisma";
 import { paginationArgs, paginate } from "@/lib/pagination";
 import type { CircularCategory, CircularSource } from "@/lib/generated/prisma";
+import { getReferenceList } from "@/lib/reference-list";
+import { circularIssuingBodyKey } from "@/lib/reference-registry";
+import { CIRCULAR_SOURCES, type CircularSourceValue } from "./schema";
+
+/** Issuing-body suggestions per source for the report form's datalist, read
+ * from the office-editable reference list (registry fallback when a company
+ * has no rows). Values only — the datalist has no separate label. */
+export type IssuingBodySuggestions = Record<CircularSourceValue, string[]>;
+
+export async function getIssuingBodySuggestions(
+  companyId: string,
+): Promise<IssuingBodySuggestions> {
+  const lists = await Promise.all(
+    CIRCULAR_SOURCES.map((s) => getReferenceList(companyId, circularIssuingBodyKey(s))),
+  );
+  return Object.fromEntries(
+    CIRCULAR_SOURCES.map((s, i) => [s, (lists[i] ?? []).map((o) => o.value)]),
+  ) as IssuingBodySuggestions;
+}
 
 export type CircularFilters = {
   search?: string;

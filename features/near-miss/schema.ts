@@ -1,9 +1,5 @@
 import { z } from "zod";
-import {
-  ROOT_CAUSE_CATEGORIES,
-  ROOT_CAUSE_SUBCATEGORIES,
-  type RootCauseCategoryValue,
-} from "@/lib/root-cause";
+import { ROOT_CAUSE_CATEGORIES } from "@/lib/root-cause";
 import { REPORTER_POSITIONS, SHIP_POSITIONS, OFFICE_POSITIONS, positionsFor } from "@/lib/crew-ranks";
 import { humanize } from "@/lib/utils";
 import { LIFECYCLE_TONE } from "@/lib/status";
@@ -91,7 +87,10 @@ export const createNearMissSchema = z
   .object({
     title: z.string().trim().min(3, "Title is required").max(200),
     reporterName: z.string().trim().min(2, "Enter the reporter's name").max(120),
-    reporterPosition: z.enum(REPORTER_POSITIONS),
+    // Membership is validated in the action against the office-editable
+    // ship-position / office-position reference list (∪ the value already
+    // persisted when editing), not pinned to the REPORTER_POSITIONS constant.
+    reporterPosition: z.string().trim().min(1, "Select the reporter's position"),
     kind: z.enum(NEARMISS_KINDS),
     horCategory: z.enum(HOR_CATEGORIES).optional(),
     stopAuthorityExercised: z.boolean(),
@@ -123,15 +122,12 @@ export const createNearMissSchema = z
     caStatus: z.array(z.string().max(200)).max(100).default([]),
     caClosedDate: z.array(z.string().max(200)).max(100).default([]),
   })
+  // The root-cause sub-category membership check moved OUT of this superRefine
+  // into the create/update-draft actions: the allowed set is the office-editable
+  // reference list (root-cause-subcategory:<CATEGORY>), which needs the company
+  // id and a DB read (∪ the value already persisted when editing). The HOR
+  // cross-field rule below is pure and stays here.
   .superRefine((v, ctx) => {
-    const allowed = ROOT_CAUSE_SUBCATEGORIES[v.rootCauseCategory as RootCauseCategoryValue];
-    if (!allowed.includes(v.rootCauseSubCategory)) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: "Select a valid sub-category for the chosen root cause",
-        path: ["rootCauseSubCategory"],
-      });
-    }
     if (v.kind === "HOR" && !v.horCategory) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,

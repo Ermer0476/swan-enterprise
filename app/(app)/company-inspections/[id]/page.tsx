@@ -16,6 +16,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { formatDate, humanize } from "@/lib/utils";
 import { lifecycleStatusTone } from "@/lib/status";
+import { getRootCauseSubcategoryOptions } from "@/lib/reference-list";
 import { ObservationsPanel } from "./observations-panel";
 import { CompanyInspectionStatusActions } from "./status-actions";
 import { EditDetailsForm } from "./edit-details-form";
@@ -57,9 +58,10 @@ export default async function CompanyInspectionDetailPage({
   const canClose = can(user, "cinsp:close");
   const canDelete = can(user, "cinsp:delete");
   const observationIds = insp.observations.map((o) => o.id);
-  const [capaRows, questionnaireItems] = await Promise.all([
+  const [capaRows, questionnaireItems, rootCauseSubOptions] = await Promise.all([
     listAllCapaActionsForEntities(user.companyId, "CompanyInspectionObservation", observationIds),
     editable ? getActiveQuestionnaireItems(user.companyId) : Promise.resolve([]),
+    getRootCauseSubcategoryOptions(user.companyId),
   ]);
 
   const correctiveRowsByObservation: Record<string, CapaRowView[]> = {};
@@ -148,6 +150,7 @@ export default async function CompanyInspectionDetailPage({
             editable={editable}
             canRespond={canRespond}
             questionnaireItems={questionnaireItems}
+            subcategoryOptions={rootCauseSubOptions}
             observations={insp.observations.map((o) => ({
               id: o.id,
               seq: o.seq,

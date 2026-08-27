@@ -20,7 +20,6 @@ import {
   ROOT_CAUSE_LABELS,
   ROOT_CAUSE_SUBCATEGORIES,
   ROOT_CAUSE_SUBCATEGORY_LABELS,
-  type RootCauseCategoryValue,
 } from "@/lib/root-cause";
 import { REPORTER_POSITIONS, SHIP_POSITIONS, OFFICE_POSITIONS, positionsFor } from "@/lib/crew-ranks";
 
@@ -309,7 +308,10 @@ export function humanize(value: string): string {
 export const createIncidentSchema = z.object({
   title: z.string().trim().min(3, "Title is required").max(200),
   reporterName: z.string().trim().min(2, "Enter the reporter's name").max(120),
-  reporterPosition: z.enum(REPORTER_POSITIONS),
+  // Membership is validated in the action against the office-editable
+  // ship-position / office-position reference list (∪ the value already
+  // persisted when editing), not pinned to the REPORTER_POSITIONS constant.
+  reporterPosition: z.string().trim().min(1, "Select the reporter's position"),
   types: z
     .array(z.enum(INCIDENT_TYPES))
     .min(1, "Select at least one type of incident"),
@@ -336,25 +338,18 @@ export const createIncidentSchema = z.object({
   // single static Zod field).
 });
 
-export const investigationSchema = z
-  .object({
-    incidentId: z.string().uuid(),
-    investigationDetails: z.string().trim().min(10, "Describe what happened, based on the investigation"),
-    severity: z.enum(INCIDENT_SEVERITIES),
-    rootCauseCategory: z.enum(ROOT_CAUSE_CATEGORIES),
-    rootCauseSubCategory: z.string().trim().min(1, "Select the root cause sub-category"),
-    rootCause: z.string().trim().max(10000).optional().or(z.literal("")),
-  })
-  .superRefine((v, ctx) => {
-    const allowed = ROOT_CAUSE_SUBCATEGORIES[v.rootCauseCategory as RootCauseCategoryValue];
-    if (!allowed.includes(v.rootCauseSubCategory)) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: "Select a valid sub-category for the chosen root cause",
-        path: ["rootCauseSubCategory"],
-      });
-    }
-  });
+// The root-cause sub-category membership check is NOT a superRefine here: the
+// allowed set is the office-editable reference list (root-cause-subcategory:
+// <CATEGORY>), which needs the company id and a DB read, so it lives in
+// saveInvestigationAction (∪ the value already persisted on the incident).
+export const investigationSchema = z.object({
+  incidentId: z.string().uuid(),
+  investigationDetails: z.string().trim().min(10, "Describe what happened, based on the investigation"),
+  severity: z.enum(INCIDENT_SEVERITIES),
+  rootCauseCategory: z.enum(ROOT_CAUSE_CATEGORIES),
+  rootCauseSubCategory: z.string().trim().min(1, "Select the root cause sub-category"),
+  rootCause: z.string().trim().max(10000).optional().or(z.literal("")),
+});
 
 export type SofRow = { time: string; event: string };
 

@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { formatDate, humanize } from "@/lib/utils";
 import { lifecycleStatusTone } from "@/lib/status";
+import { getRootCauseSubcategoryOptions } from "@/lib/reference-list";
 import { ObservationsPanel } from "./observations-panel";
 import { CdiActions } from "./cdi-actions";
 
@@ -30,6 +31,7 @@ export default async function CdiDetailPage({
   const canRespond = isShipboard && can(user, "cdi:respond") && insp.status !== "CLOSED";
   const canClose = can(user, "cdi:close");
   const canDelete = can(user, "cdi:delete");
+  const rootCauseSubOptions = await getRootCauseSubcategoryOptions(user.companyId);
 
   const meta = [
     { label: "Scheme", value: insp.scheme ?? "—" },
@@ -74,6 +76,7 @@ export default async function CdiDetailPage({
             inspectionId={insp.id}
             editable={editable}
             canRespond={canRespond}
+            subcategoryOptions={rootCauseSubOptions}
             observations={insp.observations.map((o) => ({
               id: o.id,
               questionRef: o.questionRef,
