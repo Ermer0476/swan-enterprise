@@ -13,7 +13,6 @@ import {
   INCIDENT_STATUSES,
   INCIDENT_TYPE_LABELS,
   buildSofRows,
-  positionsFor,
   type IncidentTypeValue,
 } from "./schema";
 import { getReferenceListValues } from "@/lib/reference-list";
@@ -61,8 +60,13 @@ export async function createIncidentAction(
   const d = parsed.data;
 
   // Position options are department-scoped (ship ranks vs office positions —
-  // never mixed); re-check server-side since the client list is just the UI.
-  if (!positionsFor(user.department).includes(d.reporterPosition)) {
+  // never mixed); re-check server-side against the office-editable list since
+  // the client list is just the UI.
+  const allowedPositions = await getReferenceListValues(
+    user.companyId,
+    user.department === "SHIPBOARD" ? "ship-position" : "office-position",
+  );
+  if (!allowedPositions.has(d.reporterPosition)) {
     return fail("Select a valid position for your department");
   }
 
@@ -385,7 +389,11 @@ export async function updateDraftIncidentAction(
   if (!parsed.success) return fail(parsed.error.issues[0]?.message ?? "Invalid input");
   const d = parsed.data;
 
-  if (!positionsFor(user.department).includes(d.reporterPosition)) {
+  const allowedPositions = await getReferenceListValues(
+    user.companyId,
+    user.department === "SHIPBOARD" ? "ship-position" : "office-position",
+  );
+  if (!allowedPositions.has(d.reporterPosition) && d.reporterPosition !== incident.reporterPosition) {
     return fail("Select a valid position for your department");
   }
 

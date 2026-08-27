@@ -17,6 +17,7 @@ import {
   type SofRow,
 } from "@/features/incidents/schema";
 import type { IncidentSubcategoryOptions } from "@/features/incidents/queries";
+import type { ReferenceOption } from "@/lib/reference-registry";
 import { Card, CardContent } from "@/components/ui/card";
 import { AutoGrowInput, Input, Label, Select } from "@/components/ui/input";
 import { VesselField } from "@/components/ui/vessel-field";
@@ -49,7 +50,7 @@ export function NewIncidentForm({
   ownVesselName,
 }: {
   vessels: { id: string; name: string }[];
-  positions: readonly string[];
+  positions: ReferenceOption[];
   subcategoryOptions: IncidentSubcategoryOptions;
   isShipboard: boolean;
   ownVesselId: string | null;
@@ -207,7 +208,7 @@ export function NewIncidentForm({
               <Select id="reporterPosition" name="reporterPosition" defaultValue="" required>
                 <option value="" disabled>— Select position —</option>
                 {positions.map((p) => (
-                  <option key={p} value={p}>{p}</option>
+                  <option key={p.value} value={p.value}>{p.label}</option>
                 ))}
               </Select>
             </div>

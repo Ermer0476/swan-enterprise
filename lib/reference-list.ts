@@ -39,3 +39,19 @@ export async function getReferenceListValues(
   const options = await getReferenceList(companyId, listKey);
   return new Set(options.map((o) => o.value));
 }
+
+/**
+ * Reporter-position options for a report/edit picker — ship ranks for a
+ * shipboard reporter, office positions otherwise (the two lists never mix).
+ * Reads the department-appropriate office-editable list (registry fallback
+ * when the company has no rows). Shared by Incidents and Near Miss.
+ */
+export async function getReporterPositionOptions(
+  companyId: string,
+  department: string,
+): Promise<ReferenceOption[]> {
+  return getReferenceList(
+    companyId,
+    department === "SHIPBOARD" ? "ship-position" : "office-position",
+  );
+}

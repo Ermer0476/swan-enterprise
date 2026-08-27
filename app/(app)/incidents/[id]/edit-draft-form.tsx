@@ -14,6 +14,7 @@ import {
   type IncidentTypeValue,
 } from "@/features/incidents/schema";
 import type { IncidentSubcategoryOptions } from "@/features/incidents/queries";
+import type { ReferenceOption } from "@/lib/reference-registry";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { AutoGrowInput, Input, Label, Select } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -54,7 +55,7 @@ export function EditDraftIncidentForm({
   ownVesselName,
 }: {
   incident: EditableIncident;
-  positions: readonly string[];
+  positions: ReferenceOption[];
   subcategoryOptions: IncidentSubcategoryOptions;
   ownVesselName: string | null;
 }) {
@@ -99,8 +100,14 @@ export function EditDraftIncidentForm({
               <Label htmlFor="reporterPosition">Position / Rank</Label>
               <Select id="reporterPosition" name="reporterPosition" defaultValue={incident.reporterPosition} required>
                 <option value="" disabled>— Select position —</option>
+                {/* Keep a persisted-but-now-hidden position selectable so
+                    re-saving the draft never drops it. */}
+                {incident.reporterPosition &&
+                  !positions.some((p) => p.value === incident.reporterPosition) && (
+                    <option value={incident.reporterPosition}>{incident.reporterPosition} (hidden)</option>
+                  )}
                 {positions.map((p) => (
-                  <option key={p} value={p}>{p}</option>
+                  <option key={p.value} value={p.value}>{p.label}</option>
                 ))}
               </Select>
             </div>

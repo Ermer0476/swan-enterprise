@@ -15,6 +15,7 @@ import {
   HOR_CATEGORIES,
   HOR_CATEGORY_LABELS,
 } from "@/features/near-miss/schema";
+import type { ReferenceOption } from "@/lib/reference-registry";
 import {
   ROOT_CAUSE_CATEGORIES,
   ROOT_CAUSE_LABELS,
@@ -68,7 +69,7 @@ export function EditDraftNearMissForm({
   ownVesselName,
 }: {
   nearMiss: EditableNearMiss;
-  positions: readonly string[];
+  positions: ReferenceOption[];
   ownVesselName: string | null;
 }) {
   const formRef = useRef<HTMLFormElement>(null);
@@ -161,8 +162,14 @@ export function EditDraftNearMissForm({
               <Label htmlFor="reporterPosition">Position / Rank</Label>
               <Select id="reporterPosition" name="reporterPosition" defaultValue={nearMiss.reporterPosition} required>
                 <option value="" disabled>— Select position —</option>
+                {/* Keep a persisted-but-now-hidden position selectable so
+                    re-saving the draft never drops it. */}
+                {nearMiss.reporterPosition &&
+                  !positions.some((p) => p.value === nearMiss.reporterPosition) && (
+                    <option value={nearMiss.reporterPosition}>{nearMiss.reporterPosition} (hidden)</option>
+                  )}
                 {positions.map((p) => (
-                  <option key={p} value={p}>{p}</option>
+                  <option key={p.value} value={p.value}>{p.label}</option>
                 ))}
               </Select>
             </div>

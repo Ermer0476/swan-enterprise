@@ -17,6 +17,7 @@ import {
   HOR_CATEGORIES,
   HOR_CATEGORY_LABELS,
 } from "@/features/near-miss/schema";
+import type { ReferenceOption } from "@/lib/reference-registry";
 import { CAPA_STATUSES } from "@/features/capa/schema";
 import {
   ROOT_CAUSE_CATEGORIES,
@@ -62,7 +63,7 @@ export function NewNearMissForm({
   ownVesselName,
 }: {
   vessels: { id: string; name: string }[];
-  positions: readonly string[];
+  positions: ReferenceOption[];
   isShipboard: boolean;
   ownVesselId: string | null;
   ownVesselName: string | null;
@@ -216,7 +217,7 @@ export function NewNearMissForm({
               <Select id="reporterPosition" name="reporterPosition" defaultValue="" required>
                 <option value="" disabled>— Select position —</option>
                 {positions.map((p) => (
-                  <option key={p} value={p}>{p}</option>
+                  <option key={p.value} value={p.value}>{p.label}</option>
                 ))}
               </Select>
             </div>

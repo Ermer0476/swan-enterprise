@@ -309,7 +309,10 @@ export function humanize(value: string): string {
 export const createIncidentSchema = z.object({
   title: z.string().trim().min(3, "Title is required").max(200),
   reporterName: z.string().trim().min(2, "Enter the reporter's name").max(120),
-  reporterPosition: z.enum(REPORTER_POSITIONS),
+  // Membership is validated in the action against the office-editable
+  // ship-position / office-position reference list (∪ the value already
+  // persisted when editing), not pinned to the REPORTER_POSITIONS constant.
+  reporterPosition: z.string().trim().min(1, "Select the reporter's position"),
   types: z
     .array(z.enum(INCIDENT_TYPES))
     .min(1, "Select at least one type of incident"),

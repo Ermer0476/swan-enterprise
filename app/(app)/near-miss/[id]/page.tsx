@@ -10,8 +10,8 @@ import {
   HOR_CATEGORY_LABELS,
   nearMissStatusLabel,
   nearMissStatusTone,
-  positionsFor,
 } from "@/features/near-miss/schema";
+import { getReporterPositionOptions } from "@/lib/reference-list";
 import { listCapaActions, listAllCapaActions } from "@/features/capa/queries";
 import { CapaTracker, type CapaRowView } from "@/components/capa/capa-tracker";
 import { formatRootCause } from "@/lib/root-cause";
@@ -104,6 +104,10 @@ export default async function NearMissDetailPage({
     { label: "Closed", value: nm.closedAt ? formatDate(nm.closedAt) : "—" },
   ];
 
+  const positions = isOwnDraft
+    ? await getReporterPositionOptions(user.companyId, user.department)
+    : [];
+
   return (
     <div className="mx-auto max-w-7xl">
       <Link href="/near-miss" className="mb-3 inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground print:hidden">
@@ -147,7 +151,7 @@ export default async function NearMissDetailPage({
             rootCauseCategory: nm.rootCauseCategory,
             rootCauseSubCategory: nm.rootCauseSubCategory,
           }}
-          positions={positionsFor(user.department)}
+          positions={positions}
           ownVesselName={nm.vessel?.name ?? null}
         />
       ) : (

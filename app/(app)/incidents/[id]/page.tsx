@@ -12,8 +12,8 @@ import {
   INCIDENT_TYPE_LABELS,
   INCIDENT_SUBCATEGORY_LABELS,
   humanize,
-  positionsFor,
 } from "@/features/incidents/schema";
+import { getReporterPositionOptions } from "@/lib/reference-list";
 import { formatRootCause } from "@/lib/root-cause";
 import { severityTone, incidentStatusTone } from "@/features/incidents/ui";
 import { PageHeader } from "@/components/ui/page-header";
@@ -70,6 +70,7 @@ export default async function IncidentDetailPage({
 
   if (inc.status === "DRAFT") {
     const subcategoryOptions = await getIncidentSubcategoryOptions(user.companyId);
+    const positions = await getReporterPositionOptions(user.companyId, user.department);
     return (
       <div className="mx-auto max-w-7xl">
         <Link
@@ -102,7 +103,7 @@ export default async function IncidentDetailPage({
               typeEntries: inc.typeEntries.map((e) => ({ type: e.type, subCategory: e.subCategory })),
               sofEntries: inc.sofEntries.map((s) => ({ time: s.time, event: s.event })),
             }}
-            positions={positionsFor(user.department)}
+            positions={positions}
             subcategoryOptions={subcategoryOptions}
             ownVesselName={inc.vessel?.name ?? null}
           />

@@ -1,13 +1,13 @@
 import { requirePermission } from "@/lib/rbac";
 import { listVesselOptions, getIncidentSubcategoryOptions } from "@/features/incidents/queries";
-import { positionsFor } from "@/features/incidents/schema";
+import { getReporterPositionOptions } from "@/lib/reference-list";
 import { PageHeader } from "@/components/ui/page-header";
 import { NewIncidentForm } from "./new-incident-form";
 
 export default async function NewIncidentPage() {
   const user = await requirePermission("incident:create");
   const vessels = await listVesselOptions(user.companyId);
-  const positions = positionsFor(user.department);
+  const positions = await getReporterPositionOptions(user.companyId, user.department);
   const subcategoryOptions = await getIncidentSubcategoryOptions(user.companyId);
   const isShipboard = user.department === "SHIPBOARD";
   const ownVesselName = vessels.find((v) => v.id === user.vesselId)?.name ?? null;
