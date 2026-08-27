@@ -44,6 +44,16 @@ export type RolePermission = $Result.DefaultSelection<Prisma.$RolePermissionPayl
  */
 export type UserRole = $Result.DefaultSelection<Prisma.$UserRolePayload>
 /**
+ * Model AccessLevel
+ * 
+ */
+export type AccessLevel = $Result.DefaultSelection<Prisma.$AccessLevelPayload>
+/**
+ * Model Department
+ * 
+ */
+export type Department = $Result.DefaultSelection<Prisma.$DepartmentPayload>
+/**
  * Model Vessel
  * 
  */
@@ -461,6 +471,14 @@ export namespace $Enums {
 };
 
 export type DepartmentType = (typeof DepartmentType)[keyof typeof DepartmentType]
+
+
+export const DepartmentSide: {
+  SHIP: 'SHIP',
+  SHORE: 'SHORE'
+};
+
+export type DepartmentSide = (typeof DepartmentSide)[keyof typeof DepartmentSide]
 
 
 export const VesselStatus: {
@@ -1191,6 +1209,10 @@ export type DepartmentType = $Enums.DepartmentType
 
 export const DepartmentType: typeof $Enums.DepartmentType
 
+export type DepartmentSide = $Enums.DepartmentSide
+
+export const DepartmentSide: typeof $Enums.DepartmentSide
+
 export type VesselStatus = $Enums.VesselStatus
 
 export const VesselStatus: typeof $Enums.VesselStatus
@@ -1636,6 +1658,26 @@ export class PrismaClient<
     * ```
     */
   get userRole(): Prisma.UserRoleDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.accessLevel`: Exposes CRUD operations for the **AccessLevel** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more AccessLevels
+    * const accessLevels = await prisma.accessLevel.findMany()
+    * ```
+    */
+  get accessLevel(): Prisma.AccessLevelDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.department`: Exposes CRUD operations for the **Department** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Departments
+    * const departments = await prisma.department.findMany()
+    * ```
+    */
+  get department(): Prisma.DepartmentDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.vessel`: Exposes CRUD operations for the **Vessel** model.
@@ -2803,6 +2845,8 @@ export namespace Prisma {
     Permission: 'Permission',
     RolePermission: 'RolePermission',
     UserRole: 'UserRole',
+    AccessLevel: 'AccessLevel',
+    Department: 'Department',
     Vessel: 'Vessel',
     AuditLog: 'AuditLog',
     Attachment: 'Attachment',
@@ -2893,7 +2937,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "company" | "user" | "role" | "permission" | "rolePermission" | "userRole" | "vessel" | "auditLog" | "attachment" | "comment" | "capaAction" | "notification" | "workflowDefinition" | "workflowStep" | "workflowInstance" | "workflowAction" | "smsDocument" | "smsRevision" | "incident" | "incidentSofEntry" | "incidentTypeEntry" | "nearMiss" | "nonConformity" | "sireInspection" | "sireObservation" | "sireObservationComment" | "sireQuestionnaireVersion" | "sireQuestionnaireItem" | "pscInspection" | "pscDeficiency" | "cdiInspection" | "cdiObservation" | "internalAudit" | "internalAuditFinding" | "externalAudit" | "externalAuditFinding" | "companyInspection" | "companyInspectionObservation" | "exposureCrewEntry" | "exposureInjuryCase" | "committeeMeeting" | "committeeMeetingAgenda" | "scheduleItem" | "scheduleApplicability" | "emergencyDrill" | "familiarizationRecord" | "familiarizationSession" | "lsaFfeItem" | "crewFamiliarization" | "crewFamiliarizationRecord" | "controlledDocument" | "vesselDocument" | "circular" | "circularAcknowledgement" | "riskAssessmentDocument" | "riskAssessmentRevision" | "riskHazardRow" | "riskAssessmentExecution" | "riskAssessmentRevisionRequest" | "defect" | "voyageLog" | "voyageLogBunker" | "unitMaster" | "referenceListItem" | "environmentRecord" | "garbageLedgerEntry" | "refSequence" | "tmsaAssessment" | "tmsaScore" | "tmsaFinding" | "storesCatalogueItem" | "sparesCatalogueItem" | "openingStockTake" | "inventoryEvent" | "inventoryUpdateDraft" | "requisition" | "requisitionRevision" | "requisitionLine"
+      modelProps: "company" | "user" | "role" | "permission" | "rolePermission" | "userRole" | "accessLevel" | "department" | "vessel" | "auditLog" | "attachment" | "comment" | "capaAction" | "notification" | "workflowDefinition" | "workflowStep" | "workflowInstance" | "workflowAction" | "smsDocument" | "smsRevision" | "incident" | "incidentSofEntry" | "incidentTypeEntry" | "nearMiss" | "nonConformity" | "sireInspection" | "sireObservation" | "sireObservationComment" | "sireQuestionnaireVersion" | "sireQuestionnaireItem" | "pscInspection" | "pscDeficiency" | "cdiInspection" | "cdiObservation" | "internalAudit" | "internalAuditFinding" | "externalAudit" | "externalAuditFinding" | "companyInspection" | "companyInspectionObservation" | "exposureCrewEntry" | "exposureInjuryCase" | "committeeMeeting" | "committeeMeetingAgenda" | "scheduleItem" | "scheduleApplicability" | "emergencyDrill" | "familiarizationRecord" | "familiarizationSession" | "lsaFfeItem" | "crewFamiliarization" | "crewFamiliarizationRecord" | "controlledDocument" | "vesselDocument" | "circular" | "circularAcknowledgement" | "riskAssessmentDocument" | "riskAssessmentRevision" | "riskHazardRow" | "riskAssessmentExecution" | "riskAssessmentRevisionRequest" | "defect" | "voyageLog" | "voyageLogBunker" | "unitMaster" | "referenceListItem" | "environmentRecord" | "garbageLedgerEntry" | "refSequence" | "tmsaAssessment" | "tmsaScore" | "tmsaFinding" | "storesCatalogueItem" | "sparesCatalogueItem" | "openingStockTake" | "inventoryEvent" | "inventoryUpdateDraft" | "requisition" | "requisitionRevision" | "requisitionLine"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -3338,6 +3382,154 @@ export namespace Prisma {
           count: {
             args: Prisma.UserRoleCountArgs<ExtArgs>
             result: $Utils.Optional<UserRoleCountAggregateOutputType> | number
+          }
+        }
+      }
+      AccessLevel: {
+        payload: Prisma.$AccessLevelPayload<ExtArgs>
+        fields: Prisma.AccessLevelFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.AccessLevelFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AccessLevelPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.AccessLevelFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AccessLevelPayload>
+          }
+          findFirst: {
+            args: Prisma.AccessLevelFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AccessLevelPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.AccessLevelFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AccessLevelPayload>
+          }
+          findMany: {
+            args: Prisma.AccessLevelFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AccessLevelPayload>[]
+          }
+          create: {
+            args: Prisma.AccessLevelCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AccessLevelPayload>
+          }
+          createMany: {
+            args: Prisma.AccessLevelCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.AccessLevelCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AccessLevelPayload>[]
+          }
+          delete: {
+            args: Prisma.AccessLevelDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AccessLevelPayload>
+          }
+          update: {
+            args: Prisma.AccessLevelUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AccessLevelPayload>
+          }
+          deleteMany: {
+            args: Prisma.AccessLevelDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.AccessLevelUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.AccessLevelUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AccessLevelPayload>[]
+          }
+          upsert: {
+            args: Prisma.AccessLevelUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AccessLevelPayload>
+          }
+          aggregate: {
+            args: Prisma.AccessLevelAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateAccessLevel>
+          }
+          groupBy: {
+            args: Prisma.AccessLevelGroupByArgs<ExtArgs>
+            result: $Utils.Optional<AccessLevelGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.AccessLevelCountArgs<ExtArgs>
+            result: $Utils.Optional<AccessLevelCountAggregateOutputType> | number
+          }
+        }
+      }
+      Department: {
+        payload: Prisma.$DepartmentPayload<ExtArgs>
+        fields: Prisma.DepartmentFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.DepartmentFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepartmentPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.DepartmentFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepartmentPayload>
+          }
+          findFirst: {
+            args: Prisma.DepartmentFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepartmentPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.DepartmentFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepartmentPayload>
+          }
+          findMany: {
+            args: Prisma.DepartmentFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepartmentPayload>[]
+          }
+          create: {
+            args: Prisma.DepartmentCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepartmentPayload>
+          }
+          createMany: {
+            args: Prisma.DepartmentCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.DepartmentCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepartmentPayload>[]
+          }
+          delete: {
+            args: Prisma.DepartmentDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepartmentPayload>
+          }
+          update: {
+            args: Prisma.DepartmentUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepartmentPayload>
+          }
+          deleteMany: {
+            args: Prisma.DepartmentDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.DepartmentUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.DepartmentUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepartmentPayload>[]
+          }
+          upsert: {
+            args: Prisma.DepartmentUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepartmentPayload>
+          }
+          aggregate: {
+            args: Prisma.DepartmentAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateDepartment>
+          }
+          groupBy: {
+            args: Prisma.DepartmentGroupByArgs<ExtArgs>
+            result: $Utils.Optional<DepartmentGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.DepartmentCountArgs<ExtArgs>
+            result: $Utils.Optional<DepartmentCountAggregateOutputType> | number
           }
         }
       }
@@ -8771,6 +8963,8 @@ export namespace Prisma {
     permission?: PermissionOmit
     rolePermission?: RolePermissionOmit
     userRole?: UserRoleOmit
+    accessLevel?: AccessLevelOmit
+    department?: DepartmentOmit
     vessel?: VesselOmit
     auditLog?: AuditLogOmit
     attachment?: AttachmentOmit
@@ -8967,6 +9161,8 @@ export namespace Prisma {
     requisitionRevisions: number
     unitMasters: number
     referenceListItems: number
+    accessLevels: number
+    departments: number
   }
 
   export type CompanyCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -9014,6 +9210,8 @@ export namespace Prisma {
     requisitionRevisions?: boolean | CompanyCountOutputTypeCountRequisitionRevisionsArgs
     unitMasters?: boolean | CompanyCountOutputTypeCountUnitMastersArgs
     referenceListItems?: boolean | CompanyCountOutputTypeCountReferenceListItemsArgs
+    accessLevels?: boolean | CompanyCountOutputTypeCountAccessLevelsArgs
+    departments?: boolean | CompanyCountOutputTypeCountDepartmentsArgs
   }
 
   // Custom InputTypes
@@ -9335,6 +9533,20 @@ export namespace Prisma {
     where?: ReferenceListItemWhereInput
   }
 
+  /**
+   * CompanyCountOutputType without action
+   */
+  export type CompanyCountOutputTypeCountAccessLevelsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AccessLevelWhereInput
+  }
+
+  /**
+   * CompanyCountOutputType without action
+   */
+  export type CompanyCountOutputTypeCountDepartmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DepartmentWhereInput
+  }
+
 
   /**
    * Count Type UserCountOutputType
@@ -9507,6 +9719,68 @@ export namespace Prisma {
    */
   export type PermissionCountOutputTypeCountRolesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: RolePermissionWhereInput
+  }
+
+
+  /**
+   * Count Type AccessLevelCountOutputType
+   */
+
+  export type AccessLevelCountOutputType = {
+    users: number
+  }
+
+  export type AccessLevelCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    users?: boolean | AccessLevelCountOutputTypeCountUsersArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * AccessLevelCountOutputType without action
+   */
+  export type AccessLevelCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AccessLevelCountOutputType
+     */
+    select?: AccessLevelCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * AccessLevelCountOutputType without action
+   */
+  export type AccessLevelCountOutputTypeCountUsersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: UserWhereInput
+  }
+
+
+  /**
+   * Count Type DepartmentCountOutputType
+   */
+
+  export type DepartmentCountOutputType = {
+    users: number
+  }
+
+  export type DepartmentCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    users?: boolean | DepartmentCountOutputTypeCountUsersArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * DepartmentCountOutputType without action
+   */
+  export type DepartmentCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepartmentCountOutputType
+     */
+    select?: DepartmentCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * DepartmentCountOutputType without action
+   */
+  export type DepartmentCountOutputTypeCountUsersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: UserWhereInput
   }
 
 
@@ -11059,6 +11333,8 @@ export namespace Prisma {
     requisitionRevisions?: boolean | Company$requisitionRevisionsArgs<ExtArgs>
     unitMasters?: boolean | Company$unitMastersArgs<ExtArgs>
     referenceListItems?: boolean | Company$referenceListItemsArgs<ExtArgs>
+    accessLevels?: boolean | Company$accessLevelsArgs<ExtArgs>
+    departments?: boolean | Company$departmentsArgs<ExtArgs>
     _count?: boolean | CompanyCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["company"]>
 
@@ -11165,6 +11441,8 @@ export namespace Prisma {
     requisitionRevisions?: boolean | Company$requisitionRevisionsArgs<ExtArgs>
     unitMasters?: boolean | Company$unitMastersArgs<ExtArgs>
     referenceListItems?: boolean | Company$referenceListItemsArgs<ExtArgs>
+    accessLevels?: boolean | Company$accessLevelsArgs<ExtArgs>
+    departments?: boolean | Company$departmentsArgs<ExtArgs>
     _count?: boolean | CompanyCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type CompanyIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -11217,6 +11495,8 @@ export namespace Prisma {
       requisitionRevisions: Prisma.$RequisitionRevisionPayload<ExtArgs>[]
       unitMasters: Prisma.$UnitMasterPayload<ExtArgs>[]
       referenceListItems: Prisma.$ReferenceListItemPayload<ExtArgs>[]
+      accessLevels: Prisma.$AccessLevelPayload<ExtArgs>[]
+      departments: Prisma.$DepartmentPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -11673,6 +11953,8 @@ export namespace Prisma {
     requisitionRevisions<T extends Company$requisitionRevisionsArgs<ExtArgs> = {}>(args?: Subset<T, Company$requisitionRevisionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RequisitionRevisionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     unitMasters<T extends Company$unitMastersArgs<ExtArgs> = {}>(args?: Subset<T, Company$unitMastersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UnitMasterPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     referenceListItems<T extends Company$referenceListItemsArgs<ExtArgs> = {}>(args?: Subset<T, Company$referenceListItemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReferenceListItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    accessLevels<T extends Company$accessLevelsArgs<ExtArgs> = {}>(args?: Subset<T, Company$accessLevelsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AccessLevelPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    departments<T extends Company$departmentsArgs<ExtArgs> = {}>(args?: Subset<T, Company$departmentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DepartmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -13162,6 +13444,54 @@ export namespace Prisma {
   }
 
   /**
+   * Company.accessLevels
+   */
+  export type Company$accessLevelsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AccessLevel
+     */
+    select?: AccessLevelSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AccessLevel
+     */
+    omit?: AccessLevelOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AccessLevelInclude<ExtArgs> | null
+    where?: AccessLevelWhereInput
+    orderBy?: AccessLevelOrderByWithRelationInput | AccessLevelOrderByWithRelationInput[]
+    cursor?: AccessLevelWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: AccessLevelScalarFieldEnum | AccessLevelScalarFieldEnum[]
+  }
+
+  /**
+   * Company.departments
+   */
+  export type Company$departmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Department
+     */
+    select?: DepartmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Department
+     */
+    omit?: DepartmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentInclude<ExtArgs> | null
+    where?: DepartmentWhereInput
+    orderBy?: DepartmentOrderByWithRelationInput | DepartmentOrderByWithRelationInput[]
+    cursor?: DepartmentWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: DepartmentScalarFieldEnum | DepartmentScalarFieldEnum[]
+  }
+
+  /**
    * Company without action
    */
   export type CompanyDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -13201,6 +13531,8 @@ export namespace Prisma {
     active: boolean | null
     lastLoginAt: Date | null
     vesselId: string | null
+    accessLevelId: string | null
+    departmentRefId: string | null
     createdAt: Date | null
     updatedAt: Date | null
     createdBy: string | null
@@ -13220,6 +13552,8 @@ export namespace Prisma {
     active: boolean | null
     lastLoginAt: Date | null
     vesselId: string | null
+    accessLevelId: string | null
+    departmentRefId: string | null
     createdAt: Date | null
     updatedAt: Date | null
     createdBy: string | null
@@ -13239,6 +13573,8 @@ export namespace Prisma {
     active: number
     lastLoginAt: number
     vesselId: number
+    accessLevelId: number
+    departmentRefId: number
     createdAt: number
     updatedAt: number
     createdBy: number
@@ -13260,6 +13596,8 @@ export namespace Prisma {
     active?: true
     lastLoginAt?: true
     vesselId?: true
+    accessLevelId?: true
+    departmentRefId?: true
     createdAt?: true
     updatedAt?: true
     createdBy?: true
@@ -13279,6 +13617,8 @@ export namespace Prisma {
     active?: true
     lastLoginAt?: true
     vesselId?: true
+    accessLevelId?: true
+    departmentRefId?: true
     createdAt?: true
     updatedAt?: true
     createdBy?: true
@@ -13298,6 +13638,8 @@ export namespace Prisma {
     active?: true
     lastLoginAt?: true
     vesselId?: true
+    accessLevelId?: true
+    departmentRefId?: true
     createdAt?: true
     updatedAt?: true
     createdBy?: true
@@ -13390,6 +13732,8 @@ export namespace Prisma {
     active: boolean
     lastLoginAt: Date | null
     vesselId: string | null
+    accessLevelId: string | null
+    departmentRefId: string | null
     createdAt: Date
     updatedAt: Date
     createdBy: string | null
@@ -13426,6 +13770,8 @@ export namespace Prisma {
     active?: boolean
     lastLoginAt?: boolean
     vesselId?: boolean
+    accessLevelId?: boolean
+    departmentRefId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     createdBy?: boolean
@@ -13434,6 +13780,8 @@ export namespace Prisma {
     deletedBy?: boolean
     company?: boolean | CompanyDefaultArgs<ExtArgs>
     vessel?: boolean | User$vesselArgs<ExtArgs>
+    accessLevel?: boolean | User$accessLevelArgs<ExtArgs>
+    departmentRef?: boolean | User$departmentRefArgs<ExtArgs>
     roles?: boolean | User$rolesArgs<ExtArgs>
     ownedDocs?: boolean | User$ownedDocsArgs<ExtArgs>
     reportedIncidents?: boolean | User$reportedIncidentsArgs<ExtArgs>
@@ -13457,6 +13805,8 @@ export namespace Prisma {
     active?: boolean
     lastLoginAt?: boolean
     vesselId?: boolean
+    accessLevelId?: boolean
+    departmentRefId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     createdBy?: boolean
@@ -13465,6 +13815,8 @@ export namespace Prisma {
     deletedBy?: boolean
     company?: boolean | CompanyDefaultArgs<ExtArgs>
     vessel?: boolean | User$vesselArgs<ExtArgs>
+    accessLevel?: boolean | User$accessLevelArgs<ExtArgs>
+    departmentRef?: boolean | User$departmentRefArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -13478,6 +13830,8 @@ export namespace Prisma {
     active?: boolean
     lastLoginAt?: boolean
     vesselId?: boolean
+    accessLevelId?: boolean
+    departmentRefId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     createdBy?: boolean
@@ -13486,6 +13840,8 @@ export namespace Prisma {
     deletedBy?: boolean
     company?: boolean | CompanyDefaultArgs<ExtArgs>
     vessel?: boolean | User$vesselArgs<ExtArgs>
+    accessLevel?: boolean | User$accessLevelArgs<ExtArgs>
+    departmentRef?: boolean | User$departmentRefArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectScalar = {
@@ -13499,6 +13855,8 @@ export namespace Prisma {
     active?: boolean
     lastLoginAt?: boolean
     vesselId?: boolean
+    accessLevelId?: boolean
+    departmentRefId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     createdBy?: boolean
@@ -13507,10 +13865,12 @@ export namespace Prisma {
     deletedBy?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "companyId" | "fullName" | "email" | "passwordHash" | "department" | "rank" | "active" | "lastLoginAt" | "vesselId" | "createdAt" | "updatedAt" | "createdBy" | "updatedBy" | "deletedAt" | "deletedBy", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "companyId" | "fullName" | "email" | "passwordHash" | "department" | "rank" | "active" | "lastLoginAt" | "vesselId" | "accessLevelId" | "departmentRefId" | "createdAt" | "updatedAt" | "createdBy" | "updatedBy" | "deletedAt" | "deletedBy", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     company?: boolean | CompanyDefaultArgs<ExtArgs>
     vessel?: boolean | User$vesselArgs<ExtArgs>
+    accessLevel?: boolean | User$accessLevelArgs<ExtArgs>
+    departmentRef?: boolean | User$departmentRefArgs<ExtArgs>
     roles?: boolean | User$rolesArgs<ExtArgs>
     ownedDocs?: boolean | User$ownedDocsArgs<ExtArgs>
     reportedIncidents?: boolean | User$reportedIncidentsArgs<ExtArgs>
@@ -13525,10 +13885,14 @@ export namespace Prisma {
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     company?: boolean | CompanyDefaultArgs<ExtArgs>
     vessel?: boolean | User$vesselArgs<ExtArgs>
+    accessLevel?: boolean | User$accessLevelArgs<ExtArgs>
+    departmentRef?: boolean | User$departmentRefArgs<ExtArgs>
   }
   export type UserIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     company?: boolean | CompanyDefaultArgs<ExtArgs>
     vessel?: boolean | User$vesselArgs<ExtArgs>
+    accessLevel?: boolean | User$accessLevelArgs<ExtArgs>
+    departmentRef?: boolean | User$departmentRefArgs<ExtArgs>
   }
 
   export type $UserPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -13536,6 +13900,8 @@ export namespace Prisma {
     objects: {
       company: Prisma.$CompanyPayload<ExtArgs>
       vessel: Prisma.$VesselPayload<ExtArgs> | null
+      accessLevel: Prisma.$AccessLevelPayload<ExtArgs> | null
+      departmentRef: Prisma.$DepartmentPayload<ExtArgs> | null
       roles: Prisma.$UserRolePayload<ExtArgs>[]
       ownedDocs: Prisma.$SmsDocumentPayload<ExtArgs>[]
       reportedIncidents: Prisma.$IncidentPayload<ExtArgs>[]
@@ -13557,6 +13923,8 @@ export namespace Prisma {
       active: boolean
       lastLoginAt: Date | null
       vesselId: string | null
+      accessLevelId: string | null
+      departmentRefId: string | null
       createdAt: Date
       updatedAt: Date
       createdBy: string | null
@@ -13959,6 +14327,8 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     company<T extends CompanyDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CompanyDefaultArgs<ExtArgs>>): Prisma__CompanyClient<$Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     vessel<T extends User$vesselArgs<ExtArgs> = {}>(args?: Subset<T, User$vesselArgs<ExtArgs>>): Prisma__VesselClient<$Result.GetResult<Prisma.$VesselPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    accessLevel<T extends User$accessLevelArgs<ExtArgs> = {}>(args?: Subset<T, User$accessLevelArgs<ExtArgs>>): Prisma__AccessLevelClient<$Result.GetResult<Prisma.$AccessLevelPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    departmentRef<T extends User$departmentRefArgs<ExtArgs> = {}>(args?: Subset<T, User$departmentRefArgs<ExtArgs>>): Prisma__DepartmentClient<$Result.GetResult<Prisma.$DepartmentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     roles<T extends User$rolesArgs<ExtArgs> = {}>(args?: Subset<T, User$rolesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserRolePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     ownedDocs<T extends User$ownedDocsArgs<ExtArgs> = {}>(args?: Subset<T, User$ownedDocsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SmsDocumentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     reportedIncidents<T extends User$reportedIncidentsArgs<ExtArgs> = {}>(args?: Subset<T, User$reportedIncidentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IncidentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -14007,6 +14377,8 @@ export namespace Prisma {
     readonly active: FieldRef<"User", 'Boolean'>
     readonly lastLoginAt: FieldRef<"User", 'DateTime'>
     readonly vesselId: FieldRef<"User", 'String'>
+    readonly accessLevelId: FieldRef<"User", 'String'>
+    readonly departmentRefId: FieldRef<"User", 'String'>
     readonly createdAt: FieldRef<"User", 'DateTime'>
     readonly updatedAt: FieldRef<"User", 'DateTime'>
     readonly createdBy: FieldRef<"User", 'String'>
@@ -14425,6 +14797,44 @@ export namespace Prisma {
      */
     include?: VesselInclude<ExtArgs> | null
     where?: VesselWhereInput
+  }
+
+  /**
+   * User.accessLevel
+   */
+  export type User$accessLevelArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AccessLevel
+     */
+    select?: AccessLevelSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AccessLevel
+     */
+    omit?: AccessLevelOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AccessLevelInclude<ExtArgs> | null
+    where?: AccessLevelWhereInput
+  }
+
+  /**
+   * User.departmentRef
+   */
+  export type User$departmentRefArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Department
+     */
+    select?: DepartmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Department
+     */
+    omit?: DepartmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentInclude<ExtArgs> | null
+    where?: DepartmentWhereInput
   }
 
   /**
@@ -18912,6 +19322,2398 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: UserRoleInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model AccessLevel
+   */
+
+  export type AggregateAccessLevel = {
+    _count: AccessLevelCountAggregateOutputType | null
+    _avg: AccessLevelAvgAggregateOutputType | null
+    _sum: AccessLevelSumAggregateOutputType | null
+    _min: AccessLevelMinAggregateOutputType | null
+    _max: AccessLevelMaxAggregateOutputType | null
+  }
+
+  export type AccessLevelAvgAggregateOutputType = {
+    rank: number | null
+  }
+
+  export type AccessLevelSumAggregateOutputType = {
+    rank: number | null
+  }
+
+  export type AccessLevelMinAggregateOutputType = {
+    id: string | null
+    companyId: string | null
+    name: string | null
+    rank: number | null
+    description: string | null
+    isSystem: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    createdBy: string | null
+    updatedBy: string | null
+    deletedAt: Date | null
+    deletedBy: string | null
+  }
+
+  export type AccessLevelMaxAggregateOutputType = {
+    id: string | null
+    companyId: string | null
+    name: string | null
+    rank: number | null
+    description: string | null
+    isSystem: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    createdBy: string | null
+    updatedBy: string | null
+    deletedAt: Date | null
+    deletedBy: string | null
+  }
+
+  export type AccessLevelCountAggregateOutputType = {
+    id: number
+    companyId: number
+    name: number
+    rank: number
+    description: number
+    isSystem: number
+    createdAt: number
+    updatedAt: number
+    createdBy: number
+    updatedBy: number
+    deletedAt: number
+    deletedBy: number
+    _all: number
+  }
+
+
+  export type AccessLevelAvgAggregateInputType = {
+    rank?: true
+  }
+
+  export type AccessLevelSumAggregateInputType = {
+    rank?: true
+  }
+
+  export type AccessLevelMinAggregateInputType = {
+    id?: true
+    companyId?: true
+    name?: true
+    rank?: true
+    description?: true
+    isSystem?: true
+    createdAt?: true
+    updatedAt?: true
+    createdBy?: true
+    updatedBy?: true
+    deletedAt?: true
+    deletedBy?: true
+  }
+
+  export type AccessLevelMaxAggregateInputType = {
+    id?: true
+    companyId?: true
+    name?: true
+    rank?: true
+    description?: true
+    isSystem?: true
+    createdAt?: true
+    updatedAt?: true
+    createdBy?: true
+    updatedBy?: true
+    deletedAt?: true
+    deletedBy?: true
+  }
+
+  export type AccessLevelCountAggregateInputType = {
+    id?: true
+    companyId?: true
+    name?: true
+    rank?: true
+    description?: true
+    isSystem?: true
+    createdAt?: true
+    updatedAt?: true
+    createdBy?: true
+    updatedBy?: true
+    deletedAt?: true
+    deletedBy?: true
+    _all?: true
+  }
+
+  export type AccessLevelAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which AccessLevel to aggregate.
+     */
+    where?: AccessLevelWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AccessLevels to fetch.
+     */
+    orderBy?: AccessLevelOrderByWithRelationInput | AccessLevelOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: AccessLevelWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AccessLevels from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AccessLevels.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned AccessLevels
+    **/
+    _count?: true | AccessLevelCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: AccessLevelAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: AccessLevelSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: AccessLevelMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: AccessLevelMaxAggregateInputType
+  }
+
+  export type GetAccessLevelAggregateType<T extends AccessLevelAggregateArgs> = {
+        [P in keyof T & keyof AggregateAccessLevel]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateAccessLevel[P]>
+      : GetScalarType<T[P], AggregateAccessLevel[P]>
+  }
+
+
+
+
+  export type AccessLevelGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AccessLevelWhereInput
+    orderBy?: AccessLevelOrderByWithAggregationInput | AccessLevelOrderByWithAggregationInput[]
+    by: AccessLevelScalarFieldEnum[] | AccessLevelScalarFieldEnum
+    having?: AccessLevelScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: AccessLevelCountAggregateInputType | true
+    _avg?: AccessLevelAvgAggregateInputType
+    _sum?: AccessLevelSumAggregateInputType
+    _min?: AccessLevelMinAggregateInputType
+    _max?: AccessLevelMaxAggregateInputType
+  }
+
+  export type AccessLevelGroupByOutputType = {
+    id: string
+    companyId: string
+    name: string
+    rank: number
+    description: string | null
+    isSystem: boolean
+    createdAt: Date
+    updatedAt: Date
+    createdBy: string | null
+    updatedBy: string | null
+    deletedAt: Date | null
+    deletedBy: string | null
+    _count: AccessLevelCountAggregateOutputType | null
+    _avg: AccessLevelAvgAggregateOutputType | null
+    _sum: AccessLevelSumAggregateOutputType | null
+    _min: AccessLevelMinAggregateOutputType | null
+    _max: AccessLevelMaxAggregateOutputType | null
+  }
+
+  type GetAccessLevelGroupByPayload<T extends AccessLevelGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<AccessLevelGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof AccessLevelGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], AccessLevelGroupByOutputType[P]>
+            : GetScalarType<T[P], AccessLevelGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type AccessLevelSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    companyId?: boolean
+    name?: boolean
+    rank?: boolean
+    description?: boolean
+    isSystem?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    createdBy?: boolean
+    updatedBy?: boolean
+    deletedAt?: boolean
+    deletedBy?: boolean
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+    users?: boolean | AccessLevel$usersArgs<ExtArgs>
+    _count?: boolean | AccessLevelCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["accessLevel"]>
+
+  export type AccessLevelSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    companyId?: boolean
+    name?: boolean
+    rank?: boolean
+    description?: boolean
+    isSystem?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    createdBy?: boolean
+    updatedBy?: boolean
+    deletedAt?: boolean
+    deletedBy?: boolean
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["accessLevel"]>
+
+  export type AccessLevelSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    companyId?: boolean
+    name?: boolean
+    rank?: boolean
+    description?: boolean
+    isSystem?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    createdBy?: boolean
+    updatedBy?: boolean
+    deletedAt?: boolean
+    deletedBy?: boolean
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["accessLevel"]>
+
+  export type AccessLevelSelectScalar = {
+    id?: boolean
+    companyId?: boolean
+    name?: boolean
+    rank?: boolean
+    description?: boolean
+    isSystem?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    createdBy?: boolean
+    updatedBy?: boolean
+    deletedAt?: boolean
+    deletedBy?: boolean
+  }
+
+  export type AccessLevelOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "companyId" | "name" | "rank" | "description" | "isSystem" | "createdAt" | "updatedAt" | "createdBy" | "updatedBy" | "deletedAt" | "deletedBy", ExtArgs["result"]["accessLevel"]>
+  export type AccessLevelInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+    users?: boolean | AccessLevel$usersArgs<ExtArgs>
+    _count?: boolean | AccessLevelCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type AccessLevelIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+  }
+  export type AccessLevelIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+  }
+
+  export type $AccessLevelPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "AccessLevel"
+    objects: {
+      company: Prisma.$CompanyPayload<ExtArgs>
+      users: Prisma.$UserPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      companyId: string
+      name: string
+      rank: number
+      description: string | null
+      isSystem: boolean
+      createdAt: Date
+      updatedAt: Date
+      createdBy: string | null
+      updatedBy: string | null
+      deletedAt: Date | null
+      deletedBy: string | null
+    }, ExtArgs["result"]["accessLevel"]>
+    composites: {}
+  }
+
+  type AccessLevelGetPayload<S extends boolean | null | undefined | AccessLevelDefaultArgs> = $Result.GetResult<Prisma.$AccessLevelPayload, S>
+
+  type AccessLevelCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<AccessLevelFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: AccessLevelCountAggregateInputType | true
+    }
+
+  export interface AccessLevelDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['AccessLevel'], meta: { name: 'AccessLevel' } }
+    /**
+     * Find zero or one AccessLevel that matches the filter.
+     * @param {AccessLevelFindUniqueArgs} args - Arguments to find a AccessLevel
+     * @example
+     * // Get one AccessLevel
+     * const accessLevel = await prisma.accessLevel.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends AccessLevelFindUniqueArgs>(args: SelectSubset<T, AccessLevelFindUniqueArgs<ExtArgs>>): Prisma__AccessLevelClient<$Result.GetResult<Prisma.$AccessLevelPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one AccessLevel that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {AccessLevelFindUniqueOrThrowArgs} args - Arguments to find a AccessLevel
+     * @example
+     * // Get one AccessLevel
+     * const accessLevel = await prisma.accessLevel.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends AccessLevelFindUniqueOrThrowArgs>(args: SelectSubset<T, AccessLevelFindUniqueOrThrowArgs<ExtArgs>>): Prisma__AccessLevelClient<$Result.GetResult<Prisma.$AccessLevelPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first AccessLevel that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AccessLevelFindFirstArgs} args - Arguments to find a AccessLevel
+     * @example
+     * // Get one AccessLevel
+     * const accessLevel = await prisma.accessLevel.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends AccessLevelFindFirstArgs>(args?: SelectSubset<T, AccessLevelFindFirstArgs<ExtArgs>>): Prisma__AccessLevelClient<$Result.GetResult<Prisma.$AccessLevelPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first AccessLevel that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AccessLevelFindFirstOrThrowArgs} args - Arguments to find a AccessLevel
+     * @example
+     * // Get one AccessLevel
+     * const accessLevel = await prisma.accessLevel.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends AccessLevelFindFirstOrThrowArgs>(args?: SelectSubset<T, AccessLevelFindFirstOrThrowArgs<ExtArgs>>): Prisma__AccessLevelClient<$Result.GetResult<Prisma.$AccessLevelPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more AccessLevels that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AccessLevelFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all AccessLevels
+     * const accessLevels = await prisma.accessLevel.findMany()
+     * 
+     * // Get first 10 AccessLevels
+     * const accessLevels = await prisma.accessLevel.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const accessLevelWithIdOnly = await prisma.accessLevel.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends AccessLevelFindManyArgs>(args?: SelectSubset<T, AccessLevelFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AccessLevelPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a AccessLevel.
+     * @param {AccessLevelCreateArgs} args - Arguments to create a AccessLevel.
+     * @example
+     * // Create one AccessLevel
+     * const AccessLevel = await prisma.accessLevel.create({
+     *   data: {
+     *     // ... data to create a AccessLevel
+     *   }
+     * })
+     * 
+     */
+    create<T extends AccessLevelCreateArgs>(args: SelectSubset<T, AccessLevelCreateArgs<ExtArgs>>): Prisma__AccessLevelClient<$Result.GetResult<Prisma.$AccessLevelPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many AccessLevels.
+     * @param {AccessLevelCreateManyArgs} args - Arguments to create many AccessLevels.
+     * @example
+     * // Create many AccessLevels
+     * const accessLevel = await prisma.accessLevel.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends AccessLevelCreateManyArgs>(args?: SelectSubset<T, AccessLevelCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many AccessLevels and returns the data saved in the database.
+     * @param {AccessLevelCreateManyAndReturnArgs} args - Arguments to create many AccessLevels.
+     * @example
+     * // Create many AccessLevels
+     * const accessLevel = await prisma.accessLevel.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many AccessLevels and only return the `id`
+     * const accessLevelWithIdOnly = await prisma.accessLevel.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends AccessLevelCreateManyAndReturnArgs>(args?: SelectSubset<T, AccessLevelCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AccessLevelPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a AccessLevel.
+     * @param {AccessLevelDeleteArgs} args - Arguments to delete one AccessLevel.
+     * @example
+     * // Delete one AccessLevel
+     * const AccessLevel = await prisma.accessLevel.delete({
+     *   where: {
+     *     // ... filter to delete one AccessLevel
+     *   }
+     * })
+     * 
+     */
+    delete<T extends AccessLevelDeleteArgs>(args: SelectSubset<T, AccessLevelDeleteArgs<ExtArgs>>): Prisma__AccessLevelClient<$Result.GetResult<Prisma.$AccessLevelPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one AccessLevel.
+     * @param {AccessLevelUpdateArgs} args - Arguments to update one AccessLevel.
+     * @example
+     * // Update one AccessLevel
+     * const accessLevel = await prisma.accessLevel.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends AccessLevelUpdateArgs>(args: SelectSubset<T, AccessLevelUpdateArgs<ExtArgs>>): Prisma__AccessLevelClient<$Result.GetResult<Prisma.$AccessLevelPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more AccessLevels.
+     * @param {AccessLevelDeleteManyArgs} args - Arguments to filter AccessLevels to delete.
+     * @example
+     * // Delete a few AccessLevels
+     * const { count } = await prisma.accessLevel.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends AccessLevelDeleteManyArgs>(args?: SelectSubset<T, AccessLevelDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more AccessLevels.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AccessLevelUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many AccessLevels
+     * const accessLevel = await prisma.accessLevel.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends AccessLevelUpdateManyArgs>(args: SelectSubset<T, AccessLevelUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more AccessLevels and returns the data updated in the database.
+     * @param {AccessLevelUpdateManyAndReturnArgs} args - Arguments to update many AccessLevels.
+     * @example
+     * // Update many AccessLevels
+     * const accessLevel = await prisma.accessLevel.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more AccessLevels and only return the `id`
+     * const accessLevelWithIdOnly = await prisma.accessLevel.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends AccessLevelUpdateManyAndReturnArgs>(args: SelectSubset<T, AccessLevelUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AccessLevelPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one AccessLevel.
+     * @param {AccessLevelUpsertArgs} args - Arguments to update or create a AccessLevel.
+     * @example
+     * // Update or create a AccessLevel
+     * const accessLevel = await prisma.accessLevel.upsert({
+     *   create: {
+     *     // ... data to create a AccessLevel
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the AccessLevel we want to update
+     *   }
+     * })
+     */
+    upsert<T extends AccessLevelUpsertArgs>(args: SelectSubset<T, AccessLevelUpsertArgs<ExtArgs>>): Prisma__AccessLevelClient<$Result.GetResult<Prisma.$AccessLevelPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of AccessLevels.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AccessLevelCountArgs} args - Arguments to filter AccessLevels to count.
+     * @example
+     * // Count the number of AccessLevels
+     * const count = await prisma.accessLevel.count({
+     *   where: {
+     *     // ... the filter for the AccessLevels we want to count
+     *   }
+     * })
+    **/
+    count<T extends AccessLevelCountArgs>(
+      args?: Subset<T, AccessLevelCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], AccessLevelCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a AccessLevel.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AccessLevelAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends AccessLevelAggregateArgs>(args: Subset<T, AccessLevelAggregateArgs>): Prisma.PrismaPromise<GetAccessLevelAggregateType<T>>
+
+    /**
+     * Group by AccessLevel.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AccessLevelGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends AccessLevelGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: AccessLevelGroupByArgs['orderBy'] }
+        : { orderBy?: AccessLevelGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, AccessLevelGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetAccessLevelGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the AccessLevel model
+   */
+  readonly fields: AccessLevelFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for AccessLevel.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__AccessLevelClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    company<T extends CompanyDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CompanyDefaultArgs<ExtArgs>>): Prisma__CompanyClient<$Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    users<T extends AccessLevel$usersArgs<ExtArgs> = {}>(args?: Subset<T, AccessLevel$usersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the AccessLevel model
+   */
+  interface AccessLevelFieldRefs {
+    readonly id: FieldRef<"AccessLevel", 'String'>
+    readonly companyId: FieldRef<"AccessLevel", 'String'>
+    readonly name: FieldRef<"AccessLevel", 'String'>
+    readonly rank: FieldRef<"AccessLevel", 'Int'>
+    readonly description: FieldRef<"AccessLevel", 'String'>
+    readonly isSystem: FieldRef<"AccessLevel", 'Boolean'>
+    readonly createdAt: FieldRef<"AccessLevel", 'DateTime'>
+    readonly updatedAt: FieldRef<"AccessLevel", 'DateTime'>
+    readonly createdBy: FieldRef<"AccessLevel", 'String'>
+    readonly updatedBy: FieldRef<"AccessLevel", 'String'>
+    readonly deletedAt: FieldRef<"AccessLevel", 'DateTime'>
+    readonly deletedBy: FieldRef<"AccessLevel", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * AccessLevel findUnique
+   */
+  export type AccessLevelFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AccessLevel
+     */
+    select?: AccessLevelSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AccessLevel
+     */
+    omit?: AccessLevelOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AccessLevelInclude<ExtArgs> | null
+    /**
+     * Filter, which AccessLevel to fetch.
+     */
+    where: AccessLevelWhereUniqueInput
+  }
+
+  /**
+   * AccessLevel findUniqueOrThrow
+   */
+  export type AccessLevelFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AccessLevel
+     */
+    select?: AccessLevelSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AccessLevel
+     */
+    omit?: AccessLevelOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AccessLevelInclude<ExtArgs> | null
+    /**
+     * Filter, which AccessLevel to fetch.
+     */
+    where: AccessLevelWhereUniqueInput
+  }
+
+  /**
+   * AccessLevel findFirst
+   */
+  export type AccessLevelFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AccessLevel
+     */
+    select?: AccessLevelSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AccessLevel
+     */
+    omit?: AccessLevelOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AccessLevelInclude<ExtArgs> | null
+    /**
+     * Filter, which AccessLevel to fetch.
+     */
+    where?: AccessLevelWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AccessLevels to fetch.
+     */
+    orderBy?: AccessLevelOrderByWithRelationInput | AccessLevelOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for AccessLevels.
+     */
+    cursor?: AccessLevelWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AccessLevels from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AccessLevels.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of AccessLevels.
+     */
+    distinct?: AccessLevelScalarFieldEnum | AccessLevelScalarFieldEnum[]
+  }
+
+  /**
+   * AccessLevel findFirstOrThrow
+   */
+  export type AccessLevelFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AccessLevel
+     */
+    select?: AccessLevelSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AccessLevel
+     */
+    omit?: AccessLevelOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AccessLevelInclude<ExtArgs> | null
+    /**
+     * Filter, which AccessLevel to fetch.
+     */
+    where?: AccessLevelWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AccessLevels to fetch.
+     */
+    orderBy?: AccessLevelOrderByWithRelationInput | AccessLevelOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for AccessLevels.
+     */
+    cursor?: AccessLevelWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AccessLevels from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AccessLevels.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of AccessLevels.
+     */
+    distinct?: AccessLevelScalarFieldEnum | AccessLevelScalarFieldEnum[]
+  }
+
+  /**
+   * AccessLevel findMany
+   */
+  export type AccessLevelFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AccessLevel
+     */
+    select?: AccessLevelSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AccessLevel
+     */
+    omit?: AccessLevelOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AccessLevelInclude<ExtArgs> | null
+    /**
+     * Filter, which AccessLevels to fetch.
+     */
+    where?: AccessLevelWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AccessLevels to fetch.
+     */
+    orderBy?: AccessLevelOrderByWithRelationInput | AccessLevelOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing AccessLevels.
+     */
+    cursor?: AccessLevelWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AccessLevels from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AccessLevels.
+     */
+    skip?: number
+    distinct?: AccessLevelScalarFieldEnum | AccessLevelScalarFieldEnum[]
+  }
+
+  /**
+   * AccessLevel create
+   */
+  export type AccessLevelCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AccessLevel
+     */
+    select?: AccessLevelSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AccessLevel
+     */
+    omit?: AccessLevelOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AccessLevelInclude<ExtArgs> | null
+    /**
+     * The data needed to create a AccessLevel.
+     */
+    data: XOR<AccessLevelCreateInput, AccessLevelUncheckedCreateInput>
+  }
+
+  /**
+   * AccessLevel createMany
+   */
+  export type AccessLevelCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many AccessLevels.
+     */
+    data: AccessLevelCreateManyInput | AccessLevelCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * AccessLevel createManyAndReturn
+   */
+  export type AccessLevelCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AccessLevel
+     */
+    select?: AccessLevelSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the AccessLevel
+     */
+    omit?: AccessLevelOmit<ExtArgs> | null
+    /**
+     * The data used to create many AccessLevels.
+     */
+    data: AccessLevelCreateManyInput | AccessLevelCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AccessLevelIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * AccessLevel update
+   */
+  export type AccessLevelUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AccessLevel
+     */
+    select?: AccessLevelSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AccessLevel
+     */
+    omit?: AccessLevelOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AccessLevelInclude<ExtArgs> | null
+    /**
+     * The data needed to update a AccessLevel.
+     */
+    data: XOR<AccessLevelUpdateInput, AccessLevelUncheckedUpdateInput>
+    /**
+     * Choose, which AccessLevel to update.
+     */
+    where: AccessLevelWhereUniqueInput
+  }
+
+  /**
+   * AccessLevel updateMany
+   */
+  export type AccessLevelUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update AccessLevels.
+     */
+    data: XOR<AccessLevelUpdateManyMutationInput, AccessLevelUncheckedUpdateManyInput>
+    /**
+     * Filter which AccessLevels to update
+     */
+    where?: AccessLevelWhereInput
+    /**
+     * Limit how many AccessLevels to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * AccessLevel updateManyAndReturn
+   */
+  export type AccessLevelUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AccessLevel
+     */
+    select?: AccessLevelSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the AccessLevel
+     */
+    omit?: AccessLevelOmit<ExtArgs> | null
+    /**
+     * The data used to update AccessLevels.
+     */
+    data: XOR<AccessLevelUpdateManyMutationInput, AccessLevelUncheckedUpdateManyInput>
+    /**
+     * Filter which AccessLevels to update
+     */
+    where?: AccessLevelWhereInput
+    /**
+     * Limit how many AccessLevels to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AccessLevelIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * AccessLevel upsert
+   */
+  export type AccessLevelUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AccessLevel
+     */
+    select?: AccessLevelSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AccessLevel
+     */
+    omit?: AccessLevelOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AccessLevelInclude<ExtArgs> | null
+    /**
+     * The filter to search for the AccessLevel to update in case it exists.
+     */
+    where: AccessLevelWhereUniqueInput
+    /**
+     * In case the AccessLevel found by the `where` argument doesn't exist, create a new AccessLevel with this data.
+     */
+    create: XOR<AccessLevelCreateInput, AccessLevelUncheckedCreateInput>
+    /**
+     * In case the AccessLevel was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<AccessLevelUpdateInput, AccessLevelUncheckedUpdateInput>
+  }
+
+  /**
+   * AccessLevel delete
+   */
+  export type AccessLevelDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AccessLevel
+     */
+    select?: AccessLevelSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AccessLevel
+     */
+    omit?: AccessLevelOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AccessLevelInclude<ExtArgs> | null
+    /**
+     * Filter which AccessLevel to delete.
+     */
+    where: AccessLevelWhereUniqueInput
+  }
+
+  /**
+   * AccessLevel deleteMany
+   */
+  export type AccessLevelDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which AccessLevels to delete
+     */
+    where?: AccessLevelWhereInput
+    /**
+     * Limit how many AccessLevels to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * AccessLevel.users
+   */
+  export type AccessLevel$usersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+    orderBy?: UserOrderByWithRelationInput | UserOrderByWithRelationInput[]
+    cursor?: UserWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: UserScalarFieldEnum | UserScalarFieldEnum[]
+  }
+
+  /**
+   * AccessLevel without action
+   */
+  export type AccessLevelDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AccessLevel
+     */
+    select?: AccessLevelSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AccessLevel
+     */
+    omit?: AccessLevelOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AccessLevelInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model Department
+   */
+
+  export type AggregateDepartment = {
+    _count: DepartmentCountAggregateOutputType | null
+    _min: DepartmentMinAggregateOutputType | null
+    _max: DepartmentMaxAggregateOutputType | null
+  }
+
+  export type DepartmentMinAggregateOutputType = {
+    id: string | null
+    companyId: string | null
+    name: string | null
+    side: $Enums.DepartmentSide | null
+    description: string | null
+    isSystem: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    createdBy: string | null
+    updatedBy: string | null
+    deletedAt: Date | null
+    deletedBy: string | null
+  }
+
+  export type DepartmentMaxAggregateOutputType = {
+    id: string | null
+    companyId: string | null
+    name: string | null
+    side: $Enums.DepartmentSide | null
+    description: string | null
+    isSystem: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    createdBy: string | null
+    updatedBy: string | null
+    deletedAt: Date | null
+    deletedBy: string | null
+  }
+
+  export type DepartmentCountAggregateOutputType = {
+    id: number
+    companyId: number
+    name: number
+    side: number
+    description: number
+    isSystem: number
+    createdAt: number
+    updatedAt: number
+    createdBy: number
+    updatedBy: number
+    deletedAt: number
+    deletedBy: number
+    _all: number
+  }
+
+
+  export type DepartmentMinAggregateInputType = {
+    id?: true
+    companyId?: true
+    name?: true
+    side?: true
+    description?: true
+    isSystem?: true
+    createdAt?: true
+    updatedAt?: true
+    createdBy?: true
+    updatedBy?: true
+    deletedAt?: true
+    deletedBy?: true
+  }
+
+  export type DepartmentMaxAggregateInputType = {
+    id?: true
+    companyId?: true
+    name?: true
+    side?: true
+    description?: true
+    isSystem?: true
+    createdAt?: true
+    updatedAt?: true
+    createdBy?: true
+    updatedBy?: true
+    deletedAt?: true
+    deletedBy?: true
+  }
+
+  export type DepartmentCountAggregateInputType = {
+    id?: true
+    companyId?: true
+    name?: true
+    side?: true
+    description?: true
+    isSystem?: true
+    createdAt?: true
+    updatedAt?: true
+    createdBy?: true
+    updatedBy?: true
+    deletedAt?: true
+    deletedBy?: true
+    _all?: true
+  }
+
+  export type DepartmentAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Department to aggregate.
+     */
+    where?: DepartmentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Departments to fetch.
+     */
+    orderBy?: DepartmentOrderByWithRelationInput | DepartmentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: DepartmentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Departments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Departments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Departments
+    **/
+    _count?: true | DepartmentCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: DepartmentMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: DepartmentMaxAggregateInputType
+  }
+
+  export type GetDepartmentAggregateType<T extends DepartmentAggregateArgs> = {
+        [P in keyof T & keyof AggregateDepartment]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateDepartment[P]>
+      : GetScalarType<T[P], AggregateDepartment[P]>
+  }
+
+
+
+
+  export type DepartmentGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DepartmentWhereInput
+    orderBy?: DepartmentOrderByWithAggregationInput | DepartmentOrderByWithAggregationInput[]
+    by: DepartmentScalarFieldEnum[] | DepartmentScalarFieldEnum
+    having?: DepartmentScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: DepartmentCountAggregateInputType | true
+    _min?: DepartmentMinAggregateInputType
+    _max?: DepartmentMaxAggregateInputType
+  }
+
+  export type DepartmentGroupByOutputType = {
+    id: string
+    companyId: string
+    name: string
+    side: $Enums.DepartmentSide
+    description: string | null
+    isSystem: boolean
+    createdAt: Date
+    updatedAt: Date
+    createdBy: string | null
+    updatedBy: string | null
+    deletedAt: Date | null
+    deletedBy: string | null
+    _count: DepartmentCountAggregateOutputType | null
+    _min: DepartmentMinAggregateOutputType | null
+    _max: DepartmentMaxAggregateOutputType | null
+  }
+
+  type GetDepartmentGroupByPayload<T extends DepartmentGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<DepartmentGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof DepartmentGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], DepartmentGroupByOutputType[P]>
+            : GetScalarType<T[P], DepartmentGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type DepartmentSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    companyId?: boolean
+    name?: boolean
+    side?: boolean
+    description?: boolean
+    isSystem?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    createdBy?: boolean
+    updatedBy?: boolean
+    deletedAt?: boolean
+    deletedBy?: boolean
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+    users?: boolean | Department$usersArgs<ExtArgs>
+    _count?: boolean | DepartmentCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["department"]>
+
+  export type DepartmentSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    companyId?: boolean
+    name?: boolean
+    side?: boolean
+    description?: boolean
+    isSystem?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    createdBy?: boolean
+    updatedBy?: boolean
+    deletedAt?: boolean
+    deletedBy?: boolean
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["department"]>
+
+  export type DepartmentSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    companyId?: boolean
+    name?: boolean
+    side?: boolean
+    description?: boolean
+    isSystem?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    createdBy?: boolean
+    updatedBy?: boolean
+    deletedAt?: boolean
+    deletedBy?: boolean
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["department"]>
+
+  export type DepartmentSelectScalar = {
+    id?: boolean
+    companyId?: boolean
+    name?: boolean
+    side?: boolean
+    description?: boolean
+    isSystem?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    createdBy?: boolean
+    updatedBy?: boolean
+    deletedAt?: boolean
+    deletedBy?: boolean
+  }
+
+  export type DepartmentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "companyId" | "name" | "side" | "description" | "isSystem" | "createdAt" | "updatedAt" | "createdBy" | "updatedBy" | "deletedAt" | "deletedBy", ExtArgs["result"]["department"]>
+  export type DepartmentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+    users?: boolean | Department$usersArgs<ExtArgs>
+    _count?: boolean | DepartmentCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type DepartmentIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+  }
+  export type DepartmentIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+  }
+
+  export type $DepartmentPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Department"
+    objects: {
+      company: Prisma.$CompanyPayload<ExtArgs>
+      users: Prisma.$UserPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      companyId: string
+      name: string
+      side: $Enums.DepartmentSide
+      description: string | null
+      isSystem: boolean
+      createdAt: Date
+      updatedAt: Date
+      createdBy: string | null
+      updatedBy: string | null
+      deletedAt: Date | null
+      deletedBy: string | null
+    }, ExtArgs["result"]["department"]>
+    composites: {}
+  }
+
+  type DepartmentGetPayload<S extends boolean | null | undefined | DepartmentDefaultArgs> = $Result.GetResult<Prisma.$DepartmentPayload, S>
+
+  type DepartmentCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<DepartmentFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: DepartmentCountAggregateInputType | true
+    }
+
+  export interface DepartmentDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Department'], meta: { name: 'Department' } }
+    /**
+     * Find zero or one Department that matches the filter.
+     * @param {DepartmentFindUniqueArgs} args - Arguments to find a Department
+     * @example
+     * // Get one Department
+     * const department = await prisma.department.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends DepartmentFindUniqueArgs>(args: SelectSubset<T, DepartmentFindUniqueArgs<ExtArgs>>): Prisma__DepartmentClient<$Result.GetResult<Prisma.$DepartmentPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Department that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {DepartmentFindUniqueOrThrowArgs} args - Arguments to find a Department
+     * @example
+     * // Get one Department
+     * const department = await prisma.department.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends DepartmentFindUniqueOrThrowArgs>(args: SelectSubset<T, DepartmentFindUniqueOrThrowArgs<ExtArgs>>): Prisma__DepartmentClient<$Result.GetResult<Prisma.$DepartmentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Department that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DepartmentFindFirstArgs} args - Arguments to find a Department
+     * @example
+     * // Get one Department
+     * const department = await prisma.department.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends DepartmentFindFirstArgs>(args?: SelectSubset<T, DepartmentFindFirstArgs<ExtArgs>>): Prisma__DepartmentClient<$Result.GetResult<Prisma.$DepartmentPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Department that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DepartmentFindFirstOrThrowArgs} args - Arguments to find a Department
+     * @example
+     * // Get one Department
+     * const department = await prisma.department.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends DepartmentFindFirstOrThrowArgs>(args?: SelectSubset<T, DepartmentFindFirstOrThrowArgs<ExtArgs>>): Prisma__DepartmentClient<$Result.GetResult<Prisma.$DepartmentPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Departments that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DepartmentFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Departments
+     * const departments = await prisma.department.findMany()
+     * 
+     * // Get first 10 Departments
+     * const departments = await prisma.department.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const departmentWithIdOnly = await prisma.department.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends DepartmentFindManyArgs>(args?: SelectSubset<T, DepartmentFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DepartmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Department.
+     * @param {DepartmentCreateArgs} args - Arguments to create a Department.
+     * @example
+     * // Create one Department
+     * const Department = await prisma.department.create({
+     *   data: {
+     *     // ... data to create a Department
+     *   }
+     * })
+     * 
+     */
+    create<T extends DepartmentCreateArgs>(args: SelectSubset<T, DepartmentCreateArgs<ExtArgs>>): Prisma__DepartmentClient<$Result.GetResult<Prisma.$DepartmentPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Departments.
+     * @param {DepartmentCreateManyArgs} args - Arguments to create many Departments.
+     * @example
+     * // Create many Departments
+     * const department = await prisma.department.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends DepartmentCreateManyArgs>(args?: SelectSubset<T, DepartmentCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Departments and returns the data saved in the database.
+     * @param {DepartmentCreateManyAndReturnArgs} args - Arguments to create many Departments.
+     * @example
+     * // Create many Departments
+     * const department = await prisma.department.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Departments and only return the `id`
+     * const departmentWithIdOnly = await prisma.department.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends DepartmentCreateManyAndReturnArgs>(args?: SelectSubset<T, DepartmentCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DepartmentPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Department.
+     * @param {DepartmentDeleteArgs} args - Arguments to delete one Department.
+     * @example
+     * // Delete one Department
+     * const Department = await prisma.department.delete({
+     *   where: {
+     *     // ... filter to delete one Department
+     *   }
+     * })
+     * 
+     */
+    delete<T extends DepartmentDeleteArgs>(args: SelectSubset<T, DepartmentDeleteArgs<ExtArgs>>): Prisma__DepartmentClient<$Result.GetResult<Prisma.$DepartmentPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Department.
+     * @param {DepartmentUpdateArgs} args - Arguments to update one Department.
+     * @example
+     * // Update one Department
+     * const department = await prisma.department.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends DepartmentUpdateArgs>(args: SelectSubset<T, DepartmentUpdateArgs<ExtArgs>>): Prisma__DepartmentClient<$Result.GetResult<Prisma.$DepartmentPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Departments.
+     * @param {DepartmentDeleteManyArgs} args - Arguments to filter Departments to delete.
+     * @example
+     * // Delete a few Departments
+     * const { count } = await prisma.department.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends DepartmentDeleteManyArgs>(args?: SelectSubset<T, DepartmentDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Departments.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DepartmentUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Departments
+     * const department = await prisma.department.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends DepartmentUpdateManyArgs>(args: SelectSubset<T, DepartmentUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Departments and returns the data updated in the database.
+     * @param {DepartmentUpdateManyAndReturnArgs} args - Arguments to update many Departments.
+     * @example
+     * // Update many Departments
+     * const department = await prisma.department.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Departments and only return the `id`
+     * const departmentWithIdOnly = await prisma.department.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends DepartmentUpdateManyAndReturnArgs>(args: SelectSubset<T, DepartmentUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DepartmentPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Department.
+     * @param {DepartmentUpsertArgs} args - Arguments to update or create a Department.
+     * @example
+     * // Update or create a Department
+     * const department = await prisma.department.upsert({
+     *   create: {
+     *     // ... data to create a Department
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Department we want to update
+     *   }
+     * })
+     */
+    upsert<T extends DepartmentUpsertArgs>(args: SelectSubset<T, DepartmentUpsertArgs<ExtArgs>>): Prisma__DepartmentClient<$Result.GetResult<Prisma.$DepartmentPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Departments.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DepartmentCountArgs} args - Arguments to filter Departments to count.
+     * @example
+     * // Count the number of Departments
+     * const count = await prisma.department.count({
+     *   where: {
+     *     // ... the filter for the Departments we want to count
+     *   }
+     * })
+    **/
+    count<T extends DepartmentCountArgs>(
+      args?: Subset<T, DepartmentCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], DepartmentCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Department.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DepartmentAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends DepartmentAggregateArgs>(args: Subset<T, DepartmentAggregateArgs>): Prisma.PrismaPromise<GetDepartmentAggregateType<T>>
+
+    /**
+     * Group by Department.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DepartmentGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends DepartmentGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: DepartmentGroupByArgs['orderBy'] }
+        : { orderBy?: DepartmentGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, DepartmentGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetDepartmentGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Department model
+   */
+  readonly fields: DepartmentFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Department.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__DepartmentClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    company<T extends CompanyDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CompanyDefaultArgs<ExtArgs>>): Prisma__CompanyClient<$Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    users<T extends Department$usersArgs<ExtArgs> = {}>(args?: Subset<T, Department$usersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Department model
+   */
+  interface DepartmentFieldRefs {
+    readonly id: FieldRef<"Department", 'String'>
+    readonly companyId: FieldRef<"Department", 'String'>
+    readonly name: FieldRef<"Department", 'String'>
+    readonly side: FieldRef<"Department", 'DepartmentSide'>
+    readonly description: FieldRef<"Department", 'String'>
+    readonly isSystem: FieldRef<"Department", 'Boolean'>
+    readonly createdAt: FieldRef<"Department", 'DateTime'>
+    readonly updatedAt: FieldRef<"Department", 'DateTime'>
+    readonly createdBy: FieldRef<"Department", 'String'>
+    readonly updatedBy: FieldRef<"Department", 'String'>
+    readonly deletedAt: FieldRef<"Department", 'DateTime'>
+    readonly deletedBy: FieldRef<"Department", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Department findUnique
+   */
+  export type DepartmentFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Department
+     */
+    select?: DepartmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Department
+     */
+    omit?: DepartmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentInclude<ExtArgs> | null
+    /**
+     * Filter, which Department to fetch.
+     */
+    where: DepartmentWhereUniqueInput
+  }
+
+  /**
+   * Department findUniqueOrThrow
+   */
+  export type DepartmentFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Department
+     */
+    select?: DepartmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Department
+     */
+    omit?: DepartmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentInclude<ExtArgs> | null
+    /**
+     * Filter, which Department to fetch.
+     */
+    where: DepartmentWhereUniqueInput
+  }
+
+  /**
+   * Department findFirst
+   */
+  export type DepartmentFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Department
+     */
+    select?: DepartmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Department
+     */
+    omit?: DepartmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentInclude<ExtArgs> | null
+    /**
+     * Filter, which Department to fetch.
+     */
+    where?: DepartmentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Departments to fetch.
+     */
+    orderBy?: DepartmentOrderByWithRelationInput | DepartmentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Departments.
+     */
+    cursor?: DepartmentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Departments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Departments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Departments.
+     */
+    distinct?: DepartmentScalarFieldEnum | DepartmentScalarFieldEnum[]
+  }
+
+  /**
+   * Department findFirstOrThrow
+   */
+  export type DepartmentFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Department
+     */
+    select?: DepartmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Department
+     */
+    omit?: DepartmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentInclude<ExtArgs> | null
+    /**
+     * Filter, which Department to fetch.
+     */
+    where?: DepartmentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Departments to fetch.
+     */
+    orderBy?: DepartmentOrderByWithRelationInput | DepartmentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Departments.
+     */
+    cursor?: DepartmentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Departments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Departments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Departments.
+     */
+    distinct?: DepartmentScalarFieldEnum | DepartmentScalarFieldEnum[]
+  }
+
+  /**
+   * Department findMany
+   */
+  export type DepartmentFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Department
+     */
+    select?: DepartmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Department
+     */
+    omit?: DepartmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentInclude<ExtArgs> | null
+    /**
+     * Filter, which Departments to fetch.
+     */
+    where?: DepartmentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Departments to fetch.
+     */
+    orderBy?: DepartmentOrderByWithRelationInput | DepartmentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Departments.
+     */
+    cursor?: DepartmentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Departments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Departments.
+     */
+    skip?: number
+    distinct?: DepartmentScalarFieldEnum | DepartmentScalarFieldEnum[]
+  }
+
+  /**
+   * Department create
+   */
+  export type DepartmentCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Department
+     */
+    select?: DepartmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Department
+     */
+    omit?: DepartmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Department.
+     */
+    data: XOR<DepartmentCreateInput, DepartmentUncheckedCreateInput>
+  }
+
+  /**
+   * Department createMany
+   */
+  export type DepartmentCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Departments.
+     */
+    data: DepartmentCreateManyInput | DepartmentCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Department createManyAndReturn
+   */
+  export type DepartmentCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Department
+     */
+    select?: DepartmentSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Department
+     */
+    omit?: DepartmentOmit<ExtArgs> | null
+    /**
+     * The data used to create many Departments.
+     */
+    data: DepartmentCreateManyInput | DepartmentCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Department update
+   */
+  export type DepartmentUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Department
+     */
+    select?: DepartmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Department
+     */
+    omit?: DepartmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Department.
+     */
+    data: XOR<DepartmentUpdateInput, DepartmentUncheckedUpdateInput>
+    /**
+     * Choose, which Department to update.
+     */
+    where: DepartmentWhereUniqueInput
+  }
+
+  /**
+   * Department updateMany
+   */
+  export type DepartmentUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Departments.
+     */
+    data: XOR<DepartmentUpdateManyMutationInput, DepartmentUncheckedUpdateManyInput>
+    /**
+     * Filter which Departments to update
+     */
+    where?: DepartmentWhereInput
+    /**
+     * Limit how many Departments to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Department updateManyAndReturn
+   */
+  export type DepartmentUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Department
+     */
+    select?: DepartmentSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Department
+     */
+    omit?: DepartmentOmit<ExtArgs> | null
+    /**
+     * The data used to update Departments.
+     */
+    data: XOR<DepartmentUpdateManyMutationInput, DepartmentUncheckedUpdateManyInput>
+    /**
+     * Filter which Departments to update
+     */
+    where?: DepartmentWhereInput
+    /**
+     * Limit how many Departments to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Department upsert
+   */
+  export type DepartmentUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Department
+     */
+    select?: DepartmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Department
+     */
+    omit?: DepartmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Department to update in case it exists.
+     */
+    where: DepartmentWhereUniqueInput
+    /**
+     * In case the Department found by the `where` argument doesn't exist, create a new Department with this data.
+     */
+    create: XOR<DepartmentCreateInput, DepartmentUncheckedCreateInput>
+    /**
+     * In case the Department was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<DepartmentUpdateInput, DepartmentUncheckedUpdateInput>
+  }
+
+  /**
+   * Department delete
+   */
+  export type DepartmentDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Department
+     */
+    select?: DepartmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Department
+     */
+    omit?: DepartmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentInclude<ExtArgs> | null
+    /**
+     * Filter which Department to delete.
+     */
+    where: DepartmentWhereUniqueInput
+  }
+
+  /**
+   * Department deleteMany
+   */
+  export type DepartmentDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Departments to delete
+     */
+    where?: DepartmentWhereInput
+    /**
+     * Limit how many Departments to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Department.users
+   */
+  export type Department$usersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+    orderBy?: UserOrderByWithRelationInput | UserOrderByWithRelationInput[]
+    cursor?: UserWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: UserScalarFieldEnum | UserScalarFieldEnum[]
+  }
+
+  /**
+   * Department without action
+   */
+  export type DepartmentDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Department
+     */
+    select?: DepartmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Department
+     */
+    omit?: DepartmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentInclude<ExtArgs> | null
   }
 
 
@@ -110026,6 +112828,8 @@ export namespace Prisma {
     active: 'active',
     lastLoginAt: 'lastLoginAt',
     vesselId: 'vesselId',
+    accessLevelId: 'accessLevelId',
+    departmentRefId: 'departmentRefId',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
     createdBy: 'createdBy',
@@ -110074,6 +112878,42 @@ export namespace Prisma {
   };
 
   export type UserRoleScalarFieldEnum = (typeof UserRoleScalarFieldEnum)[keyof typeof UserRoleScalarFieldEnum]
+
+
+  export const AccessLevelScalarFieldEnum: {
+    id: 'id',
+    companyId: 'companyId',
+    name: 'name',
+    rank: 'rank',
+    description: 'description',
+    isSystem: 'isSystem',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+    createdBy: 'createdBy',
+    updatedBy: 'updatedBy',
+    deletedAt: 'deletedAt',
+    deletedBy: 'deletedBy'
+  };
+
+  export type AccessLevelScalarFieldEnum = (typeof AccessLevelScalarFieldEnum)[keyof typeof AccessLevelScalarFieldEnum]
+
+
+  export const DepartmentScalarFieldEnum: {
+    id: 'id',
+    companyId: 'companyId',
+    name: 'name',
+    side: 'side',
+    description: 'description',
+    isSystem: 'isSystem',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+    createdBy: 'createdBy',
+    updatedBy: 'updatedBy',
+    deletedAt: 'deletedAt',
+    deletedBy: 'deletedBy'
+  };
+
+  export type DepartmentScalarFieldEnum = (typeof DepartmentScalarFieldEnum)[keyof typeof DepartmentScalarFieldEnum]
 
 
   export const VesselScalarFieldEnum: {
@@ -111830,6 +114670,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'DepartmentSide'
+   */
+  export type EnumDepartmentSideFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DepartmentSide'>
+    
+
+
+  /**
+   * Reference to a field of type 'DepartmentSide[]'
+   */
+  export type ListEnumDepartmentSideFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DepartmentSide[]'>
+    
+
+
+  /**
    * Reference to a field of type 'VesselStatus'
    */
   export type EnumVesselStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'VesselStatus'>
@@ -112848,6 +115702,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionListRelationFilter
     unitMasters?: UnitMasterListRelationFilter
     referenceListItems?: ReferenceListItemListRelationFilter
+    accessLevels?: AccessLevelListRelationFilter
+    departments?: DepartmentListRelationFilter
   }
 
   export type CompanyOrderByWithRelationInput = {
@@ -112911,6 +115767,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionOrderByRelationAggregateInput
     unitMasters?: UnitMasterOrderByRelationAggregateInput
     referenceListItems?: ReferenceListItemOrderByRelationAggregateInput
+    accessLevels?: AccessLevelOrderByRelationAggregateInput
+    departments?: DepartmentOrderByRelationAggregateInput
   }
 
   export type CompanyWhereUniqueInput = Prisma.AtLeast<{
@@ -112977,6 +115835,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionListRelationFilter
     unitMasters?: UnitMasterListRelationFilter
     referenceListItems?: ReferenceListItemListRelationFilter
+    accessLevels?: AccessLevelListRelationFilter
+    departments?: DepartmentListRelationFilter
   }, "id" | "code">
 
   export type CompanyOrderByWithAggregationInput = {
@@ -113039,6 +115899,8 @@ export namespace Prisma {
     active?: BoolFilter<"User"> | boolean
     lastLoginAt?: DateTimeNullableFilter<"User"> | Date | string | null
     vesselId?: StringNullableFilter<"User"> | string | null
+    accessLevelId?: StringNullableFilter<"User"> | string | null
+    departmentRefId?: StringNullableFilter<"User"> | string | null
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
     createdBy?: StringNullableFilter<"User"> | string | null
@@ -113047,6 +115909,8 @@ export namespace Prisma {
     deletedBy?: StringNullableFilter<"User"> | string | null
     company?: XOR<CompanyScalarRelationFilter, CompanyWhereInput>
     vessel?: XOR<VesselNullableScalarRelationFilter, VesselWhereInput> | null
+    accessLevel?: XOR<AccessLevelNullableScalarRelationFilter, AccessLevelWhereInput> | null
+    departmentRef?: XOR<DepartmentNullableScalarRelationFilter, DepartmentWhereInput> | null
     roles?: UserRoleListRelationFilter
     ownedDocs?: SmsDocumentListRelationFilter
     reportedIncidents?: IncidentListRelationFilter
@@ -113069,6 +115933,8 @@ export namespace Prisma {
     active?: SortOrder
     lastLoginAt?: SortOrderInput | SortOrder
     vesselId?: SortOrderInput | SortOrder
+    accessLevelId?: SortOrderInput | SortOrder
+    departmentRefId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     createdBy?: SortOrderInput | SortOrder
@@ -113077,6 +115943,8 @@ export namespace Prisma {
     deletedBy?: SortOrderInput | SortOrder
     company?: CompanyOrderByWithRelationInput
     vessel?: VesselOrderByWithRelationInput
+    accessLevel?: AccessLevelOrderByWithRelationInput
+    departmentRef?: DepartmentOrderByWithRelationInput
     roles?: UserRoleOrderByRelationAggregateInput
     ownedDocs?: SmsDocumentOrderByRelationAggregateInput
     reportedIncidents?: IncidentOrderByRelationAggregateInput
@@ -113102,6 +115970,8 @@ export namespace Prisma {
     active?: BoolFilter<"User"> | boolean
     lastLoginAt?: DateTimeNullableFilter<"User"> | Date | string | null
     vesselId?: StringNullableFilter<"User"> | string | null
+    accessLevelId?: StringNullableFilter<"User"> | string | null
+    departmentRefId?: StringNullableFilter<"User"> | string | null
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
     createdBy?: StringNullableFilter<"User"> | string | null
@@ -113110,6 +115980,8 @@ export namespace Prisma {
     deletedBy?: StringNullableFilter<"User"> | string | null
     company?: XOR<CompanyScalarRelationFilter, CompanyWhereInput>
     vessel?: XOR<VesselNullableScalarRelationFilter, VesselWhereInput> | null
+    accessLevel?: XOR<AccessLevelNullableScalarRelationFilter, AccessLevelWhereInput> | null
+    departmentRef?: XOR<DepartmentNullableScalarRelationFilter, DepartmentWhereInput> | null
     roles?: UserRoleListRelationFilter
     ownedDocs?: SmsDocumentListRelationFilter
     reportedIncidents?: IncidentListRelationFilter
@@ -113132,6 +116004,8 @@ export namespace Prisma {
     active?: SortOrder
     lastLoginAt?: SortOrderInput | SortOrder
     vesselId?: SortOrderInput | SortOrder
+    accessLevelId?: SortOrderInput | SortOrder
+    departmentRefId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     createdBy?: SortOrderInput | SortOrder
@@ -113157,6 +116031,8 @@ export namespace Prisma {
     active?: BoolWithAggregatesFilter<"User"> | boolean
     lastLoginAt?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
     vesselId?: StringNullableWithAggregatesFilter<"User"> | string | null
+    accessLevelId?: StringNullableWithAggregatesFilter<"User"> | string | null
+    departmentRefId?: StringNullableWithAggregatesFilter<"User"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
     createdBy?: StringNullableWithAggregatesFilter<"User"> | string | null
@@ -113373,6 +116249,196 @@ export namespace Prisma {
     NOT?: UserRoleScalarWhereWithAggregatesInput | UserRoleScalarWhereWithAggregatesInput[]
     userId?: StringWithAggregatesFilter<"UserRole"> | string
     roleId?: StringWithAggregatesFilter<"UserRole"> | string
+  }
+
+  export type AccessLevelWhereInput = {
+    AND?: AccessLevelWhereInput | AccessLevelWhereInput[]
+    OR?: AccessLevelWhereInput[]
+    NOT?: AccessLevelWhereInput | AccessLevelWhereInput[]
+    id?: StringFilter<"AccessLevel"> | string
+    companyId?: StringFilter<"AccessLevel"> | string
+    name?: StringFilter<"AccessLevel"> | string
+    rank?: IntFilter<"AccessLevel"> | number
+    description?: StringNullableFilter<"AccessLevel"> | string | null
+    isSystem?: BoolFilter<"AccessLevel"> | boolean
+    createdAt?: DateTimeFilter<"AccessLevel"> | Date | string
+    updatedAt?: DateTimeFilter<"AccessLevel"> | Date | string
+    createdBy?: StringNullableFilter<"AccessLevel"> | string | null
+    updatedBy?: StringNullableFilter<"AccessLevel"> | string | null
+    deletedAt?: DateTimeNullableFilter<"AccessLevel"> | Date | string | null
+    deletedBy?: StringNullableFilter<"AccessLevel"> | string | null
+    company?: XOR<CompanyScalarRelationFilter, CompanyWhereInput>
+    users?: UserListRelationFilter
+  }
+
+  export type AccessLevelOrderByWithRelationInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    name?: SortOrder
+    rank?: SortOrder
+    description?: SortOrderInput | SortOrder
+    isSystem?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    createdBy?: SortOrderInput | SortOrder
+    updatedBy?: SortOrderInput | SortOrder
+    deletedAt?: SortOrderInput | SortOrder
+    deletedBy?: SortOrderInput | SortOrder
+    company?: CompanyOrderByWithRelationInput
+    users?: UserOrderByRelationAggregateInput
+  }
+
+  export type AccessLevelWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    companyId_name?: AccessLevelCompanyIdNameCompoundUniqueInput
+    AND?: AccessLevelWhereInput | AccessLevelWhereInput[]
+    OR?: AccessLevelWhereInput[]
+    NOT?: AccessLevelWhereInput | AccessLevelWhereInput[]
+    companyId?: StringFilter<"AccessLevel"> | string
+    name?: StringFilter<"AccessLevel"> | string
+    rank?: IntFilter<"AccessLevel"> | number
+    description?: StringNullableFilter<"AccessLevel"> | string | null
+    isSystem?: BoolFilter<"AccessLevel"> | boolean
+    createdAt?: DateTimeFilter<"AccessLevel"> | Date | string
+    updatedAt?: DateTimeFilter<"AccessLevel"> | Date | string
+    createdBy?: StringNullableFilter<"AccessLevel"> | string | null
+    updatedBy?: StringNullableFilter<"AccessLevel"> | string | null
+    deletedAt?: DateTimeNullableFilter<"AccessLevel"> | Date | string | null
+    deletedBy?: StringNullableFilter<"AccessLevel"> | string | null
+    company?: XOR<CompanyScalarRelationFilter, CompanyWhereInput>
+    users?: UserListRelationFilter
+  }, "id" | "companyId_name">
+
+  export type AccessLevelOrderByWithAggregationInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    name?: SortOrder
+    rank?: SortOrder
+    description?: SortOrderInput | SortOrder
+    isSystem?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    createdBy?: SortOrderInput | SortOrder
+    updatedBy?: SortOrderInput | SortOrder
+    deletedAt?: SortOrderInput | SortOrder
+    deletedBy?: SortOrderInput | SortOrder
+    _count?: AccessLevelCountOrderByAggregateInput
+    _avg?: AccessLevelAvgOrderByAggregateInput
+    _max?: AccessLevelMaxOrderByAggregateInput
+    _min?: AccessLevelMinOrderByAggregateInput
+    _sum?: AccessLevelSumOrderByAggregateInput
+  }
+
+  export type AccessLevelScalarWhereWithAggregatesInput = {
+    AND?: AccessLevelScalarWhereWithAggregatesInput | AccessLevelScalarWhereWithAggregatesInput[]
+    OR?: AccessLevelScalarWhereWithAggregatesInput[]
+    NOT?: AccessLevelScalarWhereWithAggregatesInput | AccessLevelScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"AccessLevel"> | string
+    companyId?: StringWithAggregatesFilter<"AccessLevel"> | string
+    name?: StringWithAggregatesFilter<"AccessLevel"> | string
+    rank?: IntWithAggregatesFilter<"AccessLevel"> | number
+    description?: StringNullableWithAggregatesFilter<"AccessLevel"> | string | null
+    isSystem?: BoolWithAggregatesFilter<"AccessLevel"> | boolean
+    createdAt?: DateTimeWithAggregatesFilter<"AccessLevel"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"AccessLevel"> | Date | string
+    createdBy?: StringNullableWithAggregatesFilter<"AccessLevel"> | string | null
+    updatedBy?: StringNullableWithAggregatesFilter<"AccessLevel"> | string | null
+    deletedAt?: DateTimeNullableWithAggregatesFilter<"AccessLevel"> | Date | string | null
+    deletedBy?: StringNullableWithAggregatesFilter<"AccessLevel"> | string | null
+  }
+
+  export type DepartmentWhereInput = {
+    AND?: DepartmentWhereInput | DepartmentWhereInput[]
+    OR?: DepartmentWhereInput[]
+    NOT?: DepartmentWhereInput | DepartmentWhereInput[]
+    id?: StringFilter<"Department"> | string
+    companyId?: StringFilter<"Department"> | string
+    name?: StringFilter<"Department"> | string
+    side?: EnumDepartmentSideFilter<"Department"> | $Enums.DepartmentSide
+    description?: StringNullableFilter<"Department"> | string | null
+    isSystem?: BoolFilter<"Department"> | boolean
+    createdAt?: DateTimeFilter<"Department"> | Date | string
+    updatedAt?: DateTimeFilter<"Department"> | Date | string
+    createdBy?: StringNullableFilter<"Department"> | string | null
+    updatedBy?: StringNullableFilter<"Department"> | string | null
+    deletedAt?: DateTimeNullableFilter<"Department"> | Date | string | null
+    deletedBy?: StringNullableFilter<"Department"> | string | null
+    company?: XOR<CompanyScalarRelationFilter, CompanyWhereInput>
+    users?: UserListRelationFilter
+  }
+
+  export type DepartmentOrderByWithRelationInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    name?: SortOrder
+    side?: SortOrder
+    description?: SortOrderInput | SortOrder
+    isSystem?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    createdBy?: SortOrderInput | SortOrder
+    updatedBy?: SortOrderInput | SortOrder
+    deletedAt?: SortOrderInput | SortOrder
+    deletedBy?: SortOrderInput | SortOrder
+    company?: CompanyOrderByWithRelationInput
+    users?: UserOrderByRelationAggregateInput
+  }
+
+  export type DepartmentWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    companyId_name?: DepartmentCompanyIdNameCompoundUniqueInput
+    AND?: DepartmentWhereInput | DepartmentWhereInput[]
+    OR?: DepartmentWhereInput[]
+    NOT?: DepartmentWhereInput | DepartmentWhereInput[]
+    companyId?: StringFilter<"Department"> | string
+    name?: StringFilter<"Department"> | string
+    side?: EnumDepartmentSideFilter<"Department"> | $Enums.DepartmentSide
+    description?: StringNullableFilter<"Department"> | string | null
+    isSystem?: BoolFilter<"Department"> | boolean
+    createdAt?: DateTimeFilter<"Department"> | Date | string
+    updatedAt?: DateTimeFilter<"Department"> | Date | string
+    createdBy?: StringNullableFilter<"Department"> | string | null
+    updatedBy?: StringNullableFilter<"Department"> | string | null
+    deletedAt?: DateTimeNullableFilter<"Department"> | Date | string | null
+    deletedBy?: StringNullableFilter<"Department"> | string | null
+    company?: XOR<CompanyScalarRelationFilter, CompanyWhereInput>
+    users?: UserListRelationFilter
+  }, "id" | "companyId_name">
+
+  export type DepartmentOrderByWithAggregationInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    name?: SortOrder
+    side?: SortOrder
+    description?: SortOrderInput | SortOrder
+    isSystem?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    createdBy?: SortOrderInput | SortOrder
+    updatedBy?: SortOrderInput | SortOrder
+    deletedAt?: SortOrderInput | SortOrder
+    deletedBy?: SortOrderInput | SortOrder
+    _count?: DepartmentCountOrderByAggregateInput
+    _max?: DepartmentMaxOrderByAggregateInput
+    _min?: DepartmentMinOrderByAggregateInput
+  }
+
+  export type DepartmentScalarWhereWithAggregatesInput = {
+    AND?: DepartmentScalarWhereWithAggregatesInput | DepartmentScalarWhereWithAggregatesInput[]
+    OR?: DepartmentScalarWhereWithAggregatesInput[]
+    NOT?: DepartmentScalarWhereWithAggregatesInput | DepartmentScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Department"> | string
+    companyId?: StringWithAggregatesFilter<"Department"> | string
+    name?: StringWithAggregatesFilter<"Department"> | string
+    side?: EnumDepartmentSideWithAggregatesFilter<"Department"> | $Enums.DepartmentSide
+    description?: StringNullableWithAggregatesFilter<"Department"> | string | null
+    isSystem?: BoolWithAggregatesFilter<"Department"> | boolean
+    createdAt?: DateTimeWithAggregatesFilter<"Department"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Department"> | Date | string
+    createdBy?: StringNullableWithAggregatesFilter<"Department"> | string | null
+    updatedBy?: StringNullableWithAggregatesFilter<"Department"> | string | null
+    deletedAt?: DateTimeNullableWithAggregatesFilter<"Department"> | Date | string | null
+    deletedBy?: StringNullableWithAggregatesFilter<"Department"> | string | null
   }
 
   export type VesselWhereInput = {
@@ -122003,6 +125069,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterCreateNestedManyWithoutCompanyInput
     referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
+    accessLevels?: AccessLevelCreateNestedManyWithoutCompanyInput
+    departments?: DepartmentCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateInput = {
@@ -122066,6 +125134,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUncheckedCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterUncheckedCreateNestedManyWithoutCompanyInput
     referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
+    accessLevels?: AccessLevelUncheckedCreateNestedManyWithoutCompanyInput
+    departments?: DepartmentUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUpdateInput = {
@@ -122129,6 +125199,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUpdateManyWithoutCompanyNestedInput
     referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
+    accessLevels?: AccessLevelUpdateManyWithoutCompanyNestedInput
+    departments?: DepartmentUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateInput = {
@@ -122192,6 +125264,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUncheckedUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUncheckedUpdateManyWithoutCompanyNestedInput
     referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
+    accessLevels?: AccessLevelUncheckedUpdateManyWithoutCompanyNestedInput
+    departments?: DepartmentUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyCreateManyInput = {
@@ -122268,6 +125342,8 @@ export namespace Prisma {
     deletedBy?: string | null
     company: CompanyCreateNestedOneWithoutUsersInput
     vessel?: VesselCreateNestedOneWithoutUsersInput
+    accessLevel?: AccessLevelCreateNestedOneWithoutUsersInput
+    departmentRef?: DepartmentCreateNestedOneWithoutUsersInput
     roles?: UserRoleCreateNestedManyWithoutUserInput
     ownedDocs?: SmsDocumentCreateNestedManyWithoutOwnerInput
     reportedIncidents?: IncidentCreateNestedManyWithoutReportedByInput
@@ -122290,6 +125366,8 @@ export namespace Prisma {
     active?: boolean
     lastLoginAt?: Date | string | null
     vesselId?: string | null
+    accessLevelId?: string | null
+    departmentRefId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -122324,6 +125402,8 @@ export namespace Prisma {
     deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     company?: CompanyUpdateOneRequiredWithoutUsersNestedInput
     vessel?: VesselUpdateOneWithoutUsersNestedInput
+    accessLevel?: AccessLevelUpdateOneWithoutUsersNestedInput
+    departmentRef?: DepartmentUpdateOneWithoutUsersNestedInput
     roles?: UserRoleUpdateManyWithoutUserNestedInput
     ownedDocs?: SmsDocumentUpdateManyWithoutOwnerNestedInput
     reportedIncidents?: IncidentUpdateManyWithoutReportedByNestedInput
@@ -122346,6 +125426,8 @@ export namespace Prisma {
     active?: BoolFieldUpdateOperationsInput | boolean
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     vesselId?: NullableStringFieldUpdateOperationsInput | string | null
+    accessLevelId?: NullableStringFieldUpdateOperationsInput | string | null
+    departmentRefId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -122374,6 +125456,8 @@ export namespace Prisma {
     active?: boolean
     lastLoginAt?: Date | string | null
     vesselId?: string | null
+    accessLevelId?: string | null
+    departmentRefId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -122410,6 +125494,8 @@ export namespace Prisma {
     active?: BoolFieldUpdateOperationsInput | boolean
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     vesselId?: NullableStringFieldUpdateOperationsInput | string | null
+    accessLevelId?: NullableStringFieldUpdateOperationsInput | string | null
+    departmentRefId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -122614,6 +125700,222 @@ export namespace Prisma {
   export type UserRoleUncheckedUpdateManyInput = {
     userId?: StringFieldUpdateOperationsInput | string
     roleId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type AccessLevelCreateInput = {
+    id?: string
+    name: string
+    rank: number
+    description?: string | null
+    isSystem?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    company: CompanyCreateNestedOneWithoutAccessLevelsInput
+    users?: UserCreateNestedManyWithoutAccessLevelInput
+  }
+
+  export type AccessLevelUncheckedCreateInput = {
+    id?: string
+    companyId: string
+    name: string
+    rank: number
+    description?: string | null
+    isSystem?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    users?: UserUncheckedCreateNestedManyWithoutAccessLevelInput
+  }
+
+  export type AccessLevelUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    rank?: IntFieldUpdateOperationsInput | number
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isSystem?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    company?: CompanyUpdateOneRequiredWithoutAccessLevelsNestedInput
+    users?: UserUpdateManyWithoutAccessLevelNestedInput
+  }
+
+  export type AccessLevelUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    rank?: IntFieldUpdateOperationsInput | number
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isSystem?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    users?: UserUncheckedUpdateManyWithoutAccessLevelNestedInput
+  }
+
+  export type AccessLevelCreateManyInput = {
+    id?: string
+    companyId: string
+    name: string
+    rank: number
+    description?: string | null
+    isSystem?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+  }
+
+  export type AccessLevelUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    rank?: IntFieldUpdateOperationsInput | number
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isSystem?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type AccessLevelUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    rank?: IntFieldUpdateOperationsInput | number
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isSystem?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type DepartmentCreateInput = {
+    id?: string
+    name: string
+    side: $Enums.DepartmentSide
+    description?: string | null
+    isSystem?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    company: CompanyCreateNestedOneWithoutDepartmentsInput
+    users?: UserCreateNestedManyWithoutDepartmentRefInput
+  }
+
+  export type DepartmentUncheckedCreateInput = {
+    id?: string
+    companyId: string
+    name: string
+    side: $Enums.DepartmentSide
+    description?: string | null
+    isSystem?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    users?: UserUncheckedCreateNestedManyWithoutDepartmentRefInput
+  }
+
+  export type DepartmentUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    side?: EnumDepartmentSideFieldUpdateOperationsInput | $Enums.DepartmentSide
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isSystem?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    company?: CompanyUpdateOneRequiredWithoutDepartmentsNestedInput
+    users?: UserUpdateManyWithoutDepartmentRefNestedInput
+  }
+
+  export type DepartmentUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    side?: EnumDepartmentSideFieldUpdateOperationsInput | $Enums.DepartmentSide
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isSystem?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    users?: UserUncheckedUpdateManyWithoutDepartmentRefNestedInput
+  }
+
+  export type DepartmentCreateManyInput = {
+    id?: string
+    companyId: string
+    name: string
+    side: $Enums.DepartmentSide
+    description?: string | null
+    isSystem?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+  }
+
+  export type DepartmentUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    side?: EnumDepartmentSideFieldUpdateOperationsInput | $Enums.DepartmentSide
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isSystem?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type DepartmentUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    side?: EnumDepartmentSideFieldUpdateOperationsInput | $Enums.DepartmentSide
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isSystem?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type VesselCreateInput = {
@@ -132950,6 +136252,18 @@ export namespace Prisma {
     none?: ReferenceListItemWhereInput
   }
 
+  export type AccessLevelListRelationFilter = {
+    every?: AccessLevelWhereInput
+    some?: AccessLevelWhereInput
+    none?: AccessLevelWhereInput
+  }
+
+  export type DepartmentListRelationFilter = {
+    every?: DepartmentWhereInput
+    some?: DepartmentWhereInput
+    none?: DepartmentWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -133128,6 +136442,14 @@ export namespace Prisma {
   }
 
   export type ReferenceListItemOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type AccessLevelOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type DepartmentOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -133329,6 +136651,16 @@ export namespace Prisma {
     isNot?: VesselWhereInput | null
   }
 
+  export type AccessLevelNullableScalarRelationFilter = {
+    is?: AccessLevelWhereInput | null
+    isNot?: AccessLevelWhereInput | null
+  }
+
+  export type DepartmentNullableScalarRelationFilter = {
+    is?: DepartmentWhereInput | null
+    isNot?: DepartmentWhereInput | null
+  }
+
   export type UserRoleListRelationFilter = {
     every?: UserRoleWhereInput
     some?: UserRoleWhereInput
@@ -133380,6 +136712,8 @@ export namespace Prisma {
     active?: SortOrder
     lastLoginAt?: SortOrder
     vesselId?: SortOrder
+    accessLevelId?: SortOrder
+    departmentRefId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     createdBy?: SortOrder
@@ -133399,6 +136733,8 @@ export namespace Prisma {
     active?: SortOrder
     lastLoginAt?: SortOrder
     vesselId?: SortOrder
+    accessLevelId?: SortOrder
+    departmentRefId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     createdBy?: SortOrder
@@ -133418,6 +136754,8 @@ export namespace Prisma {
     active?: SortOrder
     lastLoginAt?: SortOrder
     vesselId?: SortOrder
+    accessLevelId?: SortOrder
+    departmentRefId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     createdBy?: SortOrder
@@ -133577,6 +136915,131 @@ export namespace Prisma {
   export type UserRoleMinOrderByAggregateInput = {
     userId?: SortOrder
     roleId?: SortOrder
+  }
+
+  export type AccessLevelCompanyIdNameCompoundUniqueInput = {
+    companyId: string
+    name: string
+  }
+
+  export type AccessLevelCountOrderByAggregateInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    name?: SortOrder
+    rank?: SortOrder
+    description?: SortOrder
+    isSystem?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    createdBy?: SortOrder
+    updatedBy?: SortOrder
+    deletedAt?: SortOrder
+    deletedBy?: SortOrder
+  }
+
+  export type AccessLevelAvgOrderByAggregateInput = {
+    rank?: SortOrder
+  }
+
+  export type AccessLevelMaxOrderByAggregateInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    name?: SortOrder
+    rank?: SortOrder
+    description?: SortOrder
+    isSystem?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    createdBy?: SortOrder
+    updatedBy?: SortOrder
+    deletedAt?: SortOrder
+    deletedBy?: SortOrder
+  }
+
+  export type AccessLevelMinOrderByAggregateInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    name?: SortOrder
+    rank?: SortOrder
+    description?: SortOrder
+    isSystem?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    createdBy?: SortOrder
+    updatedBy?: SortOrder
+    deletedAt?: SortOrder
+    deletedBy?: SortOrder
+  }
+
+  export type AccessLevelSumOrderByAggregateInput = {
+    rank?: SortOrder
+  }
+
+  export type EnumDepartmentSideFilter<$PrismaModel = never> = {
+    equals?: $Enums.DepartmentSide | EnumDepartmentSideFieldRefInput<$PrismaModel>
+    in?: $Enums.DepartmentSide[] | ListEnumDepartmentSideFieldRefInput<$PrismaModel>
+    notIn?: $Enums.DepartmentSide[] | ListEnumDepartmentSideFieldRefInput<$PrismaModel>
+    not?: NestedEnumDepartmentSideFilter<$PrismaModel> | $Enums.DepartmentSide
+  }
+
+  export type DepartmentCompanyIdNameCompoundUniqueInput = {
+    companyId: string
+    name: string
+  }
+
+  export type DepartmentCountOrderByAggregateInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    name?: SortOrder
+    side?: SortOrder
+    description?: SortOrder
+    isSystem?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    createdBy?: SortOrder
+    updatedBy?: SortOrder
+    deletedAt?: SortOrder
+    deletedBy?: SortOrder
+  }
+
+  export type DepartmentMaxOrderByAggregateInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    name?: SortOrder
+    side?: SortOrder
+    description?: SortOrder
+    isSystem?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    createdBy?: SortOrder
+    updatedBy?: SortOrder
+    deletedAt?: SortOrder
+    deletedBy?: SortOrder
+  }
+
+  export type DepartmentMinOrderByAggregateInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    name?: SortOrder
+    side?: SortOrder
+    description?: SortOrder
+    isSystem?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    createdBy?: SortOrder
+    updatedBy?: SortOrder
+    deletedAt?: SortOrder
+    deletedBy?: SortOrder
+  }
+
+  export type EnumDepartmentSideWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.DepartmentSide | EnumDepartmentSideFieldRefInput<$PrismaModel>
+    in?: $Enums.DepartmentSide[] | ListEnumDepartmentSideFieldRefInput<$PrismaModel>
+    notIn?: $Enums.DepartmentSide[] | ListEnumDepartmentSideFieldRefInput<$PrismaModel>
+    not?: NestedEnumDepartmentSideWithAggregatesFilter<$PrismaModel> | $Enums.DepartmentSide
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumDepartmentSideFilter<$PrismaModel>
+    _max?: NestedEnumDepartmentSideFilter<$PrismaModel>
   }
 
   export type IntNullableFilter<$PrismaModel = never> = {
@@ -140565,6 +144028,20 @@ export namespace Prisma {
     connect?: ReferenceListItemWhereUniqueInput | ReferenceListItemWhereUniqueInput[]
   }
 
+  export type AccessLevelCreateNestedManyWithoutCompanyInput = {
+    create?: XOR<AccessLevelCreateWithoutCompanyInput, AccessLevelUncheckedCreateWithoutCompanyInput> | AccessLevelCreateWithoutCompanyInput[] | AccessLevelUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: AccessLevelCreateOrConnectWithoutCompanyInput | AccessLevelCreateOrConnectWithoutCompanyInput[]
+    createMany?: AccessLevelCreateManyCompanyInputEnvelope
+    connect?: AccessLevelWhereUniqueInput | AccessLevelWhereUniqueInput[]
+  }
+
+  export type DepartmentCreateNestedManyWithoutCompanyInput = {
+    create?: XOR<DepartmentCreateWithoutCompanyInput, DepartmentUncheckedCreateWithoutCompanyInput> | DepartmentCreateWithoutCompanyInput[] | DepartmentUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: DepartmentCreateOrConnectWithoutCompanyInput | DepartmentCreateOrConnectWithoutCompanyInput[]
+    createMany?: DepartmentCreateManyCompanyInputEnvelope
+    connect?: DepartmentWhereUniqueInput | DepartmentWhereUniqueInput[]
+  }
+
   export type UserUncheckedCreateNestedManyWithoutCompanyInput = {
     create?: XOR<UserCreateWithoutCompanyInput, UserUncheckedCreateWithoutCompanyInput> | UserCreateWithoutCompanyInput[] | UserUncheckedCreateWithoutCompanyInput[]
     connectOrCreate?: UserCreateOrConnectWithoutCompanyInput | UserCreateOrConnectWithoutCompanyInput[]
@@ -140871,6 +144348,20 @@ export namespace Prisma {
     connectOrCreate?: ReferenceListItemCreateOrConnectWithoutCompanyInput | ReferenceListItemCreateOrConnectWithoutCompanyInput[]
     createMany?: ReferenceListItemCreateManyCompanyInputEnvelope
     connect?: ReferenceListItemWhereUniqueInput | ReferenceListItemWhereUniqueInput[]
+  }
+
+  export type AccessLevelUncheckedCreateNestedManyWithoutCompanyInput = {
+    create?: XOR<AccessLevelCreateWithoutCompanyInput, AccessLevelUncheckedCreateWithoutCompanyInput> | AccessLevelCreateWithoutCompanyInput[] | AccessLevelUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: AccessLevelCreateOrConnectWithoutCompanyInput | AccessLevelCreateOrConnectWithoutCompanyInput[]
+    createMany?: AccessLevelCreateManyCompanyInputEnvelope
+    connect?: AccessLevelWhereUniqueInput | AccessLevelWhereUniqueInput[]
+  }
+
+  export type DepartmentUncheckedCreateNestedManyWithoutCompanyInput = {
+    create?: XOR<DepartmentCreateWithoutCompanyInput, DepartmentUncheckedCreateWithoutCompanyInput> | DepartmentCreateWithoutCompanyInput[] | DepartmentUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: DepartmentCreateOrConnectWithoutCompanyInput | DepartmentCreateOrConnectWithoutCompanyInput[]
+    createMany?: DepartmentCreateManyCompanyInputEnvelope
+    connect?: DepartmentWhereUniqueInput | DepartmentWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -141517,6 +145008,34 @@ export namespace Prisma {
     deleteMany?: ReferenceListItemScalarWhereInput | ReferenceListItemScalarWhereInput[]
   }
 
+  export type AccessLevelUpdateManyWithoutCompanyNestedInput = {
+    create?: XOR<AccessLevelCreateWithoutCompanyInput, AccessLevelUncheckedCreateWithoutCompanyInput> | AccessLevelCreateWithoutCompanyInput[] | AccessLevelUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: AccessLevelCreateOrConnectWithoutCompanyInput | AccessLevelCreateOrConnectWithoutCompanyInput[]
+    upsert?: AccessLevelUpsertWithWhereUniqueWithoutCompanyInput | AccessLevelUpsertWithWhereUniqueWithoutCompanyInput[]
+    createMany?: AccessLevelCreateManyCompanyInputEnvelope
+    set?: AccessLevelWhereUniqueInput | AccessLevelWhereUniqueInput[]
+    disconnect?: AccessLevelWhereUniqueInput | AccessLevelWhereUniqueInput[]
+    delete?: AccessLevelWhereUniqueInput | AccessLevelWhereUniqueInput[]
+    connect?: AccessLevelWhereUniqueInput | AccessLevelWhereUniqueInput[]
+    update?: AccessLevelUpdateWithWhereUniqueWithoutCompanyInput | AccessLevelUpdateWithWhereUniqueWithoutCompanyInput[]
+    updateMany?: AccessLevelUpdateManyWithWhereWithoutCompanyInput | AccessLevelUpdateManyWithWhereWithoutCompanyInput[]
+    deleteMany?: AccessLevelScalarWhereInput | AccessLevelScalarWhereInput[]
+  }
+
+  export type DepartmentUpdateManyWithoutCompanyNestedInput = {
+    create?: XOR<DepartmentCreateWithoutCompanyInput, DepartmentUncheckedCreateWithoutCompanyInput> | DepartmentCreateWithoutCompanyInput[] | DepartmentUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: DepartmentCreateOrConnectWithoutCompanyInput | DepartmentCreateOrConnectWithoutCompanyInput[]
+    upsert?: DepartmentUpsertWithWhereUniqueWithoutCompanyInput | DepartmentUpsertWithWhereUniqueWithoutCompanyInput[]
+    createMany?: DepartmentCreateManyCompanyInputEnvelope
+    set?: DepartmentWhereUniqueInput | DepartmentWhereUniqueInput[]
+    disconnect?: DepartmentWhereUniqueInput | DepartmentWhereUniqueInput[]
+    delete?: DepartmentWhereUniqueInput | DepartmentWhereUniqueInput[]
+    connect?: DepartmentWhereUniqueInput | DepartmentWhereUniqueInput[]
+    update?: DepartmentUpdateWithWhereUniqueWithoutCompanyInput | DepartmentUpdateWithWhereUniqueWithoutCompanyInput[]
+    updateMany?: DepartmentUpdateManyWithWhereWithoutCompanyInput | DepartmentUpdateManyWithWhereWithoutCompanyInput[]
+    deleteMany?: DepartmentScalarWhereInput | DepartmentScalarWhereInput[]
+  }
+
   export type UserUncheckedUpdateManyWithoutCompanyNestedInput = {
     create?: XOR<UserCreateWithoutCompanyInput, UserUncheckedCreateWithoutCompanyInput> | UserCreateWithoutCompanyInput[] | UserUncheckedCreateWithoutCompanyInput[]
     connectOrCreate?: UserCreateOrConnectWithoutCompanyInput | UserCreateOrConnectWithoutCompanyInput[]
@@ -142133,6 +145652,34 @@ export namespace Prisma {
     deleteMany?: ReferenceListItemScalarWhereInput | ReferenceListItemScalarWhereInput[]
   }
 
+  export type AccessLevelUncheckedUpdateManyWithoutCompanyNestedInput = {
+    create?: XOR<AccessLevelCreateWithoutCompanyInput, AccessLevelUncheckedCreateWithoutCompanyInput> | AccessLevelCreateWithoutCompanyInput[] | AccessLevelUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: AccessLevelCreateOrConnectWithoutCompanyInput | AccessLevelCreateOrConnectWithoutCompanyInput[]
+    upsert?: AccessLevelUpsertWithWhereUniqueWithoutCompanyInput | AccessLevelUpsertWithWhereUniqueWithoutCompanyInput[]
+    createMany?: AccessLevelCreateManyCompanyInputEnvelope
+    set?: AccessLevelWhereUniqueInput | AccessLevelWhereUniqueInput[]
+    disconnect?: AccessLevelWhereUniqueInput | AccessLevelWhereUniqueInput[]
+    delete?: AccessLevelWhereUniqueInput | AccessLevelWhereUniqueInput[]
+    connect?: AccessLevelWhereUniqueInput | AccessLevelWhereUniqueInput[]
+    update?: AccessLevelUpdateWithWhereUniqueWithoutCompanyInput | AccessLevelUpdateWithWhereUniqueWithoutCompanyInput[]
+    updateMany?: AccessLevelUpdateManyWithWhereWithoutCompanyInput | AccessLevelUpdateManyWithWhereWithoutCompanyInput[]
+    deleteMany?: AccessLevelScalarWhereInput | AccessLevelScalarWhereInput[]
+  }
+
+  export type DepartmentUncheckedUpdateManyWithoutCompanyNestedInput = {
+    create?: XOR<DepartmentCreateWithoutCompanyInput, DepartmentUncheckedCreateWithoutCompanyInput> | DepartmentCreateWithoutCompanyInput[] | DepartmentUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: DepartmentCreateOrConnectWithoutCompanyInput | DepartmentCreateOrConnectWithoutCompanyInput[]
+    upsert?: DepartmentUpsertWithWhereUniqueWithoutCompanyInput | DepartmentUpsertWithWhereUniqueWithoutCompanyInput[]
+    createMany?: DepartmentCreateManyCompanyInputEnvelope
+    set?: DepartmentWhereUniqueInput | DepartmentWhereUniqueInput[]
+    disconnect?: DepartmentWhereUniqueInput | DepartmentWhereUniqueInput[]
+    delete?: DepartmentWhereUniqueInput | DepartmentWhereUniqueInput[]
+    connect?: DepartmentWhereUniqueInput | DepartmentWhereUniqueInput[]
+    update?: DepartmentUpdateWithWhereUniqueWithoutCompanyInput | DepartmentUpdateWithWhereUniqueWithoutCompanyInput[]
+    updateMany?: DepartmentUpdateManyWithWhereWithoutCompanyInput | DepartmentUpdateManyWithWhereWithoutCompanyInput[]
+    deleteMany?: DepartmentScalarWhereInput | DepartmentScalarWhereInput[]
+  }
+
   export type CompanyCreateNestedOneWithoutUsersInput = {
     create?: XOR<CompanyCreateWithoutUsersInput, CompanyUncheckedCreateWithoutUsersInput>
     connectOrCreate?: CompanyCreateOrConnectWithoutUsersInput
@@ -142143,6 +145690,18 @@ export namespace Prisma {
     create?: XOR<VesselCreateWithoutUsersInput, VesselUncheckedCreateWithoutUsersInput>
     connectOrCreate?: VesselCreateOrConnectWithoutUsersInput
     connect?: VesselWhereUniqueInput
+  }
+
+  export type AccessLevelCreateNestedOneWithoutUsersInput = {
+    create?: XOR<AccessLevelCreateWithoutUsersInput, AccessLevelUncheckedCreateWithoutUsersInput>
+    connectOrCreate?: AccessLevelCreateOrConnectWithoutUsersInput
+    connect?: AccessLevelWhereUniqueInput
+  }
+
+  export type DepartmentCreateNestedOneWithoutUsersInput = {
+    create?: XOR<DepartmentCreateWithoutUsersInput, DepartmentUncheckedCreateWithoutUsersInput>
+    connectOrCreate?: DepartmentCreateOrConnectWithoutUsersInput
+    connect?: DepartmentWhereUniqueInput
   }
 
   export type UserRoleCreateNestedManyWithoutUserInput = {
@@ -142299,6 +145858,26 @@ export namespace Prisma {
     delete?: VesselWhereInput | boolean
     connect?: VesselWhereUniqueInput
     update?: XOR<XOR<VesselUpdateToOneWithWhereWithoutUsersInput, VesselUpdateWithoutUsersInput>, VesselUncheckedUpdateWithoutUsersInput>
+  }
+
+  export type AccessLevelUpdateOneWithoutUsersNestedInput = {
+    create?: XOR<AccessLevelCreateWithoutUsersInput, AccessLevelUncheckedCreateWithoutUsersInput>
+    connectOrCreate?: AccessLevelCreateOrConnectWithoutUsersInput
+    upsert?: AccessLevelUpsertWithoutUsersInput
+    disconnect?: AccessLevelWhereInput | boolean
+    delete?: AccessLevelWhereInput | boolean
+    connect?: AccessLevelWhereUniqueInput
+    update?: XOR<XOR<AccessLevelUpdateToOneWithWhereWithoutUsersInput, AccessLevelUpdateWithoutUsersInput>, AccessLevelUncheckedUpdateWithoutUsersInput>
+  }
+
+  export type DepartmentUpdateOneWithoutUsersNestedInput = {
+    create?: XOR<DepartmentCreateWithoutUsersInput, DepartmentUncheckedCreateWithoutUsersInput>
+    connectOrCreate?: DepartmentCreateOrConnectWithoutUsersInput
+    upsert?: DepartmentUpsertWithoutUsersInput
+    disconnect?: DepartmentWhereInput | boolean
+    delete?: DepartmentWhereInput | boolean
+    connect?: DepartmentWhereUniqueInput
+    update?: XOR<XOR<DepartmentUpdateToOneWithWhereWithoutUsersInput, DepartmentUpdateWithoutUsersInput>, DepartmentUncheckedUpdateWithoutUsersInput>
   }
 
   export type UserRoleUpdateManyWithoutUserNestedInput = {
@@ -142747,6 +146326,122 @@ export namespace Prisma {
     upsert?: RoleUpsertWithoutUsersInput
     connect?: RoleWhereUniqueInput
     update?: XOR<XOR<RoleUpdateToOneWithWhereWithoutUsersInput, RoleUpdateWithoutUsersInput>, RoleUncheckedUpdateWithoutUsersInput>
+  }
+
+  export type CompanyCreateNestedOneWithoutAccessLevelsInput = {
+    create?: XOR<CompanyCreateWithoutAccessLevelsInput, CompanyUncheckedCreateWithoutAccessLevelsInput>
+    connectOrCreate?: CompanyCreateOrConnectWithoutAccessLevelsInput
+    connect?: CompanyWhereUniqueInput
+  }
+
+  export type UserCreateNestedManyWithoutAccessLevelInput = {
+    create?: XOR<UserCreateWithoutAccessLevelInput, UserUncheckedCreateWithoutAccessLevelInput> | UserCreateWithoutAccessLevelInput[] | UserUncheckedCreateWithoutAccessLevelInput[]
+    connectOrCreate?: UserCreateOrConnectWithoutAccessLevelInput | UserCreateOrConnectWithoutAccessLevelInput[]
+    createMany?: UserCreateManyAccessLevelInputEnvelope
+    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+  }
+
+  export type UserUncheckedCreateNestedManyWithoutAccessLevelInput = {
+    create?: XOR<UserCreateWithoutAccessLevelInput, UserUncheckedCreateWithoutAccessLevelInput> | UserCreateWithoutAccessLevelInput[] | UserUncheckedCreateWithoutAccessLevelInput[]
+    connectOrCreate?: UserCreateOrConnectWithoutAccessLevelInput | UserCreateOrConnectWithoutAccessLevelInput[]
+    createMany?: UserCreateManyAccessLevelInputEnvelope
+    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+  }
+
+  export type CompanyUpdateOneRequiredWithoutAccessLevelsNestedInput = {
+    create?: XOR<CompanyCreateWithoutAccessLevelsInput, CompanyUncheckedCreateWithoutAccessLevelsInput>
+    connectOrCreate?: CompanyCreateOrConnectWithoutAccessLevelsInput
+    upsert?: CompanyUpsertWithoutAccessLevelsInput
+    connect?: CompanyWhereUniqueInput
+    update?: XOR<XOR<CompanyUpdateToOneWithWhereWithoutAccessLevelsInput, CompanyUpdateWithoutAccessLevelsInput>, CompanyUncheckedUpdateWithoutAccessLevelsInput>
+  }
+
+  export type UserUpdateManyWithoutAccessLevelNestedInput = {
+    create?: XOR<UserCreateWithoutAccessLevelInput, UserUncheckedCreateWithoutAccessLevelInput> | UserCreateWithoutAccessLevelInput[] | UserUncheckedCreateWithoutAccessLevelInput[]
+    connectOrCreate?: UserCreateOrConnectWithoutAccessLevelInput | UserCreateOrConnectWithoutAccessLevelInput[]
+    upsert?: UserUpsertWithWhereUniqueWithoutAccessLevelInput | UserUpsertWithWhereUniqueWithoutAccessLevelInput[]
+    createMany?: UserCreateManyAccessLevelInputEnvelope
+    set?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    disconnect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    delete?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    update?: UserUpdateWithWhereUniqueWithoutAccessLevelInput | UserUpdateWithWhereUniqueWithoutAccessLevelInput[]
+    updateMany?: UserUpdateManyWithWhereWithoutAccessLevelInput | UserUpdateManyWithWhereWithoutAccessLevelInput[]
+    deleteMany?: UserScalarWhereInput | UserScalarWhereInput[]
+  }
+
+  export type UserUncheckedUpdateManyWithoutAccessLevelNestedInput = {
+    create?: XOR<UserCreateWithoutAccessLevelInput, UserUncheckedCreateWithoutAccessLevelInput> | UserCreateWithoutAccessLevelInput[] | UserUncheckedCreateWithoutAccessLevelInput[]
+    connectOrCreate?: UserCreateOrConnectWithoutAccessLevelInput | UserCreateOrConnectWithoutAccessLevelInput[]
+    upsert?: UserUpsertWithWhereUniqueWithoutAccessLevelInput | UserUpsertWithWhereUniqueWithoutAccessLevelInput[]
+    createMany?: UserCreateManyAccessLevelInputEnvelope
+    set?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    disconnect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    delete?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    update?: UserUpdateWithWhereUniqueWithoutAccessLevelInput | UserUpdateWithWhereUniqueWithoutAccessLevelInput[]
+    updateMany?: UserUpdateManyWithWhereWithoutAccessLevelInput | UserUpdateManyWithWhereWithoutAccessLevelInput[]
+    deleteMany?: UserScalarWhereInput | UserScalarWhereInput[]
+  }
+
+  export type CompanyCreateNestedOneWithoutDepartmentsInput = {
+    create?: XOR<CompanyCreateWithoutDepartmentsInput, CompanyUncheckedCreateWithoutDepartmentsInput>
+    connectOrCreate?: CompanyCreateOrConnectWithoutDepartmentsInput
+    connect?: CompanyWhereUniqueInput
+  }
+
+  export type UserCreateNestedManyWithoutDepartmentRefInput = {
+    create?: XOR<UserCreateWithoutDepartmentRefInput, UserUncheckedCreateWithoutDepartmentRefInput> | UserCreateWithoutDepartmentRefInput[] | UserUncheckedCreateWithoutDepartmentRefInput[]
+    connectOrCreate?: UserCreateOrConnectWithoutDepartmentRefInput | UserCreateOrConnectWithoutDepartmentRefInput[]
+    createMany?: UserCreateManyDepartmentRefInputEnvelope
+    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+  }
+
+  export type UserUncheckedCreateNestedManyWithoutDepartmentRefInput = {
+    create?: XOR<UserCreateWithoutDepartmentRefInput, UserUncheckedCreateWithoutDepartmentRefInput> | UserCreateWithoutDepartmentRefInput[] | UserUncheckedCreateWithoutDepartmentRefInput[]
+    connectOrCreate?: UserCreateOrConnectWithoutDepartmentRefInput | UserCreateOrConnectWithoutDepartmentRefInput[]
+    createMany?: UserCreateManyDepartmentRefInputEnvelope
+    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+  }
+
+  export type EnumDepartmentSideFieldUpdateOperationsInput = {
+    set?: $Enums.DepartmentSide
+  }
+
+  export type CompanyUpdateOneRequiredWithoutDepartmentsNestedInput = {
+    create?: XOR<CompanyCreateWithoutDepartmentsInput, CompanyUncheckedCreateWithoutDepartmentsInput>
+    connectOrCreate?: CompanyCreateOrConnectWithoutDepartmentsInput
+    upsert?: CompanyUpsertWithoutDepartmentsInput
+    connect?: CompanyWhereUniqueInput
+    update?: XOR<XOR<CompanyUpdateToOneWithWhereWithoutDepartmentsInput, CompanyUpdateWithoutDepartmentsInput>, CompanyUncheckedUpdateWithoutDepartmentsInput>
+  }
+
+  export type UserUpdateManyWithoutDepartmentRefNestedInput = {
+    create?: XOR<UserCreateWithoutDepartmentRefInput, UserUncheckedCreateWithoutDepartmentRefInput> | UserCreateWithoutDepartmentRefInput[] | UserUncheckedCreateWithoutDepartmentRefInput[]
+    connectOrCreate?: UserCreateOrConnectWithoutDepartmentRefInput | UserCreateOrConnectWithoutDepartmentRefInput[]
+    upsert?: UserUpsertWithWhereUniqueWithoutDepartmentRefInput | UserUpsertWithWhereUniqueWithoutDepartmentRefInput[]
+    createMany?: UserCreateManyDepartmentRefInputEnvelope
+    set?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    disconnect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    delete?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    update?: UserUpdateWithWhereUniqueWithoutDepartmentRefInput | UserUpdateWithWhereUniqueWithoutDepartmentRefInput[]
+    updateMany?: UserUpdateManyWithWhereWithoutDepartmentRefInput | UserUpdateManyWithWhereWithoutDepartmentRefInput[]
+    deleteMany?: UserScalarWhereInput | UserScalarWhereInput[]
+  }
+
+  export type UserUncheckedUpdateManyWithoutDepartmentRefNestedInput = {
+    create?: XOR<UserCreateWithoutDepartmentRefInput, UserUncheckedCreateWithoutDepartmentRefInput> | UserCreateWithoutDepartmentRefInput[] | UserUncheckedCreateWithoutDepartmentRefInput[]
+    connectOrCreate?: UserCreateOrConnectWithoutDepartmentRefInput | UserCreateOrConnectWithoutDepartmentRefInput[]
+    upsert?: UserUpsertWithWhereUniqueWithoutDepartmentRefInput | UserUpsertWithWhereUniqueWithoutDepartmentRefInput[]
+    createMany?: UserCreateManyDepartmentRefInputEnvelope
+    set?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    disconnect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    delete?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    update?: UserUpdateWithWhereUniqueWithoutDepartmentRefInput | UserUpdateWithWhereUniqueWithoutDepartmentRefInput[]
+    updateMany?: UserUpdateManyWithWhereWithoutDepartmentRefInput | UserUpdateManyWithWhereWithoutDepartmentRefInput[]
+    deleteMany?: UserScalarWhereInput | UserScalarWhereInput[]
   }
 
   export type CompanyCreateNestedOneWithoutVesselsInput = {
@@ -147832,6 +151527,23 @@ export namespace Prisma {
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
+  export type NestedEnumDepartmentSideFilter<$PrismaModel = never> = {
+    equals?: $Enums.DepartmentSide | EnumDepartmentSideFieldRefInput<$PrismaModel>
+    in?: $Enums.DepartmentSide[] | ListEnumDepartmentSideFieldRefInput<$PrismaModel>
+    notIn?: $Enums.DepartmentSide[] | ListEnumDepartmentSideFieldRefInput<$PrismaModel>
+    not?: NestedEnumDepartmentSideFilter<$PrismaModel> | $Enums.DepartmentSide
+  }
+
+  export type NestedEnumDepartmentSideWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.DepartmentSide | EnumDepartmentSideFieldRefInput<$PrismaModel>
+    in?: $Enums.DepartmentSide[] | ListEnumDepartmentSideFieldRefInput<$PrismaModel>
+    notIn?: $Enums.DepartmentSide[] | ListEnumDepartmentSideFieldRefInput<$PrismaModel>
+    not?: NestedEnumDepartmentSideWithAggregatesFilter<$PrismaModel> | $Enums.DepartmentSide
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumDepartmentSideFilter<$PrismaModel>
+    _max?: NestedEnumDepartmentSideFilter<$PrismaModel>
+  }
+
   export type NestedFloatNullableFilter<$PrismaModel = never> = {
     equals?: number | FloatFieldRefInput<$PrismaModel> | null
     in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
@@ -149178,6 +152890,8 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     deletedBy?: string | null
     vessel?: VesselCreateNestedOneWithoutUsersInput
+    accessLevel?: AccessLevelCreateNestedOneWithoutUsersInput
+    departmentRef?: DepartmentCreateNestedOneWithoutUsersInput
     roles?: UserRoleCreateNestedManyWithoutUserInput
     ownedDocs?: SmsDocumentCreateNestedManyWithoutOwnerInput
     reportedIncidents?: IncidentCreateNestedManyWithoutReportedByInput
@@ -149199,6 +152913,8 @@ export namespace Prisma {
     active?: boolean
     lastLoginAt?: Date | string | null
     vesselId?: string | null
+    accessLevelId?: string | null
+    departmentRefId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -151640,6 +155356,86 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type AccessLevelCreateWithoutCompanyInput = {
+    id?: string
+    name: string
+    rank: number
+    description?: string | null
+    isSystem?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    users?: UserCreateNestedManyWithoutAccessLevelInput
+  }
+
+  export type AccessLevelUncheckedCreateWithoutCompanyInput = {
+    id?: string
+    name: string
+    rank: number
+    description?: string | null
+    isSystem?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    users?: UserUncheckedCreateNestedManyWithoutAccessLevelInput
+  }
+
+  export type AccessLevelCreateOrConnectWithoutCompanyInput = {
+    where: AccessLevelWhereUniqueInput
+    create: XOR<AccessLevelCreateWithoutCompanyInput, AccessLevelUncheckedCreateWithoutCompanyInput>
+  }
+
+  export type AccessLevelCreateManyCompanyInputEnvelope = {
+    data: AccessLevelCreateManyCompanyInput | AccessLevelCreateManyCompanyInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type DepartmentCreateWithoutCompanyInput = {
+    id?: string
+    name: string
+    side: $Enums.DepartmentSide
+    description?: string | null
+    isSystem?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    users?: UserCreateNestedManyWithoutDepartmentRefInput
+  }
+
+  export type DepartmentUncheckedCreateWithoutCompanyInput = {
+    id?: string
+    name: string
+    side: $Enums.DepartmentSide
+    description?: string | null
+    isSystem?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    users?: UserUncheckedCreateNestedManyWithoutDepartmentRefInput
+  }
+
+  export type DepartmentCreateOrConnectWithoutCompanyInput = {
+    where: DepartmentWhereUniqueInput
+    create: XOR<DepartmentCreateWithoutCompanyInput, DepartmentUncheckedCreateWithoutCompanyInput>
+  }
+
+  export type DepartmentCreateManyCompanyInputEnvelope = {
+    data: DepartmentCreateManyCompanyInput | DepartmentCreateManyCompanyInput[]
+    skipDuplicates?: boolean
+  }
+
   export type UserUpsertWithWhereUniqueWithoutCompanyInput = {
     where: UserWhereUniqueInput
     update: XOR<UserUpdateWithoutCompanyInput, UserUncheckedUpdateWithoutCompanyInput>
@@ -151670,6 +155466,8 @@ export namespace Prisma {
     active?: BoolFilter<"User"> | boolean
     lastLoginAt?: DateTimeNullableFilter<"User"> | Date | string | null
     vesselId?: StringNullableFilter<"User"> | string | null
+    accessLevelId?: StringNullableFilter<"User"> | string | null
+    departmentRefId?: StringNullableFilter<"User"> | string | null
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
     createdBy?: StringNullableFilter<"User"> | string | null
@@ -153466,6 +157264,74 @@ export namespace Prisma {
     deletedBy?: StringNullableFilter<"ReferenceListItem"> | string | null
   }
 
+  export type AccessLevelUpsertWithWhereUniqueWithoutCompanyInput = {
+    where: AccessLevelWhereUniqueInput
+    update: XOR<AccessLevelUpdateWithoutCompanyInput, AccessLevelUncheckedUpdateWithoutCompanyInput>
+    create: XOR<AccessLevelCreateWithoutCompanyInput, AccessLevelUncheckedCreateWithoutCompanyInput>
+  }
+
+  export type AccessLevelUpdateWithWhereUniqueWithoutCompanyInput = {
+    where: AccessLevelWhereUniqueInput
+    data: XOR<AccessLevelUpdateWithoutCompanyInput, AccessLevelUncheckedUpdateWithoutCompanyInput>
+  }
+
+  export type AccessLevelUpdateManyWithWhereWithoutCompanyInput = {
+    where: AccessLevelScalarWhereInput
+    data: XOR<AccessLevelUpdateManyMutationInput, AccessLevelUncheckedUpdateManyWithoutCompanyInput>
+  }
+
+  export type AccessLevelScalarWhereInput = {
+    AND?: AccessLevelScalarWhereInput | AccessLevelScalarWhereInput[]
+    OR?: AccessLevelScalarWhereInput[]
+    NOT?: AccessLevelScalarWhereInput | AccessLevelScalarWhereInput[]
+    id?: StringFilter<"AccessLevel"> | string
+    companyId?: StringFilter<"AccessLevel"> | string
+    name?: StringFilter<"AccessLevel"> | string
+    rank?: IntFilter<"AccessLevel"> | number
+    description?: StringNullableFilter<"AccessLevel"> | string | null
+    isSystem?: BoolFilter<"AccessLevel"> | boolean
+    createdAt?: DateTimeFilter<"AccessLevel"> | Date | string
+    updatedAt?: DateTimeFilter<"AccessLevel"> | Date | string
+    createdBy?: StringNullableFilter<"AccessLevel"> | string | null
+    updatedBy?: StringNullableFilter<"AccessLevel"> | string | null
+    deletedAt?: DateTimeNullableFilter<"AccessLevel"> | Date | string | null
+    deletedBy?: StringNullableFilter<"AccessLevel"> | string | null
+  }
+
+  export type DepartmentUpsertWithWhereUniqueWithoutCompanyInput = {
+    where: DepartmentWhereUniqueInput
+    update: XOR<DepartmentUpdateWithoutCompanyInput, DepartmentUncheckedUpdateWithoutCompanyInput>
+    create: XOR<DepartmentCreateWithoutCompanyInput, DepartmentUncheckedCreateWithoutCompanyInput>
+  }
+
+  export type DepartmentUpdateWithWhereUniqueWithoutCompanyInput = {
+    where: DepartmentWhereUniqueInput
+    data: XOR<DepartmentUpdateWithoutCompanyInput, DepartmentUncheckedUpdateWithoutCompanyInput>
+  }
+
+  export type DepartmentUpdateManyWithWhereWithoutCompanyInput = {
+    where: DepartmentScalarWhereInput
+    data: XOR<DepartmentUpdateManyMutationInput, DepartmentUncheckedUpdateManyWithoutCompanyInput>
+  }
+
+  export type DepartmentScalarWhereInput = {
+    AND?: DepartmentScalarWhereInput | DepartmentScalarWhereInput[]
+    OR?: DepartmentScalarWhereInput[]
+    NOT?: DepartmentScalarWhereInput | DepartmentScalarWhereInput[]
+    id?: StringFilter<"Department"> | string
+    companyId?: StringFilter<"Department"> | string
+    name?: StringFilter<"Department"> | string
+    side?: EnumDepartmentSideFilter<"Department"> | $Enums.DepartmentSide
+    description?: StringNullableFilter<"Department"> | string | null
+    isSystem?: BoolFilter<"Department"> | boolean
+    createdAt?: DateTimeFilter<"Department"> | Date | string
+    updatedAt?: DateTimeFilter<"Department"> | Date | string
+    createdBy?: StringNullableFilter<"Department"> | string | null
+    updatedBy?: StringNullableFilter<"Department"> | string | null
+    deletedAt?: DateTimeNullableFilter<"Department"> | Date | string | null
+    deletedBy?: StringNullableFilter<"Department"> | string | null
+  }
+
   export type CompanyCreateWithoutUsersInput = {
     id?: string
     name: string
@@ -153526,6 +157392,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterCreateNestedManyWithoutCompanyInput
     referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
+    accessLevels?: AccessLevelCreateNestedManyWithoutCompanyInput
+    departments?: DepartmentCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutUsersInput = {
@@ -153588,6 +157456,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUncheckedCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterUncheckedCreateNestedManyWithoutCompanyInput
     referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
+    accessLevels?: AccessLevelUncheckedCreateNestedManyWithoutCompanyInput
+    departments?: DepartmentUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutUsersInput = {
@@ -153772,6 +157642,76 @@ export namespace Prisma {
   export type VesselCreateOrConnectWithoutUsersInput = {
     where: VesselWhereUniqueInput
     create: XOR<VesselCreateWithoutUsersInput, VesselUncheckedCreateWithoutUsersInput>
+  }
+
+  export type AccessLevelCreateWithoutUsersInput = {
+    id?: string
+    name: string
+    rank: number
+    description?: string | null
+    isSystem?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    company: CompanyCreateNestedOneWithoutAccessLevelsInput
+  }
+
+  export type AccessLevelUncheckedCreateWithoutUsersInput = {
+    id?: string
+    companyId: string
+    name: string
+    rank: number
+    description?: string | null
+    isSystem?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+  }
+
+  export type AccessLevelCreateOrConnectWithoutUsersInput = {
+    where: AccessLevelWhereUniqueInput
+    create: XOR<AccessLevelCreateWithoutUsersInput, AccessLevelUncheckedCreateWithoutUsersInput>
+  }
+
+  export type DepartmentCreateWithoutUsersInput = {
+    id?: string
+    name: string
+    side: $Enums.DepartmentSide
+    description?: string | null
+    isSystem?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    company: CompanyCreateNestedOneWithoutDepartmentsInput
+  }
+
+  export type DepartmentUncheckedCreateWithoutUsersInput = {
+    id?: string
+    companyId: string
+    name: string
+    side: $Enums.DepartmentSide
+    description?: string | null
+    isSystem?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+  }
+
+  export type DepartmentCreateOrConnectWithoutUsersInput = {
+    where: DepartmentWhereUniqueInput
+    create: XOR<DepartmentCreateWithoutUsersInput, DepartmentUncheckedCreateWithoutUsersInput>
   }
 
   export type UserRoleCreateWithoutUserInput = {
@@ -154307,6 +158247,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUpdateManyWithoutCompanyNestedInput
     referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
+    accessLevels?: AccessLevelUpdateManyWithoutCompanyNestedInput
+    departments?: DepartmentUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutUsersInput = {
@@ -154369,6 +158311,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUncheckedUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUncheckedUpdateManyWithoutCompanyNestedInput
     referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
+    accessLevels?: AccessLevelUncheckedUpdateManyWithoutCompanyNestedInput
+    departments?: DepartmentUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type VesselUpsertWithoutUsersInput = {
@@ -154554,6 +158498,88 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventUncheckedUpdateManyWithoutVesselNestedInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUncheckedUpdateManyWithoutVesselNestedInput
     requisitions?: RequisitionUncheckedUpdateManyWithoutVesselNestedInput
+  }
+
+  export type AccessLevelUpsertWithoutUsersInput = {
+    update: XOR<AccessLevelUpdateWithoutUsersInput, AccessLevelUncheckedUpdateWithoutUsersInput>
+    create: XOR<AccessLevelCreateWithoutUsersInput, AccessLevelUncheckedCreateWithoutUsersInput>
+    where?: AccessLevelWhereInput
+  }
+
+  export type AccessLevelUpdateToOneWithWhereWithoutUsersInput = {
+    where?: AccessLevelWhereInput
+    data: XOR<AccessLevelUpdateWithoutUsersInput, AccessLevelUncheckedUpdateWithoutUsersInput>
+  }
+
+  export type AccessLevelUpdateWithoutUsersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    rank?: IntFieldUpdateOperationsInput | number
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isSystem?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    company?: CompanyUpdateOneRequiredWithoutAccessLevelsNestedInput
+  }
+
+  export type AccessLevelUncheckedUpdateWithoutUsersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    rank?: IntFieldUpdateOperationsInput | number
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isSystem?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type DepartmentUpsertWithoutUsersInput = {
+    update: XOR<DepartmentUpdateWithoutUsersInput, DepartmentUncheckedUpdateWithoutUsersInput>
+    create: XOR<DepartmentCreateWithoutUsersInput, DepartmentUncheckedCreateWithoutUsersInput>
+    where?: DepartmentWhereInput
+  }
+
+  export type DepartmentUpdateToOneWithWhereWithoutUsersInput = {
+    where?: DepartmentWhereInput
+    data: XOR<DepartmentUpdateWithoutUsersInput, DepartmentUncheckedUpdateWithoutUsersInput>
+  }
+
+  export type DepartmentUpdateWithoutUsersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    side?: EnumDepartmentSideFieldUpdateOperationsInput | $Enums.DepartmentSide
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isSystem?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    company?: CompanyUpdateOneRequiredWithoutDepartmentsNestedInput
+  }
+
+  export type DepartmentUncheckedUpdateWithoutUsersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    side?: EnumDepartmentSideFieldUpdateOperationsInput | $Enums.DepartmentSide
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isSystem?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type UserRoleUpsertWithWhereUniqueWithoutUserInput = {
@@ -154824,6 +158850,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterCreateNestedManyWithoutCompanyInput
     referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
+    accessLevels?: AccessLevelCreateNestedManyWithoutCompanyInput
+    departments?: DepartmentCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutRolesInput = {
@@ -154886,6 +158914,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUncheckedCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterUncheckedCreateNestedManyWithoutCompanyInput
     referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
+    accessLevels?: AccessLevelUncheckedCreateNestedManyWithoutCompanyInput
+    departments?: DepartmentUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutRolesInput = {
@@ -155000,6 +159030,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUpdateManyWithoutCompanyNestedInput
     referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
+    accessLevels?: AccessLevelUpdateManyWithoutCompanyNestedInput
+    departments?: DepartmentUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutRolesInput = {
@@ -155062,6 +159094,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUncheckedUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUncheckedUpdateManyWithoutCompanyNestedInput
     referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
+    accessLevels?: AccessLevelUncheckedUpdateManyWithoutCompanyNestedInput
+    departments?: DepartmentUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type UserRoleUpsertWithWhereUniqueWithoutRoleInput = {
@@ -155259,6 +159293,8 @@ export namespace Prisma {
     deletedBy?: string | null
     company: CompanyCreateNestedOneWithoutUsersInput
     vessel?: VesselCreateNestedOneWithoutUsersInput
+    accessLevel?: AccessLevelCreateNestedOneWithoutUsersInput
+    departmentRef?: DepartmentCreateNestedOneWithoutUsersInput
     ownedDocs?: SmsDocumentCreateNestedManyWithoutOwnerInput
     reportedIncidents?: IncidentCreateNestedManyWithoutReportedByInput
     reportedNearMisses?: NearMissCreateNestedManyWithoutReportedByInput
@@ -155280,6 +159316,8 @@ export namespace Prisma {
     active?: boolean
     lastLoginAt?: Date | string | null
     vesselId?: string | null
+    accessLevelId?: string | null
+    departmentRefId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -155356,6 +159394,8 @@ export namespace Prisma {
     deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     company?: CompanyUpdateOneRequiredWithoutUsersNestedInput
     vessel?: VesselUpdateOneWithoutUsersNestedInput
+    accessLevel?: AccessLevelUpdateOneWithoutUsersNestedInput
+    departmentRef?: DepartmentUpdateOneWithoutUsersNestedInput
     ownedDocs?: SmsDocumentUpdateManyWithoutOwnerNestedInput
     reportedIncidents?: IncidentUpdateManyWithoutReportedByNestedInput
     reportedNearMisses?: NearMissUpdateManyWithoutReportedByNestedInput
@@ -155377,6 +159417,8 @@ export namespace Prisma {
     active?: BoolFieldUpdateOperationsInput | boolean
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     vesselId?: NullableStringFieldUpdateOperationsInput | string | null
+    accessLevelId?: NullableStringFieldUpdateOperationsInput | string | null
+    departmentRefId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -155424,6 +159466,718 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     permissions?: RolePermissionUncheckedUpdateManyWithoutRoleNestedInput
+  }
+
+  export type CompanyCreateWithoutAccessLevelsInput = {
+    id?: string
+    name: string
+    code: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    ltifTarget?: number
+    trcfTarget?: number
+    sireAvgObservationTarget?: number
+    cinspAvgObservationTarget?: number
+    procurementThresholdSupt?: number
+    procurementThresholdTechManager?: number
+    documentExpiryWarningMonths?: number
+    incidentOverdueDays?: number
+    sireDueSoonDays?: number
+    internalAuditDueSoonDays?: number
+    defaultSireVersion?: string | null
+    users?: UserCreateNestedManyWithoutCompanyInput
+    roles?: RoleCreateNestedManyWithoutCompanyInput
+    vessels?: VesselCreateNestedManyWithoutCompanyInput
+    smsDocuments?: SmsDocumentCreateNestedManyWithoutCompanyInput
+    workflows?: WorkflowDefinitionCreateNestedManyWithoutCompanyInput
+    incidents?: IncidentCreateNestedManyWithoutCompanyInput
+    nearMisses?: NearMissCreateNestedManyWithoutCompanyInput
+    nonConformities?: NonConformityCreateNestedManyWithoutCompanyInput
+    sireInspections?: SireInspectionCreateNestedManyWithoutCompanyInput
+    sireQuestionnaireVersions?: SireQuestionnaireVersionCreateNestedManyWithoutCompanyInput
+    pscInspections?: PscInspectionCreateNestedManyWithoutCompanyInput
+    cdiInspections?: CdiInspectionCreateNestedManyWithoutCompanyInput
+    internalAudits?: InternalAuditCreateNestedManyWithoutCompanyInput
+    externalAudits?: ExternalAuditCreateNestedManyWithoutCompanyInput
+    companyInspections?: CompanyInspectionCreateNestedManyWithoutCompanyInput
+    committeeMeetings?: CommitteeMeetingCreateNestedManyWithoutCompanyInput
+    scheduleItems?: ScheduleItemCreateNestedManyWithoutCompanyInput
+    emergencyDrills?: EmergencyDrillCreateNestedManyWithoutCompanyInput
+    familiarizationRecords?: FamiliarizationRecordCreateNestedManyWithoutCompanyInput
+    familiarizationSessions?: FamiliarizationSessionCreateNestedManyWithoutCompanyInput
+    scheduleApplicability?: ScheduleApplicabilityCreateNestedManyWithoutCompanyInput
+    lsaFfeItems?: LsaFfeItemCreateNestedManyWithoutCompanyInput
+    crewFamiliarizations?: CrewFamiliarizationCreateNestedManyWithoutCompanyInput
+    refSequences?: RefSequenceCreateNestedManyWithoutCompanyInput
+    controlledDocuments?: ControlledDocumentCreateNestedManyWithoutCompanyInput
+    circulars?: CircularCreateNestedManyWithoutCompanyInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentCreateNestedManyWithoutCompanyInput
+    defects?: DefectCreateNestedManyWithoutCompanyInput
+    crewFamiliarizationRecords?: CrewFamiliarizationRecordCreateNestedManyWithoutCompanyInput
+    vesselDocuments?: VesselDocumentCreateNestedManyWithoutCompanyInput
+    voyageLogs?: VoyageLogCreateNestedManyWithoutCompanyInput
+    environmentRecords?: EnvironmentRecordCreateNestedManyWithoutCompanyInput
+    tmsaAssessments?: TmsaAssessmentCreateNestedManyWithoutCompanyInput
+    tmsaScores?: TmsaScoreCreateNestedManyWithoutCompanyInput
+    tmsaFindings?: TmsaFindingCreateNestedManyWithoutCompanyInput
+    storesCatalogueItems?: StoresCatalogueItemCreateNestedManyWithoutCompanyInput
+    sparesCatalogueItems?: SparesCatalogueItemCreateNestedManyWithoutCompanyInput
+    openingStockTakes?: OpeningStockTakeCreateNestedManyWithoutCompanyInput
+    inventoryEvents?: InventoryEventCreateNestedManyWithoutCompanyInput
+    inventoryUpdateDrafts?: InventoryUpdateDraftCreateNestedManyWithoutCompanyInput
+    requisitions?: RequisitionCreateNestedManyWithoutCompanyInput
+    requisitionRevisions?: RequisitionRevisionCreateNestedManyWithoutCompanyInput
+    unitMasters?: UnitMasterCreateNestedManyWithoutCompanyInput
+    referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
+    departments?: DepartmentCreateNestedManyWithoutCompanyInput
+  }
+
+  export type CompanyUncheckedCreateWithoutAccessLevelsInput = {
+    id?: string
+    name: string
+    code: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    ltifTarget?: number
+    trcfTarget?: number
+    sireAvgObservationTarget?: number
+    cinspAvgObservationTarget?: number
+    procurementThresholdSupt?: number
+    procurementThresholdTechManager?: number
+    documentExpiryWarningMonths?: number
+    incidentOverdueDays?: number
+    sireDueSoonDays?: number
+    internalAuditDueSoonDays?: number
+    defaultSireVersion?: string | null
+    users?: UserUncheckedCreateNestedManyWithoutCompanyInput
+    roles?: RoleUncheckedCreateNestedManyWithoutCompanyInput
+    vessels?: VesselUncheckedCreateNestedManyWithoutCompanyInput
+    smsDocuments?: SmsDocumentUncheckedCreateNestedManyWithoutCompanyInput
+    workflows?: WorkflowDefinitionUncheckedCreateNestedManyWithoutCompanyInput
+    incidents?: IncidentUncheckedCreateNestedManyWithoutCompanyInput
+    nearMisses?: NearMissUncheckedCreateNestedManyWithoutCompanyInput
+    nonConformities?: NonConformityUncheckedCreateNestedManyWithoutCompanyInput
+    sireInspections?: SireInspectionUncheckedCreateNestedManyWithoutCompanyInput
+    sireQuestionnaireVersions?: SireQuestionnaireVersionUncheckedCreateNestedManyWithoutCompanyInput
+    pscInspections?: PscInspectionUncheckedCreateNestedManyWithoutCompanyInput
+    cdiInspections?: CdiInspectionUncheckedCreateNestedManyWithoutCompanyInput
+    internalAudits?: InternalAuditUncheckedCreateNestedManyWithoutCompanyInput
+    externalAudits?: ExternalAuditUncheckedCreateNestedManyWithoutCompanyInput
+    companyInspections?: CompanyInspectionUncheckedCreateNestedManyWithoutCompanyInput
+    committeeMeetings?: CommitteeMeetingUncheckedCreateNestedManyWithoutCompanyInput
+    scheduleItems?: ScheduleItemUncheckedCreateNestedManyWithoutCompanyInput
+    emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutCompanyInput
+    familiarizationRecords?: FamiliarizationRecordUncheckedCreateNestedManyWithoutCompanyInput
+    familiarizationSessions?: FamiliarizationSessionUncheckedCreateNestedManyWithoutCompanyInput
+    scheduleApplicability?: ScheduleApplicabilityUncheckedCreateNestedManyWithoutCompanyInput
+    lsaFfeItems?: LsaFfeItemUncheckedCreateNestedManyWithoutCompanyInput
+    crewFamiliarizations?: CrewFamiliarizationUncheckedCreateNestedManyWithoutCompanyInput
+    refSequences?: RefSequenceUncheckedCreateNestedManyWithoutCompanyInput
+    controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutCompanyInput
+    circulars?: CircularUncheckedCreateNestedManyWithoutCompanyInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedCreateNestedManyWithoutCompanyInput
+    defects?: DefectUncheckedCreateNestedManyWithoutCompanyInput
+    crewFamiliarizationRecords?: CrewFamiliarizationRecordUncheckedCreateNestedManyWithoutCompanyInput
+    vesselDocuments?: VesselDocumentUncheckedCreateNestedManyWithoutCompanyInput
+    voyageLogs?: VoyageLogUncheckedCreateNestedManyWithoutCompanyInput
+    environmentRecords?: EnvironmentRecordUncheckedCreateNestedManyWithoutCompanyInput
+    tmsaAssessments?: TmsaAssessmentUncheckedCreateNestedManyWithoutCompanyInput
+    tmsaScores?: TmsaScoreUncheckedCreateNestedManyWithoutCompanyInput
+    tmsaFindings?: TmsaFindingUncheckedCreateNestedManyWithoutCompanyInput
+    storesCatalogueItems?: StoresCatalogueItemUncheckedCreateNestedManyWithoutCompanyInput
+    sparesCatalogueItems?: SparesCatalogueItemUncheckedCreateNestedManyWithoutCompanyInput
+    openingStockTakes?: OpeningStockTakeUncheckedCreateNestedManyWithoutCompanyInput
+    inventoryEvents?: InventoryEventUncheckedCreateNestedManyWithoutCompanyInput
+    inventoryUpdateDrafts?: InventoryUpdateDraftUncheckedCreateNestedManyWithoutCompanyInput
+    requisitions?: RequisitionUncheckedCreateNestedManyWithoutCompanyInput
+    requisitionRevisions?: RequisitionRevisionUncheckedCreateNestedManyWithoutCompanyInput
+    unitMasters?: UnitMasterUncheckedCreateNestedManyWithoutCompanyInput
+    referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
+    departments?: DepartmentUncheckedCreateNestedManyWithoutCompanyInput
+  }
+
+  export type CompanyCreateOrConnectWithoutAccessLevelsInput = {
+    where: CompanyWhereUniqueInput
+    create: XOR<CompanyCreateWithoutAccessLevelsInput, CompanyUncheckedCreateWithoutAccessLevelsInput>
+  }
+
+  export type UserCreateWithoutAccessLevelInput = {
+    id?: string
+    fullName: string
+    email: string
+    passwordHash: string
+    department: $Enums.DepartmentType
+    rank?: string | null
+    active?: boolean
+    lastLoginAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    company: CompanyCreateNestedOneWithoutUsersInput
+    vessel?: VesselCreateNestedOneWithoutUsersInput
+    departmentRef?: DepartmentCreateNestedOneWithoutUsersInput
+    roles?: UserRoleCreateNestedManyWithoutUserInput
+    ownedDocs?: SmsDocumentCreateNestedManyWithoutOwnerInput
+    reportedIncidents?: IncidentCreateNestedManyWithoutReportedByInput
+    reportedNearMisses?: NearMissCreateNestedManyWithoutReportedByInput
+    raisedNcrs?: NonConformityCreateNestedManyWithoutRaisedByInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    sireResponsibleFor?: SireObservationCreateNestedManyWithoutResponsiblePersonInput
+    sireVerifierFor?: SireObservationCreateNestedManyWithoutVerifiedByInput
+    sireComments?: SireObservationCommentCreateNestedManyWithoutAuthorInput
+  }
+
+  export type UserUncheckedCreateWithoutAccessLevelInput = {
+    id?: string
+    companyId: string
+    fullName: string
+    email: string
+    passwordHash: string
+    department: $Enums.DepartmentType
+    rank?: string | null
+    active?: boolean
+    lastLoginAt?: Date | string | null
+    vesselId?: string | null
+    departmentRefId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    roles?: UserRoleUncheckedCreateNestedManyWithoutUserInput
+    ownedDocs?: SmsDocumentUncheckedCreateNestedManyWithoutOwnerInput
+    reportedIncidents?: IncidentUncheckedCreateNestedManyWithoutReportedByInput
+    reportedNearMisses?: NearMissUncheckedCreateNestedManyWithoutReportedByInput
+    raisedNcrs?: NonConformityUncheckedCreateNestedManyWithoutRaisedByInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    sireResponsibleFor?: SireObservationUncheckedCreateNestedManyWithoutResponsiblePersonInput
+    sireVerifierFor?: SireObservationUncheckedCreateNestedManyWithoutVerifiedByInput
+    sireComments?: SireObservationCommentUncheckedCreateNestedManyWithoutAuthorInput
+  }
+
+  export type UserCreateOrConnectWithoutAccessLevelInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutAccessLevelInput, UserUncheckedCreateWithoutAccessLevelInput>
+  }
+
+  export type UserCreateManyAccessLevelInputEnvelope = {
+    data: UserCreateManyAccessLevelInput | UserCreateManyAccessLevelInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type CompanyUpsertWithoutAccessLevelsInput = {
+    update: XOR<CompanyUpdateWithoutAccessLevelsInput, CompanyUncheckedUpdateWithoutAccessLevelsInput>
+    create: XOR<CompanyCreateWithoutAccessLevelsInput, CompanyUncheckedCreateWithoutAccessLevelsInput>
+    where?: CompanyWhereInput
+  }
+
+  export type CompanyUpdateToOneWithWhereWithoutAccessLevelsInput = {
+    where?: CompanyWhereInput
+    data: XOR<CompanyUpdateWithoutAccessLevelsInput, CompanyUncheckedUpdateWithoutAccessLevelsInput>
+  }
+
+  export type CompanyUpdateWithoutAccessLevelsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ltifTarget?: FloatFieldUpdateOperationsInput | number
+    trcfTarget?: FloatFieldUpdateOperationsInput | number
+    sireAvgObservationTarget?: FloatFieldUpdateOperationsInput | number
+    cinspAvgObservationTarget?: FloatFieldUpdateOperationsInput | number
+    procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
+    procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
+    documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    incidentOverdueDays?: IntFieldUpdateOperationsInput | number
+    sireDueSoonDays?: IntFieldUpdateOperationsInput | number
+    internalAuditDueSoonDays?: IntFieldUpdateOperationsInput | number
+    defaultSireVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    users?: UserUpdateManyWithoutCompanyNestedInput
+    roles?: RoleUpdateManyWithoutCompanyNestedInput
+    vessels?: VesselUpdateManyWithoutCompanyNestedInput
+    smsDocuments?: SmsDocumentUpdateManyWithoutCompanyNestedInput
+    workflows?: WorkflowDefinitionUpdateManyWithoutCompanyNestedInput
+    incidents?: IncidentUpdateManyWithoutCompanyNestedInput
+    nearMisses?: NearMissUpdateManyWithoutCompanyNestedInput
+    nonConformities?: NonConformityUpdateManyWithoutCompanyNestedInput
+    sireInspections?: SireInspectionUpdateManyWithoutCompanyNestedInput
+    sireQuestionnaireVersions?: SireQuestionnaireVersionUpdateManyWithoutCompanyNestedInput
+    pscInspections?: PscInspectionUpdateManyWithoutCompanyNestedInput
+    cdiInspections?: CdiInspectionUpdateManyWithoutCompanyNestedInput
+    internalAudits?: InternalAuditUpdateManyWithoutCompanyNestedInput
+    externalAudits?: ExternalAuditUpdateManyWithoutCompanyNestedInput
+    companyInspections?: CompanyInspectionUpdateManyWithoutCompanyNestedInput
+    committeeMeetings?: CommitteeMeetingUpdateManyWithoutCompanyNestedInput
+    scheduleItems?: ScheduleItemUpdateManyWithoutCompanyNestedInput
+    emergencyDrills?: EmergencyDrillUpdateManyWithoutCompanyNestedInput
+    familiarizationRecords?: FamiliarizationRecordUpdateManyWithoutCompanyNestedInput
+    familiarizationSessions?: FamiliarizationSessionUpdateManyWithoutCompanyNestedInput
+    scheduleApplicability?: ScheduleApplicabilityUpdateManyWithoutCompanyNestedInput
+    lsaFfeItems?: LsaFfeItemUpdateManyWithoutCompanyNestedInput
+    crewFamiliarizations?: CrewFamiliarizationUpdateManyWithoutCompanyNestedInput
+    refSequences?: RefSequenceUpdateManyWithoutCompanyNestedInput
+    controlledDocuments?: ControlledDocumentUpdateManyWithoutCompanyNestedInput
+    circulars?: CircularUpdateManyWithoutCompanyNestedInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUpdateManyWithoutCompanyNestedInput
+    defects?: DefectUpdateManyWithoutCompanyNestedInput
+    crewFamiliarizationRecords?: CrewFamiliarizationRecordUpdateManyWithoutCompanyNestedInput
+    vesselDocuments?: VesselDocumentUpdateManyWithoutCompanyNestedInput
+    voyageLogs?: VoyageLogUpdateManyWithoutCompanyNestedInput
+    environmentRecords?: EnvironmentRecordUpdateManyWithoutCompanyNestedInput
+    tmsaAssessments?: TmsaAssessmentUpdateManyWithoutCompanyNestedInput
+    tmsaScores?: TmsaScoreUpdateManyWithoutCompanyNestedInput
+    tmsaFindings?: TmsaFindingUpdateManyWithoutCompanyNestedInput
+    storesCatalogueItems?: StoresCatalogueItemUpdateManyWithoutCompanyNestedInput
+    sparesCatalogueItems?: SparesCatalogueItemUpdateManyWithoutCompanyNestedInput
+    openingStockTakes?: OpeningStockTakeUpdateManyWithoutCompanyNestedInput
+    inventoryEvents?: InventoryEventUpdateManyWithoutCompanyNestedInput
+    inventoryUpdateDrafts?: InventoryUpdateDraftUpdateManyWithoutCompanyNestedInput
+    requisitions?: RequisitionUpdateManyWithoutCompanyNestedInput
+    requisitionRevisions?: RequisitionRevisionUpdateManyWithoutCompanyNestedInput
+    unitMasters?: UnitMasterUpdateManyWithoutCompanyNestedInput
+    referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
+    departments?: DepartmentUpdateManyWithoutCompanyNestedInput
+  }
+
+  export type CompanyUncheckedUpdateWithoutAccessLevelsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ltifTarget?: FloatFieldUpdateOperationsInput | number
+    trcfTarget?: FloatFieldUpdateOperationsInput | number
+    sireAvgObservationTarget?: FloatFieldUpdateOperationsInput | number
+    cinspAvgObservationTarget?: FloatFieldUpdateOperationsInput | number
+    procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
+    procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
+    documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    incidentOverdueDays?: IntFieldUpdateOperationsInput | number
+    sireDueSoonDays?: IntFieldUpdateOperationsInput | number
+    internalAuditDueSoonDays?: IntFieldUpdateOperationsInput | number
+    defaultSireVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    users?: UserUncheckedUpdateManyWithoutCompanyNestedInput
+    roles?: RoleUncheckedUpdateManyWithoutCompanyNestedInput
+    vessels?: VesselUncheckedUpdateManyWithoutCompanyNestedInput
+    smsDocuments?: SmsDocumentUncheckedUpdateManyWithoutCompanyNestedInput
+    workflows?: WorkflowDefinitionUncheckedUpdateManyWithoutCompanyNestedInput
+    incidents?: IncidentUncheckedUpdateManyWithoutCompanyNestedInput
+    nearMisses?: NearMissUncheckedUpdateManyWithoutCompanyNestedInput
+    nonConformities?: NonConformityUncheckedUpdateManyWithoutCompanyNestedInput
+    sireInspections?: SireInspectionUncheckedUpdateManyWithoutCompanyNestedInput
+    sireQuestionnaireVersions?: SireQuestionnaireVersionUncheckedUpdateManyWithoutCompanyNestedInput
+    pscInspections?: PscInspectionUncheckedUpdateManyWithoutCompanyNestedInput
+    cdiInspections?: CdiInspectionUncheckedUpdateManyWithoutCompanyNestedInput
+    internalAudits?: InternalAuditUncheckedUpdateManyWithoutCompanyNestedInput
+    externalAudits?: ExternalAuditUncheckedUpdateManyWithoutCompanyNestedInput
+    companyInspections?: CompanyInspectionUncheckedUpdateManyWithoutCompanyNestedInput
+    committeeMeetings?: CommitteeMeetingUncheckedUpdateManyWithoutCompanyNestedInput
+    scheduleItems?: ScheduleItemUncheckedUpdateManyWithoutCompanyNestedInput
+    emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutCompanyNestedInput
+    familiarizationRecords?: FamiliarizationRecordUncheckedUpdateManyWithoutCompanyNestedInput
+    familiarizationSessions?: FamiliarizationSessionUncheckedUpdateManyWithoutCompanyNestedInput
+    scheduleApplicability?: ScheduleApplicabilityUncheckedUpdateManyWithoutCompanyNestedInput
+    lsaFfeItems?: LsaFfeItemUncheckedUpdateManyWithoutCompanyNestedInput
+    crewFamiliarizations?: CrewFamiliarizationUncheckedUpdateManyWithoutCompanyNestedInput
+    refSequences?: RefSequenceUncheckedUpdateManyWithoutCompanyNestedInput
+    controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutCompanyNestedInput
+    circulars?: CircularUncheckedUpdateManyWithoutCompanyNestedInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedUpdateManyWithoutCompanyNestedInput
+    defects?: DefectUncheckedUpdateManyWithoutCompanyNestedInput
+    crewFamiliarizationRecords?: CrewFamiliarizationRecordUncheckedUpdateManyWithoutCompanyNestedInput
+    vesselDocuments?: VesselDocumentUncheckedUpdateManyWithoutCompanyNestedInput
+    voyageLogs?: VoyageLogUncheckedUpdateManyWithoutCompanyNestedInput
+    environmentRecords?: EnvironmentRecordUncheckedUpdateManyWithoutCompanyNestedInput
+    tmsaAssessments?: TmsaAssessmentUncheckedUpdateManyWithoutCompanyNestedInput
+    tmsaScores?: TmsaScoreUncheckedUpdateManyWithoutCompanyNestedInput
+    tmsaFindings?: TmsaFindingUncheckedUpdateManyWithoutCompanyNestedInput
+    storesCatalogueItems?: StoresCatalogueItemUncheckedUpdateManyWithoutCompanyNestedInput
+    sparesCatalogueItems?: SparesCatalogueItemUncheckedUpdateManyWithoutCompanyNestedInput
+    openingStockTakes?: OpeningStockTakeUncheckedUpdateManyWithoutCompanyNestedInput
+    inventoryEvents?: InventoryEventUncheckedUpdateManyWithoutCompanyNestedInput
+    inventoryUpdateDrafts?: InventoryUpdateDraftUncheckedUpdateManyWithoutCompanyNestedInput
+    requisitions?: RequisitionUncheckedUpdateManyWithoutCompanyNestedInput
+    requisitionRevisions?: RequisitionRevisionUncheckedUpdateManyWithoutCompanyNestedInput
+    unitMasters?: UnitMasterUncheckedUpdateManyWithoutCompanyNestedInput
+    referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
+    departments?: DepartmentUncheckedUpdateManyWithoutCompanyNestedInput
+  }
+
+  export type UserUpsertWithWhereUniqueWithoutAccessLevelInput = {
+    where: UserWhereUniqueInput
+    update: XOR<UserUpdateWithoutAccessLevelInput, UserUncheckedUpdateWithoutAccessLevelInput>
+    create: XOR<UserCreateWithoutAccessLevelInput, UserUncheckedCreateWithoutAccessLevelInput>
+  }
+
+  export type UserUpdateWithWhereUniqueWithoutAccessLevelInput = {
+    where: UserWhereUniqueInput
+    data: XOR<UserUpdateWithoutAccessLevelInput, UserUncheckedUpdateWithoutAccessLevelInput>
+  }
+
+  export type UserUpdateManyWithWhereWithoutAccessLevelInput = {
+    where: UserScalarWhereInput
+    data: XOR<UserUpdateManyMutationInput, UserUncheckedUpdateManyWithoutAccessLevelInput>
+  }
+
+  export type CompanyCreateWithoutDepartmentsInput = {
+    id?: string
+    name: string
+    code: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    ltifTarget?: number
+    trcfTarget?: number
+    sireAvgObservationTarget?: number
+    cinspAvgObservationTarget?: number
+    procurementThresholdSupt?: number
+    procurementThresholdTechManager?: number
+    documentExpiryWarningMonths?: number
+    incidentOverdueDays?: number
+    sireDueSoonDays?: number
+    internalAuditDueSoonDays?: number
+    defaultSireVersion?: string | null
+    users?: UserCreateNestedManyWithoutCompanyInput
+    roles?: RoleCreateNestedManyWithoutCompanyInput
+    vessels?: VesselCreateNestedManyWithoutCompanyInput
+    smsDocuments?: SmsDocumentCreateNestedManyWithoutCompanyInput
+    workflows?: WorkflowDefinitionCreateNestedManyWithoutCompanyInput
+    incidents?: IncidentCreateNestedManyWithoutCompanyInput
+    nearMisses?: NearMissCreateNestedManyWithoutCompanyInput
+    nonConformities?: NonConformityCreateNestedManyWithoutCompanyInput
+    sireInspections?: SireInspectionCreateNestedManyWithoutCompanyInput
+    sireQuestionnaireVersions?: SireQuestionnaireVersionCreateNestedManyWithoutCompanyInput
+    pscInspections?: PscInspectionCreateNestedManyWithoutCompanyInput
+    cdiInspections?: CdiInspectionCreateNestedManyWithoutCompanyInput
+    internalAudits?: InternalAuditCreateNestedManyWithoutCompanyInput
+    externalAudits?: ExternalAuditCreateNestedManyWithoutCompanyInput
+    companyInspections?: CompanyInspectionCreateNestedManyWithoutCompanyInput
+    committeeMeetings?: CommitteeMeetingCreateNestedManyWithoutCompanyInput
+    scheduleItems?: ScheduleItemCreateNestedManyWithoutCompanyInput
+    emergencyDrills?: EmergencyDrillCreateNestedManyWithoutCompanyInput
+    familiarizationRecords?: FamiliarizationRecordCreateNestedManyWithoutCompanyInput
+    familiarizationSessions?: FamiliarizationSessionCreateNestedManyWithoutCompanyInput
+    scheduleApplicability?: ScheduleApplicabilityCreateNestedManyWithoutCompanyInput
+    lsaFfeItems?: LsaFfeItemCreateNestedManyWithoutCompanyInput
+    crewFamiliarizations?: CrewFamiliarizationCreateNestedManyWithoutCompanyInput
+    refSequences?: RefSequenceCreateNestedManyWithoutCompanyInput
+    controlledDocuments?: ControlledDocumentCreateNestedManyWithoutCompanyInput
+    circulars?: CircularCreateNestedManyWithoutCompanyInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentCreateNestedManyWithoutCompanyInput
+    defects?: DefectCreateNestedManyWithoutCompanyInput
+    crewFamiliarizationRecords?: CrewFamiliarizationRecordCreateNestedManyWithoutCompanyInput
+    vesselDocuments?: VesselDocumentCreateNestedManyWithoutCompanyInput
+    voyageLogs?: VoyageLogCreateNestedManyWithoutCompanyInput
+    environmentRecords?: EnvironmentRecordCreateNestedManyWithoutCompanyInput
+    tmsaAssessments?: TmsaAssessmentCreateNestedManyWithoutCompanyInput
+    tmsaScores?: TmsaScoreCreateNestedManyWithoutCompanyInput
+    tmsaFindings?: TmsaFindingCreateNestedManyWithoutCompanyInput
+    storesCatalogueItems?: StoresCatalogueItemCreateNestedManyWithoutCompanyInput
+    sparesCatalogueItems?: SparesCatalogueItemCreateNestedManyWithoutCompanyInput
+    openingStockTakes?: OpeningStockTakeCreateNestedManyWithoutCompanyInput
+    inventoryEvents?: InventoryEventCreateNestedManyWithoutCompanyInput
+    inventoryUpdateDrafts?: InventoryUpdateDraftCreateNestedManyWithoutCompanyInput
+    requisitions?: RequisitionCreateNestedManyWithoutCompanyInput
+    requisitionRevisions?: RequisitionRevisionCreateNestedManyWithoutCompanyInput
+    unitMasters?: UnitMasterCreateNestedManyWithoutCompanyInput
+    referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
+    accessLevels?: AccessLevelCreateNestedManyWithoutCompanyInput
+  }
+
+  export type CompanyUncheckedCreateWithoutDepartmentsInput = {
+    id?: string
+    name: string
+    code: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    ltifTarget?: number
+    trcfTarget?: number
+    sireAvgObservationTarget?: number
+    cinspAvgObservationTarget?: number
+    procurementThresholdSupt?: number
+    procurementThresholdTechManager?: number
+    documentExpiryWarningMonths?: number
+    incidentOverdueDays?: number
+    sireDueSoonDays?: number
+    internalAuditDueSoonDays?: number
+    defaultSireVersion?: string | null
+    users?: UserUncheckedCreateNestedManyWithoutCompanyInput
+    roles?: RoleUncheckedCreateNestedManyWithoutCompanyInput
+    vessels?: VesselUncheckedCreateNestedManyWithoutCompanyInput
+    smsDocuments?: SmsDocumentUncheckedCreateNestedManyWithoutCompanyInput
+    workflows?: WorkflowDefinitionUncheckedCreateNestedManyWithoutCompanyInput
+    incidents?: IncidentUncheckedCreateNestedManyWithoutCompanyInput
+    nearMisses?: NearMissUncheckedCreateNestedManyWithoutCompanyInput
+    nonConformities?: NonConformityUncheckedCreateNestedManyWithoutCompanyInput
+    sireInspections?: SireInspectionUncheckedCreateNestedManyWithoutCompanyInput
+    sireQuestionnaireVersions?: SireQuestionnaireVersionUncheckedCreateNestedManyWithoutCompanyInput
+    pscInspections?: PscInspectionUncheckedCreateNestedManyWithoutCompanyInput
+    cdiInspections?: CdiInspectionUncheckedCreateNestedManyWithoutCompanyInput
+    internalAudits?: InternalAuditUncheckedCreateNestedManyWithoutCompanyInput
+    externalAudits?: ExternalAuditUncheckedCreateNestedManyWithoutCompanyInput
+    companyInspections?: CompanyInspectionUncheckedCreateNestedManyWithoutCompanyInput
+    committeeMeetings?: CommitteeMeetingUncheckedCreateNestedManyWithoutCompanyInput
+    scheduleItems?: ScheduleItemUncheckedCreateNestedManyWithoutCompanyInput
+    emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutCompanyInput
+    familiarizationRecords?: FamiliarizationRecordUncheckedCreateNestedManyWithoutCompanyInput
+    familiarizationSessions?: FamiliarizationSessionUncheckedCreateNestedManyWithoutCompanyInput
+    scheduleApplicability?: ScheduleApplicabilityUncheckedCreateNestedManyWithoutCompanyInput
+    lsaFfeItems?: LsaFfeItemUncheckedCreateNestedManyWithoutCompanyInput
+    crewFamiliarizations?: CrewFamiliarizationUncheckedCreateNestedManyWithoutCompanyInput
+    refSequences?: RefSequenceUncheckedCreateNestedManyWithoutCompanyInput
+    controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutCompanyInput
+    circulars?: CircularUncheckedCreateNestedManyWithoutCompanyInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedCreateNestedManyWithoutCompanyInput
+    defects?: DefectUncheckedCreateNestedManyWithoutCompanyInput
+    crewFamiliarizationRecords?: CrewFamiliarizationRecordUncheckedCreateNestedManyWithoutCompanyInput
+    vesselDocuments?: VesselDocumentUncheckedCreateNestedManyWithoutCompanyInput
+    voyageLogs?: VoyageLogUncheckedCreateNestedManyWithoutCompanyInput
+    environmentRecords?: EnvironmentRecordUncheckedCreateNestedManyWithoutCompanyInput
+    tmsaAssessments?: TmsaAssessmentUncheckedCreateNestedManyWithoutCompanyInput
+    tmsaScores?: TmsaScoreUncheckedCreateNestedManyWithoutCompanyInput
+    tmsaFindings?: TmsaFindingUncheckedCreateNestedManyWithoutCompanyInput
+    storesCatalogueItems?: StoresCatalogueItemUncheckedCreateNestedManyWithoutCompanyInput
+    sparesCatalogueItems?: SparesCatalogueItemUncheckedCreateNestedManyWithoutCompanyInput
+    openingStockTakes?: OpeningStockTakeUncheckedCreateNestedManyWithoutCompanyInput
+    inventoryEvents?: InventoryEventUncheckedCreateNestedManyWithoutCompanyInput
+    inventoryUpdateDrafts?: InventoryUpdateDraftUncheckedCreateNestedManyWithoutCompanyInput
+    requisitions?: RequisitionUncheckedCreateNestedManyWithoutCompanyInput
+    requisitionRevisions?: RequisitionRevisionUncheckedCreateNestedManyWithoutCompanyInput
+    unitMasters?: UnitMasterUncheckedCreateNestedManyWithoutCompanyInput
+    referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
+    accessLevels?: AccessLevelUncheckedCreateNestedManyWithoutCompanyInput
+  }
+
+  export type CompanyCreateOrConnectWithoutDepartmentsInput = {
+    where: CompanyWhereUniqueInput
+    create: XOR<CompanyCreateWithoutDepartmentsInput, CompanyUncheckedCreateWithoutDepartmentsInput>
+  }
+
+  export type UserCreateWithoutDepartmentRefInput = {
+    id?: string
+    fullName: string
+    email: string
+    passwordHash: string
+    department: $Enums.DepartmentType
+    rank?: string | null
+    active?: boolean
+    lastLoginAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    company: CompanyCreateNestedOneWithoutUsersInput
+    vessel?: VesselCreateNestedOneWithoutUsersInput
+    accessLevel?: AccessLevelCreateNestedOneWithoutUsersInput
+    roles?: UserRoleCreateNestedManyWithoutUserInput
+    ownedDocs?: SmsDocumentCreateNestedManyWithoutOwnerInput
+    reportedIncidents?: IncidentCreateNestedManyWithoutReportedByInput
+    reportedNearMisses?: NearMissCreateNestedManyWithoutReportedByInput
+    raisedNcrs?: NonConformityCreateNestedManyWithoutRaisedByInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    sireResponsibleFor?: SireObservationCreateNestedManyWithoutResponsiblePersonInput
+    sireVerifierFor?: SireObservationCreateNestedManyWithoutVerifiedByInput
+    sireComments?: SireObservationCommentCreateNestedManyWithoutAuthorInput
+  }
+
+  export type UserUncheckedCreateWithoutDepartmentRefInput = {
+    id?: string
+    companyId: string
+    fullName: string
+    email: string
+    passwordHash: string
+    department: $Enums.DepartmentType
+    rank?: string | null
+    active?: boolean
+    lastLoginAt?: Date | string | null
+    vesselId?: string | null
+    accessLevelId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    roles?: UserRoleUncheckedCreateNestedManyWithoutUserInput
+    ownedDocs?: SmsDocumentUncheckedCreateNestedManyWithoutOwnerInput
+    reportedIncidents?: IncidentUncheckedCreateNestedManyWithoutReportedByInput
+    reportedNearMisses?: NearMissUncheckedCreateNestedManyWithoutReportedByInput
+    raisedNcrs?: NonConformityUncheckedCreateNestedManyWithoutRaisedByInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    sireResponsibleFor?: SireObservationUncheckedCreateNestedManyWithoutResponsiblePersonInput
+    sireVerifierFor?: SireObservationUncheckedCreateNestedManyWithoutVerifiedByInput
+    sireComments?: SireObservationCommentUncheckedCreateNestedManyWithoutAuthorInput
+  }
+
+  export type UserCreateOrConnectWithoutDepartmentRefInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutDepartmentRefInput, UserUncheckedCreateWithoutDepartmentRefInput>
+  }
+
+  export type UserCreateManyDepartmentRefInputEnvelope = {
+    data: UserCreateManyDepartmentRefInput | UserCreateManyDepartmentRefInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type CompanyUpsertWithoutDepartmentsInput = {
+    update: XOR<CompanyUpdateWithoutDepartmentsInput, CompanyUncheckedUpdateWithoutDepartmentsInput>
+    create: XOR<CompanyCreateWithoutDepartmentsInput, CompanyUncheckedCreateWithoutDepartmentsInput>
+    where?: CompanyWhereInput
+  }
+
+  export type CompanyUpdateToOneWithWhereWithoutDepartmentsInput = {
+    where?: CompanyWhereInput
+    data: XOR<CompanyUpdateWithoutDepartmentsInput, CompanyUncheckedUpdateWithoutDepartmentsInput>
+  }
+
+  export type CompanyUpdateWithoutDepartmentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ltifTarget?: FloatFieldUpdateOperationsInput | number
+    trcfTarget?: FloatFieldUpdateOperationsInput | number
+    sireAvgObservationTarget?: FloatFieldUpdateOperationsInput | number
+    cinspAvgObservationTarget?: FloatFieldUpdateOperationsInput | number
+    procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
+    procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
+    documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    incidentOverdueDays?: IntFieldUpdateOperationsInput | number
+    sireDueSoonDays?: IntFieldUpdateOperationsInput | number
+    internalAuditDueSoonDays?: IntFieldUpdateOperationsInput | number
+    defaultSireVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    users?: UserUpdateManyWithoutCompanyNestedInput
+    roles?: RoleUpdateManyWithoutCompanyNestedInput
+    vessels?: VesselUpdateManyWithoutCompanyNestedInput
+    smsDocuments?: SmsDocumentUpdateManyWithoutCompanyNestedInput
+    workflows?: WorkflowDefinitionUpdateManyWithoutCompanyNestedInput
+    incidents?: IncidentUpdateManyWithoutCompanyNestedInput
+    nearMisses?: NearMissUpdateManyWithoutCompanyNestedInput
+    nonConformities?: NonConformityUpdateManyWithoutCompanyNestedInput
+    sireInspections?: SireInspectionUpdateManyWithoutCompanyNestedInput
+    sireQuestionnaireVersions?: SireQuestionnaireVersionUpdateManyWithoutCompanyNestedInput
+    pscInspections?: PscInspectionUpdateManyWithoutCompanyNestedInput
+    cdiInspections?: CdiInspectionUpdateManyWithoutCompanyNestedInput
+    internalAudits?: InternalAuditUpdateManyWithoutCompanyNestedInput
+    externalAudits?: ExternalAuditUpdateManyWithoutCompanyNestedInput
+    companyInspections?: CompanyInspectionUpdateManyWithoutCompanyNestedInput
+    committeeMeetings?: CommitteeMeetingUpdateManyWithoutCompanyNestedInput
+    scheduleItems?: ScheduleItemUpdateManyWithoutCompanyNestedInput
+    emergencyDrills?: EmergencyDrillUpdateManyWithoutCompanyNestedInput
+    familiarizationRecords?: FamiliarizationRecordUpdateManyWithoutCompanyNestedInput
+    familiarizationSessions?: FamiliarizationSessionUpdateManyWithoutCompanyNestedInput
+    scheduleApplicability?: ScheduleApplicabilityUpdateManyWithoutCompanyNestedInput
+    lsaFfeItems?: LsaFfeItemUpdateManyWithoutCompanyNestedInput
+    crewFamiliarizations?: CrewFamiliarizationUpdateManyWithoutCompanyNestedInput
+    refSequences?: RefSequenceUpdateManyWithoutCompanyNestedInput
+    controlledDocuments?: ControlledDocumentUpdateManyWithoutCompanyNestedInput
+    circulars?: CircularUpdateManyWithoutCompanyNestedInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUpdateManyWithoutCompanyNestedInput
+    defects?: DefectUpdateManyWithoutCompanyNestedInput
+    crewFamiliarizationRecords?: CrewFamiliarizationRecordUpdateManyWithoutCompanyNestedInput
+    vesselDocuments?: VesselDocumentUpdateManyWithoutCompanyNestedInput
+    voyageLogs?: VoyageLogUpdateManyWithoutCompanyNestedInput
+    environmentRecords?: EnvironmentRecordUpdateManyWithoutCompanyNestedInput
+    tmsaAssessments?: TmsaAssessmentUpdateManyWithoutCompanyNestedInput
+    tmsaScores?: TmsaScoreUpdateManyWithoutCompanyNestedInput
+    tmsaFindings?: TmsaFindingUpdateManyWithoutCompanyNestedInput
+    storesCatalogueItems?: StoresCatalogueItemUpdateManyWithoutCompanyNestedInput
+    sparesCatalogueItems?: SparesCatalogueItemUpdateManyWithoutCompanyNestedInput
+    openingStockTakes?: OpeningStockTakeUpdateManyWithoutCompanyNestedInput
+    inventoryEvents?: InventoryEventUpdateManyWithoutCompanyNestedInput
+    inventoryUpdateDrafts?: InventoryUpdateDraftUpdateManyWithoutCompanyNestedInput
+    requisitions?: RequisitionUpdateManyWithoutCompanyNestedInput
+    requisitionRevisions?: RequisitionRevisionUpdateManyWithoutCompanyNestedInput
+    unitMasters?: UnitMasterUpdateManyWithoutCompanyNestedInput
+    referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
+    accessLevels?: AccessLevelUpdateManyWithoutCompanyNestedInput
+  }
+
+  export type CompanyUncheckedUpdateWithoutDepartmentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ltifTarget?: FloatFieldUpdateOperationsInput | number
+    trcfTarget?: FloatFieldUpdateOperationsInput | number
+    sireAvgObservationTarget?: FloatFieldUpdateOperationsInput | number
+    cinspAvgObservationTarget?: FloatFieldUpdateOperationsInput | number
+    procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
+    procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
+    documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    incidentOverdueDays?: IntFieldUpdateOperationsInput | number
+    sireDueSoonDays?: IntFieldUpdateOperationsInput | number
+    internalAuditDueSoonDays?: IntFieldUpdateOperationsInput | number
+    defaultSireVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    users?: UserUncheckedUpdateManyWithoutCompanyNestedInput
+    roles?: RoleUncheckedUpdateManyWithoutCompanyNestedInput
+    vessels?: VesselUncheckedUpdateManyWithoutCompanyNestedInput
+    smsDocuments?: SmsDocumentUncheckedUpdateManyWithoutCompanyNestedInput
+    workflows?: WorkflowDefinitionUncheckedUpdateManyWithoutCompanyNestedInput
+    incidents?: IncidentUncheckedUpdateManyWithoutCompanyNestedInput
+    nearMisses?: NearMissUncheckedUpdateManyWithoutCompanyNestedInput
+    nonConformities?: NonConformityUncheckedUpdateManyWithoutCompanyNestedInput
+    sireInspections?: SireInspectionUncheckedUpdateManyWithoutCompanyNestedInput
+    sireQuestionnaireVersions?: SireQuestionnaireVersionUncheckedUpdateManyWithoutCompanyNestedInput
+    pscInspections?: PscInspectionUncheckedUpdateManyWithoutCompanyNestedInput
+    cdiInspections?: CdiInspectionUncheckedUpdateManyWithoutCompanyNestedInput
+    internalAudits?: InternalAuditUncheckedUpdateManyWithoutCompanyNestedInput
+    externalAudits?: ExternalAuditUncheckedUpdateManyWithoutCompanyNestedInput
+    companyInspections?: CompanyInspectionUncheckedUpdateManyWithoutCompanyNestedInput
+    committeeMeetings?: CommitteeMeetingUncheckedUpdateManyWithoutCompanyNestedInput
+    scheduleItems?: ScheduleItemUncheckedUpdateManyWithoutCompanyNestedInput
+    emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutCompanyNestedInput
+    familiarizationRecords?: FamiliarizationRecordUncheckedUpdateManyWithoutCompanyNestedInput
+    familiarizationSessions?: FamiliarizationSessionUncheckedUpdateManyWithoutCompanyNestedInput
+    scheduleApplicability?: ScheduleApplicabilityUncheckedUpdateManyWithoutCompanyNestedInput
+    lsaFfeItems?: LsaFfeItemUncheckedUpdateManyWithoutCompanyNestedInput
+    crewFamiliarizations?: CrewFamiliarizationUncheckedUpdateManyWithoutCompanyNestedInput
+    refSequences?: RefSequenceUncheckedUpdateManyWithoutCompanyNestedInput
+    controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutCompanyNestedInput
+    circulars?: CircularUncheckedUpdateManyWithoutCompanyNestedInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedUpdateManyWithoutCompanyNestedInput
+    defects?: DefectUncheckedUpdateManyWithoutCompanyNestedInput
+    crewFamiliarizationRecords?: CrewFamiliarizationRecordUncheckedUpdateManyWithoutCompanyNestedInput
+    vesselDocuments?: VesselDocumentUncheckedUpdateManyWithoutCompanyNestedInput
+    voyageLogs?: VoyageLogUncheckedUpdateManyWithoutCompanyNestedInput
+    environmentRecords?: EnvironmentRecordUncheckedUpdateManyWithoutCompanyNestedInput
+    tmsaAssessments?: TmsaAssessmentUncheckedUpdateManyWithoutCompanyNestedInput
+    tmsaScores?: TmsaScoreUncheckedUpdateManyWithoutCompanyNestedInput
+    tmsaFindings?: TmsaFindingUncheckedUpdateManyWithoutCompanyNestedInput
+    storesCatalogueItems?: StoresCatalogueItemUncheckedUpdateManyWithoutCompanyNestedInput
+    sparesCatalogueItems?: SparesCatalogueItemUncheckedUpdateManyWithoutCompanyNestedInput
+    openingStockTakes?: OpeningStockTakeUncheckedUpdateManyWithoutCompanyNestedInput
+    inventoryEvents?: InventoryEventUncheckedUpdateManyWithoutCompanyNestedInput
+    inventoryUpdateDrafts?: InventoryUpdateDraftUncheckedUpdateManyWithoutCompanyNestedInput
+    requisitions?: RequisitionUncheckedUpdateManyWithoutCompanyNestedInput
+    requisitionRevisions?: RequisitionRevisionUncheckedUpdateManyWithoutCompanyNestedInput
+    unitMasters?: UnitMasterUncheckedUpdateManyWithoutCompanyNestedInput
+    referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
+    accessLevels?: AccessLevelUncheckedUpdateManyWithoutCompanyNestedInput
+  }
+
+  export type UserUpsertWithWhereUniqueWithoutDepartmentRefInput = {
+    where: UserWhereUniqueInput
+    update: XOR<UserUpdateWithoutDepartmentRefInput, UserUncheckedUpdateWithoutDepartmentRefInput>
+    create: XOR<UserCreateWithoutDepartmentRefInput, UserUncheckedCreateWithoutDepartmentRefInput>
+  }
+
+  export type UserUpdateWithWhereUniqueWithoutDepartmentRefInput = {
+    where: UserWhereUniqueInput
+    data: XOR<UserUpdateWithoutDepartmentRefInput, UserUncheckedUpdateWithoutDepartmentRefInput>
+  }
+
+  export type UserUpdateManyWithWhereWithoutDepartmentRefInput = {
+    where: UserScalarWhereInput
+    data: XOR<UserUpdateManyMutationInput, UserUncheckedUpdateManyWithoutDepartmentRefInput>
   }
 
   export type CompanyCreateWithoutVesselsInput = {
@@ -155486,6 +160240,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterCreateNestedManyWithoutCompanyInput
     referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
+    accessLevels?: AccessLevelCreateNestedManyWithoutCompanyInput
+    departments?: DepartmentCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutVesselsInput = {
@@ -155548,6 +160304,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUncheckedCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterUncheckedCreateNestedManyWithoutCompanyInput
     referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
+    accessLevels?: AccessLevelUncheckedCreateNestedManyWithoutCompanyInput
+    departments?: DepartmentUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutVesselsInput = {
@@ -156833,6 +161591,8 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     deletedBy?: string | null
     company: CompanyCreateNestedOneWithoutUsersInput
+    accessLevel?: AccessLevelCreateNestedOneWithoutUsersInput
+    departmentRef?: DepartmentCreateNestedOneWithoutUsersInput
     roles?: UserRoleCreateNestedManyWithoutUserInput
     ownedDocs?: SmsDocumentCreateNestedManyWithoutOwnerInput
     reportedIncidents?: IncidentCreateNestedManyWithoutReportedByInput
@@ -156854,6 +161614,8 @@ export namespace Prisma {
     rank?: string | null
     active?: boolean
     lastLoginAt?: Date | string | null
+    accessLevelId?: string | null
+    departmentRefId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -157495,6 +162257,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUpdateManyWithoutCompanyNestedInput
     referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
+    accessLevels?: AccessLevelUpdateManyWithoutCompanyNestedInput
+    departments?: DepartmentUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutVesselsInput = {
@@ -157557,6 +162321,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUncheckedUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUncheckedUpdateManyWithoutCompanyNestedInput
     referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
+    accessLevels?: AccessLevelUncheckedUpdateManyWithoutCompanyNestedInput
+    departments?: DepartmentUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type SmsDocumentUpsertWithWhereUniqueWithoutVesselInput = {
@@ -158189,6 +162955,8 @@ export namespace Prisma {
     deletedBy?: string | null
     company: CompanyCreateNestedOneWithoutUsersInput
     vessel?: VesselCreateNestedOneWithoutUsersInput
+    accessLevel?: AccessLevelCreateNestedOneWithoutUsersInput
+    departmentRef?: DepartmentCreateNestedOneWithoutUsersInput
     roles?: UserRoleCreateNestedManyWithoutUserInput
     ownedDocs?: SmsDocumentCreateNestedManyWithoutOwnerInput
     reportedIncidents?: IncidentCreateNestedManyWithoutReportedByInput
@@ -158210,6 +162978,8 @@ export namespace Prisma {
     active?: boolean
     lastLoginAt?: Date | string | null
     vesselId?: string | null
+    accessLevelId?: string | null
+    departmentRefId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -158259,6 +163029,8 @@ export namespace Prisma {
     deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     company?: CompanyUpdateOneRequiredWithoutUsersNestedInput
     vessel?: VesselUpdateOneWithoutUsersNestedInput
+    accessLevel?: AccessLevelUpdateOneWithoutUsersNestedInput
+    departmentRef?: DepartmentUpdateOneWithoutUsersNestedInput
     roles?: UserRoleUpdateManyWithoutUserNestedInput
     ownedDocs?: SmsDocumentUpdateManyWithoutOwnerNestedInput
     reportedIncidents?: IncidentUpdateManyWithoutReportedByNestedInput
@@ -158280,6 +163052,8 @@ export namespace Prisma {
     active?: BoolFieldUpdateOperationsInput | boolean
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     vesselId?: NullableStringFieldUpdateOperationsInput | string | null
+    accessLevelId?: NullableStringFieldUpdateOperationsInput | string | null
+    departmentRefId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -158356,6 +163130,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterCreateNestedManyWithoutCompanyInput
     referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
+    accessLevels?: AccessLevelCreateNestedManyWithoutCompanyInput
+    departments?: DepartmentCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutWorkflowsInput = {
@@ -158418,6 +163194,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUncheckedCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterUncheckedCreateNestedManyWithoutCompanyInput
     referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
+    accessLevels?: AccessLevelUncheckedCreateNestedManyWithoutCompanyInput
+    departments?: DepartmentUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutWorkflowsInput = {
@@ -158564,6 +163342,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUpdateManyWithoutCompanyNestedInput
     referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
+    accessLevels?: AccessLevelUpdateManyWithoutCompanyNestedInput
+    departments?: DepartmentUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutWorkflowsInput = {
@@ -158626,6 +163406,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUncheckedUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUncheckedUpdateManyWithoutCompanyNestedInput
     referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
+    accessLevels?: AccessLevelUncheckedUpdateManyWithoutCompanyNestedInput
+    departments?: DepartmentUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type WorkflowStepUpsertWithWhereUniqueWithoutDefinitionInput = {
@@ -159120,6 +163902,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterCreateNestedManyWithoutCompanyInput
     referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
+    accessLevels?: AccessLevelCreateNestedManyWithoutCompanyInput
+    departments?: DepartmentCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutSmsDocumentsInput = {
@@ -159182,6 +163966,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUncheckedCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterUncheckedCreateNestedManyWithoutCompanyInput
     referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
+    accessLevels?: AccessLevelUncheckedCreateNestedManyWithoutCompanyInput
+    departments?: DepartmentUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutSmsDocumentsInput = {
@@ -159206,6 +163992,8 @@ export namespace Prisma {
     deletedBy?: string | null
     company: CompanyCreateNestedOneWithoutUsersInput
     vessel?: VesselCreateNestedOneWithoutUsersInput
+    accessLevel?: AccessLevelCreateNestedOneWithoutUsersInput
+    departmentRef?: DepartmentCreateNestedOneWithoutUsersInput
     roles?: UserRoleCreateNestedManyWithoutUserInput
     reportedIncidents?: IncidentCreateNestedManyWithoutReportedByInput
     reportedNearMisses?: NearMissCreateNestedManyWithoutReportedByInput
@@ -159227,6 +164015,8 @@ export namespace Prisma {
     active?: boolean
     lastLoginAt?: Date | string | null
     vesselId?: string | null
+    accessLevelId?: string | null
+    departmentRefId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -159577,6 +164367,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUpdateManyWithoutCompanyNestedInput
     referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
+    accessLevels?: AccessLevelUpdateManyWithoutCompanyNestedInput
+    departments?: DepartmentUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutSmsDocumentsInput = {
@@ -159639,6 +164431,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUncheckedUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUncheckedUpdateManyWithoutCompanyNestedInput
     referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
+    accessLevels?: AccessLevelUncheckedUpdateManyWithoutCompanyNestedInput
+    departments?: DepartmentUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type UserUpsertWithoutOwnedDocsInput = {
@@ -159669,6 +164463,8 @@ export namespace Prisma {
     deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     company?: CompanyUpdateOneRequiredWithoutUsersNestedInput
     vessel?: VesselUpdateOneWithoutUsersNestedInput
+    accessLevel?: AccessLevelUpdateOneWithoutUsersNestedInput
+    departmentRef?: DepartmentUpdateOneWithoutUsersNestedInput
     roles?: UserRoleUpdateManyWithoutUserNestedInput
     reportedIncidents?: IncidentUpdateManyWithoutReportedByNestedInput
     reportedNearMisses?: NearMissUpdateManyWithoutReportedByNestedInput
@@ -159690,6 +164486,8 @@ export namespace Prisma {
     active?: BoolFieldUpdateOperationsInput | boolean
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     vesselId?: NullableStringFieldUpdateOperationsInput | string | null
+    accessLevelId?: NullableStringFieldUpdateOperationsInput | string | null
+    departmentRefId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -160221,6 +165019,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterCreateNestedManyWithoutCompanyInput
     referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
+    accessLevels?: AccessLevelCreateNestedManyWithoutCompanyInput
+    departments?: DepartmentCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutIncidentsInput = {
@@ -160283,6 +165083,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUncheckedCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterUncheckedCreateNestedManyWithoutCompanyInput
     referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
+    accessLevels?: AccessLevelUncheckedCreateNestedManyWithoutCompanyInput
+    departments?: DepartmentUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutIncidentsInput = {
@@ -160512,6 +165314,8 @@ export namespace Prisma {
     deletedBy?: string | null
     company: CompanyCreateNestedOneWithoutUsersInput
     vessel?: VesselCreateNestedOneWithoutUsersInput
+    accessLevel?: AccessLevelCreateNestedOneWithoutUsersInput
+    departmentRef?: DepartmentCreateNestedOneWithoutUsersInput
     roles?: UserRoleCreateNestedManyWithoutUserInput
     ownedDocs?: SmsDocumentCreateNestedManyWithoutOwnerInput
     reportedNearMisses?: NearMissCreateNestedManyWithoutReportedByInput
@@ -160533,6 +165337,8 @@ export namespace Prisma {
     active?: boolean
     lastLoginAt?: Date | string | null
     vesselId?: string | null
+    accessLevelId?: string | null
+    departmentRefId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -160651,6 +165457,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUpdateManyWithoutCompanyNestedInput
     referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
+    accessLevels?: AccessLevelUpdateManyWithoutCompanyNestedInput
+    departments?: DepartmentUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutIncidentsInput = {
@@ -160713,6 +165521,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUncheckedUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUncheckedUpdateManyWithoutCompanyNestedInput
     referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
+    accessLevels?: AccessLevelUncheckedUpdateManyWithoutCompanyNestedInput
+    departments?: DepartmentUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type VesselUpsertWithoutIncidentsInput = {
@@ -160956,6 +165766,8 @@ export namespace Prisma {
     deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     company?: CompanyUpdateOneRequiredWithoutUsersNestedInput
     vessel?: VesselUpdateOneWithoutUsersNestedInput
+    accessLevel?: AccessLevelUpdateOneWithoutUsersNestedInput
+    departmentRef?: DepartmentUpdateOneWithoutUsersNestedInput
     roles?: UserRoleUpdateManyWithoutUserNestedInput
     ownedDocs?: SmsDocumentUpdateManyWithoutOwnerNestedInput
     reportedNearMisses?: NearMissUpdateManyWithoutReportedByNestedInput
@@ -160977,6 +165789,8 @@ export namespace Prisma {
     active?: BoolFieldUpdateOperationsInput | boolean
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     vesselId?: NullableStringFieldUpdateOperationsInput | string | null
+    accessLevelId?: NullableStringFieldUpdateOperationsInput | string | null
+    departmentRefId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -161369,6 +166183,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterCreateNestedManyWithoutCompanyInput
     referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
+    accessLevels?: AccessLevelCreateNestedManyWithoutCompanyInput
+    departments?: DepartmentCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutNearMissesInput = {
@@ -161431,6 +166247,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUncheckedCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterUncheckedCreateNestedManyWithoutCompanyInput
     referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
+    accessLevels?: AccessLevelUncheckedCreateNestedManyWithoutCompanyInput
+    departments?: DepartmentUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutNearMissesInput = {
@@ -161634,6 +166452,8 @@ export namespace Prisma {
     deletedBy?: string | null
     company: CompanyCreateNestedOneWithoutUsersInput
     vessel?: VesselCreateNestedOneWithoutUsersInput
+    accessLevel?: AccessLevelCreateNestedOneWithoutUsersInput
+    departmentRef?: DepartmentCreateNestedOneWithoutUsersInput
     roles?: UserRoleCreateNestedManyWithoutUserInput
     ownedDocs?: SmsDocumentCreateNestedManyWithoutOwnerInput
     reportedIncidents?: IncidentCreateNestedManyWithoutReportedByInput
@@ -161655,6 +166475,8 @@ export namespace Prisma {
     active?: boolean
     lastLoginAt?: Date | string | null
     vesselId?: string | null
+    accessLevelId?: string | null
+    departmentRefId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -161747,6 +166569,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUpdateManyWithoutCompanyNestedInput
     referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
+    accessLevels?: AccessLevelUpdateManyWithoutCompanyNestedInput
+    departments?: DepartmentUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutNearMissesInput = {
@@ -161809,6 +166633,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUncheckedUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUncheckedUpdateManyWithoutCompanyNestedInput
     referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
+    accessLevels?: AccessLevelUncheckedUpdateManyWithoutCompanyNestedInput
+    departments?: DepartmentUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type VesselUpsertWithoutNearMissesInput = {
@@ -162024,6 +166850,8 @@ export namespace Prisma {
     deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     company?: CompanyUpdateOneRequiredWithoutUsersNestedInput
     vessel?: VesselUpdateOneWithoutUsersNestedInput
+    accessLevel?: AccessLevelUpdateOneWithoutUsersNestedInput
+    departmentRef?: DepartmentUpdateOneWithoutUsersNestedInput
     roles?: UserRoleUpdateManyWithoutUserNestedInput
     ownedDocs?: SmsDocumentUpdateManyWithoutOwnerNestedInput
     reportedIncidents?: IncidentUpdateManyWithoutReportedByNestedInput
@@ -162045,6 +166873,8 @@ export namespace Prisma {
     active?: BoolFieldUpdateOperationsInput | boolean
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     vesselId?: NullableStringFieldUpdateOperationsInput | string | null
+    accessLevelId?: NullableStringFieldUpdateOperationsInput | string | null
+    departmentRefId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -162121,6 +166951,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterCreateNestedManyWithoutCompanyInput
     referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
+    accessLevels?: AccessLevelCreateNestedManyWithoutCompanyInput
+    departments?: DepartmentCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutNonConformitiesInput = {
@@ -162183,6 +167015,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUncheckedCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterUncheckedCreateNestedManyWithoutCompanyInput
     referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
+    accessLevels?: AccessLevelUncheckedCreateNestedManyWithoutCompanyInput
+    departments?: DepartmentUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutNonConformitiesInput = {
@@ -162386,6 +167220,8 @@ export namespace Prisma {
     deletedBy?: string | null
     company: CompanyCreateNestedOneWithoutUsersInput
     vessel?: VesselCreateNestedOneWithoutUsersInput
+    accessLevel?: AccessLevelCreateNestedOneWithoutUsersInput
+    departmentRef?: DepartmentCreateNestedOneWithoutUsersInput
     roles?: UserRoleCreateNestedManyWithoutUserInput
     ownedDocs?: SmsDocumentCreateNestedManyWithoutOwnerInput
     reportedIncidents?: IncidentCreateNestedManyWithoutReportedByInput
@@ -162407,6 +167243,8 @@ export namespace Prisma {
     active?: boolean
     lastLoginAt?: Date | string | null
     vesselId?: string | null
+    accessLevelId?: string | null
+    departmentRefId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -162499,6 +167337,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUpdateManyWithoutCompanyNestedInput
     referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
+    accessLevels?: AccessLevelUpdateManyWithoutCompanyNestedInput
+    departments?: DepartmentUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutNonConformitiesInput = {
@@ -162561,6 +167401,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUncheckedUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUncheckedUpdateManyWithoutCompanyNestedInput
     referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
+    accessLevels?: AccessLevelUncheckedUpdateManyWithoutCompanyNestedInput
+    departments?: DepartmentUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type VesselUpsertWithoutNonConformitiesInput = {
@@ -162776,6 +167618,8 @@ export namespace Prisma {
     deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     company?: CompanyUpdateOneRequiredWithoutUsersNestedInput
     vessel?: VesselUpdateOneWithoutUsersNestedInput
+    accessLevel?: AccessLevelUpdateOneWithoutUsersNestedInput
+    departmentRef?: DepartmentUpdateOneWithoutUsersNestedInput
     roles?: UserRoleUpdateManyWithoutUserNestedInput
     ownedDocs?: SmsDocumentUpdateManyWithoutOwnerNestedInput
     reportedIncidents?: IncidentUpdateManyWithoutReportedByNestedInput
@@ -162797,6 +167641,8 @@ export namespace Prisma {
     active?: BoolFieldUpdateOperationsInput | boolean
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     vesselId?: NullableStringFieldUpdateOperationsInput | string | null
+    accessLevelId?: NullableStringFieldUpdateOperationsInput | string | null
+    departmentRefId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -162873,6 +167719,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterCreateNestedManyWithoutCompanyInput
     referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
+    accessLevels?: AccessLevelCreateNestedManyWithoutCompanyInput
+    departments?: DepartmentCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutSireInspectionsInput = {
@@ -162935,6 +167783,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUncheckedCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterUncheckedCreateNestedManyWithoutCompanyInput
     referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
+    accessLevels?: AccessLevelUncheckedCreateNestedManyWithoutCompanyInput
+    departments?: DepartmentUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutSireInspectionsInput = {
@@ -163254,6 +168104,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUpdateManyWithoutCompanyNestedInput
     referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
+    accessLevels?: AccessLevelUpdateManyWithoutCompanyNestedInput
+    departments?: DepartmentUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutSireInspectionsInput = {
@@ -163316,6 +168168,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUncheckedUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUncheckedUpdateManyWithoutCompanyNestedInput
     referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
+    accessLevels?: AccessLevelUncheckedUpdateManyWithoutCompanyNestedInput
+    departments?: DepartmentUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type VesselUpsertWithoutSireInspectionsInput = {
@@ -163587,6 +168441,8 @@ export namespace Prisma {
     deletedBy?: string | null
     company: CompanyCreateNestedOneWithoutUsersInput
     vessel?: VesselCreateNestedOneWithoutUsersInput
+    accessLevel?: AccessLevelCreateNestedOneWithoutUsersInput
+    departmentRef?: DepartmentCreateNestedOneWithoutUsersInput
     roles?: UserRoleCreateNestedManyWithoutUserInput
     ownedDocs?: SmsDocumentCreateNestedManyWithoutOwnerInput
     reportedIncidents?: IncidentCreateNestedManyWithoutReportedByInput
@@ -163608,6 +168464,8 @@ export namespace Prisma {
     active?: boolean
     lastLoginAt?: Date | string | null
     vesselId?: string | null
+    accessLevelId?: string | null
+    departmentRefId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -163646,6 +168504,8 @@ export namespace Prisma {
     deletedBy?: string | null
     company: CompanyCreateNestedOneWithoutUsersInput
     vessel?: VesselCreateNestedOneWithoutUsersInput
+    accessLevel?: AccessLevelCreateNestedOneWithoutUsersInput
+    departmentRef?: DepartmentCreateNestedOneWithoutUsersInput
     roles?: UserRoleCreateNestedManyWithoutUserInput
     ownedDocs?: SmsDocumentCreateNestedManyWithoutOwnerInput
     reportedIncidents?: IncidentCreateNestedManyWithoutReportedByInput
@@ -163667,6 +168527,8 @@ export namespace Prisma {
     active?: boolean
     lastLoginAt?: Date | string | null
     vesselId?: string | null
+    accessLevelId?: string | null
+    departmentRefId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -163799,6 +168661,8 @@ export namespace Prisma {
     deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     company?: CompanyUpdateOneRequiredWithoutUsersNestedInput
     vessel?: VesselUpdateOneWithoutUsersNestedInput
+    accessLevel?: AccessLevelUpdateOneWithoutUsersNestedInput
+    departmentRef?: DepartmentUpdateOneWithoutUsersNestedInput
     roles?: UserRoleUpdateManyWithoutUserNestedInput
     ownedDocs?: SmsDocumentUpdateManyWithoutOwnerNestedInput
     reportedIncidents?: IncidentUpdateManyWithoutReportedByNestedInput
@@ -163820,6 +168684,8 @@ export namespace Prisma {
     active?: BoolFieldUpdateOperationsInput | boolean
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     vesselId?: NullableStringFieldUpdateOperationsInput | string | null
+    accessLevelId?: NullableStringFieldUpdateOperationsInput | string | null
+    departmentRefId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -163864,6 +168730,8 @@ export namespace Prisma {
     deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     company?: CompanyUpdateOneRequiredWithoutUsersNestedInput
     vessel?: VesselUpdateOneWithoutUsersNestedInput
+    accessLevel?: AccessLevelUpdateOneWithoutUsersNestedInput
+    departmentRef?: DepartmentUpdateOneWithoutUsersNestedInput
     roles?: UserRoleUpdateManyWithoutUserNestedInput
     ownedDocs?: SmsDocumentUpdateManyWithoutOwnerNestedInput
     reportedIncidents?: IncidentUpdateManyWithoutReportedByNestedInput
@@ -163885,6 +168753,8 @@ export namespace Prisma {
     active?: BoolFieldUpdateOperationsInput | boolean
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     vesselId?: NullableStringFieldUpdateOperationsInput | string | null
+    accessLevelId?: NullableStringFieldUpdateOperationsInput | string | null
+    departmentRefId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -163991,6 +168861,8 @@ export namespace Prisma {
     deletedBy?: string | null
     company: CompanyCreateNestedOneWithoutUsersInput
     vessel?: VesselCreateNestedOneWithoutUsersInput
+    accessLevel?: AccessLevelCreateNestedOneWithoutUsersInput
+    departmentRef?: DepartmentCreateNestedOneWithoutUsersInput
     roles?: UserRoleCreateNestedManyWithoutUserInput
     ownedDocs?: SmsDocumentCreateNestedManyWithoutOwnerInput
     reportedIncidents?: IncidentCreateNestedManyWithoutReportedByInput
@@ -164012,6 +168884,8 @@ export namespace Prisma {
     active?: boolean
     lastLoginAt?: Date | string | null
     vesselId?: string | null
+    accessLevelId?: string | null
+    departmentRefId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -164124,6 +168998,8 @@ export namespace Prisma {
     deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     company?: CompanyUpdateOneRequiredWithoutUsersNestedInput
     vessel?: VesselUpdateOneWithoutUsersNestedInput
+    accessLevel?: AccessLevelUpdateOneWithoutUsersNestedInput
+    departmentRef?: DepartmentUpdateOneWithoutUsersNestedInput
     roles?: UserRoleUpdateManyWithoutUserNestedInput
     ownedDocs?: SmsDocumentUpdateManyWithoutOwnerNestedInput
     reportedIncidents?: IncidentUpdateManyWithoutReportedByNestedInput
@@ -164145,6 +169021,8 @@ export namespace Prisma {
     active?: BoolFieldUpdateOperationsInput | boolean
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     vesselId?: NullableStringFieldUpdateOperationsInput | string | null
+    accessLevelId?: NullableStringFieldUpdateOperationsInput | string | null
+    departmentRefId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -164221,6 +169099,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterCreateNestedManyWithoutCompanyInput
     referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
+    accessLevels?: AccessLevelCreateNestedManyWithoutCompanyInput
+    departments?: DepartmentCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutSireQuestionnaireVersionsInput = {
@@ -164283,6 +169163,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUncheckedCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterUncheckedCreateNestedManyWithoutCompanyInput
     referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
+    accessLevels?: AccessLevelUncheckedCreateNestedManyWithoutCompanyInput
+    departments?: DepartmentUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutSireQuestionnaireVersionsInput = {
@@ -164395,6 +169277,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUpdateManyWithoutCompanyNestedInput
     referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
+    accessLevels?: AccessLevelUpdateManyWithoutCompanyNestedInput
+    departments?: DepartmentUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutSireQuestionnaireVersionsInput = {
@@ -164457,6 +169341,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUncheckedUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUncheckedUpdateManyWithoutCompanyNestedInput
     referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
+    accessLevels?: AccessLevelUncheckedUpdateManyWithoutCompanyNestedInput
+    departments?: DepartmentUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type SireQuestionnaireItemUpsertWithWhereUniqueWithoutVersionInput = {
@@ -164615,6 +169501,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterCreateNestedManyWithoutCompanyInput
     referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
+    accessLevels?: AccessLevelCreateNestedManyWithoutCompanyInput
+    departments?: DepartmentCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutPscInspectionsInput = {
@@ -164677,6 +169565,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUncheckedCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterUncheckedCreateNestedManyWithoutCompanyInput
     referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
+    accessLevels?: AccessLevelUncheckedCreateNestedManyWithoutCompanyInput
+    departments?: DepartmentUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutPscInspectionsInput = {
@@ -164974,6 +169864,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUpdateManyWithoutCompanyNestedInput
     referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
+    accessLevels?: AccessLevelUpdateManyWithoutCompanyNestedInput
+    departments?: DepartmentUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutPscInspectionsInput = {
@@ -165036,6 +169928,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUncheckedUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUncheckedUpdateManyWithoutCompanyNestedInput
     referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
+    accessLevels?: AccessLevelUncheckedUpdateManyWithoutCompanyNestedInput
+    departments?: DepartmentUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type VesselUpsertWithoutPscInspectionsInput = {
@@ -165418,6 +170312,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterCreateNestedManyWithoutCompanyInput
     referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
+    accessLevels?: AccessLevelCreateNestedManyWithoutCompanyInput
+    departments?: DepartmentCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutCdiInspectionsInput = {
@@ -165480,6 +170376,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUncheckedCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterUncheckedCreateNestedManyWithoutCompanyInput
     referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
+    accessLevels?: AccessLevelUncheckedCreateNestedManyWithoutCompanyInput
+    departments?: DepartmentUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutCdiInspectionsInput = {
@@ -165779,6 +170677,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUpdateManyWithoutCompanyNestedInput
     referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
+    accessLevels?: AccessLevelUpdateManyWithoutCompanyNestedInput
+    departments?: DepartmentUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutCdiInspectionsInput = {
@@ -165841,6 +170741,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUncheckedUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUncheckedUpdateManyWithoutCompanyNestedInput
     referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
+    accessLevels?: AccessLevelUncheckedUpdateManyWithoutCompanyNestedInput
+    departments?: DepartmentUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type VesselUpsertWithoutCdiInspectionsInput = {
@@ -166220,6 +171122,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterCreateNestedManyWithoutCompanyInput
     referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
+    accessLevels?: AccessLevelCreateNestedManyWithoutCompanyInput
+    departments?: DepartmentCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutInternalAuditsInput = {
@@ -166282,6 +171186,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUncheckedCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterUncheckedCreateNestedManyWithoutCompanyInput
     referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
+    accessLevels?: AccessLevelUncheckedCreateNestedManyWithoutCompanyInput
+    departments?: DepartmentUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutInternalAuditsInput = {
@@ -166577,6 +171483,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUpdateManyWithoutCompanyNestedInput
     referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
+    accessLevels?: AccessLevelUpdateManyWithoutCompanyNestedInput
+    departments?: DepartmentUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutInternalAuditsInput = {
@@ -166639,6 +171547,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUncheckedUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUncheckedUpdateManyWithoutCompanyNestedInput
     referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
+    accessLevels?: AccessLevelUncheckedUpdateManyWithoutCompanyNestedInput
+    departments?: DepartmentUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type VesselUpsertWithoutInternalAuditsInput = {
@@ -167020,6 +171930,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterCreateNestedManyWithoutCompanyInput
     referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
+    accessLevels?: AccessLevelCreateNestedManyWithoutCompanyInput
+    departments?: DepartmentCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutExternalAuditsInput = {
@@ -167082,6 +171994,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUncheckedCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterUncheckedCreateNestedManyWithoutCompanyInput
     referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
+    accessLevels?: AccessLevelUncheckedCreateNestedManyWithoutCompanyInput
+    departments?: DepartmentUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutExternalAuditsInput = {
@@ -167377,6 +172291,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUpdateManyWithoutCompanyNestedInput
     referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
+    accessLevels?: AccessLevelUpdateManyWithoutCompanyNestedInput
+    departments?: DepartmentUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutExternalAuditsInput = {
@@ -167439,6 +172355,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUncheckedUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUncheckedUpdateManyWithoutCompanyNestedInput
     referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
+    accessLevels?: AccessLevelUncheckedUpdateManyWithoutCompanyNestedInput
+    departments?: DepartmentUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type VesselUpsertWithoutExternalAuditsInput = {
@@ -167820,6 +172738,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterCreateNestedManyWithoutCompanyInput
     referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
+    accessLevels?: AccessLevelCreateNestedManyWithoutCompanyInput
+    departments?: DepartmentCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutCompanyInspectionsInput = {
@@ -167882,6 +172802,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUncheckedCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterUncheckedCreateNestedManyWithoutCompanyInput
     referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
+    accessLevels?: AccessLevelUncheckedCreateNestedManyWithoutCompanyInput
+    departments?: DepartmentUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutCompanyInspectionsInput = {
@@ -168185,6 +173107,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUpdateManyWithoutCompanyNestedInput
     referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
+    accessLevels?: AccessLevelUpdateManyWithoutCompanyNestedInput
+    departments?: DepartmentUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutCompanyInspectionsInput = {
@@ -168247,6 +173171,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUncheckedUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUncheckedUpdateManyWithoutCompanyNestedInput
     referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
+    accessLevels?: AccessLevelUncheckedUpdateManyWithoutCompanyNestedInput
+    departments?: DepartmentUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type VesselUpsertWithoutCompanyInspectionsInput = {
@@ -168632,6 +173558,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterCreateNestedManyWithoutCompanyInput
     referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
+    accessLevels?: AccessLevelCreateNestedManyWithoutCompanyInput
+    departments?: DepartmentCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutCommitteeMeetingsInput = {
@@ -168694,6 +173622,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUncheckedCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterUncheckedCreateNestedManyWithoutCompanyInput
     referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
+    accessLevels?: AccessLevelUncheckedCreateNestedManyWithoutCompanyInput
+    departments?: DepartmentUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutCommitteeMeetingsInput = {
@@ -168985,6 +173915,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUpdateManyWithoutCompanyNestedInput
     referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
+    accessLevels?: AccessLevelUpdateManyWithoutCompanyNestedInput
+    departments?: DepartmentUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutCommitteeMeetingsInput = {
@@ -169047,6 +173979,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUncheckedUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUncheckedUpdateManyWithoutCompanyNestedInput
     referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
+    accessLevels?: AccessLevelUncheckedUpdateManyWithoutCompanyNestedInput
+    departments?: DepartmentUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type VesselUpsertWithoutCommitteeMeetingsInput = {
@@ -169450,6 +174384,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterCreateNestedManyWithoutCompanyInput
     referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
+    accessLevels?: AccessLevelCreateNestedManyWithoutCompanyInput
+    departments?: DepartmentCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutScheduleItemsInput = {
@@ -169512,6 +174448,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUncheckedCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterUncheckedCreateNestedManyWithoutCompanyInput
     referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
+    accessLevels?: AccessLevelUncheckedCreateNestedManyWithoutCompanyInput
+    departments?: DepartmentUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutScheduleItemsInput = {
@@ -169724,6 +174662,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUpdateManyWithoutCompanyNestedInput
     referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
+    accessLevels?: AccessLevelUpdateManyWithoutCompanyNestedInput
+    departments?: DepartmentUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutScheduleItemsInput = {
@@ -169786,6 +174726,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUncheckedUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUncheckedUpdateManyWithoutCompanyNestedInput
     referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
+    accessLevels?: AccessLevelUncheckedUpdateManyWithoutCompanyNestedInput
+    departments?: DepartmentUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type EmergencyDrillUpsertWithWhereUniqueWithoutScheduleItemInput = {
@@ -169896,6 +174838,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterCreateNestedManyWithoutCompanyInput
     referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
+    accessLevels?: AccessLevelCreateNestedManyWithoutCompanyInput
+    departments?: DepartmentCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutScheduleApplicabilityInput = {
@@ -169958,6 +174902,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUncheckedCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterUncheckedCreateNestedManyWithoutCompanyInput
     referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
+    accessLevels?: AccessLevelUncheckedCreateNestedManyWithoutCompanyInput
+    departments?: DepartmentUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutScheduleApplicabilityInput = {
@@ -170258,6 +175204,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUpdateManyWithoutCompanyNestedInput
     referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
+    accessLevels?: AccessLevelUpdateManyWithoutCompanyNestedInput
+    departments?: DepartmentUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutScheduleApplicabilityInput = {
@@ -170320,6 +175268,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUncheckedUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUncheckedUpdateManyWithoutCompanyNestedInput
     referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
+    accessLevels?: AccessLevelUncheckedUpdateManyWithoutCompanyNestedInput
+    departments?: DepartmentUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type VesselUpsertWithoutScheduleApplicabilityInput = {
@@ -170616,6 +175566,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterCreateNestedManyWithoutCompanyInput
     referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
+    accessLevels?: AccessLevelCreateNestedManyWithoutCompanyInput
+    departments?: DepartmentCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutEmergencyDrillsInput = {
@@ -170678,6 +175630,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUncheckedCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterUncheckedCreateNestedManyWithoutCompanyInput
     referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
+    accessLevels?: AccessLevelUncheckedCreateNestedManyWithoutCompanyInput
+    departments?: DepartmentUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutEmergencyDrillsInput = {
@@ -170978,6 +175932,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUpdateManyWithoutCompanyNestedInput
     referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
+    accessLevels?: AccessLevelUpdateManyWithoutCompanyNestedInput
+    departments?: DepartmentUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutEmergencyDrillsInput = {
@@ -171040,6 +175996,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUncheckedUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUncheckedUpdateManyWithoutCompanyNestedInput
     referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
+    accessLevels?: AccessLevelUncheckedUpdateManyWithoutCompanyNestedInput
+    departments?: DepartmentUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type VesselUpsertWithoutEmergencyDrillsInput = {
@@ -171336,6 +176294,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterCreateNestedManyWithoutCompanyInput
     referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
+    accessLevels?: AccessLevelCreateNestedManyWithoutCompanyInput
+    departments?: DepartmentCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutFamiliarizationRecordsInput = {
@@ -171398,6 +176358,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUncheckedCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterUncheckedCreateNestedManyWithoutCompanyInput
     referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
+    accessLevels?: AccessLevelUncheckedCreateNestedManyWithoutCompanyInput
+    departments?: DepartmentUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutFamiliarizationRecordsInput = {
@@ -171735,6 +176697,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUpdateManyWithoutCompanyNestedInput
     referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
+    accessLevels?: AccessLevelUpdateManyWithoutCompanyNestedInput
+    departments?: DepartmentUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutFamiliarizationRecordsInput = {
@@ -171797,6 +176761,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUncheckedUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUncheckedUpdateManyWithoutCompanyNestedInput
     referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
+    accessLevels?: AccessLevelUncheckedUpdateManyWithoutCompanyNestedInput
+    departments?: DepartmentUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type VesselUpsertWithoutFamiliarizationRecordsInput = {
@@ -172136,6 +177102,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterCreateNestedManyWithoutCompanyInput
     referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
+    accessLevels?: AccessLevelCreateNestedManyWithoutCompanyInput
+    departments?: DepartmentCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutFamiliarizationSessionsInput = {
@@ -172198,6 +177166,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUncheckedCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterUncheckedCreateNestedManyWithoutCompanyInput
     referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
+    accessLevels?: AccessLevelUncheckedCreateNestedManyWithoutCompanyInput
+    departments?: DepartmentUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutFamiliarizationSessionsInput = {
@@ -172497,6 +177467,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUpdateManyWithoutCompanyNestedInput
     referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
+    accessLevels?: AccessLevelUpdateManyWithoutCompanyNestedInput
+    departments?: DepartmentUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutFamiliarizationSessionsInput = {
@@ -172559,6 +177531,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUncheckedUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUncheckedUpdateManyWithoutCompanyNestedInput
     referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
+    accessLevels?: AccessLevelUncheckedUpdateManyWithoutCompanyNestedInput
+    departments?: DepartmentUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type VesselUpsertWithoutFamiliarizationSessionsInput = {
@@ -172822,6 +177796,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterCreateNestedManyWithoutCompanyInput
     referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
+    accessLevels?: AccessLevelCreateNestedManyWithoutCompanyInput
+    departments?: DepartmentCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutLsaFfeItemsInput = {
@@ -172884,6 +177860,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUncheckedCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterUncheckedCreateNestedManyWithoutCompanyInput
     referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
+    accessLevels?: AccessLevelUncheckedCreateNestedManyWithoutCompanyInput
+    departments?: DepartmentUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutLsaFfeItemsInput = {
@@ -172994,6 +177972,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUpdateManyWithoutCompanyNestedInput
     referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
+    accessLevels?: AccessLevelUpdateManyWithoutCompanyNestedInput
+    departments?: DepartmentUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutLsaFfeItemsInput = {
@@ -173056,6 +178036,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUncheckedUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUncheckedUpdateManyWithoutCompanyNestedInput
     referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
+    accessLevels?: AccessLevelUncheckedUpdateManyWithoutCompanyNestedInput
+    departments?: DepartmentUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type CrewFamiliarizationRecordUpsertWithWhereUniqueWithoutLsaFfeItemInput = {
@@ -173134,6 +178116,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterCreateNestedManyWithoutCompanyInput
     referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
+    accessLevels?: AccessLevelCreateNestedManyWithoutCompanyInput
+    departments?: DepartmentCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutCrewFamiliarizationsInput = {
@@ -173196,6 +178180,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUncheckedCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterUncheckedCreateNestedManyWithoutCompanyInput
     referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
+    accessLevels?: AccessLevelUncheckedCreateNestedManyWithoutCompanyInput
+    departments?: DepartmentUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutCrewFamiliarizationsInput = {
@@ -173485,6 +178471,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUpdateManyWithoutCompanyNestedInput
     referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
+    accessLevels?: AccessLevelUpdateManyWithoutCompanyNestedInput
+    departments?: DepartmentUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutCrewFamiliarizationsInput = {
@@ -173547,6 +178535,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUncheckedUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUncheckedUpdateManyWithoutCompanyNestedInput
     referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
+    accessLevels?: AccessLevelUncheckedUpdateManyWithoutCompanyNestedInput
+    departments?: DepartmentUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type VesselUpsertWithoutCrewFamiliarizationsInput = {
@@ -173810,6 +178800,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterCreateNestedManyWithoutCompanyInput
     referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
+    accessLevels?: AccessLevelCreateNestedManyWithoutCompanyInput
+    departments?: DepartmentCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutCrewFamiliarizationRecordsInput = {
@@ -173872,6 +178864,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUncheckedCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterUncheckedCreateNestedManyWithoutCompanyInput
     referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
+    accessLevels?: AccessLevelUncheckedCreateNestedManyWithoutCompanyInput
+    departments?: DepartmentUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutCrewFamiliarizationRecordsInput = {
@@ -174020,6 +179014,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUpdateManyWithoutCompanyNestedInput
     referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
+    accessLevels?: AccessLevelUpdateManyWithoutCompanyNestedInput
+    departments?: DepartmentUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutCrewFamiliarizationRecordsInput = {
@@ -174082,6 +179078,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUncheckedUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUncheckedUpdateManyWithoutCompanyNestedInput
     referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
+    accessLevels?: AccessLevelUncheckedUpdateManyWithoutCompanyNestedInput
+    departments?: DepartmentUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type CrewFamiliarizationUpsertWithoutRecordsInput = {
@@ -174226,6 +179224,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterCreateNestedManyWithoutCompanyInput
     referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
+    accessLevels?: AccessLevelCreateNestedManyWithoutCompanyInput
+    departments?: DepartmentCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutControlledDocumentsInput = {
@@ -174288,6 +179288,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUncheckedCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterUncheckedCreateNestedManyWithoutCompanyInput
     referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
+    accessLevels?: AccessLevelUncheckedCreateNestedManyWithoutCompanyInput
+    departments?: DepartmentUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutControlledDocumentsInput = {
@@ -174545,6 +179547,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUpdateManyWithoutCompanyNestedInput
     referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
+    accessLevels?: AccessLevelUpdateManyWithoutCompanyNestedInput
+    departments?: DepartmentUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutControlledDocumentsInput = {
@@ -174607,6 +179611,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUncheckedUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUncheckedUpdateManyWithoutCompanyNestedInput
     referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
+    accessLevels?: AccessLevelUncheckedUpdateManyWithoutCompanyNestedInput
+    departments?: DepartmentUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type VesselUpsertWithoutControlledDocumentsInput = {
@@ -174854,6 +179860,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterCreateNestedManyWithoutCompanyInput
     referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
+    accessLevels?: AccessLevelCreateNestedManyWithoutCompanyInput
+    departments?: DepartmentCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutVesselDocumentsInput = {
@@ -174916,6 +179924,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUncheckedCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterUncheckedCreateNestedManyWithoutCompanyInput
     referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
+    accessLevels?: AccessLevelUncheckedCreateNestedManyWithoutCompanyInput
+    departments?: DepartmentUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutVesselDocumentsInput = {
@@ -175173,6 +180183,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUpdateManyWithoutCompanyNestedInput
     referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
+    accessLevels?: AccessLevelUpdateManyWithoutCompanyNestedInput
+    departments?: DepartmentUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutVesselDocumentsInput = {
@@ -175235,6 +180247,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUncheckedUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUncheckedUpdateManyWithoutCompanyNestedInput
     referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
+    accessLevels?: AccessLevelUncheckedUpdateManyWithoutCompanyNestedInput
+    departments?: DepartmentUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type VesselUpsertWithoutVesselDocumentsInput = {
@@ -175482,6 +180496,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterCreateNestedManyWithoutCompanyInput
     referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
+    accessLevels?: AccessLevelCreateNestedManyWithoutCompanyInput
+    departments?: DepartmentCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutCircularsInput = {
@@ -175544,6 +180560,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUncheckedCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterUncheckedCreateNestedManyWithoutCompanyInput
     referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
+    accessLevels?: AccessLevelUncheckedCreateNestedManyWithoutCompanyInput
+    departments?: DepartmentUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutCircularsInput = {
@@ -175835,6 +180853,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUpdateManyWithoutCompanyNestedInput
     referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
+    accessLevels?: AccessLevelUpdateManyWithoutCompanyNestedInput
+    departments?: DepartmentUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutCircularsInput = {
@@ -175897,6 +180917,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUncheckedUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUncheckedUpdateManyWithoutCompanyNestedInput
     referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
+    accessLevels?: AccessLevelUncheckedUpdateManyWithoutCompanyNestedInput
+    departments?: DepartmentUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type VesselUpsertWithoutCircularsInput = {
@@ -176272,6 +181294,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterCreateNestedManyWithoutCompanyInput
     referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
+    accessLevels?: AccessLevelCreateNestedManyWithoutCompanyInput
+    departments?: DepartmentCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutRiskAssessmentDocumentsInput = {
@@ -176334,6 +181358,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUncheckedCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterUncheckedCreateNestedManyWithoutCompanyInput
     referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
+    accessLevels?: AccessLevelUncheckedCreateNestedManyWithoutCompanyInput
+    departments?: DepartmentUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutRiskAssessmentDocumentsInput = {
@@ -176774,6 +181800,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUpdateManyWithoutCompanyNestedInput
     referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
+    accessLevels?: AccessLevelUpdateManyWithoutCompanyNestedInput
+    departments?: DepartmentUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutRiskAssessmentDocumentsInput = {
@@ -176836,6 +181864,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUncheckedUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUncheckedUpdateManyWithoutCompanyNestedInput
     referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
+    accessLevels?: AccessLevelUncheckedUpdateManyWithoutCompanyNestedInput
+    departments?: DepartmentUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type VesselUpsertWithoutRiskAssessmentDocumentsInput = {
@@ -179106,6 +184136,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterCreateNestedManyWithoutCompanyInput
     referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
+    accessLevels?: AccessLevelCreateNestedManyWithoutCompanyInput
+    departments?: DepartmentCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutDefectsInput = {
@@ -179168,6 +184200,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUncheckedCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterUncheckedCreateNestedManyWithoutCompanyInput
     referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
+    accessLevels?: AccessLevelUncheckedCreateNestedManyWithoutCompanyInput
+    departments?: DepartmentUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutDefectsInput = {
@@ -179425,6 +184459,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUpdateManyWithoutCompanyNestedInput
     referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
+    accessLevels?: AccessLevelUpdateManyWithoutCompanyNestedInput
+    departments?: DepartmentUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutDefectsInput = {
@@ -179487,6 +184523,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUncheckedUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUncheckedUpdateManyWithoutCompanyNestedInput
     referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
+    accessLevels?: AccessLevelUncheckedUpdateManyWithoutCompanyNestedInput
+    departments?: DepartmentUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type VesselUpsertWithoutDefectsInput = {
@@ -179734,6 +184772,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterCreateNestedManyWithoutCompanyInput
     referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
+    accessLevels?: AccessLevelCreateNestedManyWithoutCompanyInput
+    departments?: DepartmentCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutVoyageLogsInput = {
@@ -179796,6 +184836,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUncheckedCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterUncheckedCreateNestedManyWithoutCompanyInput
     referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
+    accessLevels?: AccessLevelUncheckedCreateNestedManyWithoutCompanyInput
+    departments?: DepartmentUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutVoyageLogsInput = {
@@ -180083,6 +185125,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUpdateManyWithoutCompanyNestedInput
     referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
+    accessLevels?: AccessLevelUpdateManyWithoutCompanyNestedInput
+    departments?: DepartmentUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutVoyageLogsInput = {
@@ -180145,6 +185189,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUncheckedUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUncheckedUpdateManyWithoutCompanyNestedInput
     referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
+    accessLevels?: AccessLevelUncheckedUpdateManyWithoutCompanyNestedInput
+    departments?: DepartmentUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type VesselUpsertWithoutVoyageLogsInput = {
@@ -180710,6 +185756,8 @@ export namespace Prisma {
     requisitions?: RequisitionCreateNestedManyWithoutCompanyInput
     requisitionRevisions?: RequisitionRevisionCreateNestedManyWithoutCompanyInput
     referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
+    accessLevels?: AccessLevelCreateNestedManyWithoutCompanyInput
+    departments?: DepartmentCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutUnitMastersInput = {
@@ -180772,6 +185820,8 @@ export namespace Prisma {
     requisitions?: RequisitionUncheckedCreateNestedManyWithoutCompanyInput
     requisitionRevisions?: RequisitionRevisionUncheckedCreateNestedManyWithoutCompanyInput
     referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
+    accessLevels?: AccessLevelUncheckedCreateNestedManyWithoutCompanyInput
+    departments?: DepartmentUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutUnitMastersInput = {
@@ -180850,6 +185900,8 @@ export namespace Prisma {
     requisitions?: RequisitionUpdateManyWithoutCompanyNestedInput
     requisitionRevisions?: RequisitionRevisionUpdateManyWithoutCompanyNestedInput
     referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
+    accessLevels?: AccessLevelUpdateManyWithoutCompanyNestedInput
+    departments?: DepartmentUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutUnitMastersInput = {
@@ -180912,6 +185964,8 @@ export namespace Prisma {
     requisitions?: RequisitionUncheckedUpdateManyWithoutCompanyNestedInput
     requisitionRevisions?: RequisitionRevisionUncheckedUpdateManyWithoutCompanyNestedInput
     referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
+    accessLevels?: AccessLevelUncheckedUpdateManyWithoutCompanyNestedInput
+    departments?: DepartmentUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyCreateWithoutReferenceListItemsInput = {
@@ -180974,6 +186028,8 @@ export namespace Prisma {
     requisitions?: RequisitionCreateNestedManyWithoutCompanyInput
     requisitionRevisions?: RequisitionRevisionCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterCreateNestedManyWithoutCompanyInput
+    accessLevels?: AccessLevelCreateNestedManyWithoutCompanyInput
+    departments?: DepartmentCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutReferenceListItemsInput = {
@@ -181036,6 +186092,8 @@ export namespace Prisma {
     requisitions?: RequisitionUncheckedCreateNestedManyWithoutCompanyInput
     requisitionRevisions?: RequisitionRevisionUncheckedCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterUncheckedCreateNestedManyWithoutCompanyInput
+    accessLevels?: AccessLevelUncheckedCreateNestedManyWithoutCompanyInput
+    departments?: DepartmentUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutReferenceListItemsInput = {
@@ -181114,6 +186172,8 @@ export namespace Prisma {
     requisitions?: RequisitionUpdateManyWithoutCompanyNestedInput
     requisitionRevisions?: RequisitionRevisionUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUpdateManyWithoutCompanyNestedInput
+    accessLevels?: AccessLevelUpdateManyWithoutCompanyNestedInput
+    departments?: DepartmentUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutReferenceListItemsInput = {
@@ -181176,6 +186236,8 @@ export namespace Prisma {
     requisitions?: RequisitionUncheckedUpdateManyWithoutCompanyNestedInput
     requisitionRevisions?: RequisitionRevisionUncheckedUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUncheckedUpdateManyWithoutCompanyNestedInput
+    accessLevels?: AccessLevelUncheckedUpdateManyWithoutCompanyNestedInput
+    departments?: DepartmentUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyCreateWithoutEnvironmentRecordsInput = {
@@ -181238,6 +186300,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterCreateNestedManyWithoutCompanyInput
     referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
+    accessLevels?: AccessLevelCreateNestedManyWithoutCompanyInput
+    departments?: DepartmentCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutEnvironmentRecordsInput = {
@@ -181300,6 +186364,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUncheckedCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterUncheckedCreateNestedManyWithoutCompanyInput
     referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
+    accessLevels?: AccessLevelUncheckedCreateNestedManyWithoutCompanyInput
+    departments?: DepartmentUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutEnvironmentRecordsInput = {
@@ -181585,6 +186651,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUpdateManyWithoutCompanyNestedInput
     referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
+    accessLevels?: AccessLevelUpdateManyWithoutCompanyNestedInput
+    departments?: DepartmentUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutEnvironmentRecordsInput = {
@@ -181647,6 +186715,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUncheckedUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUncheckedUpdateManyWithoutCompanyNestedInput
     referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
+    accessLevels?: AccessLevelUncheckedUpdateManyWithoutCompanyNestedInput
+    departments?: DepartmentUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type VesselUpsertWithoutEnvironmentRecordsInput = {
@@ -182187,6 +187257,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterCreateNestedManyWithoutCompanyInput
     referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
+    accessLevels?: AccessLevelCreateNestedManyWithoutCompanyInput
+    departments?: DepartmentCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutRefSequencesInput = {
@@ -182249,6 +187321,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUncheckedCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterUncheckedCreateNestedManyWithoutCompanyInput
     referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
+    accessLevels?: AccessLevelUncheckedCreateNestedManyWithoutCompanyInput
+    departments?: DepartmentUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutRefSequencesInput = {
@@ -182327,6 +187401,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUpdateManyWithoutCompanyNestedInput
     referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
+    accessLevels?: AccessLevelUpdateManyWithoutCompanyNestedInput
+    departments?: DepartmentUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutRefSequencesInput = {
@@ -182389,6 +187465,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUncheckedUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUncheckedUpdateManyWithoutCompanyNestedInput
     referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
+    accessLevels?: AccessLevelUncheckedUpdateManyWithoutCompanyNestedInput
+    departments?: DepartmentUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyCreateWithoutTmsaAssessmentsInput = {
@@ -182451,6 +187529,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterCreateNestedManyWithoutCompanyInput
     referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
+    accessLevels?: AccessLevelCreateNestedManyWithoutCompanyInput
+    departments?: DepartmentCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutTmsaAssessmentsInput = {
@@ -182513,6 +187593,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUncheckedCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterUncheckedCreateNestedManyWithoutCompanyInput
     referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
+    accessLevels?: AccessLevelUncheckedCreateNestedManyWithoutCompanyInput
+    departments?: DepartmentUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutTmsaAssessmentsInput = {
@@ -182591,6 +187673,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUpdateManyWithoutCompanyNestedInput
     referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
+    accessLevels?: AccessLevelUpdateManyWithoutCompanyNestedInput
+    departments?: DepartmentUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutTmsaAssessmentsInput = {
@@ -182653,6 +187737,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUncheckedUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUncheckedUpdateManyWithoutCompanyNestedInput
     referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
+    accessLevels?: AccessLevelUncheckedUpdateManyWithoutCompanyNestedInput
+    departments?: DepartmentUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyCreateWithoutTmsaScoresInput = {
@@ -182715,6 +187801,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterCreateNestedManyWithoutCompanyInput
     referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
+    accessLevels?: AccessLevelCreateNestedManyWithoutCompanyInput
+    departments?: DepartmentCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutTmsaScoresInput = {
@@ -182777,6 +187865,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUncheckedCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterUncheckedCreateNestedManyWithoutCompanyInput
     referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
+    accessLevels?: AccessLevelUncheckedCreateNestedManyWithoutCompanyInput
+    departments?: DepartmentUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutTmsaScoresInput = {
@@ -182855,6 +187945,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUpdateManyWithoutCompanyNestedInput
     referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
+    accessLevels?: AccessLevelUpdateManyWithoutCompanyNestedInput
+    departments?: DepartmentUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutTmsaScoresInput = {
@@ -182917,6 +188009,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUncheckedUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUncheckedUpdateManyWithoutCompanyNestedInput
     referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
+    accessLevels?: AccessLevelUncheckedUpdateManyWithoutCompanyNestedInput
+    departments?: DepartmentUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyCreateWithoutTmsaFindingsInput = {
@@ -182979,6 +188073,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterCreateNestedManyWithoutCompanyInput
     referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
+    accessLevels?: AccessLevelCreateNestedManyWithoutCompanyInput
+    departments?: DepartmentCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutTmsaFindingsInput = {
@@ -183041,6 +188137,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUncheckedCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterUncheckedCreateNestedManyWithoutCompanyInput
     referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
+    accessLevels?: AccessLevelUncheckedCreateNestedManyWithoutCompanyInput
+    departments?: DepartmentUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutTmsaFindingsInput = {
@@ -183119,6 +188217,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUpdateManyWithoutCompanyNestedInput
     referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
+    accessLevels?: AccessLevelUpdateManyWithoutCompanyNestedInput
+    departments?: DepartmentUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutTmsaFindingsInput = {
@@ -183181,6 +188281,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUncheckedUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUncheckedUpdateManyWithoutCompanyNestedInput
     referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
+    accessLevels?: AccessLevelUncheckedUpdateManyWithoutCompanyNestedInput
+    departments?: DepartmentUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyCreateWithoutStoresCatalogueItemsInput = {
@@ -183243,6 +188345,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterCreateNestedManyWithoutCompanyInput
     referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
+    accessLevels?: AccessLevelCreateNestedManyWithoutCompanyInput
+    departments?: DepartmentCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutStoresCatalogueItemsInput = {
@@ -183305,6 +188409,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUncheckedCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterUncheckedCreateNestedManyWithoutCompanyInput
     referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
+    accessLevels?: AccessLevelUncheckedCreateNestedManyWithoutCompanyInput
+    departments?: DepartmentUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutStoresCatalogueItemsInput = {
@@ -183562,6 +188668,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUpdateManyWithoutCompanyNestedInput
     referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
+    accessLevels?: AccessLevelUpdateManyWithoutCompanyNestedInput
+    departments?: DepartmentUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutStoresCatalogueItemsInput = {
@@ -183624,6 +188732,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUncheckedUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUncheckedUpdateManyWithoutCompanyNestedInput
     referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
+    accessLevels?: AccessLevelUncheckedUpdateManyWithoutCompanyNestedInput
+    departments?: DepartmentUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type VesselUpsertWithoutStoresCatalogueItemsInput = {
@@ -183871,6 +188981,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterCreateNestedManyWithoutCompanyInput
     referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
+    accessLevels?: AccessLevelCreateNestedManyWithoutCompanyInput
+    departments?: DepartmentCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutSparesCatalogueItemsInput = {
@@ -183933,6 +189045,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUncheckedCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterUncheckedCreateNestedManyWithoutCompanyInput
     referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
+    accessLevels?: AccessLevelUncheckedCreateNestedManyWithoutCompanyInput
+    departments?: DepartmentUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutSparesCatalogueItemsInput = {
@@ -184190,6 +189304,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUpdateManyWithoutCompanyNestedInput
     referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
+    accessLevels?: AccessLevelUpdateManyWithoutCompanyNestedInput
+    departments?: DepartmentUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutSparesCatalogueItemsInput = {
@@ -184252,6 +189368,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUncheckedUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUncheckedUpdateManyWithoutCompanyNestedInput
     referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
+    accessLevels?: AccessLevelUncheckedUpdateManyWithoutCompanyNestedInput
+    departments?: DepartmentUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type VesselUpsertWithoutSparesCatalogueItemsInput = {
@@ -184499,6 +189617,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterCreateNestedManyWithoutCompanyInput
     referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
+    accessLevels?: AccessLevelCreateNestedManyWithoutCompanyInput
+    departments?: DepartmentCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutOpeningStockTakesInput = {
@@ -184561,6 +189681,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUncheckedCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterUncheckedCreateNestedManyWithoutCompanyInput
     referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
+    accessLevels?: AccessLevelUncheckedCreateNestedManyWithoutCompanyInput
+    departments?: DepartmentUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutOpeningStockTakesInput = {
@@ -184866,6 +189988,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUpdateManyWithoutCompanyNestedInput
     referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
+    accessLevels?: AccessLevelUpdateManyWithoutCompanyNestedInput
+    departments?: DepartmentUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutOpeningStockTakesInput = {
@@ -184928,6 +190052,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUncheckedUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUncheckedUpdateManyWithoutCompanyNestedInput
     referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
+    accessLevels?: AccessLevelUncheckedUpdateManyWithoutCompanyNestedInput
+    departments?: DepartmentUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type VesselUpsertWithoutOpeningStockTakeInput = {
@@ -185191,6 +190317,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterCreateNestedManyWithoutCompanyInput
     referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
+    accessLevels?: AccessLevelCreateNestedManyWithoutCompanyInput
+    departments?: DepartmentCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutInventoryEventsInput = {
@@ -185253,6 +190381,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUncheckedCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterUncheckedCreateNestedManyWithoutCompanyInput
     referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
+    accessLevels?: AccessLevelUncheckedCreateNestedManyWithoutCompanyInput
+    departments?: DepartmentUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutInventoryEventsInput = {
@@ -185541,6 +190671,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUpdateManyWithoutCompanyNestedInput
     referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
+    accessLevels?: AccessLevelUpdateManyWithoutCompanyNestedInput
+    departments?: DepartmentUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutInventoryEventsInput = {
@@ -185603,6 +190735,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUncheckedUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUncheckedUpdateManyWithoutCompanyNestedInput
     referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
+    accessLevels?: AccessLevelUncheckedUpdateManyWithoutCompanyNestedInput
+    departments?: DepartmentUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type VesselUpsertWithoutInventoryEventsInput = {
@@ -185887,6 +191021,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterCreateNestedManyWithoutCompanyInput
     referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
+    accessLevels?: AccessLevelCreateNestedManyWithoutCompanyInput
+    departments?: DepartmentCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutInventoryUpdateDraftsInput = {
@@ -185949,6 +191085,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUncheckedCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterUncheckedCreateNestedManyWithoutCompanyInput
     referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
+    accessLevels?: AccessLevelUncheckedCreateNestedManyWithoutCompanyInput
+    departments?: DepartmentUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutInventoryUpdateDraftsInput = {
@@ -186206,6 +191344,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUpdateManyWithoutCompanyNestedInput
     referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
+    accessLevels?: AccessLevelUpdateManyWithoutCompanyNestedInput
+    departments?: DepartmentUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutInventoryUpdateDraftsInput = {
@@ -186268,6 +191408,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUncheckedUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUncheckedUpdateManyWithoutCompanyNestedInput
     referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
+    accessLevels?: AccessLevelUncheckedUpdateManyWithoutCompanyNestedInput
+    departments?: DepartmentUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type VesselUpsertWithoutInventoryUpdateDraftsInput = {
@@ -186515,6 +191657,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterCreateNestedManyWithoutCompanyInput
     referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
+    accessLevels?: AccessLevelCreateNestedManyWithoutCompanyInput
+    departments?: DepartmentCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutRequisitionsInput = {
@@ -186577,6 +191721,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUncheckedCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterUncheckedCreateNestedManyWithoutCompanyInput
     referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
+    accessLevels?: AccessLevelUncheckedCreateNestedManyWithoutCompanyInput
+    departments?: DepartmentUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutRequisitionsInput = {
@@ -186945,6 +192091,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUpdateManyWithoutCompanyNestedInput
     referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
+    accessLevels?: AccessLevelUpdateManyWithoutCompanyNestedInput
+    departments?: DepartmentUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutRequisitionsInput = {
@@ -187007,6 +192155,8 @@ export namespace Prisma {
     requisitionRevisions?: RequisitionRevisionUncheckedUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUncheckedUpdateManyWithoutCompanyNestedInput
     referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
+    accessLevels?: AccessLevelUncheckedUpdateManyWithoutCompanyNestedInput
+    departments?: DepartmentUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type VesselUpsertWithoutRequisitionsInput = {
@@ -187329,6 +192479,8 @@ export namespace Prisma {
     requisitions?: RequisitionCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterCreateNestedManyWithoutCompanyInput
     referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
+    accessLevels?: AccessLevelCreateNestedManyWithoutCompanyInput
+    departments?: DepartmentCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutRequisitionRevisionsInput = {
@@ -187391,6 +192543,8 @@ export namespace Prisma {
     requisitions?: RequisitionUncheckedCreateNestedManyWithoutCompanyInput
     unitMasters?: UnitMasterUncheckedCreateNestedManyWithoutCompanyInput
     referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
+    accessLevels?: AccessLevelUncheckedCreateNestedManyWithoutCompanyInput
+    departments?: DepartmentUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutRequisitionRevisionsInput = {
@@ -187585,6 +192739,8 @@ export namespace Prisma {
     requisitions?: RequisitionUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUpdateManyWithoutCompanyNestedInput
     referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
+    accessLevels?: AccessLevelUpdateManyWithoutCompanyNestedInput
+    departments?: DepartmentUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutRequisitionRevisionsInput = {
@@ -187647,6 +192803,8 @@ export namespace Prisma {
     requisitions?: RequisitionUncheckedUpdateManyWithoutCompanyNestedInput
     unitMasters?: UnitMasterUncheckedUpdateManyWithoutCompanyNestedInput
     referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
+    accessLevels?: AccessLevelUncheckedUpdateManyWithoutCompanyNestedInput
+    departments?: DepartmentUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type RequisitionUpsertWithoutRevisionsInput = {
@@ -187889,6 +193047,8 @@ export namespace Prisma {
     active?: boolean
     lastLoginAt?: Date | string | null
     vesselId?: string | null
+    accessLevelId?: string | null
+    departmentRefId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -188825,6 +193985,34 @@ export namespace Prisma {
     deletedBy?: string | null
   }
 
+  export type AccessLevelCreateManyCompanyInput = {
+    id?: string
+    name: string
+    rank: number
+    description?: string | null
+    isSystem?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+  }
+
+  export type DepartmentCreateManyCompanyInput = {
+    id?: string
+    name: string
+    side: $Enums.DepartmentSide
+    description?: string | null
+    isSystem?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+  }
+
   export type UserUpdateWithoutCompanyInput = {
     id?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
@@ -188841,6 +194029,8 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     vessel?: VesselUpdateOneWithoutUsersNestedInput
+    accessLevel?: AccessLevelUpdateOneWithoutUsersNestedInput
+    departmentRef?: DepartmentUpdateOneWithoutUsersNestedInput
     roles?: UserRoleUpdateManyWithoutUserNestedInput
     ownedDocs?: SmsDocumentUpdateManyWithoutOwnerNestedInput
     reportedIncidents?: IncidentUpdateManyWithoutReportedByNestedInput
@@ -188862,6 +194052,8 @@ export namespace Prisma {
     active?: BoolFieldUpdateOperationsInput | boolean
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     vesselId?: NullableStringFieldUpdateOperationsInput | string | null
+    accessLevelId?: NullableStringFieldUpdateOperationsInput | string | null
+    departmentRefId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -188889,6 +194081,8 @@ export namespace Prisma {
     active?: BoolFieldUpdateOperationsInput | boolean
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     vesselId?: NullableStringFieldUpdateOperationsInput | string | null
+    accessLevelId?: NullableStringFieldUpdateOperationsInput | string | null
+    departmentRefId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -191809,6 +197003,94 @@ export namespace Prisma {
     deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
+  export type AccessLevelUpdateWithoutCompanyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    rank?: IntFieldUpdateOperationsInput | number
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isSystem?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    users?: UserUpdateManyWithoutAccessLevelNestedInput
+  }
+
+  export type AccessLevelUncheckedUpdateWithoutCompanyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    rank?: IntFieldUpdateOperationsInput | number
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isSystem?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    users?: UserUncheckedUpdateManyWithoutAccessLevelNestedInput
+  }
+
+  export type AccessLevelUncheckedUpdateManyWithoutCompanyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    rank?: IntFieldUpdateOperationsInput | number
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isSystem?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type DepartmentUpdateWithoutCompanyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    side?: EnumDepartmentSideFieldUpdateOperationsInput | $Enums.DepartmentSide
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isSystem?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    users?: UserUpdateManyWithoutDepartmentRefNestedInput
+  }
+
+  export type DepartmentUncheckedUpdateWithoutCompanyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    side?: EnumDepartmentSideFieldUpdateOperationsInput | $Enums.DepartmentSide
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isSystem?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    users?: UserUncheckedUpdateManyWithoutDepartmentRefNestedInput
+  }
+
+  export type DepartmentUncheckedUpdateManyWithoutCompanyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    side?: EnumDepartmentSideFieldUpdateOperationsInput | $Enums.DepartmentSide
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isSystem?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
   export type UserRoleCreateManyUserInput = {
     roleId: string
   }
@@ -192591,6 +197873,202 @@ export namespace Prisma {
     roleId?: StringFieldUpdateOperationsInput | string
   }
 
+  export type UserCreateManyAccessLevelInput = {
+    id?: string
+    companyId: string
+    fullName: string
+    email: string
+    passwordHash: string
+    department: $Enums.DepartmentType
+    rank?: string | null
+    active?: boolean
+    lastLoginAt?: Date | string | null
+    vesselId?: string | null
+    departmentRefId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+  }
+
+  export type UserUpdateWithoutAccessLevelInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fullName?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    department?: EnumDepartmentTypeFieldUpdateOperationsInput | $Enums.DepartmentType
+    rank?: NullableStringFieldUpdateOperationsInput | string | null
+    active?: BoolFieldUpdateOperationsInput | boolean
+    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    company?: CompanyUpdateOneRequiredWithoutUsersNestedInput
+    vessel?: VesselUpdateOneWithoutUsersNestedInput
+    departmentRef?: DepartmentUpdateOneWithoutUsersNestedInput
+    roles?: UserRoleUpdateManyWithoutUserNestedInput
+    ownedDocs?: SmsDocumentUpdateManyWithoutOwnerNestedInput
+    reportedIncidents?: IncidentUpdateManyWithoutReportedByNestedInput
+    reportedNearMisses?: NearMissUpdateManyWithoutReportedByNestedInput
+    raisedNcrs?: NonConformityUpdateManyWithoutRaisedByNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    sireResponsibleFor?: SireObservationUpdateManyWithoutResponsiblePersonNestedInput
+    sireVerifierFor?: SireObservationUpdateManyWithoutVerifiedByNestedInput
+    sireComments?: SireObservationCommentUpdateManyWithoutAuthorNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutAccessLevelInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    fullName?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    department?: EnumDepartmentTypeFieldUpdateOperationsInput | $Enums.DepartmentType
+    rank?: NullableStringFieldUpdateOperationsInput | string | null
+    active?: BoolFieldUpdateOperationsInput | boolean
+    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    vesselId?: NullableStringFieldUpdateOperationsInput | string | null
+    departmentRefId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    roles?: UserRoleUncheckedUpdateManyWithoutUserNestedInput
+    ownedDocs?: SmsDocumentUncheckedUpdateManyWithoutOwnerNestedInput
+    reportedIncidents?: IncidentUncheckedUpdateManyWithoutReportedByNestedInput
+    reportedNearMisses?: NearMissUncheckedUpdateManyWithoutReportedByNestedInput
+    raisedNcrs?: NonConformityUncheckedUpdateManyWithoutRaisedByNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    sireResponsibleFor?: SireObservationUncheckedUpdateManyWithoutResponsiblePersonNestedInput
+    sireVerifierFor?: SireObservationUncheckedUpdateManyWithoutVerifiedByNestedInput
+    sireComments?: SireObservationCommentUncheckedUpdateManyWithoutAuthorNestedInput
+  }
+
+  export type UserUncheckedUpdateManyWithoutAccessLevelInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    fullName?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    department?: EnumDepartmentTypeFieldUpdateOperationsInput | $Enums.DepartmentType
+    rank?: NullableStringFieldUpdateOperationsInput | string | null
+    active?: BoolFieldUpdateOperationsInput | boolean
+    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    vesselId?: NullableStringFieldUpdateOperationsInput | string | null
+    departmentRefId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type UserCreateManyDepartmentRefInput = {
+    id?: string
+    companyId: string
+    fullName: string
+    email: string
+    passwordHash: string
+    department: $Enums.DepartmentType
+    rank?: string | null
+    active?: boolean
+    lastLoginAt?: Date | string | null
+    vesselId?: string | null
+    accessLevelId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+  }
+
+  export type UserUpdateWithoutDepartmentRefInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fullName?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    department?: EnumDepartmentTypeFieldUpdateOperationsInput | $Enums.DepartmentType
+    rank?: NullableStringFieldUpdateOperationsInput | string | null
+    active?: BoolFieldUpdateOperationsInput | boolean
+    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    company?: CompanyUpdateOneRequiredWithoutUsersNestedInput
+    vessel?: VesselUpdateOneWithoutUsersNestedInput
+    accessLevel?: AccessLevelUpdateOneWithoutUsersNestedInput
+    roles?: UserRoleUpdateManyWithoutUserNestedInput
+    ownedDocs?: SmsDocumentUpdateManyWithoutOwnerNestedInput
+    reportedIncidents?: IncidentUpdateManyWithoutReportedByNestedInput
+    reportedNearMisses?: NearMissUpdateManyWithoutReportedByNestedInput
+    raisedNcrs?: NonConformityUpdateManyWithoutRaisedByNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    sireResponsibleFor?: SireObservationUpdateManyWithoutResponsiblePersonNestedInput
+    sireVerifierFor?: SireObservationUpdateManyWithoutVerifiedByNestedInput
+    sireComments?: SireObservationCommentUpdateManyWithoutAuthorNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutDepartmentRefInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    fullName?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    department?: EnumDepartmentTypeFieldUpdateOperationsInput | $Enums.DepartmentType
+    rank?: NullableStringFieldUpdateOperationsInput | string | null
+    active?: BoolFieldUpdateOperationsInput | boolean
+    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    vesselId?: NullableStringFieldUpdateOperationsInput | string | null
+    accessLevelId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    roles?: UserRoleUncheckedUpdateManyWithoutUserNestedInput
+    ownedDocs?: SmsDocumentUncheckedUpdateManyWithoutOwnerNestedInput
+    reportedIncidents?: IncidentUncheckedUpdateManyWithoutReportedByNestedInput
+    reportedNearMisses?: NearMissUncheckedUpdateManyWithoutReportedByNestedInput
+    raisedNcrs?: NonConformityUncheckedUpdateManyWithoutRaisedByNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    sireResponsibleFor?: SireObservationUncheckedUpdateManyWithoutResponsiblePersonNestedInput
+    sireVerifierFor?: SireObservationUncheckedUpdateManyWithoutVerifiedByNestedInput
+    sireComments?: SireObservationCommentUncheckedUpdateManyWithoutAuthorNestedInput
+  }
+
+  export type UserUncheckedUpdateManyWithoutDepartmentRefInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    fullName?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    department?: EnumDepartmentTypeFieldUpdateOperationsInput | $Enums.DepartmentType
+    rank?: NullableStringFieldUpdateOperationsInput | string | null
+    active?: BoolFieldUpdateOperationsInput | boolean
+    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    vesselId?: NullableStringFieldUpdateOperationsInput | string | null
+    accessLevelId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
   export type SmsDocumentCreateManyVesselInput = {
     id?: string
     companyId: string
@@ -193096,6 +198574,8 @@ export namespace Prisma {
     rank?: string | null
     active?: boolean
     lastLoginAt?: Date | string | null
+    accessLevelId?: string | null
+    departmentRefId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -194855,6 +200335,8 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     company?: CompanyUpdateOneRequiredWithoutUsersNestedInput
+    accessLevel?: AccessLevelUpdateOneWithoutUsersNestedInput
+    departmentRef?: DepartmentUpdateOneWithoutUsersNestedInput
     roles?: UserRoleUpdateManyWithoutUserNestedInput
     ownedDocs?: SmsDocumentUpdateManyWithoutOwnerNestedInput
     reportedIncidents?: IncidentUpdateManyWithoutReportedByNestedInput
@@ -194876,6 +200358,8 @@ export namespace Prisma {
     rank?: NullableStringFieldUpdateOperationsInput | string | null
     active?: BoolFieldUpdateOperationsInput | boolean
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    accessLevelId?: NullableStringFieldUpdateOperationsInput | string | null
+    departmentRefId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -194903,6 +200387,8 @@ export namespace Prisma {
     rank?: NullableStringFieldUpdateOperationsInput | string | null
     active?: BoolFieldUpdateOperationsInput | boolean
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    accessLevelId?: NullableStringFieldUpdateOperationsInput | string | null
+    departmentRefId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
