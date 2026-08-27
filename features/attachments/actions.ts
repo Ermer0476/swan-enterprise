@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { z } from "zod";
 import { randomUUID } from "crypto";
 import nodePath from "path";
 import { prisma } from "@/lib/prisma";
@@ -158,6 +159,15 @@ export async function uploadAttachmentAction(
     : await requirePermission(permission);
   if (!hasAny(user, permission)) {
     throw new Error("FORBIDDEN");
+  }
+
+  // `entityId` becomes a path segment in the storage layer
+  // (attachmentDir → path.join(STORAGE_ROOT, companyId, entityType, entityId)),
+  // so it must be a plain uuid — a value containing `../` would escape the
+  // storage root. Reject anything that isn't a uuid before any path use.
+  const parsedEntityId = z.string().uuid().safeParse(entityId);
+  if (!parsedEntityId.success) {
+    return fail(parsedEntityId.error.issues[0]?.message ?? "Invalid input");
   }
 
   const file = formData.get("file");

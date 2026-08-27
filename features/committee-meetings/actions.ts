@@ -6,6 +6,7 @@ import { prisma } from "@/lib/prisma";
 import { requirePermission } from "@/lib/rbac";
 import { writeAudit } from "@/lib/audit";
 import { allocateRefNo } from "@/lib/ref-sequence";
+import { Prisma } from "@/lib/generated/prisma";
 import {
   createCommitteeMeetingSchema,
   updateDraftMeetingSchema,
@@ -96,7 +97,10 @@ export async function createCommitteeMeetingAction(
       where: { id: meetingVesselId, companyId: user.companyId },
       select: { code: true },
     });
-    vesselCode = vessel?.code ?? null;
+    // Don't attach a vessel that isn't owned by the caller's company — a
+    // foreign/stale vesselId from the form would otherwise be persisted.
+    if (!vessel) return fail("Vessel not found");
+    vesselCode = vessel.code;
   }
 
   const meeting = await prisma.committeeMeeting.create({
@@ -356,18 +360,31 @@ export async function saveOfficeReviewMeetingAction(
   });
   if (!meeting) return fail("Meeting not found, or it's not awaiting review");
 
-  await prisma.$transaction([
-    prisma.committeeMeeting.update({
-      where: { id: meeting.id },
-      data: { shoreRemarks: d.shoreRemarks || null, updatedBy: user.id },
-    }),
-    ...d.agendaId.map((agendaId, i) =>
-      prisma.committeeMeetingAgenda.update({
-        where: { id: agendaId },
-        data: { shoreComments: d.agendaShoreComments[i] || null },
+  try {
+    await prisma.$transaction([
+      prisma.committeeMeeting.update({
+        where: { id: meeting.id },
+        data: { shoreRemarks: d.shoreRemarks || null, updatedBy: user.id },
       }),
-    ),
-  ]);
+      ...d.agendaId.map((agendaId, i) =>
+        prisma.committeeMeetingAgenda.update({
+          // Scope each agenda update to this meeting and company so an office
+          // user can't overwrite another meeting's/company's agenda comments
+          // by passing a foreign agendaId.
+          where: { id: agendaId, meetingId: meeting.id, companyId: user.companyId },
+          data: { shoreComments: d.agendaShoreComments[i] || null },
+        }),
+      ),
+    ]);
+  } catch (err) {
+    // A foreign/unknown agendaId won't match the scoped where; Prisma throws
+    // P2025 and the whole transaction rolls back, so return a clean fail()
+    // instead of a 500. Genuine errors still propagate.
+    if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === "P2025") {
+      return fail("One of the agenda items no longer belongs to this meeting");
+    }
+    throw err;
+  }
 
   await writeAudit({
     actor: user,
@@ -410,24 +427,37 @@ export async function closeMeetingAction(
     return fail("Add shore remarks before closing this meeting out");
   }
 
-  await prisma.$transaction([
-    prisma.committeeMeeting.update({
-      where: { id: meeting.id },
-      data: {
-        shoreRemarks: d.shoreRemarks || null,
-        status: "CLOSED",
-        closedAt: new Date(),
-        revisedAfterReview: false,
-        updatedBy: user.id,
-      },
-    }),
-    ...d.agendaId.map((agendaId, i) =>
-      prisma.committeeMeetingAgenda.update({
-        where: { id: agendaId },
-        data: { shoreComments: d.agendaShoreComments[i] || null },
+  try {
+    await prisma.$transaction([
+      prisma.committeeMeeting.update({
+        where: { id: meeting.id },
+        data: {
+          shoreRemarks: d.shoreRemarks || null,
+          status: "CLOSED",
+          closedAt: new Date(),
+          revisedAfterReview: false,
+          updatedBy: user.id,
+        },
       }),
-    ),
-  ]);
+      ...d.agendaId.map((agendaId, i) =>
+        prisma.committeeMeetingAgenda.update({
+          // Scope each agenda update to this meeting and company so an office
+          // user can't overwrite another meeting's/company's agenda comments
+          // by passing a foreign agendaId.
+          where: { id: agendaId, meetingId: meeting.id, companyId: user.companyId },
+          data: { shoreComments: d.agendaShoreComments[i] || null },
+        }),
+      ),
+    ]);
+  } catch (err) {
+    // A foreign/unknown agendaId won't match the scoped where; Prisma throws
+    // P2025 and the whole transaction rolls back, so return a clean fail()
+    // instead of a 500. Genuine errors still propagate.
+    if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === "P2025") {
+      return fail("One of the agenda items no longer belongs to this meeting");
+    }
+    throw err;
+  }
 
   await writeAudit({
     actor: user,
