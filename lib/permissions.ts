@@ -199,6 +199,14 @@ export const PERMISSIONS = {
 
   // Operational settings (company-wide timing windows and defaults)
   "settings:manage-windows": "Set operational timing windows (overdue / due-soon days)",
+
+  // Access Levels (data-driven user levels behind the account classification)
+  "access-level:read": "View the office-editable access levels",
+  "access-level:manage": "Add, edit and deactivate access levels",
+
+  // Departments (data-driven ship/shore departments)
+  "department:read": "View the office-editable departments",
+  "department:manage": "Add, edit and deactivate departments",
 } as const;
 
 export type PermissionKey = keyof typeof PERMISSIONS;

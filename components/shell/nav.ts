@@ -31,6 +31,7 @@ import {
   Recycle,
   Gauge,
   Ruler,
+  Layers,
 } from "lucide-react";
 import type { PermissionKey } from "@/lib/permissions";
 
@@ -168,6 +169,18 @@ export const NAV: NavGroup[] = [
         href: "/settings/environment-units",
         icon: Ruler,
         permission: "environment:manage-units",
+      },
+      {
+        label: "Access Levels",
+        href: "/settings/access-levels",
+        icon: Layers,
+        permission: "access-level:manage",
+      },
+      {
+        label: "Departments",
+        href: "/settings/departments",
+        icon: Building2,
+        permission: "department:manage",
       },
       {
         label: "Reference Lists",
