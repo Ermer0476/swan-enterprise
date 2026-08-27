@@ -141,6 +141,11 @@ export async function addCapaAction(
   formData: FormData,
 ): Promise<ActionResult> {
   const entityType = String(formData.get("entityType") ?? "");
+  // Validate against the known registry keys first — registryFor throws a raw
+  // Error for an unknown type, which (running before requirePermission and the
+  // schema parse) surfaced as an uncaught 500 on bad input. Return a clean fail
+  // instead; the known-type flow below is unchanged.
+  if (!(entityType in REGISTRY)) return fail("Invalid input");
   const { permission, path, guard } = registryFor(entityType);
   const user = await requirePermission(permission);
   if (guard && !guard(user)) {

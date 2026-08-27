@@ -323,8 +323,8 @@ export const createIncidentSchema = z.object({
 
   // Statement of Facts — chronological Time/Event rows, paired by index.
   // Blank rows (no time AND no event) are dropped, not validated.
-  sofTime: z.array(z.string()).default([]),
-  sofEvent: z.array(z.string()).default([]),
+  sofTime: z.array(z.string().max(200)).max(500).default([]),
+  sofEvent: z.array(z.string().max(10000)).max(500).default([]),
 
   immediateAction: z.string().trim().max(10000).optional().or(z.literal("")),
   // No consequence flags, severity, or root cause here — the initial report

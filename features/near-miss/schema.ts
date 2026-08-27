@@ -114,14 +114,14 @@ export const createNearMissSchema = z
     // Corrective action plan — captured in the same report too (paired by
     // index, like the SOF rows on Incidents). Blank rows (no action text)
     // are dropped, not validated.
-    caAction: z.array(z.string()).default([]),
-    caResponsible: z.array(z.string()).default([]),
-    caTargetDate: z.array(z.string()).default([]),
+    caAction: z.array(z.string().max(2000)).max(100).default([]),
+    caResponsible: z.array(z.string().max(200)).max(100).default([]),
+    caTargetDate: z.array(z.string().max(200)).max(100).default([]),
     // Only ever honored server-side when the reporter is SHIPBOARD — lets the
     // vessel mark a corrective action already resolved at the time of filing,
     // instead of always starting every row as OPEN.
-    caStatus: z.array(z.string()).default([]),
-    caClosedDate: z.array(z.string()).default([]),
+    caStatus: z.array(z.string().max(200)).max(100).default([]),
+    caClosedDate: z.array(z.string().max(200)).max(100).default([]),
   })
   .superRefine((v, ctx) => {
     const allowed = ROOT_CAUSE_SUBCATEGORIES[v.rootCauseCategory as RootCauseCategoryValue];

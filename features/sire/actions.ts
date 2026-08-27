@@ -125,6 +125,24 @@ export async function addObservationAction(
   if (!insp) return fail("Inspection not found");
   if (insp.status === "CLOSED") return fail("Inspection is closed");
 
+  // Optional FKs to User — validated only as uuids by the schema. Verify each
+  // resolves within this company before writing, so a stale/removed user id
+  // yields a clean fail rather than an uncaught P2003.
+  if (d.responsiblePersonId) {
+    const person = await prisma.user.findFirst({
+      where: { id: d.responsiblePersonId, companyId: user.companyId },
+      select: { id: true },
+    });
+    if (!person) return fail("Responsible person not found");
+  }
+  if (d.verifiedById) {
+    const verifier = await prisma.user.findFirst({
+      where: { id: d.verifiedById, companyId: user.companyId },
+      select: { id: true },
+    });
+    if (!verifier) return fail("Verifier not found");
+  }
+
   const seq = (await prisma.sireObservation.count({ where: { inspectionId: insp.id } })) + 1;
 
   await prisma.sireObservation.create({
@@ -198,6 +216,23 @@ export async function updateObservationAction(formData: FormData): Promise<Actio
     where: { id: d.observationId, companyId: user.companyId, deletedAt: null },
   });
   if (!obs) return fail("Observation not found");
+
+  // Optional FKs to User — verify each resolves within this company before
+  // writing, so a stale/removed user id yields a clean fail rather than P2003.
+  if (d.responsiblePersonId) {
+    const person = await prisma.user.findFirst({
+      where: { id: d.responsiblePersonId, companyId: user.companyId },
+      select: { id: true },
+    });
+    if (!person) return fail("Responsible person not found");
+  }
+  if (d.verifiedById) {
+    const verifier = await prisma.user.findFirst({
+      where: { id: d.verifiedById, companyId: user.companyId },
+      select: { id: true },
+    });
+    if (!verifier) return fail("Verifier not found");
+  }
 
   await prisma.sireObservation.update({
     where: { id: obs.id },
