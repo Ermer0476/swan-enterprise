@@ -18,6 +18,11 @@ export type ActionResult = { ok: boolean; error: string | null };
 const OK: ActionResult = { ok: true, error: null };
 const fail = (error: string): ActionResult => ({ ok: false, error });
 
+// Cap an uploaded Ship's Particulars document before buffering it into memory
+// and shelling out to pdftotext/tesseract — mirrors MAX_ATTACHMENT_SIZE in
+// features/attachments/schema.ts.
+const MAX_DOCUMENT_SIZE = 100 * 1024 * 1024; // 100MB
+
 function parseVesselForm(formData: FormData) {
   return vesselSchema.safeParse({
     name: formData.get("name"),
@@ -359,6 +364,10 @@ export async function parseVesselDocumentAction(
   const isPdf = name.endsWith(".pdf");
   if (!isDocx && !isPdf) {
     return { ok: false, error: "Only Word (.docx) or PDF (.pdf) files are supported", fields: {} };
+  }
+
+  if (file.size > MAX_DOCUMENT_SIZE) {
+    return { ok: false, error: "File is too large (maximum 100 MB)", fields: {} };
   }
 
   const buffer = Buffer.from(await file.arrayBuffer());
