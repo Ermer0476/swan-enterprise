@@ -21,7 +21,14 @@ export async function GET(
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
 
-  const buffer = await readAttachmentFile(attachment.fileKey);
+  let buffer: Buffer;
+  try {
+    buffer = await readAttachmentFile(attachment.fileKey);
+  } catch {
+    // The DB row exists but its on-disk file is gone (ENOENT etc.) — return a
+    // clean 404 instead of letting readFile throw an uncaught 500.
+    return NextResponse.json({ error: "Not found" }, { status: 404 });
+  }
   return new NextResponse(new Uint8Array(buffer), {
     headers: {
       "Content-Type": attachment.mimeType,
