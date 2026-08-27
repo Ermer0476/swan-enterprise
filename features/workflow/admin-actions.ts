@@ -30,13 +30,13 @@ const addStepSchema = z
     { message: "Choose a department", path: ["approverDept"] },
   );
 
-/** Ensure the definition belongs to the caller's company. */
-async function assertOwned(companyId: string, definitionId: string) {
+/** True when the definition belongs to the caller's company. */
+async function isOwnedDefinition(companyId: string, definitionId: string): Promise<boolean> {
   const def = await prisma.workflowDefinition.findFirst({
     where: { id: definitionId, companyId },
     select: { id: true },
   });
-  if (!def) throw new Error("NOT_FOUND");
+  return def !== null;
 }
 
 export async function addStepAction(
@@ -55,7 +55,9 @@ export async function addStepAction(
     return fail(parsed.error.issues[0]?.message ?? "Invalid input");
   }
   const d = parsed.data;
-  await assertOwned(user.companyId, d.definitionId);
+  if (!(await isOwnedDefinition(user.companyId, d.definitionId))) {
+    return fail("Workflow not found");
+  }
 
   const last = await prisma.workflowStep.findFirst({
     where: { definitionId: d.definitionId },

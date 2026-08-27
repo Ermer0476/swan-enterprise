@@ -102,7 +102,7 @@ export async function createFindingAction(_prev: NewFindingState, formData: Form
   const d = parsed.data;
 
   const rawTarget = d.target ?? "";
-  const target = /^\d{4}-\d{2}-\d{2}$/.test(rawTarget) ? rawTarget : rawTarget;
+  const target = /^\d{4}-\d{2}-\d{2}$/.test(rawTarget) ? rawTarget : "";
   const questionNo = d.questionNo ?? 0;
   const kpiRef = kpiRefFor(d.elementCode, d.stage, questionNo);
 
@@ -246,13 +246,16 @@ export async function updateFindingAction(formData: FormData): Promise<void> {
   const finding = await prisma.tmsaFinding.findFirst({ where: { id: d.id, companyId: user.companyId, deletedAt: null } });
   if (!finding) return;
 
+  const rawTarget = d.target ?? "";
+  const target = /^\d{4}-\d{2}-\d{2}$/.test(rawTarget) ? rawTarget : "";
+
   await prisma.tmsaFinding.update({
     where: { id: d.id },
     data: {
       status: d.status,
       correctiveAction: d.correctiveAction || "",
       responsible: d.responsible || "",
-      target: d.target || "",
+      target,
       updatedBy: user.id,
     },
   });
