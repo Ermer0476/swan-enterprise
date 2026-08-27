@@ -720,6 +720,11 @@ export async function recordExecutionAction(
   if (!doc.currentRevisionId) return fail("This Risk Assessment has no approved revision yet");
   if (doc.status === "ARCHIVED") return fail("This Risk Assessment is archived");
 
+  const vessel = await prisma.vessel.findFirst({
+    where: { id: d.vesselId, companyId: user.companyId },
+  });
+  if (!vessel) return fail("Vessel not found");
+
   const execution = await prisma.riskAssessmentExecution.create({
     data: {
       companyId: user.companyId,
@@ -771,12 +776,25 @@ export async function requestRevisionAction(
   });
   if (!doc) return fail("Risk Assessment not found");
 
+  // Optional FK — attach the vessel only if it actually resolves within this
+  // company; a stale/foreign id is dropped to null rather than blowing up the
+  // insert with a P2003 (crew-supplied and best-effort, not a hard requirement).
+  const candidateVesselId = d.vesselId || user.vesselId || null;
+  let vesselId: string | null = null;
+  if (candidateVesselId) {
+    const vessel = await prisma.vessel.findFirst({
+      where: { id: candidateVesselId, companyId: user.companyId },
+      select: { id: true },
+    });
+    vesselId = vessel?.id ?? null;
+  }
+
   const request = await prisma.riskAssessmentRevisionRequest.create({
     data: {
       companyId: user.companyId,
       documentId: doc.id,
       requestedById: user.id,
-      vesselId: d.vesselId || user.vesselId || null,
+      vesselId,
       reason: d.reason,
       reviewTrigger: d.reviewTrigger,
       status: "PENDING",
