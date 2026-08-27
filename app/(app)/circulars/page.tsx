@@ -3,7 +3,9 @@ import { Plus, Megaphone } from "lucide-react";
 import { requirePermission, can } from "@/lib/rbac";
 import { listCirculars } from "@/features/circulars/queries";
 import { listAttachmentsForEntities } from "@/features/attachments/queries";
-import { CIRCULAR_CATEGORIES, CIRCULAR_SOURCE_LABELS, ISSUING_BODY_SUGGESTIONS } from "@/features/circulars/schema";
+import { CIRCULAR_CATEGORIES, CIRCULAR_SOURCE_LABELS, type CircularSourceValue } from "@/features/circulars/schema";
+import { getReferenceList } from "@/lib/reference-list";
+import { circularIssuingBodyKey } from "@/lib/reference-registry";
 import { PageHeader } from "@/components/ui/page-header";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -39,7 +41,12 @@ export default async function CircularsPage({
   // only decides which one gets its own tab row on this page, matching the
   // reviewed structure.
   const showIssuingBodyTabs = activeSource === "FLAG" || activeSource === "CLASS" || activeSource === "INSURANCE";
-  const issuingBodySuggestions = showIssuingBodyTabs ? ISSUING_BODY_SUGGESTIONS[activeSource] : [];
+  // Suggestions are the office-editable reference list now (registry fallback
+  // when a company has no rows) — the same source the report form's datalist
+  // uses, so the tabs and the "Other" bucket stay in step with it.
+  const issuingBodySuggestions = showIssuingBodyTabs
+    ? (await getReferenceList(user.companyId, circularIssuingBodyKey(activeSource as CircularSourceValue))).map((o) => o.value)
+    : [];
 
   // SHIPBOARD sees fleet-wide circulars plus their own vessel's targeted
   // ones — never another vessel's. OFFICE stays unrestricted.
