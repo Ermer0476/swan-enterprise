@@ -450,6 +450,23 @@ export type RequisitionRevision = $Result.DefaultSelection<Prisma.$RequisitionRe
  * 
  */
 export type RequisitionLine = $Result.DefaultSelection<Prisma.$RequisitionLinePayload>
+/**
+ * Model Seafarer
+ * One seafarer in the manning register. The office's write surface; the crew
+ * list is a query over CrewAssignment, never a column on this table (§5.1).
+ */
+export type Seafarer = $Result.DefaultSelection<Prisma.$SeafarerPayload>
+/**
+ * Model CrewAssignment
+ * One tour of duty: this seafarer, on this ship, from this date to that one.
+ * The crew list is a query over this table, not over Seafarer (§5.1).
+ * 
+ * ── NO STATUS COLUMN, AND DO NOT ADD ONE ──
+ * PLANNED / ABOARD / COMPLETED are DERIVED from the two actual-date columns on
+ * every read (features/crewing/status.ts). A stored status is wrong the
+ * morning after it is written, and silently.
+ */
+export type CrewAssignment = $Result.DefaultSelection<Prisma.$CrewAssignmentPayload>
 
 /**
  * Enums
@@ -2398,6 +2415,26 @@ export class PrismaClient<
     * ```
     */
   get requisitionLine(): Prisma.RequisitionLineDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.seafarer`: Exposes CRUD operations for the **Seafarer** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Seafarers
+    * const seafarers = await prisma.seafarer.findMany()
+    * ```
+    */
+  get seafarer(): Prisma.SeafarerDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.crewAssignment`: Exposes CRUD operations for the **CrewAssignment** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more CrewAssignments
+    * const crewAssignments = await prisma.crewAssignment.findMany()
+    * ```
+    */
+  get crewAssignment(): Prisma.CrewAssignmentDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -2918,7 +2955,9 @@ export namespace Prisma {
     InventoryUpdateDraft: 'InventoryUpdateDraft',
     Requisition: 'Requisition',
     RequisitionRevision: 'RequisitionRevision',
-    RequisitionLine: 'RequisitionLine'
+    RequisitionLine: 'RequisitionLine',
+    Seafarer: 'Seafarer',
+    CrewAssignment: 'CrewAssignment'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -2937,7 +2976,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "company" | "user" | "role" | "permission" | "rolePermission" | "userRole" | "accessLevel" | "department" | "vessel" | "auditLog" | "attachment" | "comment" | "capaAction" | "notification" | "workflowDefinition" | "workflowStep" | "workflowInstance" | "workflowAction" | "smsDocument" | "smsRevision" | "incident" | "incidentSofEntry" | "incidentTypeEntry" | "nearMiss" | "nonConformity" | "sireInspection" | "sireObservation" | "sireObservationComment" | "sireQuestionnaireVersion" | "sireQuestionnaireItem" | "pscInspection" | "pscDeficiency" | "cdiInspection" | "cdiObservation" | "internalAudit" | "internalAuditFinding" | "externalAudit" | "externalAuditFinding" | "companyInspection" | "companyInspectionObservation" | "exposureCrewEntry" | "exposureInjuryCase" | "committeeMeeting" | "committeeMeetingAgenda" | "scheduleItem" | "scheduleApplicability" | "emergencyDrill" | "familiarizationRecord" | "familiarizationSession" | "lsaFfeItem" | "crewFamiliarization" | "crewFamiliarizationRecord" | "controlledDocument" | "vesselDocument" | "circular" | "circularAcknowledgement" | "riskAssessmentDocument" | "riskAssessmentRevision" | "riskHazardRow" | "riskAssessmentExecution" | "riskAssessmentRevisionRequest" | "defect" | "voyageLog" | "voyageLogBunker" | "unitMaster" | "referenceListItem" | "environmentRecord" | "garbageLedgerEntry" | "refSequence" | "tmsaAssessment" | "tmsaScore" | "tmsaFinding" | "storesCatalogueItem" | "sparesCatalogueItem" | "openingStockTake" | "inventoryEvent" | "inventoryUpdateDraft" | "requisition" | "requisitionRevision" | "requisitionLine"
+      modelProps: "company" | "user" | "role" | "permission" | "rolePermission" | "userRole" | "accessLevel" | "department" | "vessel" | "auditLog" | "attachment" | "comment" | "capaAction" | "notification" | "workflowDefinition" | "workflowStep" | "workflowInstance" | "workflowAction" | "smsDocument" | "smsRevision" | "incident" | "incidentSofEntry" | "incidentTypeEntry" | "nearMiss" | "nonConformity" | "sireInspection" | "sireObservation" | "sireObservationComment" | "sireQuestionnaireVersion" | "sireQuestionnaireItem" | "pscInspection" | "pscDeficiency" | "cdiInspection" | "cdiObservation" | "internalAudit" | "internalAuditFinding" | "externalAudit" | "externalAuditFinding" | "companyInspection" | "companyInspectionObservation" | "exposureCrewEntry" | "exposureInjuryCase" | "committeeMeeting" | "committeeMeetingAgenda" | "scheduleItem" | "scheduleApplicability" | "emergencyDrill" | "familiarizationRecord" | "familiarizationSession" | "lsaFfeItem" | "crewFamiliarization" | "crewFamiliarizationRecord" | "controlledDocument" | "vesselDocument" | "circular" | "circularAcknowledgement" | "riskAssessmentDocument" | "riskAssessmentRevision" | "riskHazardRow" | "riskAssessmentExecution" | "riskAssessmentRevisionRequest" | "defect" | "voyageLog" | "voyageLogBunker" | "unitMaster" | "referenceListItem" | "environmentRecord" | "garbageLedgerEntry" | "refSequence" | "tmsaAssessment" | "tmsaScore" | "tmsaFinding" | "storesCatalogueItem" | "sparesCatalogueItem" | "openingStockTake" | "inventoryEvent" | "inventoryUpdateDraft" | "requisition" | "requisitionRevision" | "requisitionLine" | "seafarer" | "crewAssignment"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -8861,6 +8900,154 @@ export namespace Prisma {
           }
         }
       }
+      Seafarer: {
+        payload: Prisma.$SeafarerPayload<ExtArgs>
+        fields: Prisma.SeafarerFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.SeafarerFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SeafarerPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.SeafarerFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SeafarerPayload>
+          }
+          findFirst: {
+            args: Prisma.SeafarerFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SeafarerPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.SeafarerFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SeafarerPayload>
+          }
+          findMany: {
+            args: Prisma.SeafarerFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SeafarerPayload>[]
+          }
+          create: {
+            args: Prisma.SeafarerCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SeafarerPayload>
+          }
+          createMany: {
+            args: Prisma.SeafarerCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.SeafarerCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SeafarerPayload>[]
+          }
+          delete: {
+            args: Prisma.SeafarerDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SeafarerPayload>
+          }
+          update: {
+            args: Prisma.SeafarerUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SeafarerPayload>
+          }
+          deleteMany: {
+            args: Prisma.SeafarerDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.SeafarerUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.SeafarerUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SeafarerPayload>[]
+          }
+          upsert: {
+            args: Prisma.SeafarerUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SeafarerPayload>
+          }
+          aggregate: {
+            args: Prisma.SeafarerAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateSeafarer>
+          }
+          groupBy: {
+            args: Prisma.SeafarerGroupByArgs<ExtArgs>
+            result: $Utils.Optional<SeafarerGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.SeafarerCountArgs<ExtArgs>
+            result: $Utils.Optional<SeafarerCountAggregateOutputType> | number
+          }
+        }
+      }
+      CrewAssignment: {
+        payload: Prisma.$CrewAssignmentPayload<ExtArgs>
+        fields: Prisma.CrewAssignmentFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.CrewAssignmentFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CrewAssignmentPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.CrewAssignmentFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CrewAssignmentPayload>
+          }
+          findFirst: {
+            args: Prisma.CrewAssignmentFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CrewAssignmentPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.CrewAssignmentFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CrewAssignmentPayload>
+          }
+          findMany: {
+            args: Prisma.CrewAssignmentFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CrewAssignmentPayload>[]
+          }
+          create: {
+            args: Prisma.CrewAssignmentCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CrewAssignmentPayload>
+          }
+          createMany: {
+            args: Prisma.CrewAssignmentCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.CrewAssignmentCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CrewAssignmentPayload>[]
+          }
+          delete: {
+            args: Prisma.CrewAssignmentDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CrewAssignmentPayload>
+          }
+          update: {
+            args: Prisma.CrewAssignmentUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CrewAssignmentPayload>
+          }
+          deleteMany: {
+            args: Prisma.CrewAssignmentDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.CrewAssignmentUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.CrewAssignmentUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CrewAssignmentPayload>[]
+          }
+          upsert: {
+            args: Prisma.CrewAssignmentUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CrewAssignmentPayload>
+          }
+          aggregate: {
+            args: Prisma.CrewAssignmentAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateCrewAssignment>
+          }
+          groupBy: {
+            args: Prisma.CrewAssignmentGroupByArgs<ExtArgs>
+            result: $Utils.Optional<CrewAssignmentGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.CrewAssignmentCountArgs<ExtArgs>
+            result: $Utils.Optional<CrewAssignmentCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -9037,6 +9224,8 @@ export namespace Prisma {
     requisition?: RequisitionOmit
     requisitionRevision?: RequisitionRevisionOmit
     requisitionLine?: RequisitionLineOmit
+    seafarer?: SeafarerOmit
+    crewAssignment?: CrewAssignmentOmit
   }
 
   /* Types for Logging */
@@ -9163,6 +9352,8 @@ export namespace Prisma {
     referenceListItems: number
     accessLevels: number
     departments: number
+    seafarers: number
+    crewAssignments: number
   }
 
   export type CompanyCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -9212,6 +9403,8 @@ export namespace Prisma {
     referenceListItems?: boolean | CompanyCountOutputTypeCountReferenceListItemsArgs
     accessLevels?: boolean | CompanyCountOutputTypeCountAccessLevelsArgs
     departments?: boolean | CompanyCountOutputTypeCountDepartmentsArgs
+    seafarers?: boolean | CompanyCountOutputTypeCountSeafarersArgs
+    crewAssignments?: boolean | CompanyCountOutputTypeCountCrewAssignmentsArgs
   }
 
   // Custom InputTypes
@@ -9547,6 +9740,20 @@ export namespace Prisma {
     where?: DepartmentWhereInput
   }
 
+  /**
+   * CompanyCountOutputType without action
+   */
+  export type CompanyCountOutputTypeCountSeafarersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SeafarerWhereInput
+  }
+
+  /**
+   * CompanyCountOutputType without action
+   */
+  export type CompanyCountOutputTypeCountCrewAssignmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CrewAssignmentWhereInput
+  }
+
 
   /**
    * Count Type UserCountOutputType
@@ -9821,6 +10028,7 @@ export namespace Prisma {
     inventoryEvents: number
     inventoryUpdateDrafts: number
     requisitions: number
+    crewAssignments: number
   }
 
   export type VesselCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -9856,6 +10064,7 @@ export namespace Prisma {
     inventoryEvents?: boolean | VesselCountOutputTypeCountInventoryEventsArgs
     inventoryUpdateDrafts?: boolean | VesselCountOutputTypeCountInventoryUpdateDraftsArgs
     requisitions?: boolean | VesselCountOutputTypeCountRequisitionsArgs
+    crewAssignments?: boolean | VesselCountOutputTypeCountCrewAssignmentsArgs
   }
 
   // Custom InputTypes
@@ -10091,6 +10300,13 @@ export namespace Prisma {
    */
   export type VesselCountOutputTypeCountRequisitionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: RequisitionWhereInput
+  }
+
+  /**
+   * VesselCountOutputType without action
+   */
+  export type VesselCountOutputTypeCountCrewAssignmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CrewAssignmentWhereInput
   }
 
 
@@ -10964,6 +11180,68 @@ export namespace Prisma {
 
 
   /**
+   * Count Type SeafarerCountOutputType
+   */
+
+  export type SeafarerCountOutputType = {
+    assignments: number
+  }
+
+  export type SeafarerCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    assignments?: boolean | SeafarerCountOutputTypeCountAssignmentsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * SeafarerCountOutputType without action
+   */
+  export type SeafarerCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SeafarerCountOutputType
+     */
+    select?: SeafarerCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * SeafarerCountOutputType without action
+   */
+  export type SeafarerCountOutputTypeCountAssignmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CrewAssignmentWhereInput
+  }
+
+
+  /**
+   * Count Type CrewAssignmentCountOutputType
+   */
+
+  export type CrewAssignmentCountOutputType = {
+    reliefs: number
+  }
+
+  export type CrewAssignmentCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    reliefs?: boolean | CrewAssignmentCountOutputTypeCountReliefsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * CrewAssignmentCountOutputType without action
+   */
+  export type CrewAssignmentCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CrewAssignmentCountOutputType
+     */
+    select?: CrewAssignmentCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * CrewAssignmentCountOutputType without action
+   */
+  export type CrewAssignmentCountOutputTypeCountReliefsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CrewAssignmentWhereInput
+  }
+
+
+  /**
    * Models
    */
 
@@ -11335,6 +11613,8 @@ export namespace Prisma {
     referenceListItems?: boolean | Company$referenceListItemsArgs<ExtArgs>
     accessLevels?: boolean | Company$accessLevelsArgs<ExtArgs>
     departments?: boolean | Company$departmentsArgs<ExtArgs>
+    seafarers?: boolean | Company$seafarersArgs<ExtArgs>
+    crewAssignments?: boolean | Company$crewAssignmentsArgs<ExtArgs>
     _count?: boolean | CompanyCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["company"]>
 
@@ -11443,6 +11723,8 @@ export namespace Prisma {
     referenceListItems?: boolean | Company$referenceListItemsArgs<ExtArgs>
     accessLevels?: boolean | Company$accessLevelsArgs<ExtArgs>
     departments?: boolean | Company$departmentsArgs<ExtArgs>
+    seafarers?: boolean | Company$seafarersArgs<ExtArgs>
+    crewAssignments?: boolean | Company$crewAssignmentsArgs<ExtArgs>
     _count?: boolean | CompanyCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type CompanyIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -11497,6 +11779,8 @@ export namespace Prisma {
       referenceListItems: Prisma.$ReferenceListItemPayload<ExtArgs>[]
       accessLevels: Prisma.$AccessLevelPayload<ExtArgs>[]
       departments: Prisma.$DepartmentPayload<ExtArgs>[]
+      seafarers: Prisma.$SeafarerPayload<ExtArgs>[]
+      crewAssignments: Prisma.$CrewAssignmentPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -11955,6 +12239,8 @@ export namespace Prisma {
     referenceListItems<T extends Company$referenceListItemsArgs<ExtArgs> = {}>(args?: Subset<T, Company$referenceListItemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReferenceListItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     accessLevels<T extends Company$accessLevelsArgs<ExtArgs> = {}>(args?: Subset<T, Company$accessLevelsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AccessLevelPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     departments<T extends Company$departmentsArgs<ExtArgs> = {}>(args?: Subset<T, Company$departmentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DepartmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    seafarers<T extends Company$seafarersArgs<ExtArgs> = {}>(args?: Subset<T, Company$seafarersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SeafarerPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    crewAssignments<T extends Company$crewAssignmentsArgs<ExtArgs> = {}>(args?: Subset<T, Company$crewAssignmentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CrewAssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -13489,6 +13775,54 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: DepartmentScalarFieldEnum | DepartmentScalarFieldEnum[]
+  }
+
+  /**
+   * Company.seafarers
+   */
+  export type Company$seafarersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Seafarer
+     */
+    select?: SeafarerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Seafarer
+     */
+    omit?: SeafarerOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SeafarerInclude<ExtArgs> | null
+    where?: SeafarerWhereInput
+    orderBy?: SeafarerOrderByWithRelationInput | SeafarerOrderByWithRelationInput[]
+    cursor?: SeafarerWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: SeafarerScalarFieldEnum | SeafarerScalarFieldEnum[]
+  }
+
+  /**
+   * Company.crewAssignments
+   */
+  export type Company$crewAssignmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CrewAssignment
+     */
+    select?: CrewAssignmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CrewAssignment
+     */
+    omit?: CrewAssignmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CrewAssignmentInclude<ExtArgs> | null
+    where?: CrewAssignmentWhereInput
+    orderBy?: CrewAssignmentOrderByWithRelationInput | CrewAssignmentOrderByWithRelationInput[]
+    cursor?: CrewAssignmentWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: CrewAssignmentScalarFieldEnum | CrewAssignmentScalarFieldEnum[]
   }
 
   /**
@@ -22381,6 +22715,7 @@ export namespace Prisma {
     inventoryEvents?: boolean | Vessel$inventoryEventsArgs<ExtArgs>
     inventoryUpdateDrafts?: boolean | Vessel$inventoryUpdateDraftsArgs<ExtArgs>
     requisitions?: boolean | Vessel$requisitionsArgs<ExtArgs>
+    crewAssignments?: boolean | Vessel$crewAssignmentsArgs<ExtArgs>
     _count?: boolean | VesselCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["vessel"]>
 
@@ -22587,6 +22922,7 @@ export namespace Prisma {
     inventoryEvents?: boolean | Vessel$inventoryEventsArgs<ExtArgs>
     inventoryUpdateDrafts?: boolean | Vessel$inventoryUpdateDraftsArgs<ExtArgs>
     requisitions?: boolean | Vessel$requisitionsArgs<ExtArgs>
+    crewAssignments?: boolean | Vessel$crewAssignmentsArgs<ExtArgs>
     _count?: boolean | VesselCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type VesselIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -22633,6 +22969,7 @@ export namespace Prisma {
       inventoryEvents: Prisma.$InventoryEventPayload<ExtArgs>[]
       inventoryUpdateDrafts: Prisma.$InventoryUpdateDraftPayload<ExtArgs>[]
       requisitions: Prisma.$RequisitionPayload<ExtArgs>[]
+      crewAssignments: Prisma.$CrewAssignmentPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -23115,6 +23452,7 @@ export namespace Prisma {
     inventoryEvents<T extends Vessel$inventoryEventsArgs<ExtArgs> = {}>(args?: Subset<T, Vessel$inventoryEventsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InventoryEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     inventoryUpdateDrafts<T extends Vessel$inventoryUpdateDraftsArgs<ExtArgs> = {}>(args?: Subset<T, Vessel$inventoryUpdateDraftsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InventoryUpdateDraftPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     requisitions<T extends Vessel$requisitionsArgs<ExtArgs> = {}>(args?: Subset<T, Vessel$requisitionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RequisitionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    crewAssignments<T extends Vessel$crewAssignmentsArgs<ExtArgs> = {}>(args?: Subset<T, Vessel$crewAssignmentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CrewAssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -24376,6 +24714,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: RequisitionScalarFieldEnum | RequisitionScalarFieldEnum[]
+  }
+
+  /**
+   * Vessel.crewAssignments
+   */
+  export type Vessel$crewAssignmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CrewAssignment
+     */
+    select?: CrewAssignmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CrewAssignment
+     */
+    omit?: CrewAssignmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CrewAssignmentInclude<ExtArgs> | null
+    where?: CrewAssignmentWhereInput
+    orderBy?: CrewAssignmentOrderByWithRelationInput | CrewAssignmentOrderByWithRelationInput[]
+    cursor?: CrewAssignmentWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: CrewAssignmentScalarFieldEnum | CrewAssignmentScalarFieldEnum[]
   }
 
   /**
@@ -112782,6 +113144,2757 @@ export namespace Prisma {
 
 
   /**
+   * Model Seafarer
+   */
+
+  export type AggregateSeafarer = {
+    _count: SeafarerCountAggregateOutputType | null
+    _min: SeafarerMinAggregateOutputType | null
+    _max: SeafarerMaxAggregateOutputType | null
+  }
+
+  export type SeafarerMinAggregateOutputType = {
+    id: string | null
+    companyId: string | null
+    crewCode: string | null
+    lastName: string | null
+    firstName: string | null
+    middleName: string | null
+    suffix: string | null
+    nationality: string | null
+    dateOfBirth: Date | null
+    contactPhone: string | null
+    contactEmail: string | null
+    nextOfKinName: string | null
+    nextOfKinRelationship: string | null
+    nextOfKinPhone: string | null
+    active: boolean | null
+    redactedAt: Date | null
+    redactedBy: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    createdBy: string | null
+    updatedBy: string | null
+    deletedAt: Date | null
+    deletedBy: string | null
+  }
+
+  export type SeafarerMaxAggregateOutputType = {
+    id: string | null
+    companyId: string | null
+    crewCode: string | null
+    lastName: string | null
+    firstName: string | null
+    middleName: string | null
+    suffix: string | null
+    nationality: string | null
+    dateOfBirth: Date | null
+    contactPhone: string | null
+    contactEmail: string | null
+    nextOfKinName: string | null
+    nextOfKinRelationship: string | null
+    nextOfKinPhone: string | null
+    active: boolean | null
+    redactedAt: Date | null
+    redactedBy: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    createdBy: string | null
+    updatedBy: string | null
+    deletedAt: Date | null
+    deletedBy: string | null
+  }
+
+  export type SeafarerCountAggregateOutputType = {
+    id: number
+    companyId: number
+    crewCode: number
+    lastName: number
+    firstName: number
+    middleName: number
+    suffix: number
+    nationality: number
+    dateOfBirth: number
+    contactPhone: number
+    contactEmail: number
+    nextOfKinName: number
+    nextOfKinRelationship: number
+    nextOfKinPhone: number
+    active: number
+    redactedAt: number
+    redactedBy: number
+    createdAt: number
+    updatedAt: number
+    createdBy: number
+    updatedBy: number
+    deletedAt: number
+    deletedBy: number
+    _all: number
+  }
+
+
+  export type SeafarerMinAggregateInputType = {
+    id?: true
+    companyId?: true
+    crewCode?: true
+    lastName?: true
+    firstName?: true
+    middleName?: true
+    suffix?: true
+    nationality?: true
+    dateOfBirth?: true
+    contactPhone?: true
+    contactEmail?: true
+    nextOfKinName?: true
+    nextOfKinRelationship?: true
+    nextOfKinPhone?: true
+    active?: true
+    redactedAt?: true
+    redactedBy?: true
+    createdAt?: true
+    updatedAt?: true
+    createdBy?: true
+    updatedBy?: true
+    deletedAt?: true
+    deletedBy?: true
+  }
+
+  export type SeafarerMaxAggregateInputType = {
+    id?: true
+    companyId?: true
+    crewCode?: true
+    lastName?: true
+    firstName?: true
+    middleName?: true
+    suffix?: true
+    nationality?: true
+    dateOfBirth?: true
+    contactPhone?: true
+    contactEmail?: true
+    nextOfKinName?: true
+    nextOfKinRelationship?: true
+    nextOfKinPhone?: true
+    active?: true
+    redactedAt?: true
+    redactedBy?: true
+    createdAt?: true
+    updatedAt?: true
+    createdBy?: true
+    updatedBy?: true
+    deletedAt?: true
+    deletedBy?: true
+  }
+
+  export type SeafarerCountAggregateInputType = {
+    id?: true
+    companyId?: true
+    crewCode?: true
+    lastName?: true
+    firstName?: true
+    middleName?: true
+    suffix?: true
+    nationality?: true
+    dateOfBirth?: true
+    contactPhone?: true
+    contactEmail?: true
+    nextOfKinName?: true
+    nextOfKinRelationship?: true
+    nextOfKinPhone?: true
+    active?: true
+    redactedAt?: true
+    redactedBy?: true
+    createdAt?: true
+    updatedAt?: true
+    createdBy?: true
+    updatedBy?: true
+    deletedAt?: true
+    deletedBy?: true
+    _all?: true
+  }
+
+  export type SeafarerAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Seafarer to aggregate.
+     */
+    where?: SeafarerWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Seafarers to fetch.
+     */
+    orderBy?: SeafarerOrderByWithRelationInput | SeafarerOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: SeafarerWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Seafarers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Seafarers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Seafarers
+    **/
+    _count?: true | SeafarerCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: SeafarerMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: SeafarerMaxAggregateInputType
+  }
+
+  export type GetSeafarerAggregateType<T extends SeafarerAggregateArgs> = {
+        [P in keyof T & keyof AggregateSeafarer]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateSeafarer[P]>
+      : GetScalarType<T[P], AggregateSeafarer[P]>
+  }
+
+
+
+
+  export type SeafarerGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SeafarerWhereInput
+    orderBy?: SeafarerOrderByWithAggregationInput | SeafarerOrderByWithAggregationInput[]
+    by: SeafarerScalarFieldEnum[] | SeafarerScalarFieldEnum
+    having?: SeafarerScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: SeafarerCountAggregateInputType | true
+    _min?: SeafarerMinAggregateInputType
+    _max?: SeafarerMaxAggregateInputType
+  }
+
+  export type SeafarerGroupByOutputType = {
+    id: string
+    companyId: string
+    crewCode: string | null
+    lastName: string
+    firstName: string
+    middleName: string | null
+    suffix: string | null
+    nationality: string | null
+    dateOfBirth: Date | null
+    contactPhone: string | null
+    contactEmail: string | null
+    nextOfKinName: string | null
+    nextOfKinRelationship: string | null
+    nextOfKinPhone: string | null
+    active: boolean
+    redactedAt: Date | null
+    redactedBy: string | null
+    createdAt: Date
+    updatedAt: Date
+    createdBy: string | null
+    updatedBy: string | null
+    deletedAt: Date | null
+    deletedBy: string | null
+    _count: SeafarerCountAggregateOutputType | null
+    _min: SeafarerMinAggregateOutputType | null
+    _max: SeafarerMaxAggregateOutputType | null
+  }
+
+  type GetSeafarerGroupByPayload<T extends SeafarerGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<SeafarerGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof SeafarerGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], SeafarerGroupByOutputType[P]>
+            : GetScalarType<T[P], SeafarerGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type SeafarerSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    companyId?: boolean
+    crewCode?: boolean
+    lastName?: boolean
+    firstName?: boolean
+    middleName?: boolean
+    suffix?: boolean
+    nationality?: boolean
+    dateOfBirth?: boolean
+    contactPhone?: boolean
+    contactEmail?: boolean
+    nextOfKinName?: boolean
+    nextOfKinRelationship?: boolean
+    nextOfKinPhone?: boolean
+    active?: boolean
+    redactedAt?: boolean
+    redactedBy?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    createdBy?: boolean
+    updatedBy?: boolean
+    deletedAt?: boolean
+    deletedBy?: boolean
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+    assignments?: boolean | Seafarer$assignmentsArgs<ExtArgs>
+    _count?: boolean | SeafarerCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["seafarer"]>
+
+  export type SeafarerSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    companyId?: boolean
+    crewCode?: boolean
+    lastName?: boolean
+    firstName?: boolean
+    middleName?: boolean
+    suffix?: boolean
+    nationality?: boolean
+    dateOfBirth?: boolean
+    contactPhone?: boolean
+    contactEmail?: boolean
+    nextOfKinName?: boolean
+    nextOfKinRelationship?: boolean
+    nextOfKinPhone?: boolean
+    active?: boolean
+    redactedAt?: boolean
+    redactedBy?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    createdBy?: boolean
+    updatedBy?: boolean
+    deletedAt?: boolean
+    deletedBy?: boolean
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["seafarer"]>
+
+  export type SeafarerSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    companyId?: boolean
+    crewCode?: boolean
+    lastName?: boolean
+    firstName?: boolean
+    middleName?: boolean
+    suffix?: boolean
+    nationality?: boolean
+    dateOfBirth?: boolean
+    contactPhone?: boolean
+    contactEmail?: boolean
+    nextOfKinName?: boolean
+    nextOfKinRelationship?: boolean
+    nextOfKinPhone?: boolean
+    active?: boolean
+    redactedAt?: boolean
+    redactedBy?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    createdBy?: boolean
+    updatedBy?: boolean
+    deletedAt?: boolean
+    deletedBy?: boolean
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["seafarer"]>
+
+  export type SeafarerSelectScalar = {
+    id?: boolean
+    companyId?: boolean
+    crewCode?: boolean
+    lastName?: boolean
+    firstName?: boolean
+    middleName?: boolean
+    suffix?: boolean
+    nationality?: boolean
+    dateOfBirth?: boolean
+    contactPhone?: boolean
+    contactEmail?: boolean
+    nextOfKinName?: boolean
+    nextOfKinRelationship?: boolean
+    nextOfKinPhone?: boolean
+    active?: boolean
+    redactedAt?: boolean
+    redactedBy?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    createdBy?: boolean
+    updatedBy?: boolean
+    deletedAt?: boolean
+    deletedBy?: boolean
+  }
+
+  export type SeafarerOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "companyId" | "crewCode" | "lastName" | "firstName" | "middleName" | "suffix" | "nationality" | "dateOfBirth" | "contactPhone" | "contactEmail" | "nextOfKinName" | "nextOfKinRelationship" | "nextOfKinPhone" | "active" | "redactedAt" | "redactedBy" | "createdAt" | "updatedAt" | "createdBy" | "updatedBy" | "deletedAt" | "deletedBy", ExtArgs["result"]["seafarer"]>
+  export type SeafarerInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+    assignments?: boolean | Seafarer$assignmentsArgs<ExtArgs>
+    _count?: boolean | SeafarerCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type SeafarerIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+  }
+  export type SeafarerIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+  }
+
+  export type $SeafarerPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Seafarer"
+    objects: {
+      company: Prisma.$CompanyPayload<ExtArgs>
+      assignments: Prisma.$CrewAssignmentPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      companyId: string
+      /**
+       * The client's own crew/employee number, if they use one — but now a
+       * first-class identity minted by the register (features/crewing/crew-id.ts,
+       * `YYYY-99999`) rather than free text.
+       * 
+       * No @@unique, ON PURPOSE: rows are soft deleted and Postgres unique indexes
+       * ignore deletedAt, so deleting a seafarer and re-registering him would fail
+       * with a P2002 against a row nobody can see. "One live seafarer per crew
+       * code" is enforced in the action against deletedAt: null (crewCodeTaken).
+       * Technically racy; the worst outcome is a duplicate list row, not
+       * corruption, at a create rate of one human click.
+       */
+      crewCode: string | null
+      /**
+       * Four columns, not one `fullName`. Philippine names are surname-first on
+       * every official document (POEA/DMW contract, SIRB, flag-state crew list),
+       * the middle name is the mother's maiden surname and is load-bearing for
+       * identification, and the suffix (Jr./Sr./III) distinguishes father from
+       * son — who genuinely do sail for the same company.
+       */
+      lastName: string
+      firstName: string
+      middleName: string | null
+      suffix: string | null
+      /**
+       * SENSITIVE — RA 10173 §3(l)(1) names race and ethnic origin; treated as
+       * sensitive on the conservative reading (§3.1).
+       */
+      nationality: string | null
+      /**
+       * SENSITIVE — §3(l)(1) names AGE explicitly. Held because certificate and
+       * contract validity turn on it; never rendered to a shipboard caller.
+       */
+      dateOfBirth: Date | null
+      /**
+       * SENSITIVE — the individual's own contact detail, not the company's.
+       */
+      contactPhone: string | null
+      contactEmail: string | null
+      /**
+       * SENSITIVE, and the next of kin is a SEPARATE DATA SUBJECT who never dealt
+       * with this company (§3.6). Emergency use only. Never on a ship's list.
+       */
+      nextOfKinName: string | null
+      nextOfKinRelationship: string | null
+      nextOfKinPhone: string | null
+      /**
+       * In the manning pool. False = no longer employed, kept for the MLC record
+       * of service. NOT the same thing as deletedAt, and not the same thing as
+       * redactedAt — three different states with three different meanings (§3.5).
+       */
+      active: boolean
+      /**
+       * Set by redactSeafarerAction (§3.5, a later batch): the sensitive tier
+       * above has been nulled in place under RA 10173 §16(e) / the retention
+       * policy, while the employment skeleton survives. IRREVERSIBLE. Null = never
+       * redacted. The columns land now, with the table, because a second migration
+       * window against this live database is the expensive part.
+       */
+      redactedAt: Date | null
+      redactedBy: string | null
+      createdAt: Date
+      updatedAt: Date
+      createdBy: string | null
+      updatedBy: string | null
+      deletedAt: Date | null
+      deletedBy: string | null
+    }, ExtArgs["result"]["seafarer"]>
+    composites: {}
+  }
+
+  type SeafarerGetPayload<S extends boolean | null | undefined | SeafarerDefaultArgs> = $Result.GetResult<Prisma.$SeafarerPayload, S>
+
+  type SeafarerCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<SeafarerFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: SeafarerCountAggregateInputType | true
+    }
+
+  export interface SeafarerDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Seafarer'], meta: { name: 'Seafarer' } }
+    /**
+     * Find zero or one Seafarer that matches the filter.
+     * @param {SeafarerFindUniqueArgs} args - Arguments to find a Seafarer
+     * @example
+     * // Get one Seafarer
+     * const seafarer = await prisma.seafarer.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends SeafarerFindUniqueArgs>(args: SelectSubset<T, SeafarerFindUniqueArgs<ExtArgs>>): Prisma__SeafarerClient<$Result.GetResult<Prisma.$SeafarerPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Seafarer that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {SeafarerFindUniqueOrThrowArgs} args - Arguments to find a Seafarer
+     * @example
+     * // Get one Seafarer
+     * const seafarer = await prisma.seafarer.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends SeafarerFindUniqueOrThrowArgs>(args: SelectSubset<T, SeafarerFindUniqueOrThrowArgs<ExtArgs>>): Prisma__SeafarerClient<$Result.GetResult<Prisma.$SeafarerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Seafarer that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SeafarerFindFirstArgs} args - Arguments to find a Seafarer
+     * @example
+     * // Get one Seafarer
+     * const seafarer = await prisma.seafarer.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends SeafarerFindFirstArgs>(args?: SelectSubset<T, SeafarerFindFirstArgs<ExtArgs>>): Prisma__SeafarerClient<$Result.GetResult<Prisma.$SeafarerPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Seafarer that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SeafarerFindFirstOrThrowArgs} args - Arguments to find a Seafarer
+     * @example
+     * // Get one Seafarer
+     * const seafarer = await prisma.seafarer.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends SeafarerFindFirstOrThrowArgs>(args?: SelectSubset<T, SeafarerFindFirstOrThrowArgs<ExtArgs>>): Prisma__SeafarerClient<$Result.GetResult<Prisma.$SeafarerPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Seafarers that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SeafarerFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Seafarers
+     * const seafarers = await prisma.seafarer.findMany()
+     * 
+     * // Get first 10 Seafarers
+     * const seafarers = await prisma.seafarer.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const seafarerWithIdOnly = await prisma.seafarer.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends SeafarerFindManyArgs>(args?: SelectSubset<T, SeafarerFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SeafarerPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Seafarer.
+     * @param {SeafarerCreateArgs} args - Arguments to create a Seafarer.
+     * @example
+     * // Create one Seafarer
+     * const Seafarer = await prisma.seafarer.create({
+     *   data: {
+     *     // ... data to create a Seafarer
+     *   }
+     * })
+     * 
+     */
+    create<T extends SeafarerCreateArgs>(args: SelectSubset<T, SeafarerCreateArgs<ExtArgs>>): Prisma__SeafarerClient<$Result.GetResult<Prisma.$SeafarerPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Seafarers.
+     * @param {SeafarerCreateManyArgs} args - Arguments to create many Seafarers.
+     * @example
+     * // Create many Seafarers
+     * const seafarer = await prisma.seafarer.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends SeafarerCreateManyArgs>(args?: SelectSubset<T, SeafarerCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Seafarers and returns the data saved in the database.
+     * @param {SeafarerCreateManyAndReturnArgs} args - Arguments to create many Seafarers.
+     * @example
+     * // Create many Seafarers
+     * const seafarer = await prisma.seafarer.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Seafarers and only return the `id`
+     * const seafarerWithIdOnly = await prisma.seafarer.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends SeafarerCreateManyAndReturnArgs>(args?: SelectSubset<T, SeafarerCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SeafarerPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Seafarer.
+     * @param {SeafarerDeleteArgs} args - Arguments to delete one Seafarer.
+     * @example
+     * // Delete one Seafarer
+     * const Seafarer = await prisma.seafarer.delete({
+     *   where: {
+     *     // ... filter to delete one Seafarer
+     *   }
+     * })
+     * 
+     */
+    delete<T extends SeafarerDeleteArgs>(args: SelectSubset<T, SeafarerDeleteArgs<ExtArgs>>): Prisma__SeafarerClient<$Result.GetResult<Prisma.$SeafarerPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Seafarer.
+     * @param {SeafarerUpdateArgs} args - Arguments to update one Seafarer.
+     * @example
+     * // Update one Seafarer
+     * const seafarer = await prisma.seafarer.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends SeafarerUpdateArgs>(args: SelectSubset<T, SeafarerUpdateArgs<ExtArgs>>): Prisma__SeafarerClient<$Result.GetResult<Prisma.$SeafarerPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Seafarers.
+     * @param {SeafarerDeleteManyArgs} args - Arguments to filter Seafarers to delete.
+     * @example
+     * // Delete a few Seafarers
+     * const { count } = await prisma.seafarer.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends SeafarerDeleteManyArgs>(args?: SelectSubset<T, SeafarerDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Seafarers.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SeafarerUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Seafarers
+     * const seafarer = await prisma.seafarer.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends SeafarerUpdateManyArgs>(args: SelectSubset<T, SeafarerUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Seafarers and returns the data updated in the database.
+     * @param {SeafarerUpdateManyAndReturnArgs} args - Arguments to update many Seafarers.
+     * @example
+     * // Update many Seafarers
+     * const seafarer = await prisma.seafarer.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Seafarers and only return the `id`
+     * const seafarerWithIdOnly = await prisma.seafarer.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends SeafarerUpdateManyAndReturnArgs>(args: SelectSubset<T, SeafarerUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SeafarerPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Seafarer.
+     * @param {SeafarerUpsertArgs} args - Arguments to update or create a Seafarer.
+     * @example
+     * // Update or create a Seafarer
+     * const seafarer = await prisma.seafarer.upsert({
+     *   create: {
+     *     // ... data to create a Seafarer
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Seafarer we want to update
+     *   }
+     * })
+     */
+    upsert<T extends SeafarerUpsertArgs>(args: SelectSubset<T, SeafarerUpsertArgs<ExtArgs>>): Prisma__SeafarerClient<$Result.GetResult<Prisma.$SeafarerPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Seafarers.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SeafarerCountArgs} args - Arguments to filter Seafarers to count.
+     * @example
+     * // Count the number of Seafarers
+     * const count = await prisma.seafarer.count({
+     *   where: {
+     *     // ... the filter for the Seafarers we want to count
+     *   }
+     * })
+    **/
+    count<T extends SeafarerCountArgs>(
+      args?: Subset<T, SeafarerCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], SeafarerCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Seafarer.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SeafarerAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends SeafarerAggregateArgs>(args: Subset<T, SeafarerAggregateArgs>): Prisma.PrismaPromise<GetSeafarerAggregateType<T>>
+
+    /**
+     * Group by Seafarer.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SeafarerGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends SeafarerGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: SeafarerGroupByArgs['orderBy'] }
+        : { orderBy?: SeafarerGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, SeafarerGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetSeafarerGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Seafarer model
+   */
+  readonly fields: SeafarerFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Seafarer.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__SeafarerClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    company<T extends CompanyDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CompanyDefaultArgs<ExtArgs>>): Prisma__CompanyClient<$Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    assignments<T extends Seafarer$assignmentsArgs<ExtArgs> = {}>(args?: Subset<T, Seafarer$assignmentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CrewAssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Seafarer model
+   */
+  interface SeafarerFieldRefs {
+    readonly id: FieldRef<"Seafarer", 'String'>
+    readonly companyId: FieldRef<"Seafarer", 'String'>
+    readonly crewCode: FieldRef<"Seafarer", 'String'>
+    readonly lastName: FieldRef<"Seafarer", 'String'>
+    readonly firstName: FieldRef<"Seafarer", 'String'>
+    readonly middleName: FieldRef<"Seafarer", 'String'>
+    readonly suffix: FieldRef<"Seafarer", 'String'>
+    readonly nationality: FieldRef<"Seafarer", 'String'>
+    readonly dateOfBirth: FieldRef<"Seafarer", 'DateTime'>
+    readonly contactPhone: FieldRef<"Seafarer", 'String'>
+    readonly contactEmail: FieldRef<"Seafarer", 'String'>
+    readonly nextOfKinName: FieldRef<"Seafarer", 'String'>
+    readonly nextOfKinRelationship: FieldRef<"Seafarer", 'String'>
+    readonly nextOfKinPhone: FieldRef<"Seafarer", 'String'>
+    readonly active: FieldRef<"Seafarer", 'Boolean'>
+    readonly redactedAt: FieldRef<"Seafarer", 'DateTime'>
+    readonly redactedBy: FieldRef<"Seafarer", 'String'>
+    readonly createdAt: FieldRef<"Seafarer", 'DateTime'>
+    readonly updatedAt: FieldRef<"Seafarer", 'DateTime'>
+    readonly createdBy: FieldRef<"Seafarer", 'String'>
+    readonly updatedBy: FieldRef<"Seafarer", 'String'>
+    readonly deletedAt: FieldRef<"Seafarer", 'DateTime'>
+    readonly deletedBy: FieldRef<"Seafarer", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Seafarer findUnique
+   */
+  export type SeafarerFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Seafarer
+     */
+    select?: SeafarerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Seafarer
+     */
+    omit?: SeafarerOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SeafarerInclude<ExtArgs> | null
+    /**
+     * Filter, which Seafarer to fetch.
+     */
+    where: SeafarerWhereUniqueInput
+  }
+
+  /**
+   * Seafarer findUniqueOrThrow
+   */
+  export type SeafarerFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Seafarer
+     */
+    select?: SeafarerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Seafarer
+     */
+    omit?: SeafarerOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SeafarerInclude<ExtArgs> | null
+    /**
+     * Filter, which Seafarer to fetch.
+     */
+    where: SeafarerWhereUniqueInput
+  }
+
+  /**
+   * Seafarer findFirst
+   */
+  export type SeafarerFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Seafarer
+     */
+    select?: SeafarerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Seafarer
+     */
+    omit?: SeafarerOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SeafarerInclude<ExtArgs> | null
+    /**
+     * Filter, which Seafarer to fetch.
+     */
+    where?: SeafarerWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Seafarers to fetch.
+     */
+    orderBy?: SeafarerOrderByWithRelationInput | SeafarerOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Seafarers.
+     */
+    cursor?: SeafarerWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Seafarers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Seafarers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Seafarers.
+     */
+    distinct?: SeafarerScalarFieldEnum | SeafarerScalarFieldEnum[]
+  }
+
+  /**
+   * Seafarer findFirstOrThrow
+   */
+  export type SeafarerFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Seafarer
+     */
+    select?: SeafarerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Seafarer
+     */
+    omit?: SeafarerOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SeafarerInclude<ExtArgs> | null
+    /**
+     * Filter, which Seafarer to fetch.
+     */
+    where?: SeafarerWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Seafarers to fetch.
+     */
+    orderBy?: SeafarerOrderByWithRelationInput | SeafarerOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Seafarers.
+     */
+    cursor?: SeafarerWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Seafarers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Seafarers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Seafarers.
+     */
+    distinct?: SeafarerScalarFieldEnum | SeafarerScalarFieldEnum[]
+  }
+
+  /**
+   * Seafarer findMany
+   */
+  export type SeafarerFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Seafarer
+     */
+    select?: SeafarerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Seafarer
+     */
+    omit?: SeafarerOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SeafarerInclude<ExtArgs> | null
+    /**
+     * Filter, which Seafarers to fetch.
+     */
+    where?: SeafarerWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Seafarers to fetch.
+     */
+    orderBy?: SeafarerOrderByWithRelationInput | SeafarerOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Seafarers.
+     */
+    cursor?: SeafarerWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Seafarers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Seafarers.
+     */
+    skip?: number
+    distinct?: SeafarerScalarFieldEnum | SeafarerScalarFieldEnum[]
+  }
+
+  /**
+   * Seafarer create
+   */
+  export type SeafarerCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Seafarer
+     */
+    select?: SeafarerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Seafarer
+     */
+    omit?: SeafarerOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SeafarerInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Seafarer.
+     */
+    data: XOR<SeafarerCreateInput, SeafarerUncheckedCreateInput>
+  }
+
+  /**
+   * Seafarer createMany
+   */
+  export type SeafarerCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Seafarers.
+     */
+    data: SeafarerCreateManyInput | SeafarerCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Seafarer createManyAndReturn
+   */
+  export type SeafarerCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Seafarer
+     */
+    select?: SeafarerSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Seafarer
+     */
+    omit?: SeafarerOmit<ExtArgs> | null
+    /**
+     * The data used to create many Seafarers.
+     */
+    data: SeafarerCreateManyInput | SeafarerCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SeafarerIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Seafarer update
+   */
+  export type SeafarerUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Seafarer
+     */
+    select?: SeafarerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Seafarer
+     */
+    omit?: SeafarerOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SeafarerInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Seafarer.
+     */
+    data: XOR<SeafarerUpdateInput, SeafarerUncheckedUpdateInput>
+    /**
+     * Choose, which Seafarer to update.
+     */
+    where: SeafarerWhereUniqueInput
+  }
+
+  /**
+   * Seafarer updateMany
+   */
+  export type SeafarerUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Seafarers.
+     */
+    data: XOR<SeafarerUpdateManyMutationInput, SeafarerUncheckedUpdateManyInput>
+    /**
+     * Filter which Seafarers to update
+     */
+    where?: SeafarerWhereInput
+    /**
+     * Limit how many Seafarers to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Seafarer updateManyAndReturn
+   */
+  export type SeafarerUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Seafarer
+     */
+    select?: SeafarerSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Seafarer
+     */
+    omit?: SeafarerOmit<ExtArgs> | null
+    /**
+     * The data used to update Seafarers.
+     */
+    data: XOR<SeafarerUpdateManyMutationInput, SeafarerUncheckedUpdateManyInput>
+    /**
+     * Filter which Seafarers to update
+     */
+    where?: SeafarerWhereInput
+    /**
+     * Limit how many Seafarers to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SeafarerIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Seafarer upsert
+   */
+  export type SeafarerUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Seafarer
+     */
+    select?: SeafarerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Seafarer
+     */
+    omit?: SeafarerOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SeafarerInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Seafarer to update in case it exists.
+     */
+    where: SeafarerWhereUniqueInput
+    /**
+     * In case the Seafarer found by the `where` argument doesn't exist, create a new Seafarer with this data.
+     */
+    create: XOR<SeafarerCreateInput, SeafarerUncheckedCreateInput>
+    /**
+     * In case the Seafarer was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<SeafarerUpdateInput, SeafarerUncheckedUpdateInput>
+  }
+
+  /**
+   * Seafarer delete
+   */
+  export type SeafarerDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Seafarer
+     */
+    select?: SeafarerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Seafarer
+     */
+    omit?: SeafarerOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SeafarerInclude<ExtArgs> | null
+    /**
+     * Filter which Seafarer to delete.
+     */
+    where: SeafarerWhereUniqueInput
+  }
+
+  /**
+   * Seafarer deleteMany
+   */
+  export type SeafarerDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Seafarers to delete
+     */
+    where?: SeafarerWhereInput
+    /**
+     * Limit how many Seafarers to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Seafarer.assignments
+   */
+  export type Seafarer$assignmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CrewAssignment
+     */
+    select?: CrewAssignmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CrewAssignment
+     */
+    omit?: CrewAssignmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CrewAssignmentInclude<ExtArgs> | null
+    where?: CrewAssignmentWhereInput
+    orderBy?: CrewAssignmentOrderByWithRelationInput | CrewAssignmentOrderByWithRelationInput[]
+    cursor?: CrewAssignmentWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: CrewAssignmentScalarFieldEnum | CrewAssignmentScalarFieldEnum[]
+  }
+
+  /**
+   * Seafarer without action
+   */
+  export type SeafarerDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Seafarer
+     */
+    select?: SeafarerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Seafarer
+     */
+    omit?: SeafarerOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SeafarerInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model CrewAssignment
+   */
+
+  export type AggregateCrewAssignment = {
+    _count: CrewAssignmentCountAggregateOutputType | null
+    _min: CrewAssignmentMinAggregateOutputType | null
+    _max: CrewAssignmentMaxAggregateOutputType | null
+  }
+
+  export type CrewAssignmentMinAggregateOutputType = {
+    id: string | null
+    companyId: string | null
+    seafarerId: string | null
+    vesselId: string | null
+    rankCode: string | null
+    plannedSignOnDate: Date | null
+    actualSignOnDate: Date | null
+    plannedSignOffDate: Date | null
+    actualSignOffDate: Date | null
+    signOnPort: string | null
+    signOffPort: string | null
+    signOffReason: string | null
+    reliefForAssignmentId: string | null
+    vesselRemarks: string | null
+    shoreRemarks: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    createdBy: string | null
+    updatedBy: string | null
+    deletedAt: Date | null
+    deletedBy: string | null
+  }
+
+  export type CrewAssignmentMaxAggregateOutputType = {
+    id: string | null
+    companyId: string | null
+    seafarerId: string | null
+    vesselId: string | null
+    rankCode: string | null
+    plannedSignOnDate: Date | null
+    actualSignOnDate: Date | null
+    plannedSignOffDate: Date | null
+    actualSignOffDate: Date | null
+    signOnPort: string | null
+    signOffPort: string | null
+    signOffReason: string | null
+    reliefForAssignmentId: string | null
+    vesselRemarks: string | null
+    shoreRemarks: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    createdBy: string | null
+    updatedBy: string | null
+    deletedAt: Date | null
+    deletedBy: string | null
+  }
+
+  export type CrewAssignmentCountAggregateOutputType = {
+    id: number
+    companyId: number
+    seafarerId: number
+    vesselId: number
+    rankCode: number
+    plannedSignOnDate: number
+    actualSignOnDate: number
+    plannedSignOffDate: number
+    actualSignOffDate: number
+    signOnPort: number
+    signOffPort: number
+    signOffReason: number
+    reliefForAssignmentId: number
+    vesselRemarks: number
+    shoreRemarks: number
+    createdAt: number
+    updatedAt: number
+    createdBy: number
+    updatedBy: number
+    deletedAt: number
+    deletedBy: number
+    _all: number
+  }
+
+
+  export type CrewAssignmentMinAggregateInputType = {
+    id?: true
+    companyId?: true
+    seafarerId?: true
+    vesselId?: true
+    rankCode?: true
+    plannedSignOnDate?: true
+    actualSignOnDate?: true
+    plannedSignOffDate?: true
+    actualSignOffDate?: true
+    signOnPort?: true
+    signOffPort?: true
+    signOffReason?: true
+    reliefForAssignmentId?: true
+    vesselRemarks?: true
+    shoreRemarks?: true
+    createdAt?: true
+    updatedAt?: true
+    createdBy?: true
+    updatedBy?: true
+    deletedAt?: true
+    deletedBy?: true
+  }
+
+  export type CrewAssignmentMaxAggregateInputType = {
+    id?: true
+    companyId?: true
+    seafarerId?: true
+    vesselId?: true
+    rankCode?: true
+    plannedSignOnDate?: true
+    actualSignOnDate?: true
+    plannedSignOffDate?: true
+    actualSignOffDate?: true
+    signOnPort?: true
+    signOffPort?: true
+    signOffReason?: true
+    reliefForAssignmentId?: true
+    vesselRemarks?: true
+    shoreRemarks?: true
+    createdAt?: true
+    updatedAt?: true
+    createdBy?: true
+    updatedBy?: true
+    deletedAt?: true
+    deletedBy?: true
+  }
+
+  export type CrewAssignmentCountAggregateInputType = {
+    id?: true
+    companyId?: true
+    seafarerId?: true
+    vesselId?: true
+    rankCode?: true
+    plannedSignOnDate?: true
+    actualSignOnDate?: true
+    plannedSignOffDate?: true
+    actualSignOffDate?: true
+    signOnPort?: true
+    signOffPort?: true
+    signOffReason?: true
+    reliefForAssignmentId?: true
+    vesselRemarks?: true
+    shoreRemarks?: true
+    createdAt?: true
+    updatedAt?: true
+    createdBy?: true
+    updatedBy?: true
+    deletedAt?: true
+    deletedBy?: true
+    _all?: true
+  }
+
+  export type CrewAssignmentAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which CrewAssignment to aggregate.
+     */
+    where?: CrewAssignmentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CrewAssignments to fetch.
+     */
+    orderBy?: CrewAssignmentOrderByWithRelationInput | CrewAssignmentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: CrewAssignmentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CrewAssignments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CrewAssignments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned CrewAssignments
+    **/
+    _count?: true | CrewAssignmentCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: CrewAssignmentMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: CrewAssignmentMaxAggregateInputType
+  }
+
+  export type GetCrewAssignmentAggregateType<T extends CrewAssignmentAggregateArgs> = {
+        [P in keyof T & keyof AggregateCrewAssignment]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateCrewAssignment[P]>
+      : GetScalarType<T[P], AggregateCrewAssignment[P]>
+  }
+
+
+
+
+  export type CrewAssignmentGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CrewAssignmentWhereInput
+    orderBy?: CrewAssignmentOrderByWithAggregationInput | CrewAssignmentOrderByWithAggregationInput[]
+    by: CrewAssignmentScalarFieldEnum[] | CrewAssignmentScalarFieldEnum
+    having?: CrewAssignmentScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: CrewAssignmentCountAggregateInputType | true
+    _min?: CrewAssignmentMinAggregateInputType
+    _max?: CrewAssignmentMaxAggregateInputType
+  }
+
+  export type CrewAssignmentGroupByOutputType = {
+    id: string
+    companyId: string
+    seafarerId: string
+    vesselId: string
+    rankCode: string
+    plannedSignOnDate: Date
+    actualSignOnDate: Date | null
+    plannedSignOffDate: Date | null
+    actualSignOffDate: Date | null
+    signOnPort: string | null
+    signOffPort: string | null
+    signOffReason: string | null
+    reliefForAssignmentId: string | null
+    vesselRemarks: string | null
+    shoreRemarks: string | null
+    createdAt: Date
+    updatedAt: Date
+    createdBy: string | null
+    updatedBy: string | null
+    deletedAt: Date | null
+    deletedBy: string | null
+    _count: CrewAssignmentCountAggregateOutputType | null
+    _min: CrewAssignmentMinAggregateOutputType | null
+    _max: CrewAssignmentMaxAggregateOutputType | null
+  }
+
+  type GetCrewAssignmentGroupByPayload<T extends CrewAssignmentGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<CrewAssignmentGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof CrewAssignmentGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], CrewAssignmentGroupByOutputType[P]>
+            : GetScalarType<T[P], CrewAssignmentGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type CrewAssignmentSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    companyId?: boolean
+    seafarerId?: boolean
+    vesselId?: boolean
+    rankCode?: boolean
+    plannedSignOnDate?: boolean
+    actualSignOnDate?: boolean
+    plannedSignOffDate?: boolean
+    actualSignOffDate?: boolean
+    signOnPort?: boolean
+    signOffPort?: boolean
+    signOffReason?: boolean
+    reliefForAssignmentId?: boolean
+    vesselRemarks?: boolean
+    shoreRemarks?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    createdBy?: boolean
+    updatedBy?: boolean
+    deletedAt?: boolean
+    deletedBy?: boolean
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+    seafarer?: boolean | SeafarerDefaultArgs<ExtArgs>
+    vessel?: boolean | VesselDefaultArgs<ExtArgs>
+    reliefFor?: boolean | CrewAssignment$reliefForArgs<ExtArgs>
+    reliefs?: boolean | CrewAssignment$reliefsArgs<ExtArgs>
+    _count?: boolean | CrewAssignmentCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["crewAssignment"]>
+
+  export type CrewAssignmentSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    companyId?: boolean
+    seafarerId?: boolean
+    vesselId?: boolean
+    rankCode?: boolean
+    plannedSignOnDate?: boolean
+    actualSignOnDate?: boolean
+    plannedSignOffDate?: boolean
+    actualSignOffDate?: boolean
+    signOnPort?: boolean
+    signOffPort?: boolean
+    signOffReason?: boolean
+    reliefForAssignmentId?: boolean
+    vesselRemarks?: boolean
+    shoreRemarks?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    createdBy?: boolean
+    updatedBy?: boolean
+    deletedAt?: boolean
+    deletedBy?: boolean
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+    seafarer?: boolean | SeafarerDefaultArgs<ExtArgs>
+    vessel?: boolean | VesselDefaultArgs<ExtArgs>
+    reliefFor?: boolean | CrewAssignment$reliefForArgs<ExtArgs>
+  }, ExtArgs["result"]["crewAssignment"]>
+
+  export type CrewAssignmentSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    companyId?: boolean
+    seafarerId?: boolean
+    vesselId?: boolean
+    rankCode?: boolean
+    plannedSignOnDate?: boolean
+    actualSignOnDate?: boolean
+    plannedSignOffDate?: boolean
+    actualSignOffDate?: boolean
+    signOnPort?: boolean
+    signOffPort?: boolean
+    signOffReason?: boolean
+    reliefForAssignmentId?: boolean
+    vesselRemarks?: boolean
+    shoreRemarks?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    createdBy?: boolean
+    updatedBy?: boolean
+    deletedAt?: boolean
+    deletedBy?: boolean
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+    seafarer?: boolean | SeafarerDefaultArgs<ExtArgs>
+    vessel?: boolean | VesselDefaultArgs<ExtArgs>
+    reliefFor?: boolean | CrewAssignment$reliefForArgs<ExtArgs>
+  }, ExtArgs["result"]["crewAssignment"]>
+
+  export type CrewAssignmentSelectScalar = {
+    id?: boolean
+    companyId?: boolean
+    seafarerId?: boolean
+    vesselId?: boolean
+    rankCode?: boolean
+    plannedSignOnDate?: boolean
+    actualSignOnDate?: boolean
+    plannedSignOffDate?: boolean
+    actualSignOffDate?: boolean
+    signOnPort?: boolean
+    signOffPort?: boolean
+    signOffReason?: boolean
+    reliefForAssignmentId?: boolean
+    vesselRemarks?: boolean
+    shoreRemarks?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    createdBy?: boolean
+    updatedBy?: boolean
+    deletedAt?: boolean
+    deletedBy?: boolean
+  }
+
+  export type CrewAssignmentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "companyId" | "seafarerId" | "vesselId" | "rankCode" | "plannedSignOnDate" | "actualSignOnDate" | "plannedSignOffDate" | "actualSignOffDate" | "signOnPort" | "signOffPort" | "signOffReason" | "reliefForAssignmentId" | "vesselRemarks" | "shoreRemarks" | "createdAt" | "updatedAt" | "createdBy" | "updatedBy" | "deletedAt" | "deletedBy", ExtArgs["result"]["crewAssignment"]>
+  export type CrewAssignmentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+    seafarer?: boolean | SeafarerDefaultArgs<ExtArgs>
+    vessel?: boolean | VesselDefaultArgs<ExtArgs>
+    reliefFor?: boolean | CrewAssignment$reliefForArgs<ExtArgs>
+    reliefs?: boolean | CrewAssignment$reliefsArgs<ExtArgs>
+    _count?: boolean | CrewAssignmentCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type CrewAssignmentIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+    seafarer?: boolean | SeafarerDefaultArgs<ExtArgs>
+    vessel?: boolean | VesselDefaultArgs<ExtArgs>
+    reliefFor?: boolean | CrewAssignment$reliefForArgs<ExtArgs>
+  }
+  export type CrewAssignmentIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+    seafarer?: boolean | SeafarerDefaultArgs<ExtArgs>
+    vessel?: boolean | VesselDefaultArgs<ExtArgs>
+    reliefFor?: boolean | CrewAssignment$reliefForArgs<ExtArgs>
+  }
+
+  export type $CrewAssignmentPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "CrewAssignment"
+    objects: {
+      company: Prisma.$CompanyPayload<ExtArgs>
+      seafarer: Prisma.$SeafarerPayload<ExtArgs>
+      vessel: Prisma.$VesselPayload<ExtArgs>
+      reliefFor: Prisma.$CrewAssignmentPayload<ExtArgs> | null
+      reliefs: Prisma.$CrewAssignmentPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      companyId: string
+      seafarerId: string
+      /**
+       * REQUIRED, not nullable. Every assignment is to exactly one ship; there is
+       * no shore-side or fleet-wide variant, so there is no null case. This is
+       * what makes the vessel boundary apply uniformly with no null branch on the
+       * security path.
+       */
+      vesselId: string
+      /**
+       * A code from SHIP_POSITIONS (lib/crew-ranks.ts) — the app's ONE rank
+       * vocabulary. Zod-validated, never free text.
+       */
+      rankCode: string
+      /**
+       * Four date columns, two pairs, and the split is the module's whole point.
+       * PLANNED is what the crewing desk intends; ACTUAL is what happened.
+       * 
+       * plannedSignOnDate  — required: a relief always has an intended date.
+       * actualSignOnDate   — null = has not joined yet. THE PLANNED/ABOARD
+       * discriminator.
+       * plannedSignOffDate — null = open-ended / contract end not yet fixed.
+       * actualSignOffDate  — null = STILL ABOARD. This one column is what every
+       * "current crew" query filters on.
+       */
+      plannedSignOnDate: Date
+      actualSignOnDate: Date | null
+      plannedSignOffDate: Date | null
+      actualSignOffDate: Date | null
+      /**
+       * Free text, like VoyageReport.port and for the same reason: real-world data
+       * is inconsistent ("LUANDA, ANGOLA", "OPL Cape Town") and a port master is a
+       * separate feature. Do not normalise.
+       */
+      signOnPort: string | null
+      signOffPort: string | null
+      /**
+       * A value from SIGN_OFF_REASONS (features/crewing/schema.ts). The list is
+       * CONSTRAINED ON PURPOSE and excludes MEDICAL_REPATRIATION and DISMISSAL —
+       * health data and disciplinary data respectively. Adding either RECLASSIFIES
+       * this column as sensitive and every list that renders it.
+       */
+      signOffReason: string | null
+      /**
+       * This assignment relieves that one — how "who replaces whom" is recorded
+       * rather than guessed from dates. Self-relation, nullable.
+       * null = not a relief of a specific person: an additional berth, a first
+       * manning, or simply a link the desk never recorded.
+       */
+      reliefForAssignmentId: string | null
+      /**
+       * Two remark columns, two owners — the app-wide split. The ship writes
+       * vesselRemarks, the office writes shoreRemarks, and neither overwrites the
+       * other. BOTH ARE RESTRICTED TIER (§5.4): operational notes only — no
+       * medical, no disciplinary content.
+       */
+      vesselRemarks: string | null
+      shoreRemarks: string | null
+      createdAt: Date
+      updatedAt: Date
+      createdBy: string | null
+      updatedBy: string | null
+      deletedAt: Date | null
+      deletedBy: string | null
+    }, ExtArgs["result"]["crewAssignment"]>
+    composites: {}
+  }
+
+  type CrewAssignmentGetPayload<S extends boolean | null | undefined | CrewAssignmentDefaultArgs> = $Result.GetResult<Prisma.$CrewAssignmentPayload, S>
+
+  type CrewAssignmentCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<CrewAssignmentFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: CrewAssignmentCountAggregateInputType | true
+    }
+
+  export interface CrewAssignmentDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['CrewAssignment'], meta: { name: 'CrewAssignment' } }
+    /**
+     * Find zero or one CrewAssignment that matches the filter.
+     * @param {CrewAssignmentFindUniqueArgs} args - Arguments to find a CrewAssignment
+     * @example
+     * // Get one CrewAssignment
+     * const crewAssignment = await prisma.crewAssignment.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends CrewAssignmentFindUniqueArgs>(args: SelectSubset<T, CrewAssignmentFindUniqueArgs<ExtArgs>>): Prisma__CrewAssignmentClient<$Result.GetResult<Prisma.$CrewAssignmentPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one CrewAssignment that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {CrewAssignmentFindUniqueOrThrowArgs} args - Arguments to find a CrewAssignment
+     * @example
+     * // Get one CrewAssignment
+     * const crewAssignment = await prisma.crewAssignment.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends CrewAssignmentFindUniqueOrThrowArgs>(args: SelectSubset<T, CrewAssignmentFindUniqueOrThrowArgs<ExtArgs>>): Prisma__CrewAssignmentClient<$Result.GetResult<Prisma.$CrewAssignmentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first CrewAssignment that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CrewAssignmentFindFirstArgs} args - Arguments to find a CrewAssignment
+     * @example
+     * // Get one CrewAssignment
+     * const crewAssignment = await prisma.crewAssignment.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends CrewAssignmentFindFirstArgs>(args?: SelectSubset<T, CrewAssignmentFindFirstArgs<ExtArgs>>): Prisma__CrewAssignmentClient<$Result.GetResult<Prisma.$CrewAssignmentPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first CrewAssignment that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CrewAssignmentFindFirstOrThrowArgs} args - Arguments to find a CrewAssignment
+     * @example
+     * // Get one CrewAssignment
+     * const crewAssignment = await prisma.crewAssignment.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends CrewAssignmentFindFirstOrThrowArgs>(args?: SelectSubset<T, CrewAssignmentFindFirstOrThrowArgs<ExtArgs>>): Prisma__CrewAssignmentClient<$Result.GetResult<Prisma.$CrewAssignmentPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more CrewAssignments that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CrewAssignmentFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all CrewAssignments
+     * const crewAssignments = await prisma.crewAssignment.findMany()
+     * 
+     * // Get first 10 CrewAssignments
+     * const crewAssignments = await prisma.crewAssignment.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const crewAssignmentWithIdOnly = await prisma.crewAssignment.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends CrewAssignmentFindManyArgs>(args?: SelectSubset<T, CrewAssignmentFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CrewAssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a CrewAssignment.
+     * @param {CrewAssignmentCreateArgs} args - Arguments to create a CrewAssignment.
+     * @example
+     * // Create one CrewAssignment
+     * const CrewAssignment = await prisma.crewAssignment.create({
+     *   data: {
+     *     // ... data to create a CrewAssignment
+     *   }
+     * })
+     * 
+     */
+    create<T extends CrewAssignmentCreateArgs>(args: SelectSubset<T, CrewAssignmentCreateArgs<ExtArgs>>): Prisma__CrewAssignmentClient<$Result.GetResult<Prisma.$CrewAssignmentPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many CrewAssignments.
+     * @param {CrewAssignmentCreateManyArgs} args - Arguments to create many CrewAssignments.
+     * @example
+     * // Create many CrewAssignments
+     * const crewAssignment = await prisma.crewAssignment.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends CrewAssignmentCreateManyArgs>(args?: SelectSubset<T, CrewAssignmentCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many CrewAssignments and returns the data saved in the database.
+     * @param {CrewAssignmentCreateManyAndReturnArgs} args - Arguments to create many CrewAssignments.
+     * @example
+     * // Create many CrewAssignments
+     * const crewAssignment = await prisma.crewAssignment.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many CrewAssignments and only return the `id`
+     * const crewAssignmentWithIdOnly = await prisma.crewAssignment.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends CrewAssignmentCreateManyAndReturnArgs>(args?: SelectSubset<T, CrewAssignmentCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CrewAssignmentPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a CrewAssignment.
+     * @param {CrewAssignmentDeleteArgs} args - Arguments to delete one CrewAssignment.
+     * @example
+     * // Delete one CrewAssignment
+     * const CrewAssignment = await prisma.crewAssignment.delete({
+     *   where: {
+     *     // ... filter to delete one CrewAssignment
+     *   }
+     * })
+     * 
+     */
+    delete<T extends CrewAssignmentDeleteArgs>(args: SelectSubset<T, CrewAssignmentDeleteArgs<ExtArgs>>): Prisma__CrewAssignmentClient<$Result.GetResult<Prisma.$CrewAssignmentPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one CrewAssignment.
+     * @param {CrewAssignmentUpdateArgs} args - Arguments to update one CrewAssignment.
+     * @example
+     * // Update one CrewAssignment
+     * const crewAssignment = await prisma.crewAssignment.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends CrewAssignmentUpdateArgs>(args: SelectSubset<T, CrewAssignmentUpdateArgs<ExtArgs>>): Prisma__CrewAssignmentClient<$Result.GetResult<Prisma.$CrewAssignmentPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more CrewAssignments.
+     * @param {CrewAssignmentDeleteManyArgs} args - Arguments to filter CrewAssignments to delete.
+     * @example
+     * // Delete a few CrewAssignments
+     * const { count } = await prisma.crewAssignment.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends CrewAssignmentDeleteManyArgs>(args?: SelectSubset<T, CrewAssignmentDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more CrewAssignments.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CrewAssignmentUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many CrewAssignments
+     * const crewAssignment = await prisma.crewAssignment.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends CrewAssignmentUpdateManyArgs>(args: SelectSubset<T, CrewAssignmentUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more CrewAssignments and returns the data updated in the database.
+     * @param {CrewAssignmentUpdateManyAndReturnArgs} args - Arguments to update many CrewAssignments.
+     * @example
+     * // Update many CrewAssignments
+     * const crewAssignment = await prisma.crewAssignment.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more CrewAssignments and only return the `id`
+     * const crewAssignmentWithIdOnly = await prisma.crewAssignment.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends CrewAssignmentUpdateManyAndReturnArgs>(args: SelectSubset<T, CrewAssignmentUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CrewAssignmentPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one CrewAssignment.
+     * @param {CrewAssignmentUpsertArgs} args - Arguments to update or create a CrewAssignment.
+     * @example
+     * // Update or create a CrewAssignment
+     * const crewAssignment = await prisma.crewAssignment.upsert({
+     *   create: {
+     *     // ... data to create a CrewAssignment
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the CrewAssignment we want to update
+     *   }
+     * })
+     */
+    upsert<T extends CrewAssignmentUpsertArgs>(args: SelectSubset<T, CrewAssignmentUpsertArgs<ExtArgs>>): Prisma__CrewAssignmentClient<$Result.GetResult<Prisma.$CrewAssignmentPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of CrewAssignments.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CrewAssignmentCountArgs} args - Arguments to filter CrewAssignments to count.
+     * @example
+     * // Count the number of CrewAssignments
+     * const count = await prisma.crewAssignment.count({
+     *   where: {
+     *     // ... the filter for the CrewAssignments we want to count
+     *   }
+     * })
+    **/
+    count<T extends CrewAssignmentCountArgs>(
+      args?: Subset<T, CrewAssignmentCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], CrewAssignmentCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a CrewAssignment.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CrewAssignmentAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends CrewAssignmentAggregateArgs>(args: Subset<T, CrewAssignmentAggregateArgs>): Prisma.PrismaPromise<GetCrewAssignmentAggregateType<T>>
+
+    /**
+     * Group by CrewAssignment.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CrewAssignmentGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends CrewAssignmentGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: CrewAssignmentGroupByArgs['orderBy'] }
+        : { orderBy?: CrewAssignmentGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, CrewAssignmentGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCrewAssignmentGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the CrewAssignment model
+   */
+  readonly fields: CrewAssignmentFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for CrewAssignment.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__CrewAssignmentClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    company<T extends CompanyDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CompanyDefaultArgs<ExtArgs>>): Prisma__CompanyClient<$Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    seafarer<T extends SeafarerDefaultArgs<ExtArgs> = {}>(args?: Subset<T, SeafarerDefaultArgs<ExtArgs>>): Prisma__SeafarerClient<$Result.GetResult<Prisma.$SeafarerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    vessel<T extends VesselDefaultArgs<ExtArgs> = {}>(args?: Subset<T, VesselDefaultArgs<ExtArgs>>): Prisma__VesselClient<$Result.GetResult<Prisma.$VesselPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    reliefFor<T extends CrewAssignment$reliefForArgs<ExtArgs> = {}>(args?: Subset<T, CrewAssignment$reliefForArgs<ExtArgs>>): Prisma__CrewAssignmentClient<$Result.GetResult<Prisma.$CrewAssignmentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    reliefs<T extends CrewAssignment$reliefsArgs<ExtArgs> = {}>(args?: Subset<T, CrewAssignment$reliefsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CrewAssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the CrewAssignment model
+   */
+  interface CrewAssignmentFieldRefs {
+    readonly id: FieldRef<"CrewAssignment", 'String'>
+    readonly companyId: FieldRef<"CrewAssignment", 'String'>
+    readonly seafarerId: FieldRef<"CrewAssignment", 'String'>
+    readonly vesselId: FieldRef<"CrewAssignment", 'String'>
+    readonly rankCode: FieldRef<"CrewAssignment", 'String'>
+    readonly plannedSignOnDate: FieldRef<"CrewAssignment", 'DateTime'>
+    readonly actualSignOnDate: FieldRef<"CrewAssignment", 'DateTime'>
+    readonly plannedSignOffDate: FieldRef<"CrewAssignment", 'DateTime'>
+    readonly actualSignOffDate: FieldRef<"CrewAssignment", 'DateTime'>
+    readonly signOnPort: FieldRef<"CrewAssignment", 'String'>
+    readonly signOffPort: FieldRef<"CrewAssignment", 'String'>
+    readonly signOffReason: FieldRef<"CrewAssignment", 'String'>
+    readonly reliefForAssignmentId: FieldRef<"CrewAssignment", 'String'>
+    readonly vesselRemarks: FieldRef<"CrewAssignment", 'String'>
+    readonly shoreRemarks: FieldRef<"CrewAssignment", 'String'>
+    readonly createdAt: FieldRef<"CrewAssignment", 'DateTime'>
+    readonly updatedAt: FieldRef<"CrewAssignment", 'DateTime'>
+    readonly createdBy: FieldRef<"CrewAssignment", 'String'>
+    readonly updatedBy: FieldRef<"CrewAssignment", 'String'>
+    readonly deletedAt: FieldRef<"CrewAssignment", 'DateTime'>
+    readonly deletedBy: FieldRef<"CrewAssignment", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * CrewAssignment findUnique
+   */
+  export type CrewAssignmentFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CrewAssignment
+     */
+    select?: CrewAssignmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CrewAssignment
+     */
+    omit?: CrewAssignmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CrewAssignmentInclude<ExtArgs> | null
+    /**
+     * Filter, which CrewAssignment to fetch.
+     */
+    where: CrewAssignmentWhereUniqueInput
+  }
+
+  /**
+   * CrewAssignment findUniqueOrThrow
+   */
+  export type CrewAssignmentFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CrewAssignment
+     */
+    select?: CrewAssignmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CrewAssignment
+     */
+    omit?: CrewAssignmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CrewAssignmentInclude<ExtArgs> | null
+    /**
+     * Filter, which CrewAssignment to fetch.
+     */
+    where: CrewAssignmentWhereUniqueInput
+  }
+
+  /**
+   * CrewAssignment findFirst
+   */
+  export type CrewAssignmentFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CrewAssignment
+     */
+    select?: CrewAssignmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CrewAssignment
+     */
+    omit?: CrewAssignmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CrewAssignmentInclude<ExtArgs> | null
+    /**
+     * Filter, which CrewAssignment to fetch.
+     */
+    where?: CrewAssignmentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CrewAssignments to fetch.
+     */
+    orderBy?: CrewAssignmentOrderByWithRelationInput | CrewAssignmentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CrewAssignments.
+     */
+    cursor?: CrewAssignmentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CrewAssignments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CrewAssignments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CrewAssignments.
+     */
+    distinct?: CrewAssignmentScalarFieldEnum | CrewAssignmentScalarFieldEnum[]
+  }
+
+  /**
+   * CrewAssignment findFirstOrThrow
+   */
+  export type CrewAssignmentFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CrewAssignment
+     */
+    select?: CrewAssignmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CrewAssignment
+     */
+    omit?: CrewAssignmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CrewAssignmentInclude<ExtArgs> | null
+    /**
+     * Filter, which CrewAssignment to fetch.
+     */
+    where?: CrewAssignmentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CrewAssignments to fetch.
+     */
+    orderBy?: CrewAssignmentOrderByWithRelationInput | CrewAssignmentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CrewAssignments.
+     */
+    cursor?: CrewAssignmentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CrewAssignments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CrewAssignments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CrewAssignments.
+     */
+    distinct?: CrewAssignmentScalarFieldEnum | CrewAssignmentScalarFieldEnum[]
+  }
+
+  /**
+   * CrewAssignment findMany
+   */
+  export type CrewAssignmentFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CrewAssignment
+     */
+    select?: CrewAssignmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CrewAssignment
+     */
+    omit?: CrewAssignmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CrewAssignmentInclude<ExtArgs> | null
+    /**
+     * Filter, which CrewAssignments to fetch.
+     */
+    where?: CrewAssignmentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CrewAssignments to fetch.
+     */
+    orderBy?: CrewAssignmentOrderByWithRelationInput | CrewAssignmentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing CrewAssignments.
+     */
+    cursor?: CrewAssignmentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CrewAssignments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CrewAssignments.
+     */
+    skip?: number
+    distinct?: CrewAssignmentScalarFieldEnum | CrewAssignmentScalarFieldEnum[]
+  }
+
+  /**
+   * CrewAssignment create
+   */
+  export type CrewAssignmentCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CrewAssignment
+     */
+    select?: CrewAssignmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CrewAssignment
+     */
+    omit?: CrewAssignmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CrewAssignmentInclude<ExtArgs> | null
+    /**
+     * The data needed to create a CrewAssignment.
+     */
+    data: XOR<CrewAssignmentCreateInput, CrewAssignmentUncheckedCreateInput>
+  }
+
+  /**
+   * CrewAssignment createMany
+   */
+  export type CrewAssignmentCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many CrewAssignments.
+     */
+    data: CrewAssignmentCreateManyInput | CrewAssignmentCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * CrewAssignment createManyAndReturn
+   */
+  export type CrewAssignmentCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CrewAssignment
+     */
+    select?: CrewAssignmentSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the CrewAssignment
+     */
+    omit?: CrewAssignmentOmit<ExtArgs> | null
+    /**
+     * The data used to create many CrewAssignments.
+     */
+    data: CrewAssignmentCreateManyInput | CrewAssignmentCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CrewAssignmentIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * CrewAssignment update
+   */
+  export type CrewAssignmentUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CrewAssignment
+     */
+    select?: CrewAssignmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CrewAssignment
+     */
+    omit?: CrewAssignmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CrewAssignmentInclude<ExtArgs> | null
+    /**
+     * The data needed to update a CrewAssignment.
+     */
+    data: XOR<CrewAssignmentUpdateInput, CrewAssignmentUncheckedUpdateInput>
+    /**
+     * Choose, which CrewAssignment to update.
+     */
+    where: CrewAssignmentWhereUniqueInput
+  }
+
+  /**
+   * CrewAssignment updateMany
+   */
+  export type CrewAssignmentUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update CrewAssignments.
+     */
+    data: XOR<CrewAssignmentUpdateManyMutationInput, CrewAssignmentUncheckedUpdateManyInput>
+    /**
+     * Filter which CrewAssignments to update
+     */
+    where?: CrewAssignmentWhereInput
+    /**
+     * Limit how many CrewAssignments to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * CrewAssignment updateManyAndReturn
+   */
+  export type CrewAssignmentUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CrewAssignment
+     */
+    select?: CrewAssignmentSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the CrewAssignment
+     */
+    omit?: CrewAssignmentOmit<ExtArgs> | null
+    /**
+     * The data used to update CrewAssignments.
+     */
+    data: XOR<CrewAssignmentUpdateManyMutationInput, CrewAssignmentUncheckedUpdateManyInput>
+    /**
+     * Filter which CrewAssignments to update
+     */
+    where?: CrewAssignmentWhereInput
+    /**
+     * Limit how many CrewAssignments to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CrewAssignmentIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * CrewAssignment upsert
+   */
+  export type CrewAssignmentUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CrewAssignment
+     */
+    select?: CrewAssignmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CrewAssignment
+     */
+    omit?: CrewAssignmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CrewAssignmentInclude<ExtArgs> | null
+    /**
+     * The filter to search for the CrewAssignment to update in case it exists.
+     */
+    where: CrewAssignmentWhereUniqueInput
+    /**
+     * In case the CrewAssignment found by the `where` argument doesn't exist, create a new CrewAssignment with this data.
+     */
+    create: XOR<CrewAssignmentCreateInput, CrewAssignmentUncheckedCreateInput>
+    /**
+     * In case the CrewAssignment was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<CrewAssignmentUpdateInput, CrewAssignmentUncheckedUpdateInput>
+  }
+
+  /**
+   * CrewAssignment delete
+   */
+  export type CrewAssignmentDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CrewAssignment
+     */
+    select?: CrewAssignmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CrewAssignment
+     */
+    omit?: CrewAssignmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CrewAssignmentInclude<ExtArgs> | null
+    /**
+     * Filter which CrewAssignment to delete.
+     */
+    where: CrewAssignmentWhereUniqueInput
+  }
+
+  /**
+   * CrewAssignment deleteMany
+   */
+  export type CrewAssignmentDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which CrewAssignments to delete
+     */
+    where?: CrewAssignmentWhereInput
+    /**
+     * Limit how many CrewAssignments to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * CrewAssignment.reliefFor
+   */
+  export type CrewAssignment$reliefForArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CrewAssignment
+     */
+    select?: CrewAssignmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CrewAssignment
+     */
+    omit?: CrewAssignmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CrewAssignmentInclude<ExtArgs> | null
+    where?: CrewAssignmentWhereInput
+  }
+
+  /**
+   * CrewAssignment.reliefs
+   */
+  export type CrewAssignment$reliefsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CrewAssignment
+     */
+    select?: CrewAssignmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CrewAssignment
+     */
+    omit?: CrewAssignmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CrewAssignmentInclude<ExtArgs> | null
+    where?: CrewAssignmentWhereInput
+    orderBy?: CrewAssignmentOrderByWithRelationInput | CrewAssignmentOrderByWithRelationInput[]
+    cursor?: CrewAssignmentWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: CrewAssignmentScalarFieldEnum | CrewAssignmentScalarFieldEnum[]
+  }
+
+  /**
+   * CrewAssignment without action
+   */
+  export type CrewAssignmentDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CrewAssignment
+     */
+    select?: CrewAssignmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CrewAssignment
+     */
+    omit?: CrewAssignmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CrewAssignmentInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -114539,6 +117652,62 @@ export namespace Prisma {
   export type RequisitionLineScalarFieldEnum = (typeof RequisitionLineScalarFieldEnum)[keyof typeof RequisitionLineScalarFieldEnum]
 
 
+  export const SeafarerScalarFieldEnum: {
+    id: 'id',
+    companyId: 'companyId',
+    crewCode: 'crewCode',
+    lastName: 'lastName',
+    firstName: 'firstName',
+    middleName: 'middleName',
+    suffix: 'suffix',
+    nationality: 'nationality',
+    dateOfBirth: 'dateOfBirth',
+    contactPhone: 'contactPhone',
+    contactEmail: 'contactEmail',
+    nextOfKinName: 'nextOfKinName',
+    nextOfKinRelationship: 'nextOfKinRelationship',
+    nextOfKinPhone: 'nextOfKinPhone',
+    active: 'active',
+    redactedAt: 'redactedAt',
+    redactedBy: 'redactedBy',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+    createdBy: 'createdBy',
+    updatedBy: 'updatedBy',
+    deletedAt: 'deletedAt',
+    deletedBy: 'deletedBy'
+  };
+
+  export type SeafarerScalarFieldEnum = (typeof SeafarerScalarFieldEnum)[keyof typeof SeafarerScalarFieldEnum]
+
+
+  export const CrewAssignmentScalarFieldEnum: {
+    id: 'id',
+    companyId: 'companyId',
+    seafarerId: 'seafarerId',
+    vesselId: 'vesselId',
+    rankCode: 'rankCode',
+    plannedSignOnDate: 'plannedSignOnDate',
+    actualSignOnDate: 'actualSignOnDate',
+    plannedSignOffDate: 'plannedSignOffDate',
+    actualSignOffDate: 'actualSignOffDate',
+    signOnPort: 'signOnPort',
+    signOffPort: 'signOffPort',
+    signOffReason: 'signOffReason',
+    reliefForAssignmentId: 'reliefForAssignmentId',
+    vesselRemarks: 'vesselRemarks',
+    shoreRemarks: 'shoreRemarks',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+    createdBy: 'createdBy',
+    updatedBy: 'updatedBy',
+    deletedAt: 'deletedAt',
+    deletedBy: 'deletedBy'
+  };
+
+  export type CrewAssignmentScalarFieldEnum = (typeof CrewAssignmentScalarFieldEnum)[keyof typeof CrewAssignmentScalarFieldEnum]
+
+
   export const SortOrder: {
     asc: 'asc',
     desc: 'desc'
@@ -115704,6 +118873,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemListRelationFilter
     accessLevels?: AccessLevelListRelationFilter
     departments?: DepartmentListRelationFilter
+    seafarers?: SeafarerListRelationFilter
+    crewAssignments?: CrewAssignmentListRelationFilter
   }
 
   export type CompanyOrderByWithRelationInput = {
@@ -115769,6 +118940,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemOrderByRelationAggregateInput
     accessLevels?: AccessLevelOrderByRelationAggregateInput
     departments?: DepartmentOrderByRelationAggregateInput
+    seafarers?: SeafarerOrderByRelationAggregateInput
+    crewAssignments?: CrewAssignmentOrderByRelationAggregateInput
   }
 
   export type CompanyWhereUniqueInput = Prisma.AtLeast<{
@@ -115837,6 +119010,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemListRelationFilter
     accessLevels?: AccessLevelListRelationFilter
     departments?: DepartmentListRelationFilter
+    seafarers?: SeafarerListRelationFilter
+    crewAssignments?: CrewAssignmentListRelationFilter
   }, "id" | "code">
 
   export type CompanyOrderByWithAggregationInput = {
@@ -116531,6 +119706,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventListRelationFilter
     inventoryUpdateDrafts?: InventoryUpdateDraftListRelationFilter
     requisitions?: RequisitionListRelationFilter
+    crewAssignments?: CrewAssignmentListRelationFilter
   }
 
   export type VesselOrderByWithRelationInput = {
@@ -116620,6 +119796,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventOrderByRelationAggregateInput
     inventoryUpdateDrafts?: InventoryUpdateDraftOrderByRelationAggregateInput
     requisitions?: RequisitionOrderByRelationAggregateInput
+    crewAssignments?: CrewAssignmentOrderByRelationAggregateInput
   }
 
   export type VesselWhereUniqueInput = Prisma.AtLeast<{
@@ -116713,6 +119890,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventListRelationFilter
     inventoryUpdateDrafts?: InventoryUpdateDraftListRelationFilter
     requisitions?: RequisitionListRelationFilter
+    crewAssignments?: CrewAssignmentListRelationFilter
   }, "id" | "code" | "imo" | "companyId_code">
 
   export type VesselOrderByWithAggregationInput = {
@@ -125008,6 +128186,301 @@ export namespace Prisma {
     createdBy?: StringNullableWithAggregatesFilter<"RequisitionLine"> | string | null
   }
 
+  export type SeafarerWhereInput = {
+    AND?: SeafarerWhereInput | SeafarerWhereInput[]
+    OR?: SeafarerWhereInput[]
+    NOT?: SeafarerWhereInput | SeafarerWhereInput[]
+    id?: StringFilter<"Seafarer"> | string
+    companyId?: StringFilter<"Seafarer"> | string
+    crewCode?: StringNullableFilter<"Seafarer"> | string | null
+    lastName?: StringFilter<"Seafarer"> | string
+    firstName?: StringFilter<"Seafarer"> | string
+    middleName?: StringNullableFilter<"Seafarer"> | string | null
+    suffix?: StringNullableFilter<"Seafarer"> | string | null
+    nationality?: StringNullableFilter<"Seafarer"> | string | null
+    dateOfBirth?: DateTimeNullableFilter<"Seafarer"> | Date | string | null
+    contactPhone?: StringNullableFilter<"Seafarer"> | string | null
+    contactEmail?: StringNullableFilter<"Seafarer"> | string | null
+    nextOfKinName?: StringNullableFilter<"Seafarer"> | string | null
+    nextOfKinRelationship?: StringNullableFilter<"Seafarer"> | string | null
+    nextOfKinPhone?: StringNullableFilter<"Seafarer"> | string | null
+    active?: BoolFilter<"Seafarer"> | boolean
+    redactedAt?: DateTimeNullableFilter<"Seafarer"> | Date | string | null
+    redactedBy?: StringNullableFilter<"Seafarer"> | string | null
+    createdAt?: DateTimeFilter<"Seafarer"> | Date | string
+    updatedAt?: DateTimeFilter<"Seafarer"> | Date | string
+    createdBy?: StringNullableFilter<"Seafarer"> | string | null
+    updatedBy?: StringNullableFilter<"Seafarer"> | string | null
+    deletedAt?: DateTimeNullableFilter<"Seafarer"> | Date | string | null
+    deletedBy?: StringNullableFilter<"Seafarer"> | string | null
+    company?: XOR<CompanyScalarRelationFilter, CompanyWhereInput>
+    assignments?: CrewAssignmentListRelationFilter
+  }
+
+  export type SeafarerOrderByWithRelationInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    crewCode?: SortOrderInput | SortOrder
+    lastName?: SortOrder
+    firstName?: SortOrder
+    middleName?: SortOrderInput | SortOrder
+    suffix?: SortOrderInput | SortOrder
+    nationality?: SortOrderInput | SortOrder
+    dateOfBirth?: SortOrderInput | SortOrder
+    contactPhone?: SortOrderInput | SortOrder
+    contactEmail?: SortOrderInput | SortOrder
+    nextOfKinName?: SortOrderInput | SortOrder
+    nextOfKinRelationship?: SortOrderInput | SortOrder
+    nextOfKinPhone?: SortOrderInput | SortOrder
+    active?: SortOrder
+    redactedAt?: SortOrderInput | SortOrder
+    redactedBy?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    createdBy?: SortOrderInput | SortOrder
+    updatedBy?: SortOrderInput | SortOrder
+    deletedAt?: SortOrderInput | SortOrder
+    deletedBy?: SortOrderInput | SortOrder
+    company?: CompanyOrderByWithRelationInput
+    assignments?: CrewAssignmentOrderByRelationAggregateInput
+  }
+
+  export type SeafarerWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: SeafarerWhereInput | SeafarerWhereInput[]
+    OR?: SeafarerWhereInput[]
+    NOT?: SeafarerWhereInput | SeafarerWhereInput[]
+    companyId?: StringFilter<"Seafarer"> | string
+    crewCode?: StringNullableFilter<"Seafarer"> | string | null
+    lastName?: StringFilter<"Seafarer"> | string
+    firstName?: StringFilter<"Seafarer"> | string
+    middleName?: StringNullableFilter<"Seafarer"> | string | null
+    suffix?: StringNullableFilter<"Seafarer"> | string | null
+    nationality?: StringNullableFilter<"Seafarer"> | string | null
+    dateOfBirth?: DateTimeNullableFilter<"Seafarer"> | Date | string | null
+    contactPhone?: StringNullableFilter<"Seafarer"> | string | null
+    contactEmail?: StringNullableFilter<"Seafarer"> | string | null
+    nextOfKinName?: StringNullableFilter<"Seafarer"> | string | null
+    nextOfKinRelationship?: StringNullableFilter<"Seafarer"> | string | null
+    nextOfKinPhone?: StringNullableFilter<"Seafarer"> | string | null
+    active?: BoolFilter<"Seafarer"> | boolean
+    redactedAt?: DateTimeNullableFilter<"Seafarer"> | Date | string | null
+    redactedBy?: StringNullableFilter<"Seafarer"> | string | null
+    createdAt?: DateTimeFilter<"Seafarer"> | Date | string
+    updatedAt?: DateTimeFilter<"Seafarer"> | Date | string
+    createdBy?: StringNullableFilter<"Seafarer"> | string | null
+    updatedBy?: StringNullableFilter<"Seafarer"> | string | null
+    deletedAt?: DateTimeNullableFilter<"Seafarer"> | Date | string | null
+    deletedBy?: StringNullableFilter<"Seafarer"> | string | null
+    company?: XOR<CompanyScalarRelationFilter, CompanyWhereInput>
+    assignments?: CrewAssignmentListRelationFilter
+  }, "id">
+
+  export type SeafarerOrderByWithAggregationInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    crewCode?: SortOrderInput | SortOrder
+    lastName?: SortOrder
+    firstName?: SortOrder
+    middleName?: SortOrderInput | SortOrder
+    suffix?: SortOrderInput | SortOrder
+    nationality?: SortOrderInput | SortOrder
+    dateOfBirth?: SortOrderInput | SortOrder
+    contactPhone?: SortOrderInput | SortOrder
+    contactEmail?: SortOrderInput | SortOrder
+    nextOfKinName?: SortOrderInput | SortOrder
+    nextOfKinRelationship?: SortOrderInput | SortOrder
+    nextOfKinPhone?: SortOrderInput | SortOrder
+    active?: SortOrder
+    redactedAt?: SortOrderInput | SortOrder
+    redactedBy?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    createdBy?: SortOrderInput | SortOrder
+    updatedBy?: SortOrderInput | SortOrder
+    deletedAt?: SortOrderInput | SortOrder
+    deletedBy?: SortOrderInput | SortOrder
+    _count?: SeafarerCountOrderByAggregateInput
+    _max?: SeafarerMaxOrderByAggregateInput
+    _min?: SeafarerMinOrderByAggregateInput
+  }
+
+  export type SeafarerScalarWhereWithAggregatesInput = {
+    AND?: SeafarerScalarWhereWithAggregatesInput | SeafarerScalarWhereWithAggregatesInput[]
+    OR?: SeafarerScalarWhereWithAggregatesInput[]
+    NOT?: SeafarerScalarWhereWithAggregatesInput | SeafarerScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Seafarer"> | string
+    companyId?: StringWithAggregatesFilter<"Seafarer"> | string
+    crewCode?: StringNullableWithAggregatesFilter<"Seafarer"> | string | null
+    lastName?: StringWithAggregatesFilter<"Seafarer"> | string
+    firstName?: StringWithAggregatesFilter<"Seafarer"> | string
+    middleName?: StringNullableWithAggregatesFilter<"Seafarer"> | string | null
+    suffix?: StringNullableWithAggregatesFilter<"Seafarer"> | string | null
+    nationality?: StringNullableWithAggregatesFilter<"Seafarer"> | string | null
+    dateOfBirth?: DateTimeNullableWithAggregatesFilter<"Seafarer"> | Date | string | null
+    contactPhone?: StringNullableWithAggregatesFilter<"Seafarer"> | string | null
+    contactEmail?: StringNullableWithAggregatesFilter<"Seafarer"> | string | null
+    nextOfKinName?: StringNullableWithAggregatesFilter<"Seafarer"> | string | null
+    nextOfKinRelationship?: StringNullableWithAggregatesFilter<"Seafarer"> | string | null
+    nextOfKinPhone?: StringNullableWithAggregatesFilter<"Seafarer"> | string | null
+    active?: BoolWithAggregatesFilter<"Seafarer"> | boolean
+    redactedAt?: DateTimeNullableWithAggregatesFilter<"Seafarer"> | Date | string | null
+    redactedBy?: StringNullableWithAggregatesFilter<"Seafarer"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"Seafarer"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Seafarer"> | Date | string
+    createdBy?: StringNullableWithAggregatesFilter<"Seafarer"> | string | null
+    updatedBy?: StringNullableWithAggregatesFilter<"Seafarer"> | string | null
+    deletedAt?: DateTimeNullableWithAggregatesFilter<"Seafarer"> | Date | string | null
+    deletedBy?: StringNullableWithAggregatesFilter<"Seafarer"> | string | null
+  }
+
+  export type CrewAssignmentWhereInput = {
+    AND?: CrewAssignmentWhereInput | CrewAssignmentWhereInput[]
+    OR?: CrewAssignmentWhereInput[]
+    NOT?: CrewAssignmentWhereInput | CrewAssignmentWhereInput[]
+    id?: StringFilter<"CrewAssignment"> | string
+    companyId?: StringFilter<"CrewAssignment"> | string
+    seafarerId?: StringFilter<"CrewAssignment"> | string
+    vesselId?: StringFilter<"CrewAssignment"> | string
+    rankCode?: StringFilter<"CrewAssignment"> | string
+    plannedSignOnDate?: DateTimeFilter<"CrewAssignment"> | Date | string
+    actualSignOnDate?: DateTimeNullableFilter<"CrewAssignment"> | Date | string | null
+    plannedSignOffDate?: DateTimeNullableFilter<"CrewAssignment"> | Date | string | null
+    actualSignOffDate?: DateTimeNullableFilter<"CrewAssignment"> | Date | string | null
+    signOnPort?: StringNullableFilter<"CrewAssignment"> | string | null
+    signOffPort?: StringNullableFilter<"CrewAssignment"> | string | null
+    signOffReason?: StringNullableFilter<"CrewAssignment"> | string | null
+    reliefForAssignmentId?: StringNullableFilter<"CrewAssignment"> | string | null
+    vesselRemarks?: StringNullableFilter<"CrewAssignment"> | string | null
+    shoreRemarks?: StringNullableFilter<"CrewAssignment"> | string | null
+    createdAt?: DateTimeFilter<"CrewAssignment"> | Date | string
+    updatedAt?: DateTimeFilter<"CrewAssignment"> | Date | string
+    createdBy?: StringNullableFilter<"CrewAssignment"> | string | null
+    updatedBy?: StringNullableFilter<"CrewAssignment"> | string | null
+    deletedAt?: DateTimeNullableFilter<"CrewAssignment"> | Date | string | null
+    deletedBy?: StringNullableFilter<"CrewAssignment"> | string | null
+    company?: XOR<CompanyScalarRelationFilter, CompanyWhereInput>
+    seafarer?: XOR<SeafarerScalarRelationFilter, SeafarerWhereInput>
+    vessel?: XOR<VesselScalarRelationFilter, VesselWhereInput>
+    reliefFor?: XOR<CrewAssignmentNullableScalarRelationFilter, CrewAssignmentWhereInput> | null
+    reliefs?: CrewAssignmentListRelationFilter
+  }
+
+  export type CrewAssignmentOrderByWithRelationInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    seafarerId?: SortOrder
+    vesselId?: SortOrder
+    rankCode?: SortOrder
+    plannedSignOnDate?: SortOrder
+    actualSignOnDate?: SortOrderInput | SortOrder
+    plannedSignOffDate?: SortOrderInput | SortOrder
+    actualSignOffDate?: SortOrderInput | SortOrder
+    signOnPort?: SortOrderInput | SortOrder
+    signOffPort?: SortOrderInput | SortOrder
+    signOffReason?: SortOrderInput | SortOrder
+    reliefForAssignmentId?: SortOrderInput | SortOrder
+    vesselRemarks?: SortOrderInput | SortOrder
+    shoreRemarks?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    createdBy?: SortOrderInput | SortOrder
+    updatedBy?: SortOrderInput | SortOrder
+    deletedAt?: SortOrderInput | SortOrder
+    deletedBy?: SortOrderInput | SortOrder
+    company?: CompanyOrderByWithRelationInput
+    seafarer?: SeafarerOrderByWithRelationInput
+    vessel?: VesselOrderByWithRelationInput
+    reliefFor?: CrewAssignmentOrderByWithRelationInput
+    reliefs?: CrewAssignmentOrderByRelationAggregateInput
+  }
+
+  export type CrewAssignmentWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: CrewAssignmentWhereInput | CrewAssignmentWhereInput[]
+    OR?: CrewAssignmentWhereInput[]
+    NOT?: CrewAssignmentWhereInput | CrewAssignmentWhereInput[]
+    companyId?: StringFilter<"CrewAssignment"> | string
+    seafarerId?: StringFilter<"CrewAssignment"> | string
+    vesselId?: StringFilter<"CrewAssignment"> | string
+    rankCode?: StringFilter<"CrewAssignment"> | string
+    plannedSignOnDate?: DateTimeFilter<"CrewAssignment"> | Date | string
+    actualSignOnDate?: DateTimeNullableFilter<"CrewAssignment"> | Date | string | null
+    plannedSignOffDate?: DateTimeNullableFilter<"CrewAssignment"> | Date | string | null
+    actualSignOffDate?: DateTimeNullableFilter<"CrewAssignment"> | Date | string | null
+    signOnPort?: StringNullableFilter<"CrewAssignment"> | string | null
+    signOffPort?: StringNullableFilter<"CrewAssignment"> | string | null
+    signOffReason?: StringNullableFilter<"CrewAssignment"> | string | null
+    reliefForAssignmentId?: StringNullableFilter<"CrewAssignment"> | string | null
+    vesselRemarks?: StringNullableFilter<"CrewAssignment"> | string | null
+    shoreRemarks?: StringNullableFilter<"CrewAssignment"> | string | null
+    createdAt?: DateTimeFilter<"CrewAssignment"> | Date | string
+    updatedAt?: DateTimeFilter<"CrewAssignment"> | Date | string
+    createdBy?: StringNullableFilter<"CrewAssignment"> | string | null
+    updatedBy?: StringNullableFilter<"CrewAssignment"> | string | null
+    deletedAt?: DateTimeNullableFilter<"CrewAssignment"> | Date | string | null
+    deletedBy?: StringNullableFilter<"CrewAssignment"> | string | null
+    company?: XOR<CompanyScalarRelationFilter, CompanyWhereInput>
+    seafarer?: XOR<SeafarerScalarRelationFilter, SeafarerWhereInput>
+    vessel?: XOR<VesselScalarRelationFilter, VesselWhereInput>
+    reliefFor?: XOR<CrewAssignmentNullableScalarRelationFilter, CrewAssignmentWhereInput> | null
+    reliefs?: CrewAssignmentListRelationFilter
+  }, "id">
+
+  export type CrewAssignmentOrderByWithAggregationInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    seafarerId?: SortOrder
+    vesselId?: SortOrder
+    rankCode?: SortOrder
+    plannedSignOnDate?: SortOrder
+    actualSignOnDate?: SortOrderInput | SortOrder
+    plannedSignOffDate?: SortOrderInput | SortOrder
+    actualSignOffDate?: SortOrderInput | SortOrder
+    signOnPort?: SortOrderInput | SortOrder
+    signOffPort?: SortOrderInput | SortOrder
+    signOffReason?: SortOrderInput | SortOrder
+    reliefForAssignmentId?: SortOrderInput | SortOrder
+    vesselRemarks?: SortOrderInput | SortOrder
+    shoreRemarks?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    createdBy?: SortOrderInput | SortOrder
+    updatedBy?: SortOrderInput | SortOrder
+    deletedAt?: SortOrderInput | SortOrder
+    deletedBy?: SortOrderInput | SortOrder
+    _count?: CrewAssignmentCountOrderByAggregateInput
+    _max?: CrewAssignmentMaxOrderByAggregateInput
+    _min?: CrewAssignmentMinOrderByAggregateInput
+  }
+
+  export type CrewAssignmentScalarWhereWithAggregatesInput = {
+    AND?: CrewAssignmentScalarWhereWithAggregatesInput | CrewAssignmentScalarWhereWithAggregatesInput[]
+    OR?: CrewAssignmentScalarWhereWithAggregatesInput[]
+    NOT?: CrewAssignmentScalarWhereWithAggregatesInput | CrewAssignmentScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"CrewAssignment"> | string
+    companyId?: StringWithAggregatesFilter<"CrewAssignment"> | string
+    seafarerId?: StringWithAggregatesFilter<"CrewAssignment"> | string
+    vesselId?: StringWithAggregatesFilter<"CrewAssignment"> | string
+    rankCode?: StringWithAggregatesFilter<"CrewAssignment"> | string
+    plannedSignOnDate?: DateTimeWithAggregatesFilter<"CrewAssignment"> | Date | string
+    actualSignOnDate?: DateTimeNullableWithAggregatesFilter<"CrewAssignment"> | Date | string | null
+    plannedSignOffDate?: DateTimeNullableWithAggregatesFilter<"CrewAssignment"> | Date | string | null
+    actualSignOffDate?: DateTimeNullableWithAggregatesFilter<"CrewAssignment"> | Date | string | null
+    signOnPort?: StringNullableWithAggregatesFilter<"CrewAssignment"> | string | null
+    signOffPort?: StringNullableWithAggregatesFilter<"CrewAssignment"> | string | null
+    signOffReason?: StringNullableWithAggregatesFilter<"CrewAssignment"> | string | null
+    reliefForAssignmentId?: StringNullableWithAggregatesFilter<"CrewAssignment"> | string | null
+    vesselRemarks?: StringNullableWithAggregatesFilter<"CrewAssignment"> | string | null
+    shoreRemarks?: StringNullableWithAggregatesFilter<"CrewAssignment"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"CrewAssignment"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"CrewAssignment"> | Date | string
+    createdBy?: StringNullableWithAggregatesFilter<"CrewAssignment"> | string | null
+    updatedBy?: StringNullableWithAggregatesFilter<"CrewAssignment"> | string | null
+    deletedAt?: DateTimeNullableWithAggregatesFilter<"CrewAssignment"> | Date | string | null
+    deletedBy?: StringNullableWithAggregatesFilter<"CrewAssignment"> | string | null
+  }
+
   export type CompanyCreateInput = {
     id?: string
     name: string
@@ -125071,6 +128544,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
     accessLevels?: AccessLevelCreateNestedManyWithoutCompanyInput
     departments?: DepartmentCreateNestedManyWithoutCompanyInput
+    seafarers?: SeafarerCreateNestedManyWithoutCompanyInput
+    crewAssignments?: CrewAssignmentCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateInput = {
@@ -125136,6 +128611,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
     accessLevels?: AccessLevelUncheckedCreateNestedManyWithoutCompanyInput
     departments?: DepartmentUncheckedCreateNestedManyWithoutCompanyInput
+    seafarers?: SeafarerUncheckedCreateNestedManyWithoutCompanyInput
+    crewAssignments?: CrewAssignmentUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUpdateInput = {
@@ -125201,6 +128678,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
     accessLevels?: AccessLevelUpdateManyWithoutCompanyNestedInput
     departments?: DepartmentUpdateManyWithoutCompanyNestedInput
+    seafarers?: SeafarerUpdateManyWithoutCompanyNestedInput
+    crewAssignments?: CrewAssignmentUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateInput = {
@@ -125266,6 +128745,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
     accessLevels?: AccessLevelUncheckedUpdateManyWithoutCompanyNestedInput
     departments?: DepartmentUncheckedUpdateManyWithoutCompanyNestedInput
+    seafarers?: SeafarerUncheckedUpdateManyWithoutCompanyNestedInput
+    crewAssignments?: CrewAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyCreateManyInput = {
@@ -126004,6 +129485,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventCreateNestedManyWithoutVesselInput
     inventoryUpdateDrafts?: InventoryUpdateDraftCreateNestedManyWithoutVesselInput
     requisitions?: RequisitionCreateNestedManyWithoutVesselInput
+    crewAssignments?: CrewAssignmentCreateNestedManyWithoutVesselInput
   }
 
   export type VesselUncheckedCreateInput = {
@@ -126092,6 +129574,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventUncheckedCreateNestedManyWithoutVesselInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUncheckedCreateNestedManyWithoutVesselInput
     requisitions?: RequisitionUncheckedCreateNestedManyWithoutVesselInput
+    crewAssignments?: CrewAssignmentUncheckedCreateNestedManyWithoutVesselInput
   }
 
   export type VesselUpdateInput = {
@@ -126180,6 +129663,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventUpdateManyWithoutVesselNestedInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUpdateManyWithoutVesselNestedInput
     requisitions?: RequisitionUpdateManyWithoutVesselNestedInput
+    crewAssignments?: CrewAssignmentUpdateManyWithoutVesselNestedInput
   }
 
   export type VesselUncheckedUpdateInput = {
@@ -126268,6 +129752,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventUncheckedUpdateManyWithoutVesselNestedInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUncheckedUpdateManyWithoutVesselNestedInput
     requisitions?: RequisitionUncheckedUpdateManyWithoutVesselNestedInput
+    crewAssignments?: CrewAssignmentUncheckedUpdateManyWithoutVesselNestedInput
   }
 
   export type VesselCreateManyInput = {
@@ -135925,6 +139410,359 @@ export namespace Prisma {
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
+  export type SeafarerCreateInput = {
+    id?: string
+    crewCode?: string | null
+    lastName: string
+    firstName: string
+    middleName?: string | null
+    suffix?: string | null
+    nationality?: string | null
+    dateOfBirth?: Date | string | null
+    contactPhone?: string | null
+    contactEmail?: string | null
+    nextOfKinName?: string | null
+    nextOfKinRelationship?: string | null
+    nextOfKinPhone?: string | null
+    active?: boolean
+    redactedAt?: Date | string | null
+    redactedBy?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    company: CompanyCreateNestedOneWithoutSeafarersInput
+    assignments?: CrewAssignmentCreateNestedManyWithoutSeafarerInput
+  }
+
+  export type SeafarerUncheckedCreateInput = {
+    id?: string
+    companyId: string
+    crewCode?: string | null
+    lastName: string
+    firstName: string
+    middleName?: string | null
+    suffix?: string | null
+    nationality?: string | null
+    dateOfBirth?: Date | string | null
+    contactPhone?: string | null
+    contactEmail?: string | null
+    nextOfKinName?: string | null
+    nextOfKinRelationship?: string | null
+    nextOfKinPhone?: string | null
+    active?: boolean
+    redactedAt?: Date | string | null
+    redactedBy?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    assignments?: CrewAssignmentUncheckedCreateNestedManyWithoutSeafarerInput
+  }
+
+  export type SeafarerUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    crewCode?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    middleName?: NullableStringFieldUpdateOperationsInput | string | null
+    suffix?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
+    dateOfBirth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    contactPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    contactEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    nextOfKinName?: NullableStringFieldUpdateOperationsInput | string | null
+    nextOfKinRelationship?: NullableStringFieldUpdateOperationsInput | string | null
+    nextOfKinPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    active?: BoolFieldUpdateOperationsInput | boolean
+    redactedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    redactedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    company?: CompanyUpdateOneRequiredWithoutSeafarersNestedInput
+    assignments?: CrewAssignmentUpdateManyWithoutSeafarerNestedInput
+  }
+
+  export type SeafarerUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    crewCode?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    middleName?: NullableStringFieldUpdateOperationsInput | string | null
+    suffix?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
+    dateOfBirth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    contactPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    contactEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    nextOfKinName?: NullableStringFieldUpdateOperationsInput | string | null
+    nextOfKinRelationship?: NullableStringFieldUpdateOperationsInput | string | null
+    nextOfKinPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    active?: BoolFieldUpdateOperationsInput | boolean
+    redactedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    redactedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    assignments?: CrewAssignmentUncheckedUpdateManyWithoutSeafarerNestedInput
+  }
+
+  export type SeafarerCreateManyInput = {
+    id?: string
+    companyId: string
+    crewCode?: string | null
+    lastName: string
+    firstName: string
+    middleName?: string | null
+    suffix?: string | null
+    nationality?: string | null
+    dateOfBirth?: Date | string | null
+    contactPhone?: string | null
+    contactEmail?: string | null
+    nextOfKinName?: string | null
+    nextOfKinRelationship?: string | null
+    nextOfKinPhone?: string | null
+    active?: boolean
+    redactedAt?: Date | string | null
+    redactedBy?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+  }
+
+  export type SeafarerUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    crewCode?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    middleName?: NullableStringFieldUpdateOperationsInput | string | null
+    suffix?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
+    dateOfBirth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    contactPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    contactEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    nextOfKinName?: NullableStringFieldUpdateOperationsInput | string | null
+    nextOfKinRelationship?: NullableStringFieldUpdateOperationsInput | string | null
+    nextOfKinPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    active?: BoolFieldUpdateOperationsInput | boolean
+    redactedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    redactedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type SeafarerUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    crewCode?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    middleName?: NullableStringFieldUpdateOperationsInput | string | null
+    suffix?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
+    dateOfBirth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    contactPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    contactEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    nextOfKinName?: NullableStringFieldUpdateOperationsInput | string | null
+    nextOfKinRelationship?: NullableStringFieldUpdateOperationsInput | string | null
+    nextOfKinPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    active?: BoolFieldUpdateOperationsInput | boolean
+    redactedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    redactedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type CrewAssignmentCreateInput = {
+    id?: string
+    rankCode: string
+    plannedSignOnDate: Date | string
+    actualSignOnDate?: Date | string | null
+    plannedSignOffDate?: Date | string | null
+    actualSignOffDate?: Date | string | null
+    signOnPort?: string | null
+    signOffPort?: string | null
+    signOffReason?: string | null
+    vesselRemarks?: string | null
+    shoreRemarks?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    company: CompanyCreateNestedOneWithoutCrewAssignmentsInput
+    seafarer: SeafarerCreateNestedOneWithoutAssignmentsInput
+    vessel: VesselCreateNestedOneWithoutCrewAssignmentsInput
+    reliefFor?: CrewAssignmentCreateNestedOneWithoutReliefsInput
+    reliefs?: CrewAssignmentCreateNestedManyWithoutReliefForInput
+  }
+
+  export type CrewAssignmentUncheckedCreateInput = {
+    id?: string
+    companyId: string
+    seafarerId: string
+    vesselId: string
+    rankCode: string
+    plannedSignOnDate: Date | string
+    actualSignOnDate?: Date | string | null
+    plannedSignOffDate?: Date | string | null
+    actualSignOffDate?: Date | string | null
+    signOnPort?: string | null
+    signOffPort?: string | null
+    signOffReason?: string | null
+    reliefForAssignmentId?: string | null
+    vesselRemarks?: string | null
+    shoreRemarks?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    reliefs?: CrewAssignmentUncheckedCreateNestedManyWithoutReliefForInput
+  }
+
+  export type CrewAssignmentUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    rankCode?: StringFieldUpdateOperationsInput | string
+    plannedSignOnDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    actualSignOnDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    plannedSignOffDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    actualSignOffDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    signOnPort?: NullableStringFieldUpdateOperationsInput | string | null
+    signOffPort?: NullableStringFieldUpdateOperationsInput | string | null
+    signOffReason?: NullableStringFieldUpdateOperationsInput | string | null
+    vesselRemarks?: NullableStringFieldUpdateOperationsInput | string | null
+    shoreRemarks?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    company?: CompanyUpdateOneRequiredWithoutCrewAssignmentsNestedInput
+    seafarer?: SeafarerUpdateOneRequiredWithoutAssignmentsNestedInput
+    vessel?: VesselUpdateOneRequiredWithoutCrewAssignmentsNestedInput
+    reliefFor?: CrewAssignmentUpdateOneWithoutReliefsNestedInput
+    reliefs?: CrewAssignmentUpdateManyWithoutReliefForNestedInput
+  }
+
+  export type CrewAssignmentUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    seafarerId?: StringFieldUpdateOperationsInput | string
+    vesselId?: StringFieldUpdateOperationsInput | string
+    rankCode?: StringFieldUpdateOperationsInput | string
+    plannedSignOnDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    actualSignOnDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    plannedSignOffDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    actualSignOffDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    signOnPort?: NullableStringFieldUpdateOperationsInput | string | null
+    signOffPort?: NullableStringFieldUpdateOperationsInput | string | null
+    signOffReason?: NullableStringFieldUpdateOperationsInput | string | null
+    reliefForAssignmentId?: NullableStringFieldUpdateOperationsInput | string | null
+    vesselRemarks?: NullableStringFieldUpdateOperationsInput | string | null
+    shoreRemarks?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    reliefs?: CrewAssignmentUncheckedUpdateManyWithoutReliefForNestedInput
+  }
+
+  export type CrewAssignmentCreateManyInput = {
+    id?: string
+    companyId: string
+    seafarerId: string
+    vesselId: string
+    rankCode: string
+    plannedSignOnDate: Date | string
+    actualSignOnDate?: Date | string | null
+    plannedSignOffDate?: Date | string | null
+    actualSignOffDate?: Date | string | null
+    signOnPort?: string | null
+    signOffPort?: string | null
+    signOffReason?: string | null
+    reliefForAssignmentId?: string | null
+    vesselRemarks?: string | null
+    shoreRemarks?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+  }
+
+  export type CrewAssignmentUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    rankCode?: StringFieldUpdateOperationsInput | string
+    plannedSignOnDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    actualSignOnDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    plannedSignOffDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    actualSignOffDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    signOnPort?: NullableStringFieldUpdateOperationsInput | string | null
+    signOffPort?: NullableStringFieldUpdateOperationsInput | string | null
+    signOffReason?: NullableStringFieldUpdateOperationsInput | string | null
+    vesselRemarks?: NullableStringFieldUpdateOperationsInput | string | null
+    shoreRemarks?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type CrewAssignmentUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    seafarerId?: StringFieldUpdateOperationsInput | string
+    vesselId?: StringFieldUpdateOperationsInput | string
+    rankCode?: StringFieldUpdateOperationsInput | string
+    plannedSignOnDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    actualSignOnDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    plannedSignOffDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    actualSignOffDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    signOnPort?: NullableStringFieldUpdateOperationsInput | string | null
+    signOffPort?: NullableStringFieldUpdateOperationsInput | string | null
+    signOffReason?: NullableStringFieldUpdateOperationsInput | string | null
+    reliefForAssignmentId?: NullableStringFieldUpdateOperationsInput | string | null
+    vesselRemarks?: NullableStringFieldUpdateOperationsInput | string | null
+    shoreRemarks?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -136264,6 +140102,18 @@ export namespace Prisma {
     none?: DepartmentWhereInput
   }
 
+  export type SeafarerListRelationFilter = {
+    every?: SeafarerWhereInput
+    some?: SeafarerWhereInput
+    none?: SeafarerWhereInput
+  }
+
+  export type CrewAssignmentListRelationFilter = {
+    every?: CrewAssignmentWhereInput
+    some?: CrewAssignmentWhereInput
+    none?: CrewAssignmentWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -136450,6 +140300,14 @@ export namespace Prisma {
   }
 
   export type DepartmentOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type SeafarerOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type CrewAssignmentOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -143720,6 +147578,166 @@ export namespace Prisma {
     _max?: NestedEnumRequisitionLineItemTypeFilter<$PrismaModel>
   }
 
+  export type SeafarerCountOrderByAggregateInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    crewCode?: SortOrder
+    lastName?: SortOrder
+    firstName?: SortOrder
+    middleName?: SortOrder
+    suffix?: SortOrder
+    nationality?: SortOrder
+    dateOfBirth?: SortOrder
+    contactPhone?: SortOrder
+    contactEmail?: SortOrder
+    nextOfKinName?: SortOrder
+    nextOfKinRelationship?: SortOrder
+    nextOfKinPhone?: SortOrder
+    active?: SortOrder
+    redactedAt?: SortOrder
+    redactedBy?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    createdBy?: SortOrder
+    updatedBy?: SortOrder
+    deletedAt?: SortOrder
+    deletedBy?: SortOrder
+  }
+
+  export type SeafarerMaxOrderByAggregateInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    crewCode?: SortOrder
+    lastName?: SortOrder
+    firstName?: SortOrder
+    middleName?: SortOrder
+    suffix?: SortOrder
+    nationality?: SortOrder
+    dateOfBirth?: SortOrder
+    contactPhone?: SortOrder
+    contactEmail?: SortOrder
+    nextOfKinName?: SortOrder
+    nextOfKinRelationship?: SortOrder
+    nextOfKinPhone?: SortOrder
+    active?: SortOrder
+    redactedAt?: SortOrder
+    redactedBy?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    createdBy?: SortOrder
+    updatedBy?: SortOrder
+    deletedAt?: SortOrder
+    deletedBy?: SortOrder
+  }
+
+  export type SeafarerMinOrderByAggregateInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    crewCode?: SortOrder
+    lastName?: SortOrder
+    firstName?: SortOrder
+    middleName?: SortOrder
+    suffix?: SortOrder
+    nationality?: SortOrder
+    dateOfBirth?: SortOrder
+    contactPhone?: SortOrder
+    contactEmail?: SortOrder
+    nextOfKinName?: SortOrder
+    nextOfKinRelationship?: SortOrder
+    nextOfKinPhone?: SortOrder
+    active?: SortOrder
+    redactedAt?: SortOrder
+    redactedBy?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    createdBy?: SortOrder
+    updatedBy?: SortOrder
+    deletedAt?: SortOrder
+    deletedBy?: SortOrder
+  }
+
+  export type SeafarerScalarRelationFilter = {
+    is?: SeafarerWhereInput
+    isNot?: SeafarerWhereInput
+  }
+
+  export type CrewAssignmentNullableScalarRelationFilter = {
+    is?: CrewAssignmentWhereInput | null
+    isNot?: CrewAssignmentWhereInput | null
+  }
+
+  export type CrewAssignmentCountOrderByAggregateInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    seafarerId?: SortOrder
+    vesselId?: SortOrder
+    rankCode?: SortOrder
+    plannedSignOnDate?: SortOrder
+    actualSignOnDate?: SortOrder
+    plannedSignOffDate?: SortOrder
+    actualSignOffDate?: SortOrder
+    signOnPort?: SortOrder
+    signOffPort?: SortOrder
+    signOffReason?: SortOrder
+    reliefForAssignmentId?: SortOrder
+    vesselRemarks?: SortOrder
+    shoreRemarks?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    createdBy?: SortOrder
+    updatedBy?: SortOrder
+    deletedAt?: SortOrder
+    deletedBy?: SortOrder
+  }
+
+  export type CrewAssignmentMaxOrderByAggregateInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    seafarerId?: SortOrder
+    vesselId?: SortOrder
+    rankCode?: SortOrder
+    plannedSignOnDate?: SortOrder
+    actualSignOnDate?: SortOrder
+    plannedSignOffDate?: SortOrder
+    actualSignOffDate?: SortOrder
+    signOnPort?: SortOrder
+    signOffPort?: SortOrder
+    signOffReason?: SortOrder
+    reliefForAssignmentId?: SortOrder
+    vesselRemarks?: SortOrder
+    shoreRemarks?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    createdBy?: SortOrder
+    updatedBy?: SortOrder
+    deletedAt?: SortOrder
+    deletedBy?: SortOrder
+  }
+
+  export type CrewAssignmentMinOrderByAggregateInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    seafarerId?: SortOrder
+    vesselId?: SortOrder
+    rankCode?: SortOrder
+    plannedSignOnDate?: SortOrder
+    actualSignOnDate?: SortOrder
+    plannedSignOffDate?: SortOrder
+    actualSignOffDate?: SortOrder
+    signOnPort?: SortOrder
+    signOffPort?: SortOrder
+    signOffReason?: SortOrder
+    reliefForAssignmentId?: SortOrder
+    vesselRemarks?: SortOrder
+    shoreRemarks?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    createdBy?: SortOrder
+    updatedBy?: SortOrder
+    deletedAt?: SortOrder
+    deletedBy?: SortOrder
+  }
+
   export type UserCreateNestedManyWithoutCompanyInput = {
     create?: XOR<UserCreateWithoutCompanyInput, UserUncheckedCreateWithoutCompanyInput> | UserCreateWithoutCompanyInput[] | UserUncheckedCreateWithoutCompanyInput[]
     connectOrCreate?: UserCreateOrConnectWithoutCompanyInput | UserCreateOrConnectWithoutCompanyInput[]
@@ -144042,6 +148060,20 @@ export namespace Prisma {
     connect?: DepartmentWhereUniqueInput | DepartmentWhereUniqueInput[]
   }
 
+  export type SeafarerCreateNestedManyWithoutCompanyInput = {
+    create?: XOR<SeafarerCreateWithoutCompanyInput, SeafarerUncheckedCreateWithoutCompanyInput> | SeafarerCreateWithoutCompanyInput[] | SeafarerUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: SeafarerCreateOrConnectWithoutCompanyInput | SeafarerCreateOrConnectWithoutCompanyInput[]
+    createMany?: SeafarerCreateManyCompanyInputEnvelope
+    connect?: SeafarerWhereUniqueInput | SeafarerWhereUniqueInput[]
+  }
+
+  export type CrewAssignmentCreateNestedManyWithoutCompanyInput = {
+    create?: XOR<CrewAssignmentCreateWithoutCompanyInput, CrewAssignmentUncheckedCreateWithoutCompanyInput> | CrewAssignmentCreateWithoutCompanyInput[] | CrewAssignmentUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: CrewAssignmentCreateOrConnectWithoutCompanyInput | CrewAssignmentCreateOrConnectWithoutCompanyInput[]
+    createMany?: CrewAssignmentCreateManyCompanyInputEnvelope
+    connect?: CrewAssignmentWhereUniqueInput | CrewAssignmentWhereUniqueInput[]
+  }
+
   export type UserUncheckedCreateNestedManyWithoutCompanyInput = {
     create?: XOR<UserCreateWithoutCompanyInput, UserUncheckedCreateWithoutCompanyInput> | UserCreateWithoutCompanyInput[] | UserUncheckedCreateWithoutCompanyInput[]
     connectOrCreate?: UserCreateOrConnectWithoutCompanyInput | UserCreateOrConnectWithoutCompanyInput[]
@@ -144362,6 +148394,20 @@ export namespace Prisma {
     connectOrCreate?: DepartmentCreateOrConnectWithoutCompanyInput | DepartmentCreateOrConnectWithoutCompanyInput[]
     createMany?: DepartmentCreateManyCompanyInputEnvelope
     connect?: DepartmentWhereUniqueInput | DepartmentWhereUniqueInput[]
+  }
+
+  export type SeafarerUncheckedCreateNestedManyWithoutCompanyInput = {
+    create?: XOR<SeafarerCreateWithoutCompanyInput, SeafarerUncheckedCreateWithoutCompanyInput> | SeafarerCreateWithoutCompanyInput[] | SeafarerUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: SeafarerCreateOrConnectWithoutCompanyInput | SeafarerCreateOrConnectWithoutCompanyInput[]
+    createMany?: SeafarerCreateManyCompanyInputEnvelope
+    connect?: SeafarerWhereUniqueInput | SeafarerWhereUniqueInput[]
+  }
+
+  export type CrewAssignmentUncheckedCreateNestedManyWithoutCompanyInput = {
+    create?: XOR<CrewAssignmentCreateWithoutCompanyInput, CrewAssignmentUncheckedCreateWithoutCompanyInput> | CrewAssignmentCreateWithoutCompanyInput[] | CrewAssignmentUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: CrewAssignmentCreateOrConnectWithoutCompanyInput | CrewAssignmentCreateOrConnectWithoutCompanyInput[]
+    createMany?: CrewAssignmentCreateManyCompanyInputEnvelope
+    connect?: CrewAssignmentWhereUniqueInput | CrewAssignmentWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -145036,6 +149082,34 @@ export namespace Prisma {
     deleteMany?: DepartmentScalarWhereInput | DepartmentScalarWhereInput[]
   }
 
+  export type SeafarerUpdateManyWithoutCompanyNestedInput = {
+    create?: XOR<SeafarerCreateWithoutCompanyInput, SeafarerUncheckedCreateWithoutCompanyInput> | SeafarerCreateWithoutCompanyInput[] | SeafarerUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: SeafarerCreateOrConnectWithoutCompanyInput | SeafarerCreateOrConnectWithoutCompanyInput[]
+    upsert?: SeafarerUpsertWithWhereUniqueWithoutCompanyInput | SeafarerUpsertWithWhereUniqueWithoutCompanyInput[]
+    createMany?: SeafarerCreateManyCompanyInputEnvelope
+    set?: SeafarerWhereUniqueInput | SeafarerWhereUniqueInput[]
+    disconnect?: SeafarerWhereUniqueInput | SeafarerWhereUniqueInput[]
+    delete?: SeafarerWhereUniqueInput | SeafarerWhereUniqueInput[]
+    connect?: SeafarerWhereUniqueInput | SeafarerWhereUniqueInput[]
+    update?: SeafarerUpdateWithWhereUniqueWithoutCompanyInput | SeafarerUpdateWithWhereUniqueWithoutCompanyInput[]
+    updateMany?: SeafarerUpdateManyWithWhereWithoutCompanyInput | SeafarerUpdateManyWithWhereWithoutCompanyInput[]
+    deleteMany?: SeafarerScalarWhereInput | SeafarerScalarWhereInput[]
+  }
+
+  export type CrewAssignmentUpdateManyWithoutCompanyNestedInput = {
+    create?: XOR<CrewAssignmentCreateWithoutCompanyInput, CrewAssignmentUncheckedCreateWithoutCompanyInput> | CrewAssignmentCreateWithoutCompanyInput[] | CrewAssignmentUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: CrewAssignmentCreateOrConnectWithoutCompanyInput | CrewAssignmentCreateOrConnectWithoutCompanyInput[]
+    upsert?: CrewAssignmentUpsertWithWhereUniqueWithoutCompanyInput | CrewAssignmentUpsertWithWhereUniqueWithoutCompanyInput[]
+    createMany?: CrewAssignmentCreateManyCompanyInputEnvelope
+    set?: CrewAssignmentWhereUniqueInput | CrewAssignmentWhereUniqueInput[]
+    disconnect?: CrewAssignmentWhereUniqueInput | CrewAssignmentWhereUniqueInput[]
+    delete?: CrewAssignmentWhereUniqueInput | CrewAssignmentWhereUniqueInput[]
+    connect?: CrewAssignmentWhereUniqueInput | CrewAssignmentWhereUniqueInput[]
+    update?: CrewAssignmentUpdateWithWhereUniqueWithoutCompanyInput | CrewAssignmentUpdateWithWhereUniqueWithoutCompanyInput[]
+    updateMany?: CrewAssignmentUpdateManyWithWhereWithoutCompanyInput | CrewAssignmentUpdateManyWithWhereWithoutCompanyInput[]
+    deleteMany?: CrewAssignmentScalarWhereInput | CrewAssignmentScalarWhereInput[]
+  }
+
   export type UserUncheckedUpdateManyWithoutCompanyNestedInput = {
     create?: XOR<UserCreateWithoutCompanyInput, UserUncheckedCreateWithoutCompanyInput> | UserCreateWithoutCompanyInput[] | UserUncheckedCreateWithoutCompanyInput[]
     connectOrCreate?: UserCreateOrConnectWithoutCompanyInput | UserCreateOrConnectWithoutCompanyInput[]
@@ -145678,6 +149752,34 @@ export namespace Prisma {
     update?: DepartmentUpdateWithWhereUniqueWithoutCompanyInput | DepartmentUpdateWithWhereUniqueWithoutCompanyInput[]
     updateMany?: DepartmentUpdateManyWithWhereWithoutCompanyInput | DepartmentUpdateManyWithWhereWithoutCompanyInput[]
     deleteMany?: DepartmentScalarWhereInput | DepartmentScalarWhereInput[]
+  }
+
+  export type SeafarerUncheckedUpdateManyWithoutCompanyNestedInput = {
+    create?: XOR<SeafarerCreateWithoutCompanyInput, SeafarerUncheckedCreateWithoutCompanyInput> | SeafarerCreateWithoutCompanyInput[] | SeafarerUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: SeafarerCreateOrConnectWithoutCompanyInput | SeafarerCreateOrConnectWithoutCompanyInput[]
+    upsert?: SeafarerUpsertWithWhereUniqueWithoutCompanyInput | SeafarerUpsertWithWhereUniqueWithoutCompanyInput[]
+    createMany?: SeafarerCreateManyCompanyInputEnvelope
+    set?: SeafarerWhereUniqueInput | SeafarerWhereUniqueInput[]
+    disconnect?: SeafarerWhereUniqueInput | SeafarerWhereUniqueInput[]
+    delete?: SeafarerWhereUniqueInput | SeafarerWhereUniqueInput[]
+    connect?: SeafarerWhereUniqueInput | SeafarerWhereUniqueInput[]
+    update?: SeafarerUpdateWithWhereUniqueWithoutCompanyInput | SeafarerUpdateWithWhereUniqueWithoutCompanyInput[]
+    updateMany?: SeafarerUpdateManyWithWhereWithoutCompanyInput | SeafarerUpdateManyWithWhereWithoutCompanyInput[]
+    deleteMany?: SeafarerScalarWhereInput | SeafarerScalarWhereInput[]
+  }
+
+  export type CrewAssignmentUncheckedUpdateManyWithoutCompanyNestedInput = {
+    create?: XOR<CrewAssignmentCreateWithoutCompanyInput, CrewAssignmentUncheckedCreateWithoutCompanyInput> | CrewAssignmentCreateWithoutCompanyInput[] | CrewAssignmentUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: CrewAssignmentCreateOrConnectWithoutCompanyInput | CrewAssignmentCreateOrConnectWithoutCompanyInput[]
+    upsert?: CrewAssignmentUpsertWithWhereUniqueWithoutCompanyInput | CrewAssignmentUpsertWithWhereUniqueWithoutCompanyInput[]
+    createMany?: CrewAssignmentCreateManyCompanyInputEnvelope
+    set?: CrewAssignmentWhereUniqueInput | CrewAssignmentWhereUniqueInput[]
+    disconnect?: CrewAssignmentWhereUniqueInput | CrewAssignmentWhereUniqueInput[]
+    delete?: CrewAssignmentWhereUniqueInput | CrewAssignmentWhereUniqueInput[]
+    connect?: CrewAssignmentWhereUniqueInput | CrewAssignmentWhereUniqueInput[]
+    update?: CrewAssignmentUpdateWithWhereUniqueWithoutCompanyInput | CrewAssignmentUpdateWithWhereUniqueWithoutCompanyInput[]
+    updateMany?: CrewAssignmentUpdateManyWithWhereWithoutCompanyInput | CrewAssignmentUpdateManyWithWhereWithoutCompanyInput[]
+    deleteMany?: CrewAssignmentScalarWhereInput | CrewAssignmentScalarWhereInput[]
   }
 
   export type CompanyCreateNestedOneWithoutUsersInput = {
@@ -146680,6 +150782,13 @@ export namespace Prisma {
     connect?: RequisitionWhereUniqueInput | RequisitionWhereUniqueInput[]
   }
 
+  export type CrewAssignmentCreateNestedManyWithoutVesselInput = {
+    create?: XOR<CrewAssignmentCreateWithoutVesselInput, CrewAssignmentUncheckedCreateWithoutVesselInput> | CrewAssignmentCreateWithoutVesselInput[] | CrewAssignmentUncheckedCreateWithoutVesselInput[]
+    connectOrCreate?: CrewAssignmentCreateOrConnectWithoutVesselInput | CrewAssignmentCreateOrConnectWithoutVesselInput[]
+    createMany?: CrewAssignmentCreateManyVesselInputEnvelope
+    connect?: CrewAssignmentWhereUniqueInput | CrewAssignmentWhereUniqueInput[]
+  }
+
   export type SmsDocumentUncheckedCreateNestedManyWithoutVesselInput = {
     create?: XOR<SmsDocumentCreateWithoutVesselInput, SmsDocumentUncheckedCreateWithoutVesselInput> | SmsDocumentCreateWithoutVesselInput[] | SmsDocumentUncheckedCreateWithoutVesselInput[]
     connectOrCreate?: SmsDocumentCreateOrConnectWithoutVesselInput | SmsDocumentCreateOrConnectWithoutVesselInput[]
@@ -146908,6 +151017,13 @@ export namespace Prisma {
     connectOrCreate?: RequisitionCreateOrConnectWithoutVesselInput | RequisitionCreateOrConnectWithoutVesselInput[]
     createMany?: RequisitionCreateManyVesselInputEnvelope
     connect?: RequisitionWhereUniqueInput | RequisitionWhereUniqueInput[]
+  }
+
+  export type CrewAssignmentUncheckedCreateNestedManyWithoutVesselInput = {
+    create?: XOR<CrewAssignmentCreateWithoutVesselInput, CrewAssignmentUncheckedCreateWithoutVesselInput> | CrewAssignmentCreateWithoutVesselInput[] | CrewAssignmentUncheckedCreateWithoutVesselInput[]
+    connectOrCreate?: CrewAssignmentCreateOrConnectWithoutVesselInput | CrewAssignmentCreateOrConnectWithoutVesselInput[]
+    createMany?: CrewAssignmentCreateManyVesselInputEnvelope
+    connect?: CrewAssignmentWhereUniqueInput | CrewAssignmentWhereUniqueInput[]
   }
 
   export type NullableIntFieldUpdateOperationsInput = {
@@ -147396,6 +151512,20 @@ export namespace Prisma {
     deleteMany?: RequisitionScalarWhereInput | RequisitionScalarWhereInput[]
   }
 
+  export type CrewAssignmentUpdateManyWithoutVesselNestedInput = {
+    create?: XOR<CrewAssignmentCreateWithoutVesselInput, CrewAssignmentUncheckedCreateWithoutVesselInput> | CrewAssignmentCreateWithoutVesselInput[] | CrewAssignmentUncheckedCreateWithoutVesselInput[]
+    connectOrCreate?: CrewAssignmentCreateOrConnectWithoutVesselInput | CrewAssignmentCreateOrConnectWithoutVesselInput[]
+    upsert?: CrewAssignmentUpsertWithWhereUniqueWithoutVesselInput | CrewAssignmentUpsertWithWhereUniqueWithoutVesselInput[]
+    createMany?: CrewAssignmentCreateManyVesselInputEnvelope
+    set?: CrewAssignmentWhereUniqueInput | CrewAssignmentWhereUniqueInput[]
+    disconnect?: CrewAssignmentWhereUniqueInput | CrewAssignmentWhereUniqueInput[]
+    delete?: CrewAssignmentWhereUniqueInput | CrewAssignmentWhereUniqueInput[]
+    connect?: CrewAssignmentWhereUniqueInput | CrewAssignmentWhereUniqueInput[]
+    update?: CrewAssignmentUpdateWithWhereUniqueWithoutVesselInput | CrewAssignmentUpdateWithWhereUniqueWithoutVesselInput[]
+    updateMany?: CrewAssignmentUpdateManyWithWhereWithoutVesselInput | CrewAssignmentUpdateManyWithWhereWithoutVesselInput[]
+    deleteMany?: CrewAssignmentScalarWhereInput | CrewAssignmentScalarWhereInput[]
+  }
+
   export type SmsDocumentUncheckedUpdateManyWithoutVesselNestedInput = {
     create?: XOR<SmsDocumentCreateWithoutVesselInput, SmsDocumentUncheckedCreateWithoutVesselInput> | SmsDocumentCreateWithoutVesselInput[] | SmsDocumentUncheckedCreateWithoutVesselInput[]
     connectOrCreate?: SmsDocumentCreateOrConnectWithoutVesselInput | SmsDocumentCreateOrConnectWithoutVesselInput[]
@@ -147852,6 +151982,20 @@ export namespace Prisma {
     update?: RequisitionUpdateWithWhereUniqueWithoutVesselInput | RequisitionUpdateWithWhereUniqueWithoutVesselInput[]
     updateMany?: RequisitionUpdateManyWithWhereWithoutVesselInput | RequisitionUpdateManyWithWhereWithoutVesselInput[]
     deleteMany?: RequisitionScalarWhereInput | RequisitionScalarWhereInput[]
+  }
+
+  export type CrewAssignmentUncheckedUpdateManyWithoutVesselNestedInput = {
+    create?: XOR<CrewAssignmentCreateWithoutVesselInput, CrewAssignmentUncheckedCreateWithoutVesselInput> | CrewAssignmentCreateWithoutVesselInput[] | CrewAssignmentUncheckedCreateWithoutVesselInput[]
+    connectOrCreate?: CrewAssignmentCreateOrConnectWithoutVesselInput | CrewAssignmentCreateOrConnectWithoutVesselInput[]
+    upsert?: CrewAssignmentUpsertWithWhereUniqueWithoutVesselInput | CrewAssignmentUpsertWithWhereUniqueWithoutVesselInput[]
+    createMany?: CrewAssignmentCreateManyVesselInputEnvelope
+    set?: CrewAssignmentWhereUniqueInput | CrewAssignmentWhereUniqueInput[]
+    disconnect?: CrewAssignmentWhereUniqueInput | CrewAssignmentWhereUniqueInput[]
+    delete?: CrewAssignmentWhereUniqueInput | CrewAssignmentWhereUniqueInput[]
+    connect?: CrewAssignmentWhereUniqueInput | CrewAssignmentWhereUniqueInput[]
+    update?: CrewAssignmentUpdateWithWhereUniqueWithoutVesselInput | CrewAssignmentUpdateWithWhereUniqueWithoutVesselInput[]
+    updateMany?: CrewAssignmentUpdateManyWithWhereWithoutVesselInput | CrewAssignmentUpdateManyWithWhereWithoutVesselInput[]
+    deleteMany?: CrewAssignmentScalarWhereInput | CrewAssignmentScalarWhereInput[]
   }
 
   export type EnumAuditActionFieldUpdateOperationsInput = {
@@ -151320,6 +155464,162 @@ export namespace Prisma {
     update?: XOR<XOR<RequisitionRevisionUpdateToOneWithWhereWithoutLinesInput, RequisitionRevisionUpdateWithoutLinesInput>, RequisitionRevisionUncheckedUpdateWithoutLinesInput>
   }
 
+  export type CompanyCreateNestedOneWithoutSeafarersInput = {
+    create?: XOR<CompanyCreateWithoutSeafarersInput, CompanyUncheckedCreateWithoutSeafarersInput>
+    connectOrCreate?: CompanyCreateOrConnectWithoutSeafarersInput
+    connect?: CompanyWhereUniqueInput
+  }
+
+  export type CrewAssignmentCreateNestedManyWithoutSeafarerInput = {
+    create?: XOR<CrewAssignmentCreateWithoutSeafarerInput, CrewAssignmentUncheckedCreateWithoutSeafarerInput> | CrewAssignmentCreateWithoutSeafarerInput[] | CrewAssignmentUncheckedCreateWithoutSeafarerInput[]
+    connectOrCreate?: CrewAssignmentCreateOrConnectWithoutSeafarerInput | CrewAssignmentCreateOrConnectWithoutSeafarerInput[]
+    createMany?: CrewAssignmentCreateManySeafarerInputEnvelope
+    connect?: CrewAssignmentWhereUniqueInput | CrewAssignmentWhereUniqueInput[]
+  }
+
+  export type CrewAssignmentUncheckedCreateNestedManyWithoutSeafarerInput = {
+    create?: XOR<CrewAssignmentCreateWithoutSeafarerInput, CrewAssignmentUncheckedCreateWithoutSeafarerInput> | CrewAssignmentCreateWithoutSeafarerInput[] | CrewAssignmentUncheckedCreateWithoutSeafarerInput[]
+    connectOrCreate?: CrewAssignmentCreateOrConnectWithoutSeafarerInput | CrewAssignmentCreateOrConnectWithoutSeafarerInput[]
+    createMany?: CrewAssignmentCreateManySeafarerInputEnvelope
+    connect?: CrewAssignmentWhereUniqueInput | CrewAssignmentWhereUniqueInput[]
+  }
+
+  export type CompanyUpdateOneRequiredWithoutSeafarersNestedInput = {
+    create?: XOR<CompanyCreateWithoutSeafarersInput, CompanyUncheckedCreateWithoutSeafarersInput>
+    connectOrCreate?: CompanyCreateOrConnectWithoutSeafarersInput
+    upsert?: CompanyUpsertWithoutSeafarersInput
+    connect?: CompanyWhereUniqueInput
+    update?: XOR<XOR<CompanyUpdateToOneWithWhereWithoutSeafarersInput, CompanyUpdateWithoutSeafarersInput>, CompanyUncheckedUpdateWithoutSeafarersInput>
+  }
+
+  export type CrewAssignmentUpdateManyWithoutSeafarerNestedInput = {
+    create?: XOR<CrewAssignmentCreateWithoutSeafarerInput, CrewAssignmentUncheckedCreateWithoutSeafarerInput> | CrewAssignmentCreateWithoutSeafarerInput[] | CrewAssignmentUncheckedCreateWithoutSeafarerInput[]
+    connectOrCreate?: CrewAssignmentCreateOrConnectWithoutSeafarerInput | CrewAssignmentCreateOrConnectWithoutSeafarerInput[]
+    upsert?: CrewAssignmentUpsertWithWhereUniqueWithoutSeafarerInput | CrewAssignmentUpsertWithWhereUniqueWithoutSeafarerInput[]
+    createMany?: CrewAssignmentCreateManySeafarerInputEnvelope
+    set?: CrewAssignmentWhereUniqueInput | CrewAssignmentWhereUniqueInput[]
+    disconnect?: CrewAssignmentWhereUniqueInput | CrewAssignmentWhereUniqueInput[]
+    delete?: CrewAssignmentWhereUniqueInput | CrewAssignmentWhereUniqueInput[]
+    connect?: CrewAssignmentWhereUniqueInput | CrewAssignmentWhereUniqueInput[]
+    update?: CrewAssignmentUpdateWithWhereUniqueWithoutSeafarerInput | CrewAssignmentUpdateWithWhereUniqueWithoutSeafarerInput[]
+    updateMany?: CrewAssignmentUpdateManyWithWhereWithoutSeafarerInput | CrewAssignmentUpdateManyWithWhereWithoutSeafarerInput[]
+    deleteMany?: CrewAssignmentScalarWhereInput | CrewAssignmentScalarWhereInput[]
+  }
+
+  export type CrewAssignmentUncheckedUpdateManyWithoutSeafarerNestedInput = {
+    create?: XOR<CrewAssignmentCreateWithoutSeafarerInput, CrewAssignmentUncheckedCreateWithoutSeafarerInput> | CrewAssignmentCreateWithoutSeafarerInput[] | CrewAssignmentUncheckedCreateWithoutSeafarerInput[]
+    connectOrCreate?: CrewAssignmentCreateOrConnectWithoutSeafarerInput | CrewAssignmentCreateOrConnectWithoutSeafarerInput[]
+    upsert?: CrewAssignmentUpsertWithWhereUniqueWithoutSeafarerInput | CrewAssignmentUpsertWithWhereUniqueWithoutSeafarerInput[]
+    createMany?: CrewAssignmentCreateManySeafarerInputEnvelope
+    set?: CrewAssignmentWhereUniqueInput | CrewAssignmentWhereUniqueInput[]
+    disconnect?: CrewAssignmentWhereUniqueInput | CrewAssignmentWhereUniqueInput[]
+    delete?: CrewAssignmentWhereUniqueInput | CrewAssignmentWhereUniqueInput[]
+    connect?: CrewAssignmentWhereUniqueInput | CrewAssignmentWhereUniqueInput[]
+    update?: CrewAssignmentUpdateWithWhereUniqueWithoutSeafarerInput | CrewAssignmentUpdateWithWhereUniqueWithoutSeafarerInput[]
+    updateMany?: CrewAssignmentUpdateManyWithWhereWithoutSeafarerInput | CrewAssignmentUpdateManyWithWhereWithoutSeafarerInput[]
+    deleteMany?: CrewAssignmentScalarWhereInput | CrewAssignmentScalarWhereInput[]
+  }
+
+  export type CompanyCreateNestedOneWithoutCrewAssignmentsInput = {
+    create?: XOR<CompanyCreateWithoutCrewAssignmentsInput, CompanyUncheckedCreateWithoutCrewAssignmentsInput>
+    connectOrCreate?: CompanyCreateOrConnectWithoutCrewAssignmentsInput
+    connect?: CompanyWhereUniqueInput
+  }
+
+  export type SeafarerCreateNestedOneWithoutAssignmentsInput = {
+    create?: XOR<SeafarerCreateWithoutAssignmentsInput, SeafarerUncheckedCreateWithoutAssignmentsInput>
+    connectOrCreate?: SeafarerCreateOrConnectWithoutAssignmentsInput
+    connect?: SeafarerWhereUniqueInput
+  }
+
+  export type VesselCreateNestedOneWithoutCrewAssignmentsInput = {
+    create?: XOR<VesselCreateWithoutCrewAssignmentsInput, VesselUncheckedCreateWithoutCrewAssignmentsInput>
+    connectOrCreate?: VesselCreateOrConnectWithoutCrewAssignmentsInput
+    connect?: VesselWhereUniqueInput
+  }
+
+  export type CrewAssignmentCreateNestedOneWithoutReliefsInput = {
+    create?: XOR<CrewAssignmentCreateWithoutReliefsInput, CrewAssignmentUncheckedCreateWithoutReliefsInput>
+    connectOrCreate?: CrewAssignmentCreateOrConnectWithoutReliefsInput
+    connect?: CrewAssignmentWhereUniqueInput
+  }
+
+  export type CrewAssignmentCreateNestedManyWithoutReliefForInput = {
+    create?: XOR<CrewAssignmentCreateWithoutReliefForInput, CrewAssignmentUncheckedCreateWithoutReliefForInput> | CrewAssignmentCreateWithoutReliefForInput[] | CrewAssignmentUncheckedCreateWithoutReliefForInput[]
+    connectOrCreate?: CrewAssignmentCreateOrConnectWithoutReliefForInput | CrewAssignmentCreateOrConnectWithoutReliefForInput[]
+    createMany?: CrewAssignmentCreateManyReliefForInputEnvelope
+    connect?: CrewAssignmentWhereUniqueInput | CrewAssignmentWhereUniqueInput[]
+  }
+
+  export type CrewAssignmentUncheckedCreateNestedManyWithoutReliefForInput = {
+    create?: XOR<CrewAssignmentCreateWithoutReliefForInput, CrewAssignmentUncheckedCreateWithoutReliefForInput> | CrewAssignmentCreateWithoutReliefForInput[] | CrewAssignmentUncheckedCreateWithoutReliefForInput[]
+    connectOrCreate?: CrewAssignmentCreateOrConnectWithoutReliefForInput | CrewAssignmentCreateOrConnectWithoutReliefForInput[]
+    createMany?: CrewAssignmentCreateManyReliefForInputEnvelope
+    connect?: CrewAssignmentWhereUniqueInput | CrewAssignmentWhereUniqueInput[]
+  }
+
+  export type CompanyUpdateOneRequiredWithoutCrewAssignmentsNestedInput = {
+    create?: XOR<CompanyCreateWithoutCrewAssignmentsInput, CompanyUncheckedCreateWithoutCrewAssignmentsInput>
+    connectOrCreate?: CompanyCreateOrConnectWithoutCrewAssignmentsInput
+    upsert?: CompanyUpsertWithoutCrewAssignmentsInput
+    connect?: CompanyWhereUniqueInput
+    update?: XOR<XOR<CompanyUpdateToOneWithWhereWithoutCrewAssignmentsInput, CompanyUpdateWithoutCrewAssignmentsInput>, CompanyUncheckedUpdateWithoutCrewAssignmentsInput>
+  }
+
+  export type SeafarerUpdateOneRequiredWithoutAssignmentsNestedInput = {
+    create?: XOR<SeafarerCreateWithoutAssignmentsInput, SeafarerUncheckedCreateWithoutAssignmentsInput>
+    connectOrCreate?: SeafarerCreateOrConnectWithoutAssignmentsInput
+    upsert?: SeafarerUpsertWithoutAssignmentsInput
+    connect?: SeafarerWhereUniqueInput
+    update?: XOR<XOR<SeafarerUpdateToOneWithWhereWithoutAssignmentsInput, SeafarerUpdateWithoutAssignmentsInput>, SeafarerUncheckedUpdateWithoutAssignmentsInput>
+  }
+
+  export type VesselUpdateOneRequiredWithoutCrewAssignmentsNestedInput = {
+    create?: XOR<VesselCreateWithoutCrewAssignmentsInput, VesselUncheckedCreateWithoutCrewAssignmentsInput>
+    connectOrCreate?: VesselCreateOrConnectWithoutCrewAssignmentsInput
+    upsert?: VesselUpsertWithoutCrewAssignmentsInput
+    connect?: VesselWhereUniqueInput
+    update?: XOR<XOR<VesselUpdateToOneWithWhereWithoutCrewAssignmentsInput, VesselUpdateWithoutCrewAssignmentsInput>, VesselUncheckedUpdateWithoutCrewAssignmentsInput>
+  }
+
+  export type CrewAssignmentUpdateOneWithoutReliefsNestedInput = {
+    create?: XOR<CrewAssignmentCreateWithoutReliefsInput, CrewAssignmentUncheckedCreateWithoutReliefsInput>
+    connectOrCreate?: CrewAssignmentCreateOrConnectWithoutReliefsInput
+    upsert?: CrewAssignmentUpsertWithoutReliefsInput
+    disconnect?: CrewAssignmentWhereInput | boolean
+    delete?: CrewAssignmentWhereInput | boolean
+    connect?: CrewAssignmentWhereUniqueInput
+    update?: XOR<XOR<CrewAssignmentUpdateToOneWithWhereWithoutReliefsInput, CrewAssignmentUpdateWithoutReliefsInput>, CrewAssignmentUncheckedUpdateWithoutReliefsInput>
+  }
+
+  export type CrewAssignmentUpdateManyWithoutReliefForNestedInput = {
+    create?: XOR<CrewAssignmentCreateWithoutReliefForInput, CrewAssignmentUncheckedCreateWithoutReliefForInput> | CrewAssignmentCreateWithoutReliefForInput[] | CrewAssignmentUncheckedCreateWithoutReliefForInput[]
+    connectOrCreate?: CrewAssignmentCreateOrConnectWithoutReliefForInput | CrewAssignmentCreateOrConnectWithoutReliefForInput[]
+    upsert?: CrewAssignmentUpsertWithWhereUniqueWithoutReliefForInput | CrewAssignmentUpsertWithWhereUniqueWithoutReliefForInput[]
+    createMany?: CrewAssignmentCreateManyReliefForInputEnvelope
+    set?: CrewAssignmentWhereUniqueInput | CrewAssignmentWhereUniqueInput[]
+    disconnect?: CrewAssignmentWhereUniqueInput | CrewAssignmentWhereUniqueInput[]
+    delete?: CrewAssignmentWhereUniqueInput | CrewAssignmentWhereUniqueInput[]
+    connect?: CrewAssignmentWhereUniqueInput | CrewAssignmentWhereUniqueInput[]
+    update?: CrewAssignmentUpdateWithWhereUniqueWithoutReliefForInput | CrewAssignmentUpdateWithWhereUniqueWithoutReliefForInput[]
+    updateMany?: CrewAssignmentUpdateManyWithWhereWithoutReliefForInput | CrewAssignmentUpdateManyWithWhereWithoutReliefForInput[]
+    deleteMany?: CrewAssignmentScalarWhereInput | CrewAssignmentScalarWhereInput[]
+  }
+
+  export type CrewAssignmentUncheckedUpdateManyWithoutReliefForNestedInput = {
+    create?: XOR<CrewAssignmentCreateWithoutReliefForInput, CrewAssignmentUncheckedCreateWithoutReliefForInput> | CrewAssignmentCreateWithoutReliefForInput[] | CrewAssignmentUncheckedCreateWithoutReliefForInput[]
+    connectOrCreate?: CrewAssignmentCreateOrConnectWithoutReliefForInput | CrewAssignmentCreateOrConnectWithoutReliefForInput[]
+    upsert?: CrewAssignmentUpsertWithWhereUniqueWithoutReliefForInput | CrewAssignmentUpsertWithWhereUniqueWithoutReliefForInput[]
+    createMany?: CrewAssignmentCreateManyReliefForInputEnvelope
+    set?: CrewAssignmentWhereUniqueInput | CrewAssignmentWhereUniqueInput[]
+    disconnect?: CrewAssignmentWhereUniqueInput | CrewAssignmentWhereUniqueInput[]
+    delete?: CrewAssignmentWhereUniqueInput | CrewAssignmentWhereUniqueInput[]
+    connect?: CrewAssignmentWhereUniqueInput | CrewAssignmentWhereUniqueInput[]
+    update?: CrewAssignmentUpdateWithWhereUniqueWithoutReliefForInput | CrewAssignmentUpdateWithWhereUniqueWithoutReliefForInput[]
+    updateMany?: CrewAssignmentUpdateManyWithWhereWithoutReliefForInput | CrewAssignmentUpdateManyWithWhereWithoutReliefForInput[]
+    deleteMany?: CrewAssignmentScalarWhereInput | CrewAssignmentScalarWhereInput[]
+  }
+
   export type NestedStringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -153059,6 +157359,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventCreateNestedManyWithoutVesselInput
     inventoryUpdateDrafts?: InventoryUpdateDraftCreateNestedManyWithoutVesselInput
     requisitions?: RequisitionCreateNestedManyWithoutVesselInput
+    crewAssignments?: CrewAssignmentCreateNestedManyWithoutVesselInput
   }
 
   export type VesselUncheckedCreateWithoutCompanyInput = {
@@ -153146,6 +157447,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventUncheckedCreateNestedManyWithoutVesselInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUncheckedCreateNestedManyWithoutVesselInput
     requisitions?: RequisitionUncheckedCreateNestedManyWithoutVesselInput
+    crewAssignments?: CrewAssignmentUncheckedCreateNestedManyWithoutVesselInput
   }
 
   export type VesselCreateOrConnectWithoutCompanyInput = {
@@ -155436,6 +159738,126 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type SeafarerCreateWithoutCompanyInput = {
+    id?: string
+    crewCode?: string | null
+    lastName: string
+    firstName: string
+    middleName?: string | null
+    suffix?: string | null
+    nationality?: string | null
+    dateOfBirth?: Date | string | null
+    contactPhone?: string | null
+    contactEmail?: string | null
+    nextOfKinName?: string | null
+    nextOfKinRelationship?: string | null
+    nextOfKinPhone?: string | null
+    active?: boolean
+    redactedAt?: Date | string | null
+    redactedBy?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    assignments?: CrewAssignmentCreateNestedManyWithoutSeafarerInput
+  }
+
+  export type SeafarerUncheckedCreateWithoutCompanyInput = {
+    id?: string
+    crewCode?: string | null
+    lastName: string
+    firstName: string
+    middleName?: string | null
+    suffix?: string | null
+    nationality?: string | null
+    dateOfBirth?: Date | string | null
+    contactPhone?: string | null
+    contactEmail?: string | null
+    nextOfKinName?: string | null
+    nextOfKinRelationship?: string | null
+    nextOfKinPhone?: string | null
+    active?: boolean
+    redactedAt?: Date | string | null
+    redactedBy?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    assignments?: CrewAssignmentUncheckedCreateNestedManyWithoutSeafarerInput
+  }
+
+  export type SeafarerCreateOrConnectWithoutCompanyInput = {
+    where: SeafarerWhereUniqueInput
+    create: XOR<SeafarerCreateWithoutCompanyInput, SeafarerUncheckedCreateWithoutCompanyInput>
+  }
+
+  export type SeafarerCreateManyCompanyInputEnvelope = {
+    data: SeafarerCreateManyCompanyInput | SeafarerCreateManyCompanyInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type CrewAssignmentCreateWithoutCompanyInput = {
+    id?: string
+    rankCode: string
+    plannedSignOnDate: Date | string
+    actualSignOnDate?: Date | string | null
+    plannedSignOffDate?: Date | string | null
+    actualSignOffDate?: Date | string | null
+    signOnPort?: string | null
+    signOffPort?: string | null
+    signOffReason?: string | null
+    vesselRemarks?: string | null
+    shoreRemarks?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    seafarer: SeafarerCreateNestedOneWithoutAssignmentsInput
+    vessel: VesselCreateNestedOneWithoutCrewAssignmentsInput
+    reliefFor?: CrewAssignmentCreateNestedOneWithoutReliefsInput
+    reliefs?: CrewAssignmentCreateNestedManyWithoutReliefForInput
+  }
+
+  export type CrewAssignmentUncheckedCreateWithoutCompanyInput = {
+    id?: string
+    seafarerId: string
+    vesselId: string
+    rankCode: string
+    plannedSignOnDate: Date | string
+    actualSignOnDate?: Date | string | null
+    plannedSignOffDate?: Date | string | null
+    actualSignOffDate?: Date | string | null
+    signOnPort?: string | null
+    signOffPort?: string | null
+    signOffReason?: string | null
+    reliefForAssignmentId?: string | null
+    vesselRemarks?: string | null
+    shoreRemarks?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    reliefs?: CrewAssignmentUncheckedCreateNestedManyWithoutReliefForInput
+  }
+
+  export type CrewAssignmentCreateOrConnectWithoutCompanyInput = {
+    where: CrewAssignmentWhereUniqueInput
+    create: XOR<CrewAssignmentCreateWithoutCompanyInput, CrewAssignmentUncheckedCreateWithoutCompanyInput>
+  }
+
+  export type CrewAssignmentCreateManyCompanyInputEnvelope = {
+    data: CrewAssignmentCreateManyCompanyInput | CrewAssignmentCreateManyCompanyInput[]
+    skipDuplicates?: boolean
+  }
+
   export type UserUpsertWithWhereUniqueWithoutCompanyInput = {
     where: UserWhereUniqueInput
     update: XOR<UserUpdateWithoutCompanyInput, UserUncheckedUpdateWithoutCompanyInput>
@@ -157332,6 +161754,94 @@ export namespace Prisma {
     deletedBy?: StringNullableFilter<"Department"> | string | null
   }
 
+  export type SeafarerUpsertWithWhereUniqueWithoutCompanyInput = {
+    where: SeafarerWhereUniqueInput
+    update: XOR<SeafarerUpdateWithoutCompanyInput, SeafarerUncheckedUpdateWithoutCompanyInput>
+    create: XOR<SeafarerCreateWithoutCompanyInput, SeafarerUncheckedCreateWithoutCompanyInput>
+  }
+
+  export type SeafarerUpdateWithWhereUniqueWithoutCompanyInput = {
+    where: SeafarerWhereUniqueInput
+    data: XOR<SeafarerUpdateWithoutCompanyInput, SeafarerUncheckedUpdateWithoutCompanyInput>
+  }
+
+  export type SeafarerUpdateManyWithWhereWithoutCompanyInput = {
+    where: SeafarerScalarWhereInput
+    data: XOR<SeafarerUpdateManyMutationInput, SeafarerUncheckedUpdateManyWithoutCompanyInput>
+  }
+
+  export type SeafarerScalarWhereInput = {
+    AND?: SeafarerScalarWhereInput | SeafarerScalarWhereInput[]
+    OR?: SeafarerScalarWhereInput[]
+    NOT?: SeafarerScalarWhereInput | SeafarerScalarWhereInput[]
+    id?: StringFilter<"Seafarer"> | string
+    companyId?: StringFilter<"Seafarer"> | string
+    crewCode?: StringNullableFilter<"Seafarer"> | string | null
+    lastName?: StringFilter<"Seafarer"> | string
+    firstName?: StringFilter<"Seafarer"> | string
+    middleName?: StringNullableFilter<"Seafarer"> | string | null
+    suffix?: StringNullableFilter<"Seafarer"> | string | null
+    nationality?: StringNullableFilter<"Seafarer"> | string | null
+    dateOfBirth?: DateTimeNullableFilter<"Seafarer"> | Date | string | null
+    contactPhone?: StringNullableFilter<"Seafarer"> | string | null
+    contactEmail?: StringNullableFilter<"Seafarer"> | string | null
+    nextOfKinName?: StringNullableFilter<"Seafarer"> | string | null
+    nextOfKinRelationship?: StringNullableFilter<"Seafarer"> | string | null
+    nextOfKinPhone?: StringNullableFilter<"Seafarer"> | string | null
+    active?: BoolFilter<"Seafarer"> | boolean
+    redactedAt?: DateTimeNullableFilter<"Seafarer"> | Date | string | null
+    redactedBy?: StringNullableFilter<"Seafarer"> | string | null
+    createdAt?: DateTimeFilter<"Seafarer"> | Date | string
+    updatedAt?: DateTimeFilter<"Seafarer"> | Date | string
+    createdBy?: StringNullableFilter<"Seafarer"> | string | null
+    updatedBy?: StringNullableFilter<"Seafarer"> | string | null
+    deletedAt?: DateTimeNullableFilter<"Seafarer"> | Date | string | null
+    deletedBy?: StringNullableFilter<"Seafarer"> | string | null
+  }
+
+  export type CrewAssignmentUpsertWithWhereUniqueWithoutCompanyInput = {
+    where: CrewAssignmentWhereUniqueInput
+    update: XOR<CrewAssignmentUpdateWithoutCompanyInput, CrewAssignmentUncheckedUpdateWithoutCompanyInput>
+    create: XOR<CrewAssignmentCreateWithoutCompanyInput, CrewAssignmentUncheckedCreateWithoutCompanyInput>
+  }
+
+  export type CrewAssignmentUpdateWithWhereUniqueWithoutCompanyInput = {
+    where: CrewAssignmentWhereUniqueInput
+    data: XOR<CrewAssignmentUpdateWithoutCompanyInput, CrewAssignmentUncheckedUpdateWithoutCompanyInput>
+  }
+
+  export type CrewAssignmentUpdateManyWithWhereWithoutCompanyInput = {
+    where: CrewAssignmentScalarWhereInput
+    data: XOR<CrewAssignmentUpdateManyMutationInput, CrewAssignmentUncheckedUpdateManyWithoutCompanyInput>
+  }
+
+  export type CrewAssignmentScalarWhereInput = {
+    AND?: CrewAssignmentScalarWhereInput | CrewAssignmentScalarWhereInput[]
+    OR?: CrewAssignmentScalarWhereInput[]
+    NOT?: CrewAssignmentScalarWhereInput | CrewAssignmentScalarWhereInput[]
+    id?: StringFilter<"CrewAssignment"> | string
+    companyId?: StringFilter<"CrewAssignment"> | string
+    seafarerId?: StringFilter<"CrewAssignment"> | string
+    vesselId?: StringFilter<"CrewAssignment"> | string
+    rankCode?: StringFilter<"CrewAssignment"> | string
+    plannedSignOnDate?: DateTimeFilter<"CrewAssignment"> | Date | string
+    actualSignOnDate?: DateTimeNullableFilter<"CrewAssignment"> | Date | string | null
+    plannedSignOffDate?: DateTimeNullableFilter<"CrewAssignment"> | Date | string | null
+    actualSignOffDate?: DateTimeNullableFilter<"CrewAssignment"> | Date | string | null
+    signOnPort?: StringNullableFilter<"CrewAssignment"> | string | null
+    signOffPort?: StringNullableFilter<"CrewAssignment"> | string | null
+    signOffReason?: StringNullableFilter<"CrewAssignment"> | string | null
+    reliefForAssignmentId?: StringNullableFilter<"CrewAssignment"> | string | null
+    vesselRemarks?: StringNullableFilter<"CrewAssignment"> | string | null
+    shoreRemarks?: StringNullableFilter<"CrewAssignment"> | string | null
+    createdAt?: DateTimeFilter<"CrewAssignment"> | Date | string
+    updatedAt?: DateTimeFilter<"CrewAssignment"> | Date | string
+    createdBy?: StringNullableFilter<"CrewAssignment"> | string | null
+    updatedBy?: StringNullableFilter<"CrewAssignment"> | string | null
+    deletedAt?: DateTimeNullableFilter<"CrewAssignment"> | Date | string | null
+    deletedBy?: StringNullableFilter<"CrewAssignment"> | string | null
+  }
+
   export type CompanyCreateWithoutUsersInput = {
     id?: string
     name: string
@@ -157394,6 +161904,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
     accessLevels?: AccessLevelCreateNestedManyWithoutCompanyInput
     departments?: DepartmentCreateNestedManyWithoutCompanyInput
+    seafarers?: SeafarerCreateNestedManyWithoutCompanyInput
+    crewAssignments?: CrewAssignmentCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutUsersInput = {
@@ -157458,6 +161970,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
     accessLevels?: AccessLevelUncheckedCreateNestedManyWithoutCompanyInput
     departments?: DepartmentUncheckedCreateNestedManyWithoutCompanyInput
+    seafarers?: SeafarerUncheckedCreateNestedManyWithoutCompanyInput
+    crewAssignments?: CrewAssignmentUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutUsersInput = {
@@ -157550,6 +162064,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventCreateNestedManyWithoutVesselInput
     inventoryUpdateDrafts?: InventoryUpdateDraftCreateNestedManyWithoutVesselInput
     requisitions?: RequisitionCreateNestedManyWithoutVesselInput
+    crewAssignments?: CrewAssignmentCreateNestedManyWithoutVesselInput
   }
 
   export type VesselUncheckedCreateWithoutUsersInput = {
@@ -157637,6 +162152,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventUncheckedCreateNestedManyWithoutVesselInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUncheckedCreateNestedManyWithoutVesselInput
     requisitions?: RequisitionUncheckedCreateNestedManyWithoutVesselInput
+    crewAssignments?: CrewAssignmentUncheckedCreateNestedManyWithoutVesselInput
   }
 
   export type VesselCreateOrConnectWithoutUsersInput = {
@@ -158249,6 +162765,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
     accessLevels?: AccessLevelUpdateManyWithoutCompanyNestedInput
     departments?: DepartmentUpdateManyWithoutCompanyNestedInput
+    seafarers?: SeafarerUpdateManyWithoutCompanyNestedInput
+    crewAssignments?: CrewAssignmentUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutUsersInput = {
@@ -158313,6 +162831,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
     accessLevels?: AccessLevelUncheckedUpdateManyWithoutCompanyNestedInput
     departments?: DepartmentUncheckedUpdateManyWithoutCompanyNestedInput
+    seafarers?: SeafarerUncheckedUpdateManyWithoutCompanyNestedInput
+    crewAssignments?: CrewAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type VesselUpsertWithoutUsersInput = {
@@ -158411,6 +162931,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventUpdateManyWithoutVesselNestedInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUpdateManyWithoutVesselNestedInput
     requisitions?: RequisitionUpdateManyWithoutVesselNestedInput
+    crewAssignments?: CrewAssignmentUpdateManyWithoutVesselNestedInput
   }
 
   export type VesselUncheckedUpdateWithoutUsersInput = {
@@ -158498,6 +163019,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventUncheckedUpdateManyWithoutVesselNestedInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUncheckedUpdateManyWithoutVesselNestedInput
     requisitions?: RequisitionUncheckedUpdateManyWithoutVesselNestedInput
+    crewAssignments?: CrewAssignmentUncheckedUpdateManyWithoutVesselNestedInput
   }
 
   export type AccessLevelUpsertWithoutUsersInput = {
@@ -158852,6 +163374,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
     accessLevels?: AccessLevelCreateNestedManyWithoutCompanyInput
     departments?: DepartmentCreateNestedManyWithoutCompanyInput
+    seafarers?: SeafarerCreateNestedManyWithoutCompanyInput
+    crewAssignments?: CrewAssignmentCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutRolesInput = {
@@ -158916,6 +163440,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
     accessLevels?: AccessLevelUncheckedCreateNestedManyWithoutCompanyInput
     departments?: DepartmentUncheckedCreateNestedManyWithoutCompanyInput
+    seafarers?: SeafarerUncheckedCreateNestedManyWithoutCompanyInput
+    crewAssignments?: CrewAssignmentUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutRolesInput = {
@@ -159032,6 +163558,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
     accessLevels?: AccessLevelUpdateManyWithoutCompanyNestedInput
     departments?: DepartmentUpdateManyWithoutCompanyNestedInput
+    seafarers?: SeafarerUpdateManyWithoutCompanyNestedInput
+    crewAssignments?: CrewAssignmentUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutRolesInput = {
@@ -159096,6 +163624,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
     accessLevels?: AccessLevelUncheckedUpdateManyWithoutCompanyNestedInput
     departments?: DepartmentUncheckedUpdateManyWithoutCompanyNestedInput
+    seafarers?: SeafarerUncheckedUpdateManyWithoutCompanyNestedInput
+    crewAssignments?: CrewAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type UserRoleUpsertWithWhereUniqueWithoutRoleInput = {
@@ -159530,6 +164060,8 @@ export namespace Prisma {
     unitMasters?: UnitMasterCreateNestedManyWithoutCompanyInput
     referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
     departments?: DepartmentCreateNestedManyWithoutCompanyInput
+    seafarers?: SeafarerCreateNestedManyWithoutCompanyInput
+    crewAssignments?: CrewAssignmentCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutAccessLevelsInput = {
@@ -159594,6 +164126,8 @@ export namespace Prisma {
     unitMasters?: UnitMasterUncheckedCreateNestedManyWithoutCompanyInput
     referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
     departments?: DepartmentUncheckedCreateNestedManyWithoutCompanyInput
+    seafarers?: SeafarerUncheckedCreateNestedManyWithoutCompanyInput
+    crewAssignments?: CrewAssignmentUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutAccessLevelsInput = {
@@ -159742,6 +164276,8 @@ export namespace Prisma {
     unitMasters?: UnitMasterUpdateManyWithoutCompanyNestedInput
     referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
     departments?: DepartmentUpdateManyWithoutCompanyNestedInput
+    seafarers?: SeafarerUpdateManyWithoutCompanyNestedInput
+    crewAssignments?: CrewAssignmentUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutAccessLevelsInput = {
@@ -159806,6 +164342,8 @@ export namespace Prisma {
     unitMasters?: UnitMasterUncheckedUpdateManyWithoutCompanyNestedInput
     referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
     departments?: DepartmentUncheckedUpdateManyWithoutCompanyNestedInput
+    seafarers?: SeafarerUncheckedUpdateManyWithoutCompanyNestedInput
+    crewAssignments?: CrewAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type UserUpsertWithWhereUniqueWithoutAccessLevelInput = {
@@ -159886,6 +164424,8 @@ export namespace Prisma {
     unitMasters?: UnitMasterCreateNestedManyWithoutCompanyInput
     referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
     accessLevels?: AccessLevelCreateNestedManyWithoutCompanyInput
+    seafarers?: SeafarerCreateNestedManyWithoutCompanyInput
+    crewAssignments?: CrewAssignmentCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutDepartmentsInput = {
@@ -159950,6 +164490,8 @@ export namespace Prisma {
     unitMasters?: UnitMasterUncheckedCreateNestedManyWithoutCompanyInput
     referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
     accessLevels?: AccessLevelUncheckedCreateNestedManyWithoutCompanyInput
+    seafarers?: SeafarerUncheckedCreateNestedManyWithoutCompanyInput
+    crewAssignments?: CrewAssignmentUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutDepartmentsInput = {
@@ -160098,6 +164640,8 @@ export namespace Prisma {
     unitMasters?: UnitMasterUpdateManyWithoutCompanyNestedInput
     referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
     accessLevels?: AccessLevelUpdateManyWithoutCompanyNestedInput
+    seafarers?: SeafarerUpdateManyWithoutCompanyNestedInput
+    crewAssignments?: CrewAssignmentUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutDepartmentsInput = {
@@ -160162,6 +164706,8 @@ export namespace Prisma {
     unitMasters?: UnitMasterUncheckedUpdateManyWithoutCompanyNestedInput
     referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
     accessLevels?: AccessLevelUncheckedUpdateManyWithoutCompanyNestedInput
+    seafarers?: SeafarerUncheckedUpdateManyWithoutCompanyNestedInput
+    crewAssignments?: CrewAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type UserUpsertWithWhereUniqueWithoutDepartmentRefInput = {
@@ -160242,6 +164788,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
     accessLevels?: AccessLevelCreateNestedManyWithoutCompanyInput
     departments?: DepartmentCreateNestedManyWithoutCompanyInput
+    seafarers?: SeafarerCreateNestedManyWithoutCompanyInput
+    crewAssignments?: CrewAssignmentCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutVesselsInput = {
@@ -160306,6 +164854,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
     accessLevels?: AccessLevelUncheckedCreateNestedManyWithoutCompanyInput
     departments?: DepartmentUncheckedCreateNestedManyWithoutCompanyInput
+    seafarers?: SeafarerUncheckedCreateNestedManyWithoutCompanyInput
+    crewAssignments?: CrewAssignmentUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutVesselsInput = {
@@ -162186,6 +166736,64 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type CrewAssignmentCreateWithoutVesselInput = {
+    id?: string
+    rankCode: string
+    plannedSignOnDate: Date | string
+    actualSignOnDate?: Date | string | null
+    plannedSignOffDate?: Date | string | null
+    actualSignOffDate?: Date | string | null
+    signOnPort?: string | null
+    signOffPort?: string | null
+    signOffReason?: string | null
+    vesselRemarks?: string | null
+    shoreRemarks?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    company: CompanyCreateNestedOneWithoutCrewAssignmentsInput
+    seafarer: SeafarerCreateNestedOneWithoutAssignmentsInput
+    reliefFor?: CrewAssignmentCreateNestedOneWithoutReliefsInput
+    reliefs?: CrewAssignmentCreateNestedManyWithoutReliefForInput
+  }
+
+  export type CrewAssignmentUncheckedCreateWithoutVesselInput = {
+    id?: string
+    companyId: string
+    seafarerId: string
+    rankCode: string
+    plannedSignOnDate: Date | string
+    actualSignOnDate?: Date | string | null
+    plannedSignOffDate?: Date | string | null
+    actualSignOffDate?: Date | string | null
+    signOnPort?: string | null
+    signOffPort?: string | null
+    signOffReason?: string | null
+    reliefForAssignmentId?: string | null
+    vesselRemarks?: string | null
+    shoreRemarks?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    reliefs?: CrewAssignmentUncheckedCreateNestedManyWithoutReliefForInput
+  }
+
+  export type CrewAssignmentCreateOrConnectWithoutVesselInput = {
+    where: CrewAssignmentWhereUniqueInput
+    create: XOR<CrewAssignmentCreateWithoutVesselInput, CrewAssignmentUncheckedCreateWithoutVesselInput>
+  }
+
+  export type CrewAssignmentCreateManyVesselInputEnvelope = {
+    data: CrewAssignmentCreateManyVesselInput | CrewAssignmentCreateManyVesselInput[]
+    skipDuplicates?: boolean
+  }
+
   export type CompanyUpsertWithoutVesselsInput = {
     update: XOR<CompanyUpdateWithoutVesselsInput, CompanyUncheckedUpdateWithoutVesselsInput>
     create: XOR<CompanyCreateWithoutVesselsInput, CompanyUncheckedCreateWithoutVesselsInput>
@@ -162259,6 +166867,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
     accessLevels?: AccessLevelUpdateManyWithoutCompanyNestedInput
     departments?: DepartmentUpdateManyWithoutCompanyNestedInput
+    seafarers?: SeafarerUpdateManyWithoutCompanyNestedInput
+    crewAssignments?: CrewAssignmentUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutVesselsInput = {
@@ -162323,6 +166933,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
     accessLevels?: AccessLevelUncheckedUpdateManyWithoutCompanyNestedInput
     departments?: DepartmentUncheckedUpdateManyWithoutCompanyNestedInput
+    seafarers?: SeafarerUncheckedUpdateManyWithoutCompanyNestedInput
+    crewAssignments?: CrewAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type SmsDocumentUpsertWithWhereUniqueWithoutVesselInput = {
@@ -162938,6 +167550,22 @@ export namespace Prisma {
     data: XOR<RequisitionUpdateManyMutationInput, RequisitionUncheckedUpdateManyWithoutVesselInput>
   }
 
+  export type CrewAssignmentUpsertWithWhereUniqueWithoutVesselInput = {
+    where: CrewAssignmentWhereUniqueInput
+    update: XOR<CrewAssignmentUpdateWithoutVesselInput, CrewAssignmentUncheckedUpdateWithoutVesselInput>
+    create: XOR<CrewAssignmentCreateWithoutVesselInput, CrewAssignmentUncheckedCreateWithoutVesselInput>
+  }
+
+  export type CrewAssignmentUpdateWithWhereUniqueWithoutVesselInput = {
+    where: CrewAssignmentWhereUniqueInput
+    data: XOR<CrewAssignmentUpdateWithoutVesselInput, CrewAssignmentUncheckedUpdateWithoutVesselInput>
+  }
+
+  export type CrewAssignmentUpdateManyWithWhereWithoutVesselInput = {
+    where: CrewAssignmentScalarWhereInput
+    data: XOR<CrewAssignmentUpdateManyMutationInput, CrewAssignmentUncheckedUpdateManyWithoutVesselInput>
+  }
+
   export type UserCreateWithoutNotificationsInput = {
     id?: string
     fullName: string
@@ -163132,6 +167760,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
     accessLevels?: AccessLevelCreateNestedManyWithoutCompanyInput
     departments?: DepartmentCreateNestedManyWithoutCompanyInput
+    seafarers?: SeafarerCreateNestedManyWithoutCompanyInput
+    crewAssignments?: CrewAssignmentCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutWorkflowsInput = {
@@ -163196,6 +167826,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
     accessLevels?: AccessLevelUncheckedCreateNestedManyWithoutCompanyInput
     departments?: DepartmentUncheckedCreateNestedManyWithoutCompanyInput
+    seafarers?: SeafarerUncheckedCreateNestedManyWithoutCompanyInput
+    crewAssignments?: CrewAssignmentUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutWorkflowsInput = {
@@ -163344,6 +167976,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
     accessLevels?: AccessLevelUpdateManyWithoutCompanyNestedInput
     departments?: DepartmentUpdateManyWithoutCompanyNestedInput
+    seafarers?: SeafarerUpdateManyWithoutCompanyNestedInput
+    crewAssignments?: CrewAssignmentUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutWorkflowsInput = {
@@ -163408,6 +168042,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
     accessLevels?: AccessLevelUncheckedUpdateManyWithoutCompanyNestedInput
     departments?: DepartmentUncheckedUpdateManyWithoutCompanyNestedInput
+    seafarers?: SeafarerUncheckedUpdateManyWithoutCompanyNestedInput
+    crewAssignments?: CrewAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type WorkflowStepUpsertWithWhereUniqueWithoutDefinitionInput = {
@@ -163904,6 +168540,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
     accessLevels?: AccessLevelCreateNestedManyWithoutCompanyInput
     departments?: DepartmentCreateNestedManyWithoutCompanyInput
+    seafarers?: SeafarerCreateNestedManyWithoutCompanyInput
+    crewAssignments?: CrewAssignmentCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutSmsDocumentsInput = {
@@ -163968,6 +168606,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
     accessLevels?: AccessLevelUncheckedCreateNestedManyWithoutCompanyInput
     departments?: DepartmentUncheckedCreateNestedManyWithoutCompanyInput
+    seafarers?: SeafarerUncheckedCreateNestedManyWithoutCompanyInput
+    crewAssignments?: CrewAssignmentUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutSmsDocumentsInput = {
@@ -164123,6 +168763,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventCreateNestedManyWithoutVesselInput
     inventoryUpdateDrafts?: InventoryUpdateDraftCreateNestedManyWithoutVesselInput
     requisitions?: RequisitionCreateNestedManyWithoutVesselInput
+    crewAssignments?: CrewAssignmentCreateNestedManyWithoutVesselInput
   }
 
   export type VesselUncheckedCreateWithoutSmsDocumentsInput = {
@@ -164210,6 +168851,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventUncheckedCreateNestedManyWithoutVesselInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUncheckedCreateNestedManyWithoutVesselInput
     requisitions?: RequisitionUncheckedCreateNestedManyWithoutVesselInput
+    crewAssignments?: CrewAssignmentUncheckedCreateNestedManyWithoutVesselInput
   }
 
   export type VesselCreateOrConnectWithoutSmsDocumentsInput = {
@@ -164369,6 +169011,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
     accessLevels?: AccessLevelUpdateManyWithoutCompanyNestedInput
     departments?: DepartmentUpdateManyWithoutCompanyNestedInput
+    seafarers?: SeafarerUpdateManyWithoutCompanyNestedInput
+    crewAssignments?: CrewAssignmentUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutSmsDocumentsInput = {
@@ -164433,6 +169077,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
     accessLevels?: AccessLevelUncheckedUpdateManyWithoutCompanyNestedInput
     departments?: DepartmentUncheckedUpdateManyWithoutCompanyNestedInput
+    seafarers?: SeafarerUncheckedUpdateManyWithoutCompanyNestedInput
+    crewAssignments?: CrewAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type UserUpsertWithoutOwnedDocsInput = {
@@ -164600,6 +169246,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventUpdateManyWithoutVesselNestedInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUpdateManyWithoutVesselNestedInput
     requisitions?: RequisitionUpdateManyWithoutVesselNestedInput
+    crewAssignments?: CrewAssignmentUpdateManyWithoutVesselNestedInput
   }
 
   export type VesselUncheckedUpdateWithoutSmsDocumentsInput = {
@@ -164687,6 +169334,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventUncheckedUpdateManyWithoutVesselNestedInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUncheckedUpdateManyWithoutVesselNestedInput
     requisitions?: RequisitionUncheckedUpdateManyWithoutVesselNestedInput
+    crewAssignments?: CrewAssignmentUncheckedUpdateManyWithoutVesselNestedInput
   }
 
   export type SmsRevisionUpsertWithoutCurrentOfInput = {
@@ -165021,6 +169669,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
     accessLevels?: AccessLevelCreateNestedManyWithoutCompanyInput
     departments?: DepartmentCreateNestedManyWithoutCompanyInput
+    seafarers?: SeafarerCreateNestedManyWithoutCompanyInput
+    crewAssignments?: CrewAssignmentCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutIncidentsInput = {
@@ -165085,6 +169735,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
     accessLevels?: AccessLevelUncheckedCreateNestedManyWithoutCompanyInput
     departments?: DepartmentUncheckedCreateNestedManyWithoutCompanyInput
+    seafarers?: SeafarerUncheckedCreateNestedManyWithoutCompanyInput
+    crewAssignments?: CrewAssignmentUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutIncidentsInput = {
@@ -165177,6 +169829,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventCreateNestedManyWithoutVesselInput
     inventoryUpdateDrafts?: InventoryUpdateDraftCreateNestedManyWithoutVesselInput
     requisitions?: RequisitionCreateNestedManyWithoutVesselInput
+    crewAssignments?: CrewAssignmentCreateNestedManyWithoutVesselInput
   }
 
   export type VesselUncheckedCreateWithoutIncidentsInput = {
@@ -165264,6 +169917,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventUncheckedCreateNestedManyWithoutVesselInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUncheckedCreateNestedManyWithoutVesselInput
     requisitions?: RequisitionUncheckedCreateNestedManyWithoutVesselInput
+    crewAssignments?: CrewAssignmentUncheckedCreateNestedManyWithoutVesselInput
   }
 
   export type VesselCreateOrConnectWithoutIncidentsInput = {
@@ -165459,6 +170113,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
     accessLevels?: AccessLevelUpdateManyWithoutCompanyNestedInput
     departments?: DepartmentUpdateManyWithoutCompanyNestedInput
+    seafarers?: SeafarerUpdateManyWithoutCompanyNestedInput
+    crewAssignments?: CrewAssignmentUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutIncidentsInput = {
@@ -165523,6 +170179,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
     accessLevels?: AccessLevelUncheckedUpdateManyWithoutCompanyNestedInput
     departments?: DepartmentUncheckedUpdateManyWithoutCompanyNestedInput
+    seafarers?: SeafarerUncheckedUpdateManyWithoutCompanyNestedInput
+    crewAssignments?: CrewAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type VesselUpsertWithoutIncidentsInput = {
@@ -165621,6 +170279,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventUpdateManyWithoutVesselNestedInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUpdateManyWithoutVesselNestedInput
     requisitions?: RequisitionUpdateManyWithoutVesselNestedInput
+    crewAssignments?: CrewAssignmentUpdateManyWithoutVesselNestedInput
   }
 
   export type VesselUncheckedUpdateWithoutIncidentsInput = {
@@ -165708,6 +170367,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventUncheckedUpdateManyWithoutVesselNestedInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUncheckedUpdateManyWithoutVesselNestedInput
     requisitions?: RequisitionUncheckedUpdateManyWithoutVesselNestedInput
+    crewAssignments?: CrewAssignmentUncheckedUpdateManyWithoutVesselNestedInput
   }
 
   export type IncidentTypeEntryUpsertWithWhereUniqueWithoutIncidentInput = {
@@ -166185,6 +170845,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
     accessLevels?: AccessLevelCreateNestedManyWithoutCompanyInput
     departments?: DepartmentCreateNestedManyWithoutCompanyInput
+    seafarers?: SeafarerCreateNestedManyWithoutCompanyInput
+    crewAssignments?: CrewAssignmentCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutNearMissesInput = {
@@ -166249,6 +170911,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
     accessLevels?: AccessLevelUncheckedCreateNestedManyWithoutCompanyInput
     departments?: DepartmentUncheckedCreateNestedManyWithoutCompanyInput
+    seafarers?: SeafarerUncheckedCreateNestedManyWithoutCompanyInput
+    crewAssignments?: CrewAssignmentUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutNearMissesInput = {
@@ -166341,6 +171005,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventCreateNestedManyWithoutVesselInput
     inventoryUpdateDrafts?: InventoryUpdateDraftCreateNestedManyWithoutVesselInput
     requisitions?: RequisitionCreateNestedManyWithoutVesselInput
+    crewAssignments?: CrewAssignmentCreateNestedManyWithoutVesselInput
   }
 
   export type VesselUncheckedCreateWithoutNearMissesInput = {
@@ -166428,6 +171093,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventUncheckedCreateNestedManyWithoutVesselInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUncheckedCreateNestedManyWithoutVesselInput
     requisitions?: RequisitionUncheckedCreateNestedManyWithoutVesselInput
+    crewAssignments?: CrewAssignmentUncheckedCreateNestedManyWithoutVesselInput
   }
 
   export type VesselCreateOrConnectWithoutNearMissesInput = {
@@ -166571,6 +171237,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
     accessLevels?: AccessLevelUpdateManyWithoutCompanyNestedInput
     departments?: DepartmentUpdateManyWithoutCompanyNestedInput
+    seafarers?: SeafarerUpdateManyWithoutCompanyNestedInput
+    crewAssignments?: CrewAssignmentUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutNearMissesInput = {
@@ -166635,6 +171303,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
     accessLevels?: AccessLevelUncheckedUpdateManyWithoutCompanyNestedInput
     departments?: DepartmentUncheckedUpdateManyWithoutCompanyNestedInput
+    seafarers?: SeafarerUncheckedUpdateManyWithoutCompanyNestedInput
+    crewAssignments?: CrewAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type VesselUpsertWithoutNearMissesInput = {
@@ -166733,6 +171403,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventUpdateManyWithoutVesselNestedInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUpdateManyWithoutVesselNestedInput
     requisitions?: RequisitionUpdateManyWithoutVesselNestedInput
+    crewAssignments?: CrewAssignmentUpdateManyWithoutVesselNestedInput
   }
 
   export type VesselUncheckedUpdateWithoutNearMissesInput = {
@@ -166820,6 +171491,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventUncheckedUpdateManyWithoutVesselNestedInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUncheckedUpdateManyWithoutVesselNestedInput
     requisitions?: RequisitionUncheckedUpdateManyWithoutVesselNestedInput
+    crewAssignments?: CrewAssignmentUncheckedUpdateManyWithoutVesselNestedInput
   }
 
   export type UserUpsertWithoutReportedNearMissesInput = {
@@ -166953,6 +171625,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
     accessLevels?: AccessLevelCreateNestedManyWithoutCompanyInput
     departments?: DepartmentCreateNestedManyWithoutCompanyInput
+    seafarers?: SeafarerCreateNestedManyWithoutCompanyInput
+    crewAssignments?: CrewAssignmentCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutNonConformitiesInput = {
@@ -167017,6 +171691,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
     accessLevels?: AccessLevelUncheckedCreateNestedManyWithoutCompanyInput
     departments?: DepartmentUncheckedCreateNestedManyWithoutCompanyInput
+    seafarers?: SeafarerUncheckedCreateNestedManyWithoutCompanyInput
+    crewAssignments?: CrewAssignmentUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutNonConformitiesInput = {
@@ -167109,6 +171785,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventCreateNestedManyWithoutVesselInput
     inventoryUpdateDrafts?: InventoryUpdateDraftCreateNestedManyWithoutVesselInput
     requisitions?: RequisitionCreateNestedManyWithoutVesselInput
+    crewAssignments?: CrewAssignmentCreateNestedManyWithoutVesselInput
   }
 
   export type VesselUncheckedCreateWithoutNonConformitiesInput = {
@@ -167196,6 +171873,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventUncheckedCreateNestedManyWithoutVesselInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUncheckedCreateNestedManyWithoutVesselInput
     requisitions?: RequisitionUncheckedCreateNestedManyWithoutVesselInput
+    crewAssignments?: CrewAssignmentUncheckedCreateNestedManyWithoutVesselInput
   }
 
   export type VesselCreateOrConnectWithoutNonConformitiesInput = {
@@ -167339,6 +172017,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
     accessLevels?: AccessLevelUpdateManyWithoutCompanyNestedInput
     departments?: DepartmentUpdateManyWithoutCompanyNestedInput
+    seafarers?: SeafarerUpdateManyWithoutCompanyNestedInput
+    crewAssignments?: CrewAssignmentUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutNonConformitiesInput = {
@@ -167403,6 +172083,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
     accessLevels?: AccessLevelUncheckedUpdateManyWithoutCompanyNestedInput
     departments?: DepartmentUncheckedUpdateManyWithoutCompanyNestedInput
+    seafarers?: SeafarerUncheckedUpdateManyWithoutCompanyNestedInput
+    crewAssignments?: CrewAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type VesselUpsertWithoutNonConformitiesInput = {
@@ -167501,6 +172183,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventUpdateManyWithoutVesselNestedInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUpdateManyWithoutVesselNestedInput
     requisitions?: RequisitionUpdateManyWithoutVesselNestedInput
+    crewAssignments?: CrewAssignmentUpdateManyWithoutVesselNestedInput
   }
 
   export type VesselUncheckedUpdateWithoutNonConformitiesInput = {
@@ -167588,6 +172271,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventUncheckedUpdateManyWithoutVesselNestedInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUncheckedUpdateManyWithoutVesselNestedInput
     requisitions?: RequisitionUncheckedUpdateManyWithoutVesselNestedInput
+    crewAssignments?: CrewAssignmentUncheckedUpdateManyWithoutVesselNestedInput
   }
 
   export type UserUpsertWithoutRaisedNcrsInput = {
@@ -167721,6 +172405,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
     accessLevels?: AccessLevelCreateNestedManyWithoutCompanyInput
     departments?: DepartmentCreateNestedManyWithoutCompanyInput
+    seafarers?: SeafarerCreateNestedManyWithoutCompanyInput
+    crewAssignments?: CrewAssignmentCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutSireInspectionsInput = {
@@ -167785,6 +172471,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
     accessLevels?: AccessLevelUncheckedCreateNestedManyWithoutCompanyInput
     departments?: DepartmentUncheckedCreateNestedManyWithoutCompanyInput
+    seafarers?: SeafarerUncheckedCreateNestedManyWithoutCompanyInput
+    crewAssignments?: CrewAssignmentUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutSireInspectionsInput = {
@@ -167877,6 +172565,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventCreateNestedManyWithoutVesselInput
     inventoryUpdateDrafts?: InventoryUpdateDraftCreateNestedManyWithoutVesselInput
     requisitions?: RequisitionCreateNestedManyWithoutVesselInput
+    crewAssignments?: CrewAssignmentCreateNestedManyWithoutVesselInput
   }
 
   export type VesselUncheckedCreateWithoutSireInspectionsInput = {
@@ -167964,6 +172653,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventUncheckedCreateNestedManyWithoutVesselInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUncheckedCreateNestedManyWithoutVesselInput
     requisitions?: RequisitionUncheckedCreateNestedManyWithoutVesselInput
+    crewAssignments?: CrewAssignmentUncheckedCreateNestedManyWithoutVesselInput
   }
 
   export type VesselCreateOrConnectWithoutSireInspectionsInput = {
@@ -168106,6 +172796,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
     accessLevels?: AccessLevelUpdateManyWithoutCompanyNestedInput
     departments?: DepartmentUpdateManyWithoutCompanyNestedInput
+    seafarers?: SeafarerUpdateManyWithoutCompanyNestedInput
+    crewAssignments?: CrewAssignmentUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutSireInspectionsInput = {
@@ -168170,6 +172862,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
     accessLevels?: AccessLevelUncheckedUpdateManyWithoutCompanyNestedInput
     departments?: DepartmentUncheckedUpdateManyWithoutCompanyNestedInput
+    seafarers?: SeafarerUncheckedUpdateManyWithoutCompanyNestedInput
+    crewAssignments?: CrewAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type VesselUpsertWithoutSireInspectionsInput = {
@@ -168268,6 +172962,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventUpdateManyWithoutVesselNestedInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUpdateManyWithoutVesselNestedInput
     requisitions?: RequisitionUpdateManyWithoutVesselNestedInput
+    crewAssignments?: CrewAssignmentUpdateManyWithoutVesselNestedInput
   }
 
   export type VesselUncheckedUpdateWithoutSireInspectionsInput = {
@@ -168355,6 +173050,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventUncheckedUpdateManyWithoutVesselNestedInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUncheckedUpdateManyWithoutVesselNestedInput
     requisitions?: RequisitionUncheckedUpdateManyWithoutVesselNestedInput
+    crewAssignments?: CrewAssignmentUncheckedUpdateManyWithoutVesselNestedInput
   }
 
   export type SireObservationUpsertWithWhereUniqueWithoutInspectionInput = {
@@ -169101,6 +173797,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
     accessLevels?: AccessLevelCreateNestedManyWithoutCompanyInput
     departments?: DepartmentCreateNestedManyWithoutCompanyInput
+    seafarers?: SeafarerCreateNestedManyWithoutCompanyInput
+    crewAssignments?: CrewAssignmentCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutSireQuestionnaireVersionsInput = {
@@ -169165,6 +173863,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
     accessLevels?: AccessLevelUncheckedCreateNestedManyWithoutCompanyInput
     departments?: DepartmentUncheckedCreateNestedManyWithoutCompanyInput
+    seafarers?: SeafarerUncheckedCreateNestedManyWithoutCompanyInput
+    crewAssignments?: CrewAssignmentUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutSireQuestionnaireVersionsInput = {
@@ -169279,6 +173979,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
     accessLevels?: AccessLevelUpdateManyWithoutCompanyNestedInput
     departments?: DepartmentUpdateManyWithoutCompanyNestedInput
+    seafarers?: SeafarerUpdateManyWithoutCompanyNestedInput
+    crewAssignments?: CrewAssignmentUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutSireQuestionnaireVersionsInput = {
@@ -169343,6 +174045,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
     accessLevels?: AccessLevelUncheckedUpdateManyWithoutCompanyNestedInput
     departments?: DepartmentUncheckedUpdateManyWithoutCompanyNestedInput
+    seafarers?: SeafarerUncheckedUpdateManyWithoutCompanyNestedInput
+    crewAssignments?: CrewAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type SireQuestionnaireItemUpsertWithWhereUniqueWithoutVersionInput = {
@@ -169503,6 +174207,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
     accessLevels?: AccessLevelCreateNestedManyWithoutCompanyInput
     departments?: DepartmentCreateNestedManyWithoutCompanyInput
+    seafarers?: SeafarerCreateNestedManyWithoutCompanyInput
+    crewAssignments?: CrewAssignmentCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutPscInspectionsInput = {
@@ -169567,6 +174273,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
     accessLevels?: AccessLevelUncheckedCreateNestedManyWithoutCompanyInput
     departments?: DepartmentUncheckedCreateNestedManyWithoutCompanyInput
+    seafarers?: SeafarerUncheckedCreateNestedManyWithoutCompanyInput
+    crewAssignments?: CrewAssignmentUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutPscInspectionsInput = {
@@ -169659,6 +174367,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventCreateNestedManyWithoutVesselInput
     inventoryUpdateDrafts?: InventoryUpdateDraftCreateNestedManyWithoutVesselInput
     requisitions?: RequisitionCreateNestedManyWithoutVesselInput
+    crewAssignments?: CrewAssignmentCreateNestedManyWithoutVesselInput
   }
 
   export type VesselUncheckedCreateWithoutPscInspectionsInput = {
@@ -169746,6 +174455,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventUncheckedCreateNestedManyWithoutVesselInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUncheckedCreateNestedManyWithoutVesselInput
     requisitions?: RequisitionUncheckedCreateNestedManyWithoutVesselInput
+    crewAssignments?: CrewAssignmentUncheckedCreateNestedManyWithoutVesselInput
   }
 
   export type VesselCreateOrConnectWithoutPscInspectionsInput = {
@@ -169866,6 +174576,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
     accessLevels?: AccessLevelUpdateManyWithoutCompanyNestedInput
     departments?: DepartmentUpdateManyWithoutCompanyNestedInput
+    seafarers?: SeafarerUpdateManyWithoutCompanyNestedInput
+    crewAssignments?: CrewAssignmentUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutPscInspectionsInput = {
@@ -169930,6 +174642,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
     accessLevels?: AccessLevelUncheckedUpdateManyWithoutCompanyNestedInput
     departments?: DepartmentUncheckedUpdateManyWithoutCompanyNestedInput
+    seafarers?: SeafarerUncheckedUpdateManyWithoutCompanyNestedInput
+    crewAssignments?: CrewAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type VesselUpsertWithoutPscInspectionsInput = {
@@ -170028,6 +174742,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventUpdateManyWithoutVesselNestedInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUpdateManyWithoutVesselNestedInput
     requisitions?: RequisitionUpdateManyWithoutVesselNestedInput
+    crewAssignments?: CrewAssignmentUpdateManyWithoutVesselNestedInput
   }
 
   export type VesselUncheckedUpdateWithoutPscInspectionsInput = {
@@ -170115,6 +174830,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventUncheckedUpdateManyWithoutVesselNestedInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUncheckedUpdateManyWithoutVesselNestedInput
     requisitions?: RequisitionUncheckedUpdateManyWithoutVesselNestedInput
+    crewAssignments?: CrewAssignmentUncheckedUpdateManyWithoutVesselNestedInput
   }
 
   export type PscDeficiencyUpsertWithWhereUniqueWithoutInspectionInput = {
@@ -170314,6 +175030,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
     accessLevels?: AccessLevelCreateNestedManyWithoutCompanyInput
     departments?: DepartmentCreateNestedManyWithoutCompanyInput
+    seafarers?: SeafarerCreateNestedManyWithoutCompanyInput
+    crewAssignments?: CrewAssignmentCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutCdiInspectionsInput = {
@@ -170378,6 +175096,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
     accessLevels?: AccessLevelUncheckedCreateNestedManyWithoutCompanyInput
     departments?: DepartmentUncheckedCreateNestedManyWithoutCompanyInput
+    seafarers?: SeafarerUncheckedCreateNestedManyWithoutCompanyInput
+    crewAssignments?: CrewAssignmentUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutCdiInspectionsInput = {
@@ -170470,6 +175190,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventCreateNestedManyWithoutVesselInput
     inventoryUpdateDrafts?: InventoryUpdateDraftCreateNestedManyWithoutVesselInput
     requisitions?: RequisitionCreateNestedManyWithoutVesselInput
+    crewAssignments?: CrewAssignmentCreateNestedManyWithoutVesselInput
   }
 
   export type VesselUncheckedCreateWithoutCdiInspectionsInput = {
@@ -170557,6 +175278,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventUncheckedCreateNestedManyWithoutVesselInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUncheckedCreateNestedManyWithoutVesselInput
     requisitions?: RequisitionUncheckedCreateNestedManyWithoutVesselInput
+    crewAssignments?: CrewAssignmentUncheckedCreateNestedManyWithoutVesselInput
   }
 
   export type VesselCreateOrConnectWithoutCdiInspectionsInput = {
@@ -170679,6 +175401,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
     accessLevels?: AccessLevelUpdateManyWithoutCompanyNestedInput
     departments?: DepartmentUpdateManyWithoutCompanyNestedInput
+    seafarers?: SeafarerUpdateManyWithoutCompanyNestedInput
+    crewAssignments?: CrewAssignmentUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutCdiInspectionsInput = {
@@ -170743,6 +175467,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
     accessLevels?: AccessLevelUncheckedUpdateManyWithoutCompanyNestedInput
     departments?: DepartmentUncheckedUpdateManyWithoutCompanyNestedInput
+    seafarers?: SeafarerUncheckedUpdateManyWithoutCompanyNestedInput
+    crewAssignments?: CrewAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type VesselUpsertWithoutCdiInspectionsInput = {
@@ -170841,6 +175567,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventUpdateManyWithoutVesselNestedInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUpdateManyWithoutVesselNestedInput
     requisitions?: RequisitionUpdateManyWithoutVesselNestedInput
+    crewAssignments?: CrewAssignmentUpdateManyWithoutVesselNestedInput
   }
 
   export type VesselUncheckedUpdateWithoutCdiInspectionsInput = {
@@ -170928,6 +175655,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventUncheckedUpdateManyWithoutVesselNestedInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUncheckedUpdateManyWithoutVesselNestedInput
     requisitions?: RequisitionUncheckedUpdateManyWithoutVesselNestedInput
+    crewAssignments?: CrewAssignmentUncheckedUpdateManyWithoutVesselNestedInput
   }
 
   export type CdiObservationUpsertWithWhereUniqueWithoutInspectionInput = {
@@ -171124,6 +175852,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
     accessLevels?: AccessLevelCreateNestedManyWithoutCompanyInput
     departments?: DepartmentCreateNestedManyWithoutCompanyInput
+    seafarers?: SeafarerCreateNestedManyWithoutCompanyInput
+    crewAssignments?: CrewAssignmentCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutInternalAuditsInput = {
@@ -171188,6 +175918,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
     accessLevels?: AccessLevelUncheckedCreateNestedManyWithoutCompanyInput
     departments?: DepartmentUncheckedCreateNestedManyWithoutCompanyInput
+    seafarers?: SeafarerUncheckedCreateNestedManyWithoutCompanyInput
+    crewAssignments?: CrewAssignmentUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutInternalAuditsInput = {
@@ -171280,6 +176012,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventCreateNestedManyWithoutVesselInput
     inventoryUpdateDrafts?: InventoryUpdateDraftCreateNestedManyWithoutVesselInput
     requisitions?: RequisitionCreateNestedManyWithoutVesselInput
+    crewAssignments?: CrewAssignmentCreateNestedManyWithoutVesselInput
   }
 
   export type VesselUncheckedCreateWithoutInternalAuditsInput = {
@@ -171367,6 +176100,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventUncheckedCreateNestedManyWithoutVesselInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUncheckedCreateNestedManyWithoutVesselInput
     requisitions?: RequisitionUncheckedCreateNestedManyWithoutVesselInput
+    crewAssignments?: CrewAssignmentUncheckedCreateNestedManyWithoutVesselInput
   }
 
   export type VesselCreateOrConnectWithoutInternalAuditsInput = {
@@ -171485,6 +176219,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
     accessLevels?: AccessLevelUpdateManyWithoutCompanyNestedInput
     departments?: DepartmentUpdateManyWithoutCompanyNestedInput
+    seafarers?: SeafarerUpdateManyWithoutCompanyNestedInput
+    crewAssignments?: CrewAssignmentUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutInternalAuditsInput = {
@@ -171549,6 +176285,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
     accessLevels?: AccessLevelUncheckedUpdateManyWithoutCompanyNestedInput
     departments?: DepartmentUncheckedUpdateManyWithoutCompanyNestedInput
+    seafarers?: SeafarerUncheckedUpdateManyWithoutCompanyNestedInput
+    crewAssignments?: CrewAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type VesselUpsertWithoutInternalAuditsInput = {
@@ -171647,6 +176385,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventUpdateManyWithoutVesselNestedInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUpdateManyWithoutVesselNestedInput
     requisitions?: RequisitionUpdateManyWithoutVesselNestedInput
+    crewAssignments?: CrewAssignmentUpdateManyWithoutVesselNestedInput
   }
 
   export type VesselUncheckedUpdateWithoutInternalAuditsInput = {
@@ -171734,6 +176473,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventUncheckedUpdateManyWithoutVesselNestedInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUncheckedUpdateManyWithoutVesselNestedInput
     requisitions?: RequisitionUncheckedUpdateManyWithoutVesselNestedInput
+    crewAssignments?: CrewAssignmentUncheckedUpdateManyWithoutVesselNestedInput
   }
 
   export type InternalAuditFindingUpsertWithWhereUniqueWithoutAuditInput = {
@@ -171932,6 +176672,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
     accessLevels?: AccessLevelCreateNestedManyWithoutCompanyInput
     departments?: DepartmentCreateNestedManyWithoutCompanyInput
+    seafarers?: SeafarerCreateNestedManyWithoutCompanyInput
+    crewAssignments?: CrewAssignmentCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutExternalAuditsInput = {
@@ -171996,6 +176738,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
     accessLevels?: AccessLevelUncheckedCreateNestedManyWithoutCompanyInput
     departments?: DepartmentUncheckedCreateNestedManyWithoutCompanyInput
+    seafarers?: SeafarerUncheckedCreateNestedManyWithoutCompanyInput
+    crewAssignments?: CrewAssignmentUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutExternalAuditsInput = {
@@ -172088,6 +176832,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventCreateNestedManyWithoutVesselInput
     inventoryUpdateDrafts?: InventoryUpdateDraftCreateNestedManyWithoutVesselInput
     requisitions?: RequisitionCreateNestedManyWithoutVesselInput
+    crewAssignments?: CrewAssignmentCreateNestedManyWithoutVesselInput
   }
 
   export type VesselUncheckedCreateWithoutExternalAuditsInput = {
@@ -172175,6 +176920,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventUncheckedCreateNestedManyWithoutVesselInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUncheckedCreateNestedManyWithoutVesselInput
     requisitions?: RequisitionUncheckedCreateNestedManyWithoutVesselInput
+    crewAssignments?: CrewAssignmentUncheckedCreateNestedManyWithoutVesselInput
   }
 
   export type VesselCreateOrConnectWithoutExternalAuditsInput = {
@@ -172293,6 +177039,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
     accessLevels?: AccessLevelUpdateManyWithoutCompanyNestedInput
     departments?: DepartmentUpdateManyWithoutCompanyNestedInput
+    seafarers?: SeafarerUpdateManyWithoutCompanyNestedInput
+    crewAssignments?: CrewAssignmentUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutExternalAuditsInput = {
@@ -172357,6 +177105,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
     accessLevels?: AccessLevelUncheckedUpdateManyWithoutCompanyNestedInput
     departments?: DepartmentUncheckedUpdateManyWithoutCompanyNestedInput
+    seafarers?: SeafarerUncheckedUpdateManyWithoutCompanyNestedInput
+    crewAssignments?: CrewAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type VesselUpsertWithoutExternalAuditsInput = {
@@ -172455,6 +177205,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventUpdateManyWithoutVesselNestedInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUpdateManyWithoutVesselNestedInput
     requisitions?: RequisitionUpdateManyWithoutVesselNestedInput
+    crewAssignments?: CrewAssignmentUpdateManyWithoutVesselNestedInput
   }
 
   export type VesselUncheckedUpdateWithoutExternalAuditsInput = {
@@ -172542,6 +177293,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventUncheckedUpdateManyWithoutVesselNestedInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUncheckedUpdateManyWithoutVesselNestedInput
     requisitions?: RequisitionUncheckedUpdateManyWithoutVesselNestedInput
+    crewAssignments?: CrewAssignmentUncheckedUpdateManyWithoutVesselNestedInput
   }
 
   export type ExternalAuditFindingUpsertWithWhereUniqueWithoutAuditInput = {
@@ -172740,6 +177492,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
     accessLevels?: AccessLevelCreateNestedManyWithoutCompanyInput
     departments?: DepartmentCreateNestedManyWithoutCompanyInput
+    seafarers?: SeafarerCreateNestedManyWithoutCompanyInput
+    crewAssignments?: CrewAssignmentCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutCompanyInspectionsInput = {
@@ -172804,6 +177558,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
     accessLevels?: AccessLevelUncheckedCreateNestedManyWithoutCompanyInput
     departments?: DepartmentUncheckedCreateNestedManyWithoutCompanyInput
+    seafarers?: SeafarerUncheckedCreateNestedManyWithoutCompanyInput
+    crewAssignments?: CrewAssignmentUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutCompanyInspectionsInput = {
@@ -172896,6 +177652,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventCreateNestedManyWithoutVesselInput
     inventoryUpdateDrafts?: InventoryUpdateDraftCreateNestedManyWithoutVesselInput
     requisitions?: RequisitionCreateNestedManyWithoutVesselInput
+    crewAssignments?: CrewAssignmentCreateNestedManyWithoutVesselInput
   }
 
   export type VesselUncheckedCreateWithoutCompanyInspectionsInput = {
@@ -172983,6 +177740,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventUncheckedCreateNestedManyWithoutVesselInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUncheckedCreateNestedManyWithoutVesselInput
     requisitions?: RequisitionUncheckedCreateNestedManyWithoutVesselInput
+    crewAssignments?: CrewAssignmentUncheckedCreateNestedManyWithoutVesselInput
   }
 
   export type VesselCreateOrConnectWithoutCompanyInspectionsInput = {
@@ -173109,6 +177867,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
     accessLevels?: AccessLevelUpdateManyWithoutCompanyNestedInput
     departments?: DepartmentUpdateManyWithoutCompanyNestedInput
+    seafarers?: SeafarerUpdateManyWithoutCompanyNestedInput
+    crewAssignments?: CrewAssignmentUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutCompanyInspectionsInput = {
@@ -173173,6 +177933,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
     accessLevels?: AccessLevelUncheckedUpdateManyWithoutCompanyNestedInput
     departments?: DepartmentUncheckedUpdateManyWithoutCompanyNestedInput
+    seafarers?: SeafarerUncheckedUpdateManyWithoutCompanyNestedInput
+    crewAssignments?: CrewAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type VesselUpsertWithoutCompanyInspectionsInput = {
@@ -173271,6 +178033,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventUpdateManyWithoutVesselNestedInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUpdateManyWithoutVesselNestedInput
     requisitions?: RequisitionUpdateManyWithoutVesselNestedInput
+    crewAssignments?: CrewAssignmentUpdateManyWithoutVesselNestedInput
   }
 
   export type VesselUncheckedUpdateWithoutCompanyInspectionsInput = {
@@ -173358,6 +178121,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventUncheckedUpdateManyWithoutVesselNestedInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUncheckedUpdateManyWithoutVesselNestedInput
     requisitions?: RequisitionUncheckedUpdateManyWithoutVesselNestedInput
+    crewAssignments?: CrewAssignmentUncheckedUpdateManyWithoutVesselNestedInput
   }
 
   export type CompanyInspectionObservationUpsertWithWhereUniqueWithoutInspectionInput = {
@@ -173560,6 +178324,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
     accessLevels?: AccessLevelCreateNestedManyWithoutCompanyInput
     departments?: DepartmentCreateNestedManyWithoutCompanyInput
+    seafarers?: SeafarerCreateNestedManyWithoutCompanyInput
+    crewAssignments?: CrewAssignmentCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutCommitteeMeetingsInput = {
@@ -173624,6 +178390,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
     accessLevels?: AccessLevelUncheckedCreateNestedManyWithoutCompanyInput
     departments?: DepartmentUncheckedCreateNestedManyWithoutCompanyInput
+    seafarers?: SeafarerUncheckedCreateNestedManyWithoutCompanyInput
+    crewAssignments?: CrewAssignmentUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutCommitteeMeetingsInput = {
@@ -173716,6 +178484,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventCreateNestedManyWithoutVesselInput
     inventoryUpdateDrafts?: InventoryUpdateDraftCreateNestedManyWithoutVesselInput
     requisitions?: RequisitionCreateNestedManyWithoutVesselInput
+    crewAssignments?: CrewAssignmentCreateNestedManyWithoutVesselInput
   }
 
   export type VesselUncheckedCreateWithoutCommitteeMeetingsInput = {
@@ -173803,6 +178572,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventUncheckedCreateNestedManyWithoutVesselInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUncheckedCreateNestedManyWithoutVesselInput
     requisitions?: RequisitionUncheckedCreateNestedManyWithoutVesselInput
+    crewAssignments?: CrewAssignmentUncheckedCreateNestedManyWithoutVesselInput
   }
 
   export type VesselCreateOrConnectWithoutCommitteeMeetingsInput = {
@@ -173917,6 +178687,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
     accessLevels?: AccessLevelUpdateManyWithoutCompanyNestedInput
     departments?: DepartmentUpdateManyWithoutCompanyNestedInput
+    seafarers?: SeafarerUpdateManyWithoutCompanyNestedInput
+    crewAssignments?: CrewAssignmentUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutCommitteeMeetingsInput = {
@@ -173981,6 +178753,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
     accessLevels?: AccessLevelUncheckedUpdateManyWithoutCompanyNestedInput
     departments?: DepartmentUncheckedUpdateManyWithoutCompanyNestedInput
+    seafarers?: SeafarerUncheckedUpdateManyWithoutCompanyNestedInput
+    crewAssignments?: CrewAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type VesselUpsertWithoutCommitteeMeetingsInput = {
@@ -174079,6 +178853,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventUpdateManyWithoutVesselNestedInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUpdateManyWithoutVesselNestedInput
     requisitions?: RequisitionUpdateManyWithoutVesselNestedInput
+    crewAssignments?: CrewAssignmentUpdateManyWithoutVesselNestedInput
   }
 
   export type VesselUncheckedUpdateWithoutCommitteeMeetingsInput = {
@@ -174166,6 +178941,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventUncheckedUpdateManyWithoutVesselNestedInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUncheckedUpdateManyWithoutVesselNestedInput
     requisitions?: RequisitionUncheckedUpdateManyWithoutVesselNestedInput
+    crewAssignments?: CrewAssignmentUncheckedUpdateManyWithoutVesselNestedInput
   }
 
   export type CommitteeMeetingAgendaUpsertWithWhereUniqueWithoutMeetingInput = {
@@ -174386,6 +179162,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
     accessLevels?: AccessLevelCreateNestedManyWithoutCompanyInput
     departments?: DepartmentCreateNestedManyWithoutCompanyInput
+    seafarers?: SeafarerCreateNestedManyWithoutCompanyInput
+    crewAssignments?: CrewAssignmentCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutScheduleItemsInput = {
@@ -174450,6 +179228,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
     accessLevels?: AccessLevelUncheckedCreateNestedManyWithoutCompanyInput
     departments?: DepartmentUncheckedCreateNestedManyWithoutCompanyInput
+    seafarers?: SeafarerUncheckedCreateNestedManyWithoutCompanyInput
+    crewAssignments?: CrewAssignmentUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutScheduleItemsInput = {
@@ -174664,6 +179444,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
     accessLevels?: AccessLevelUpdateManyWithoutCompanyNestedInput
     departments?: DepartmentUpdateManyWithoutCompanyNestedInput
+    seafarers?: SeafarerUpdateManyWithoutCompanyNestedInput
+    crewAssignments?: CrewAssignmentUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutScheduleItemsInput = {
@@ -174728,6 +179510,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
     accessLevels?: AccessLevelUncheckedUpdateManyWithoutCompanyNestedInput
     departments?: DepartmentUncheckedUpdateManyWithoutCompanyNestedInput
+    seafarers?: SeafarerUncheckedUpdateManyWithoutCompanyNestedInput
+    crewAssignments?: CrewAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type EmergencyDrillUpsertWithWhereUniqueWithoutScheduleItemInput = {
@@ -174840,6 +179624,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
     accessLevels?: AccessLevelCreateNestedManyWithoutCompanyInput
     departments?: DepartmentCreateNestedManyWithoutCompanyInput
+    seafarers?: SeafarerCreateNestedManyWithoutCompanyInput
+    crewAssignments?: CrewAssignmentCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutScheduleApplicabilityInput = {
@@ -174904,6 +179690,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
     accessLevels?: AccessLevelUncheckedCreateNestedManyWithoutCompanyInput
     departments?: DepartmentUncheckedCreateNestedManyWithoutCompanyInput
+    seafarers?: SeafarerUncheckedCreateNestedManyWithoutCompanyInput
+    crewAssignments?: CrewAssignmentUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutScheduleApplicabilityInput = {
@@ -174996,6 +179784,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventCreateNestedManyWithoutVesselInput
     inventoryUpdateDrafts?: InventoryUpdateDraftCreateNestedManyWithoutVesselInput
     requisitions?: RequisitionCreateNestedManyWithoutVesselInput
+    crewAssignments?: CrewAssignmentCreateNestedManyWithoutVesselInput
   }
 
   export type VesselUncheckedCreateWithoutScheduleApplicabilityInput = {
@@ -175083,6 +179872,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventUncheckedCreateNestedManyWithoutVesselInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUncheckedCreateNestedManyWithoutVesselInput
     requisitions?: RequisitionUncheckedCreateNestedManyWithoutVesselInput
+    crewAssignments?: CrewAssignmentUncheckedCreateNestedManyWithoutVesselInput
   }
 
   export type VesselCreateOrConnectWithoutScheduleApplicabilityInput = {
@@ -175206,6 +179996,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
     accessLevels?: AccessLevelUpdateManyWithoutCompanyNestedInput
     departments?: DepartmentUpdateManyWithoutCompanyNestedInput
+    seafarers?: SeafarerUpdateManyWithoutCompanyNestedInput
+    crewAssignments?: CrewAssignmentUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutScheduleApplicabilityInput = {
@@ -175270,6 +180062,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
     accessLevels?: AccessLevelUncheckedUpdateManyWithoutCompanyNestedInput
     departments?: DepartmentUncheckedUpdateManyWithoutCompanyNestedInput
+    seafarers?: SeafarerUncheckedUpdateManyWithoutCompanyNestedInput
+    crewAssignments?: CrewAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type VesselUpsertWithoutScheduleApplicabilityInput = {
@@ -175368,6 +180162,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventUpdateManyWithoutVesselNestedInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUpdateManyWithoutVesselNestedInput
     requisitions?: RequisitionUpdateManyWithoutVesselNestedInput
+    crewAssignments?: CrewAssignmentUpdateManyWithoutVesselNestedInput
   }
 
   export type VesselUncheckedUpdateWithoutScheduleApplicabilityInput = {
@@ -175455,6 +180250,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventUncheckedUpdateManyWithoutVesselNestedInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUncheckedUpdateManyWithoutVesselNestedInput
     requisitions?: RequisitionUncheckedUpdateManyWithoutVesselNestedInput
+    crewAssignments?: CrewAssignmentUncheckedUpdateManyWithoutVesselNestedInput
   }
 
   export type ScheduleItemUpsertWithoutExceptionsInput = {
@@ -175568,6 +180364,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
     accessLevels?: AccessLevelCreateNestedManyWithoutCompanyInput
     departments?: DepartmentCreateNestedManyWithoutCompanyInput
+    seafarers?: SeafarerCreateNestedManyWithoutCompanyInput
+    crewAssignments?: CrewAssignmentCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutEmergencyDrillsInput = {
@@ -175632,6 +180430,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
     accessLevels?: AccessLevelUncheckedCreateNestedManyWithoutCompanyInput
     departments?: DepartmentUncheckedCreateNestedManyWithoutCompanyInput
+    seafarers?: SeafarerUncheckedCreateNestedManyWithoutCompanyInput
+    crewAssignments?: CrewAssignmentUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutEmergencyDrillsInput = {
@@ -175724,6 +180524,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventCreateNestedManyWithoutVesselInput
     inventoryUpdateDrafts?: InventoryUpdateDraftCreateNestedManyWithoutVesselInput
     requisitions?: RequisitionCreateNestedManyWithoutVesselInput
+    crewAssignments?: CrewAssignmentCreateNestedManyWithoutVesselInput
   }
 
   export type VesselUncheckedCreateWithoutEmergencyDrillsInput = {
@@ -175811,6 +180612,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventUncheckedCreateNestedManyWithoutVesselInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUncheckedCreateNestedManyWithoutVesselInput
     requisitions?: RequisitionUncheckedCreateNestedManyWithoutVesselInput
+    crewAssignments?: CrewAssignmentUncheckedCreateNestedManyWithoutVesselInput
   }
 
   export type VesselCreateOrConnectWithoutEmergencyDrillsInput = {
@@ -175934,6 +180736,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
     accessLevels?: AccessLevelUpdateManyWithoutCompanyNestedInput
     departments?: DepartmentUpdateManyWithoutCompanyNestedInput
+    seafarers?: SeafarerUpdateManyWithoutCompanyNestedInput
+    crewAssignments?: CrewAssignmentUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutEmergencyDrillsInput = {
@@ -175998,6 +180802,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
     accessLevels?: AccessLevelUncheckedUpdateManyWithoutCompanyNestedInput
     departments?: DepartmentUncheckedUpdateManyWithoutCompanyNestedInput
+    seafarers?: SeafarerUncheckedUpdateManyWithoutCompanyNestedInput
+    crewAssignments?: CrewAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type VesselUpsertWithoutEmergencyDrillsInput = {
@@ -176096,6 +180902,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventUpdateManyWithoutVesselNestedInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUpdateManyWithoutVesselNestedInput
     requisitions?: RequisitionUpdateManyWithoutVesselNestedInput
+    crewAssignments?: CrewAssignmentUpdateManyWithoutVesselNestedInput
   }
 
   export type VesselUncheckedUpdateWithoutEmergencyDrillsInput = {
@@ -176183,6 +180990,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventUncheckedUpdateManyWithoutVesselNestedInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUncheckedUpdateManyWithoutVesselNestedInput
     requisitions?: RequisitionUncheckedUpdateManyWithoutVesselNestedInput
+    crewAssignments?: CrewAssignmentUncheckedUpdateManyWithoutVesselNestedInput
   }
 
   export type ScheduleItemUpsertWithoutDrillsInput = {
@@ -176296,6 +181104,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
     accessLevels?: AccessLevelCreateNestedManyWithoutCompanyInput
     departments?: DepartmentCreateNestedManyWithoutCompanyInput
+    seafarers?: SeafarerCreateNestedManyWithoutCompanyInput
+    crewAssignments?: CrewAssignmentCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutFamiliarizationRecordsInput = {
@@ -176360,6 +181170,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
     accessLevels?: AccessLevelUncheckedCreateNestedManyWithoutCompanyInput
     departments?: DepartmentUncheckedCreateNestedManyWithoutCompanyInput
+    seafarers?: SeafarerUncheckedCreateNestedManyWithoutCompanyInput
+    crewAssignments?: CrewAssignmentUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutFamiliarizationRecordsInput = {
@@ -176452,6 +181264,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventCreateNestedManyWithoutVesselInput
     inventoryUpdateDrafts?: InventoryUpdateDraftCreateNestedManyWithoutVesselInput
     requisitions?: RequisitionCreateNestedManyWithoutVesselInput
+    crewAssignments?: CrewAssignmentCreateNestedManyWithoutVesselInput
   }
 
   export type VesselUncheckedCreateWithoutFamiliarizationRecordsInput = {
@@ -176539,6 +181352,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventUncheckedCreateNestedManyWithoutVesselInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUncheckedCreateNestedManyWithoutVesselInput
     requisitions?: RequisitionUncheckedCreateNestedManyWithoutVesselInput
+    crewAssignments?: CrewAssignmentUncheckedCreateNestedManyWithoutVesselInput
   }
 
   export type VesselCreateOrConnectWithoutFamiliarizationRecordsInput = {
@@ -176699,6 +181513,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
     accessLevels?: AccessLevelUpdateManyWithoutCompanyNestedInput
     departments?: DepartmentUpdateManyWithoutCompanyNestedInput
+    seafarers?: SeafarerUpdateManyWithoutCompanyNestedInput
+    crewAssignments?: CrewAssignmentUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutFamiliarizationRecordsInput = {
@@ -176763,6 +181579,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
     accessLevels?: AccessLevelUncheckedUpdateManyWithoutCompanyNestedInput
     departments?: DepartmentUncheckedUpdateManyWithoutCompanyNestedInput
+    seafarers?: SeafarerUncheckedUpdateManyWithoutCompanyNestedInput
+    crewAssignments?: CrewAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type VesselUpsertWithoutFamiliarizationRecordsInput = {
@@ -176861,6 +181679,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventUpdateManyWithoutVesselNestedInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUpdateManyWithoutVesselNestedInput
     requisitions?: RequisitionUpdateManyWithoutVesselNestedInput
+    crewAssignments?: CrewAssignmentUpdateManyWithoutVesselNestedInput
   }
 
   export type VesselUncheckedUpdateWithoutFamiliarizationRecordsInput = {
@@ -176948,6 +181767,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventUncheckedUpdateManyWithoutVesselNestedInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUncheckedUpdateManyWithoutVesselNestedInput
     requisitions?: RequisitionUncheckedUpdateManyWithoutVesselNestedInput
+    crewAssignments?: CrewAssignmentUncheckedUpdateManyWithoutVesselNestedInput
   }
 
   export type ScheduleItemUpsertWithoutFamiliarizationsInput = {
@@ -177104,6 +181924,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
     accessLevels?: AccessLevelCreateNestedManyWithoutCompanyInput
     departments?: DepartmentCreateNestedManyWithoutCompanyInput
+    seafarers?: SeafarerCreateNestedManyWithoutCompanyInput
+    crewAssignments?: CrewAssignmentCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutFamiliarizationSessionsInput = {
@@ -177168,6 +181990,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
     accessLevels?: AccessLevelUncheckedCreateNestedManyWithoutCompanyInput
     departments?: DepartmentUncheckedCreateNestedManyWithoutCompanyInput
+    seafarers?: SeafarerUncheckedCreateNestedManyWithoutCompanyInput
+    crewAssignments?: CrewAssignmentUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutFamiliarizationSessionsInput = {
@@ -177260,6 +182084,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventCreateNestedManyWithoutVesselInput
     inventoryUpdateDrafts?: InventoryUpdateDraftCreateNestedManyWithoutVesselInput
     requisitions?: RequisitionCreateNestedManyWithoutVesselInput
+    crewAssignments?: CrewAssignmentCreateNestedManyWithoutVesselInput
   }
 
   export type VesselUncheckedCreateWithoutFamiliarizationSessionsInput = {
@@ -177347,6 +182172,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventUncheckedCreateNestedManyWithoutVesselInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUncheckedCreateNestedManyWithoutVesselInput
     requisitions?: RequisitionUncheckedCreateNestedManyWithoutVesselInput
+    crewAssignments?: CrewAssignmentUncheckedCreateNestedManyWithoutVesselInput
   }
 
   export type VesselCreateOrConnectWithoutFamiliarizationSessionsInput = {
@@ -177469,6 +182295,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
     accessLevels?: AccessLevelUpdateManyWithoutCompanyNestedInput
     departments?: DepartmentUpdateManyWithoutCompanyNestedInput
+    seafarers?: SeafarerUpdateManyWithoutCompanyNestedInput
+    crewAssignments?: CrewAssignmentUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutFamiliarizationSessionsInput = {
@@ -177533,6 +182361,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
     accessLevels?: AccessLevelUncheckedUpdateManyWithoutCompanyNestedInput
     departments?: DepartmentUncheckedUpdateManyWithoutCompanyNestedInput
+    seafarers?: SeafarerUncheckedUpdateManyWithoutCompanyNestedInput
+    crewAssignments?: CrewAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type VesselUpsertWithoutFamiliarizationSessionsInput = {
@@ -177631,6 +182461,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventUpdateManyWithoutVesselNestedInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUpdateManyWithoutVesselNestedInput
     requisitions?: RequisitionUpdateManyWithoutVesselNestedInput
+    crewAssignments?: CrewAssignmentUpdateManyWithoutVesselNestedInput
   }
 
   export type VesselUncheckedUpdateWithoutFamiliarizationSessionsInput = {
@@ -177718,6 +182549,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventUncheckedUpdateManyWithoutVesselNestedInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUncheckedUpdateManyWithoutVesselNestedInput
     requisitions?: RequisitionUncheckedUpdateManyWithoutVesselNestedInput
+    crewAssignments?: CrewAssignmentUncheckedUpdateManyWithoutVesselNestedInput
   }
 
   export type FamiliarizationRecordUpsertWithWhereUniqueWithoutFamiliarizationSessionInput = {
@@ -177798,6 +182630,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
     accessLevels?: AccessLevelCreateNestedManyWithoutCompanyInput
     departments?: DepartmentCreateNestedManyWithoutCompanyInput
+    seafarers?: SeafarerCreateNestedManyWithoutCompanyInput
+    crewAssignments?: CrewAssignmentCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutLsaFfeItemsInput = {
@@ -177862,6 +182696,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
     accessLevels?: AccessLevelUncheckedCreateNestedManyWithoutCompanyInput
     departments?: DepartmentUncheckedCreateNestedManyWithoutCompanyInput
+    seafarers?: SeafarerUncheckedCreateNestedManyWithoutCompanyInput
+    crewAssignments?: CrewAssignmentUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutLsaFfeItemsInput = {
@@ -177974,6 +182810,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
     accessLevels?: AccessLevelUpdateManyWithoutCompanyNestedInput
     departments?: DepartmentUpdateManyWithoutCompanyNestedInput
+    seafarers?: SeafarerUpdateManyWithoutCompanyNestedInput
+    crewAssignments?: CrewAssignmentUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutLsaFfeItemsInput = {
@@ -178038,6 +182876,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
     accessLevels?: AccessLevelUncheckedUpdateManyWithoutCompanyNestedInput
     departments?: DepartmentUncheckedUpdateManyWithoutCompanyNestedInput
+    seafarers?: SeafarerUncheckedUpdateManyWithoutCompanyNestedInput
+    crewAssignments?: CrewAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type CrewFamiliarizationRecordUpsertWithWhereUniqueWithoutLsaFfeItemInput = {
@@ -178118,6 +182958,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
     accessLevels?: AccessLevelCreateNestedManyWithoutCompanyInput
     departments?: DepartmentCreateNestedManyWithoutCompanyInput
+    seafarers?: SeafarerCreateNestedManyWithoutCompanyInput
+    crewAssignments?: CrewAssignmentCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutCrewFamiliarizationsInput = {
@@ -178182,6 +183024,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
     accessLevels?: AccessLevelUncheckedCreateNestedManyWithoutCompanyInput
     departments?: DepartmentUncheckedCreateNestedManyWithoutCompanyInput
+    seafarers?: SeafarerUncheckedCreateNestedManyWithoutCompanyInput
+    crewAssignments?: CrewAssignmentUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutCrewFamiliarizationsInput = {
@@ -178274,6 +183118,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventCreateNestedManyWithoutVesselInput
     inventoryUpdateDrafts?: InventoryUpdateDraftCreateNestedManyWithoutVesselInput
     requisitions?: RequisitionCreateNestedManyWithoutVesselInput
+    crewAssignments?: CrewAssignmentCreateNestedManyWithoutVesselInput
   }
 
   export type VesselUncheckedCreateWithoutCrewFamiliarizationsInput = {
@@ -178361,6 +183206,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventUncheckedCreateNestedManyWithoutVesselInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUncheckedCreateNestedManyWithoutVesselInput
     requisitions?: RequisitionUncheckedCreateNestedManyWithoutVesselInput
+    crewAssignments?: CrewAssignmentUncheckedCreateNestedManyWithoutVesselInput
   }
 
   export type VesselCreateOrConnectWithoutCrewFamiliarizationsInput = {
@@ -178473,6 +183319,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
     accessLevels?: AccessLevelUpdateManyWithoutCompanyNestedInput
     departments?: DepartmentUpdateManyWithoutCompanyNestedInput
+    seafarers?: SeafarerUpdateManyWithoutCompanyNestedInput
+    crewAssignments?: CrewAssignmentUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutCrewFamiliarizationsInput = {
@@ -178537,6 +183385,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
     accessLevels?: AccessLevelUncheckedUpdateManyWithoutCompanyNestedInput
     departments?: DepartmentUncheckedUpdateManyWithoutCompanyNestedInput
+    seafarers?: SeafarerUncheckedUpdateManyWithoutCompanyNestedInput
+    crewAssignments?: CrewAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type VesselUpsertWithoutCrewFamiliarizationsInput = {
@@ -178635,6 +183485,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventUpdateManyWithoutVesselNestedInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUpdateManyWithoutVesselNestedInput
     requisitions?: RequisitionUpdateManyWithoutVesselNestedInput
+    crewAssignments?: CrewAssignmentUpdateManyWithoutVesselNestedInput
   }
 
   export type VesselUncheckedUpdateWithoutCrewFamiliarizationsInput = {
@@ -178722,6 +183573,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventUncheckedUpdateManyWithoutVesselNestedInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUncheckedUpdateManyWithoutVesselNestedInput
     requisitions?: RequisitionUncheckedUpdateManyWithoutVesselNestedInput
+    crewAssignments?: CrewAssignmentUncheckedUpdateManyWithoutVesselNestedInput
   }
 
   export type CrewFamiliarizationRecordUpsertWithWhereUniqueWithoutCrewFamiliarizationInput = {
@@ -178802,6 +183654,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
     accessLevels?: AccessLevelCreateNestedManyWithoutCompanyInput
     departments?: DepartmentCreateNestedManyWithoutCompanyInput
+    seafarers?: SeafarerCreateNestedManyWithoutCompanyInput
+    crewAssignments?: CrewAssignmentCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutCrewFamiliarizationRecordsInput = {
@@ -178866,6 +183720,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
     accessLevels?: AccessLevelUncheckedCreateNestedManyWithoutCompanyInput
     departments?: DepartmentUncheckedCreateNestedManyWithoutCompanyInput
+    seafarers?: SeafarerUncheckedCreateNestedManyWithoutCompanyInput
+    crewAssignments?: CrewAssignmentUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutCrewFamiliarizationRecordsInput = {
@@ -179016,6 +183872,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
     accessLevels?: AccessLevelUpdateManyWithoutCompanyNestedInput
     departments?: DepartmentUpdateManyWithoutCompanyNestedInput
+    seafarers?: SeafarerUpdateManyWithoutCompanyNestedInput
+    crewAssignments?: CrewAssignmentUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutCrewFamiliarizationRecordsInput = {
@@ -179080,6 +183938,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
     accessLevels?: AccessLevelUncheckedUpdateManyWithoutCompanyNestedInput
     departments?: DepartmentUncheckedUpdateManyWithoutCompanyNestedInput
+    seafarers?: SeafarerUncheckedUpdateManyWithoutCompanyNestedInput
+    crewAssignments?: CrewAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type CrewFamiliarizationUpsertWithoutRecordsInput = {
@@ -179226,6 +184086,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
     accessLevels?: AccessLevelCreateNestedManyWithoutCompanyInput
     departments?: DepartmentCreateNestedManyWithoutCompanyInput
+    seafarers?: SeafarerCreateNestedManyWithoutCompanyInput
+    crewAssignments?: CrewAssignmentCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutControlledDocumentsInput = {
@@ -179290,6 +184152,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
     accessLevels?: AccessLevelUncheckedCreateNestedManyWithoutCompanyInput
     departments?: DepartmentUncheckedCreateNestedManyWithoutCompanyInput
+    seafarers?: SeafarerUncheckedCreateNestedManyWithoutCompanyInput
+    crewAssignments?: CrewAssignmentUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutControlledDocumentsInput = {
@@ -179382,6 +184246,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventCreateNestedManyWithoutVesselInput
     inventoryUpdateDrafts?: InventoryUpdateDraftCreateNestedManyWithoutVesselInput
     requisitions?: RequisitionCreateNestedManyWithoutVesselInput
+    crewAssignments?: CrewAssignmentCreateNestedManyWithoutVesselInput
   }
 
   export type VesselUncheckedCreateWithoutControlledDocumentsInput = {
@@ -179469,6 +184334,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventUncheckedCreateNestedManyWithoutVesselInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUncheckedCreateNestedManyWithoutVesselInput
     requisitions?: RequisitionUncheckedCreateNestedManyWithoutVesselInput
+    crewAssignments?: CrewAssignmentUncheckedCreateNestedManyWithoutVesselInput
   }
 
   export type VesselCreateOrConnectWithoutControlledDocumentsInput = {
@@ -179549,6 +184415,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
     accessLevels?: AccessLevelUpdateManyWithoutCompanyNestedInput
     departments?: DepartmentUpdateManyWithoutCompanyNestedInput
+    seafarers?: SeafarerUpdateManyWithoutCompanyNestedInput
+    crewAssignments?: CrewAssignmentUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutControlledDocumentsInput = {
@@ -179613,6 +184481,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
     accessLevels?: AccessLevelUncheckedUpdateManyWithoutCompanyNestedInput
     departments?: DepartmentUncheckedUpdateManyWithoutCompanyNestedInput
+    seafarers?: SeafarerUncheckedUpdateManyWithoutCompanyNestedInput
+    crewAssignments?: CrewAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type VesselUpsertWithoutControlledDocumentsInput = {
@@ -179711,6 +184581,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventUpdateManyWithoutVesselNestedInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUpdateManyWithoutVesselNestedInput
     requisitions?: RequisitionUpdateManyWithoutVesselNestedInput
+    crewAssignments?: CrewAssignmentUpdateManyWithoutVesselNestedInput
   }
 
   export type VesselUncheckedUpdateWithoutControlledDocumentsInput = {
@@ -179798,6 +184669,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventUncheckedUpdateManyWithoutVesselNestedInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUncheckedUpdateManyWithoutVesselNestedInput
     requisitions?: RequisitionUncheckedUpdateManyWithoutVesselNestedInput
+    crewAssignments?: CrewAssignmentUncheckedUpdateManyWithoutVesselNestedInput
   }
 
   export type CompanyCreateWithoutVesselDocumentsInput = {
@@ -179862,6 +184734,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
     accessLevels?: AccessLevelCreateNestedManyWithoutCompanyInput
     departments?: DepartmentCreateNestedManyWithoutCompanyInput
+    seafarers?: SeafarerCreateNestedManyWithoutCompanyInput
+    crewAssignments?: CrewAssignmentCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutVesselDocumentsInput = {
@@ -179926,6 +184800,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
     accessLevels?: AccessLevelUncheckedCreateNestedManyWithoutCompanyInput
     departments?: DepartmentUncheckedCreateNestedManyWithoutCompanyInput
+    seafarers?: SeafarerUncheckedCreateNestedManyWithoutCompanyInput
+    crewAssignments?: CrewAssignmentUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutVesselDocumentsInput = {
@@ -180018,6 +184894,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventCreateNestedManyWithoutVesselInput
     inventoryUpdateDrafts?: InventoryUpdateDraftCreateNestedManyWithoutVesselInput
     requisitions?: RequisitionCreateNestedManyWithoutVesselInput
+    crewAssignments?: CrewAssignmentCreateNestedManyWithoutVesselInput
   }
 
   export type VesselUncheckedCreateWithoutVesselDocumentsInput = {
@@ -180105,6 +184982,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventUncheckedCreateNestedManyWithoutVesselInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUncheckedCreateNestedManyWithoutVesselInput
     requisitions?: RequisitionUncheckedCreateNestedManyWithoutVesselInput
+    crewAssignments?: CrewAssignmentUncheckedCreateNestedManyWithoutVesselInput
   }
 
   export type VesselCreateOrConnectWithoutVesselDocumentsInput = {
@@ -180185,6 +185063,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
     accessLevels?: AccessLevelUpdateManyWithoutCompanyNestedInput
     departments?: DepartmentUpdateManyWithoutCompanyNestedInput
+    seafarers?: SeafarerUpdateManyWithoutCompanyNestedInput
+    crewAssignments?: CrewAssignmentUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutVesselDocumentsInput = {
@@ -180249,6 +185129,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
     accessLevels?: AccessLevelUncheckedUpdateManyWithoutCompanyNestedInput
     departments?: DepartmentUncheckedUpdateManyWithoutCompanyNestedInput
+    seafarers?: SeafarerUncheckedUpdateManyWithoutCompanyNestedInput
+    crewAssignments?: CrewAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type VesselUpsertWithoutVesselDocumentsInput = {
@@ -180347,6 +185229,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventUpdateManyWithoutVesselNestedInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUpdateManyWithoutVesselNestedInput
     requisitions?: RequisitionUpdateManyWithoutVesselNestedInput
+    crewAssignments?: CrewAssignmentUpdateManyWithoutVesselNestedInput
   }
 
   export type VesselUncheckedUpdateWithoutVesselDocumentsInput = {
@@ -180434,6 +185317,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventUncheckedUpdateManyWithoutVesselNestedInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUncheckedUpdateManyWithoutVesselNestedInput
     requisitions?: RequisitionUncheckedUpdateManyWithoutVesselNestedInput
+    crewAssignments?: CrewAssignmentUncheckedUpdateManyWithoutVesselNestedInput
   }
 
   export type CompanyCreateWithoutCircularsInput = {
@@ -180498,6 +185382,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
     accessLevels?: AccessLevelCreateNestedManyWithoutCompanyInput
     departments?: DepartmentCreateNestedManyWithoutCompanyInput
+    seafarers?: SeafarerCreateNestedManyWithoutCompanyInput
+    crewAssignments?: CrewAssignmentCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutCircularsInput = {
@@ -180562,6 +185448,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
     accessLevels?: AccessLevelUncheckedCreateNestedManyWithoutCompanyInput
     departments?: DepartmentUncheckedCreateNestedManyWithoutCompanyInput
+    seafarers?: SeafarerUncheckedCreateNestedManyWithoutCompanyInput
+    crewAssignments?: CrewAssignmentUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutCircularsInput = {
@@ -180654,6 +185542,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventCreateNestedManyWithoutVesselInput
     inventoryUpdateDrafts?: InventoryUpdateDraftCreateNestedManyWithoutVesselInput
     requisitions?: RequisitionCreateNestedManyWithoutVesselInput
+    crewAssignments?: CrewAssignmentCreateNestedManyWithoutVesselInput
   }
 
   export type VesselUncheckedCreateWithoutCircularsInput = {
@@ -180741,6 +185630,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventUncheckedCreateNestedManyWithoutVesselInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUncheckedCreateNestedManyWithoutVesselInput
     requisitions?: RequisitionUncheckedCreateNestedManyWithoutVesselInput
+    crewAssignments?: CrewAssignmentUncheckedCreateNestedManyWithoutVesselInput
   }
 
   export type VesselCreateOrConnectWithoutCircularsInput = {
@@ -180855,6 +185745,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
     accessLevels?: AccessLevelUpdateManyWithoutCompanyNestedInput
     departments?: DepartmentUpdateManyWithoutCompanyNestedInput
+    seafarers?: SeafarerUpdateManyWithoutCompanyNestedInput
+    crewAssignments?: CrewAssignmentUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutCircularsInput = {
@@ -180919,6 +185811,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
     accessLevels?: AccessLevelUncheckedUpdateManyWithoutCompanyNestedInput
     departments?: DepartmentUncheckedUpdateManyWithoutCompanyNestedInput
+    seafarers?: SeafarerUncheckedUpdateManyWithoutCompanyNestedInput
+    crewAssignments?: CrewAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type VesselUpsertWithoutCircularsInput = {
@@ -181017,6 +185911,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventUpdateManyWithoutVesselNestedInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUpdateManyWithoutVesselNestedInput
     requisitions?: RequisitionUpdateManyWithoutVesselNestedInput
+    crewAssignments?: CrewAssignmentUpdateManyWithoutVesselNestedInput
   }
 
   export type VesselUncheckedUpdateWithoutCircularsInput = {
@@ -181104,6 +185999,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventUncheckedUpdateManyWithoutVesselNestedInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUncheckedUpdateManyWithoutVesselNestedInput
     requisitions?: RequisitionUncheckedUpdateManyWithoutVesselNestedInput
+    crewAssignments?: CrewAssignmentUncheckedUpdateManyWithoutVesselNestedInput
   }
 
   export type CircularAcknowledgementUpsertWithWhereUniqueWithoutCircularInput = {
@@ -181296,6 +186192,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
     accessLevels?: AccessLevelCreateNestedManyWithoutCompanyInput
     departments?: DepartmentCreateNestedManyWithoutCompanyInput
+    seafarers?: SeafarerCreateNestedManyWithoutCompanyInput
+    crewAssignments?: CrewAssignmentCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutRiskAssessmentDocumentsInput = {
@@ -181360,6 +186258,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
     accessLevels?: AccessLevelUncheckedCreateNestedManyWithoutCompanyInput
     departments?: DepartmentUncheckedCreateNestedManyWithoutCompanyInput
+    seafarers?: SeafarerUncheckedCreateNestedManyWithoutCompanyInput
+    crewAssignments?: CrewAssignmentUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutRiskAssessmentDocumentsInput = {
@@ -181452,6 +186352,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventCreateNestedManyWithoutVesselInput
     inventoryUpdateDrafts?: InventoryUpdateDraftCreateNestedManyWithoutVesselInput
     requisitions?: RequisitionCreateNestedManyWithoutVesselInput
+    crewAssignments?: CrewAssignmentCreateNestedManyWithoutVesselInput
   }
 
   export type VesselUncheckedCreateWithoutRiskAssessmentDocumentsInput = {
@@ -181539,6 +186440,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventUncheckedCreateNestedManyWithoutVesselInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUncheckedCreateNestedManyWithoutVesselInput
     requisitions?: RequisitionUncheckedCreateNestedManyWithoutVesselInput
+    crewAssignments?: CrewAssignmentUncheckedCreateNestedManyWithoutVesselInput
   }
 
   export type VesselCreateOrConnectWithoutRiskAssessmentDocumentsInput = {
@@ -181802,6 +186704,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
     accessLevels?: AccessLevelUpdateManyWithoutCompanyNestedInput
     departments?: DepartmentUpdateManyWithoutCompanyNestedInput
+    seafarers?: SeafarerUpdateManyWithoutCompanyNestedInput
+    crewAssignments?: CrewAssignmentUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutRiskAssessmentDocumentsInput = {
@@ -181866,6 +186770,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
     accessLevels?: AccessLevelUncheckedUpdateManyWithoutCompanyNestedInput
     departments?: DepartmentUncheckedUpdateManyWithoutCompanyNestedInput
+    seafarers?: SeafarerUncheckedUpdateManyWithoutCompanyNestedInput
+    crewAssignments?: CrewAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type VesselUpsertWithoutRiskAssessmentDocumentsInput = {
@@ -181964,6 +186870,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventUpdateManyWithoutVesselNestedInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUpdateManyWithoutVesselNestedInput
     requisitions?: RequisitionUpdateManyWithoutVesselNestedInput
+    crewAssignments?: CrewAssignmentUpdateManyWithoutVesselNestedInput
   }
 
   export type VesselUncheckedUpdateWithoutRiskAssessmentDocumentsInput = {
@@ -182051,6 +186958,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventUncheckedUpdateManyWithoutVesselNestedInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUncheckedUpdateManyWithoutVesselNestedInput
     requisitions?: RequisitionUncheckedUpdateManyWithoutVesselNestedInput
+    crewAssignments?: CrewAssignmentUncheckedUpdateManyWithoutVesselNestedInput
   }
 
   export type RiskAssessmentRevisionUpsertWithoutCurrentOfInput = {
@@ -182676,6 +187584,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventCreateNestedManyWithoutVesselInput
     inventoryUpdateDrafts?: InventoryUpdateDraftCreateNestedManyWithoutVesselInput
     requisitions?: RequisitionCreateNestedManyWithoutVesselInput
+    crewAssignments?: CrewAssignmentCreateNestedManyWithoutVesselInput
   }
 
   export type VesselUncheckedCreateWithoutRiskHazardRowsInput = {
@@ -182763,6 +187672,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventUncheckedCreateNestedManyWithoutVesselInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUncheckedCreateNestedManyWithoutVesselInput
     requisitions?: RequisitionUncheckedCreateNestedManyWithoutVesselInput
+    crewAssignments?: CrewAssignmentUncheckedCreateNestedManyWithoutVesselInput
   }
 
   export type VesselCreateOrConnectWithoutRiskHazardRowsInput = {
@@ -182919,6 +187829,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventUpdateManyWithoutVesselNestedInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUpdateManyWithoutVesselNestedInput
     requisitions?: RequisitionUpdateManyWithoutVesselNestedInput
+    crewAssignments?: CrewAssignmentUpdateManyWithoutVesselNestedInput
   }
 
   export type VesselUncheckedUpdateWithoutRiskHazardRowsInput = {
@@ -183006,6 +187917,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventUncheckedUpdateManyWithoutVesselNestedInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUncheckedUpdateManyWithoutVesselNestedInput
     requisitions?: RequisitionUncheckedUpdateManyWithoutVesselNestedInput
+    crewAssignments?: CrewAssignmentUncheckedUpdateManyWithoutVesselNestedInput
   }
 
   export type RiskAssessmentDocumentCreateWithoutExecutionsInput = {
@@ -183197,6 +188109,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventCreateNestedManyWithoutVesselInput
     inventoryUpdateDrafts?: InventoryUpdateDraftCreateNestedManyWithoutVesselInput
     requisitions?: RequisitionCreateNestedManyWithoutVesselInput
+    crewAssignments?: CrewAssignmentCreateNestedManyWithoutVesselInput
   }
 
   export type VesselUncheckedCreateWithoutRiskAssessmentExecutionsInput = {
@@ -183284,6 +188197,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventUncheckedCreateNestedManyWithoutVesselInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUncheckedCreateNestedManyWithoutVesselInput
     requisitions?: RequisitionUncheckedCreateNestedManyWithoutVesselInput
+    crewAssignments?: CrewAssignmentUncheckedCreateNestedManyWithoutVesselInput
   }
 
   export type VesselCreateOrConnectWithoutRiskAssessmentExecutionsInput = {
@@ -183503,6 +188417,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventUpdateManyWithoutVesselNestedInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUpdateManyWithoutVesselNestedInput
     requisitions?: RequisitionUpdateManyWithoutVesselNestedInput
+    crewAssignments?: CrewAssignmentUpdateManyWithoutVesselNestedInput
   }
 
   export type VesselUncheckedUpdateWithoutRiskAssessmentExecutionsInput = {
@@ -183590,6 +188505,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventUncheckedUpdateManyWithoutVesselNestedInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUncheckedUpdateManyWithoutVesselNestedInput
     requisitions?: RequisitionUncheckedUpdateManyWithoutVesselNestedInput
+    crewAssignments?: CrewAssignmentUncheckedUpdateManyWithoutVesselNestedInput
   }
 
   export type RiskAssessmentDocumentCreateWithoutRevisionRequestsInput = {
@@ -183734,6 +188650,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventCreateNestedManyWithoutVesselInput
     inventoryUpdateDrafts?: InventoryUpdateDraftCreateNestedManyWithoutVesselInput
     requisitions?: RequisitionCreateNestedManyWithoutVesselInput
+    crewAssignments?: CrewAssignmentCreateNestedManyWithoutVesselInput
   }
 
   export type VesselUncheckedCreateWithoutRiskAssessmentRevisionRequestsInput = {
@@ -183821,6 +188738,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventUncheckedCreateNestedManyWithoutVesselInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUncheckedCreateNestedManyWithoutVesselInput
     requisitions?: RequisitionUncheckedCreateNestedManyWithoutVesselInput
+    crewAssignments?: CrewAssignmentUncheckedCreateNestedManyWithoutVesselInput
   }
 
   export type VesselCreateOrConnectWithoutRiskAssessmentRevisionRequestsInput = {
@@ -183987,6 +188905,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventUpdateManyWithoutVesselNestedInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUpdateManyWithoutVesselNestedInput
     requisitions?: RequisitionUpdateManyWithoutVesselNestedInput
+    crewAssignments?: CrewAssignmentUpdateManyWithoutVesselNestedInput
   }
 
   export type VesselUncheckedUpdateWithoutRiskAssessmentRevisionRequestsInput = {
@@ -184074,6 +188993,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventUncheckedUpdateManyWithoutVesselNestedInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUncheckedUpdateManyWithoutVesselNestedInput
     requisitions?: RequisitionUncheckedUpdateManyWithoutVesselNestedInput
+    crewAssignments?: CrewAssignmentUncheckedUpdateManyWithoutVesselNestedInput
   }
 
   export type CompanyCreateWithoutDefectsInput = {
@@ -184138,6 +189058,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
     accessLevels?: AccessLevelCreateNestedManyWithoutCompanyInput
     departments?: DepartmentCreateNestedManyWithoutCompanyInput
+    seafarers?: SeafarerCreateNestedManyWithoutCompanyInput
+    crewAssignments?: CrewAssignmentCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutDefectsInput = {
@@ -184202,6 +189124,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
     accessLevels?: AccessLevelUncheckedCreateNestedManyWithoutCompanyInput
     departments?: DepartmentUncheckedCreateNestedManyWithoutCompanyInput
+    seafarers?: SeafarerUncheckedCreateNestedManyWithoutCompanyInput
+    crewAssignments?: CrewAssignmentUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutDefectsInput = {
@@ -184294,6 +189218,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventCreateNestedManyWithoutVesselInput
     inventoryUpdateDrafts?: InventoryUpdateDraftCreateNestedManyWithoutVesselInput
     requisitions?: RequisitionCreateNestedManyWithoutVesselInput
+    crewAssignments?: CrewAssignmentCreateNestedManyWithoutVesselInput
   }
 
   export type VesselUncheckedCreateWithoutDefectsInput = {
@@ -184381,6 +189306,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventUncheckedCreateNestedManyWithoutVesselInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUncheckedCreateNestedManyWithoutVesselInput
     requisitions?: RequisitionUncheckedCreateNestedManyWithoutVesselInput
+    crewAssignments?: CrewAssignmentUncheckedCreateNestedManyWithoutVesselInput
   }
 
   export type VesselCreateOrConnectWithoutDefectsInput = {
@@ -184461,6 +189387,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
     accessLevels?: AccessLevelUpdateManyWithoutCompanyNestedInput
     departments?: DepartmentUpdateManyWithoutCompanyNestedInput
+    seafarers?: SeafarerUpdateManyWithoutCompanyNestedInput
+    crewAssignments?: CrewAssignmentUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutDefectsInput = {
@@ -184525,6 +189453,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
     accessLevels?: AccessLevelUncheckedUpdateManyWithoutCompanyNestedInput
     departments?: DepartmentUncheckedUpdateManyWithoutCompanyNestedInput
+    seafarers?: SeafarerUncheckedUpdateManyWithoutCompanyNestedInput
+    crewAssignments?: CrewAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type VesselUpsertWithoutDefectsInput = {
@@ -184623,6 +189553,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventUpdateManyWithoutVesselNestedInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUpdateManyWithoutVesselNestedInput
     requisitions?: RequisitionUpdateManyWithoutVesselNestedInput
+    crewAssignments?: CrewAssignmentUpdateManyWithoutVesselNestedInput
   }
 
   export type VesselUncheckedUpdateWithoutDefectsInput = {
@@ -184710,6 +189641,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventUncheckedUpdateManyWithoutVesselNestedInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUncheckedUpdateManyWithoutVesselNestedInput
     requisitions?: RequisitionUncheckedUpdateManyWithoutVesselNestedInput
+    crewAssignments?: CrewAssignmentUncheckedUpdateManyWithoutVesselNestedInput
   }
 
   export type CompanyCreateWithoutVoyageLogsInput = {
@@ -184774,6 +189706,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
     accessLevels?: AccessLevelCreateNestedManyWithoutCompanyInput
     departments?: DepartmentCreateNestedManyWithoutCompanyInput
+    seafarers?: SeafarerCreateNestedManyWithoutCompanyInput
+    crewAssignments?: CrewAssignmentCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutVoyageLogsInput = {
@@ -184838,6 +189772,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
     accessLevels?: AccessLevelUncheckedCreateNestedManyWithoutCompanyInput
     departments?: DepartmentUncheckedCreateNestedManyWithoutCompanyInput
+    seafarers?: SeafarerUncheckedCreateNestedManyWithoutCompanyInput
+    crewAssignments?: CrewAssignmentUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutVoyageLogsInput = {
@@ -184930,6 +189866,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventCreateNestedManyWithoutVesselInput
     inventoryUpdateDrafts?: InventoryUpdateDraftCreateNestedManyWithoutVesselInput
     requisitions?: RequisitionCreateNestedManyWithoutVesselInput
+    crewAssignments?: CrewAssignmentCreateNestedManyWithoutVesselInput
   }
 
   export type VesselUncheckedCreateWithoutVoyageLogsInput = {
@@ -185017,6 +189954,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventUncheckedCreateNestedManyWithoutVesselInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUncheckedCreateNestedManyWithoutVesselInput
     requisitions?: RequisitionUncheckedCreateNestedManyWithoutVesselInput
+    crewAssignments?: CrewAssignmentUncheckedCreateNestedManyWithoutVesselInput
   }
 
   export type VesselCreateOrConnectWithoutVoyageLogsInput = {
@@ -185127,6 +190065,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
     accessLevels?: AccessLevelUpdateManyWithoutCompanyNestedInput
     departments?: DepartmentUpdateManyWithoutCompanyNestedInput
+    seafarers?: SeafarerUpdateManyWithoutCompanyNestedInput
+    crewAssignments?: CrewAssignmentUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutVoyageLogsInput = {
@@ -185191,6 +190131,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
     accessLevels?: AccessLevelUncheckedUpdateManyWithoutCompanyNestedInput
     departments?: DepartmentUncheckedUpdateManyWithoutCompanyNestedInput
+    seafarers?: SeafarerUncheckedUpdateManyWithoutCompanyNestedInput
+    crewAssignments?: CrewAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type VesselUpsertWithoutVoyageLogsInput = {
@@ -185289,6 +190231,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventUpdateManyWithoutVesselNestedInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUpdateManyWithoutVesselNestedInput
     requisitions?: RequisitionUpdateManyWithoutVesselNestedInput
+    crewAssignments?: CrewAssignmentUpdateManyWithoutVesselNestedInput
   }
 
   export type VesselUncheckedUpdateWithoutVoyageLogsInput = {
@@ -185376,6 +190319,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventUncheckedUpdateManyWithoutVesselNestedInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUncheckedUpdateManyWithoutVesselNestedInput
     requisitions?: RequisitionUncheckedUpdateManyWithoutVesselNestedInput
+    crewAssignments?: CrewAssignmentUncheckedUpdateManyWithoutVesselNestedInput
   }
 
   export type VoyageLogBunkerUpsertWithWhereUniqueWithoutVoyageLogInput = {
@@ -185758,6 +190702,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
     accessLevels?: AccessLevelCreateNestedManyWithoutCompanyInput
     departments?: DepartmentCreateNestedManyWithoutCompanyInput
+    seafarers?: SeafarerCreateNestedManyWithoutCompanyInput
+    crewAssignments?: CrewAssignmentCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutUnitMastersInput = {
@@ -185822,6 +190768,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
     accessLevels?: AccessLevelUncheckedCreateNestedManyWithoutCompanyInput
     departments?: DepartmentUncheckedCreateNestedManyWithoutCompanyInput
+    seafarers?: SeafarerUncheckedCreateNestedManyWithoutCompanyInput
+    crewAssignments?: CrewAssignmentUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutUnitMastersInput = {
@@ -185902,6 +190850,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
     accessLevels?: AccessLevelUpdateManyWithoutCompanyNestedInput
     departments?: DepartmentUpdateManyWithoutCompanyNestedInput
+    seafarers?: SeafarerUpdateManyWithoutCompanyNestedInput
+    crewAssignments?: CrewAssignmentUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutUnitMastersInput = {
@@ -185966,6 +190916,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
     accessLevels?: AccessLevelUncheckedUpdateManyWithoutCompanyNestedInput
     departments?: DepartmentUncheckedUpdateManyWithoutCompanyNestedInput
+    seafarers?: SeafarerUncheckedUpdateManyWithoutCompanyNestedInput
+    crewAssignments?: CrewAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyCreateWithoutReferenceListItemsInput = {
@@ -186030,6 +190982,8 @@ export namespace Prisma {
     unitMasters?: UnitMasterCreateNestedManyWithoutCompanyInput
     accessLevels?: AccessLevelCreateNestedManyWithoutCompanyInput
     departments?: DepartmentCreateNestedManyWithoutCompanyInput
+    seafarers?: SeafarerCreateNestedManyWithoutCompanyInput
+    crewAssignments?: CrewAssignmentCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutReferenceListItemsInput = {
@@ -186094,6 +191048,8 @@ export namespace Prisma {
     unitMasters?: UnitMasterUncheckedCreateNestedManyWithoutCompanyInput
     accessLevels?: AccessLevelUncheckedCreateNestedManyWithoutCompanyInput
     departments?: DepartmentUncheckedCreateNestedManyWithoutCompanyInput
+    seafarers?: SeafarerUncheckedCreateNestedManyWithoutCompanyInput
+    crewAssignments?: CrewAssignmentUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutReferenceListItemsInput = {
@@ -186174,6 +191130,8 @@ export namespace Prisma {
     unitMasters?: UnitMasterUpdateManyWithoutCompanyNestedInput
     accessLevels?: AccessLevelUpdateManyWithoutCompanyNestedInput
     departments?: DepartmentUpdateManyWithoutCompanyNestedInput
+    seafarers?: SeafarerUpdateManyWithoutCompanyNestedInput
+    crewAssignments?: CrewAssignmentUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutReferenceListItemsInput = {
@@ -186238,6 +191196,8 @@ export namespace Prisma {
     unitMasters?: UnitMasterUncheckedUpdateManyWithoutCompanyNestedInput
     accessLevels?: AccessLevelUncheckedUpdateManyWithoutCompanyNestedInput
     departments?: DepartmentUncheckedUpdateManyWithoutCompanyNestedInput
+    seafarers?: SeafarerUncheckedUpdateManyWithoutCompanyNestedInput
+    crewAssignments?: CrewAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyCreateWithoutEnvironmentRecordsInput = {
@@ -186302,6 +191262,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
     accessLevels?: AccessLevelCreateNestedManyWithoutCompanyInput
     departments?: DepartmentCreateNestedManyWithoutCompanyInput
+    seafarers?: SeafarerCreateNestedManyWithoutCompanyInput
+    crewAssignments?: CrewAssignmentCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutEnvironmentRecordsInput = {
@@ -186366,6 +191328,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
     accessLevels?: AccessLevelUncheckedCreateNestedManyWithoutCompanyInput
     departments?: DepartmentUncheckedCreateNestedManyWithoutCompanyInput
+    seafarers?: SeafarerUncheckedCreateNestedManyWithoutCompanyInput
+    crewAssignments?: CrewAssignmentUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutEnvironmentRecordsInput = {
@@ -186458,6 +191422,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventCreateNestedManyWithoutVesselInput
     inventoryUpdateDrafts?: InventoryUpdateDraftCreateNestedManyWithoutVesselInput
     requisitions?: RequisitionCreateNestedManyWithoutVesselInput
+    crewAssignments?: CrewAssignmentCreateNestedManyWithoutVesselInput
   }
 
   export type VesselUncheckedCreateWithoutEnvironmentRecordsInput = {
@@ -186545,6 +191510,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventUncheckedCreateNestedManyWithoutVesselInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUncheckedCreateNestedManyWithoutVesselInput
     requisitions?: RequisitionUncheckedCreateNestedManyWithoutVesselInput
+    crewAssignments?: CrewAssignmentUncheckedCreateNestedManyWithoutVesselInput
   }
 
   export type VesselCreateOrConnectWithoutEnvironmentRecordsInput = {
@@ -186653,6 +191619,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
     accessLevels?: AccessLevelUpdateManyWithoutCompanyNestedInput
     departments?: DepartmentUpdateManyWithoutCompanyNestedInput
+    seafarers?: SeafarerUpdateManyWithoutCompanyNestedInput
+    crewAssignments?: CrewAssignmentUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutEnvironmentRecordsInput = {
@@ -186717,6 +191685,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
     accessLevels?: AccessLevelUncheckedUpdateManyWithoutCompanyNestedInput
     departments?: DepartmentUncheckedUpdateManyWithoutCompanyNestedInput
+    seafarers?: SeafarerUncheckedUpdateManyWithoutCompanyNestedInput
+    crewAssignments?: CrewAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type VesselUpsertWithoutEnvironmentRecordsInput = {
@@ -186815,6 +191785,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventUpdateManyWithoutVesselNestedInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUpdateManyWithoutVesselNestedInput
     requisitions?: RequisitionUpdateManyWithoutVesselNestedInput
+    crewAssignments?: CrewAssignmentUpdateManyWithoutVesselNestedInput
   }
 
   export type VesselUncheckedUpdateWithoutEnvironmentRecordsInput = {
@@ -186902,6 +191873,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventUncheckedUpdateManyWithoutVesselNestedInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUncheckedUpdateManyWithoutVesselNestedInput
     requisitions?: RequisitionUncheckedUpdateManyWithoutVesselNestedInput
+    crewAssignments?: CrewAssignmentUncheckedUpdateManyWithoutVesselNestedInput
   }
 
   export type GarbageLedgerEntryUpsertWithWhereUniqueWithoutEnvironmentRecordInput = {
@@ -187259,6 +192231,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
     accessLevels?: AccessLevelCreateNestedManyWithoutCompanyInput
     departments?: DepartmentCreateNestedManyWithoutCompanyInput
+    seafarers?: SeafarerCreateNestedManyWithoutCompanyInput
+    crewAssignments?: CrewAssignmentCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutRefSequencesInput = {
@@ -187323,6 +192297,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
     accessLevels?: AccessLevelUncheckedCreateNestedManyWithoutCompanyInput
     departments?: DepartmentUncheckedCreateNestedManyWithoutCompanyInput
+    seafarers?: SeafarerUncheckedCreateNestedManyWithoutCompanyInput
+    crewAssignments?: CrewAssignmentUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutRefSequencesInput = {
@@ -187403,6 +192379,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
     accessLevels?: AccessLevelUpdateManyWithoutCompanyNestedInput
     departments?: DepartmentUpdateManyWithoutCompanyNestedInput
+    seafarers?: SeafarerUpdateManyWithoutCompanyNestedInput
+    crewAssignments?: CrewAssignmentUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutRefSequencesInput = {
@@ -187467,6 +192445,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
     accessLevels?: AccessLevelUncheckedUpdateManyWithoutCompanyNestedInput
     departments?: DepartmentUncheckedUpdateManyWithoutCompanyNestedInput
+    seafarers?: SeafarerUncheckedUpdateManyWithoutCompanyNestedInput
+    crewAssignments?: CrewAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyCreateWithoutTmsaAssessmentsInput = {
@@ -187531,6 +192511,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
     accessLevels?: AccessLevelCreateNestedManyWithoutCompanyInput
     departments?: DepartmentCreateNestedManyWithoutCompanyInput
+    seafarers?: SeafarerCreateNestedManyWithoutCompanyInput
+    crewAssignments?: CrewAssignmentCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutTmsaAssessmentsInput = {
@@ -187595,6 +192577,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
     accessLevels?: AccessLevelUncheckedCreateNestedManyWithoutCompanyInput
     departments?: DepartmentUncheckedCreateNestedManyWithoutCompanyInput
+    seafarers?: SeafarerUncheckedCreateNestedManyWithoutCompanyInput
+    crewAssignments?: CrewAssignmentUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutTmsaAssessmentsInput = {
@@ -187675,6 +192659,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
     accessLevels?: AccessLevelUpdateManyWithoutCompanyNestedInput
     departments?: DepartmentUpdateManyWithoutCompanyNestedInput
+    seafarers?: SeafarerUpdateManyWithoutCompanyNestedInput
+    crewAssignments?: CrewAssignmentUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutTmsaAssessmentsInput = {
@@ -187739,6 +192725,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
     accessLevels?: AccessLevelUncheckedUpdateManyWithoutCompanyNestedInput
     departments?: DepartmentUncheckedUpdateManyWithoutCompanyNestedInput
+    seafarers?: SeafarerUncheckedUpdateManyWithoutCompanyNestedInput
+    crewAssignments?: CrewAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyCreateWithoutTmsaScoresInput = {
@@ -187803,6 +192791,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
     accessLevels?: AccessLevelCreateNestedManyWithoutCompanyInput
     departments?: DepartmentCreateNestedManyWithoutCompanyInput
+    seafarers?: SeafarerCreateNestedManyWithoutCompanyInput
+    crewAssignments?: CrewAssignmentCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutTmsaScoresInput = {
@@ -187867,6 +192857,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
     accessLevels?: AccessLevelUncheckedCreateNestedManyWithoutCompanyInput
     departments?: DepartmentUncheckedCreateNestedManyWithoutCompanyInput
+    seafarers?: SeafarerUncheckedCreateNestedManyWithoutCompanyInput
+    crewAssignments?: CrewAssignmentUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutTmsaScoresInput = {
@@ -187947,6 +192939,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
     accessLevels?: AccessLevelUpdateManyWithoutCompanyNestedInput
     departments?: DepartmentUpdateManyWithoutCompanyNestedInput
+    seafarers?: SeafarerUpdateManyWithoutCompanyNestedInput
+    crewAssignments?: CrewAssignmentUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutTmsaScoresInput = {
@@ -188011,6 +193005,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
     accessLevels?: AccessLevelUncheckedUpdateManyWithoutCompanyNestedInput
     departments?: DepartmentUncheckedUpdateManyWithoutCompanyNestedInput
+    seafarers?: SeafarerUncheckedUpdateManyWithoutCompanyNestedInput
+    crewAssignments?: CrewAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyCreateWithoutTmsaFindingsInput = {
@@ -188075,6 +193071,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
     accessLevels?: AccessLevelCreateNestedManyWithoutCompanyInput
     departments?: DepartmentCreateNestedManyWithoutCompanyInput
+    seafarers?: SeafarerCreateNestedManyWithoutCompanyInput
+    crewAssignments?: CrewAssignmentCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutTmsaFindingsInput = {
@@ -188139,6 +193137,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
     accessLevels?: AccessLevelUncheckedCreateNestedManyWithoutCompanyInput
     departments?: DepartmentUncheckedCreateNestedManyWithoutCompanyInput
+    seafarers?: SeafarerUncheckedCreateNestedManyWithoutCompanyInput
+    crewAssignments?: CrewAssignmentUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutTmsaFindingsInput = {
@@ -188219,6 +193219,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
     accessLevels?: AccessLevelUpdateManyWithoutCompanyNestedInput
     departments?: DepartmentUpdateManyWithoutCompanyNestedInput
+    seafarers?: SeafarerUpdateManyWithoutCompanyNestedInput
+    crewAssignments?: CrewAssignmentUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutTmsaFindingsInput = {
@@ -188283,6 +193285,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
     accessLevels?: AccessLevelUncheckedUpdateManyWithoutCompanyNestedInput
     departments?: DepartmentUncheckedUpdateManyWithoutCompanyNestedInput
+    seafarers?: SeafarerUncheckedUpdateManyWithoutCompanyNestedInput
+    crewAssignments?: CrewAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyCreateWithoutStoresCatalogueItemsInput = {
@@ -188347,6 +193351,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
     accessLevels?: AccessLevelCreateNestedManyWithoutCompanyInput
     departments?: DepartmentCreateNestedManyWithoutCompanyInput
+    seafarers?: SeafarerCreateNestedManyWithoutCompanyInput
+    crewAssignments?: CrewAssignmentCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutStoresCatalogueItemsInput = {
@@ -188411,6 +193417,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
     accessLevels?: AccessLevelUncheckedCreateNestedManyWithoutCompanyInput
     departments?: DepartmentUncheckedCreateNestedManyWithoutCompanyInput
+    seafarers?: SeafarerUncheckedCreateNestedManyWithoutCompanyInput
+    crewAssignments?: CrewAssignmentUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutStoresCatalogueItemsInput = {
@@ -188503,6 +193511,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventCreateNestedManyWithoutVesselInput
     inventoryUpdateDrafts?: InventoryUpdateDraftCreateNestedManyWithoutVesselInput
     requisitions?: RequisitionCreateNestedManyWithoutVesselInput
+    crewAssignments?: CrewAssignmentCreateNestedManyWithoutVesselInput
   }
 
   export type VesselUncheckedCreateWithoutStoresCatalogueItemsInput = {
@@ -188590,6 +193599,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventUncheckedCreateNestedManyWithoutVesselInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUncheckedCreateNestedManyWithoutVesselInput
     requisitions?: RequisitionUncheckedCreateNestedManyWithoutVesselInput
+    crewAssignments?: CrewAssignmentUncheckedCreateNestedManyWithoutVesselInput
   }
 
   export type VesselCreateOrConnectWithoutStoresCatalogueItemsInput = {
@@ -188670,6 +193680,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
     accessLevels?: AccessLevelUpdateManyWithoutCompanyNestedInput
     departments?: DepartmentUpdateManyWithoutCompanyNestedInput
+    seafarers?: SeafarerUpdateManyWithoutCompanyNestedInput
+    crewAssignments?: CrewAssignmentUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutStoresCatalogueItemsInput = {
@@ -188734,6 +193746,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
     accessLevels?: AccessLevelUncheckedUpdateManyWithoutCompanyNestedInput
     departments?: DepartmentUncheckedUpdateManyWithoutCompanyNestedInput
+    seafarers?: SeafarerUncheckedUpdateManyWithoutCompanyNestedInput
+    crewAssignments?: CrewAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type VesselUpsertWithoutStoresCatalogueItemsInput = {
@@ -188832,6 +193846,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventUpdateManyWithoutVesselNestedInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUpdateManyWithoutVesselNestedInput
     requisitions?: RequisitionUpdateManyWithoutVesselNestedInput
+    crewAssignments?: CrewAssignmentUpdateManyWithoutVesselNestedInput
   }
 
   export type VesselUncheckedUpdateWithoutStoresCatalogueItemsInput = {
@@ -188919,6 +193934,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventUncheckedUpdateManyWithoutVesselNestedInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUncheckedUpdateManyWithoutVesselNestedInput
     requisitions?: RequisitionUncheckedUpdateManyWithoutVesselNestedInput
+    crewAssignments?: CrewAssignmentUncheckedUpdateManyWithoutVesselNestedInput
   }
 
   export type CompanyCreateWithoutSparesCatalogueItemsInput = {
@@ -188983,6 +193999,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
     accessLevels?: AccessLevelCreateNestedManyWithoutCompanyInput
     departments?: DepartmentCreateNestedManyWithoutCompanyInput
+    seafarers?: SeafarerCreateNestedManyWithoutCompanyInput
+    crewAssignments?: CrewAssignmentCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutSparesCatalogueItemsInput = {
@@ -189047,6 +194065,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
     accessLevels?: AccessLevelUncheckedCreateNestedManyWithoutCompanyInput
     departments?: DepartmentUncheckedCreateNestedManyWithoutCompanyInput
+    seafarers?: SeafarerUncheckedCreateNestedManyWithoutCompanyInput
+    crewAssignments?: CrewAssignmentUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutSparesCatalogueItemsInput = {
@@ -189139,6 +194159,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventCreateNestedManyWithoutVesselInput
     inventoryUpdateDrafts?: InventoryUpdateDraftCreateNestedManyWithoutVesselInput
     requisitions?: RequisitionCreateNestedManyWithoutVesselInput
+    crewAssignments?: CrewAssignmentCreateNestedManyWithoutVesselInput
   }
 
   export type VesselUncheckedCreateWithoutSparesCatalogueItemsInput = {
@@ -189226,6 +194247,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventUncheckedCreateNestedManyWithoutVesselInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUncheckedCreateNestedManyWithoutVesselInput
     requisitions?: RequisitionUncheckedCreateNestedManyWithoutVesselInput
+    crewAssignments?: CrewAssignmentUncheckedCreateNestedManyWithoutVesselInput
   }
 
   export type VesselCreateOrConnectWithoutSparesCatalogueItemsInput = {
@@ -189306,6 +194328,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
     accessLevels?: AccessLevelUpdateManyWithoutCompanyNestedInput
     departments?: DepartmentUpdateManyWithoutCompanyNestedInput
+    seafarers?: SeafarerUpdateManyWithoutCompanyNestedInput
+    crewAssignments?: CrewAssignmentUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutSparesCatalogueItemsInput = {
@@ -189370,6 +194394,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
     accessLevels?: AccessLevelUncheckedUpdateManyWithoutCompanyNestedInput
     departments?: DepartmentUncheckedUpdateManyWithoutCompanyNestedInput
+    seafarers?: SeafarerUncheckedUpdateManyWithoutCompanyNestedInput
+    crewAssignments?: CrewAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type VesselUpsertWithoutSparesCatalogueItemsInput = {
@@ -189468,6 +194494,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventUpdateManyWithoutVesselNestedInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUpdateManyWithoutVesselNestedInput
     requisitions?: RequisitionUpdateManyWithoutVesselNestedInput
+    crewAssignments?: CrewAssignmentUpdateManyWithoutVesselNestedInput
   }
 
   export type VesselUncheckedUpdateWithoutSparesCatalogueItemsInput = {
@@ -189555,6 +194582,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventUncheckedUpdateManyWithoutVesselNestedInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUncheckedUpdateManyWithoutVesselNestedInput
     requisitions?: RequisitionUncheckedUpdateManyWithoutVesselNestedInput
+    crewAssignments?: CrewAssignmentUncheckedUpdateManyWithoutVesselNestedInput
   }
 
   export type CompanyCreateWithoutOpeningStockTakesInput = {
@@ -189619,6 +194647,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
     accessLevels?: AccessLevelCreateNestedManyWithoutCompanyInput
     departments?: DepartmentCreateNestedManyWithoutCompanyInput
+    seafarers?: SeafarerCreateNestedManyWithoutCompanyInput
+    crewAssignments?: CrewAssignmentCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutOpeningStockTakesInput = {
@@ -189683,6 +194713,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
     accessLevels?: AccessLevelUncheckedCreateNestedManyWithoutCompanyInput
     departments?: DepartmentUncheckedCreateNestedManyWithoutCompanyInput
+    seafarers?: SeafarerUncheckedCreateNestedManyWithoutCompanyInput
+    crewAssignments?: CrewAssignmentUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutOpeningStockTakesInput = {
@@ -189775,6 +194807,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventCreateNestedManyWithoutVesselInput
     inventoryUpdateDrafts?: InventoryUpdateDraftCreateNestedManyWithoutVesselInput
     requisitions?: RequisitionCreateNestedManyWithoutVesselInput
+    crewAssignments?: CrewAssignmentCreateNestedManyWithoutVesselInput
   }
 
   export type VesselUncheckedCreateWithoutOpeningStockTakeInput = {
@@ -189862,6 +194895,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventUncheckedCreateNestedManyWithoutVesselInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUncheckedCreateNestedManyWithoutVesselInput
     requisitions?: RequisitionUncheckedCreateNestedManyWithoutVesselInput
+    crewAssignments?: CrewAssignmentUncheckedCreateNestedManyWithoutVesselInput
   }
 
   export type VesselCreateOrConnectWithoutOpeningStockTakeInput = {
@@ -189990,6 +195024,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
     accessLevels?: AccessLevelUpdateManyWithoutCompanyNestedInput
     departments?: DepartmentUpdateManyWithoutCompanyNestedInput
+    seafarers?: SeafarerUpdateManyWithoutCompanyNestedInput
+    crewAssignments?: CrewAssignmentUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutOpeningStockTakesInput = {
@@ -190054,6 +195090,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
     accessLevels?: AccessLevelUncheckedUpdateManyWithoutCompanyNestedInput
     departments?: DepartmentUncheckedUpdateManyWithoutCompanyNestedInput
+    seafarers?: SeafarerUncheckedUpdateManyWithoutCompanyNestedInput
+    crewAssignments?: CrewAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type VesselUpsertWithoutOpeningStockTakeInput = {
@@ -190152,6 +195190,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventUpdateManyWithoutVesselNestedInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUpdateManyWithoutVesselNestedInput
     requisitions?: RequisitionUpdateManyWithoutVesselNestedInput
+    crewAssignments?: CrewAssignmentUpdateManyWithoutVesselNestedInput
   }
 
   export type VesselUncheckedUpdateWithoutOpeningStockTakeInput = {
@@ -190239,6 +195278,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventUncheckedUpdateManyWithoutVesselNestedInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUncheckedUpdateManyWithoutVesselNestedInput
     requisitions?: RequisitionUncheckedUpdateManyWithoutVesselNestedInput
+    crewAssignments?: CrewAssignmentUncheckedUpdateManyWithoutVesselNestedInput
   }
 
   export type InventoryEventUpsertWithWhereUniqueWithoutOpeningStockTakeInput = {
@@ -190319,6 +195359,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
     accessLevels?: AccessLevelCreateNestedManyWithoutCompanyInput
     departments?: DepartmentCreateNestedManyWithoutCompanyInput
+    seafarers?: SeafarerCreateNestedManyWithoutCompanyInput
+    crewAssignments?: CrewAssignmentCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutInventoryEventsInput = {
@@ -190383,6 +195425,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
     accessLevels?: AccessLevelUncheckedCreateNestedManyWithoutCompanyInput
     departments?: DepartmentUncheckedCreateNestedManyWithoutCompanyInput
+    seafarers?: SeafarerUncheckedCreateNestedManyWithoutCompanyInput
+    crewAssignments?: CrewAssignmentUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutInventoryEventsInput = {
@@ -190475,6 +195519,7 @@ export namespace Prisma {
     openingStockTake?: OpeningStockTakeCreateNestedOneWithoutVesselInput
     inventoryUpdateDrafts?: InventoryUpdateDraftCreateNestedManyWithoutVesselInput
     requisitions?: RequisitionCreateNestedManyWithoutVesselInput
+    crewAssignments?: CrewAssignmentCreateNestedManyWithoutVesselInput
   }
 
   export type VesselUncheckedCreateWithoutInventoryEventsInput = {
@@ -190562,6 +195607,7 @@ export namespace Prisma {
     openingStockTake?: OpeningStockTakeUncheckedCreateNestedOneWithoutVesselInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUncheckedCreateNestedManyWithoutVesselInput
     requisitions?: RequisitionUncheckedCreateNestedManyWithoutVesselInput
+    crewAssignments?: CrewAssignmentUncheckedCreateNestedManyWithoutVesselInput
   }
 
   export type VesselCreateOrConnectWithoutInventoryEventsInput = {
@@ -190673,6 +195719,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
     accessLevels?: AccessLevelUpdateManyWithoutCompanyNestedInput
     departments?: DepartmentUpdateManyWithoutCompanyNestedInput
+    seafarers?: SeafarerUpdateManyWithoutCompanyNestedInput
+    crewAssignments?: CrewAssignmentUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutInventoryEventsInput = {
@@ -190737,6 +195785,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
     accessLevels?: AccessLevelUncheckedUpdateManyWithoutCompanyNestedInput
     departments?: DepartmentUncheckedUpdateManyWithoutCompanyNestedInput
+    seafarers?: SeafarerUncheckedUpdateManyWithoutCompanyNestedInput
+    crewAssignments?: CrewAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type VesselUpsertWithoutInventoryEventsInput = {
@@ -190835,6 +195885,7 @@ export namespace Prisma {
     openingStockTake?: OpeningStockTakeUpdateOneWithoutVesselNestedInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUpdateManyWithoutVesselNestedInput
     requisitions?: RequisitionUpdateManyWithoutVesselNestedInput
+    crewAssignments?: CrewAssignmentUpdateManyWithoutVesselNestedInput
   }
 
   export type VesselUncheckedUpdateWithoutInventoryEventsInput = {
@@ -190922,6 +195973,7 @@ export namespace Prisma {
     openingStockTake?: OpeningStockTakeUncheckedUpdateOneWithoutVesselNestedInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUncheckedUpdateManyWithoutVesselNestedInput
     requisitions?: RequisitionUncheckedUpdateManyWithoutVesselNestedInput
+    crewAssignments?: CrewAssignmentUncheckedUpdateManyWithoutVesselNestedInput
   }
 
   export type OpeningStockTakeUpsertWithoutLinesInput = {
@@ -191023,6 +196075,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
     accessLevels?: AccessLevelCreateNestedManyWithoutCompanyInput
     departments?: DepartmentCreateNestedManyWithoutCompanyInput
+    seafarers?: SeafarerCreateNestedManyWithoutCompanyInput
+    crewAssignments?: CrewAssignmentCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutInventoryUpdateDraftsInput = {
@@ -191087,6 +196141,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
     accessLevels?: AccessLevelUncheckedCreateNestedManyWithoutCompanyInput
     departments?: DepartmentUncheckedCreateNestedManyWithoutCompanyInput
+    seafarers?: SeafarerUncheckedCreateNestedManyWithoutCompanyInput
+    crewAssignments?: CrewAssignmentUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutInventoryUpdateDraftsInput = {
@@ -191179,6 +196235,7 @@ export namespace Prisma {
     openingStockTake?: OpeningStockTakeCreateNestedOneWithoutVesselInput
     inventoryEvents?: InventoryEventCreateNestedManyWithoutVesselInput
     requisitions?: RequisitionCreateNestedManyWithoutVesselInput
+    crewAssignments?: CrewAssignmentCreateNestedManyWithoutVesselInput
   }
 
   export type VesselUncheckedCreateWithoutInventoryUpdateDraftsInput = {
@@ -191266,6 +196323,7 @@ export namespace Prisma {
     openingStockTake?: OpeningStockTakeUncheckedCreateNestedOneWithoutVesselInput
     inventoryEvents?: InventoryEventUncheckedCreateNestedManyWithoutVesselInput
     requisitions?: RequisitionUncheckedCreateNestedManyWithoutVesselInput
+    crewAssignments?: CrewAssignmentUncheckedCreateNestedManyWithoutVesselInput
   }
 
   export type VesselCreateOrConnectWithoutInventoryUpdateDraftsInput = {
@@ -191346,6 +196404,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
     accessLevels?: AccessLevelUpdateManyWithoutCompanyNestedInput
     departments?: DepartmentUpdateManyWithoutCompanyNestedInput
+    seafarers?: SeafarerUpdateManyWithoutCompanyNestedInput
+    crewAssignments?: CrewAssignmentUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutInventoryUpdateDraftsInput = {
@@ -191410,6 +196470,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
     accessLevels?: AccessLevelUncheckedUpdateManyWithoutCompanyNestedInput
     departments?: DepartmentUncheckedUpdateManyWithoutCompanyNestedInput
+    seafarers?: SeafarerUncheckedUpdateManyWithoutCompanyNestedInput
+    crewAssignments?: CrewAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type VesselUpsertWithoutInventoryUpdateDraftsInput = {
@@ -191508,6 +196570,7 @@ export namespace Prisma {
     openingStockTake?: OpeningStockTakeUpdateOneWithoutVesselNestedInput
     inventoryEvents?: InventoryEventUpdateManyWithoutVesselNestedInput
     requisitions?: RequisitionUpdateManyWithoutVesselNestedInput
+    crewAssignments?: CrewAssignmentUpdateManyWithoutVesselNestedInput
   }
 
   export type VesselUncheckedUpdateWithoutInventoryUpdateDraftsInput = {
@@ -191595,6 +196658,7 @@ export namespace Prisma {
     openingStockTake?: OpeningStockTakeUncheckedUpdateOneWithoutVesselNestedInput
     inventoryEvents?: InventoryEventUncheckedUpdateManyWithoutVesselNestedInput
     requisitions?: RequisitionUncheckedUpdateManyWithoutVesselNestedInput
+    crewAssignments?: CrewAssignmentUncheckedUpdateManyWithoutVesselNestedInput
   }
 
   export type CompanyCreateWithoutRequisitionsInput = {
@@ -191659,6 +196723,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
     accessLevels?: AccessLevelCreateNestedManyWithoutCompanyInput
     departments?: DepartmentCreateNestedManyWithoutCompanyInput
+    seafarers?: SeafarerCreateNestedManyWithoutCompanyInput
+    crewAssignments?: CrewAssignmentCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutRequisitionsInput = {
@@ -191723,6 +196789,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
     accessLevels?: AccessLevelUncheckedCreateNestedManyWithoutCompanyInput
     departments?: DepartmentUncheckedCreateNestedManyWithoutCompanyInput
+    seafarers?: SeafarerUncheckedCreateNestedManyWithoutCompanyInput
+    crewAssignments?: CrewAssignmentUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutRequisitionsInput = {
@@ -191815,6 +196883,7 @@ export namespace Prisma {
     openingStockTake?: OpeningStockTakeCreateNestedOneWithoutVesselInput
     inventoryEvents?: InventoryEventCreateNestedManyWithoutVesselInput
     inventoryUpdateDrafts?: InventoryUpdateDraftCreateNestedManyWithoutVesselInput
+    crewAssignments?: CrewAssignmentCreateNestedManyWithoutVesselInput
   }
 
   export type VesselUncheckedCreateWithoutRequisitionsInput = {
@@ -191902,6 +196971,7 @@ export namespace Prisma {
     openingStockTake?: OpeningStockTakeUncheckedCreateNestedOneWithoutVesselInput
     inventoryEvents?: InventoryEventUncheckedCreateNestedManyWithoutVesselInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUncheckedCreateNestedManyWithoutVesselInput
+    crewAssignments?: CrewAssignmentUncheckedCreateNestedManyWithoutVesselInput
   }
 
   export type VesselCreateOrConnectWithoutRequisitionsInput = {
@@ -192093,6 +197163,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
     accessLevels?: AccessLevelUpdateManyWithoutCompanyNestedInput
     departments?: DepartmentUpdateManyWithoutCompanyNestedInput
+    seafarers?: SeafarerUpdateManyWithoutCompanyNestedInput
+    crewAssignments?: CrewAssignmentUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutRequisitionsInput = {
@@ -192157,6 +197229,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
     accessLevels?: AccessLevelUncheckedUpdateManyWithoutCompanyNestedInput
     departments?: DepartmentUncheckedUpdateManyWithoutCompanyNestedInput
+    seafarers?: SeafarerUncheckedUpdateManyWithoutCompanyNestedInput
+    crewAssignments?: CrewAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type VesselUpsertWithoutRequisitionsInput = {
@@ -192255,6 +197329,7 @@ export namespace Prisma {
     openingStockTake?: OpeningStockTakeUpdateOneWithoutVesselNestedInput
     inventoryEvents?: InventoryEventUpdateManyWithoutVesselNestedInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUpdateManyWithoutVesselNestedInput
+    crewAssignments?: CrewAssignmentUpdateManyWithoutVesselNestedInput
   }
 
   export type VesselUncheckedUpdateWithoutRequisitionsInput = {
@@ -192342,6 +197417,7 @@ export namespace Prisma {
     openingStockTake?: OpeningStockTakeUncheckedUpdateOneWithoutVesselNestedInput
     inventoryEvents?: InventoryEventUncheckedUpdateManyWithoutVesselNestedInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUncheckedUpdateManyWithoutVesselNestedInput
+    crewAssignments?: CrewAssignmentUncheckedUpdateManyWithoutVesselNestedInput
   }
 
   export type RequisitionRevisionUpsertWithoutCurrentOfInput = {
@@ -192481,6 +197557,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
     accessLevels?: AccessLevelCreateNestedManyWithoutCompanyInput
     departments?: DepartmentCreateNestedManyWithoutCompanyInput
+    seafarers?: SeafarerCreateNestedManyWithoutCompanyInput
+    crewAssignments?: CrewAssignmentCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutRequisitionRevisionsInput = {
@@ -192545,6 +197623,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
     accessLevels?: AccessLevelUncheckedCreateNestedManyWithoutCompanyInput
     departments?: DepartmentUncheckedCreateNestedManyWithoutCompanyInput
+    seafarers?: SeafarerUncheckedCreateNestedManyWithoutCompanyInput
+    crewAssignments?: CrewAssignmentUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutRequisitionRevisionsInput = {
@@ -192741,6 +197821,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
     accessLevels?: AccessLevelUpdateManyWithoutCompanyNestedInput
     departments?: DepartmentUpdateManyWithoutCompanyNestedInput
+    seafarers?: SeafarerUpdateManyWithoutCompanyNestedInput
+    crewAssignments?: CrewAssignmentUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutRequisitionRevisionsInput = {
@@ -192805,6 +197887,8 @@ export namespace Prisma {
     referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
     accessLevels?: AccessLevelUncheckedUpdateManyWithoutCompanyNestedInput
     departments?: DepartmentUncheckedUpdateManyWithoutCompanyNestedInput
+    seafarers?: SeafarerUncheckedUpdateManyWithoutCompanyNestedInput
+    crewAssignments?: CrewAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type RequisitionUpsertWithoutRevisionsInput = {
@@ -193035,6 +198119,1314 @@ export namespace Prisma {
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
     updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
     currentOf?: RequisitionUncheckedUpdateOneWithoutCurrentRevisionNestedInput
+  }
+
+  export type CompanyCreateWithoutSeafarersInput = {
+    id?: string
+    name: string
+    code: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    ltifTarget?: number
+    trcfTarget?: number
+    sireAvgObservationTarget?: number
+    cinspAvgObservationTarget?: number
+    procurementThresholdSupt?: number
+    procurementThresholdTechManager?: number
+    documentExpiryWarningMonths?: number
+    incidentOverdueDays?: number
+    sireDueSoonDays?: number
+    internalAuditDueSoonDays?: number
+    defaultSireVersion?: string | null
+    users?: UserCreateNestedManyWithoutCompanyInput
+    roles?: RoleCreateNestedManyWithoutCompanyInput
+    vessels?: VesselCreateNestedManyWithoutCompanyInput
+    smsDocuments?: SmsDocumentCreateNestedManyWithoutCompanyInput
+    workflows?: WorkflowDefinitionCreateNestedManyWithoutCompanyInput
+    incidents?: IncidentCreateNestedManyWithoutCompanyInput
+    nearMisses?: NearMissCreateNestedManyWithoutCompanyInput
+    nonConformities?: NonConformityCreateNestedManyWithoutCompanyInput
+    sireInspections?: SireInspectionCreateNestedManyWithoutCompanyInput
+    sireQuestionnaireVersions?: SireQuestionnaireVersionCreateNestedManyWithoutCompanyInput
+    pscInspections?: PscInspectionCreateNestedManyWithoutCompanyInput
+    cdiInspections?: CdiInspectionCreateNestedManyWithoutCompanyInput
+    internalAudits?: InternalAuditCreateNestedManyWithoutCompanyInput
+    externalAudits?: ExternalAuditCreateNestedManyWithoutCompanyInput
+    companyInspections?: CompanyInspectionCreateNestedManyWithoutCompanyInput
+    committeeMeetings?: CommitteeMeetingCreateNestedManyWithoutCompanyInput
+    scheduleItems?: ScheduleItemCreateNestedManyWithoutCompanyInput
+    emergencyDrills?: EmergencyDrillCreateNestedManyWithoutCompanyInput
+    familiarizationRecords?: FamiliarizationRecordCreateNestedManyWithoutCompanyInput
+    familiarizationSessions?: FamiliarizationSessionCreateNestedManyWithoutCompanyInput
+    scheduleApplicability?: ScheduleApplicabilityCreateNestedManyWithoutCompanyInput
+    lsaFfeItems?: LsaFfeItemCreateNestedManyWithoutCompanyInput
+    crewFamiliarizations?: CrewFamiliarizationCreateNestedManyWithoutCompanyInput
+    refSequences?: RefSequenceCreateNestedManyWithoutCompanyInput
+    controlledDocuments?: ControlledDocumentCreateNestedManyWithoutCompanyInput
+    circulars?: CircularCreateNestedManyWithoutCompanyInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentCreateNestedManyWithoutCompanyInput
+    defects?: DefectCreateNestedManyWithoutCompanyInput
+    crewFamiliarizationRecords?: CrewFamiliarizationRecordCreateNestedManyWithoutCompanyInput
+    vesselDocuments?: VesselDocumentCreateNestedManyWithoutCompanyInput
+    voyageLogs?: VoyageLogCreateNestedManyWithoutCompanyInput
+    environmentRecords?: EnvironmentRecordCreateNestedManyWithoutCompanyInput
+    tmsaAssessments?: TmsaAssessmentCreateNestedManyWithoutCompanyInput
+    tmsaScores?: TmsaScoreCreateNestedManyWithoutCompanyInput
+    tmsaFindings?: TmsaFindingCreateNestedManyWithoutCompanyInput
+    storesCatalogueItems?: StoresCatalogueItemCreateNestedManyWithoutCompanyInput
+    sparesCatalogueItems?: SparesCatalogueItemCreateNestedManyWithoutCompanyInput
+    openingStockTakes?: OpeningStockTakeCreateNestedManyWithoutCompanyInput
+    inventoryEvents?: InventoryEventCreateNestedManyWithoutCompanyInput
+    inventoryUpdateDrafts?: InventoryUpdateDraftCreateNestedManyWithoutCompanyInput
+    requisitions?: RequisitionCreateNestedManyWithoutCompanyInput
+    requisitionRevisions?: RequisitionRevisionCreateNestedManyWithoutCompanyInput
+    unitMasters?: UnitMasterCreateNestedManyWithoutCompanyInput
+    referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
+    accessLevels?: AccessLevelCreateNestedManyWithoutCompanyInput
+    departments?: DepartmentCreateNestedManyWithoutCompanyInput
+    crewAssignments?: CrewAssignmentCreateNestedManyWithoutCompanyInput
+  }
+
+  export type CompanyUncheckedCreateWithoutSeafarersInput = {
+    id?: string
+    name: string
+    code: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    ltifTarget?: number
+    trcfTarget?: number
+    sireAvgObservationTarget?: number
+    cinspAvgObservationTarget?: number
+    procurementThresholdSupt?: number
+    procurementThresholdTechManager?: number
+    documentExpiryWarningMonths?: number
+    incidentOverdueDays?: number
+    sireDueSoonDays?: number
+    internalAuditDueSoonDays?: number
+    defaultSireVersion?: string | null
+    users?: UserUncheckedCreateNestedManyWithoutCompanyInput
+    roles?: RoleUncheckedCreateNestedManyWithoutCompanyInput
+    vessels?: VesselUncheckedCreateNestedManyWithoutCompanyInput
+    smsDocuments?: SmsDocumentUncheckedCreateNestedManyWithoutCompanyInput
+    workflows?: WorkflowDefinitionUncheckedCreateNestedManyWithoutCompanyInput
+    incidents?: IncidentUncheckedCreateNestedManyWithoutCompanyInput
+    nearMisses?: NearMissUncheckedCreateNestedManyWithoutCompanyInput
+    nonConformities?: NonConformityUncheckedCreateNestedManyWithoutCompanyInput
+    sireInspections?: SireInspectionUncheckedCreateNestedManyWithoutCompanyInput
+    sireQuestionnaireVersions?: SireQuestionnaireVersionUncheckedCreateNestedManyWithoutCompanyInput
+    pscInspections?: PscInspectionUncheckedCreateNestedManyWithoutCompanyInput
+    cdiInspections?: CdiInspectionUncheckedCreateNestedManyWithoutCompanyInput
+    internalAudits?: InternalAuditUncheckedCreateNestedManyWithoutCompanyInput
+    externalAudits?: ExternalAuditUncheckedCreateNestedManyWithoutCompanyInput
+    companyInspections?: CompanyInspectionUncheckedCreateNestedManyWithoutCompanyInput
+    committeeMeetings?: CommitteeMeetingUncheckedCreateNestedManyWithoutCompanyInput
+    scheduleItems?: ScheduleItemUncheckedCreateNestedManyWithoutCompanyInput
+    emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutCompanyInput
+    familiarizationRecords?: FamiliarizationRecordUncheckedCreateNestedManyWithoutCompanyInput
+    familiarizationSessions?: FamiliarizationSessionUncheckedCreateNestedManyWithoutCompanyInput
+    scheduleApplicability?: ScheduleApplicabilityUncheckedCreateNestedManyWithoutCompanyInput
+    lsaFfeItems?: LsaFfeItemUncheckedCreateNestedManyWithoutCompanyInput
+    crewFamiliarizations?: CrewFamiliarizationUncheckedCreateNestedManyWithoutCompanyInput
+    refSequences?: RefSequenceUncheckedCreateNestedManyWithoutCompanyInput
+    controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutCompanyInput
+    circulars?: CircularUncheckedCreateNestedManyWithoutCompanyInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedCreateNestedManyWithoutCompanyInput
+    defects?: DefectUncheckedCreateNestedManyWithoutCompanyInput
+    crewFamiliarizationRecords?: CrewFamiliarizationRecordUncheckedCreateNestedManyWithoutCompanyInput
+    vesselDocuments?: VesselDocumentUncheckedCreateNestedManyWithoutCompanyInput
+    voyageLogs?: VoyageLogUncheckedCreateNestedManyWithoutCompanyInput
+    environmentRecords?: EnvironmentRecordUncheckedCreateNestedManyWithoutCompanyInput
+    tmsaAssessments?: TmsaAssessmentUncheckedCreateNestedManyWithoutCompanyInput
+    tmsaScores?: TmsaScoreUncheckedCreateNestedManyWithoutCompanyInput
+    tmsaFindings?: TmsaFindingUncheckedCreateNestedManyWithoutCompanyInput
+    storesCatalogueItems?: StoresCatalogueItemUncheckedCreateNestedManyWithoutCompanyInput
+    sparesCatalogueItems?: SparesCatalogueItemUncheckedCreateNestedManyWithoutCompanyInput
+    openingStockTakes?: OpeningStockTakeUncheckedCreateNestedManyWithoutCompanyInput
+    inventoryEvents?: InventoryEventUncheckedCreateNestedManyWithoutCompanyInput
+    inventoryUpdateDrafts?: InventoryUpdateDraftUncheckedCreateNestedManyWithoutCompanyInput
+    requisitions?: RequisitionUncheckedCreateNestedManyWithoutCompanyInput
+    requisitionRevisions?: RequisitionRevisionUncheckedCreateNestedManyWithoutCompanyInput
+    unitMasters?: UnitMasterUncheckedCreateNestedManyWithoutCompanyInput
+    referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
+    accessLevels?: AccessLevelUncheckedCreateNestedManyWithoutCompanyInput
+    departments?: DepartmentUncheckedCreateNestedManyWithoutCompanyInput
+    crewAssignments?: CrewAssignmentUncheckedCreateNestedManyWithoutCompanyInput
+  }
+
+  export type CompanyCreateOrConnectWithoutSeafarersInput = {
+    where: CompanyWhereUniqueInput
+    create: XOR<CompanyCreateWithoutSeafarersInput, CompanyUncheckedCreateWithoutSeafarersInput>
+  }
+
+  export type CrewAssignmentCreateWithoutSeafarerInput = {
+    id?: string
+    rankCode: string
+    plannedSignOnDate: Date | string
+    actualSignOnDate?: Date | string | null
+    plannedSignOffDate?: Date | string | null
+    actualSignOffDate?: Date | string | null
+    signOnPort?: string | null
+    signOffPort?: string | null
+    signOffReason?: string | null
+    vesselRemarks?: string | null
+    shoreRemarks?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    company: CompanyCreateNestedOneWithoutCrewAssignmentsInput
+    vessel: VesselCreateNestedOneWithoutCrewAssignmentsInput
+    reliefFor?: CrewAssignmentCreateNestedOneWithoutReliefsInput
+    reliefs?: CrewAssignmentCreateNestedManyWithoutReliefForInput
+  }
+
+  export type CrewAssignmentUncheckedCreateWithoutSeafarerInput = {
+    id?: string
+    companyId: string
+    vesselId: string
+    rankCode: string
+    plannedSignOnDate: Date | string
+    actualSignOnDate?: Date | string | null
+    plannedSignOffDate?: Date | string | null
+    actualSignOffDate?: Date | string | null
+    signOnPort?: string | null
+    signOffPort?: string | null
+    signOffReason?: string | null
+    reliefForAssignmentId?: string | null
+    vesselRemarks?: string | null
+    shoreRemarks?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    reliefs?: CrewAssignmentUncheckedCreateNestedManyWithoutReliefForInput
+  }
+
+  export type CrewAssignmentCreateOrConnectWithoutSeafarerInput = {
+    where: CrewAssignmentWhereUniqueInput
+    create: XOR<CrewAssignmentCreateWithoutSeafarerInput, CrewAssignmentUncheckedCreateWithoutSeafarerInput>
+  }
+
+  export type CrewAssignmentCreateManySeafarerInputEnvelope = {
+    data: CrewAssignmentCreateManySeafarerInput | CrewAssignmentCreateManySeafarerInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type CompanyUpsertWithoutSeafarersInput = {
+    update: XOR<CompanyUpdateWithoutSeafarersInput, CompanyUncheckedUpdateWithoutSeafarersInput>
+    create: XOR<CompanyCreateWithoutSeafarersInput, CompanyUncheckedCreateWithoutSeafarersInput>
+    where?: CompanyWhereInput
+  }
+
+  export type CompanyUpdateToOneWithWhereWithoutSeafarersInput = {
+    where?: CompanyWhereInput
+    data: XOR<CompanyUpdateWithoutSeafarersInput, CompanyUncheckedUpdateWithoutSeafarersInput>
+  }
+
+  export type CompanyUpdateWithoutSeafarersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ltifTarget?: FloatFieldUpdateOperationsInput | number
+    trcfTarget?: FloatFieldUpdateOperationsInput | number
+    sireAvgObservationTarget?: FloatFieldUpdateOperationsInput | number
+    cinspAvgObservationTarget?: FloatFieldUpdateOperationsInput | number
+    procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
+    procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
+    documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    incidentOverdueDays?: IntFieldUpdateOperationsInput | number
+    sireDueSoonDays?: IntFieldUpdateOperationsInput | number
+    internalAuditDueSoonDays?: IntFieldUpdateOperationsInput | number
+    defaultSireVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    users?: UserUpdateManyWithoutCompanyNestedInput
+    roles?: RoleUpdateManyWithoutCompanyNestedInput
+    vessels?: VesselUpdateManyWithoutCompanyNestedInput
+    smsDocuments?: SmsDocumentUpdateManyWithoutCompanyNestedInput
+    workflows?: WorkflowDefinitionUpdateManyWithoutCompanyNestedInput
+    incidents?: IncidentUpdateManyWithoutCompanyNestedInput
+    nearMisses?: NearMissUpdateManyWithoutCompanyNestedInput
+    nonConformities?: NonConformityUpdateManyWithoutCompanyNestedInput
+    sireInspections?: SireInspectionUpdateManyWithoutCompanyNestedInput
+    sireQuestionnaireVersions?: SireQuestionnaireVersionUpdateManyWithoutCompanyNestedInput
+    pscInspections?: PscInspectionUpdateManyWithoutCompanyNestedInput
+    cdiInspections?: CdiInspectionUpdateManyWithoutCompanyNestedInput
+    internalAudits?: InternalAuditUpdateManyWithoutCompanyNestedInput
+    externalAudits?: ExternalAuditUpdateManyWithoutCompanyNestedInput
+    companyInspections?: CompanyInspectionUpdateManyWithoutCompanyNestedInput
+    committeeMeetings?: CommitteeMeetingUpdateManyWithoutCompanyNestedInput
+    scheduleItems?: ScheduleItemUpdateManyWithoutCompanyNestedInput
+    emergencyDrills?: EmergencyDrillUpdateManyWithoutCompanyNestedInput
+    familiarizationRecords?: FamiliarizationRecordUpdateManyWithoutCompanyNestedInput
+    familiarizationSessions?: FamiliarizationSessionUpdateManyWithoutCompanyNestedInput
+    scheduleApplicability?: ScheduleApplicabilityUpdateManyWithoutCompanyNestedInput
+    lsaFfeItems?: LsaFfeItemUpdateManyWithoutCompanyNestedInput
+    crewFamiliarizations?: CrewFamiliarizationUpdateManyWithoutCompanyNestedInput
+    refSequences?: RefSequenceUpdateManyWithoutCompanyNestedInput
+    controlledDocuments?: ControlledDocumentUpdateManyWithoutCompanyNestedInput
+    circulars?: CircularUpdateManyWithoutCompanyNestedInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUpdateManyWithoutCompanyNestedInput
+    defects?: DefectUpdateManyWithoutCompanyNestedInput
+    crewFamiliarizationRecords?: CrewFamiliarizationRecordUpdateManyWithoutCompanyNestedInput
+    vesselDocuments?: VesselDocumentUpdateManyWithoutCompanyNestedInput
+    voyageLogs?: VoyageLogUpdateManyWithoutCompanyNestedInput
+    environmentRecords?: EnvironmentRecordUpdateManyWithoutCompanyNestedInput
+    tmsaAssessments?: TmsaAssessmentUpdateManyWithoutCompanyNestedInput
+    tmsaScores?: TmsaScoreUpdateManyWithoutCompanyNestedInput
+    tmsaFindings?: TmsaFindingUpdateManyWithoutCompanyNestedInput
+    storesCatalogueItems?: StoresCatalogueItemUpdateManyWithoutCompanyNestedInput
+    sparesCatalogueItems?: SparesCatalogueItemUpdateManyWithoutCompanyNestedInput
+    openingStockTakes?: OpeningStockTakeUpdateManyWithoutCompanyNestedInput
+    inventoryEvents?: InventoryEventUpdateManyWithoutCompanyNestedInput
+    inventoryUpdateDrafts?: InventoryUpdateDraftUpdateManyWithoutCompanyNestedInput
+    requisitions?: RequisitionUpdateManyWithoutCompanyNestedInput
+    requisitionRevisions?: RequisitionRevisionUpdateManyWithoutCompanyNestedInput
+    unitMasters?: UnitMasterUpdateManyWithoutCompanyNestedInput
+    referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
+    accessLevels?: AccessLevelUpdateManyWithoutCompanyNestedInput
+    departments?: DepartmentUpdateManyWithoutCompanyNestedInput
+    crewAssignments?: CrewAssignmentUpdateManyWithoutCompanyNestedInput
+  }
+
+  export type CompanyUncheckedUpdateWithoutSeafarersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ltifTarget?: FloatFieldUpdateOperationsInput | number
+    trcfTarget?: FloatFieldUpdateOperationsInput | number
+    sireAvgObservationTarget?: FloatFieldUpdateOperationsInput | number
+    cinspAvgObservationTarget?: FloatFieldUpdateOperationsInput | number
+    procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
+    procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
+    documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    incidentOverdueDays?: IntFieldUpdateOperationsInput | number
+    sireDueSoonDays?: IntFieldUpdateOperationsInput | number
+    internalAuditDueSoonDays?: IntFieldUpdateOperationsInput | number
+    defaultSireVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    users?: UserUncheckedUpdateManyWithoutCompanyNestedInput
+    roles?: RoleUncheckedUpdateManyWithoutCompanyNestedInput
+    vessels?: VesselUncheckedUpdateManyWithoutCompanyNestedInput
+    smsDocuments?: SmsDocumentUncheckedUpdateManyWithoutCompanyNestedInput
+    workflows?: WorkflowDefinitionUncheckedUpdateManyWithoutCompanyNestedInput
+    incidents?: IncidentUncheckedUpdateManyWithoutCompanyNestedInput
+    nearMisses?: NearMissUncheckedUpdateManyWithoutCompanyNestedInput
+    nonConformities?: NonConformityUncheckedUpdateManyWithoutCompanyNestedInput
+    sireInspections?: SireInspectionUncheckedUpdateManyWithoutCompanyNestedInput
+    sireQuestionnaireVersions?: SireQuestionnaireVersionUncheckedUpdateManyWithoutCompanyNestedInput
+    pscInspections?: PscInspectionUncheckedUpdateManyWithoutCompanyNestedInput
+    cdiInspections?: CdiInspectionUncheckedUpdateManyWithoutCompanyNestedInput
+    internalAudits?: InternalAuditUncheckedUpdateManyWithoutCompanyNestedInput
+    externalAudits?: ExternalAuditUncheckedUpdateManyWithoutCompanyNestedInput
+    companyInspections?: CompanyInspectionUncheckedUpdateManyWithoutCompanyNestedInput
+    committeeMeetings?: CommitteeMeetingUncheckedUpdateManyWithoutCompanyNestedInput
+    scheduleItems?: ScheduleItemUncheckedUpdateManyWithoutCompanyNestedInput
+    emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutCompanyNestedInput
+    familiarizationRecords?: FamiliarizationRecordUncheckedUpdateManyWithoutCompanyNestedInput
+    familiarizationSessions?: FamiliarizationSessionUncheckedUpdateManyWithoutCompanyNestedInput
+    scheduleApplicability?: ScheduleApplicabilityUncheckedUpdateManyWithoutCompanyNestedInput
+    lsaFfeItems?: LsaFfeItemUncheckedUpdateManyWithoutCompanyNestedInput
+    crewFamiliarizations?: CrewFamiliarizationUncheckedUpdateManyWithoutCompanyNestedInput
+    refSequences?: RefSequenceUncheckedUpdateManyWithoutCompanyNestedInput
+    controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutCompanyNestedInput
+    circulars?: CircularUncheckedUpdateManyWithoutCompanyNestedInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedUpdateManyWithoutCompanyNestedInput
+    defects?: DefectUncheckedUpdateManyWithoutCompanyNestedInput
+    crewFamiliarizationRecords?: CrewFamiliarizationRecordUncheckedUpdateManyWithoutCompanyNestedInput
+    vesselDocuments?: VesselDocumentUncheckedUpdateManyWithoutCompanyNestedInput
+    voyageLogs?: VoyageLogUncheckedUpdateManyWithoutCompanyNestedInput
+    environmentRecords?: EnvironmentRecordUncheckedUpdateManyWithoutCompanyNestedInput
+    tmsaAssessments?: TmsaAssessmentUncheckedUpdateManyWithoutCompanyNestedInput
+    tmsaScores?: TmsaScoreUncheckedUpdateManyWithoutCompanyNestedInput
+    tmsaFindings?: TmsaFindingUncheckedUpdateManyWithoutCompanyNestedInput
+    storesCatalogueItems?: StoresCatalogueItemUncheckedUpdateManyWithoutCompanyNestedInput
+    sparesCatalogueItems?: SparesCatalogueItemUncheckedUpdateManyWithoutCompanyNestedInput
+    openingStockTakes?: OpeningStockTakeUncheckedUpdateManyWithoutCompanyNestedInput
+    inventoryEvents?: InventoryEventUncheckedUpdateManyWithoutCompanyNestedInput
+    inventoryUpdateDrafts?: InventoryUpdateDraftUncheckedUpdateManyWithoutCompanyNestedInput
+    requisitions?: RequisitionUncheckedUpdateManyWithoutCompanyNestedInput
+    requisitionRevisions?: RequisitionRevisionUncheckedUpdateManyWithoutCompanyNestedInput
+    unitMasters?: UnitMasterUncheckedUpdateManyWithoutCompanyNestedInput
+    referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
+    accessLevels?: AccessLevelUncheckedUpdateManyWithoutCompanyNestedInput
+    departments?: DepartmentUncheckedUpdateManyWithoutCompanyNestedInput
+    crewAssignments?: CrewAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
+  }
+
+  export type CrewAssignmentUpsertWithWhereUniqueWithoutSeafarerInput = {
+    where: CrewAssignmentWhereUniqueInput
+    update: XOR<CrewAssignmentUpdateWithoutSeafarerInput, CrewAssignmentUncheckedUpdateWithoutSeafarerInput>
+    create: XOR<CrewAssignmentCreateWithoutSeafarerInput, CrewAssignmentUncheckedCreateWithoutSeafarerInput>
+  }
+
+  export type CrewAssignmentUpdateWithWhereUniqueWithoutSeafarerInput = {
+    where: CrewAssignmentWhereUniqueInput
+    data: XOR<CrewAssignmentUpdateWithoutSeafarerInput, CrewAssignmentUncheckedUpdateWithoutSeafarerInput>
+  }
+
+  export type CrewAssignmentUpdateManyWithWhereWithoutSeafarerInput = {
+    where: CrewAssignmentScalarWhereInput
+    data: XOR<CrewAssignmentUpdateManyMutationInput, CrewAssignmentUncheckedUpdateManyWithoutSeafarerInput>
+  }
+
+  export type CompanyCreateWithoutCrewAssignmentsInput = {
+    id?: string
+    name: string
+    code: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    ltifTarget?: number
+    trcfTarget?: number
+    sireAvgObservationTarget?: number
+    cinspAvgObservationTarget?: number
+    procurementThresholdSupt?: number
+    procurementThresholdTechManager?: number
+    documentExpiryWarningMonths?: number
+    incidentOverdueDays?: number
+    sireDueSoonDays?: number
+    internalAuditDueSoonDays?: number
+    defaultSireVersion?: string | null
+    users?: UserCreateNestedManyWithoutCompanyInput
+    roles?: RoleCreateNestedManyWithoutCompanyInput
+    vessels?: VesselCreateNestedManyWithoutCompanyInput
+    smsDocuments?: SmsDocumentCreateNestedManyWithoutCompanyInput
+    workflows?: WorkflowDefinitionCreateNestedManyWithoutCompanyInput
+    incidents?: IncidentCreateNestedManyWithoutCompanyInput
+    nearMisses?: NearMissCreateNestedManyWithoutCompanyInput
+    nonConformities?: NonConformityCreateNestedManyWithoutCompanyInput
+    sireInspections?: SireInspectionCreateNestedManyWithoutCompanyInput
+    sireQuestionnaireVersions?: SireQuestionnaireVersionCreateNestedManyWithoutCompanyInput
+    pscInspections?: PscInspectionCreateNestedManyWithoutCompanyInput
+    cdiInspections?: CdiInspectionCreateNestedManyWithoutCompanyInput
+    internalAudits?: InternalAuditCreateNestedManyWithoutCompanyInput
+    externalAudits?: ExternalAuditCreateNestedManyWithoutCompanyInput
+    companyInspections?: CompanyInspectionCreateNestedManyWithoutCompanyInput
+    committeeMeetings?: CommitteeMeetingCreateNestedManyWithoutCompanyInput
+    scheduleItems?: ScheduleItemCreateNestedManyWithoutCompanyInput
+    emergencyDrills?: EmergencyDrillCreateNestedManyWithoutCompanyInput
+    familiarizationRecords?: FamiliarizationRecordCreateNestedManyWithoutCompanyInput
+    familiarizationSessions?: FamiliarizationSessionCreateNestedManyWithoutCompanyInput
+    scheduleApplicability?: ScheduleApplicabilityCreateNestedManyWithoutCompanyInput
+    lsaFfeItems?: LsaFfeItemCreateNestedManyWithoutCompanyInput
+    crewFamiliarizations?: CrewFamiliarizationCreateNestedManyWithoutCompanyInput
+    refSequences?: RefSequenceCreateNestedManyWithoutCompanyInput
+    controlledDocuments?: ControlledDocumentCreateNestedManyWithoutCompanyInput
+    circulars?: CircularCreateNestedManyWithoutCompanyInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentCreateNestedManyWithoutCompanyInput
+    defects?: DefectCreateNestedManyWithoutCompanyInput
+    crewFamiliarizationRecords?: CrewFamiliarizationRecordCreateNestedManyWithoutCompanyInput
+    vesselDocuments?: VesselDocumentCreateNestedManyWithoutCompanyInput
+    voyageLogs?: VoyageLogCreateNestedManyWithoutCompanyInput
+    environmentRecords?: EnvironmentRecordCreateNestedManyWithoutCompanyInput
+    tmsaAssessments?: TmsaAssessmentCreateNestedManyWithoutCompanyInput
+    tmsaScores?: TmsaScoreCreateNestedManyWithoutCompanyInput
+    tmsaFindings?: TmsaFindingCreateNestedManyWithoutCompanyInput
+    storesCatalogueItems?: StoresCatalogueItemCreateNestedManyWithoutCompanyInput
+    sparesCatalogueItems?: SparesCatalogueItemCreateNestedManyWithoutCompanyInput
+    openingStockTakes?: OpeningStockTakeCreateNestedManyWithoutCompanyInput
+    inventoryEvents?: InventoryEventCreateNestedManyWithoutCompanyInput
+    inventoryUpdateDrafts?: InventoryUpdateDraftCreateNestedManyWithoutCompanyInput
+    requisitions?: RequisitionCreateNestedManyWithoutCompanyInput
+    requisitionRevisions?: RequisitionRevisionCreateNestedManyWithoutCompanyInput
+    unitMasters?: UnitMasterCreateNestedManyWithoutCompanyInput
+    referenceListItems?: ReferenceListItemCreateNestedManyWithoutCompanyInput
+    accessLevels?: AccessLevelCreateNestedManyWithoutCompanyInput
+    departments?: DepartmentCreateNestedManyWithoutCompanyInput
+    seafarers?: SeafarerCreateNestedManyWithoutCompanyInput
+  }
+
+  export type CompanyUncheckedCreateWithoutCrewAssignmentsInput = {
+    id?: string
+    name: string
+    code: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    ltifTarget?: number
+    trcfTarget?: number
+    sireAvgObservationTarget?: number
+    cinspAvgObservationTarget?: number
+    procurementThresholdSupt?: number
+    procurementThresholdTechManager?: number
+    documentExpiryWarningMonths?: number
+    incidentOverdueDays?: number
+    sireDueSoonDays?: number
+    internalAuditDueSoonDays?: number
+    defaultSireVersion?: string | null
+    users?: UserUncheckedCreateNestedManyWithoutCompanyInput
+    roles?: RoleUncheckedCreateNestedManyWithoutCompanyInput
+    vessels?: VesselUncheckedCreateNestedManyWithoutCompanyInput
+    smsDocuments?: SmsDocumentUncheckedCreateNestedManyWithoutCompanyInput
+    workflows?: WorkflowDefinitionUncheckedCreateNestedManyWithoutCompanyInput
+    incidents?: IncidentUncheckedCreateNestedManyWithoutCompanyInput
+    nearMisses?: NearMissUncheckedCreateNestedManyWithoutCompanyInput
+    nonConformities?: NonConformityUncheckedCreateNestedManyWithoutCompanyInput
+    sireInspections?: SireInspectionUncheckedCreateNestedManyWithoutCompanyInput
+    sireQuestionnaireVersions?: SireQuestionnaireVersionUncheckedCreateNestedManyWithoutCompanyInput
+    pscInspections?: PscInspectionUncheckedCreateNestedManyWithoutCompanyInput
+    cdiInspections?: CdiInspectionUncheckedCreateNestedManyWithoutCompanyInput
+    internalAudits?: InternalAuditUncheckedCreateNestedManyWithoutCompanyInput
+    externalAudits?: ExternalAuditUncheckedCreateNestedManyWithoutCompanyInput
+    companyInspections?: CompanyInspectionUncheckedCreateNestedManyWithoutCompanyInput
+    committeeMeetings?: CommitteeMeetingUncheckedCreateNestedManyWithoutCompanyInput
+    scheduleItems?: ScheduleItemUncheckedCreateNestedManyWithoutCompanyInput
+    emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutCompanyInput
+    familiarizationRecords?: FamiliarizationRecordUncheckedCreateNestedManyWithoutCompanyInput
+    familiarizationSessions?: FamiliarizationSessionUncheckedCreateNestedManyWithoutCompanyInput
+    scheduleApplicability?: ScheduleApplicabilityUncheckedCreateNestedManyWithoutCompanyInput
+    lsaFfeItems?: LsaFfeItemUncheckedCreateNestedManyWithoutCompanyInput
+    crewFamiliarizations?: CrewFamiliarizationUncheckedCreateNestedManyWithoutCompanyInput
+    refSequences?: RefSequenceUncheckedCreateNestedManyWithoutCompanyInput
+    controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutCompanyInput
+    circulars?: CircularUncheckedCreateNestedManyWithoutCompanyInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedCreateNestedManyWithoutCompanyInput
+    defects?: DefectUncheckedCreateNestedManyWithoutCompanyInput
+    crewFamiliarizationRecords?: CrewFamiliarizationRecordUncheckedCreateNestedManyWithoutCompanyInput
+    vesselDocuments?: VesselDocumentUncheckedCreateNestedManyWithoutCompanyInput
+    voyageLogs?: VoyageLogUncheckedCreateNestedManyWithoutCompanyInput
+    environmentRecords?: EnvironmentRecordUncheckedCreateNestedManyWithoutCompanyInput
+    tmsaAssessments?: TmsaAssessmentUncheckedCreateNestedManyWithoutCompanyInput
+    tmsaScores?: TmsaScoreUncheckedCreateNestedManyWithoutCompanyInput
+    tmsaFindings?: TmsaFindingUncheckedCreateNestedManyWithoutCompanyInput
+    storesCatalogueItems?: StoresCatalogueItemUncheckedCreateNestedManyWithoutCompanyInput
+    sparesCatalogueItems?: SparesCatalogueItemUncheckedCreateNestedManyWithoutCompanyInput
+    openingStockTakes?: OpeningStockTakeUncheckedCreateNestedManyWithoutCompanyInput
+    inventoryEvents?: InventoryEventUncheckedCreateNestedManyWithoutCompanyInput
+    inventoryUpdateDrafts?: InventoryUpdateDraftUncheckedCreateNestedManyWithoutCompanyInput
+    requisitions?: RequisitionUncheckedCreateNestedManyWithoutCompanyInput
+    requisitionRevisions?: RequisitionRevisionUncheckedCreateNestedManyWithoutCompanyInput
+    unitMasters?: UnitMasterUncheckedCreateNestedManyWithoutCompanyInput
+    referenceListItems?: ReferenceListItemUncheckedCreateNestedManyWithoutCompanyInput
+    accessLevels?: AccessLevelUncheckedCreateNestedManyWithoutCompanyInput
+    departments?: DepartmentUncheckedCreateNestedManyWithoutCompanyInput
+    seafarers?: SeafarerUncheckedCreateNestedManyWithoutCompanyInput
+  }
+
+  export type CompanyCreateOrConnectWithoutCrewAssignmentsInput = {
+    where: CompanyWhereUniqueInput
+    create: XOR<CompanyCreateWithoutCrewAssignmentsInput, CompanyUncheckedCreateWithoutCrewAssignmentsInput>
+  }
+
+  export type SeafarerCreateWithoutAssignmentsInput = {
+    id?: string
+    crewCode?: string | null
+    lastName: string
+    firstName: string
+    middleName?: string | null
+    suffix?: string | null
+    nationality?: string | null
+    dateOfBirth?: Date | string | null
+    contactPhone?: string | null
+    contactEmail?: string | null
+    nextOfKinName?: string | null
+    nextOfKinRelationship?: string | null
+    nextOfKinPhone?: string | null
+    active?: boolean
+    redactedAt?: Date | string | null
+    redactedBy?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    company: CompanyCreateNestedOneWithoutSeafarersInput
+  }
+
+  export type SeafarerUncheckedCreateWithoutAssignmentsInput = {
+    id?: string
+    companyId: string
+    crewCode?: string | null
+    lastName: string
+    firstName: string
+    middleName?: string | null
+    suffix?: string | null
+    nationality?: string | null
+    dateOfBirth?: Date | string | null
+    contactPhone?: string | null
+    contactEmail?: string | null
+    nextOfKinName?: string | null
+    nextOfKinRelationship?: string | null
+    nextOfKinPhone?: string | null
+    active?: boolean
+    redactedAt?: Date | string | null
+    redactedBy?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+  }
+
+  export type SeafarerCreateOrConnectWithoutAssignmentsInput = {
+    where: SeafarerWhereUniqueInput
+    create: XOR<SeafarerCreateWithoutAssignmentsInput, SeafarerUncheckedCreateWithoutAssignmentsInput>
+  }
+
+  export type VesselCreateWithoutCrewAssignmentsInput = {
+    id?: string
+    name: string
+    code: string
+    imo?: string | null
+    officialNumber?: string | null
+    callSign?: string | null
+    mmsi?: string | null
+    flag?: string | null
+    type: string
+    classificationSociety?: string | null
+    yearBuilt?: number | null
+    grossTonnage?: number | null
+    loa?: number | null
+    breadth?: number | null
+    depth?: number | null
+    status?: $Enums.VesselStatus
+    capacityCbm?: number | null
+    netTonnage?: number | null
+    deadweight?: number | null
+    tradeArea?: string | null
+    registeredOwner?: string | null
+    headOwner?: string | null
+    charterer?: string | null
+    yearWithSwan?: number | null
+    lastDryDock?: Date | string | null
+    dryDockPlace?: string | null
+    nextDryDockDue?: Date | string | null
+    portOfRegistry?: string | null
+    lbp?: number | null
+    draft?: number | null
+    mainEngine?: string | null
+    serviceSpeed?: number | null
+    stdFoConsumptionMt?: number | null
+    stdDoConsumptionMt?: number | null
+    navigationArea?: string | null
+    classNotation?: string | null
+    ownerAddress?: string | null
+    builder?: string | null
+    keelLaidDate?: Date | string | null
+    launchingDate?: Date | string | null
+    deliveryDate?: Date | string | null
+    totalComplement?: number | null
+    satPhone?: string | null
+    vesselEmail?: string | null
+    archivedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    company: CompanyCreateNestedOneWithoutVesselsInput
+    smsDocuments?: SmsDocumentCreateNestedManyWithoutVesselInput
+    incidents?: IncidentCreateNestedManyWithoutVesselInput
+    nearMisses?: NearMissCreateNestedManyWithoutVesselInput
+    nonConformities?: NonConformityCreateNestedManyWithoutVesselInput
+    sireInspections?: SireInspectionCreateNestedManyWithoutVesselInput
+    pscInspections?: PscInspectionCreateNestedManyWithoutVesselInput
+    cdiInspections?: CdiInspectionCreateNestedManyWithoutVesselInput
+    internalAudits?: InternalAuditCreateNestedManyWithoutVesselInput
+    externalAudits?: ExternalAuditCreateNestedManyWithoutVesselInput
+    companyInspections?: CompanyInspectionCreateNestedManyWithoutVesselInput
+    committeeMeetings?: CommitteeMeetingCreateNestedManyWithoutVesselInput
+    emergencyDrills?: EmergencyDrillCreateNestedManyWithoutVesselInput
+    familiarizationRecords?: FamiliarizationRecordCreateNestedManyWithoutVesselInput
+    familiarizationSessions?: FamiliarizationSessionCreateNestedManyWithoutVesselInput
+    scheduleApplicability?: ScheduleApplicabilityCreateNestedManyWithoutVesselInput
+    crewFamiliarizations?: CrewFamiliarizationCreateNestedManyWithoutVesselInput
+    controlledDocuments?: ControlledDocumentCreateNestedManyWithoutVesselInput
+    circulars?: CircularCreateNestedManyWithoutVesselInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentCreateNestedManyWithoutVesselInput
+    riskAssessmentExecutions?: RiskAssessmentExecutionCreateNestedManyWithoutVesselInput
+    riskAssessmentRevisionRequests?: RiskAssessmentRevisionRequestCreateNestedManyWithoutVesselInput
+    riskHazardRows?: RiskHazardRowCreateNestedManyWithoutVesselInput
+    defects?: DefectCreateNestedManyWithoutVesselInput
+    vesselDocuments?: VesselDocumentCreateNestedManyWithoutVesselInput
+    users?: UserCreateNestedManyWithoutVesselInput
+    voyageLogs?: VoyageLogCreateNestedManyWithoutVesselInput
+    environmentRecords?: EnvironmentRecordCreateNestedManyWithoutVesselInput
+    storesCatalogueItems?: StoresCatalogueItemCreateNestedManyWithoutVesselInput
+    sparesCatalogueItems?: SparesCatalogueItemCreateNestedManyWithoutVesselInput
+    openingStockTake?: OpeningStockTakeCreateNestedOneWithoutVesselInput
+    inventoryEvents?: InventoryEventCreateNestedManyWithoutVesselInput
+    inventoryUpdateDrafts?: InventoryUpdateDraftCreateNestedManyWithoutVesselInput
+    requisitions?: RequisitionCreateNestedManyWithoutVesselInput
+  }
+
+  export type VesselUncheckedCreateWithoutCrewAssignmentsInput = {
+    id?: string
+    companyId: string
+    name: string
+    code: string
+    imo?: string | null
+    officialNumber?: string | null
+    callSign?: string | null
+    mmsi?: string | null
+    flag?: string | null
+    type: string
+    classificationSociety?: string | null
+    yearBuilt?: number | null
+    grossTonnage?: number | null
+    loa?: number | null
+    breadth?: number | null
+    depth?: number | null
+    status?: $Enums.VesselStatus
+    capacityCbm?: number | null
+    netTonnage?: number | null
+    deadweight?: number | null
+    tradeArea?: string | null
+    registeredOwner?: string | null
+    headOwner?: string | null
+    charterer?: string | null
+    yearWithSwan?: number | null
+    lastDryDock?: Date | string | null
+    dryDockPlace?: string | null
+    nextDryDockDue?: Date | string | null
+    portOfRegistry?: string | null
+    lbp?: number | null
+    draft?: number | null
+    mainEngine?: string | null
+    serviceSpeed?: number | null
+    stdFoConsumptionMt?: number | null
+    stdDoConsumptionMt?: number | null
+    navigationArea?: string | null
+    classNotation?: string | null
+    ownerAddress?: string | null
+    builder?: string | null
+    keelLaidDate?: Date | string | null
+    launchingDate?: Date | string | null
+    deliveryDate?: Date | string | null
+    totalComplement?: number | null
+    satPhone?: string | null
+    vesselEmail?: string | null
+    archivedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    smsDocuments?: SmsDocumentUncheckedCreateNestedManyWithoutVesselInput
+    incidents?: IncidentUncheckedCreateNestedManyWithoutVesselInput
+    nearMisses?: NearMissUncheckedCreateNestedManyWithoutVesselInput
+    nonConformities?: NonConformityUncheckedCreateNestedManyWithoutVesselInput
+    sireInspections?: SireInspectionUncheckedCreateNestedManyWithoutVesselInput
+    pscInspections?: PscInspectionUncheckedCreateNestedManyWithoutVesselInput
+    cdiInspections?: CdiInspectionUncheckedCreateNestedManyWithoutVesselInput
+    internalAudits?: InternalAuditUncheckedCreateNestedManyWithoutVesselInput
+    externalAudits?: ExternalAuditUncheckedCreateNestedManyWithoutVesselInput
+    companyInspections?: CompanyInspectionUncheckedCreateNestedManyWithoutVesselInput
+    committeeMeetings?: CommitteeMeetingUncheckedCreateNestedManyWithoutVesselInput
+    emergencyDrills?: EmergencyDrillUncheckedCreateNestedManyWithoutVesselInput
+    familiarizationRecords?: FamiliarizationRecordUncheckedCreateNestedManyWithoutVesselInput
+    familiarizationSessions?: FamiliarizationSessionUncheckedCreateNestedManyWithoutVesselInput
+    scheduleApplicability?: ScheduleApplicabilityUncheckedCreateNestedManyWithoutVesselInput
+    crewFamiliarizations?: CrewFamiliarizationUncheckedCreateNestedManyWithoutVesselInput
+    controlledDocuments?: ControlledDocumentUncheckedCreateNestedManyWithoutVesselInput
+    circulars?: CircularUncheckedCreateNestedManyWithoutVesselInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedCreateNestedManyWithoutVesselInput
+    riskAssessmentExecutions?: RiskAssessmentExecutionUncheckedCreateNestedManyWithoutVesselInput
+    riskAssessmentRevisionRequests?: RiskAssessmentRevisionRequestUncheckedCreateNestedManyWithoutVesselInput
+    riskHazardRows?: RiskHazardRowUncheckedCreateNestedManyWithoutVesselInput
+    defects?: DefectUncheckedCreateNestedManyWithoutVesselInput
+    vesselDocuments?: VesselDocumentUncheckedCreateNestedManyWithoutVesselInput
+    users?: UserUncheckedCreateNestedManyWithoutVesselInput
+    voyageLogs?: VoyageLogUncheckedCreateNestedManyWithoutVesselInput
+    environmentRecords?: EnvironmentRecordUncheckedCreateNestedManyWithoutVesselInput
+    storesCatalogueItems?: StoresCatalogueItemUncheckedCreateNestedManyWithoutVesselInput
+    sparesCatalogueItems?: SparesCatalogueItemUncheckedCreateNestedManyWithoutVesselInput
+    openingStockTake?: OpeningStockTakeUncheckedCreateNestedOneWithoutVesselInput
+    inventoryEvents?: InventoryEventUncheckedCreateNestedManyWithoutVesselInput
+    inventoryUpdateDrafts?: InventoryUpdateDraftUncheckedCreateNestedManyWithoutVesselInput
+    requisitions?: RequisitionUncheckedCreateNestedManyWithoutVesselInput
+  }
+
+  export type VesselCreateOrConnectWithoutCrewAssignmentsInput = {
+    where: VesselWhereUniqueInput
+    create: XOR<VesselCreateWithoutCrewAssignmentsInput, VesselUncheckedCreateWithoutCrewAssignmentsInput>
+  }
+
+  export type CrewAssignmentCreateWithoutReliefsInput = {
+    id?: string
+    rankCode: string
+    plannedSignOnDate: Date | string
+    actualSignOnDate?: Date | string | null
+    plannedSignOffDate?: Date | string | null
+    actualSignOffDate?: Date | string | null
+    signOnPort?: string | null
+    signOffPort?: string | null
+    signOffReason?: string | null
+    vesselRemarks?: string | null
+    shoreRemarks?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    company: CompanyCreateNestedOneWithoutCrewAssignmentsInput
+    seafarer: SeafarerCreateNestedOneWithoutAssignmentsInput
+    vessel: VesselCreateNestedOneWithoutCrewAssignmentsInput
+    reliefFor?: CrewAssignmentCreateNestedOneWithoutReliefsInput
+  }
+
+  export type CrewAssignmentUncheckedCreateWithoutReliefsInput = {
+    id?: string
+    companyId: string
+    seafarerId: string
+    vesselId: string
+    rankCode: string
+    plannedSignOnDate: Date | string
+    actualSignOnDate?: Date | string | null
+    plannedSignOffDate?: Date | string | null
+    actualSignOffDate?: Date | string | null
+    signOnPort?: string | null
+    signOffPort?: string | null
+    signOffReason?: string | null
+    reliefForAssignmentId?: string | null
+    vesselRemarks?: string | null
+    shoreRemarks?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+  }
+
+  export type CrewAssignmentCreateOrConnectWithoutReliefsInput = {
+    where: CrewAssignmentWhereUniqueInput
+    create: XOR<CrewAssignmentCreateWithoutReliefsInput, CrewAssignmentUncheckedCreateWithoutReliefsInput>
+  }
+
+  export type CrewAssignmentCreateWithoutReliefForInput = {
+    id?: string
+    rankCode: string
+    plannedSignOnDate: Date | string
+    actualSignOnDate?: Date | string | null
+    plannedSignOffDate?: Date | string | null
+    actualSignOffDate?: Date | string | null
+    signOnPort?: string | null
+    signOffPort?: string | null
+    signOffReason?: string | null
+    vesselRemarks?: string | null
+    shoreRemarks?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    company: CompanyCreateNestedOneWithoutCrewAssignmentsInput
+    seafarer: SeafarerCreateNestedOneWithoutAssignmentsInput
+    vessel: VesselCreateNestedOneWithoutCrewAssignmentsInput
+    reliefs?: CrewAssignmentCreateNestedManyWithoutReliefForInput
+  }
+
+  export type CrewAssignmentUncheckedCreateWithoutReliefForInput = {
+    id?: string
+    companyId: string
+    seafarerId: string
+    vesselId: string
+    rankCode: string
+    plannedSignOnDate: Date | string
+    actualSignOnDate?: Date | string | null
+    plannedSignOffDate?: Date | string | null
+    actualSignOffDate?: Date | string | null
+    signOnPort?: string | null
+    signOffPort?: string | null
+    signOffReason?: string | null
+    vesselRemarks?: string | null
+    shoreRemarks?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    reliefs?: CrewAssignmentUncheckedCreateNestedManyWithoutReliefForInput
+  }
+
+  export type CrewAssignmentCreateOrConnectWithoutReliefForInput = {
+    where: CrewAssignmentWhereUniqueInput
+    create: XOR<CrewAssignmentCreateWithoutReliefForInput, CrewAssignmentUncheckedCreateWithoutReliefForInput>
+  }
+
+  export type CrewAssignmentCreateManyReliefForInputEnvelope = {
+    data: CrewAssignmentCreateManyReliefForInput | CrewAssignmentCreateManyReliefForInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type CompanyUpsertWithoutCrewAssignmentsInput = {
+    update: XOR<CompanyUpdateWithoutCrewAssignmentsInput, CompanyUncheckedUpdateWithoutCrewAssignmentsInput>
+    create: XOR<CompanyCreateWithoutCrewAssignmentsInput, CompanyUncheckedCreateWithoutCrewAssignmentsInput>
+    where?: CompanyWhereInput
+  }
+
+  export type CompanyUpdateToOneWithWhereWithoutCrewAssignmentsInput = {
+    where?: CompanyWhereInput
+    data: XOR<CompanyUpdateWithoutCrewAssignmentsInput, CompanyUncheckedUpdateWithoutCrewAssignmentsInput>
+  }
+
+  export type CompanyUpdateWithoutCrewAssignmentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ltifTarget?: FloatFieldUpdateOperationsInput | number
+    trcfTarget?: FloatFieldUpdateOperationsInput | number
+    sireAvgObservationTarget?: FloatFieldUpdateOperationsInput | number
+    cinspAvgObservationTarget?: FloatFieldUpdateOperationsInput | number
+    procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
+    procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
+    documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    incidentOverdueDays?: IntFieldUpdateOperationsInput | number
+    sireDueSoonDays?: IntFieldUpdateOperationsInput | number
+    internalAuditDueSoonDays?: IntFieldUpdateOperationsInput | number
+    defaultSireVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    users?: UserUpdateManyWithoutCompanyNestedInput
+    roles?: RoleUpdateManyWithoutCompanyNestedInput
+    vessels?: VesselUpdateManyWithoutCompanyNestedInput
+    smsDocuments?: SmsDocumentUpdateManyWithoutCompanyNestedInput
+    workflows?: WorkflowDefinitionUpdateManyWithoutCompanyNestedInput
+    incidents?: IncidentUpdateManyWithoutCompanyNestedInput
+    nearMisses?: NearMissUpdateManyWithoutCompanyNestedInput
+    nonConformities?: NonConformityUpdateManyWithoutCompanyNestedInput
+    sireInspections?: SireInspectionUpdateManyWithoutCompanyNestedInput
+    sireQuestionnaireVersions?: SireQuestionnaireVersionUpdateManyWithoutCompanyNestedInput
+    pscInspections?: PscInspectionUpdateManyWithoutCompanyNestedInput
+    cdiInspections?: CdiInspectionUpdateManyWithoutCompanyNestedInput
+    internalAudits?: InternalAuditUpdateManyWithoutCompanyNestedInput
+    externalAudits?: ExternalAuditUpdateManyWithoutCompanyNestedInput
+    companyInspections?: CompanyInspectionUpdateManyWithoutCompanyNestedInput
+    committeeMeetings?: CommitteeMeetingUpdateManyWithoutCompanyNestedInput
+    scheduleItems?: ScheduleItemUpdateManyWithoutCompanyNestedInput
+    emergencyDrills?: EmergencyDrillUpdateManyWithoutCompanyNestedInput
+    familiarizationRecords?: FamiliarizationRecordUpdateManyWithoutCompanyNestedInput
+    familiarizationSessions?: FamiliarizationSessionUpdateManyWithoutCompanyNestedInput
+    scheduleApplicability?: ScheduleApplicabilityUpdateManyWithoutCompanyNestedInput
+    lsaFfeItems?: LsaFfeItemUpdateManyWithoutCompanyNestedInput
+    crewFamiliarizations?: CrewFamiliarizationUpdateManyWithoutCompanyNestedInput
+    refSequences?: RefSequenceUpdateManyWithoutCompanyNestedInput
+    controlledDocuments?: ControlledDocumentUpdateManyWithoutCompanyNestedInput
+    circulars?: CircularUpdateManyWithoutCompanyNestedInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUpdateManyWithoutCompanyNestedInput
+    defects?: DefectUpdateManyWithoutCompanyNestedInput
+    crewFamiliarizationRecords?: CrewFamiliarizationRecordUpdateManyWithoutCompanyNestedInput
+    vesselDocuments?: VesselDocumentUpdateManyWithoutCompanyNestedInput
+    voyageLogs?: VoyageLogUpdateManyWithoutCompanyNestedInput
+    environmentRecords?: EnvironmentRecordUpdateManyWithoutCompanyNestedInput
+    tmsaAssessments?: TmsaAssessmentUpdateManyWithoutCompanyNestedInput
+    tmsaScores?: TmsaScoreUpdateManyWithoutCompanyNestedInput
+    tmsaFindings?: TmsaFindingUpdateManyWithoutCompanyNestedInput
+    storesCatalogueItems?: StoresCatalogueItemUpdateManyWithoutCompanyNestedInput
+    sparesCatalogueItems?: SparesCatalogueItemUpdateManyWithoutCompanyNestedInput
+    openingStockTakes?: OpeningStockTakeUpdateManyWithoutCompanyNestedInput
+    inventoryEvents?: InventoryEventUpdateManyWithoutCompanyNestedInput
+    inventoryUpdateDrafts?: InventoryUpdateDraftUpdateManyWithoutCompanyNestedInput
+    requisitions?: RequisitionUpdateManyWithoutCompanyNestedInput
+    requisitionRevisions?: RequisitionRevisionUpdateManyWithoutCompanyNestedInput
+    unitMasters?: UnitMasterUpdateManyWithoutCompanyNestedInput
+    referenceListItems?: ReferenceListItemUpdateManyWithoutCompanyNestedInput
+    accessLevels?: AccessLevelUpdateManyWithoutCompanyNestedInput
+    departments?: DepartmentUpdateManyWithoutCompanyNestedInput
+    seafarers?: SeafarerUpdateManyWithoutCompanyNestedInput
+  }
+
+  export type CompanyUncheckedUpdateWithoutCrewAssignmentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ltifTarget?: FloatFieldUpdateOperationsInput | number
+    trcfTarget?: FloatFieldUpdateOperationsInput | number
+    sireAvgObservationTarget?: FloatFieldUpdateOperationsInput | number
+    cinspAvgObservationTarget?: FloatFieldUpdateOperationsInput | number
+    procurementThresholdSupt?: FloatFieldUpdateOperationsInput | number
+    procurementThresholdTechManager?: FloatFieldUpdateOperationsInput | number
+    documentExpiryWarningMonths?: IntFieldUpdateOperationsInput | number
+    incidentOverdueDays?: IntFieldUpdateOperationsInput | number
+    sireDueSoonDays?: IntFieldUpdateOperationsInput | number
+    internalAuditDueSoonDays?: IntFieldUpdateOperationsInput | number
+    defaultSireVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    users?: UserUncheckedUpdateManyWithoutCompanyNestedInput
+    roles?: RoleUncheckedUpdateManyWithoutCompanyNestedInput
+    vessels?: VesselUncheckedUpdateManyWithoutCompanyNestedInput
+    smsDocuments?: SmsDocumentUncheckedUpdateManyWithoutCompanyNestedInput
+    workflows?: WorkflowDefinitionUncheckedUpdateManyWithoutCompanyNestedInput
+    incidents?: IncidentUncheckedUpdateManyWithoutCompanyNestedInput
+    nearMisses?: NearMissUncheckedUpdateManyWithoutCompanyNestedInput
+    nonConformities?: NonConformityUncheckedUpdateManyWithoutCompanyNestedInput
+    sireInspections?: SireInspectionUncheckedUpdateManyWithoutCompanyNestedInput
+    sireQuestionnaireVersions?: SireQuestionnaireVersionUncheckedUpdateManyWithoutCompanyNestedInput
+    pscInspections?: PscInspectionUncheckedUpdateManyWithoutCompanyNestedInput
+    cdiInspections?: CdiInspectionUncheckedUpdateManyWithoutCompanyNestedInput
+    internalAudits?: InternalAuditUncheckedUpdateManyWithoutCompanyNestedInput
+    externalAudits?: ExternalAuditUncheckedUpdateManyWithoutCompanyNestedInput
+    companyInspections?: CompanyInspectionUncheckedUpdateManyWithoutCompanyNestedInput
+    committeeMeetings?: CommitteeMeetingUncheckedUpdateManyWithoutCompanyNestedInput
+    scheduleItems?: ScheduleItemUncheckedUpdateManyWithoutCompanyNestedInput
+    emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutCompanyNestedInput
+    familiarizationRecords?: FamiliarizationRecordUncheckedUpdateManyWithoutCompanyNestedInput
+    familiarizationSessions?: FamiliarizationSessionUncheckedUpdateManyWithoutCompanyNestedInput
+    scheduleApplicability?: ScheduleApplicabilityUncheckedUpdateManyWithoutCompanyNestedInput
+    lsaFfeItems?: LsaFfeItemUncheckedUpdateManyWithoutCompanyNestedInput
+    crewFamiliarizations?: CrewFamiliarizationUncheckedUpdateManyWithoutCompanyNestedInput
+    refSequences?: RefSequenceUncheckedUpdateManyWithoutCompanyNestedInput
+    controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutCompanyNestedInput
+    circulars?: CircularUncheckedUpdateManyWithoutCompanyNestedInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedUpdateManyWithoutCompanyNestedInput
+    defects?: DefectUncheckedUpdateManyWithoutCompanyNestedInput
+    crewFamiliarizationRecords?: CrewFamiliarizationRecordUncheckedUpdateManyWithoutCompanyNestedInput
+    vesselDocuments?: VesselDocumentUncheckedUpdateManyWithoutCompanyNestedInput
+    voyageLogs?: VoyageLogUncheckedUpdateManyWithoutCompanyNestedInput
+    environmentRecords?: EnvironmentRecordUncheckedUpdateManyWithoutCompanyNestedInput
+    tmsaAssessments?: TmsaAssessmentUncheckedUpdateManyWithoutCompanyNestedInput
+    tmsaScores?: TmsaScoreUncheckedUpdateManyWithoutCompanyNestedInput
+    tmsaFindings?: TmsaFindingUncheckedUpdateManyWithoutCompanyNestedInput
+    storesCatalogueItems?: StoresCatalogueItemUncheckedUpdateManyWithoutCompanyNestedInput
+    sparesCatalogueItems?: SparesCatalogueItemUncheckedUpdateManyWithoutCompanyNestedInput
+    openingStockTakes?: OpeningStockTakeUncheckedUpdateManyWithoutCompanyNestedInput
+    inventoryEvents?: InventoryEventUncheckedUpdateManyWithoutCompanyNestedInput
+    inventoryUpdateDrafts?: InventoryUpdateDraftUncheckedUpdateManyWithoutCompanyNestedInput
+    requisitions?: RequisitionUncheckedUpdateManyWithoutCompanyNestedInput
+    requisitionRevisions?: RequisitionRevisionUncheckedUpdateManyWithoutCompanyNestedInput
+    unitMasters?: UnitMasterUncheckedUpdateManyWithoutCompanyNestedInput
+    referenceListItems?: ReferenceListItemUncheckedUpdateManyWithoutCompanyNestedInput
+    accessLevels?: AccessLevelUncheckedUpdateManyWithoutCompanyNestedInput
+    departments?: DepartmentUncheckedUpdateManyWithoutCompanyNestedInput
+    seafarers?: SeafarerUncheckedUpdateManyWithoutCompanyNestedInput
+  }
+
+  export type SeafarerUpsertWithoutAssignmentsInput = {
+    update: XOR<SeafarerUpdateWithoutAssignmentsInput, SeafarerUncheckedUpdateWithoutAssignmentsInput>
+    create: XOR<SeafarerCreateWithoutAssignmentsInput, SeafarerUncheckedCreateWithoutAssignmentsInput>
+    where?: SeafarerWhereInput
+  }
+
+  export type SeafarerUpdateToOneWithWhereWithoutAssignmentsInput = {
+    where?: SeafarerWhereInput
+    data: XOR<SeafarerUpdateWithoutAssignmentsInput, SeafarerUncheckedUpdateWithoutAssignmentsInput>
+  }
+
+  export type SeafarerUpdateWithoutAssignmentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    crewCode?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    middleName?: NullableStringFieldUpdateOperationsInput | string | null
+    suffix?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
+    dateOfBirth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    contactPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    contactEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    nextOfKinName?: NullableStringFieldUpdateOperationsInput | string | null
+    nextOfKinRelationship?: NullableStringFieldUpdateOperationsInput | string | null
+    nextOfKinPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    active?: BoolFieldUpdateOperationsInput | boolean
+    redactedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    redactedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    company?: CompanyUpdateOneRequiredWithoutSeafarersNestedInput
+  }
+
+  export type SeafarerUncheckedUpdateWithoutAssignmentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    crewCode?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    middleName?: NullableStringFieldUpdateOperationsInput | string | null
+    suffix?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
+    dateOfBirth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    contactPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    contactEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    nextOfKinName?: NullableStringFieldUpdateOperationsInput | string | null
+    nextOfKinRelationship?: NullableStringFieldUpdateOperationsInput | string | null
+    nextOfKinPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    active?: BoolFieldUpdateOperationsInput | boolean
+    redactedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    redactedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type VesselUpsertWithoutCrewAssignmentsInput = {
+    update: XOR<VesselUpdateWithoutCrewAssignmentsInput, VesselUncheckedUpdateWithoutCrewAssignmentsInput>
+    create: XOR<VesselCreateWithoutCrewAssignmentsInput, VesselUncheckedCreateWithoutCrewAssignmentsInput>
+    where?: VesselWhereInput
+  }
+
+  export type VesselUpdateToOneWithWhereWithoutCrewAssignmentsInput = {
+    where?: VesselWhereInput
+    data: XOR<VesselUpdateWithoutCrewAssignmentsInput, VesselUncheckedUpdateWithoutCrewAssignmentsInput>
+  }
+
+  export type VesselUpdateWithoutCrewAssignmentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    imo?: NullableStringFieldUpdateOperationsInput | string | null
+    officialNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    callSign?: NullableStringFieldUpdateOperationsInput | string | null
+    mmsi?: NullableStringFieldUpdateOperationsInput | string | null
+    flag?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: StringFieldUpdateOperationsInput | string
+    classificationSociety?: NullableStringFieldUpdateOperationsInput | string | null
+    yearBuilt?: NullableIntFieldUpdateOperationsInput | number | null
+    grossTonnage?: NullableFloatFieldUpdateOperationsInput | number | null
+    loa?: NullableFloatFieldUpdateOperationsInput | number | null
+    breadth?: NullableFloatFieldUpdateOperationsInput | number | null
+    depth?: NullableFloatFieldUpdateOperationsInput | number | null
+    status?: EnumVesselStatusFieldUpdateOperationsInput | $Enums.VesselStatus
+    capacityCbm?: NullableFloatFieldUpdateOperationsInput | number | null
+    netTonnage?: NullableFloatFieldUpdateOperationsInput | number | null
+    deadweight?: NullableFloatFieldUpdateOperationsInput | number | null
+    tradeArea?: NullableStringFieldUpdateOperationsInput | string | null
+    registeredOwner?: NullableStringFieldUpdateOperationsInput | string | null
+    headOwner?: NullableStringFieldUpdateOperationsInput | string | null
+    charterer?: NullableStringFieldUpdateOperationsInput | string | null
+    yearWithSwan?: NullableIntFieldUpdateOperationsInput | number | null
+    lastDryDock?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dryDockPlace?: NullableStringFieldUpdateOperationsInput | string | null
+    nextDryDockDue?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    portOfRegistry?: NullableStringFieldUpdateOperationsInput | string | null
+    lbp?: NullableFloatFieldUpdateOperationsInput | number | null
+    draft?: NullableFloatFieldUpdateOperationsInput | number | null
+    mainEngine?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceSpeed?: NullableFloatFieldUpdateOperationsInput | number | null
+    stdFoConsumptionMt?: NullableFloatFieldUpdateOperationsInput | number | null
+    stdDoConsumptionMt?: NullableFloatFieldUpdateOperationsInput | number | null
+    navigationArea?: NullableStringFieldUpdateOperationsInput | string | null
+    classNotation?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    builder?: NullableStringFieldUpdateOperationsInput | string | null
+    keelLaidDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    launchingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    totalComplement?: NullableIntFieldUpdateOperationsInput | number | null
+    satPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    vesselEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    company?: CompanyUpdateOneRequiredWithoutVesselsNestedInput
+    smsDocuments?: SmsDocumentUpdateManyWithoutVesselNestedInput
+    incidents?: IncidentUpdateManyWithoutVesselNestedInput
+    nearMisses?: NearMissUpdateManyWithoutVesselNestedInput
+    nonConformities?: NonConformityUpdateManyWithoutVesselNestedInput
+    sireInspections?: SireInspectionUpdateManyWithoutVesselNestedInput
+    pscInspections?: PscInspectionUpdateManyWithoutVesselNestedInput
+    cdiInspections?: CdiInspectionUpdateManyWithoutVesselNestedInput
+    internalAudits?: InternalAuditUpdateManyWithoutVesselNestedInput
+    externalAudits?: ExternalAuditUpdateManyWithoutVesselNestedInput
+    companyInspections?: CompanyInspectionUpdateManyWithoutVesselNestedInput
+    committeeMeetings?: CommitteeMeetingUpdateManyWithoutVesselNestedInput
+    emergencyDrills?: EmergencyDrillUpdateManyWithoutVesselNestedInput
+    familiarizationRecords?: FamiliarizationRecordUpdateManyWithoutVesselNestedInput
+    familiarizationSessions?: FamiliarizationSessionUpdateManyWithoutVesselNestedInput
+    scheduleApplicability?: ScheduleApplicabilityUpdateManyWithoutVesselNestedInput
+    crewFamiliarizations?: CrewFamiliarizationUpdateManyWithoutVesselNestedInput
+    controlledDocuments?: ControlledDocumentUpdateManyWithoutVesselNestedInput
+    circulars?: CircularUpdateManyWithoutVesselNestedInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUpdateManyWithoutVesselNestedInput
+    riskAssessmentExecutions?: RiskAssessmentExecutionUpdateManyWithoutVesselNestedInput
+    riskAssessmentRevisionRequests?: RiskAssessmentRevisionRequestUpdateManyWithoutVesselNestedInput
+    riskHazardRows?: RiskHazardRowUpdateManyWithoutVesselNestedInput
+    defects?: DefectUpdateManyWithoutVesselNestedInput
+    vesselDocuments?: VesselDocumentUpdateManyWithoutVesselNestedInput
+    users?: UserUpdateManyWithoutVesselNestedInput
+    voyageLogs?: VoyageLogUpdateManyWithoutVesselNestedInput
+    environmentRecords?: EnvironmentRecordUpdateManyWithoutVesselNestedInput
+    storesCatalogueItems?: StoresCatalogueItemUpdateManyWithoutVesselNestedInput
+    sparesCatalogueItems?: SparesCatalogueItemUpdateManyWithoutVesselNestedInput
+    openingStockTake?: OpeningStockTakeUpdateOneWithoutVesselNestedInput
+    inventoryEvents?: InventoryEventUpdateManyWithoutVesselNestedInput
+    inventoryUpdateDrafts?: InventoryUpdateDraftUpdateManyWithoutVesselNestedInput
+    requisitions?: RequisitionUpdateManyWithoutVesselNestedInput
+  }
+
+  export type VesselUncheckedUpdateWithoutCrewAssignmentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    imo?: NullableStringFieldUpdateOperationsInput | string | null
+    officialNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    callSign?: NullableStringFieldUpdateOperationsInput | string | null
+    mmsi?: NullableStringFieldUpdateOperationsInput | string | null
+    flag?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: StringFieldUpdateOperationsInput | string
+    classificationSociety?: NullableStringFieldUpdateOperationsInput | string | null
+    yearBuilt?: NullableIntFieldUpdateOperationsInput | number | null
+    grossTonnage?: NullableFloatFieldUpdateOperationsInput | number | null
+    loa?: NullableFloatFieldUpdateOperationsInput | number | null
+    breadth?: NullableFloatFieldUpdateOperationsInput | number | null
+    depth?: NullableFloatFieldUpdateOperationsInput | number | null
+    status?: EnumVesselStatusFieldUpdateOperationsInput | $Enums.VesselStatus
+    capacityCbm?: NullableFloatFieldUpdateOperationsInput | number | null
+    netTonnage?: NullableFloatFieldUpdateOperationsInput | number | null
+    deadweight?: NullableFloatFieldUpdateOperationsInput | number | null
+    tradeArea?: NullableStringFieldUpdateOperationsInput | string | null
+    registeredOwner?: NullableStringFieldUpdateOperationsInput | string | null
+    headOwner?: NullableStringFieldUpdateOperationsInput | string | null
+    charterer?: NullableStringFieldUpdateOperationsInput | string | null
+    yearWithSwan?: NullableIntFieldUpdateOperationsInput | number | null
+    lastDryDock?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dryDockPlace?: NullableStringFieldUpdateOperationsInput | string | null
+    nextDryDockDue?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    portOfRegistry?: NullableStringFieldUpdateOperationsInput | string | null
+    lbp?: NullableFloatFieldUpdateOperationsInput | number | null
+    draft?: NullableFloatFieldUpdateOperationsInput | number | null
+    mainEngine?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceSpeed?: NullableFloatFieldUpdateOperationsInput | number | null
+    stdFoConsumptionMt?: NullableFloatFieldUpdateOperationsInput | number | null
+    stdDoConsumptionMt?: NullableFloatFieldUpdateOperationsInput | number | null
+    navigationArea?: NullableStringFieldUpdateOperationsInput | string | null
+    classNotation?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    builder?: NullableStringFieldUpdateOperationsInput | string | null
+    keelLaidDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    launchingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    totalComplement?: NullableIntFieldUpdateOperationsInput | number | null
+    satPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    vesselEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    smsDocuments?: SmsDocumentUncheckedUpdateManyWithoutVesselNestedInput
+    incidents?: IncidentUncheckedUpdateManyWithoutVesselNestedInput
+    nearMisses?: NearMissUncheckedUpdateManyWithoutVesselNestedInput
+    nonConformities?: NonConformityUncheckedUpdateManyWithoutVesselNestedInput
+    sireInspections?: SireInspectionUncheckedUpdateManyWithoutVesselNestedInput
+    pscInspections?: PscInspectionUncheckedUpdateManyWithoutVesselNestedInput
+    cdiInspections?: CdiInspectionUncheckedUpdateManyWithoutVesselNestedInput
+    internalAudits?: InternalAuditUncheckedUpdateManyWithoutVesselNestedInput
+    externalAudits?: ExternalAuditUncheckedUpdateManyWithoutVesselNestedInput
+    companyInspections?: CompanyInspectionUncheckedUpdateManyWithoutVesselNestedInput
+    committeeMeetings?: CommitteeMeetingUncheckedUpdateManyWithoutVesselNestedInput
+    emergencyDrills?: EmergencyDrillUncheckedUpdateManyWithoutVesselNestedInput
+    familiarizationRecords?: FamiliarizationRecordUncheckedUpdateManyWithoutVesselNestedInput
+    familiarizationSessions?: FamiliarizationSessionUncheckedUpdateManyWithoutVesselNestedInput
+    scheduleApplicability?: ScheduleApplicabilityUncheckedUpdateManyWithoutVesselNestedInput
+    crewFamiliarizations?: CrewFamiliarizationUncheckedUpdateManyWithoutVesselNestedInput
+    controlledDocuments?: ControlledDocumentUncheckedUpdateManyWithoutVesselNestedInput
+    circulars?: CircularUncheckedUpdateManyWithoutVesselNestedInput
+    riskAssessmentDocuments?: RiskAssessmentDocumentUncheckedUpdateManyWithoutVesselNestedInput
+    riskAssessmentExecutions?: RiskAssessmentExecutionUncheckedUpdateManyWithoutVesselNestedInput
+    riskAssessmentRevisionRequests?: RiskAssessmentRevisionRequestUncheckedUpdateManyWithoutVesselNestedInput
+    riskHazardRows?: RiskHazardRowUncheckedUpdateManyWithoutVesselNestedInput
+    defects?: DefectUncheckedUpdateManyWithoutVesselNestedInput
+    vesselDocuments?: VesselDocumentUncheckedUpdateManyWithoutVesselNestedInput
+    users?: UserUncheckedUpdateManyWithoutVesselNestedInput
+    voyageLogs?: VoyageLogUncheckedUpdateManyWithoutVesselNestedInput
+    environmentRecords?: EnvironmentRecordUncheckedUpdateManyWithoutVesselNestedInput
+    storesCatalogueItems?: StoresCatalogueItemUncheckedUpdateManyWithoutVesselNestedInput
+    sparesCatalogueItems?: SparesCatalogueItemUncheckedUpdateManyWithoutVesselNestedInput
+    openingStockTake?: OpeningStockTakeUncheckedUpdateOneWithoutVesselNestedInput
+    inventoryEvents?: InventoryEventUncheckedUpdateManyWithoutVesselNestedInput
+    inventoryUpdateDrafts?: InventoryUpdateDraftUncheckedUpdateManyWithoutVesselNestedInput
+    requisitions?: RequisitionUncheckedUpdateManyWithoutVesselNestedInput
+  }
+
+  export type CrewAssignmentUpsertWithoutReliefsInput = {
+    update: XOR<CrewAssignmentUpdateWithoutReliefsInput, CrewAssignmentUncheckedUpdateWithoutReliefsInput>
+    create: XOR<CrewAssignmentCreateWithoutReliefsInput, CrewAssignmentUncheckedCreateWithoutReliefsInput>
+    where?: CrewAssignmentWhereInput
+  }
+
+  export type CrewAssignmentUpdateToOneWithWhereWithoutReliefsInput = {
+    where?: CrewAssignmentWhereInput
+    data: XOR<CrewAssignmentUpdateWithoutReliefsInput, CrewAssignmentUncheckedUpdateWithoutReliefsInput>
+  }
+
+  export type CrewAssignmentUpdateWithoutReliefsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    rankCode?: StringFieldUpdateOperationsInput | string
+    plannedSignOnDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    actualSignOnDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    plannedSignOffDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    actualSignOffDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    signOnPort?: NullableStringFieldUpdateOperationsInput | string | null
+    signOffPort?: NullableStringFieldUpdateOperationsInput | string | null
+    signOffReason?: NullableStringFieldUpdateOperationsInput | string | null
+    vesselRemarks?: NullableStringFieldUpdateOperationsInput | string | null
+    shoreRemarks?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    company?: CompanyUpdateOneRequiredWithoutCrewAssignmentsNestedInput
+    seafarer?: SeafarerUpdateOneRequiredWithoutAssignmentsNestedInput
+    vessel?: VesselUpdateOneRequiredWithoutCrewAssignmentsNestedInput
+    reliefFor?: CrewAssignmentUpdateOneWithoutReliefsNestedInput
+  }
+
+  export type CrewAssignmentUncheckedUpdateWithoutReliefsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    seafarerId?: StringFieldUpdateOperationsInput | string
+    vesselId?: StringFieldUpdateOperationsInput | string
+    rankCode?: StringFieldUpdateOperationsInput | string
+    plannedSignOnDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    actualSignOnDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    plannedSignOffDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    actualSignOffDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    signOnPort?: NullableStringFieldUpdateOperationsInput | string | null
+    signOffPort?: NullableStringFieldUpdateOperationsInput | string | null
+    signOffReason?: NullableStringFieldUpdateOperationsInput | string | null
+    reliefForAssignmentId?: NullableStringFieldUpdateOperationsInput | string | null
+    vesselRemarks?: NullableStringFieldUpdateOperationsInput | string | null
+    shoreRemarks?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type CrewAssignmentUpsertWithWhereUniqueWithoutReliefForInput = {
+    where: CrewAssignmentWhereUniqueInput
+    update: XOR<CrewAssignmentUpdateWithoutReliefForInput, CrewAssignmentUncheckedUpdateWithoutReliefForInput>
+    create: XOR<CrewAssignmentCreateWithoutReliefForInput, CrewAssignmentUncheckedCreateWithoutReliefForInput>
+  }
+
+  export type CrewAssignmentUpdateWithWhereUniqueWithoutReliefForInput = {
+    where: CrewAssignmentWhereUniqueInput
+    data: XOR<CrewAssignmentUpdateWithoutReliefForInput, CrewAssignmentUncheckedUpdateWithoutReliefForInput>
+  }
+
+  export type CrewAssignmentUpdateManyWithWhereWithoutReliefForInput = {
+    where: CrewAssignmentScalarWhereInput
+    data: XOR<CrewAssignmentUpdateManyMutationInput, CrewAssignmentUncheckedUpdateManyWithoutReliefForInput>
   }
 
   export type UserCreateManyCompanyInput = {
@@ -194013,6 +200405,54 @@ export namespace Prisma {
     deletedBy?: string | null
   }
 
+  export type SeafarerCreateManyCompanyInput = {
+    id?: string
+    crewCode?: string | null
+    lastName: string
+    firstName: string
+    middleName?: string | null
+    suffix?: string | null
+    nationality?: string | null
+    dateOfBirth?: Date | string | null
+    contactPhone?: string | null
+    contactEmail?: string | null
+    nextOfKinName?: string | null
+    nextOfKinRelationship?: string | null
+    nextOfKinPhone?: string | null
+    active?: boolean
+    redactedAt?: Date | string | null
+    redactedBy?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+  }
+
+  export type CrewAssignmentCreateManyCompanyInput = {
+    id?: string
+    seafarerId: string
+    vesselId: string
+    rankCode: string
+    plannedSignOnDate: Date | string
+    actualSignOnDate?: Date | string | null
+    plannedSignOffDate?: Date | string | null
+    actualSignOffDate?: Date | string | null
+    signOnPort?: string | null
+    signOffPort?: string | null
+    signOffReason?: string | null
+    reliefForAssignmentId?: string | null
+    vesselRemarks?: string | null
+    shoreRemarks?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+  }
+
   export type UserUpdateWithoutCompanyInput = {
     id?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
@@ -194207,6 +200647,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventUpdateManyWithoutVesselNestedInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUpdateManyWithoutVesselNestedInput
     requisitions?: RequisitionUpdateManyWithoutVesselNestedInput
+    crewAssignments?: CrewAssignmentUpdateManyWithoutVesselNestedInput
   }
 
   export type VesselUncheckedUpdateWithoutCompanyInput = {
@@ -194294,6 +200735,7 @@ export namespace Prisma {
     inventoryEvents?: InventoryEventUncheckedUpdateManyWithoutVesselNestedInput
     inventoryUpdateDrafts?: InventoryUpdateDraftUncheckedUpdateManyWithoutVesselNestedInput
     requisitions?: RequisitionUncheckedUpdateManyWithoutVesselNestedInput
+    crewAssignments?: CrewAssignmentUncheckedUpdateManyWithoutVesselNestedInput
   }
 
   export type VesselUncheckedUpdateManyWithoutCompanyInput = {
@@ -197091,6 +203533,154 @@ export namespace Prisma {
     deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
+  export type SeafarerUpdateWithoutCompanyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    crewCode?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    middleName?: NullableStringFieldUpdateOperationsInput | string | null
+    suffix?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
+    dateOfBirth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    contactPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    contactEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    nextOfKinName?: NullableStringFieldUpdateOperationsInput | string | null
+    nextOfKinRelationship?: NullableStringFieldUpdateOperationsInput | string | null
+    nextOfKinPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    active?: BoolFieldUpdateOperationsInput | boolean
+    redactedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    redactedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    assignments?: CrewAssignmentUpdateManyWithoutSeafarerNestedInput
+  }
+
+  export type SeafarerUncheckedUpdateWithoutCompanyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    crewCode?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    middleName?: NullableStringFieldUpdateOperationsInput | string | null
+    suffix?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
+    dateOfBirth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    contactPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    contactEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    nextOfKinName?: NullableStringFieldUpdateOperationsInput | string | null
+    nextOfKinRelationship?: NullableStringFieldUpdateOperationsInput | string | null
+    nextOfKinPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    active?: BoolFieldUpdateOperationsInput | boolean
+    redactedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    redactedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    assignments?: CrewAssignmentUncheckedUpdateManyWithoutSeafarerNestedInput
+  }
+
+  export type SeafarerUncheckedUpdateManyWithoutCompanyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    crewCode?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    middleName?: NullableStringFieldUpdateOperationsInput | string | null
+    suffix?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
+    dateOfBirth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    contactPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    contactEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    nextOfKinName?: NullableStringFieldUpdateOperationsInput | string | null
+    nextOfKinRelationship?: NullableStringFieldUpdateOperationsInput | string | null
+    nextOfKinPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    active?: BoolFieldUpdateOperationsInput | boolean
+    redactedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    redactedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type CrewAssignmentUpdateWithoutCompanyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    rankCode?: StringFieldUpdateOperationsInput | string
+    plannedSignOnDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    actualSignOnDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    plannedSignOffDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    actualSignOffDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    signOnPort?: NullableStringFieldUpdateOperationsInput | string | null
+    signOffPort?: NullableStringFieldUpdateOperationsInput | string | null
+    signOffReason?: NullableStringFieldUpdateOperationsInput | string | null
+    vesselRemarks?: NullableStringFieldUpdateOperationsInput | string | null
+    shoreRemarks?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    seafarer?: SeafarerUpdateOneRequiredWithoutAssignmentsNestedInput
+    vessel?: VesselUpdateOneRequiredWithoutCrewAssignmentsNestedInput
+    reliefFor?: CrewAssignmentUpdateOneWithoutReliefsNestedInput
+    reliefs?: CrewAssignmentUpdateManyWithoutReliefForNestedInput
+  }
+
+  export type CrewAssignmentUncheckedUpdateWithoutCompanyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    seafarerId?: StringFieldUpdateOperationsInput | string
+    vesselId?: StringFieldUpdateOperationsInput | string
+    rankCode?: StringFieldUpdateOperationsInput | string
+    plannedSignOnDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    actualSignOnDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    plannedSignOffDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    actualSignOffDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    signOnPort?: NullableStringFieldUpdateOperationsInput | string | null
+    signOffPort?: NullableStringFieldUpdateOperationsInput | string | null
+    signOffReason?: NullableStringFieldUpdateOperationsInput | string | null
+    reliefForAssignmentId?: NullableStringFieldUpdateOperationsInput | string | null
+    vesselRemarks?: NullableStringFieldUpdateOperationsInput | string | null
+    shoreRemarks?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    reliefs?: CrewAssignmentUncheckedUpdateManyWithoutReliefForNestedInput
+  }
+
+  export type CrewAssignmentUncheckedUpdateManyWithoutCompanyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    seafarerId?: StringFieldUpdateOperationsInput | string
+    vesselId?: StringFieldUpdateOperationsInput | string
+    rankCode?: StringFieldUpdateOperationsInput | string
+    plannedSignOnDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    actualSignOnDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    plannedSignOffDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    actualSignOffDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    signOnPort?: NullableStringFieldUpdateOperationsInput | string | null
+    signOffPort?: NullableStringFieldUpdateOperationsInput | string | null
+    signOffReason?: NullableStringFieldUpdateOperationsInput | string | null
+    reliefForAssignmentId?: NullableStringFieldUpdateOperationsInput | string | null
+    vesselRemarks?: NullableStringFieldUpdateOperationsInput | string | null
+    shoreRemarks?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
   export type UserRoleCreateManyUserInput = {
     roleId: string
   }
@@ -198800,6 +205390,29 @@ export namespace Prisma {
     updatedAt?: Date | string
     createdBy?: string | null
     updatedBy?: string | null
+  }
+
+  export type CrewAssignmentCreateManyVesselInput = {
+    id?: string
+    companyId: string
+    seafarerId: string
+    rankCode: string
+    plannedSignOnDate: Date | string
+    actualSignOnDate?: Date | string | null
+    plannedSignOffDate?: Date | string | null
+    actualSignOffDate?: Date | string | null
+    signOnPort?: string | null
+    signOffPort?: string | null
+    signOffReason?: string | null
+    reliefForAssignmentId?: string | null
+    vesselRemarks?: string | null
+    shoreRemarks?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
   }
 
   export type SmsDocumentUpdateWithoutVesselInput = {
@@ -201057,6 +207670,77 @@ export namespace Prisma {
     updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
+  export type CrewAssignmentUpdateWithoutVesselInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    rankCode?: StringFieldUpdateOperationsInput | string
+    plannedSignOnDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    actualSignOnDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    plannedSignOffDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    actualSignOffDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    signOnPort?: NullableStringFieldUpdateOperationsInput | string | null
+    signOffPort?: NullableStringFieldUpdateOperationsInput | string | null
+    signOffReason?: NullableStringFieldUpdateOperationsInput | string | null
+    vesselRemarks?: NullableStringFieldUpdateOperationsInput | string | null
+    shoreRemarks?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    company?: CompanyUpdateOneRequiredWithoutCrewAssignmentsNestedInput
+    seafarer?: SeafarerUpdateOneRequiredWithoutAssignmentsNestedInput
+    reliefFor?: CrewAssignmentUpdateOneWithoutReliefsNestedInput
+    reliefs?: CrewAssignmentUpdateManyWithoutReliefForNestedInput
+  }
+
+  export type CrewAssignmentUncheckedUpdateWithoutVesselInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    seafarerId?: StringFieldUpdateOperationsInput | string
+    rankCode?: StringFieldUpdateOperationsInput | string
+    plannedSignOnDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    actualSignOnDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    plannedSignOffDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    actualSignOffDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    signOnPort?: NullableStringFieldUpdateOperationsInput | string | null
+    signOffPort?: NullableStringFieldUpdateOperationsInput | string | null
+    signOffReason?: NullableStringFieldUpdateOperationsInput | string | null
+    reliefForAssignmentId?: NullableStringFieldUpdateOperationsInput | string | null
+    vesselRemarks?: NullableStringFieldUpdateOperationsInput | string | null
+    shoreRemarks?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    reliefs?: CrewAssignmentUncheckedUpdateManyWithoutReliefForNestedInput
+  }
+
+  export type CrewAssignmentUncheckedUpdateManyWithoutVesselInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    seafarerId?: StringFieldUpdateOperationsInput | string
+    rankCode?: StringFieldUpdateOperationsInput | string
+    plannedSignOnDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    actualSignOnDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    plannedSignOffDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    actualSignOffDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    signOnPort?: NullableStringFieldUpdateOperationsInput | string | null
+    signOffPort?: NullableStringFieldUpdateOperationsInput | string | null
+    signOffReason?: NullableStringFieldUpdateOperationsInput | string | null
+    reliefForAssignmentId?: NullableStringFieldUpdateOperationsInput | string | null
+    vesselRemarks?: NullableStringFieldUpdateOperationsInput | string | null
+    shoreRemarks?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
   export type WorkflowStepCreateManyDefinitionInput = {
     id?: string
     order: number
@@ -202981,6 +209665,194 @@ export namespace Prisma {
     qtyReceived?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type CrewAssignmentCreateManySeafarerInput = {
+    id?: string
+    companyId: string
+    vesselId: string
+    rankCode: string
+    plannedSignOnDate: Date | string
+    actualSignOnDate?: Date | string | null
+    plannedSignOffDate?: Date | string | null
+    actualSignOffDate?: Date | string | null
+    signOnPort?: string | null
+    signOffPort?: string | null
+    signOffReason?: string | null
+    reliefForAssignmentId?: string | null
+    vesselRemarks?: string | null
+    shoreRemarks?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+  }
+
+  export type CrewAssignmentUpdateWithoutSeafarerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    rankCode?: StringFieldUpdateOperationsInput | string
+    plannedSignOnDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    actualSignOnDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    plannedSignOffDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    actualSignOffDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    signOnPort?: NullableStringFieldUpdateOperationsInput | string | null
+    signOffPort?: NullableStringFieldUpdateOperationsInput | string | null
+    signOffReason?: NullableStringFieldUpdateOperationsInput | string | null
+    vesselRemarks?: NullableStringFieldUpdateOperationsInput | string | null
+    shoreRemarks?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    company?: CompanyUpdateOneRequiredWithoutCrewAssignmentsNestedInput
+    vessel?: VesselUpdateOneRequiredWithoutCrewAssignmentsNestedInput
+    reliefFor?: CrewAssignmentUpdateOneWithoutReliefsNestedInput
+    reliefs?: CrewAssignmentUpdateManyWithoutReliefForNestedInput
+  }
+
+  export type CrewAssignmentUncheckedUpdateWithoutSeafarerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    vesselId?: StringFieldUpdateOperationsInput | string
+    rankCode?: StringFieldUpdateOperationsInput | string
+    plannedSignOnDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    actualSignOnDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    plannedSignOffDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    actualSignOffDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    signOnPort?: NullableStringFieldUpdateOperationsInput | string | null
+    signOffPort?: NullableStringFieldUpdateOperationsInput | string | null
+    signOffReason?: NullableStringFieldUpdateOperationsInput | string | null
+    reliefForAssignmentId?: NullableStringFieldUpdateOperationsInput | string | null
+    vesselRemarks?: NullableStringFieldUpdateOperationsInput | string | null
+    shoreRemarks?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    reliefs?: CrewAssignmentUncheckedUpdateManyWithoutReliefForNestedInput
+  }
+
+  export type CrewAssignmentUncheckedUpdateManyWithoutSeafarerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    vesselId?: StringFieldUpdateOperationsInput | string
+    rankCode?: StringFieldUpdateOperationsInput | string
+    plannedSignOnDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    actualSignOnDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    plannedSignOffDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    actualSignOffDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    signOnPort?: NullableStringFieldUpdateOperationsInput | string | null
+    signOffPort?: NullableStringFieldUpdateOperationsInput | string | null
+    signOffReason?: NullableStringFieldUpdateOperationsInput | string | null
+    reliefForAssignmentId?: NullableStringFieldUpdateOperationsInput | string | null
+    vesselRemarks?: NullableStringFieldUpdateOperationsInput | string | null
+    shoreRemarks?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type CrewAssignmentCreateManyReliefForInput = {
+    id?: string
+    companyId: string
+    seafarerId: string
+    vesselId: string
+    rankCode: string
+    plannedSignOnDate: Date | string
+    actualSignOnDate?: Date | string | null
+    plannedSignOffDate?: Date | string | null
+    actualSignOffDate?: Date | string | null
+    signOnPort?: string | null
+    signOffPort?: string | null
+    signOffReason?: string | null
+    vesselRemarks?: string | null
+    shoreRemarks?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+  }
+
+  export type CrewAssignmentUpdateWithoutReliefForInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    rankCode?: StringFieldUpdateOperationsInput | string
+    plannedSignOnDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    actualSignOnDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    plannedSignOffDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    actualSignOffDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    signOnPort?: NullableStringFieldUpdateOperationsInput | string | null
+    signOffPort?: NullableStringFieldUpdateOperationsInput | string | null
+    signOffReason?: NullableStringFieldUpdateOperationsInput | string | null
+    vesselRemarks?: NullableStringFieldUpdateOperationsInput | string | null
+    shoreRemarks?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    company?: CompanyUpdateOneRequiredWithoutCrewAssignmentsNestedInput
+    seafarer?: SeafarerUpdateOneRequiredWithoutAssignmentsNestedInput
+    vessel?: VesselUpdateOneRequiredWithoutCrewAssignmentsNestedInput
+    reliefs?: CrewAssignmentUpdateManyWithoutReliefForNestedInput
+  }
+
+  export type CrewAssignmentUncheckedUpdateWithoutReliefForInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    seafarerId?: StringFieldUpdateOperationsInput | string
+    vesselId?: StringFieldUpdateOperationsInput | string
+    rankCode?: StringFieldUpdateOperationsInput | string
+    plannedSignOnDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    actualSignOnDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    plannedSignOffDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    actualSignOffDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    signOnPort?: NullableStringFieldUpdateOperationsInput | string | null
+    signOffPort?: NullableStringFieldUpdateOperationsInput | string | null
+    signOffReason?: NullableStringFieldUpdateOperationsInput | string | null
+    vesselRemarks?: NullableStringFieldUpdateOperationsInput | string | null
+    shoreRemarks?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    reliefs?: CrewAssignmentUncheckedUpdateManyWithoutReliefForNestedInput
+  }
+
+  export type CrewAssignmentUncheckedUpdateManyWithoutReliefForInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    seafarerId?: StringFieldUpdateOperationsInput | string
+    vesselId?: StringFieldUpdateOperationsInput | string
+    rankCode?: StringFieldUpdateOperationsInput | string
+    plannedSignOnDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    actualSignOnDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    plannedSignOffDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    actualSignOffDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    signOnPort?: NullableStringFieldUpdateOperationsInput | string | null
+    signOffPort?: NullableStringFieldUpdateOperationsInput | string | null
+    signOffReason?: NullableStringFieldUpdateOperationsInput | string | null
+    vesselRemarks?: NullableStringFieldUpdateOperationsInput | string | null
+    shoreRemarks?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
 
