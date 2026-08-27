@@ -59,6 +59,7 @@ export async function updateScheduleItemFrequencyAction(formData: FormData): Pro
   const frequencyLabel = String(formData.get("frequencyLabel") ?? "").trim();
   const frequencyDaysRaw = String(formData.get("frequencyDays") ?? "").trim();
   if (!scheduleItemId) return fail("Missing item");
+  if (frequencyLabel.length > 200) return fail("Frequency label is too long (maximum 200 characters)");
 
   const item = await prisma.scheduleItem.findFirst({
     where: { id: scheduleItemId, companyId: user.companyId, deletedAt: null },
