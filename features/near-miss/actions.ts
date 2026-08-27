@@ -180,7 +180,7 @@ export async function saveOfficeReviewAction(
     shoreRemarks: formData.get("shoreRemarks"),
     reviewedAt: formData.get("reviewedAt"),
   });
-  if (!parsed.success) return fail("Invalid input");
+  if (!parsed.success) return fail(parsed.error.issues[0]?.message ?? "Invalid input");
 
   const nm = await prisma.nearMiss.findFirst({
     where: { id: parsed.data.nearMissId, companyId: user.companyId, deletedAt: null },
