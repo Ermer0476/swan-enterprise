@@ -441,6 +441,17 @@ model User {
   active       Boolean        @default(true)
   lastLoginAt  DateTime?
 
+  // ── Dual staff identity (ADDITIVE, both nullable) ──
+  // The company's own staff / shore / employee number, and — for a shore user
+  // who came from the ships — their seafarer crew ID (YYYY-99999). Both are
+  // company-scoped and live-only unique: uniqueness is enforced IN-ACTION
+  // against deletedAt:null, NOT with an @@unique constraint, so a soft-deleted
+  // account never blocks a reused id and two companies can each hold the same
+  // value — the same doctrine as Seafarer.crewCode. Nullable so no existing
+  // row is affected.
+  employeeId String?
+  crewId     String?
+
   // ── First-login / forced password change + session revocation (ADDITIVE) ──
   // `mustChangePassword` gates the account into /change-password before any
   // other page renders (set true by admin-issued one-time passwords). Default

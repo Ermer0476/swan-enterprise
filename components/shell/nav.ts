@@ -171,6 +171,12 @@ export const NAV: NavGroup[] = [
         permission: "environment:manage-units",
       },
       {
+        label: "Users",
+        href: "/settings/users",
+        icon: Users,
+        permission: "admin:manage-users",
+      },
+      {
         label: "Access Levels",
         href: "/settings/access-levels",
         icon: Layers,
