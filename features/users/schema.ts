@@ -171,6 +171,35 @@ function datesConsistent(
   }
 }
 
+/**
+ * Builds a display `fullName` as `LAST, FIRST MIDDLE`, skipping any blank part.
+ *
+ * Shared on purpose — createUserAction, updateUserAction and a future
+ * masterlist importer all compose a name here so the three can never spell one
+ * differently. Lives in schema.ts (not actions.ts) because a "use server"
+ * module may only export async functions, and this is the same reason the
+ * refusal messages live here too.
+ *
+ * Returns `null` when NO name part is supplied; the callers read that as "the
+ * masterlist name fields were left blank, keep the fullName the form already
+ * has" — the legacy edit path that only touched the single Full name box.
+ * Parts are trimmed; internal spacing (compound surnames like "Dela Cruz") is
+ * left untouched. Degrades gracefully when only some parts exist.
+ */
+export function composeFullName(parts: {
+  lastName?: string | null;
+  firstName?: string | null;
+  middleName?: string | null;
+}): string | null {
+  const last = (parts.lastName ?? "").trim();
+  const first = (parts.firstName ?? "").trim();
+  const middle = (parts.middleName ?? "").trim();
+  if (!last && !first && !middle) return null;
+  const given = [first, middle].filter(Boolean).join(" ");
+  if (last && given) return `${last}, ${given}`;
+  return last || given;
+}
+
 const detailFields = {
   fullName: z.string().trim().min(2, "Full name is required").max(120),
   email: emailField,
