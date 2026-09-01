@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Plus, Users, ArrowLeft } from "lucide-react";
+import { Plus, Users, ArrowLeft, Upload } from "lucide-react";
 import { requirePermission, can } from "@/lib/rbac";
 import { requireOfficeOrNotFound } from "@/features/crewing/visibility";
 import { listSeafarers } from "@/features/crewing/queries";
@@ -45,6 +45,9 @@ export default async function SeafarerRegisterPage({
     readPage(sp),
   );
   const canCreate = can(user, "crew:create");
+  // Importing a manifest both creates seafarers and embarks them, so it needs
+  // crew:assign as well — same rule the import actions enforce.
+  const canImport = canCreate && can(user, "crew:assign");
 
   return (
     <>
@@ -60,11 +63,20 @@ export default async function SeafarerRegisterPage({
         description="The people the company employs at sea. The office owns the person; the ship owns the event."
         actions={
           canCreate ? (
-            <Link href="/crewing/seafarers/new">
-              <Button>
-                <Plus className="h-4 w-4" /> Add Seafarer
-              </Button>
-            </Link>
+            <div className="flex flex-wrap items-center gap-2">
+              {canImport && (
+                <Link href="/crewing/import">
+                  <Button variant="outline">
+                    <Upload className="h-4 w-4" /> Import manifest
+                  </Button>
+                </Link>
+              )}
+              <Link href="/crewing/seafarers/new">
+                <Button>
+                  <Plus className="h-4 w-4" /> Add Seafarer
+                </Button>
+              </Link>
+            </div>
           ) : undefined
         }
       />
