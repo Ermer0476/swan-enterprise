@@ -341,7 +341,7 @@ export async function createUserAction(
   // stored, returned, audited or logged.
   const passwordHash = await hashPassword(d.password);
 
-  // `LAST, FIRST MIDDLE` when the masterlist name parts were filled in;
+  // Natural-order `First Middle Last` when the masterlist name parts were filled in;
   // otherwise the single Full name box the admin typed. Both the composed
   // name and the parts are written in the same statement below.
   const fullName = composeFullName(d) ?? d.fullName;
@@ -542,7 +542,7 @@ export async function updateUserAction(
 
   const passwordHash = d.password ? await hashPassword(d.password) : null;
 
-  // Same rule as create: `LAST, FIRST MIDDLE` when the masterlist name parts
+  // Same rule as create: natural-order `First Middle Last` when the masterlist name parts
   // are supplied, otherwise the single Full name box (a legacy edit that never
   // filled the parts). fullName and the parts are written in one statement.
   const fullName = composeFullName(d) ?? d.fullName;
