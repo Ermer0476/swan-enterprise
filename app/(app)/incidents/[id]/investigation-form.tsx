@@ -1,8 +1,6 @@
 "use client";
 
-import { useState } from "react";
-import { useActionState } from "react";
-import { useFormStatus } from "react-dom";
+import { useState, useActionState } from "react";
 import {
   saveInvestigationAction,
   type ActionResult,
@@ -17,15 +15,6 @@ import {
 } from "@/features/incidents/schema";
 import { AutoGrowInput, Label, Select } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-
-function SaveButton() {
-  const { pending } = useFormStatus();
-  return (
-    <Button type="submit" size="sm" disabled={pending}>
-      {pending ? "Saving…" : "Save investigation"}
-    </Button>
-  );
-}
 
 export function InvestigationForm({
   incidentId,
@@ -42,10 +31,16 @@ export function InvestigationForm({
   rootCauseSubCategory: string;
   rootCause: string;
 }) {
-  const [state, formAction] = useActionState<ActionResult, FormData>(
+  const [state, formAction, isPending] = useActionState<ActionResult, FormData>(
     saveInvestigationAction,
     { ok: false, error: null },
   );
+  // Controlled (not defaultValue) so a validation error never silently
+  // discards what the user typed — a re-render only ever reflects this
+  // component's own state, never a stale/refetched prop.
+  const [details, setDetails] = useState(investigationDetails);
+  const [severityValue, setSeverityValue] = useState(severity);
+  const [rootCauseDescription, setRootCauseDescription] = useState(rootCause);
   const [category, setCategory] = useState(rootCauseCategory);
   const [subCategory, setSubCategory] = useState(rootCauseSubCategory);
 
@@ -57,22 +52,48 @@ export function InvestigationForm({
   const subOptions =
     category && (ROOT_CAUSE_SUBCATEGORIES as Record<string, readonly string[]>)[category];
 
+  // Submitting via a plain FormData built from this component's own state —
+  // not the browser's native form-submission collection — because a native
+  // <form action={formAction}> apparently resets <select> elements' live DOM
+  // value (though not <textarea>s') partway through an Actions round trip.
+  // That's a DOM/React-internals quirk, not a state bug: this component's
+  // own React state was never wrong, only what the browser handed to the
+  // server on submit was. Building FormData straight from state sidesteps
+  // that entirely — the server now always gets exactly what's on screen.
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const fd = new FormData();
+    fd.set("incidentId", incidentId);
+    fd.set("investigationDetails", details);
+    fd.set("severity", severityValue);
+    fd.set("rootCauseCategory", category);
+    fd.set("rootCauseSubCategory", subCategory);
+    fd.set("rootCause", rootCauseDescription);
+    formAction(fd);
+  }
+
   return (
-    <form action={formAction} className="space-y-4">
-      <input type="hidden" name="incidentId" value={incidentId} />
+    <form onSubmit={handleSubmit} className="space-y-4">
       <div className="space-y-1.5">
         <Label htmlFor="investigationDetails">Details</Label>
         <AutoGrowInput
           id="investigationDetails"
           name="investigationDetails"
           required
-          defaultValue={investigationDetails}
+          value={details}
+          onChange={(e) => setDetails(e.target.value)}
           placeholder="What happened, based on the investigation — the office's own account…"
         />
       </div>
       <div className="space-y-1.5">
         <Label htmlFor="severity">Severity</Label>
-        <Select id="severity" name="severity" required defaultValue={severity}>
+        <Select
+          id="severity"
+          name="severity"
+          required
+          value={severityValue}
+          onChange={(e) => setSeverityValue(e.target.value)}
+        >
           <option value="" disabled>— Select severity —</option>
           {INCIDENT_SEVERITIES.map((s) => (
             <option key={s} value={s}>{humanize(s)}</option>
@@ -121,14 +142,17 @@ export function InvestigationForm({
         <AutoGrowInput
           id="rootCause"
           name="rootCause"
-          defaultValue={rootCause}
+          value={rootCauseDescription}
+          onChange={(e) => setRootCauseDescription(e.target.value)}
           placeholder="Underlying cause identified during investigation…"
         />
       </div>
 
       {state.error && <p className="text-sm text-danger">{state.error}</p>}
       {state.ok && <p className="text-sm text-success">Saved.</p>}
-      <SaveButton />
+      <Button type="submit" size="sm" disabled={isPending}>
+        {isPending ? "Saving…" : "Save investigation"}
+      </Button>
     </form>
   );
 }

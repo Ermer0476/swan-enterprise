@@ -19,7 +19,7 @@ export default async function SireDetailPage({
 }) {
   const user = await requirePermission("sire:read");
   const { id } = await params;
-  const insp = await getSire(user.companyId, id);
+  const insp = await getSire(user.companyId, id, user.department === "SHIPBOARD", user.vesselId);
   if (!insp) notFound();
   const personnel = await listPersonnelOptions(user.companyId);
 

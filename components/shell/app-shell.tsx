@@ -8,6 +8,7 @@ import { ChevronLeft, ChevronRight, Menu, X, Moon, Sun, Search, LogOut, Ship } f
 import { cn } from "@/lib/utils";
 import { NAV } from "./nav";
 import { logoutAction } from "@/app/(auth)/actions";
+import { ViewAsToggle } from "./view-as-toggle";
 
 /**
  * App shell — a collapsible sidebar that fully hides (not just an icon rail).
@@ -22,11 +23,23 @@ export function AppShell({
   fullName,
   roles,
   permissions,
+  counts = {},
+  viewAs = null,
+  isShipboard = false,
   children,
 }: {
   fullName: string;
   roles: string[];
   permissions: string[];
+  /** Sidebar badge counts by nav href — see lib/nav-counts.ts. */
+  counts?: Record<string, number>;
+  /** Administrator-only dev toggle state — null hides it entirely for
+   * everyone else. See lib/view-as.ts. */
+  viewAs?: { active: boolean; vesselName: string | null } | null;
+  /** True for a real Ship Officer login, or an Administrator currently
+   * viewing as a vessel — hides office/management-only nav items even when
+   * the account otherwise holds the underlying permission. */
+  isShipboard?: boolean;
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
@@ -90,7 +103,15 @@ export function AppShell({
     setDark(next);
   }
 
-  const initials = fullName
+  // While previewing as a vessel, the header should read like that vessel's
+  // own login (matching what a real Ship Officer session shows) rather than
+  // the underlying Administrator's own name/role — the permission set is
+  // still the Administrator's, this is purely a display swap.
+  const previewingAsVessel = !!(viewAs?.active && viewAs.vesselName);
+  const displayName = previewingAsVessel ? viewAs!.vesselName! : fullName;
+  const displayRoleLabel = previewingAsVessel ? "Ship Officer" : roles.join(", ") || "No role";
+
+  const initials = displayName
     .split(" ")
     .map((p) => p[0])
     .slice(0, 2)
@@ -110,7 +131,9 @@ export function AppShell({
   const navLinks = (onNavigate?: () => void) => (
     <nav ref={navRef} className="flex-1 overflow-y-auto px-2 py-3">
       {NAV.map((group) => {
-        const items = group.items.filter((i) => !i.permission || perms.has(i.permission));
+        const items = group.items.filter(
+          (i) => (!i.permission || perms.has(i.permission)) && !(isShipboard && i.hiddenForShipboard),
+        );
         if (items.length === 0) return null;
         return (
           <div key={group.title} className="mb-4">
@@ -122,6 +145,12 @@ export function AppShell({
                 const active = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
                 const Icon = item.icon;
                 const base = "flex items-center gap-2.5 rounded-md px-2 py-1.5 text-sm transition-colors";
+                const count = counts[item.href] ?? 0;
+                const badge = count > 0 && (
+                  <span className="ml-auto flex h-5 min-w-5 items-center justify-center rounded-full bg-warning px-1.5 text-[11px] font-semibold text-sidebar">
+                    {count}
+                  </span>
+                );
                 if (item.soon) {
                   return (
                     <li key={item.href}>
@@ -162,6 +191,7 @@ export function AppShell({
                       >
                         <Icon className="h-4 w-4 shrink-0" />
                         <span className="min-w-0 flex-1 truncate text-left">{item.label}</span>
+                        {badge}
                         <ChevronRight className={cn("h-3.5 w-3.5 shrink-0 transition-transform", submenuOpen && "rotate-90")} />
                       </button>
                       {submenuOpen && submenuPos && typeof document !== "undefined" && createPortal(
@@ -208,6 +238,7 @@ export function AppShell({
                     >
                       <Icon className="h-4 w-4 shrink-0" />
                       <span className="truncate">{item.label}</span>
+                      {badge}
                     </Link>
                   </li>
                 );
@@ -292,6 +323,8 @@ export function AppShell({
           </div>
 
           <div className="ml-auto flex items-center gap-2">
+            {viewAs && <ViewAsToggle active={viewAs.active} vesselName={viewAs.vesselName} />}
+
             <button
               type="button"
               onClick={toggleTheme}
@@ -303,10 +336,8 @@ export function AppShell({
 
             <div className="flex items-center gap-2.5 pl-2">
               <div className="hidden text-right sm:block">
-                <div className="text-sm font-medium leading-tight">{fullName}</div>
-                <div className="text-[11px] leading-tight text-muted-foreground">
-                  {roles.join(", ") || "No role"}
-                </div>
+                <div className="text-sm font-medium leading-tight">{displayName}</div>
+                <div className="text-[11px] leading-tight text-muted-foreground">{displayRoleLabel}</div>
               </div>
               <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-xs font-semibold text-primary-foreground">
                 {initials}

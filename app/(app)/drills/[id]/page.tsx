@@ -2,7 +2,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, FileText } from "lucide-react";
 import { requirePermission, can } from "@/lib/rbac";
-import { getDrill } from "@/features/drills/queries";
+import { getDrill, listVesselOptions } from "@/features/drills/queries";
+import { resolveEffectiveScheduleItems } from "@/features/schedule/queries";
 import { PageHeader } from "@/components/ui/page-header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -12,6 +13,8 @@ import { lifecycleStatusTone } from "@/lib/status";
 import { listAttachments } from "@/features/attachments/queries";
 import { AttachmentList } from "@/components/attachments/attachment-list";
 import { DrillActions } from "./drill-actions";
+import { DeleteDraftDrillButton, ReportDraftDrillButton } from "./draft-actions";
+import { EditDraftDrillForm } from "./edit-draft-form";
 
 export default async function DrillDetailPage({
   params,
@@ -20,8 +23,62 @@ export default async function DrillDetailPage({
 }) {
   const user = await requirePermission("drill:read");
   const { id } = await params;
-  const drill = await getDrill(user.companyId, id);
+  const isShipboard = user.department === "SHIPBOARD";
+  const drill = await getDrill(user.companyId, id, isShipboard, user.id, user.vesselId);
   if (!drill) notFound();
+
+  const isOwnDraft =
+    drill.status === "DRAFT" && can(user, "drill:create") && (isShipboard || drill.createdBy === user.id);
+
+  if (drill.status === "DRAFT") {
+    const [vessels, scheduleItems] = await Promise.all([
+      listVesselOptions(user.companyId),
+      resolveEffectiveScheduleItems(user.companyId, "DRILL", drill.vessel?.flag ?? null),
+    ]);
+    const ownVesselName = vessels.find((v) => v.id === user.vesselId)?.name ?? null;
+    return (
+      <div className="mx-auto max-w-7xl">
+        <Link href="/drills" className="mb-3 inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground">
+          <ArrowLeft className="h-4 w-4" /> Back to Emergency Drills
+        </Link>
+        <PageHeader
+          title="Draft drill record"
+          actions={
+            <div className="flex items-center gap-2">
+              <Badge tone={lifecycleStatusTone(drill.status)}>{humanize(drill.status)}</Badge>
+              {isOwnDraft && <DeleteDraftDrillButton drillId={drill.id} />}
+              {isOwnDraft && <ReportDraftDrillButton drillId={drill.id} />}
+            </div>
+          }
+        />
+        {isOwnDraft ? (
+          <EditDraftDrillForm
+            drill={{
+              id: drill.id,
+              vesselId: drill.vesselId,
+              scheduleItemId: drill.scheduleItemId,
+              drillDate: drill.drillDate.toISOString().slice(0, 10),
+              drillTime: drill.drillTime ?? "",
+              position: drill.position ?? "",
+              participants: drill.participants ?? "",
+              conductedBy: drill.conductedBy ?? "",
+              details: drill.details ?? "",
+              deficiencies: drill.deficiencies ?? "",
+              correctiveAction: drill.correctiveAction ?? "",
+              vesselRemarks: drill.vesselRemarks ?? "",
+            }}
+            vessels={vessels}
+            scheduleItems={scheduleItems}
+            isShipboard={isShipboard}
+            ownVesselId={user.vesselId}
+            ownVesselName={ownVesselName}
+          />
+        ) : (
+          <p className="text-sm text-muted-foreground">You don&apos;t have access to edit this draft.</p>
+        )}
+      </div>
+    );
+  }
 
   const editable = can(user, "drill:update") && drill.status !== "CLOSED";
   const canClose = can(user, "drill:close");
@@ -51,7 +108,7 @@ export default async function DrillDetailPage({
       </Link>
 
       <PageHeader
-        title={drill.refNo}
+        title={drill.refNo ?? ""}
         actions={
           <div className="flex items-center gap-2">
             <Badge tone={lifecycleStatusTone(drill.status)}>{humanize(drill.status)}</Badge>

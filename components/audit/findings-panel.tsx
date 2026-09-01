@@ -12,8 +12,6 @@ import { ncrPrefillHref } from "@/lib/ncr-link";
 import { formatRootCause, type RootCauseCategoryValue } from "@/lib/root-cause";
 import {
   CapaTracker,
-  CapaSummaryTable,
-  renumberCapaCodeForGroup,
   type CapaRowView,
   type CapaSummaryRowView,
 } from "@/components/capa/capa-tracker";
@@ -46,6 +44,15 @@ function isResolved(rows: CapaRow[]): boolean {
   return rows.length > 0 && rows.every((r) => r.status === "CLOSED");
 }
 
+/** Earliest non-null target date already on the finding's own corrective
+ * action(s), as yyyy-mm-dd — same "earliest wins" rule createNcrAction uses
+ * server-side, so what's shown on the raise form matches what actually gets
+ * saved. */
+function earliestTargetDate(rows: CapaRowView[]): string | null {
+  const dates = rows.map((r) => r.targetDate).filter((d): d is string => !!d).sort();
+  return dates[0]?.slice(0, 10) ?? null;
+}
+
 function AddButton() {
   const { pending } = useFormStatus();
   return (
@@ -58,6 +65,7 @@ function AddButton() {
 function FindingRow({
   finding,
   editable,
+  canRespond,
   deleteAction,
   saveRootCauseAction,
   canCreateNcr,
@@ -73,6 +81,7 @@ function FindingRow({
 }: {
   finding: AuditFindingView;
   editable: boolean;
+  canRespond: boolean;
   deleteAction: FindingAction;
   saveRootCauseAction: SaveRootCauseAction;
   canCreateNcr: boolean;
@@ -124,6 +133,7 @@ function FindingRow({
                     description: finding.description,
                     raisedAt: ncrContext.raisedAt,
                     reportRefNo: ncrContext.reportRefNo,
+                    targetDate: earliestTargetDate(correctiveRows),
                   })}
                 >
                   <Button type="button" size="sm">Raise NCR</Button>
@@ -208,6 +218,7 @@ function FindingRow({
           kind="CORRECTIVE"
           title="Corrective Actions"
           editable={existingNcr ? canUpdateNcr : editable}
+          canRespond={existingNcr ? false : canRespond}
           rows={correctiveRows}
         />
       </div>
@@ -229,6 +240,7 @@ export function AuditFindingsPanel({
   auditId,
   findings,
   editable,
+  canRespond,
   addAction,
   deleteAction,
   saveRootCauseAction,
@@ -246,6 +258,7 @@ export function AuditFindingsPanel({
   auditId: string;
   findings: AuditFindingView[];
   editable: boolean;
+  canRespond: boolean;
   addAction: AddAction;
   deleteAction: FindingAction;
   saveRootCauseAction: SaveRootCauseAction;
@@ -269,19 +282,6 @@ export function AuditFindingsPanel({
     if (addState.ok) formRef.current?.reset();
   }, [addState.ok]);
 
-  // One consolidated CAPA register for the whole audit, below every finding,
-  // so what's still pending is visible at a glance instead of buried inside
-  // each individual card.
-  const allCapaRows: CapaSummaryRowView[] = findings.flatMap((f, i) => {
-    const rows = allCapaRowsByFinding[f.id] ?? [];
-    const rowEditable = ncrBySourceId[f.id] ? canUpdateNcr : editable;
-    return rows.map((r) => ({
-      ...r,
-      code: renumberCapaCodeForGroup(r.code, i + 1),
-      editable: rowEditable,
-    }));
-  });
-
   return (
     <div className="space-y-4">
       {findings.length === 0 ? (
@@ -293,6 +293,7 @@ export function AuditFindingsPanel({
               key={f.id}
               finding={f}
               editable={editable}
+              canRespond={canRespond}
               deleteAction={deleteAction}
               saveRootCauseAction={saveRootCauseAction}
               canCreateNcr={canCreateNcr}
@@ -308,13 +309,6 @@ export function AuditFindingsPanel({
             />
           ))}
         </ul>
-      )}
-
-      {findings.length > 0 && (
-        <div className="space-y-2 rounded-md border border-border p-3">
-          <h4 className="text-sm font-semibold">All CAPA Tracker</h4>
-          <CapaSummaryTable rows={allCapaRows} editable={editable || canUpdateNcr} />
-        </div>
       )}
 
       {editable && (

@@ -60,7 +60,7 @@ export default async function NearMissReportPage({
 }) {
   const user = await requirePermission("nm:read");
   const { id } = await params;
-  const nm = await getNearMiss(user.companyId, id, user.department === "SHIPBOARD");
+  const nm = await getNearMiss(user.companyId, id, user.department === "SHIPBOARD", user.id, user.vesselId);
   if (!nm) notFound();
 
   const [correctiveRows, allCapaRows] = await Promise.all([

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useActionState, useEffect, useRef } from "react";
+import { useActionState, useEffect, useMemo, useRef, useState } from "react";
 import { useFormStatus } from "react-dom";
 import {
   createDrillAction,
@@ -33,8 +33,17 @@ function groupByCategory(items: ScheduleItemOption[]): [string, ScheduleItemOpti
 function SubmitButton() {
   const { pending } = useFormStatus();
   return (
-    <Button type="submit" disabled={pending}>
+    <Button type="submit" name="intent" value="report" disabled={pending}>
       {pending ? "Saving…" : "Record Drill"}
+    </Button>
+  );
+}
+
+function DraftSubmitButton() {
+  const { pending } = useFormStatus();
+  return (
+    <Button type="submit" name="intent" value="draft" variant="outline" disabled={pending}>
+      {pending ? "Saving…" : "Save as Draft"}
     </Button>
   );
 }
@@ -42,18 +51,24 @@ function SubmitButton() {
 // Mirrors SMS form R-AS-021 "Report of Drill / Training onboard" (Appendix 6).
 export function NewDrillForm({
   vessels,
-  scheduleItems,
+  itemsByFlag,
   isShipboard,
   ownVesselId,
   ownVesselName,
+  ownVesselFlag,
 }: {
-  vessels: { id: string; name: string }[];
-  scheduleItems: ScheduleItemOption[];
+  vessels: { id: string; name: string; flag: string | null }[];
+  /** Every distinct flag's own effective drill set, keyed by flag ("" =
+   * the fleet-wide default) — lets the "Kind of Drill" list switch
+   * instantly when the vessel selection changes, no reload. */
+  itemsByFlag: Record<string, ScheduleItemOption[]>;
   isShipboard: boolean;
   ownVesselId: string | null;
   ownVesselName: string | null;
+  ownVesselFlag: string | null;
 }) {
   const formRef = useRef<HTMLFormElement>(null);
+  const [selectedVesselId, setSelectedVesselId] = useState(isShipboard ? (ownVesselId ?? "") : "");
   // The browser resets every field in the <form> the moment a form action
   // resolves — even on a rejected (fail()) result. Capture what was
   // submitted so a failed submission only has to point at what's missing,
@@ -98,7 +113,11 @@ export function NewDrillForm({
     ].forEach(restore);
   }, [state]);
 
-  const grouped = groupByCategory(scheduleItems);
+  const effectiveItems = useMemo(() => {
+    const flag = isShipboard ? ownVesselFlag : (vessels.find((v) => v.id === selectedVesselId)?.flag ?? null);
+    return itemsByFlag[flag ?? ""] ?? itemsByFlag[""] ?? [];
+  }, [isShipboard, ownVesselFlag, selectedVesselId, vessels, itemsByFlag]);
+  const grouped = groupByCategory(effectiveItems);
 
   return (
     <Card>
@@ -128,6 +147,7 @@ export function NewDrillForm({
               ownVesselName={ownVesselName}
               blankLabel="Select vessel…"
               required
+              onChange={setSelectedVesselId}
             />
             <div className="space-y-1.5">
               <Label htmlFor="drillDate">Date</Label>
@@ -182,6 +202,7 @@ export function NewDrillForm({
           {state.error && <p className="text-sm text-danger" role="alert">{state.error}</p>}
           <div className="flex items-center gap-2">
             <SubmitButton />
+            <DraftSubmitButton />
             <Link href="/drills"><Button type="button" variant="ghost">Cancel</Button></Link>
           </div>
         </form>

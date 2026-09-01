@@ -1,6 +1,6 @@
-// Shared types + helpers for the Internal and External Audit modules, which
-// have an identical structure. The two modules pass their own server actions
-// into the shared client components below.
+// Shared types + helpers for the Internal Audit, External Audit, and Flag
+// Inspection modules, which have an identical structure. Each module passes
+// its own server actions into the shared client components below.
 
 export type AuditActionResult = { ok: boolean; error: string | null };
 
@@ -19,12 +19,13 @@ export type AuditNcrContext = {
   vesselId: string | null;
   reportRefNo: string;
   raisedAt: string; // yyyy-mm-dd
-  source: "INTERNAL_AUDIT" | "EXTERNAL_AUDIT";
+  source: "INTERNAL_AUDIT" | "EXTERNAL_AUDIT" | "FLAG_STATE";
 };
 
-// A finding's own entity type ("InternalAuditFinding" / "ExternalAuditFinding")
-// — used as the CAPA entityType when a finding has no linked NCR yet.
-export type AuditFindingEntityType = "InternalAuditFinding" | "ExternalAuditFinding";
+// A finding's own entity type ("InternalAuditFinding" / "ExternalAuditFinding"
+// / "FlagInspectionFinding") — used as the CAPA entityType when a finding has
+// no linked NCR yet.
+export type AuditFindingEntityType = "InternalAuditFinding" | "ExternalAuditFinding" | "FlagInspectionFinding";
 
 export type RootCauseValue = { category: string | null; subCategory: string | null; description: string | null };
 export type CapaEntityRef = { entityType: string; entityId: string };

@@ -27,6 +27,7 @@ export default async function NewNcrPage({
     requirement: first(sp.requirement) ?? "",
     description: first(sp.description) ?? "",
     raisedAt: first(sp.raisedAt) ?? "",
+    targetDate: first(sp.targetDate) ?? "",
   };
 
   const isShipboard = user.department === "SHIPBOARD";

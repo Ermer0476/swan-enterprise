@@ -788,7 +788,7 @@ export function ObservationsPanel({
       )}
 
       {editable && !showAddForm && (
-        <Button type="button" variant="outline" onClick={() => setShowAddForm(true)}>
+        <Button type="button" variant="accent" onClick={() => setShowAddForm(true)}>
           <Plus className="h-4 w-4" /> Add observation
         </Button>
       )}

@@ -120,6 +120,9 @@ enum IncidentType {
 }
 
 enum IncidentStatus {
+  // The reporter's own work-in-progress — invisible to everyone else until
+  // "Report Incident" moves it to REPORTED. See features/incidents/queries.ts.
+  DRAFT
   REPORTED
   UNDER_INVESTIGATION
   ACTION_PENDING
@@ -208,20 +211,46 @@ enum NcrSource {
 // General Manager hold ncr:close, mirroring how Incident "Verified by
 // Management" is captured (closing = verification, not a separate step).
 enum NcrStatus {
+  DRAFT
   OPEN
   SUBMITTED_TO_OFFICE
+  VERIFIED
   CLOSED
+}
+
+// The either/or choice on R-AS-001's "Verification of Corrective Action"
+// block — "Completed per SMS" vs "Follow-up is required as per SMS".
+// Assistance-required is a separate, non-exclusive checkbox on that same
+// form, so it's its own boolean field on NonConformity, not part of this enum.
+enum NcrVerificationOutcome {
+  COMPLETED
+  FOLLOWUP_REQUIRED
 }
 
 // ─── External Inspections (SIRE / PSC / CDI) ────────────────────────────────
 //  Each regime is its own module but shares the inspection/finding lifecycle.
+//  InternalAudit does NOT use this — it has its own InternalAuditStatus below
+//  (it alone needed a DRAFT state; adding DRAFT here would leak into every
+//  other model that shares this enum: SIRE/PSC/CDI/CompanyInspection/
+//  ExternalAudit).
 enum InspectionStatus {
   OPEN
   IN_PROGRESS
   CLOSED
 }
 
-enum FindingStatus {
+// Dedicated to InternalAudit only — kept separate from InspectionStatus (see
+// comment above) so DRAFT doesn't leak into the other inspection modules.
+enum InternalAuditStatus {
+  DRAFT
+  OPEN
+  IN_PROGRESS
+  CLOSED
+}
+
+// Dedicated to EmergencyDrill only, so DRAFT doesn't leak into other modules.
+enum DrillStatus {
+  DRAFT
   OPEN
   CLOSED
 }
@@ -239,9 +268,29 @@ enum SireOverallResult {
   MAJOR_CONCERN
 }
 
-// SIRE observations run a longer lifecycle than the generic FindingStatus
-// (OPEN/CLOSED) — verification is its own step, not just a status label.
+// Which discipline a Company Inspection covers — see CompanyInspection.inspectionType.
+enum CompanyInspectionType {
+  TECHNICAL
+  SAFETY
+}
+
+// See CompanyInspection.visitKind.
+enum CompanyInspectionVisitKind {
+  PORT_VISIT
+  SAILING_VISIT
+}
+
+// SIRE observations run a longer lifecycle than a plain OPEN/CLOSED status —
+// verification is its own step, not just a status label. CdiObservationStatus
+// (below) mirrors this shape for the same reason.
 enum SireObservationStatus {
+  OPEN
+  ONGOING
+  PENDING_VERIFICATION
+  CLOSED
+}
+
+enum CdiObservationStatus {
   OPEN
   ONGOING
   PENDING_VERIFICATION
@@ -290,28 +339,79 @@ model Company {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  users                   User[]
-  roles                   Role[]
-  vessels                 Vessel[]
-  smsDocuments            SmsDocument[]
-  workflows               WorkflowDefinition[]
-  incidents               Incident[]
-  nearMisses              NearMiss[]
-  nonConformities         NonConformity[]
-  sireInspections         SireInspection[]
-  pscInspections          PscInspection[]
-  cdiInspections          CdiInspection[]
-  internalAudits          InternalAudit[]
-  externalAudits          ExternalAudit[]
-  committeeMeetings       CommitteeMeeting[]
-  scheduleItems           ScheduleItem[]
-  emergencyDrills         EmergencyDrill[]
-  familiarizationRecords  FamiliarizationRecord[]
-  scheduleApplicability   ScheduleApplicability[]
-  controlledDocuments     ControlledDocument[]
-  circulars               Circular[]
-  riskAssessmentDocuments RiskAssessmentDocument[]
-  defects                 Defect[]
+  // Exposure Hours KPI dashboard targets (LTIF/TRCF), per-million-hours rate.
+  // Editable at /settings/exposure-kpi — see exposure:manage-targets.
+  ltifTarget Float @default(1.0)
+  trcfTarget Float @default(4.0)
+
+  // SIRE KPI dashboard target: average observations per inspection, fleet-wide.
+  // Editable at /settings/sire-kpi — see sire:manage-targets.
+  sireAvgObservationTarget Float @default(3.0)
+
+  // Company Inspection KPI dashboard target: average observations per
+  // inspection, fleet-wide — same pattern as SIRE's target, kept on its own
+  // field since the two modules' observation volumes aren't comparable.
+  // Editable at /settings/company-inspections-kpi — see cinsp:manage-targets.
+  cinspAvgObservationTarget Float @default(3.0)
+
+  // Procurement requisition approval routing thresholds (peso amounts).
+  // Routing logic that consumes these is a later build — see
+  // features/procurement/. Editable at /settings/procurement-thresholds —
+  // see procurement:manage-thresholds.
+  procurementThresholdSupt        Float @default(50000)
+  procurementThresholdTechManager Float @default(500000)
+
+  users                      User[]
+  roles                      Role[]
+  vessels                    Vessel[]
+  smsDocuments               SmsDocument[]
+  workflows                  WorkflowDefinition[]
+  incidents                  Incident[]
+  nearMisses                 NearMiss[]
+  nonConformities            NonConformity[]
+  sireInspections            SireInspection[]
+  sireQuestionnaireVersions  SireQuestionnaireVersion[]
+  pscInspections             PscInspection[]
+  cdiInspections             CdiInspection[]
+  internalAudits             InternalAudit[]
+  externalAudits             ExternalAudit[]
+  flagInspections            FlagInspection[]
+  companyInspections         CompanyInspection[]
+  committeeMeetings          CommitteeMeeting[]
+  scheduleItems              ScheduleItem[]
+  emergencyDrills            EmergencyDrill[]
+  familiarizationRecords     FamiliarizationRecord[]
+  familiarizationSessions    FamiliarizationSession[]
+  scheduleApplicability      ScheduleApplicability[]
+  lsaFfeItems                LsaFfeItem[]
+  crewFamiliarizations       CrewFamiliarization[]
+  refSequences               RefSequence[]
+  controlledDocuments        ControlledDocument[]
+  circulars                  Circular[]
+  riskAssessmentDocuments    RiskAssessmentDocument[]
+  defects                    Defect[]
+  crewFamiliarizationRecords CrewFamiliarizationRecord[]
+  vesselDocuments            VesselDocument[]
+  voyageLogs                 VoyageLog[]
+  environmentRecords         EnvironmentRecord[]
+  tmsaAssessments            TmsaAssessment[]
+  tmsaScores                 TmsaScore[]
+  tmsaFindings               TmsaFinding[]
+  storesCatalogueItems       StoresCatalogueItem[]
+  sparesCatalogueItems       SparesCatalogueItem[]
+  openingStockTakes          OpeningStockTake[]
+  inventoryEvents            InventoryEvent[]
+  inventoryUpdateDrafts      InventoryUpdateDraft[]
+  requisitions               Requisition[]
+  requisitionRevisions       RequisitionRevision[]
+  unitMasters                UnitMaster[]
+  budgetOpex                 BudgetOpex[]
+  calendarEvents             CalendarEvent[]
+  budgetSchedules            BudgetSchedule[]
+
+  // How far ahead of its Expired date a certificate is flagged with a
+  // warning icon on the Vessel Documentation / Company Documents registers.
+  documentExpiryWarningMonths Int @default(3)
 }
 
 model User {
@@ -343,11 +443,16 @@ model User {
   ownedDocs          SmsDocument[]            @relation("DocumentOwner")
   reportedIncidents  Incident[]               @relation("IncidentReporter")
   reportedNearMisses NearMiss[]               @relation("NearMissReporter")
+  nearMissShoreRemarksAuthored NearMiss[]     @relation("NearMissShoreRemarksBy")
   raisedNcrs         NonConformity[]          @relation("NcrRaisedBy")
+  ncrVerifiedByAuthored   NonConformity[]     @relation("NcrVerifiedBy")
+  ncrClosedByAuthored     NonConformity[]     @relation("NcrClosedBy")
   notifications      Notification[]
   sireResponsibleFor SireObservation[]        @relation("SireObservationResponsible")
   sireVerifierFor    SireObservation[]        @relation("SireObservationVerifier")
   sireComments       SireObservationComment[] @relation("SireObservationCommentAuthor")
+  cdiResponsibleFor  CdiObservation[]         @relation("CdiObservationResponsible")
+  cdiVerifierFor     CdiObservation[]         @relation("CdiObservationVerifier")
 
   @@index([companyId])
   @@index([department])
@@ -407,10 +512,12 @@ model Vessel {
   companyId             String
   company               Company      @relation(fields: [companyId], references: [id])
   name                  String
-  // Short internal fleet code (e.g. "SWA") — prefixed onto vessel-raised NCR
-  // numbers (SWA-NCR-2026-0001) so each ship keeps its own NC sequence while
-  // staying unambiguous once everything lands in the office's central register.
-  code                  String?
+  // Short internal fleet code (e.g. "SWA") — prefixed onto every
+  // vessel-raised ref number (SWA-DR-2026-0001, SWA-NCR-2026-0001, ...) so
+  // two ships' Nth report of the year never look alike once everything
+  // lands in the office's central register. Mandatory and unique — every
+  // vessel must have one before it can raise a vessel-linked report.
+  code                  String       @unique
   // Optional so real-fleet vessels can be entered before their official IMO
   // number is on file (e.g. bulk-imported from the fleet register) — fill
   // it in later once confirmed. Still unique whenever it IS set.
@@ -451,6 +558,11 @@ model Vessel {
   draft           Float? // Draft, extreme (m)
   mainEngine      String? // e.g. "HITACHI MAN B&W 6S35ME-B9.7-HPSCR x 1 set"
   serviceSpeed    Float? // knots
+  // Standard daily consumption from sea trial — manually set per vessel
+  // (not derived from voyage-log history), used as the KPI dashboard's
+  // fuel-consumption threshold line.
+  stdFoConsumptionMt Float? // mt/day
+  stdDoConsumptionMt Float? // mt/day
   navigationArea  String? // e.g. "OCEAN GOING"
   classNotation   String?
   ownerAddress    String?
@@ -483,19 +595,113 @@ model Vessel {
   cdiInspections                 CdiInspection[]
   internalAudits                 InternalAudit[]
   externalAudits                 ExternalAudit[]
+  flagInspections                FlagInspection[]
+  companyInspections             CompanyInspection[]
   committeeMeetings              CommitteeMeeting[]
   emergencyDrills                EmergencyDrill[]
   familiarizationRecords         FamiliarizationRecord[]
+  familiarizationSessions        FamiliarizationSession[]
   scheduleApplicability          ScheduleApplicability[]
+  crewFamiliarizations           CrewFamiliarization[]
   controlledDocuments            ControlledDocument[]
   circulars                      Circular[]
   riskAssessmentDocuments        RiskAssessmentDocument[]        @relation("RaDocumentVessel")
   riskAssessmentExecutions       RiskAssessmentExecution[]       @relation("RaExecutionVessel")
   riskAssessmentRevisionRequests RiskAssessmentRevisionRequest[] @relation("RaRevisionRequestVessel")
+  riskHazardRows                 RiskHazardRow[]                 @relation("RaHazardRowVessel")
   defects                        Defect[]
+  vesselDocuments                VesselDocument[]
   users                          User[]                          @relation("UserVessel")
+  voyageLogs                     VoyageLog[]
+  environmentRecords             EnvironmentRecord[]
+  storesCatalogueItems           StoresCatalogueItem[]
+  sparesCatalogueItems           SparesCatalogueItem[]
+  openingStockTake                OpeningStockTake?
+  inventoryEvents                InventoryEvent[]
+  inventoryUpdateDrafts           InventoryUpdateDraft[]
+  requisitions                   Requisition[]
+  budgets                        BudgetOpex[]
 
   @@unique([companyId, code])
+  @@index([companyId])
+}
+
+/// Per-vessel operating-expense budget vs. actual, powering the OPEX Controller.
+/// One row per vessel + period + category (subCategory/subItem null = the
+/// category total; non-null = a line item under it). Periods are "MM-YYYY" for
+/// monthly manual entry or "FY-YYYY" for full-year imports.
+model BudgetOpex {
+  id              String   @id @default(uuid())
+  companyId       String
+  company         Company  @relation(fields: [companyId], references: [id])
+  vesselId        String
+  vessel          Vessel   @relation(fields: [vesselId], references: [id])
+  monthYear       String // "05-2026" or "FY-2025"
+  category        String
+  subCategory     String?
+  subItem         String?
+  budgetAllocated Float
+  actualCost      Float
+  variance        Float
+  days            Float?
+  qty             Float?
+  rate            Float?
+  rob             Float?
+  orderQty        Float?
+  expiry          String?
+  basis           String?
+  createdAt       DateTime @default(now())
+  createdBy       String?
+  updatedAt       DateTime @updatedAt
+  updatedBy       String?
+
+  @@index([companyId, vesselId, monthYear])
+}
+
+// Office-only calendar (ported from Swan-GCC): custom events plus derived
+// drydock reminders. Events are company-global (no vessel binding).
+model CalendarEvent {
+  id        String   @id @default(uuid())
+  companyId String
+  company   Company  @relation(fields: [companyId], references: [id])
+  title     String
+  startAt   DateTime // start date + time
+  endAt     DateTime // end date + time (supports multi-day)
+  allDay    Boolean  @default(false)
+  note      String?
+  color     String   @default("sky") // sky | amber | red | emerald | indigo | purple
+  createdAt DateTime @default(now())
+  createdBy String?
+  updatedAt DateTime @updatedAt
+  updatedBy String?
+
+  @@index([companyId, startAt])
+}
+
+// Budget Proposal schedule dashboard (ported from Swan-GCC). Drives the
+// per-vessel budget preparation timeline; the proposal line items themselves
+// live in BudgetOpex under PROP-<year> periods.
+model BudgetSchedule {
+  id               String    @id @default(uuid())
+  companyId        String
+  company          Company   @relation(fields: [companyId], references: [id])
+  vesselName       String
+  vesselId         String? // matched to the fleet register when possible
+  sortOrder        Int?
+  status           String? // Proposed / Approved
+  submitToMgt      String? // month name
+  submitToOwners   String? // month name
+  budgetStatus     String    @default("Pending") // Pending / On Process / Drafted
+  contractFrom     DateTime?
+  contractTo       DateTime?
+  nextContractFrom DateTime?
+  nextContractTo   DateTime?
+  bfa              String?
+  remarks          String?
+  syncedAt         DateTime  @default(now())
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
   @@index([companyId])
 }
 
@@ -582,6 +788,7 @@ model CapaAction {
   deletedAt DateTime?
   deletedBy String?
 
+  @@unique([companyId, entityType, entityId, kind, code])
   @@index([companyId, entityType, entityId, kind])
 }
 
@@ -749,7 +956,10 @@ model Incident {
   id        String  @id @default(uuid())
   companyId String
   company   Company @relation(fields: [companyId], references: [id])
-  refNo     String // human reference, unique per company (e.g. INC-2026-0001)
+  // Null while status = DRAFT — assigned only once the report actually goes
+  // out, so a draft that's abandoned/edited repeatedly never burns a
+  // sequence number.
+  refNo     String? // human reference, unique per company (e.g. INC-2026-0001)
 
   title    String
   severity Severity? // office-assessed, set during investigation — not by the reporter
@@ -811,6 +1021,8 @@ model Incident {
   @@unique([companyId, refNo])
   @@index([companyId, status])
   @@index([companyId, severity])
+  @@index([companyId, vesselId])
+  @@index([companyId, occurredAt])
 }
 
 // Statement of Facts — chronological timeline of events/response actions,
@@ -891,6 +1103,13 @@ model NearMiss {
   // was `companyComments` prior to that standardization pass.
   shoreRemarks String?
   reviewedAt   DateTime?
+  // Who last saved shoreRemarks, and when — a dedicated attribution pair,
+  // separate from the record-level updatedBy/updatedAt (which covers every
+  // field on this row, not just this one) and from reviewedAt (a
+  // manually-typed date, not an audit timestamp).
+  shoreRemarksByUserId String?
+  shoreRemarksByUser   User?     @relation("NearMissShoreRemarksBy", fields: [shoreRemarksByUserId], references: [id])
+  shoreRemarksAt       DateTime?
 
   reportedById     String?
   reportedBy       User?   @relation("NearMissReporter", fields: [reportedById], references: [id])
@@ -920,11 +1139,15 @@ model NonConformity {
   id        String  @id @default(uuid())
   companyId String
   company   Company @relation(fields: [companyId], references: [id])
-  refNo     String
+  refNo     String? // null while status = DRAFT — assigned only once actually raised
 
   title          String
   vesselId       String?
   vessel         Vessel?   @relation(fields: [vesselId], references: [id])
+  // Office/shore department this NCR is raised against or owned by —
+  // separate from vesselId (null for shore-raised records); matches
+  // R-AS-001's "Department Name" field alongside "Vessel/Company".
+  departmentName String?
   source         NcrSource
   // Soft link to the specific finding/deficiency row that raised this NCR
   // (PscDeficiency / InternalAuditFinding / ExternalAuditFinding, etc. —
@@ -951,19 +1174,35 @@ model NonConformity {
   // named individual.
   personInCharge       String?
 
-  // Office's written reply on this NCR — same app-wide "shore feedback on a
-  // vessel/office-raised report" field as NearMiss.shoreRemarks and
-  // CommitteeMeeting.shoreRemarks (see COMMENTS_STANDARDIZATION_REPORT.md).
-  // NCR has no ship/office permission split elsewhere in this module, so
-  // this is gated by the same ncr:update permission as root cause, not a
-  // separate office-only key.
-  shoreRemarks String?
-
   status   NcrStatus @default(OPEN)
   closedAt DateTime?
 
+  // Verification of Corrective Action — DPA / Safety Mgt. Committee sign-off,
+  // required before Close Out (R-AS-001 section 6). Distinct from Close Out
+  // below: verification judges whether the corrective action itself was
+  // done; close-out is the separate act of shutting the NCR record.
+  verificationOutcome        NcrVerificationOutcome?
+  verificationFollowUpNature String? // filled when outcome = FOLLOWUP_REQUIRED
+  assistanceRequired         Boolean   @default(false) // independent checkbox on the same form, not part of the outcome choice
+  assistanceNature           String?
+  verifiedByUserId           String?
+  verifiedByUser             User?     @relation("NcrVerifiedBy", fields: [verifiedByUserId], references: [id])
+  verifiedAt                 DateTime?
+
+  // Close Out (R-AS-001 section 7) — a record can still flag its own
+  // follow-up at close-out, separate from any follow-up already noted at
+  // verification above.
+  closeOutFollowUpRequired Boolean @default(false)
+  closeOutFollowUpNature   String?
+  closedByUserId           String?
+  closedByUser             User?   @relation("NcrClosedBy", fields: [closedByUserId], references: [id])
+
   raisedById String?
   raisedBy   User?   @relation("NcrRaisedBy", fields: [raisedById], references: [id])
+  // Typed name of the actual individual reporter — shipboard accounts are
+  // shared logins, so raisedBy (the logged-in account) doesn't reliably
+  // identify who raised it. Same convention as NearMiss.reporterName.
+  reporterName String?
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
@@ -1010,6 +1249,8 @@ model SireInspection {
 
   @@unique([companyId, refNo])
   @@index([companyId, status])
+  @@index([companyId, vesselId])
+  @@index([companyId, inspectionDate])
 }
 
 model SireObservation {
@@ -1050,6 +1291,7 @@ model SireObservation {
   createdBy String?
   deletedAt DateTime?
 
+  @@unique([inspectionId, seq])
   @@index([inspectionId])
 }
 
@@ -1065,6 +1307,56 @@ model SireObservationComment {
   createdAt DateTime @default(now())
 
   @@index([observationId])
+}
+
+// SIRE 2.0's own VIQ (Vessel Inspection Questionnaire) gets revised by OCIMF
+// periodically, so this is uploaded reference data rather than a hardcoded
+// list — office uploads a new spreadsheet version when SIRE updates, and the
+// most recent one supersedes the last (see features/sire-questionnaire). Only
+// used today to power a "suggest the VIQ chapter/question number" hint on
+// Company Inspection observations — the Supt drafting an internal inspection
+// doesn't always know the exact SIRE 2.0 reference offhand, unlike an actual
+// SIRE inspector recording an official vetting.
+model SireQuestionnaireVersion {
+  id        String  @id @default(uuid())
+  companyId String
+  company   Company @relation(fields: [companyId], references: [id])
+
+  label String // e.g. the uploaded filename, or a typed label
+  // Exactly one active version per company at a time — enforced in
+  // features/sire-questionnaire/actions.ts (deactivate-then-activate in a
+  // transaction), not a DB constraint, matching how "current revision"
+  // singleton state is handled elsewhere in this app (e.g. RiskAssessmentDocument).
+  isActive  Boolean @default(false)
+  itemCount Int     @default(0)
+
+  items SireQuestionnaireItem[]
+
+  createdAt DateTime  @default(now())
+  createdBy String?
+  deletedAt DateTime?
+  deletedBy String?
+
+  @@index([companyId, isActive])
+}
+
+model SireQuestionnaireItem {
+  id        String                   @id @default(uuid())
+  companyId String
+  versionId String
+  version   SireQuestionnaireVersion @relation(fields: [versionId], references: [id], onDelete: Cascade)
+
+  chapter        Int // derived from the leading number in `no` (e.g. "4.2.3" -> 4)
+  no             String // VIQ question number, e.g. "4.2.3"
+  question       String  @db.Text
+  shortText      String?
+  personInCharge String?
+  smsProcRefs    String? // company SMS procedures this question maps to
+
+  createdAt DateTime @default(now())
+
+  @@index([companyId, versionId])
+  @@index([companyId, versionId, chapter])
 }
 
 // ─── Phase 1 module: PSC Inspection (Port State Control) ─────────────────────
@@ -1099,6 +1391,8 @@ model PscInspection {
 
   @@unique([companyId, refNo])
   @@index([companyId, status])
+  @@index([companyId, vesselId])
+  @@index([companyId, inspectionDate])
 }
 
 model PscDeficiency {
@@ -1170,14 +1464,25 @@ model CdiObservation {
   questionRef  String? // CDI question reference
   observation  String
   response     String?
-  status       FindingStatus @default(OPEN)
+  status       CdiObservationStatus @default(OPEN)
 
   // category is the CDI checklist section (1–14, 5LP for LPG cargo ops).
   // Root-cause taxonomy still mirrors SIRE, so both feed the same KPI shape.
   category             CdiObservationSection?
+  immediateCause       String? // mirrors SireObservation.immediateCause
   rootCauseCategory    RootCauseCategory?
   rootCauseSubCategory String? // one flat sub-cause per category — see lib/root-cause.ts
   rootCause            String? // free-text root cause description
+  correctiveAction     String? // mirrors SireObservation.correctiveAction
+  preventiveMeasure    String? // mirrors SireObservation.preventiveMeasure
+
+  responsiblePersonId  String?
+  responsiblePerson    User?     @relation("CdiObservationResponsible", fields: [responsiblePersonId], references: [id])
+  targetDate           DateTime?
+  actualCompletionDate DateTime?
+
+  verifiedById String?
+  verifiedBy   User?   @relation("CdiObservationVerifier", fields: [verifiedById], references: [id])
 
   createdAt DateTime  @default(now())
   createdBy String?
@@ -1195,7 +1500,7 @@ model InternalAudit {
   id        String  @id @default(uuid())
   companyId String
   company   Company @relation(fields: [companyId], references: [id])
-  refNo     String
+  refNo     String? // null while status = DRAFT — assigned only once actually raised
 
   vesselId String?
   vessel   Vessel? @relation(fields: [vesselId], references: [id])
@@ -1207,7 +1512,7 @@ model InternalAudit {
   auditDate   DateTime
   summary     String?
 
-  status   InspectionStatus @default(OPEN)
+  status   InternalAuditStatus @default(OPEN)
   closedAt DateTime?
 
   findings InternalAuditFinding[]
@@ -1221,6 +1526,8 @@ model InternalAudit {
 
   @@unique([companyId, refNo])
   @@index([companyId, status])
+  @@index([companyId, vesselId])
+  @@index([companyId, auditDate])
 }
 
 model InternalAuditFinding {
@@ -1279,6 +1586,8 @@ model ExternalAudit {
 
   @@unique([companyId, refNo])
   @@index([companyId, status])
+  @@index([companyId, vesselId])
+  @@index([companyId, auditDate])
 }
 
 model ExternalAuditFinding {
@@ -1305,6 +1614,207 @@ model ExternalAuditFinding {
   deletedAt DateTime?
 
   @@index([auditId])
+}
+
+// Flag State inspections — same structure as ExternalAudit/ExternalAuditFinding
+// (a duplicate module by design, not a variant), with its own permission
+// prefix (flaginsp:*) and ref sequence (FI-{year}).
+model FlagInspection {
+  id        String  @id @default(uuid())
+  companyId String
+  company   Company @relation(fields: [companyId], references: [id])
+  refNo     String
+
+  vesselId String?
+  vessel   Vessel? @relation(fields: [vesselId], references: [id])
+
+  scope       String
+  standard    String
+  auditorName String? // lead surveyor / inspector
+  auditBody   String? // flag state administration / recognized organization
+  auditDate   DateTime
+  summary     String?
+
+  status   InspectionStatus @default(OPEN)
+  closedAt DateTime?
+
+  findings FlagInspectionFinding[]
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  createdBy String?
+  updatedBy String?
+  deletedAt DateTime?
+  deletedBy String?
+
+  @@unique([companyId, refNo])
+  @@index([companyId, status])
+  @@index([companyId, vesselId])
+  @@index([companyId, auditDate])
+}
+
+model FlagInspectionFinding {
+  id                   String               @id @default(uuid())
+  companyId            String
+  auditId              String
+  audit                FlagInspection       @relation(fields: [auditId], references: [id], onDelete: Cascade)
+  category             AuditFindingCategory
+  reference            String?
+  description          String
+  // Root cause classification — same shared taxonomy as Incident/Near
+  // Miss/NCR/PSC (lib/root-cause.ts). Corrective actions live in CapaAction
+  // (entityType "FlagInspectionFinding").
+  rootCauseCategory    RootCauseCategory?
+  rootCauseSubCategory String? // one flat sub-cause per category — see lib/root-cause.ts
+  rootCause            String? // free-text root cause description
+
+  createdAt DateTime  @default(now())
+  createdBy String?
+  deletedAt DateTime?
+
+  @@index([auditId])
+}
+
+// Company-conducted inspections (superintendent visits, internal vetting-style
+// checks) — same OPEN/IN_PROGRESS/CLOSED lifecycle as SIRE, but each
+// observation is deliberately lean: Observation + Root Cause + an on-the-spot
+// Immediate Corrective Action, with any longer-running follow-up tracked in
+// the shared CAPA register (CapaAction, entityType "CompanyInspectionObservation")
+// instead of SIRE's fuller responsible-person/target-date/verification fields.
+model CompanyInspection {
+  id        String  @id @default(uuid())
+  companyId String
+  company   Company @relation(fields: [companyId], references: [id])
+  refNo     String
+
+  vesselId String?
+  vessel   Vessel? @relation(fields: [vesselId], references: [id])
+
+  // Which discipline the inspection covers — Technical (machinery, equipment
+  // condition) vs Safety (procedures, PPE, safe working practices).
+  inspectionType CompanyInspectionType?
+
+  // Port Visit (alongside/berth) vs Sailing Visit (underway) — replaces the
+  // earlier SIRE-style overall result, which didn't fit how these
+  // company-conducted inspections are actually classified.
+  visitKind CompanyInspectionVisitKind?
+
+  inspectorName  String?
+  port           String?
+  inspectionDate DateTime
+  summary        String?
+
+  status   InspectionStatus @default(OPEN)
+  closedAt DateTime?
+
+  observations CompanyInspectionObservation[]
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  createdBy String?
+  updatedBy String?
+  deletedAt DateTime?
+  deletedBy String?
+
+  @@unique([companyId, refNo])
+  @@index([companyId, status])
+  @@index([companyId, vesselId])
+  @@index([companyId, inspectionDate])
+}
+
+model CompanyInspectionObservation {
+  id           String            @id @default(uuid())
+  companyId    String
+  inspectionId String
+  inspection   CompanyInspection @relation(fields: [inspectionId], references: [id], onDelete: Cascade)
+
+  // Stable per-inspection ordinal for "Observation No. N", same as SireObservation.seq.
+  seq         Int
+  chapter     Int? // VIQ_CHAPTERS in features/sire/schema.ts — reused as-is
+  category    SireObservationCategory?
+  viqRef      String? // "Question number", e.g. "3.5.1"
+  observation String // "Finding / Inspector observation" in the UI
+  immediateCause String?
+
+  rootCauseCategory    RootCauseCategory?
+  rootCauseSubCategory String? // one flat sub-cause per category — see lib/root-cause.ts
+  rootCause            String? // free-text root cause description
+
+  immediateCorrectiveAction String? // fixed on the spot, distinct from the CAPA follow-up
+
+  createdAt DateTime  @default(now())
+  createdBy String?
+  deletedAt DateTime?
+
+  @@unique([inspectionId, seq])
+  @@index([inspectionId])
+}
+
+// ─── Exposure Hours module — continuous crew-hours ledger + injury cases ────
+//  Total exposure hours are never manually entered. Each vessel keeps a
+//  running crew-count history (ExposureCrewEntry) — one row per crew-count
+//  change and the date it took effect — and total hours for any date range
+//  is computed as crew × 24h/day integrated across that history, live, up
+//  to today. Injury cases are logged independently, each tagged with the
+//  date it occurred; LTI/TRC/LTIF/TRCF are derived from them, never stored.
+//  See features/exposure-hours/schema.ts for the shared formula/computation
+//  helpers.
+enum ExposureEnteredBy {
+  VESSEL
+  OFFICE
+}
+
+model ExposureCrewEntry {
+  id        String @id @default(uuid())
+  companyId String
+  vesselId  String
+
+  crew          Int
+  effectiveFrom DateTime // this crew count applies from this date onward, until the next entry
+
+  enteredBy ExposureEnteredBy
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  createdBy String?
+  updatedBy String?
+  deletedAt DateTime?
+  deletedBy String?
+
+  @@index([companyId, vesselId, effectiveFrom])
+}
+
+// One row per recordable injury/case, classified under its single, final,
+// most-serious outcome (see the hierarchy below) — never split across
+// multiple categories as it evolves.
+//   FAT > PTD > PPD > LWC > RWC > MTC > FAC (not recordable)
+enum InjuryClassification {
+  FAC
+  MTC
+  RWC
+  LWC
+  PPD
+  PTD
+  FAT
+}
+
+model ExposureInjuryCase {
+  id        String @id @default(uuid())
+  companyId String
+  vesselId  String
+
+  classification InjuryClassification
+  description    String?
+  occurredOn     DateTime
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  createdBy String?
+  updatedBy String?
+  deletedAt DateTime?
+  deletedBy String?
+
+  @@index([companyId, vesselId, occurredOn])
 }
 
 // ─── Phase 1 module: Committee Meetings (ADM-04 / RC-013) ─────────────────────
@@ -1353,19 +1863,17 @@ model CommitteeMeeting {
   // Crew who could not attend and must acknowledge the minutes separately.
   forAcknowledgement String?
 
-  vesselRemarks String? // Master's overall closing remarks
-  shoreRemarks  String? // office's overall reply — required before Close
-
   status             CommitteeMeetingStatus @default(DRAFT)
   reportedAt         DateTime? // set (and refreshed) every time the vessel reports
   closedAt           DateTime? // set when the office closes it out
   // True the moment the vessel edits+re-reports a meeting the office has
   // already closed once — cleared when the office closes it again. Lets the
   // office notice "the vessel changed something since I last reviewed this"
-  // without losing the shoreRemarks/agenda shoreComments already on file.
+  // without losing the shoreRemarks already on file.
   revisedAfterReview Boolean                @default(false)
 
   agendaItems CommitteeMeetingAgenda[]
+  typeRemarks CommitteeMeetingTypeRemarks[]
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
@@ -1391,10 +1899,31 @@ model CommitteeMeetingAgenda {
   code          String? // "A", "B"… for fixed-template items; null for ad hoc Others topics
   label         String // full agenda line text
   details       String? // discussion details, filled in by the vessel
-  shoreComments String? // office's per-item reply, once reviewed
 
   createdAt DateTime @default(now())
 
+  @@index([meetingId])
+}
+
+// One overall office reply PER committee type present in the meeting — a
+// single combined meeting (e.g. Safety + Health & Hygiene held together)
+// needs a separate company response for each type, not one shared blob,
+// since the office may need to close out one committee's items before the
+// other's discussion is finished.
+model CommitteeMeetingTypeRemarks {
+  id            String           @id @default(uuid())
+  companyId     String
+  meetingId     String
+  meeting       CommitteeMeeting @relation(fields: [meetingId], references: [id], onDelete: Cascade)
+  committeeType CommitteeType
+  shoreRemarks  String?
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  createdBy String?
+  updatedBy String?
+
+  @@unique([meetingId, committeeType])
   @@index([meetingId])
 }
 
@@ -1416,6 +1945,14 @@ model ScheduleItem {
   companyId String
   company   Company          @relation(fields: [companyId], references: [id])
   kind      ScheduleItemKind
+  // "" (empty string, the default) = the fleet-wide fallback set, used by
+  // any vessel whose flag (Vessel.flag) has no dedicated set of its own.
+  // A real flag name (e.g. "Panama") scopes this item to only vessels
+  // flying that flag — see resolveEffectiveScheduleItems in
+  // features/schedule/queries.ts. Deliberately not nullable: Postgres
+  // treats NULL as distinct from NULL in a unique index, which would let
+  // duplicate itemNo rows slip into the default set silently.
+  flag String @default("")
 
   // Section heading as printed on the SMS form — "STATUTORY DRILLS",
   // "NON-STATUTORY DRILL", "TRAINING" (drills); null for familiarization,
@@ -1442,8 +1979,8 @@ model ScheduleItem {
   familiarizations FamiliarizationRecord[]
   exceptions       ScheduleApplicability[]
 
-  @@unique([companyId, kind, itemNo])
-  @@index([companyId, kind, sortOrder])
+  @@unique([companyId, kind, flag, itemNo])
+  @@index([companyId, kind, flag, sortOrder])
 }
 
 // Per-vessel override marking a checklist item as not applicable to that
@@ -1480,7 +2017,7 @@ model EmergencyDrill {
   id        String  @id @default(uuid())
   companyId String
   company   Company @relation(fields: [companyId], references: [id])
-  refNo     String
+  refNo     String? // null while status = DRAFT — assigned only once actually recorded
 
   vesselId String
   vessel   Vessel @relation(fields: [vesselId], references: [id])
@@ -1500,7 +2037,7 @@ model EmergencyDrill {
   correctiveAction String? // "Master's Opinion for Improvement and Corrective Action"
   vesselRemarks    String?
 
-  status   FindingStatus @default(OPEN)
+  status   DrillStatus @default(OPEN)
   closedAt DateTime?
 
   createdAt DateTime  @default(now())
@@ -1534,6 +2071,11 @@ model FamiliarizationRecord {
   notedBy       String?
   remarks       String?
 
+  // The logging session this completion belongs to — one session covers several
+  // topics at once and is shown as a single drill-style record.
+  familiarizationSessionId String?
+  familiarizationSession   FamiliarizationSession? @relation(fields: [familiarizationSessionId], references: [id])
+
   createdAt DateTime  @default(now())
   createdBy String?
   updatedAt DateTime  @updatedAt
@@ -1542,6 +2084,128 @@ model FamiliarizationRecord {
   deletedBy String?
 
   @@index([companyId, vesselId, scheduleItemId])
+}
+
+// One "Log Familiarization" session (CK-047(b)) = one drill-style record, the
+// same format as an Emergency Drill / LSA-FFE record. It covers whichever SMS
+// topics were touched that sitting (each a FamiliarizationRecord linked here).
+model FamiliarizationSession {
+  id        String  @id @default(uuid())
+  companyId String
+  company   Company @relation(fields: [companyId], references: [id])
+  refNo     String
+
+  vesselId String
+  vessel   Vessel @relation(fields: [vesselId], references: [id])
+
+  sessionDate DateTime
+  notedBy     String?
+  remarks     String?
+
+  records FamiliarizationRecord[]
+
+  createdAt DateTime  @default(now())
+  createdBy String?
+  updatedAt DateTime  @updatedAt
+  updatedBy String?
+  deletedAt DateTime?
+  deletedBy String?
+
+  @@unique([companyId, refNo])
+  @@index([companyId, vesselId])
+}
+
+// LSA/FFE familiarization checklist (CK-047(a)) — distinct from the
+// vessel-level ScheduleItem/matrix machinery above: this tracks a group
+// induction session's coverage of every Life Saving Appliance and Fire
+// Fighting Equipment item, per SMS TRN-10 4.3(5) ("Training on all the
+// Ship's LSA and FFE shall be covered within any period of 2 months").
+// LsaFfeItem is the fixed 55-item catalog (29 LSA + 26 FFE, transcribed
+// verbatim from the form); CrewFamiliarization is one 8-week induction
+// cycle for whichever crew attend (free-text `attendees`, not one row per
+// person); CrewFamiliarizationRecord marks the date each item was actually
+// covered in that cycle (absence = not yet done).
+enum LsaFfeCategory {
+  LSA
+  FFE
+}
+
+model LsaFfeItem {
+  id            String         @id @default(uuid())
+  companyId     String
+  company       Company        @relation(fields: [companyId], references: [id])
+  category      LsaFfeCategory
+  itemNo        Int
+  name          String
+  active        Boolean        @default(true)
+  // Which week (1-8) of the 2-month TRN-10 4.3(5) cycle this item is
+  // suggested for — a pacing guide only, not enforced. Every item still
+  // just needs a completedDate somewhere within the 8-week cycle.
+  suggestedWeek Int            @default(1)
+
+  records CrewFamiliarizationRecord[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([companyId, category, itemNo])
+  @@index([companyId, category])
+}
+
+model CrewFamiliarization {
+  id        String  @id @default(uuid())
+  companyId String
+  company   Company @relation(fields: [companyId], references: [id])
+  refNo     String
+
+  vesselId String
+  vessel   Vessel @relation(fields: [vesselId], references: [id])
+
+  // Free text, not a single crew member — this induction is conducted as a
+  // group session that whichever crew need it attend, not filed one form
+  // per individual.
+  // One familiarization session = one record, exactly like an Emergency Drill
+  // record. `week` is which week of the 8-week LSA/FFE schedule this session
+  // covered; `cycleStartDate` is the date the familiarization was carried out;
+  // attendees are whoever was available that session.
+  week           Int      @default(1)
+  attendees      String
+  cycleStartDate DateTime
+  supervisedBy   String?
+  details        String? // free-text "Details of familiarization" for the session
+
+  records CrewFamiliarizationRecord[]
+
+  createdAt DateTime  @default(now())
+  createdBy String?
+  updatedAt DateTime  @updatedAt
+  updatedBy String?
+  deletedAt DateTime?
+  deletedBy String?
+
+  @@unique([companyId, refNo])
+  @@index([companyId, vesselId])
+}
+
+model CrewFamiliarizationRecord {
+  id        String  @id @default(uuid())
+  companyId String
+  company   Company @relation(fields: [companyId], references: [id])
+
+  crewFamiliarizationId String
+  crewFamiliarization   CrewFamiliarization @relation(fields: [crewFamiliarizationId], references: [id])
+
+  lsaFfeItemId String
+  lsaFfeItem   LsaFfeItem @relation(fields: [lsaFfeItemId], references: [id])
+
+  completedDate DateTime
+
+  createdAt DateTime @default(now())
+  createdBy String?
+  updatedAt DateTime @updatedAt
+  updatedBy String?
+
+  @@unique([crewFamiliarizationId, lsaFfeItemId])
 }
 
 // ─── Phase 1 module: Controlled Documents ─────────────────────────────────────
@@ -1589,6 +2253,56 @@ model ControlledDocument {
 
   @@unique([companyId, docNumber])
   @@index([companyId, status])
+}
+
+// Certificate/document register — statutory certs, class certs, insurance,
+// etc., tracked for expiry (Vessel Documentation / Company Documents pages).
+// Distinct from ControlledDocument above, which is the SMS procedure
+// library, not a certificate expiry tracker.
+model VesselDocument {
+  id        String  @id @default(uuid())
+  companyId String
+  company   Company @relation(fields: [companyId], references: [id])
+
+  // null = Company Documents (Origin: COMPANY); set = Vessel Documentation
+  // (Origin: VESSEL) — same nullable-vesselId convention as ControlledDocument.
+  vesselId String?
+  vessel   Vessel? @relation(fields: [vesselId], references: [id])
+
+  // Free text, not an enum — Vessel Documentation's UI offers a fixed
+  // 8-category list (Ship Information, Flag Certificates, ...); Company
+  // Documents has no fixed list yet, so its filter is built from whatever
+  // types are actually in use.
+  type String
+
+  // Source-register sequence code, e.g. "101.03" — informational only, not
+  // unique/required (unlike other modules' refNo, this isn't a generated ID).
+  refNo String?
+
+  name        String
+  issuingBody String?
+  certNo      String?
+  // Printed renewal interval, e.g. "5Y", "1Y", "3M", "as needed" — display
+  // only, not used for due-date math (unlike ScheduleItem.frequencyDays).
+  interval    String?
+  issuedDate  DateTime?
+  expiredDate DateTime?
+  remarks     String?
+
+  // Power-icon toggle in the register — an inactive document (e.g.
+  // superseded, or the vessel changed flag/class) is kept on file but
+  // excluded from the Expiring/Expired counts.
+  active Boolean @default(true)
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  createdBy String?
+  updatedBy String?
+  deletedAt DateTime?
+  deletedBy String?
+
+  @@index([companyId, vesselId])
+  @@index([companyId, type])
 }
 
 // ─── Phase 1 module: Circulars ────────────────────────────────────────────────
@@ -1716,6 +2430,7 @@ enum ReviewTrigger {
   SMS_PROCEDURE_REVISED
   MANAGEMENT_REQUEST
   REGULATORY_CHANGE
+  MANAGEMENT_OF_CHANGE
 }
 
 enum RaExecutionCondition {
@@ -1727,6 +2442,23 @@ enum RaRevisionRequestStatus {
   PENDING
   APPROVED
   REJECTED
+}
+
+/**
+ * Office's categorized outcome for a piece of vessel-origin RA feedback —
+ * one shared vocabulary across all three surfaces a vessel can feed back
+ * through (revision requests, execution-added controls, vessel-authored
+ * hazard rows), so office triage reads the same way regardless of which
+ * surface the feedback came from. Recording this never by itself changes
+ * the master template — ADDED_TO_TEMPLATE still requires office to actually
+ * add the equivalent row/control on the next revision via the normal
+ * authoring actions (addHazardRowAction etc.).
+ */
+enum RaFeedbackDisposition {
+  ADDED_TO_TEMPLATE
+  NOT_ADDED
+  ALREADY_COVERED
+  FURTHER_REVIEW_REQUIRED
 }
 
 /**
@@ -1843,10 +2575,31 @@ model RiskHazardRow {
   isNew            Boolean @default(false) // ★ new hazard added in this revision
   ratingChangeNote String? // e.g. "S corrected 4→3 — rationale..."
 
+  // null = fleet-wide master row (office-authored, part of the formal
+  // revision). Set = a vessel-specific addendum added directly by that
+  // vessel's own officers, without going through the office review flow —
+  // visible only to that vessel and to office (for oversight), never to
+  // other vessels, and never counted as part of the master hazard table.
+  // Carried forward automatically when a new revision is created (see
+  // createRevisionAction) since it hasn't been formally reviewed away yet.
+  vesselId String?
+  vessel   Vessel? @relation("RaHazardRowVessel", fields: [vesselId], references: [id])
+
+  // Office's disposition on a vessel-authored addendum row only (always
+  // null on master rows) — same review-tracking shape as RaExecutionControl,
+  // surfaced together with it on the Vessel Feedback screen.
+  officeReviewedAt DateTime?
+  officeReviewedBy String?
+  disposition      RaFeedbackDisposition?
+
   createdAt DateTime @default(now())
   createdBy String?
 
+  executionSelections RaExecutionHazardSelection[]
+  executionControls   RaExecutionControl[]
+
   @@index([companyId, revisionId, rowNo])
+  @@index([companyId, vesselId])
 }
 
 /**
@@ -1865,6 +2618,7 @@ model RiskAssessmentExecution {
   vesselId String
   vessel   Vessel @relation("RaExecutionVessel", fields: [vesselId], references: [id])
   jobName  String // the specific job/task this execution covers
+  execNo   String? // e.g. "RA-2026-0006-01" — parent refNo + per-document sequence
 
   conditionStatus       RaExecutionCondition @default(UNCHANGED)
   changedConditionsNote String?
@@ -1879,8 +2633,77 @@ model RiskAssessmentExecution {
   createdAt  DateTime @default(now())
   createdBy  String?
 
+  hazardSelections RaExecutionHazardSelection[]
+  addedControls    RaExecutionControl[]
+
+  @@unique([companyId, execNo])
   @@index([companyId, documentId])
   @@index([companyId, vesselId])
+}
+
+/**
+ * Which hazard rows from the frozen revision the vessel confirmed apply to
+ * this specific job — the rest of the library RA's rows are not relevant to
+ * this execution and are left unselected.
+ *
+ * severity/likelihood/resLikelihood are the vessel's own re-rating of this
+ * hazard for the ACTUAL conditions of this job (per SSP-13 Sec. 5.7, residual
+ * Severity is always the same as initial Severity, so only resLikelihood is
+ * stored — same convention as RiskHazardRow). All three are nullable: they
+ * default to null (falling back to the template row's own severity/
+ * likelihood/resLikelihood at render time) for any execution recorded before
+ * this feature existed, and historical executions are never backfilled.
+ */
+model RaExecutionHazardSelection {
+  id          String                  @id @default(uuid())
+  companyId   String
+  executionId String
+  execution   RiskAssessmentExecution @relation(fields: [executionId], references: [id], onDelete: Cascade)
+  hazardRowId String
+  hazardRow   RiskHazardRow           @relation(fields: [hazardRowId], references: [id])
+
+  severity      Int? // 1-5, vessel's actual rating for this job
+  likelihood    Int? // 1-5, vessel's actual rating for this job
+  resLikelihood Int? // 1-5, vessel's residual rating after controls, for this job
+
+  createdAt DateTime @default(now())
+  createdBy String?
+
+  @@unique([executionId, hazardRowId])
+  @@index([companyId, executionId])
+}
+
+/**
+ * An extra control the vessel adds to a hazard row within one job execution
+ * — never mutates the master hazard row. Flagged distinctly in the UI and
+ * queued here for office review at the next revision cycle.
+ */
+model RaExecutionControl {
+  id          String                  @id @default(uuid())
+  companyId   String
+  executionId String
+  execution   RiskAssessmentExecution @relation(fields: [executionId], references: [id], onDelete: Cascade)
+  hazardRowId String
+  hazardRow   RiskHazardRow           @relation(fields: [hazardRowId], references: [id])
+
+  controlText String // Vessel's own submission — retained as-is, never overwritten.
+  addedBy     String?
+
+  // Office's reworded/cleaned-up version, drafted before a disposition is
+  // decided — the text actually meant to be inserted into the master
+  // template on the next revision, once disposition is ADDED_TO_TEMPLATE.
+  officeWording String?
+
+  officeReviewedAt DateTime?
+  officeReviewedBy String?
+  disposition      RaFeedbackDisposition?
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@index([companyId, executionId])
+  @@index([companyId, hazardRowId])
+  @@index([companyId, officeReviewedAt])
 }
 
 /**
@@ -1905,6 +2728,7 @@ model RiskAssessmentRevisionRequest {
   decidedById  String?
   decidedAt    DateTime?
   decisionNote String?
+  disposition  RaFeedbackDisposition?
 
   createdAt DateTime @default(now())
 
@@ -1940,8 +2764,10 @@ model Defect {
   severity                DefectSeverity
   dateRaised              DateTime
   targetRectificationDate DateTime?
-  actionTaken             String?
+  actionTaken             String? // office-side rectification actions
   raisedBy                String?
+  vesselRemarks           String? // ship-side status updates / remarks
+  officeRemarks           String? // office-side remarks back to the ship
 
   status      DefectStatus @default(OPEN)
   rectifiedAt DateTime?
@@ -1955,4 +2781,942 @@ model Defect {
 
   @@unique([companyId, refNo])
   @@index([companyId, status])
+}
+
+// ─── Vessel Tracker (daily voyage log) ────────────────────────────────────────
+// Mirrors the "Voyage Input Data" sheet of the fleet's existing Voyage
+// Analysis BTsolve Excel workbook — same fields, same order — so vessels
+// filling this in aren't learning a new form, just moving the same daily
+// entry online. VesselStatus is the one field with no direct Excel column:
+// the office's own Vessel Tracker calendar dashboard needs it to pick the
+// right day icon, so it's asked directly using the same everyday terms a
+// deck officer already uses in noon reporting (not derived/guessed from the
+// Excel's plain Underway/At Port split, which is too coarse for that).
+enum VoyageReportType {
+  DEPARTURE
+  ARRIVAL
+  NOON_AT_SEA
+  IN_PORT
+}
+
+enum VesselTrackerStatus {
+  SAILING
+  DRIFTING
+  SHELTERING
+  ANCHORING
+  IN_PORT
+}
+
+enum VesselLadenState {
+  LADEN
+  BALLAST
+}
+
+enum EngineOrder {
+  NORMAL_STEAMING
+  SLOW_STEAMING
+  SUPER_SLOW_STEAMING
+  FAST_STEAMING
+}
+
+model VoyageLog {
+  id        String  @id @default(uuid())
+  companyId String
+  company   Company @relation(fields: [companyId], references: [id])
+  vesselId  String
+  vessel    Vessel  @relation(fields: [vesselId], references: [id])
+
+  date     DateTime // report date (calendar day this entry belongs to)
+  voyageNo String?
+  // No standalone "route" field — fromPort/nextPort below fully describe a
+  // leg; routeLabel() in features/vessel-tracker/schema.ts derives a
+  // display string from them wherever the old routeOrPort was shown.
+
+  reportType   VoyageReportType
+  vesselStatus VesselTrackerStatus
+  ladenState   VesselLadenState
+  engineOrder  EngineOrder? // not applicable while in port
+
+  // Steaming Time / Port Stay are manual entries — the report's own Date +
+  // Report Time is the single timestamp for this entry (no separate
+  // From/To period range).
+  steamingTimeHrs Float?
+  obsSpeedKn      Float?
+  meSpeedKn       Float?
+  rpm             Float?
+  slipPct         Float?
+  beaufortScale   Int?
+  portStayHrs     Float?
+  totalPortStayHrs Float? // running total across every While-in-Port entry this voyage — same "voyage to date" treatment as totalSteamingTimeHrs
+  offHireHrs      Float? // stays manual — a charter-party/commercial call, not inferable from vesselStatus
+
+  // Total FO/DO (and their ROB) are derived at read time by summing the
+  // per-grade `bunkers` ledger below, grouped by category — no longer
+  // stored here. The old Boiler/M.E./A.E. breakdown was a duplicate of the
+  // per-grade ledger that predated seeing the fleet's real report and has
+  // been removed (v3 cleanup).
+
+  // ─── Fields below mirror the fleet's actual daily "Vessel Tracker"
+  // report (While in Port / Noon / Departure / Arrival) from btsolve.com —
+  // free text where the source form itself is free text (e.g. Lat/Long in
+  // DMS, ETB/ETC/ETD which are often "N/A"), typed fields where the source
+  // is a real number. Per-grade bunker figures (HSFO/LSFO/HSDO/etc., each
+  // with Previous/Consumed/Received/ROB) live in VoyageLogBunker below
+  // instead of as flat columns here — a real ROB ledger, not a fixed set
+  // of columns some vessels won't even carry (e.g. a vessel with no HSGO).
+  fromPort        String? // port sailed from — the Arrival/Departure/Noon reports track this separately from "Port" (current location) and "Next Port"
+  nextPort        String?
+  course          String?
+  zoneDescription String? // e.g. "-2"
+  reportTimeLocal String? // e.g. "0800H" — the source form's own free-text time label; combined with `date` as this entry's one timestamp
+
+  position String? // free text — DMS lat/long (e.g. "33° 57.75' S 25° 38.67' E") or a place name (e.g. "At Singapore anchorage")
+
+  draftFwdM  Float?
+  draftAftM  Float?
+  draftMeanM Float?
+
+  // Navigation/performance stats block — Arrival/Departure/Noon reports
+  // only (a vessel alongside has nothing to log here), same fields the
+  // office's own dashboard is likely already deriving informally from the
+  // narrative SOF text — capturing them structured here instead.
+  distanceRunNm          Float?
+  totalDistanceRunNm     Float?
+  dtgNextPortNm          Float? // Distance To Go
+  totalSteamingTimeHrs   Float?
+  distanceLogNm          Float?
+  generalAvgSpeedKn      Float?
+  engineDistanceNm       Float?
+  totalEngineDistanceNm  Float?
+  generalAvgEngineSpeedKn Float?
+  weatherCondition       String?
+  generalAvgSlipPct      Float?
+  barometer              Float?
+  exhaustTempUnit        String?
+  exhaustGasTemp         String?
+
+  etaNextPortDate DateTime?
+  etaNextPortTime String?
+  etaNextPortZd   String?
+
+  cargoOnboard      String?
+  cargoToDiscLoaded String?
+  blQuantity        Float?
+  // Free-text per-tank Bottom-Middle-Top readings, e.g. "TK1 - 14.8, 14.0,
+  // 0.0 / TK2 - 17.1, 16.2, 18.5" — the real form flows this as one line
+  // covering however many tanks a voyage has, not a fixed column count.
+  cargoTemp String? @db.Text
+
+  agentName    String?
+  agentTel     String?
+  agentFax     String?
+  agentEmail   String?
+  agentAddress String?
+
+  deckDeptReport   String? @db.Text
+  engineDeptReport String? @db.Text
+  statementOfFacts String? @db.Text
+
+  master        String?
+  chiefEngineer String?
+
+  remarks String? @db.Text
+
+  bunkers VoyageLogBunker[]
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  createdBy String?
+  updatedBy String?
+  deletedAt DateTime?
+  deletedBy String?
+
+  @@index([companyId, vesselId, date])
+}
+
+enum BunkerGrade {
+  HSFO
+  LSFO
+  HSDO
+  LSDO
+  HSGO
+  LSGO
+  CYL_OIL
+  MELO
+  GELO
+  FRESH_WATER
+  FRESH_WATER_PRODUCTION
+}
+
+/// One row per bunker/oil/water grade per voyage log entry — Previous +
+/// Received - Consumed = ROB, the same running ledger the daily report
+/// itself tracks. A child table rather than flat columns because not every
+/// vessel carries every grade (e.g. no HSGO), and it keeps VoyageLog from
+/// growing an ever-wider fixed column set as grades get added.
+model VoyageLogBunker {
+  id          String      @id @default(uuid())
+  companyId   String
+  voyageLogId String
+  voyageLog   VoyageLog   @relation(fields: [voyageLogId], references: [id], onDelete: Cascade)
+  grade       BunkerGrade
+  previous    Float?
+  consumed    Float?
+  received    Float?
+  rob         Float?
+
+  @@unique([voyageLogId, grade])
+  @@index([companyId, voyageLogId])
+}
+
+// Monthly garbage disposal + oil/water discharge reporting per vessel — the
+// fleet's own "GARBAGE Form" + "OIL Immision" Excel sheet, one row-set per
+// vessel per month, brought into the ERP so it can be graphed on a KPI
+// dashboard instead of eyeballed in a spreadsheet. Mirrors the VoyageLog/
+// VoyageLogBunker parent+ledger pattern above.
+enum GarbageCategory {
+  PLASTICS
+  FOOD_WASTES
+  DOMESTIC_WASTES
+  COOKING_OIL
+  INCINERATOR_ASHES
+  OPERATIONAL_WASTES
+  ANIMAL_CARCASSES
+  FISHING_GEAR
+  E_WASTE
+}
+
+// Metrics that offer the crew a Unit choice at entry time (everything else
+// below is always entered directly in its one fixed standard unit, same as
+// before — no picker, no normalization step, kept as simple as the current
+// form). Extend this list only when a category genuinely needs more than
+// one input unit in practice.
+enum UnitMasterMetric {
+  SEWAGE
+  CARGO
+}
+
+/** Controlled conversion-factor reference data — "Unit Master" per the
+ * Environmental spec: an admin-managed table of (metric, unit) →
+ * (standardUnit, factor), so a crew member can pick whatever unit they
+ * actually measured in (e.g. Litres) and the software derives the
+ * standardized figure (e.g. m³) FOR them — never the other way around.
+ * `factor` converts 1 unit of `unit` into `standardUnit`. Not editable from
+ * any normal data-entry screen — only from the admin-only Unit Master page. */
+model UnitMaster {
+  id        String   @id @default(uuid())
+  companyId String
+  company   Company  @relation(fields: [companyId], references: [id])
+  metric    UnitMasterMetric
+  unit      String // e.g. "m3", "L", "MT", "CBM"
+  unitLabel String // display label, e.g. "Litres (L)"
+
+  standardUnit     String // fixed target unit for this metric — same value on every row sharing a metric, e.g. "m3" for SEWAGE
+  toStandardFactor Float // multiply an entered quantity in `unit` by this to get the quantity in `standardUnit`
+  isDefault        Boolean @default(false) // pre-selected in the entry form's Unit dropdown
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  createdBy String?
+  updatedBy String?
+
+  @@unique([companyId, metric, unit])
+  @@index([companyId, metric])
+}
+
+model EnvironmentRecord {
+  id        String  @id @default(uuid())
+  companyId String
+  company   Company @relation(fields: [companyId], references: [id])
+  vesselId  String
+  vessel    Vessel  @relation(fields: [vesselId], references: [id])
+
+  year  Int
+  month Int // 1-12
+
+  // Ballast Water — always entered directly in the standard unit (m³), no
+  // per-entry unit picker.
+  ballastWaterQuantity   Float? // m3
+  ballastWaterOperations Int?
+  ballastWaterMethod     String? // treatment / exchange method
+  ballastWaterRemarks    String?
+
+  // Sewage — split by disposal route (at sea vs a shore reception facility)
+  // rather than one lump figure, since which route it went is exactly what
+  // a MARPOL sewage record needs to show. Total Monthly Discharged is
+  // NEVER stored — derived at read/display time as the sum of the two,
+  // same "derive, don't store" convention as the Garbage ledger's Total
+  // Garbage. The one MARPOL-waste category the crew may log in a unit
+  // other than the standard, so the derived total also carries its
+  // Unit-Master-normalized figure (see UnitMaster above).
+  sewageDischargedAtSea       Float? // as entered, in sewageUnit
+  sewageDischargedToFacility  Float? // as entered, in sewageUnit
+  sewageUnit                  String? // UnitMaster.unit for metric SEWAGE — applies to both quantities above
+  sewageQuantityNormalized    Float? // derived: (sewageDischargedAtSea + sewageDischargedToFacility) * matching UnitMaster.toStandardFactor, in sewageQuantityStandardUnit
+  sewageQuantityStandardUnit  String? // UnitMaster.standardUnit at the time this was saved (e.g. "m3") — kept alongside the number so a later Unit Master edit can't silently reinterpret an old entry
+  sewageReceptionFacility     String? // name/location of the facility sewageDischargedToFacility was landed at
+  sewageRemarks                String?
+
+  // Grey Water — always m³, no unit picker.
+  greyWaterGenerated  Float?
+  greyWaterDischarged Float?
+  greyWaterRetained   Float? // retained / landed
+  greyWaterRemarks    String?
+
+  // Refrigerant Gas — always kg, no unit picker (kg IS the standard unit).
+  refrigerantGasType        String?
+  refrigerantEquipment      String?
+  refrigerantAdded          Float? // added / charged
+  refrigerantRecovered      Float?
+  refrigerantDisposedAshore Float?
+  refrigerantLeakage        Float? // leakage / loss
+  refrigerantQuantityKg     Float?
+  refrigerantRemarks        String?
+
+  // Cargo — a denominator for management analytics ONLY, never treated as a
+  // MARPOL waste quantity. Same Unit Master pattern as Sewage: gas carriers
+  // routinely report in CBM at some ports and MT at others, and the
+  // MT⇄CBM factor is cargo-density-specific, not a fixed physical constant
+  // — so it's a controlled, admin-set factor rather than something this app
+  // calculates itself.
+  cargoLoaded                Float?
+  cargoDischarged            Float?
+  cargoType                  String?
+  cargoUnit                  String? // UnitMaster.unit for metric CARGO — applies to both cargoLoaded and cargoDischarged
+  cargoLoadedNormalized      Float? // derived, in cargoStandardUnit
+  cargoDischargedNormalized  Float? // derived, in cargoStandardUnit
+  cargoStandardUnit          String? // UnitMaster.standardUnit at time of save (e.g. "MT")
+  cargoPort                  String?
+
+  // Stern Tube / Lube Oil — always in the company's one chosen unit (set via
+  // Unit Master's isDefault row for future use; entered plainly for now,
+  // same as before this feature).
+  lubeOilType        String?
+  lubeOilAdded       Float? // quantity added
+  lubeOilTransferred Float? // quantity transferred
+  lubeOilLost        Float? // quantity lost / leakage, if applicable
+  lubeOilEquipment   String?
+  lubeOilRemarks     String?
+
+  // Bilge — always m³, no unit picker.
+  bilgeGenerated     Float?
+  bilgeProcessed     Float?
+  bilgeDischargedOws Float? // discharged through OWS
+  bilgeLandedAshore  Float?
+  bilgeRetained      Float?
+  bilgeRemarks       String?
+
+  // Sludge — always m³, no unit picker.
+  sludgeGenerated             Float?
+  sludgeRetained               Float?
+  sludgeTransferredIncinerator Float?
+  sludgeLandedAshore           Float?
+  sludgeRemarks                String?
+
+  garbageEntries GarbageLedgerEntry[]
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  createdBy String?
+  updatedBy String?
+  deletedAt DateTime?
+  deletedBy String?
+
+  @@unique([vesselId, year, month])
+  @@index([companyId, vesselId, year, month])
+}
+
+model GarbageLedgerEntry {
+  id                   String            @id @default(uuid())
+  companyId            String
+  environmentRecordId  String
+  environmentRecord    EnvironmentRecord @relation(fields: [environmentRecordId], references: [id], onDelete: Cascade)
+  category             GarbageCategory
+  overboardToSeaCbm    Float?
+  incineratedCbm       Float?
+  dischargeAshoreCbm   Float?
+  // Total Garbage is NOT stored — derived at read time as the sum of the
+  // three fields above, same convention as VoyageLogBunker.consumed.
+
+  @@unique([environmentRecordId, category])
+  @@index([companyId, environmentRecordId])
+}
+
+// Atomic counter backing every module's sequential reference number
+// (DR-2026-0001, INC-2026-0001, CF-2026-0001, ...). A plain
+// count()-then-format is a race condition under concurrent writes — two
+// submissions at the same instant (e.g. two vessels reporting at once) can
+// both read the same count and both try to create the same refNo, tripping
+// the model's own @@unique([companyId, refNo]) as a hard error rather than
+// silently colliding. This table makes allocation a single atomic
+// INSERT ... ON CONFLICT DO UPDATE instead — see lib/ref-sequence.ts.
+model RefSequence {
+  companyId String
+  company   Company @relation(fields: [companyId], references: [id])
+  prefix    String // e.g. "DR-2026", "INC-2026" — includes the year
+  seq       Int     @default(0)
+
+  @@id([companyId, prefix])
+}
+
+// ─── TMSA Hub — office-only TMSA 3 self-assessment + audit CAP tracker ────────
+// Ported from the Swan-GCC (GM Command Center) app's TMSA module. Company-wide
+// (not per-vessel) — TMSA is a fleet-level OCIMF self-assessment, not a
+// per-ship record. Never surfaced to SHIPBOARD-department users (no
+// tmsa:* permission is granted to the Ship Officer role in prisma/seed.ts).
+
+enum TmsaComplianceStatus {
+  YES
+  NO
+}
+
+// Company Response revision lifecycle for a KPI's narrative answer:
+//   ON_OCIMF = the version currently uploaded on the OCIMF website (baseline)
+//   REVISED  = edited locally, a new revision pending OCIMF upload
+enum TmsaResponseState {
+  ON_OCIMF
+  REVISED
+}
+
+enum TmsaFindingStatus {
+  OPEN
+  IN_PROGRESS
+  CLOSED
+}
+
+// Per-KPI self-assessment answer from the official OCIMF TMSA 3 report — the
+// "live" source of truth. The Score Matrix's live view is computed from these
+// rows rather than the imported TmsaScore snapshot (see getLiveMatrix).
+model TmsaAssessment {
+  id        String  @id @default(uuid())
+  companyId String
+  company   Company @relation(fields: [companyId], references: [id])
+
+  code             String // "1.2.3" — element.stage.question
+  elementNumber    Int // base element 1..13
+  elementCode      String @default("") // "1", "1A"
+  stage            Int // Stage 1..4
+  questionNo       Int    @default(0)
+  kpiDescription   String @db.Text // the KPI question text
+  complianceStatus TmsaComplianceStatus
+  remarks          String? @db.Text // Swan's narrative answer (Company Response)
+  bpg              String? @db.Text // Best Practice Guidance
+
+  revision      Int               @default(1) // Rev 1 = the upload baseline
+  responseState TmsaResponseState @default(ON_OCIMF)
+  revisedAt     DateTime? // when the response was last edited
+  uploadedAt    DateTime? // when the current revision was marked uploaded to OCIMF
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  createdBy String?
+  updatedBy String?
+  deletedAt DateTime?
+  deletedBy String?
+
+  @@unique([companyId, code])
+  @@index([companyId, elementCode])
+}
+
+// TMSA 3 self-assessment score tracker — one row per (year, element),
+// mirrors an imported "TMSA 3 Score" workbook. Company-wide, historical
+// snapshot (the Score Matrix's "Live" view uses TmsaAssessment instead;
+// this is what a past assessment year actually scored).
+model TmsaScore {
+  id        String  @id @default(uuid())
+  companyId String
+  company   Company @relation(fields: [companyId], references: [id])
+
+  year        Int // Assessment year, e.g. 2025
+  elementCode String // "1", "1A", "2", ... "13"
+  elementBase Int // Numeric base element (1..13) for grouping
+  sortOrder   Int // Preserve sheet row order (1, 1A, 2, 3, 3A, ...)
+  title       String
+
+  s1Yes Int
+  s1Req Int
+  s2Yes Int
+  s2Req Int
+  s3Yes Int
+  s3Req Int
+  s4Yes Int
+  s4Req Int
+
+  noCount      Int // No. of "No" answers
+  reqTotal     Int // No. of Req. (total KPIs across stages)
+  rating       Float // Rating out of 4 = totalYes / reqTotal * 4
+  stageCleared Int // Whole-number stage cleared
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  createdBy String?
+  updatedBy String?
+  deletedAt DateTime?
+  deletedBy String?
+
+  @@unique([companyId, year, elementCode])
+}
+
+// TMSA audit finding + corrective action (CAP) — company-level. `source` is
+// deliberately a free-text field (not an enum) — an oil-major/vetting
+// company audit source list is open-ended, not a fixed set.
+model TmsaFinding {
+  id        String  @id @default(uuid())
+  companyId String
+  company   Company @relation(fields: [companyId], references: [id])
+
+  code        String // e.g. "TMSA-001"
+  seq         Int // numeric order parsed from code, for stable sorting
+  auditYear   Int    @default(2024)
+  elementCode String // "1", "1A", ... "13"
+  elementBase Int // numeric base element (1..13) for grouping
+  stageQ      String // raw "Stage/Q" from the report, e.g. "2.0"
+  // TMSA numbering (Element.Stage.Question) parsed from the observation, so a
+  // finding maps to a specific KPI. questionNo = 0 when only element+stage known.
+  stage       Int    @default(0)
+  questionNo  Int    @default(0)
+  kpiRef      String @default("") // "1.2.1" or "1.2" when question unknown
+  source      String // Internal, Equinor, Chevron, ...
+  observation String @db.Text
+  correctiveAction String @db.Text
+  status      TmsaFindingStatus @default(OPEN)
+  responsible String
+  target      String // free text: date, "COMPLETED", "Ongoing", "Q3 2026", ...
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  createdBy String?
+  updatedBy String?
+  deletedAt DateTime?
+  deletedBy String?
+
+  @@unique([companyId, code])
+  @@index([companyId, elementCode])
+  @@index([companyId, status])
+}
+
+// ─── Procurement — Stage A (Phase 0 setup + Phase 1 vessel side) ─────────────
+// Requisition numbering format: {VesselCode}-{YY}RQ-{CATEGORY}-{NNN}, e.g.
+// "ESM-26RQ-DECK-001" — see lib/ref-sequence.ts's allocateRefNo, reused as-is
+// with pad: 3. Office screening/RFQ/PO (Phase 2) and GRN/status dashboard
+// (Phase 3) are a deliberately separate follow-up build — see
+// features/procurement/.
+
+enum StoresCategory {
+  DECK
+  ENGINE
+  TOOLS
+  GALLEY
+  STATIONERY
+  PAINTS
+  CHEMICALS
+  MEDICINE
+  PROVISIONS
+  SAFETY
+  FIREFIGHTING
+  BOOKS_CHARTS
+  NAVIGATION
+  PORTABLE_RADIOS
+  IMO_STICKERS
+}
+
+// The vessel's onboard department making the request — independent of
+// RequisitionCategory below, which is what kind of item/catalogue the lines
+// are drawn from (e.g. an Engine department request can still be for
+// Provisions or Stationery, not only Engine-store items).
+enum RequisitionDepartment {
+  DECK
+  ENGINE
+}
+
+// Requisition-number CATEGORY segment — every StoresCategory plus SPARES
+// (for Spares Catalogue requisitions). Distinct from StoresCategory since
+// StoresCatalogueItem.category must never allow "SPARES" as a value.
+enum RequisitionCategory {
+  DECK
+  ENGINE
+  TOOLS
+  GALLEY
+  STATIONERY
+  PAINTS
+  CHEMICALS
+  MEDICINE
+  PROVISIONS
+  SAFETY
+  FIREFIGHTING
+  BOOKS_CHARTS
+  NAVIGATION
+  PORTABLE_RADIOS
+  IMO_STICKERS
+  SPARES
+}
+
+// Per-vessel (not fleet-wide — real fleet practice showed two vessels'
+// catalogues genuinely diverge, e.g. Esmeralda's real Deck Inventory import
+// vs. another ship's own stores). Mirrors SparesCatalogueItem's shape.
+// Category-specific compliance fields are flat nullable columns (same
+// convention as VoyageLog/EnvironmentRecord's wide-table-with-nullable-
+// domain-fields) rather than subtype tables — this fleet's category set is
+// small and fixed.
+model StoresCatalogueItem {
+  id        String  @id @default(uuid())
+  companyId String
+  company   Company @relation(fields: [companyId], references: [id])
+  vesselId  String
+  vessel    Vessel  @relation(fields: [vesselId], references: [id])
+
+  // Optional — confirmed against the fleet's real inventory sheets that IMPA
+  // coding isn't actually used onboard; items are identified by description
+  // + physical location instead. Kept as an optional field for whichever
+  // items a user does want to code.
+  impaCode String?
+  name     String
+  category StoresCategory
+  // Reuses RequisitionDepartment (Deck/Engine) — the same "which onboard
+  // department" concept as on a Requisition, just at the catalogue-item
+  // level so Opening Stock Take / Inventory can group by department first.
+  // Independent of category: e.g. "Safety Requisition" or "Navigation"
+  // items still belong to one department or the other.
+  department RequisitionDepartment @default(DECK)
+  unit       String // "pc", "ltr", "kg", ...
+  active     Boolean @default(true)
+
+  // The sub-heading within a location on the real sheets — sometimes an
+  // equipment name ("Cargo Heater"), sometimes a purpose ("Use for Cargo
+  // Tank"). Free text on purpose since Stores items aren't always tied to
+  // a piece of equipment the way Spares are.
+  subGroup String?
+  // Free-text specs/part numbers/notes — mirrors the real form's REMARKS
+  // column (e.g. "440V 1KW", "Part No. B05-0030").
+  remarks String? @db.Text
+
+  // Medicine
+  requiresExpiryTracking Boolean @default(false)
+  medicalChestCompliance Boolean @default(false) // tracked against the medical chest list
+
+  // Chemicals
+  imoHazardClass String? // e.g. "8" (corrosive) — the SDS itself lives in Attachments
+
+  // Paints
+  shelfLifeMonths Int?
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  createdBy String?
+  updatedBy String?
+  deletedAt DateTime?
+  deletedBy String?
+
+  @@unique([companyId, vesselId, impaCode])
+  @@index([companyId, vesselId, category])
+}
+
+// Per-vessel. Identified by Maker + Equipment + Part No., not IMPA.
+model SparesCatalogueItem {
+  id        String  @id @default(uuid())
+  companyId String
+  company   Company @relation(fields: [companyId], references: [id])
+  vesselId  String
+  vessel    Vessel  @relation(fields: [vesselId], references: [id])
+
+  makerName     String
+  equipmentName String
+  partNo        String
+  description   String?
+  unit          String
+  // Physical stowage — same convention as StoresCatalogueItem.location
+  // (e.g. "Bosun Store Box No. 11"). Naturally unambiguous here since this
+  // model is already per-vessel.
+  location      String?
+  // ISM 10.3 — not optional. Drives a required badge on every requisition
+  // line (and, in a later build, a stricter routing rule).
+  criticalSpare Boolean @default(false)
+  active        Boolean @default(true)
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  createdBy String?
+  updatedBy String?
+  deletedAt DateTime?
+  deletedBy String?
+
+  @@unique([companyId, vesselId, makerName, partNo])
+  @@index([companyId, vesselId])
+}
+
+enum StockTakeStatus {
+  DRAFT
+  POSTED
+}
+
+// One-time per vessel — the gate. A vessel's Requisition module stays locked
+// until this is POSTED. @@unique enforces "once ever," not a recurring
+// stocktake type.
+model OpeningStockTake {
+  id        String  @id @default(uuid())
+  companyId String
+  company   Company @relation(fields: [companyId], references: [id])
+  vesselId  String
+  vessel    Vessel  @relation(fields: [vesselId], references: [id])
+
+  status   StockTakeStatus @default(DRAFT)
+  postedAt DateTime?
+  postedBy String?
+
+  lines InventoryEvent[] // OPENING-type events this stock take generated, once posted
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  createdBy String?
+  updatedBy String?
+
+  // vesselId alone (not the companyId, vesselId pair) backs the 1:1 relation
+  // on Vessel.openingStockTake — fine since a vesselId is already scoped to
+  // exactly one company by definition.
+  @@unique([vesselId])
+  @@index([companyId])
+}
+
+enum InventoryItemType {
+  STORES
+  SPARES
+}
+
+enum InventoryEventType {
+  OPENING
+  ISSUED
+  RECEIVED // written when a vessel receives a FOR_DELIVERY requisition line
+  ADJUSTMENT
+}
+
+// Matches the real inventory report's split balance columns (New / Usable /
+// Reconditioned) — the fleet doesn't track one flat ROB number, it tracks
+// three condition buckets per item.
+enum InventoryCondition {
+  NEW
+  USABLE
+  RECONDITIONED
+}
+
+// The append-only inventory ledger. ROB is never stored — always
+// SUM(quantity) computed at read time (see getCurrentRob/getRobByCondition
+// in features/procurement/queries.ts), grouped by `condition` to reproduce
+// the New/Usable/Reconditioned split. itemType+itemId is a deliberate loose
+// (non-FK) polymorphic reference — same convention as
+// Attachment.entityType/entityId — since itemId points at one of two
+// different tables depending on itemType.
+model InventoryEvent {
+  id        String  @id @default(uuid())
+  companyId String
+  company   Company @relation(fields: [companyId], references: [id])
+  vesselId  String
+  vessel    Vessel  @relation(fields: [vesselId], references: [id])
+
+  itemType InventoryItemType
+  itemId   String
+
+  eventType InventoryEventType
+  condition InventoryCondition @default(USABLE)
+  quantity  Float // signed: +40 opening, -5 issued, +12 received, ±2 adjustment
+  reason    String? // required (enforced in the action) for ADJUSTMENT
+
+  // Physical stowage as reported by the vessel at the time of this event
+  // (e.g. "Bosun Store", "Paint Locker") — kept to the general area only.
+  // Lives here rather than on StoresCatalogueItem because Stores is
+  // fleet-wide but stowage isn't — two vessels' Bosun Store hold different
+  // things. Set on OPENING events (the ship labels it while counting);
+  // ISSUED/ADJUSTMENT typically leave it null since they don't relocate
+  // anything.
+  location String?
+  // Sub-detail within Location that doesn't belong in the location name
+  // itself — box/bin number, shelf, "beside C/O cabin", etc. (e.g.
+  // "Box No. 3"). Split out so the same physical area (many box numbers)
+  // consolidates to one Location suggestion instead of a distinct string
+  // per box.
+  remarks String?
+
+  // Loose reference back to what generated this event — same non-FK-string
+  // convention as above, for a "why did ROB change" audit trail without a
+  // hard dependency on every possible source module.
+  sourceType String? // "OPENING_STOCK_TAKE" | "MANUAL" | "REQUISITION"
+  sourceId   String?
+
+  occurredAt DateTime @default(now())
+  createdAt  DateTime @default(now())
+  createdBy  String?
+
+  openingStockTakeId String?
+  openingStockTake   OpeningStockTake? @relation(fields: [openingStockTakeId], references: [id])
+
+  @@index([companyId, vesselId, itemType, itemId])
+}
+
+enum InventoryUpdateStatus {
+  DRAFT
+  POSTED
+}
+
+// A scratch "Update Inventory" grid the crew can save mid-review before
+// committing — the InventoryEvent ledger above is append-only by design, so
+// nothing here becomes a real event until posted. Lines are kept as a JSON
+// blob rather than a child table: they're wholly replaced on every save
+// (never queried or edited individually) and become irrelevant the moment
+// they're posted, so a line-per-row table would just be overhead.
+model InventoryUpdateDraft {
+  id        String  @id @default(uuid())
+  companyId String
+  company   Company @relation(fields: [companyId], references: [id])
+  vesselId  String
+  vessel    Vessel  @relation(fields: [vesselId], references: [id])
+
+  // The Deck/Engine/Spares + Category scope this draft was built from —
+  // null department means the Spares scope (no department of its own); null
+  // category means "All Categories" within that department.
+  department RequisitionDepartment?
+  category   StoresCategory?
+
+  status     InventoryUpdateStatus @default(DRAFT)
+  occurredAt DateTime // the effective date chosen when the draft was last saved
+  linesJson  Json // UpdateInventoryLine[] — { itemType, itemId, eventType, condition, quantity, reason }
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  createdBy String?
+  updatedBy String?
+  postedAt  DateTime?
+  postedBy  String?
+
+  @@index([companyId, vesselId, status])
+}
+
+enum RequisitionRevisionStatus {
+  DRAFT
+  PENDING_MASTER_APPROVAL
+  APPROVED_BY_MASTER // locked; refNo assigned.
+  SENT_TO_OFFICE // office screening — cancel/revise lines (procurement:office-review)
+  FOR_QUOTATION // office sent the (screened) requisition out to supplier(s) for pricing
+  FOR_DELIVERY // a quotation was picked; deliveryPort is set; vessel is waiting on the goods
+  RECEIVED // every non-cancelled line has qtyReceived covering its approved/requested qty — terminal
+  CLOSED // ended without every line arriving (supplier never quoted/shipped, or office cancelled it) — terminal; whatever WAS received stays posted, the rest just goes unfulfilled. A vessel that still needs it raises a fresh requisition rather than reopening this one.
+}
+
+enum RequisitionLineItemType {
+  STORES
+  SPARES
+  NON_CATALOGUE
+}
+
+// Stable parent — mirrors RiskAssessmentDocument/RiskAssessmentRevision
+// (features/risk/): the refNo lives here (assigned once, at first Master
+// approval) and never changes across revisions.
+model Requisition {
+  id        String  @id @default(uuid())
+  companyId String
+  company   Company @relation(fields: [companyId], references: [id])
+  vesselId  String
+  vessel    Vessel  @relation(fields: [vesselId], references: [id])
+
+  refNo      String? // null until first APPROVED_BY_MASTER; e.g. "ESM-26RQ-DECK-001"
+  category   RequisitionCategory // drives the ref number's CATEGORY segment
+  department RequisitionDepartment @default(DECK) // onboard department requesting — set explicitly at creation; default only backs pre-existing rows
+
+  currentRevisionId String?               @unique
+  currentRevision   RequisitionRevision?  @relation("CurrentRevision", fields: [currentRevisionId], references: [id])
+  revisions         RequisitionRevision[] @relation("DocumentRevisions")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  createdBy String?
+  updatedBy String?
+
+  @@unique([companyId, refNo])
+  @@index([companyId, vesselId])
+}
+
+model RequisitionRevision {
+  id            String      @id @default(uuid())
+  companyId     String
+  company       Company     @relation(fields: [companyId], references: [id])
+  requisitionId String
+  requisition   Requisition @relation("DocumentRevisions", fields: [requisitionId], references: [id], onDelete: Cascade)
+  revisionNo    Int
+
+  status RequisitionRevisionStatus @default(DRAFT)
+
+  requestedBy      String? // officer name/rank at time of request — not every requester (Cook, Bosun) is necessarily a system User
+  masterApprovedAt DateTime?
+  masterApprovedBy String?
+  sentToOfficeAt   DateTime?
+
+  // Office pipeline past SENT_TO_OFFICE — kept as simple status/timestamp
+  // fields rather than a Quotation/Supplier model; picking a quotation
+  // happens outside the system (email/phone), the office just records the
+  // outcome here once one's chosen.
+  forQuotationAt DateTime?
+  forDeliveryAt  DateTime?
+  deliveryPort   String? // set when moving to FOR_DELIVERY — where the vessel should expect the goods
+  receivedAt     DateTime? // set once every non-cancelled line's qtyReceived covers what was approved/requested
+
+  // Closing out FOR_QUOTATION/FOR_DELIVERY without everything arriving —
+  // e.g. the supplier never quoted, or never shipped a line. Whatever was
+  // already received (if any) stays posted; the requisition just stops
+  // waiting on the rest.
+  closedAt     DateTime?
+  closedBy     String?
+  closeReason  String?
+
+  currentOf Requisition? @relation("CurrentRevision") // back-pointer, populated only when this IS the current revision
+
+  lines RequisitionLine[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  createdBy String?
+  updatedBy String?
+
+  @@unique([requisitionId, revisionNo])
+}
+
+model RequisitionLine {
+  id         String               @id @default(uuid())
+  companyId  String
+  revisionId String
+  revision   RequisitionRevision @relation(fields: [revisionId], references: [id], onDelete: Cascade)
+
+  itemType                RequisitionLineItemType
+  itemId                  String? // StoresCatalogueItem.id or SparesCatalogueItem.id — null for NON_CATALOGUE
+  nonCatalogueDescription String? // required when itemType = NON_CATALOGUE
+  // Only meaningful for NON_CATALOGUE lines — a catalogue item already has
+  // its own unit/impaCode, always read live from the catalogue instead.
+  // Lets the requester hand office a starting point when they already know
+  // it, without that becoming an official catalogue entry on its own.
+  unit     String?
+  impaCode String?
+
+  qtyRequested     Float
+  robAtRequestTime Float? // snapshot of computed ROB when the line was added
+  // Requisition-specific context (e.g. "for engine overhaul", "urgent — main
+  // engine down") — independent of the catalogue item's own remarks, which
+  // just describe the item itself. Editable regardless of item type.
+  remarks String?
+
+  // Office screening (once the requisition reaches SENT_TO_OFFICE) — kept
+  // separate from qtyRequested rather than overwriting it, so what the
+  // vessel actually asked for stays on record even after the office revises
+  // it. Null qtyApproved means "office hasn't touched this line yet";
+  // whatever the vessel requested still stands.
+  qtyApproved Float?
+  cancelled   Boolean   @default(false)
+  cancelledAt DateTime?
+  cancelledBy String?
+
+  // Cumulative across every receiving action on this line (deliveries can
+  // arrive in more than one batch) — each individual receipt is also its
+  // own InventoryEvent (eventType RECEIVED, sourceType "REQUISITION"), so
+  // this running total is a fast completeness check, not the only record.
+  qtyReceived Float @default(0)
+
+  createdAt DateTime @default(now())
+  createdBy String?
+
+  @@index([companyId, revisionId])
 }

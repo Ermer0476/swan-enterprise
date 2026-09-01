@@ -8,6 +8,17 @@ import {
 export const INSPECTION_STATUSES = ["OPEN", "IN_PROGRESS", "CLOSED"] as const;
 export const FINDING_CATEGORIES = ["MAJOR_NC", "MINOR_NC", "OBSERVATION"] as const;
 
+// External Audits KPI dashboard period selector — same 3-option convention
+// as PSC's KPI page, Rolling 12 Months default.
+export const EAUDIT_KPI_PERIODS = ["ROLLING_12", "YTD", "YEARLY"] as const;
+export type EauditKpiPeriodKey = (typeof EAUDIT_KPI_PERIODS)[number];
+export const EAUDIT_KPI_PERIOD_LABELS: Record<EauditKpiPeriodKey, string> = {
+  ROLLING_12: "Rolling 12 Months",
+  YTD: "YTD",
+  YEARLY: "Yearly",
+};
+export const DEFAULT_EAUDIT_KPI_PERIOD: EauditKpiPeriodKey = "ROLLING_12";
+
 export const createExternalAuditSchema = z.object({
   vesselId: z.string().uuid().optional().or(z.literal("")),
   scope: z.string().trim().min(2, "Scope is required").max(200),

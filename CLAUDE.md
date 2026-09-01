@@ -30,8 +30,21 @@ feature must trace back to an SMS procedure.
 Iterate locally; don't deploy until asked. Verify with `npm run typecheck` and
 `npm run build`. Uses a local PostgreSQL 15 server (via Homebrew,
 `brew services start postgresql@15`) — `DATABASE_URL` in `.env` is
-`postgresql://ermermagbanua:swan@localhost:5432/swan_enterprise`. `npm run
-db:push && npm run db:seed` to reset demo data. Seeded logins use password
-`swan1234`. Postgres supports `mode: "insensitive"` and `skipDuplicates` in
-Prisma queries (SQLite didn't) — fine to use going forward, existing code
-doesn't need to change.
+`postgresql://ermermagbanua:swan@localhost:5435/swan_enterprise`. Port is
+**5435**, not the Postgres default 5432 — this machine also has three
+system-installed EDB PostgreSQL servers (13/14/15) permanently occupying
+5432/5433/5434, so Homebrew's postgresql@15 is configured (in its own
+`postgresql.conf`) to listen on 5435 instead. If DB connections start
+failing with "password authentication failed," check `brew services list`
+for postgresql@15 first — it's a different server than whatever else may be
+listening on 5432. **Schema changes now go through Prisma Migrate, NOT `db push`** — a baseline
+migration lives in `prisma/migrations/`. After editing `schema.prisma`, run
+`npx prisma migrate dev --name describe_change`: it writes a reviewable SQL
+migration, applies it to your local DB, and is what gets deployed to the NAS
+via `prisma migrate deploy`. **Do NOT use `prisma db push` for schema edits** —
+it silently drops columns to match the schema and caused live-data drift on the
+NAS. (`migrate dev` needs a shadow DB, so the local Postgres user needs
+`CREATEDB`.) To reset demo data: `npm run db:seed`.
+Seeded logins use password `swan1234`. Postgres supports `mode:
+"insensitive"` and `skipDuplicates` in Prisma queries (SQLite didn't) — fine
+to use going forward, existing code doesn't need to change.

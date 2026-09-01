@@ -6,6 +6,18 @@ import {
 } from "@/lib/root-cause";
 
 export const INSPECTION_STATUSES = ["OPEN", "IN_PROGRESS", "CLOSED"] as const;
+
+// PSC KPI dashboard period selector — Rolling 12 Months default, matching
+// the same maritime-standard convention used on Exposure Hours' KPI page.
+export const PSC_KPI_PERIODS = ["ROLLING_12", "YTD", "YEARLY"] as const;
+export type PscKpiPeriodKey = (typeof PSC_KPI_PERIODS)[number];
+export const PSC_KPI_PERIOD_LABELS: Record<PscKpiPeriodKey, string> = {
+  ROLLING_12: "Rolling 12 Months",
+  YTD: "YTD",
+  YEARLY: "Yearly",
+};
+export const DEFAULT_PSC_KPI_PERIOD: PscKpiPeriodKey = "ROLLING_12";
+
 export const MOU_REGIONS = [
   "Tokyo MOU",
   "Paris MOU",

@@ -9,6 +9,8 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Pager } from "@/components/ui/pager";
+import { readPage } from "@/lib/pagination";
 import { AttachmentQuickView } from "@/components/attachments/attachment-quick-view";
 import { formatDate, humanize } from "@/lib/utils";
 import type { CircularCategory, CircularSource } from "@/lib/generated/prisma";
@@ -39,14 +41,22 @@ export default async function CircularsPage({
   const showIssuingBodyTabs = activeSource === "FLAG" || activeSource === "CLASS" || activeSource === "INSURANCE";
   const issuingBodySuggestions = showIssuingBodyTabs ? ISSUING_BODY_SUGGESTIONS[activeSource] : [];
 
-  const rows = await listCirculars(user.companyId, {
-    search: sp.q || undefined,
-    source: activeSource,
-    category: showIssuingBodyTabs ? undefined : activeCategory,
-    issuingBody: showIssuingBodyTabs && activeIssuingBody && activeIssuingBody !== "OTHER" ? activeIssuingBody : undefined,
-    issuingBodyNotIn: showIssuingBodyTabs && activeIssuingBody === "OTHER" ? issuingBodySuggestions : undefined,
-    archive: isArchive,
-  });
+  // SHIPBOARD sees fleet-wide circulars plus their own vessel's targeted
+  // ones — never another vessel's. OFFICE stays unrestricted.
+  const isShipboard = user.department === "SHIPBOARD";
+  const { rows, total, page, totalPages } = await listCirculars(
+    user.companyId,
+    {
+      search: sp.q || undefined,
+      source: activeSource,
+      category: showIssuingBodyTabs ? undefined : activeCategory,
+      issuingBody: showIssuingBodyTabs && activeIssuingBody && activeIssuingBody !== "OTHER" ? activeIssuingBody : undefined,
+      issuingBodyNotIn: showIssuingBodyTabs && activeIssuingBody === "OTHER" ? issuingBodySuggestions : undefined,
+      archive: isArchive,
+      shipboardVesselId: isShipboard ? user.vesselId : undefined,
+    },
+    readPage(sp),
+  );
   const canCreate = can(user, "circular:create");
   const attachmentsByCircular = await listAttachmentsForEntities(
     user.companyId,
@@ -196,6 +206,7 @@ export default async function CircularsPage({
               </tbody>
             </table>
           </div>
+          <Pager page={page} totalPages={totalPages} total={total} basePath="/circulars" searchParams={sp} />
         </Card>
       )}
     </>

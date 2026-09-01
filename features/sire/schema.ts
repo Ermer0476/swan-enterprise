@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { Wrench, ListChecks, Users, Camera, type LucideIcon } from "lucide-react";
 import { ROOT_CAUSE_CATEGORIES } from "@/lib/root-cause";
 
 export const INSPECTION_STATUSES = ["OPEN", "IN_PROGRESS", "CLOSED"] as const;
@@ -43,6 +44,13 @@ export const SIRE_OBSERVATION_CATEGORY_LABELS: Record<(typeof SIRE_OBSERVATION_C
   PROCESS: "Process",
   HUMAN: "Human",
   PHOTOGRAPH: "Photograph",
+};
+// Also reused by Company Inspections' KPI page — same 4-way category set.
+export const SIRE_OBSERVATION_CATEGORY_ICONS: Record<(typeof SIRE_OBSERVATION_CATEGORIES)[number], LucideIcon> = {
+  HARDWARE: Wrench,
+  PROCESS: ListChecks,
+  HUMAN: Users,
+  PHOTOGRAPH: Camera,
 };
 
 // OCIMF VIQ chapters.
@@ -118,4 +126,26 @@ export const updateObservationSchema = addObservationSchema
 export const addCommentSchema = z.object({
   observationId: z.string().uuid(),
   body: z.string().trim().min(1, "Comment can't be empty").max(4000),
+});
+
+// SIRE KPI dashboard target: average observations per inspection, fleet-wide.
+export const DEFAULT_SIRE_OBSERVATION_TARGET = 3.0;
+
+// SIRE reports are valid for 6 months (OCIMF), but the office schedules the
+// next inspection at the 5-month mark so a delayed re-inspection never lets
+// the report's validity actually lapse — 1 month of buffer.
+export const SIRE_SCHEDULE_MONTHS = 5;
+export const SIRE_VALIDITY_MONTHS = 6;
+
+export const SIRE_SCHEDULE_URGENCIES = ["NOT_YET_INSPECTED", "OVERDUE", "DUE_SOON", "ON_TRACK"] as const;
+export type SireScheduleUrgency = (typeof SIRE_SCHEDULE_URGENCIES)[number];
+export const SIRE_SCHEDULE_URGENCY_LABELS: Record<SireScheduleUrgency, string> = {
+  NOT_YET_INSPECTED: "Not Yet Inspected",
+  OVERDUE: "Overdue",
+  DUE_SOON: "Due Soon",
+  ON_TRACK: "On Track",
+};
+
+export const updateSireTargetSchema = z.object({
+  avgObservationTarget: z.coerce.number().positive("Target must be greater than 0"),
 });

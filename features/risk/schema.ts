@@ -65,6 +65,7 @@ export const REVIEW_TRIGGERS = [
   "SMS_PROCEDURE_REVISED",
   "MANAGEMENT_REQUEST",
   "REGULATORY_CHANGE",
+  "MANAGEMENT_OF_CHANGE",
 ] as const;
 
 export const REVIEW_TRIGGER_LABELS: Record<(typeof REVIEW_TRIGGERS)[number], string> = {
@@ -81,6 +82,7 @@ export const REVIEW_TRIGGER_LABELS: Record<(typeof REVIEW_TRIGGERS)[number], str
   SMS_PROCEDURE_REVISED: "SMS Procedure Revised",
   MANAGEMENT_REQUEST: "Management Request",
   REGULATORY_CHANGE: "Regulatory Change",
+  MANAGEMENT_OF_CHANGE: "Management of Change (MOC)",
 };
 
 export const REVIEW_FREQUENCY_MONTHS = [6, 12, 24] as const;
@@ -91,13 +93,28 @@ export const APPROVAL_LEVEL_LABELS: Record<(typeof APPROVAL_LEVELS)[number], str
   COMPANY_MANDATORY: "Company approval MANDATORY",
 };
 
+/** Office's categorized outcome on one piece of vessel-origin RA feedback —
+ * shared across revision requests, execution-added controls, and
+ * vessel-authored hazard rows so triage reads the same regardless of source. */
+export const DISPOSITIONS = [
+  "ADDED_TO_TEMPLATE",
+  "NOT_ADDED",
+  "ALREADY_COVERED",
+  "FURTHER_REVIEW_REQUIRED",
+] as const;
+export const DISPOSITION_LABELS: Record<(typeof DISPOSITIONS)[number], string> = {
+  ADDED_TO_TEMPLATE: "Added to Template",
+  NOT_ADDED: "Not Added",
+  ALREADY_COVERED: "Already Covered",
+  FURTHER_REVIEW_REQUIRED: "Further Review Required",
+};
+
 const levelField = z.coerce.number().int().min(1).max(5);
 
 export const createDocumentSchema = z.object({
   title: z.string().trim().min(3, "Title is required").max(200),
   category: z.string().trim().min(2, "Category is required").max(80),
   description: z.string().trim().max(2000).optional().or(z.literal("")),
-  vesselId: z.string().uuid().optional().or(z.literal("")),
   applicableVesselType: z.string().trim().max(80).optional().or(z.literal("")),
   reviewFrequencyMonths: z.coerce.number().int().min(1).max(120),
   smsProcedureRefs: z.string().trim().max(500).optional().or(z.literal("")),
@@ -136,6 +153,23 @@ export const hazardRowSchema = z.object({
   ratingChangeNote: z.string().trim().max(1000).optional().or(z.literal("")),
 });
 
+/** One reviewer-confirmed row from a parsed revised-RA document upload —
+ * same shape as hazardRowSchema minus revisionId (the whole batch shares
+ * one, passed separately) and coercing from parsed JSON rather than
+ * FormData, so numbers/booleans arrive typed instead of as strings. */
+export const bulkHazardRowDraftSchema = z.object({
+  phase: z.string().trim().max(120).nullable(),
+  consequence: z.string().trim().min(3, "Describe the unwanted consequence").max(300),
+  causes: z.string().trim().min(3, "Describe the possible causes / hazard factors").max(2000),
+  severity: z.number().int().min(1).max(5),
+  likelihood: z.number().int().min(1).max(5),
+  existingControls: z.string().trim().min(3, "Existing controls are required").max(3000),
+  additionalControls: z.string().trim().max(3000).nullable(),
+  resLikelihood: z.number().int().min(1).max(5).nullable(),
+  responsible: z.string().trim().max(200).nullable(),
+  isNew: z.boolean(),
+});
+
 export const deleteHazardRowSchema = z.object({
   rowId: z.string().uuid(),
   documentId: z.string().uuid(),
@@ -164,6 +198,48 @@ export const executionSchema = z.object({
   temporaryControls: z.string().trim().max(2000).optional().or(z.literal("")),
   toolboxAttendees: z.string().trim().max(2000).optional().or(z.literal("")),
   toolboxSigned: z.coerce.boolean().optional(),
+  // Manually entered so the crew can record the real date the job was done
+  // (may be back-dated) — not auto-stamped at submit time.
+  executedAt: z
+    .string()
+    .min(1, "Date conducted is required")
+    .refine((v) => !Number.isNaN(Date.parse(v)), "Invalid date"),
+});
+
+/** One selected hazard's actual rating for this job, submitted alongside
+ * executionSchema as a JSON array keyed by hazardRowId — coerced from parsed
+ * JSON (numbers arrive typed), same convention as bulkHazardRowDraftSchema. */
+export const hazardRatingSchema = z.object({
+  hazardRowId: z.string().uuid(),
+  severity: z.number().int().min(1).max(5).nullable(),
+  likelihood: z.number().int().min(1).max(5).nullable(),
+  resLikelihood: z.number().int().min(1).max(5).nullable(),
+});
+
+export const addExecutionControlSchema = z.object({
+  executionId: z.string().uuid(),
+  hazardRowId: z.string().uuid(),
+  controlText: z.string().trim().min(3, "Describe the control").max(1000),
+});
+
+export const markControlReviewedSchema = z.object({
+  controlId: z.string().uuid(),
+  disposition: z.enum(DISPOSITIONS).optional(),
+});
+
+/** Office drafting its own reworded version of a vessel-added execution
+ * control — kept in a separate field from the vessel's own controlText
+ * (which is never overwritten), and edited independently of the review
+ * decision itself. Once disposition is ADDED_TO_TEMPLATE, this is the text
+ * actually meant to go into the master template on the next revision. */
+export const updateExecutionControlWordingSchema = z.object({
+  controlId: z.string().uuid(),
+  officeWording: z.string().trim().max(1000).optional().or(z.literal("")),
+});
+
+export const reviewVesselHazardRowSchema = z.object({
+  rowId: z.string().uuid(),
+  disposition: z.enum(DISPOSITIONS),
 });
 
 export const revisionRequestSchema = z.object({
@@ -177,10 +253,13 @@ export const decideRevisionRequestSchema = z.object({
   requestId: z.string().uuid(),
   decision: z.enum(["APPROVED", "REJECTED"]),
   decisionNote: z.string().trim().max(2000).optional().or(z.literal("")),
+  disposition: z.enum(DISPOSITIONS).optional(),
 });
 
 export type CreateDocumentInput = z.infer<typeof createDocumentSchema>;
 export type AddRevisionInput = z.infer<typeof addRevisionSchema>;
 export type HazardRowInput = z.infer<typeof hazardRowSchema>;
 export type ExecutionInput = z.infer<typeof executionSchema>;
+export type HazardRatingInput = z.infer<typeof hazardRatingSchema>;
+export type AddExecutionControlInput = z.infer<typeof addExecutionControlSchema>;
 export type RevisionRequestInput = z.infer<typeof revisionRequestSchema>;

@@ -11,6 +11,7 @@ import { defectStatusTone } from "@/features/defects/ui";
 import { listAttachments } from "@/features/attachments/queries";
 import { AttachmentList } from "@/components/attachments/attachment-list";
 import { DefectStatusForm } from "./defect-status-form";
+import { DefectRemarksForm } from "./defect-remarks-form";
 
 export default async function DefectDetailPage({
   params,
@@ -19,10 +20,17 @@ export default async function DefectDetailPage({
 }) {
   const user = await requirePermission("defect:read");
   const { id } = await params;
-  const defect = await getDefect(user.companyId, id);
+  const isShipboard = user.department === "SHIPBOARD";
+  const defect = await getDefect(user.companyId, id, isShipboard, user.vesselId);
   if (!defect) notFound();
 
   const editable = can(user, "defect:update");
+  // Vessel remarks are the ship's own status update; Office remarks are the
+  // office's reply — each side only ever writes its own box, never the
+  // other's, same split as RA execution's controlText (vessel) vs
+  // officeWording (office).
+  const canEditVesselRemarks = editable && isShipboard;
+  const canEditOfficeRemarks = editable && !isShipboard;
   const canDelete = can(user, "defect:delete");
   const attachments = await listAttachments(user.companyId, "Defect", defect.id);
 
@@ -71,11 +79,41 @@ export default async function DefectDetailPage({
             defectId={defect.id}
             status={defect.status}
             actionTaken={defect.actionTaken ?? ""}
+            targetRectificationDate={defect.targetRectificationDate ? defect.targetRectificationDate.toISOString().slice(0, 10) : ""}
+            rectifiedAt={defect.rectifiedAt ? defect.rectifiedAt.toISOString() : null}
             editable={editable}
             canDelete={canDelete}
           />
         </CardContent>
       </Card>
+
+      <div className="mb-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
+        <Card>
+          <CardHeader><CardTitle>Vessel remarks</CardTitle></CardHeader>
+          <CardContent>
+            <DefectRemarksForm
+              defectId={defect.id}
+              kind="vessel"
+              value={defect.vesselRemarks ?? ""}
+              editable={canEditVesselRemarks}
+              placeholder="Ship's status update / remarks on this defect…"
+            />
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader><CardTitle>Office remarks</CardTitle></CardHeader>
+          <CardContent>
+            <DefectRemarksForm
+              defectId={defect.id}
+              kind="office"
+              value={defect.officeRemarks ?? ""}
+              editable={canEditOfficeRemarks}
+              placeholder="Office reply / guidance to the ship…"
+            />
+          </CardContent>
+        </Card>
+      </div>
 
       <Card>
         <CardHeader><CardTitle>Attachments</CardTitle></CardHeader>

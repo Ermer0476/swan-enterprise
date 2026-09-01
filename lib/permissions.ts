@@ -47,6 +47,7 @@ export const PERMISSIONS = {
   "sire:update": "Manage SIRE observations and responses",
   "sire:close": "Close SIRE inspections",
   "sire:delete": "Delete SIRE inspections",
+  "sire:manage-targets": "Set the Average Observations KPI dashboard target",
 
   // PSC Inspection module
   "psc:read": "View PSC inspections",
@@ -61,6 +62,10 @@ export const PERMISSIONS = {
   "cdi:update": "Manage CDI observations and responses",
   "cdi:close": "Close CDI inspections",
   "cdi:delete": "Delete CDI inspections",
+  // Narrower than cdi:update — lets the vessel mark its own observations'
+  // response/status without granting the ability to add/edit/delete
+  // observations themselves (office-authored).
+  "cdi:respond": "Update response/status on your own vessel's CDI observations",
 
   // Internal Audit module
   "iaudit:read": "View internal audits",
@@ -75,6 +80,32 @@ export const PERMISSIONS = {
   "eaudit:update": "Manage external audit findings",
   "eaudit:close": "Close external audits",
   "eaudit:delete": "Delete external audits",
+
+  // Flag Inspection module — same shape as External Audit, own regime
+  "flaginsp:read": "View flag inspections",
+  "flaginsp:create": "Record flag inspections",
+  "flaginsp:update": "Manage flag inspection findings",
+  "flaginsp:close": "Close flag inspections",
+  "flaginsp:delete": "Delete flag inspections",
+
+  // Company Inspection module
+  "cinsp:read": "View company inspections",
+  "cinsp:create": "Record company inspections",
+  "cinsp:update": "Manage company inspection observations",
+  "cinsp:close": "Close company inspections",
+  "cinsp:delete": "Delete company inspections",
+  "cinsp:manage-targets": "Set the Average Observations KPI dashboard target",
+
+  // Narrower than {psc,iaudit,eaudit,flaginsp,cinsp}:update — lets the vessel mark an
+  // existing corrective/preventive action's status/closed date on its own
+  // vessel's PSC deficiencies / audit findings / company inspection
+  // observations, without granting the ability to add, edit the action text
+  // of, or delete CAPA items (office-authored, office-owned).
+  "capa:respond": "Update status/closed date on your own vessel's corrective actions",
+
+  // SIRE 2.0 Questionnaire (reference data) — versioned VIQ upload, used to
+  // suggest chapter/question numbers on Company Inspection observations
+  "sire-questionnaire:manage": "Upload and manage SIRE 2.0 Questionnaire versions",
 
   // Vessel Master module — fleet particulars referenced by every safety module
   "vessel:read": "View vessel particulars",
@@ -96,6 +127,12 @@ export const PERMISSIONS = {
   "drill:update": "Edit drill records and observations",
   "drill:close": "Close emergency drills",
   "drill:delete": "Delete emergency drills and familiarization records",
+  // Administrator-only (not granted to QHSE Manager / Marine Superintendent
+  // like the rest of drill:*) — the required drill/familiarization list and
+  // its intervals are fixed SMS schedule facts shared by the whole fleet
+  // (or by every vessel flying a given flag), so only the platform admin
+  // changes them, never a vessel.
+  "schedule:manage": "Manage the fleet's drill/familiarization schedule, including per-flag-state item sets",
 
   // Controlled Documents module
   "doc:read": "View controlled documents",
@@ -123,6 +160,54 @@ export const PERMISSIONS = {
   "defect:create": "Report equipment defects",
   "defect:update": "Update defect status and rectification",
   "defect:delete": "Delete defect records",
+
+  // Vessel Tracker (daily voyage log)
+  "vtracker:read": "View the vessel voyage/performance tracker",
+  "vtracker:create": "Add daily voyage log entries",
+  "vtracker:update": "Edit voyage log entries",
+  "vtracker:delete": "Delete voyage log entries",
+
+  // Environment Records (monthly garbage/discharge reporting)
+  "environment:read": "View environment (garbage/discharge) records",
+  "environment:create": "Add monthly environment records",
+  "environment:update": "Edit environment records",
+  "environment:delete": "Delete environment records",
+  "environment:manage-units": "Manage the controlled Unit Master (conversion factors) for environmental reporting",
+
+  // TMSA Hub (office-only — never granted to Ship Officer/SHIPBOARD)
+  "tmsa:read": "View the TMSA score matrix and audit CAP tracker",
+  "tmsa:update-kpi": "Edit TMSA KPI compliance status and company response narrative",
+  "tmsa:manage-cap": "Create, edit, and delete TMSA audit findings (CAP)",
+
+  // OPEX Controller (office-only — fleet operating-expense budget vs actual)
+  "opex:read": "View the OPEX Controller (fleet operating-expense budget vs actual)",
+  "opex:manage": "Upload OPEX data and edit budget/actual figures",
+  "budget:read": "View the Budget Proposal Builder (annual budget proposals)",
+  "budget:manage": "Prepare, edit and submit budget proposals",
+  "calendar:read": "View the office calendar",
+  "calendar:manage": "Create, edit and delete calendar events",
+
+  // Procurement (Stage A — Item Master, Opening Stock Take, Inventory, Requisitions)
+  "procurement:read": "View procurement — catalogues, inventory, requisitions",
+  "procurement:manage-catalogue": "Add/edit Stores and Spares catalogue items",
+  "procurement:opening-stock-take": "Build and post a vessel's one-time opening stock take",
+  "procurement:create": "Create/edit draft requisitions and log manual inventory issue/adjustment",
+  "procurement:approve": "Approve a requisition as vessel Master (locks it, assigns the requisition number)",
+  "procurement:office-review": "Cancel or revise requisition lines once a requisition reaches the office",
+  "procurement:manage-thresholds": "Set procurement approval routing thresholds",
+
+  // Vessel Documentation / Company Documents (certificate expiry register)
+  "vesseldoc:read": "View vessel and company document/certificate registers",
+  "vesseldoc:create": "Add certificates/documents to the register",
+  "vesseldoc:update": "Edit certificate/document records and their attachments",
+  "vesseldoc:delete": "Delete certificate/document records",
+
+  // Exposure Hours module (monthly LTI/TRC safety statistics per vessel)
+  "exposure:read": "View exposure hours records and fleet summary",
+  "exposure:create": "Add monthly exposure hours records",
+  "exposure:update": "Edit exposure hours records",
+  "exposure:delete": "Delete exposure hours records",
+  "exposure:manage-targets": "Set LTIF/TRCF KPI dashboard targets",
 } as const;
 
 export type PermissionKey = keyof typeof PERMISSIONS;

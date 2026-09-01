@@ -25,6 +25,15 @@ import {
   Umbrella,
   Building2,
   Archive,
+  Activity,
+  Target,
+  FileQuestion,
+  Recycle,
+  Gauge,
+  FileSpreadsheet,
+  CalendarDays,
+  Ruler,
+  Wallet,
 } from "lucide-react";
 import type { PermissionKey } from "@/lib/permissions";
 
@@ -42,6 +51,11 @@ export type NavItem = {
   permission?: PermissionKey;
   /** Not yet implemented — shown as a roadmap placeholder. */
   soon?: boolean;
+  /** Office/management-only screens that stay out of the sidebar for a
+   * shipboard session — real Ship Officer logins as well as the
+   * Administrator "view as Vessel" toggle (see lib/view-as.ts) — even when
+   * the account otherwise holds the underlying permission. */
+  hiddenForShipboard?: boolean;
   /** Flyout submenu (Searchgear-style CRM pattern) — the parent item still
    * links to its own page; the chevron opens a floating list of shortcuts
    * next to it, same shape as filtering the parent page by a query param. */
@@ -60,7 +74,11 @@ export const NAV: NavGroup[] = [
     title: "Overview",
     items: [
       { label: "Dashboard", href: "/", icon: LayoutDashboard },
-      { label: "Vessels", href: "/vessels", icon: Ship, permission: "vessel:read" },
+      { label: "Vessels", href: "/vessels", icon: Ship, permission: "vessel:read", hiddenForShipboard: true },
+      { label: "TMSA Hub", href: "/tmsa", icon: Gauge, permission: "tmsa:read", hiddenForShipboard: true },
+      { label: "OPEX Controller", href: "/opex-controller", icon: Wallet, permission: "opex:read", hiddenForShipboard: true },
+      { label: "Budget Proposal", href: "/budget-proposal", icon: FileSpreadsheet, permission: "budget:read", hiddenForShipboard: true },
+      { label: "Calendar", href: "/calendar", icon: CalendarDays, permission: "calendar:read" },
     ],
   },
   {
@@ -75,9 +93,22 @@ export const NAV: NavGroup[] = [
       { label: "CDI Inspections", href: "/cdi", icon: FlaskConical, permission: "cdi:read" },
       { label: "Internal Audits", href: "/internal-audits", icon: ShieldCheck, permission: "iaudit:read" },
       { label: "External Audits", href: "/external-audits", icon: ShieldCheck, permission: "eaudit:read" },
+      { label: "Flag Inspections", href: "/flag-inspections", icon: Flag, permission: "flaginsp:read" },
+      { label: "Company Inspections", href: "/company-inspections", icon: Building2, permission: "cinsp:read" },
+      { label: "Exposure Hours", href: "/exposure-hours", icon: Activity, permission: "exposure:read" },
       { label: "Committee Meetings", href: "/meetings", icon: CalendarClock, permission: "meeting:read" },
-      { label: "Emergency Drills", href: "/drills", icon: Flame, permission: "drill:read" },
-      { label: "Documents", href: "/documents", icon: FolderOpen, permission: "doc:read" },
+      { label: "Emergency Drills", href: "/drills/matrix", icon: Flame, permission: "drill:read" },
+      {
+        label: "Documents",
+        href: "/documents",
+        icon: FolderOpen,
+        permission: "doc:read",
+        children: [
+          { label: "Controlled Documents", href: "/documents", icon: FolderOpen },
+          { label: "Vessel Documentation", href: "/documents/vessel", icon: Ship },
+          { label: "Company Documents", href: "/documents/company", icon: Building2 },
+        ],
+      },
       {
         label: "Circulars",
         href: "/circulars",
@@ -99,14 +130,15 @@ export const NAV: NavGroup[] = [
     title: "Operations (Phase 2)",
     items: [
       { label: "Planned Maintenance", href: "/pms", icon: Wrench, soon: true },
-      { label: "Procurement", href: "/procurement", icon: ShoppingCart, soon: true },
+      { label: "Procurement", href: "/procurement", icon: ShoppingCart, permission: "procurement:read" },
       { label: "Crewing", href: "/crewing", icon: Users, soon: true },
     ],
   },
   {
     title: "Analytics (Phase 3)",
     items: [
-      { label: "Fleet Tracking", href: "/tracking", icon: Ship, soon: true },
+      { label: "Vessel Tracker", href: "/vessel-tracker", icon: Ship, permission: "vtracker:read" },
+      { label: "Environment Records", href: "/environment", icon: Recycle, permission: "environment:read" },
       { label: "KPI & TMSA", href: "/kpi", icon: BarChart3, soon: true },
     ],
   },
@@ -118,6 +150,42 @@ export const NAV: NavGroup[] = [
         href: "/settings/workflows",
         icon: GitBranch,
         permission: "admin:manage-workflows",
+      },
+      {
+        label: "Exposure KPI Targets",
+        href: "/settings/exposure-kpi",
+        icon: Target,
+        permission: "exposure:manage-targets",
+      },
+      {
+        label: "SIRE KPI Target",
+        href: "/settings/sire-kpi",
+        icon: Target,
+        permission: "sire:manage-targets",
+      },
+      {
+        label: "Company Inspection KPI Target",
+        href: "/settings/company-inspections-kpi",
+        icon: Target,
+        permission: "cinsp:manage-targets",
+      },
+      {
+        label: "SIRE 2.0 Questionnaire",
+        href: "/settings/sire-questionnaire",
+        icon: FileQuestion,
+        permission: "sire-questionnaire:manage",
+      },
+      {
+        label: "Environmental Unit Master",
+        href: "/settings/environment-units",
+        icon: Ruler,
+        permission: "environment:manage-units",
+      },
+      {
+        label: "Flag Drill Schedules",
+        href: "/settings/flag-drill-schedules",
+        icon: Flame,
+        permission: "schedule:manage",
       },
     ],
   },

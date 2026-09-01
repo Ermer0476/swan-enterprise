@@ -30,7 +30,7 @@ import { AutoGrowInput, Input, Label, Select } from "@/components/ui/input";
 import { VesselField } from "@/components/ui/vessel-field";
 import { Button } from "@/components/ui/button";
 
-function ReportSubmitButton({ blocked }: { blocked: boolean }) {
+function ReportSubmitButton({ blocked, reason }: { blocked: boolean; reason?: string }) {
   const { pending } = useFormStatus();
   return (
     <Button
@@ -38,7 +38,7 @@ function ReportSubmitButton({ blocked }: { blocked: boolean }) {
       name="intent"
       value="report"
       disabled={pending || blocked}
-      title={blocked ? "Close every corrective action in the All CAPA Tracker before reporting to the office" : undefined}
+      title={blocked ? reason : undefined}
     >
       {pending ? "Reporting…" : "Report near miss"}
     </Button>
@@ -185,13 +185,17 @@ export function NewNearMissForm({
       ),
     );
   }
-  // "Report near miss" is blocked until every corrective action actually
-  // authored (non-blank Action text) is Closed — otherwise the office would
-  // see it as submitted while the vessel still has open follow-up work.
-  // Only meaningful for shipboard, since only shipboard gets the Status
-  // column / Save-as-Draft path in the first place.
+  // "Report near miss" needs at least one corrective action on record —
+  // otherwise the report should just stay a Draft until there's a plan to
+  // report. Shipboard has one further gate on top: every authored action
+  // (non-blank Action text) must already be Closed, since only shipboard
+  // gets the Status column / can pre-close a row at filing time.
+  const hasCapa = capaRows.some((r) => r.action.trim().length > 0);
   const allCapaClosed = capaRows.every((r) => !r.action.trim() || r.status === "CLOSED");
-  const reportBlocked = isShipboard && !allCapaClosed;
+  const reportBlocked = !hasCapa || (isShipboard && !allCapaClosed);
+  const reportBlockedReason = !hasCapa
+    ? "Add at least one corrective action before reporting"
+    : "Close every corrective action in the All CAPA Tracker before reporting to the office";
 
   return (
     <Card>
@@ -270,9 +274,9 @@ export function NewNearMissForm({
           </div>
 
           <div className="space-y-1.5">
-            <Label htmlFor="description">Details of the Near Miss</Label>
+            <Label htmlFor="description">Details of the {isHor ? "HOR" : "Near Miss"}</Label>
             <AutoGrowInput id="description" name="description" required
-              placeholder="Describe the near miss…" />
+              placeholder={isHor ? "Describe the hazard observation…" : "Describe the near miss…"} />
           </div>
 
           <div className="space-y-1.5">
@@ -462,17 +466,14 @@ export function NewNearMissForm({
           )}
 
           {reportBlocked && (
-            <p className="text-xs text-muted-foreground">
-              Close every corrective action in the All CAPA Tracker before reporting to the office —
-              or Save as Draft to keep working on it.
-            </p>
+            <p className="text-xs text-muted-foreground">{reportBlockedReason} — or Save as Draft to keep working on it.</p>
           )}
           {state.error && (
             <p className="text-sm text-danger" role="alert">{state.error}</p>
           )}
           <div className="flex items-center gap-2">
-            <ReportSubmitButton blocked={reportBlocked} />
-            {isShipboard && <DraftSubmitButton />}
+            <ReportSubmitButton blocked={reportBlocked} reason={reportBlockedReason} />
+            <DraftSubmitButton />
             <Link href="/near-miss">
               <Button type="button" variant="ghost">Cancel</Button>
             </Link>

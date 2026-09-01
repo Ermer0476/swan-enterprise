@@ -5,6 +5,8 @@ import { ArrowRight, Trash2 } from "lucide-react";
 import {
   advanceStatusAction,
   deleteIncidentAction,
+  deleteDraftIncidentAction,
+  reportDraftIncidentAction,
   type ActionResult,
 } from "@/features/incidents/actions";
 import { humanize } from "@/features/incidents/schema";
@@ -99,6 +101,57 @@ export function IncidentActions({
           {error}
         </p>
       )}
+    </div>
+  );
+}
+
+/** Deletes its own Draft — a permanent action, so it's confirmed first. */
+export function DeleteDraftIncidentButton({ incidentId }: { incidentId: string }) {
+  const [pending, startTransition] = useTransition();
+  const [error, setError] = useState<string | null>(null);
+
+  function submit() {
+    if (!confirm("Delete this draft? This can't be undone.")) return;
+    setError(null);
+    const fd = new FormData();
+    fd.set("incidentId", incidentId);
+    startTransition(async () => {
+      const res = await deleteDraftIncidentAction(fd);
+      if (!res.ok) setError(res.error);
+    });
+  }
+
+  return (
+    <div className="flex flex-col items-end gap-1">
+      <Button type="button" variant="outline" onClick={submit} disabled={pending}>
+        <Trash2 className="h-4 w-4" /> Delete Draft
+      </Button>
+      {error && <p className="text-sm text-danger" role="alert">{error}</p>}
+    </div>
+  );
+}
+
+/** Submits a Draft for office review (status DRAFT → REPORTED). */
+export function ReportDraftIncidentButton({ incidentId }: { incidentId: string }) {
+  const [pending, startTransition] = useTransition();
+  const [error, setError] = useState<string | null>(null);
+
+  function submit() {
+    setError(null);
+    const fd = new FormData();
+    fd.set("incidentId", incidentId);
+    startTransition(async () => {
+      const res = await reportDraftIncidentAction(fd);
+      if (!res.ok) setError(res.error);
+    });
+  }
+
+  return (
+    <div className="flex flex-col items-end gap-1">
+      <Button type="button" onClick={submit} disabled={pending}>
+        Report Incident <ArrowRight className="h-4 w-4" />
+      </Button>
+      {error && <p className="text-sm text-danger" role="alert">{error}</p>}
     </div>
   );
 }

@@ -2,8 +2,17 @@ import { z } from "zod";
 import { ROOT_CAUSE_CATEGORIES } from "@/lib/root-cause";
 
 export const INSPECTION_STATUSES = ["OPEN", "IN_PROGRESS", "CLOSED"] as const;
-export const FINDING_STATUSES = ["OPEN", "CLOSED"] as const;
 export const CDI_SCHEMES = ["CDI-M", "CDI-T", "CDI-SQAS"] as const;
+
+// Mirrors SireObservationStatus — verification is its own step, not just a
+// status label.
+export const CDI_OBSERVATION_STATUSES = ["OPEN", "ONGOING", "PENDING_VERIFICATION", "CLOSED"] as const;
+export const CDI_OBSERVATION_STATUS_LABELS: Record<(typeof CDI_OBSERVATION_STATUSES)[number], string> = {
+  OPEN: "Open",
+  ONGOING: "Ongoing",
+  PENDING_VERIFICATION: "Pending Verification",
+  CLOSED: "Closed",
+};
 
 // CDI checklist sections. 5LP is type-specific (LPG cargo operations).
 export const CDI_OBSERVATION_CATEGORIES = [
@@ -39,6 +48,12 @@ export const CDI_OBSERVATION_CATEGORY_LABELS: Record<(typeof CDI_OBSERVATION_CAT
   SECTION_14: "14 — Accommodation",
 };
 
+const optionalDate = z
+  .string()
+  .optional()
+  .or(z.literal(""))
+  .refine((v) => !v || !Number.isNaN(Date.parse(v)), "Invalid date");
+
 export const createCdiSchema = z.object({
   vesselId: z.string().uuid().optional().or(z.literal("")),
   inspectorName: z.string().trim().max(200).optional().or(z.literal("")),
@@ -58,17 +73,33 @@ export const addObservationSchema = z.object({
   // it (a missing value here would silently drop out of that reporting).
   category: z.enum(CDI_OBSERVATION_CATEGORIES, { message: "Category is required" }),
   observation: z.string().trim().min(3, "Observation is required").max(10000),
+  immediateCause: z.string().trim().max(10000).optional().or(z.literal("")),
   rootCauseCategory: z.enum(ROOT_CAUSE_CATEGORIES, { message: "Root cause category is required" }),
   rootCauseSubCategory: z.string().trim().max(60).optional().or(z.literal("")),
   rootCause: z.string().trim().max(10000).optional().or(z.literal("")),
+  correctiveAction: z.string().trim().max(10000).optional().or(z.literal("")),
+  preventiveMeasure: z.string().trim().max(10000).optional().or(z.literal("")),
+  responsiblePersonId: z.string().uuid().optional().or(z.literal("")),
+  targetDate: optionalDate,
+  actualCompletionDate: optionalDate,
+  verifiedById: z.string().uuid().optional().or(z.literal("")),
 });
 
 export const updateObservationSchema = z.object({
   observationId: z.string().uuid(),
+  questionRef: z.string().trim().max(40).optional().or(z.literal("")),
+  observation: z.string().trim().min(3, "Observation is required").max(10000),
   response: z.string().trim().max(10000).optional().or(z.literal("")),
-  status: z.enum(FINDING_STATUSES),
+  status: z.enum(CDI_OBSERVATION_STATUSES),
   category: z.enum(CDI_OBSERVATION_CATEGORIES, { message: "Category is required" }),
+  immediateCause: z.string().trim().max(10000).optional().or(z.literal("")),
   rootCauseCategory: z.enum(ROOT_CAUSE_CATEGORIES, { message: "Root cause category is required" }),
   rootCauseSubCategory: z.string().trim().max(60).optional().or(z.literal("")),
   rootCause: z.string().trim().max(10000).optional().or(z.literal("")),
+  correctiveAction: z.string().trim().max(10000).optional().or(z.literal("")),
+  preventiveMeasure: z.string().trim().max(10000).optional().or(z.literal("")),
+  responsiblePersonId: z.string().uuid().optional().or(z.literal("")),
+  targetDate: optionalDate,
+  actualCompletionDate: optionalDate,
+  verifiedById: z.string().uuid().optional().or(z.literal("")),
 });

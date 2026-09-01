@@ -2,13 +2,15 @@ import Link from "next/link";
 import { Plus, CalendarClock } from "lucide-react";
 import { requirePermission, can } from "@/lib/rbac";
 import { listCommitteeMeetings, listVesselOptions } from "@/features/committee-meetings/queries";
-import { COMMITTEE_TYPE_LABELS, meetingStatusTone } from "@/features/committee-meetings/schema";
+import { COMMITTEE_TYPE_LABELS, meetingStatusLabel, meetingStatusTone } from "@/features/committee-meetings/schema";
 import { PageHeader } from "@/components/ui/page-header";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input, Select } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { formatDate, humanize } from "@/lib/utils";
+import { Pager } from "@/components/ui/pager";
+import { readPage } from "@/lib/pagination";
+import { formatDate } from "@/lib/utils";
 
 export default async function MeetingsPage({
   searchParams,
@@ -17,11 +19,15 @@ export default async function MeetingsPage({
 }) {
   const user = await requirePermission("meeting:read");
   const sp = await searchParams;
-  const [rows, vessels] = await Promise.all([
-    listCommitteeMeetings(user, {
-      search: sp.q || undefined,
-      vesselId: sp.vesselId || undefined,
-    }),
+  const [{ rows, total, page, totalPages }, vessels] = await Promise.all([
+    listCommitteeMeetings(
+      user,
+      {
+        search: sp.q || undefined,
+        vesselId: sp.vesselId || undefined,
+      },
+      readPage(sp),
+    ),
     listVesselOptions(user.companyId),
   ]);
   const canCreate = can(user, "meeting:create");
@@ -95,7 +101,7 @@ export default async function MeetingsPage({
                     <td className="px-4 py-2.5 text-muted-foreground">{r.inCharge ?? "—"}</td>
                     <td className="px-4 py-2.5">
                       <div className="flex flex-wrap items-center gap-1">
-                        <Badge tone={meetingStatusTone(r.status)}>{humanize(r.status)}</Badge>
+                        <Badge tone={meetingStatusTone(r.status)}>{meetingStatusLabel(r.status)}</Badge>
                         {r.revisedAfterReview && r.status === "REPORTED" && (
                           <Badge tone="warning">Revised</Badge>
                         )}
@@ -106,6 +112,7 @@ export default async function MeetingsPage({
               </tbody>
             </table>
           </div>
+          <Pager page={page} totalPages={totalPages} total={total} basePath="/meetings" searchParams={sp} />
         </Card>
       )}
     </>

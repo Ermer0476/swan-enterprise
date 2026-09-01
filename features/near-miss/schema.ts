@@ -36,7 +36,7 @@ export function nearMissStatusLabel(status: string, department: string): string 
  * — only the *label* (`nearMissStatusLabel`) varies by department, not the
  * color, so the same underlying status always reads as the same color.
  */
-export function nearMissStatusTone(status: string): "success" | "warning" | "neutral" {
+export function nearMissStatusTone(status: string): "success" | "warning" | "danger" {
   if (status === "CLOSED") return LIFECYCLE_TONE.CLOSED;
   if (status === "DRAFT") return LIFECYCLE_TONE.OPEN;
   return LIFECYCLE_TONE.UNDER_REVIEW; // REPORTED or UNDER_REVIEW

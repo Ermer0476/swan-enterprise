@@ -3,6 +3,7 @@ import Link from "next/link";
 import type { MatrixRow } from "@/features/schedule/queries";
 import { formatDate } from "@/lib/utils";
 import { NaToggle } from "./na-toggle";
+import { FrequencyEditor } from "./frequency-editor";
 
 const MONTH_LABELS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
@@ -23,12 +24,16 @@ export function MatrixTable({
   year,
   vesselId,
   canEditApplicability = false,
+  canEditFrequency = false,
   recordHref,
 }: {
   rows: MatrixRow[];
   year: number;
   vesselId?: string;
   canEditApplicability?: boolean;
+  /** Administrator-only — stricter than canEditApplicability, since the
+   * frequency schedule is a fixed fleet-wide SMS fact. */
+  canEditFrequency?: boolean;
   /** Builds the URL for a completion record's day-of-month badge, e.g.
    * `(id) => \`/drills/${id}\``. Omit to render the days as plain text
    * (familiarization records have no detail page yet). */
@@ -87,7 +92,17 @@ export function MatrixTable({
                       <div className="mt-0.5 text-xs italic text-muted-foreground">Not applicable to this vessel</div>
                     )}
                   </td>
-                  <td className="px-3 py-2 align-top text-xs text-muted-foreground">{row.frequencyLabel ?? "—"}</td>
+                  <td className="px-3 py-2 align-top text-xs text-muted-foreground">
+                    {canEditFrequency ? (
+                      <FrequencyEditor
+                        scheduleItemId={row.id}
+                        frequencyLabel={row.frequencyLabel}
+                        frequencyDays={row.frequencyDays}
+                      />
+                    ) : (
+                      row.frequencyLabel ?? "—"
+                    )}
+                  </td>
                   <td className="px-3 py-2 align-top text-xs text-muted-foreground">
                     {row.lastDate ? formatDate(row.lastDate) : "—"}
                   </td>

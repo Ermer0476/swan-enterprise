@@ -11,6 +11,7 @@ import {
 } from "@/features/near-miss/actions";
 import { humanize } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 
 export function NearMissActions({
   nearMissId,
@@ -25,6 +26,7 @@ export function NearMissActions({
 }) {
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
+  const [confirmingDelete, setConfirmingDelete] = useState(false);
 
   function run(action: (fd: FormData) => Promise<ActionResult>) {
     setError(null);
@@ -41,7 +43,8 @@ export function NearMissActions({
       <div className="flex flex-wrap items-center gap-2">
         {canAdvance && nextStatus && (
           <Button type="button" onClick={() => run(advanceNearMissAction)} disabled={pending}>
-            Advance to {humanize(nextStatus)} <ArrowRight className="h-4 w-4" />
+            {nextStatus === "REPORTED" ? "Report Near Miss" : `Advance to ${humanize(nextStatus)}`}{" "}
+            <ArrowRight className="h-4 w-4" />
           </Button>
         )}
         {!nextStatus && (
@@ -53,9 +56,7 @@ export function NearMissActions({
           <Button
             type="button"
             variant="outline"
-            onClick={() => {
-              if (confirm("Delete this near miss?")) run(deleteNearMissAction);
-            }}
+            onClick={() => setConfirmingDelete(true)}
             disabled={pending}
           >
             <Trash2 className="h-4 w-4" /> Delete
@@ -63,6 +64,16 @@ export function NearMissActions({
         )}
       </div>
       {error && <p className="text-sm text-danger" role="alert">{error}</p>}
+      <ConfirmDialog
+        open={confirmingDelete}
+        title="Delete this near miss?"
+        confirming={pending}
+        onConfirm={() => {
+          setConfirmingDelete(false);
+          run(deleteNearMissAction);
+        }}
+        onCancel={() => setConfirmingDelete(false)}
+      />
     </div>
   );
 }
@@ -71,9 +82,10 @@ export function NearMissActions({
 export function DeleteDraftButton({ nearMissId }: { nearMissId: string }) {
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
+  const [confirming, setConfirming] = useState(false);
 
   function submit() {
-    if (!confirm("Delete this draft? This can't be undone.")) return;
+    setConfirming(false);
     setError(null);
     const fd = new FormData();
     fd.set("nearMissId", nearMissId);
@@ -85,10 +97,18 @@ export function DeleteDraftButton({ nearMissId }: { nearMissId: string }) {
 
   return (
     <div className="flex flex-col items-end gap-1">
-      <Button type="button" variant="outline" onClick={submit} disabled={pending}>
+      <Button type="button" variant="outline" onClick={() => setConfirming(true)} disabled={pending}>
         <Trash2 className="h-4 w-4" /> Delete Draft
       </Button>
       {error && <p className="text-sm text-danger" role="alert">{error}</p>}
+      <ConfirmDialog
+        open={confirming}
+        title="Delete this draft?"
+        description="This can't be undone."
+        confirming={pending}
+        onConfirm={submit}
+        onCancel={() => setConfirming(false)}
+      />
     </div>
   );
 }

@@ -24,10 +24,14 @@ export default async function DocumentsPage({
 }) {
   const user = await requirePermission("doc:read");
   const sp = await searchParams;
+  // SHIPBOARD sees fleet-wide documents plus their own vessel's — never
+  // another vessel's. OFFICE stays unrestricted.
+  const isShipboard = user.department === "SHIPBOARD";
   const rows = await listDocuments(user.companyId, {
     search: sp.q || undefined,
     status: (sp.status as ControlledDocStatus) || undefined,
     category: (sp.category as DocumentCategory) || undefined,
+    shipboardVesselId: isShipboard ? user.vesselId : undefined,
   });
   const canCreate = can(user, "doc:create");
 

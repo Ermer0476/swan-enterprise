@@ -3,18 +3,15 @@ import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { requirePermission } from "@/lib/rbac";
 import { getNcr } from "@/features/non-conformities/queries";
-import { listCapaActions, listAllCapaActions } from "@/features/capa/queries";
-import {
-  CapaTracker,
-  CapaSummaryTable,
-  type CapaRowView,
-  type CapaSummaryRowView,
-} from "@/components/capa/capa-tracker";
+import { listCapaActions } from "@/features/capa/queries";
+import { CapaTracker, type CapaRowView } from "@/components/capa/capa-tracker";
 import { formatRootCause } from "@/lib/root-cause";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { formatDate, humanize, severityTone } from "@/lib/utils";
 import { PrintButton } from "@/components/ui/print-button";
+import { VerificationSummary } from "@/app/(app)/non-conformities/[id]/verification-form";
+import { CloseOutSummary } from "@/app/(app)/non-conformities/[id]/close-out-form";
 
 function toRowView(r: {
   id: string;
@@ -32,15 +29,9 @@ function toRowView(r: {
   };
 }
 
-function toSummaryRowView(
-  r: Parameters<typeof toRowView>[0] & { kind: "CORRECTIVE" | "PREVENTIVE" },
-): CapaSummaryRowView {
-  return { ...toRowView(r), kind: r.kind };
-}
-
 function statusTone(s: string) {
   if (s === "CLOSED") return "success";
-  if (s === "SUBMITTED_TO_OFFICE") return "warning";
+  if (s === "SUBMITTED_TO_OFFICE" || s === "VERIFIED") return "warning";
   return "danger";
 }
 
@@ -55,21 +46,19 @@ export default async function NcrReportPage({
 }) {
   const user = await requirePermission("ncr:read");
   const { id } = await params;
-  const ncr = await getNcr(user.companyId, id);
+  const ncr = await getNcr(user.companyId, id, user.department === "SHIPBOARD", user.id, user.vesselId);
   if (!ncr) notFound();
 
-  const [correctiveRows, allCapaRows] = await Promise.all([
-    listCapaActions(user.companyId, "NonConformity", ncr.id, "CORRECTIVE"),
-    listAllCapaActions(user.companyId, "NonConformity", ncr.id),
-  ]);
+  const correctiveRows = await listCapaActions(user.companyId, "NonConformity", ncr.id, "CORRECTIVE");
 
   const meta = [
     { label: "Source", value: humanize(ncr.source) },
     { label: "Vessel", value: ncr.vessel?.name ?? "Shore / N/A" },
+    { label: "Department", value: ncr.departmentName || "—" },
     { label: "Raised", value: formatDate(ncr.raisedAt) },
     { label: "Target", value: formatDate(ncr.targetDate) },
     { label: "Closed", value: ncr.closedAt ? formatDate(ncr.closedAt) : "—" },
-    { label: "Raised by", value: ncr.raisedBy?.fullName ?? "—" },
+    { label: "Reporter", value: ncr.reporterName || ncr.raisedBy?.fullName || "—" },
   ];
 
   return (
@@ -128,7 +117,7 @@ export default async function NcrReportPage({
 
       <Card className="mb-6">
         <CardHeader><CardTitle>Corrective Action</CardTitle></CardHeader>
-        <CardContent className="space-y-6">
+        <CardContent>
           {/* Always read-only here — this is a report view, not a working page. */}
           <CapaTracker
             entityType="NonConformity"
@@ -138,24 +127,35 @@ export default async function NcrReportPage({
             editable={false}
             rows={correctiveRows.map(toRowView)}
           />
+        </CardContent>
+      </Card>
 
-          <div className="space-y-3">
-            <h4 className="text-sm font-semibold">All CAPA Tracker</h4>
-            <CapaSummaryTable
-              rows={allCapaRows.map(toSummaryRowView)}
-              editable={false}
-            />
-          </div>
+      <Card className="mb-6">
+        <CardHeader><CardTitle>Verification of Corrective Action</CardTitle></CardHeader>
+        <CardContent>
+          <VerificationSummary
+            outcome={ncr.verificationOutcome}
+            followUpNature={ncr.verificationFollowUpNature}
+            assistanceRequired={ncr.assistanceRequired}
+            assistanceNature={ncr.assistanceNature}
+            verifiedBy={ncr.verifiedByUser}
+            verifiedAt={ncr.verifiedAt ? formatDate(ncr.verifiedAt) : null}
+          />
         </CardContent>
       </Card>
 
       <Card>
-        <CardHeader><CardTitle>Shore Remarks</CardTitle></CardHeader>
+        <CardHeader><CardTitle>Close Out</CardTitle></CardHeader>
         <CardContent>
-          {ncr.shoreRemarks ? (
-            <Field label="Shore Remarks" value={ncr.shoreRemarks} />
+          {ncr.status === "CLOSED" ? (
+            <CloseOutSummary
+              followUpRequired={ncr.closeOutFollowUpRequired}
+              followUpNature={ncr.closeOutFollowUpNature}
+              closedBy={ncr.closedByUser}
+              closedAt={ncr.closedAt ? formatDate(ncr.closedAt) : null}
+            />
           ) : (
-            <p className="text-sm text-muted-foreground">No shore remarks recorded yet.</p>
+            <p className="text-sm text-muted-foreground">Not yet closed out.</p>
           )}
         </CardContent>
       </Card>

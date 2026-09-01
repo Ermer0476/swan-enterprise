@@ -29,7 +29,10 @@ export default async function DocumentDetailPage({
 }) {
   const user = await requirePermission("doc:read");
   const { id } = await params;
-  const doc = await getDocument(user.companyId, id);
+  // SHIPBOARD may open a fleet-wide document or one belonging to their own
+  // vessel — not another vessel's. OFFICE is unrestricted.
+  const isShipboard = user.department === "SHIPBOARD";
+  const doc = await getDocument(user.companyId, id, isShipboard ? user.vesselId : undefined);
   if (!doc) notFound();
 
   const canAdvance = can(user, "doc:update");

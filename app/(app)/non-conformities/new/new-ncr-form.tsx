@@ -16,8 +16,17 @@ import { Button } from "@/components/ui/button";
 function SubmitButton() {
   const { pending } = useFormStatus();
   return (
-    <Button type="submit" disabled={pending}>
-      {pending ? "Raising…" : "Raise NCR"}
+    <Button type="submit" name="intent" value="report" disabled={pending}>
+      {pending ? "Submitting…" : "Submit to Office"}
+    </Button>
+  );
+}
+
+function DraftSubmitButton() {
+  const { pending } = useFormStatus();
+  return (
+    <Button type="submit" name="intent" value="draft" variant="outline" disabled={pending}>
+      {pending ? "Saving…" : "Save as Draft"}
     </Button>
   );
 }
@@ -30,6 +39,7 @@ type Prefill = {
   requirement: string;
   description: string;
   raisedAt: string;
+  targetDate: string;
 };
 
 export function NewNcrForm({
@@ -96,7 +106,7 @@ export function NewNcrForm({
       el.dispatchEvent(new Event("input", { bubbles: true }));
     };
     ["title", "source", "severity", "requirement", "raisedAt", "targetDate",
-      "description", "personInCharge",
+      "description", "personInCharge", "departmentName", "reporterName",
     ].forEach(restore);
 
     if (!isShipboard) setVesselId(String(fd.get("vesselId") ?? ""));
@@ -156,6 +166,17 @@ export function NewNcrForm({
             )}
           </div>
 
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div className="space-y-1.5">
+              <Label htmlFor="departmentName">Department</Label>
+              <AutoGrowInput id="departmentName" name="departmentName" placeholder="e.g. QHSE Department" />
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="reporterName">Reporter Name</Label>
+              <AutoGrowInput id="reporterName" name="reporterName" placeholder="Full name" />
+            </div>
+          </div>
+
           <div className="space-y-1.5">
             <Label htmlFor="requirement">Requirement / clause breached</Label>
             <AutoGrowInput id="requirement" name="requirement" defaultValue={prefill.requirement}
@@ -169,7 +190,7 @@ export function NewNcrForm({
             </div>
             <div className="space-y-1.5">
               <Label htmlFor="targetDate">Target close date</Label>
-              <Input id="targetDate" name="targetDate" type="date" />
+              <Input id="targetDate" name="targetDate" type="date" defaultValue={prefill.targetDate} />
             </div>
           </div>
 
@@ -190,6 +211,7 @@ export function NewNcrForm({
           {state.error && <p className="text-sm text-danger" role="alert">{state.error}</p>}
           <div className="flex items-center gap-2">
             <SubmitButton />
+            <DraftSubmitButton />
             <Link href="/non-conformities"><Button type="button" variant="ghost">Cancel</Button></Link>
           </div>
         </form>

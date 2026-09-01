@@ -1,10 +1,10 @@
 /**
  * SWAN Enterprise's app-wide lifecycle status color standard:
- *   - OPEN         🟢 green  — active work (root cause/corrective action/
- *                  attachments/remarks may still change)
+ *   - OPEN         🔴 red    — active work (root cause/corrective action/
+ *                  attachments/remarks may still change) — needs attention
  *   - UNDER_REVIEW 🟡 amber  — the working side is done; awaiting DPA /
  *                  General Manager / office verification before it can close
- *   - CLOSED       ⚪ gray   — verified and closed — read-only from here on
+ *   - CLOSED       🟢 green  — verified and closed — read-only from here on
  *
  * This is a display-only concern: no module's actual Prisma status enum is
  * renamed to match these three names. Every module keeps its own real status
@@ -17,14 +17,14 @@
  *
  * `LIFECYCLE_TONE` is the single source of truth for the three colors
  * themselves — every module's own bucketing function should return one of
- * these three constants rather than hardcoding "success"/"warning"/"neutral"
+ * these three constants rather than hardcoding "success"/"warning"/"danger"
  * directly, so a future re-standardization is a one-line change here instead
  * of a repo-wide find-and-replace.
  */
 export const LIFECYCLE_TONE = {
-  OPEN: "success",
+  OPEN: "danger",
   UNDER_REVIEW: "warning",
-  CLOSED: "neutral",
+  CLOSED: "success",
 } as const;
 
 /**

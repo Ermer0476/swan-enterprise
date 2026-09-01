@@ -13,8 +13,6 @@ import { ncrPrefillHref } from "@/lib/ncr-link";
 import { formatRootCause, type RootCauseCategoryValue } from "@/lib/root-cause";
 import {
   CapaTracker,
-  CapaSummaryTable,
-  renumberCapaCodeForGroup,
   type CapaRowView,
   type CapaSummaryRowView,
 } from "@/components/capa/capa-tracker";
@@ -43,6 +41,15 @@ export type DeficiencyView = {
 type RootCauseValue = { category: string | null; subCategory: string | null; description: string | null };
 type CapaEntityRef = { entityType: string; entityId: string };
 
+/** Earliest non-null target date already on the deficiency's own corrective
+ * action(s), as yyyy-mm-dd — same "earliest wins" rule createNcrAction uses
+ * server-side, so what's shown on the raise form matches what actually gets
+ * saved. */
+function earliestTargetDate(rows: CapaRowView[]): string | null {
+  const dates = rows.map((r) => r.targetDate).filter((d): d is string => !!d).sort();
+  return dates[0]?.slice(0, 10) ?? null;
+}
+
 function AddButton() {
   const { pending } = useFormStatus();
   return (
@@ -55,6 +62,7 @@ function AddButton() {
 function DeficiencyRow({
   def,
   editable,
+  canRespond,
   canCreateNcr,
   canUpdateNcr,
   existingNcr,
@@ -67,6 +75,7 @@ function DeficiencyRow({
 }: {
   def: DeficiencyView;
   editable: boolean;
+  canRespond: boolean;
   canCreateNcr: boolean;
   canUpdateNcr: boolean;
   existingNcr?: { id: string; refNo: string };
@@ -117,6 +126,7 @@ function DeficiencyRow({
                     raisedAt: ncrContext.raisedAt,
                     reportRefNo: ncrContext.reportRefNo,
                     port: ncrContext.port,
+                    targetDate: earliestTargetDate(correctiveRows),
                   })}
                 >
                   <Button type="button" size="sm">Raise NCR</Button>
@@ -193,6 +203,7 @@ function DeficiencyRow({
           kind="CORRECTIVE"
           title="Corrective Actions"
           editable={existingNcr ? canUpdateNcr : editable}
+          canRespond={existingNcr ? false : canRespond}
           rows={correctiveRows}
         />
       </div>
@@ -214,6 +225,7 @@ export function DeficienciesPanel({
   inspectionId,
   deficiencies,
   editable,
+  canRespond,
   canCreateNcr,
   canUpdateNcr,
   ncrBySourceId,
@@ -227,6 +239,7 @@ export function DeficienciesPanel({
   inspectionId: string;
   deficiencies: DeficiencyView[];
   editable: boolean;
+  canRespond: boolean;
   canCreateNcr: boolean;
   canUpdateNcr: boolean;
   ncrBySourceId: Record<string, { id: string; refNo: string }>;
@@ -246,19 +259,6 @@ export function DeficienciesPanel({
     if (addState.ok) formRef.current?.reset();
   }, [addState.ok]);
 
-  // One consolidated CAPA register for the whole inspection, below every
-  // deficiency, so what's still pending is visible at a glance instead of
-  // buried inside each individual card.
-  const allCapaRows: CapaSummaryRowView[] = deficiencies.flatMap((d, i) => {
-    const rows = allCapaRowsByDeficiency[d.id] ?? [];
-    const rowEditable = ncrBySourceId[d.id] ? canUpdateNcr : editable;
-    return rows.map((r) => ({
-      ...r,
-      code: renumberCapaCodeForGroup(r.code, i + 1),
-      editable: rowEditable,
-    }));
-  });
-
   return (
     <div className="space-y-4">
       {deficiencies.length === 0 ? (
@@ -270,6 +270,7 @@ export function DeficienciesPanel({
               key={d.id}
               def={d}
               editable={editable}
+              canRespond={canRespond}
               canCreateNcr={canCreateNcr}
               canUpdateNcr={canUpdateNcr}
               existingNcr={ncrBySourceId[d.id]}
@@ -282,13 +283,6 @@ export function DeficienciesPanel({
             />
           ))}
         </ul>
-      )}
-
-      {deficiencies.length > 0 && (
-        <div className="space-y-2 rounded-md border border-border p-3">
-          <h4 className="text-sm font-semibold">All CAPA Tracker</h4>
-          <CapaSummaryTable rows={allCapaRows} editable={editable || canUpdateNcr} />
-        </div>
       )}
 
       {editable && (

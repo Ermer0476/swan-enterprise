@@ -7,12 +7,15 @@ import mammoth from "mammoth";
 import { prisma } from "@/lib/prisma";
 import { requirePermission } from "@/lib/rbac";
 import { writeAudit } from "@/lib/audit";
+import { withUniqueRetry } from "@/lib/retry";
+import { allocateRefNo } from "@/lib/ref-sequence";
 import { ROOT_CAUSE_CATEGORIES } from "@/lib/root-cause";
 import {
   createSireSchema,
   addObservationSchema,
   updateObservationSchema,
   addCommentSchema,
+  updateSireTargetSchema,
   SIRE_OBSERVATION_CATEGORIES,
 } from "./schema";
 import { parseSireDraftResponse, type ParsedObservationDraft } from "./document-parser";
@@ -21,13 +24,9 @@ export type ActionResult = { ok: boolean; error: string | null };
 const OK: ActionResult = { ok: true, error: null };
 const fail = (error: string): ActionResult => ({ ok: false, error });
 
-async function nextRefNo(companyId: string): Promise<string> {
+async function nextRefNo(companyId: string, vesselCode: string | null): Promise<string> {
   const year = new Date().getFullYear();
-  const prefix = `SIRE-${year}-`;
-  const count = await prisma.sireInspection.count({
-    where: { companyId, refNo: { startsWith: prefix } },
-  });
-  return `${prefix}${String(count + 1).padStart(4, "0")}`;
+  return allocateRefNo(companyId, vesselCode ? `${vesselCode}-SIRE-${year}` : `SIRE-${year}`);
 }
 
 export async function createSireAction(
@@ -51,10 +50,20 @@ export async function createSireAction(
   }
   const d = parsed.data;
 
+  let vesselCode: string | null = null;
+  if (d.vesselId) {
+    const vessel = await prisma.vessel.findFirst({
+      where: { id: d.vesselId, companyId: user.companyId },
+      select: { code: true },
+    });
+    if (!vessel) return fail("Vessel not found");
+    vesselCode = vessel.code;
+  }
+
   const insp = await prisma.sireInspection.create({
     data: {
       companyId: user.companyId,
-      refNo: await nextRefNo(user.companyId),
+      refNo: await nextRefNo(user.companyId, vesselCode),
       vesselId: d.vesselId || null,
       inspectingCompany: d.inspectingCompany,
       inspectorName: d.inspectorName,
@@ -117,31 +126,35 @@ export async function addObservationAction(
   if (!insp) return fail("Inspection not found");
   if (insp.status === "CLOSED") return fail("Inspection is closed");
 
-  const seq = (await prisma.sireObservation.count({ where: { inspectionId: insp.id } })) + 1;
-
-  await prisma.sireObservation.create({
-    data: {
-      companyId: user.companyId,
-      inspectionId: insp.id,
-      seq,
-      chapter: d.chapter || null,
-      category: d.category || null,
-      viqRef: d.viqRef || null,
-      question: d.question || null,
-      observation: d.observation,
-      immediateCause: d.immediateCause || null,
-      rootCauseCategory: d.rootCauseCategory || null,
-      rootCauseSubCategory: d.rootCauseSubCategory || null,
-      rootCause: d.rootCause || null,
-      correctiveAction: d.correctiveAction || null,
-      preventiveMeasure: d.preventiveMeasure || null,
-      responsiblePersonId: d.responsiblePersonId || null,
-      targetDate: d.targetDate ? new Date(d.targetDate) : null,
-      actualCompletionDate: d.actualCompletionDate ? new Date(d.actualCompletionDate) : null,
-      status: d.status,
-      verifiedById: d.verifiedById || null,
-      createdBy: user.id,
-    },
+  // Recompute the seq and create inside a retry: two concurrent adds would derive
+  // the same seq and collide on @@unique([inspectionId, seq]) — retry recomputes.
+  const seq = await withUniqueRetry(async () => {
+    const next = (await prisma.sireObservation.count({ where: { inspectionId: insp.id } })) + 1;
+    await prisma.sireObservation.create({
+      data: {
+        companyId: user.companyId,
+        inspectionId: insp.id,
+        seq: next,
+        chapter: d.chapter || null,
+        category: d.category || null,
+        viqRef: d.viqRef || null,
+        question: d.question || null,
+        observation: d.observation,
+        immediateCause: d.immediateCause || null,
+        rootCauseCategory: d.rootCauseCategory || null,
+        rootCauseSubCategory: d.rootCauseSubCategory || null,
+        rootCause: d.rootCause || null,
+        correctiveAction: d.correctiveAction || null,
+        preventiveMeasure: d.preventiveMeasure || null,
+        responsiblePersonId: d.responsiblePersonId || null,
+        targetDate: d.targetDate ? new Date(d.targetDate) : null,
+        actualCompletionDate: d.actualCompletionDate ? new Date(d.actualCompletionDate) : null,
+        status: d.status,
+        verifiedById: d.verifiedById || null,
+        createdBy: user.id,
+      },
+    });
+    return next;
   });
   if (insp.status === "OPEN") {
     await prisma.sireInspection.update({
@@ -319,32 +332,37 @@ export async function bulkAddObservationsAction(formData: FormData): Promise<Act
   if (!insp) return fail("Inspection not found");
   if (insp.status === "CLOSED") return fail("Inspection is closed");
 
-  let seq = await prisma.sireObservation.count({ where: { inspectionId: insp.id } });
-  await prisma.$transaction(
-    drafts.map((d) => {
-      seq += 1;
-      return prisma.sireObservation.create({
-        data: {
-          companyId: user.companyId,
-          inspectionId: insp.id,
-          seq,
-          chapter: d.chapter,
-          category: d.category,
-          viqRef: d.viqRef,
-          question: d.question,
-          observation: d.observation,
-          immediateCause: d.immediateCause,
-          rootCauseCategory: d.rootCauseCategory,
-          rootCauseSubCategory: d.rootCauseSubCategory,
-          rootCause: d.rootCause,
-          correctiveAction: d.correctiveAction,
-          preventiveMeasure: d.preventiveMeasure,
-          status: "OPEN",
-          createdBy: user.id,
-        },
-      });
-    }),
-  );
+  // Recompute the base seq and create the batch inside a retry: a concurrent add
+  // would shift the count and collide on @@unique([inspectionId, seq]); the whole
+  // $transaction rolls back on P2002 and we recompute from a fresh count.
+  await withUniqueRetry(async () => {
+    let seq = await prisma.sireObservation.count({ where: { inspectionId: insp.id } });
+    await prisma.$transaction(
+      drafts.map((d) => {
+        seq += 1;
+        return prisma.sireObservation.create({
+          data: {
+            companyId: user.companyId,
+            inspectionId: insp.id,
+            seq,
+            chapter: d.chapter,
+            category: d.category,
+            viqRef: d.viqRef,
+            question: d.question,
+            observation: d.observation,
+            immediateCause: d.immediateCause,
+            rootCauseCategory: d.rootCauseCategory,
+            rootCauseSubCategory: d.rootCauseSubCategory,
+            rootCause: d.rootCause,
+            correctiveAction: d.correctiveAction,
+            preventiveMeasure: d.preventiveMeasure,
+            status: "OPEN",
+            createdBy: user.id,
+          },
+        });
+      }),
+    );
+  });
 
   if (insp.status === "OPEN") {
     await prisma.sireInspection.update({
@@ -420,6 +438,30 @@ export async function closeSireAction(formData: FormData): Promise<ActionResult>
   });
 
   revalidatePath(`/sire/${insp.id}`);
+  return OK;
+}
+
+export async function updateSireTargetAction(_prev: ActionResult, formData: FormData): Promise<ActionResult> {
+  const user = await requirePermission("sire:manage-targets");
+  const parsed = updateSireTargetSchema.safeParse({
+    avgObservationTarget: formData.get("avgObservationTarget"),
+  });
+  if (!parsed.success) return fail(parsed.error.issues[0]?.message ?? "Invalid input");
+  const d = parsed.data;
+
+  await prisma.company.update({
+    where: { id: user.companyId },
+    data: { sireAvgObservationTarget: d.avgObservationTarget },
+  });
+  await writeAudit({
+    actor: user,
+    action: "UPDATE",
+    entityType: "Company",
+    entityId: user.companyId,
+    summary: `Set SIRE KPI target to Average Observations ≤ ${d.avgObservationTarget}`,
+  });
+  revalidatePath("/sire/kpi");
+  revalidatePath("/settings/sire-kpi");
   return OK;
 }
 

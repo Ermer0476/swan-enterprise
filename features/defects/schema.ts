@@ -24,4 +24,24 @@ export const updateDefectSchema = z.object({
   defectId: z.string().uuid(),
   status: z.enum(DEFECT_STATUSES),
   actionTaken: z.string().trim().max(5000).optional().or(z.literal("")),
+  targetRectificationDate: z
+    .string()
+    .optional()
+    .or(z.literal(""))
+    .refine((v) => !v || !Number.isNaN(Date.parse(v)), "Invalid date"),
+  // Manually entered by whoever closes the defect — the actual date the
+  // work was done, not necessarily today (the day it's being logged).
+  rectifiedAt: z
+    .string()
+    .optional()
+    .or(z.literal(""))
+    .refine((v) => !v || !Number.isNaN(Date.parse(v)), "Invalid date"),
+});
+
+// Ship- and office-side remarks — each saved to its OWN column so the two
+// (and the structured status/action) never overwrite each other.
+export const defectRemarksSchema = z.object({
+  defectId: z.string().uuid(),
+  kind: z.enum(["vessel", "office"]),
+  value: z.string().trim().max(5000).optional().or(z.literal("")),
 });

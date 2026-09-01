@@ -1,16 +1,25 @@
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
-import { requirePermission } from "@/lib/rbac";
-import { sireAnalytics, resolveSirePeriod } from "@/features/sire/queries";
-import { ROOT_CAUSE_LABELS, ROOT_CAUSE_SUBCATEGORY_LABELS, type RootCauseCategoryValue } from "@/lib/root-cause";
+import { ArrowLeft, Target } from "lucide-react";
+import { requirePermission, can } from "@/lib/rbac";
+import { sireAnalytics, resolveSirePeriod, getSireKpiTargets } from "@/features/sire/queries";
+import { VIQ_CHAPTERS, SIRE_OBSERVATION_CATEGORIES, SIRE_OBSERVATION_CATEGORY_ICONS } from "@/features/sire/schema";
 import { PageHeader } from "@/components/ui/page-header";
 import { Card, CardContent } from "@/components/ui/card";
 import { Select } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { humanize } from "@/lib/utils";
-import { BarChart, StackedBarChart, paletteColor, type BarDatum, type StackedDatum, type LegendEntry } from "@/components/ui/bar-chart";
-import { DonutChart, type DonutDatum } from "@/components/ui/donut-chart";
+import {
+  BarChart,
+  StackedBarChart,
+  VerticalBarChart,
+  paletteColor,
+  type BarDatum,
+  type StackedDatum,
+  type LegendEntry,
+} from "@/components/ui/bar-chart";
+import { RootCausePanel } from "@/components/kpi/root-cause-panel";
 import { KpiTabs } from "@/components/ui/kpi-tabs";
+import { GaugeChart } from "@/components/ui/gauge-chart";
 
 export default async function SireKpiPage({
   searchParams,
@@ -19,6 +28,8 @@ export default async function SireKpiPage({
 }) {
   const user = await requirePermission("sire:create");
   const sp = await searchParams;
+  const isShipboard = user.department === "SHIPBOARD";
+  const vesselId = isShipboard ? (user.vesselId ?? undefined) : undefined;
 
   // No year selected = All Time (quarter is meaningless without a year, so
   // it's ignored in that case too). Year with no quarter = the whole year.
@@ -26,38 +37,32 @@ export default async function SireKpiPage({
   const quarter = sp.quarter ? Number(sp.quarter) : undefined;
 
   const range = resolveSirePeriod(year, quarter);
-  const data = await sireAnalytics(user.companyId, range);
+  const [data, targets] = await Promise.all([
+    sireAnalytics(user.companyId, range, vesselId),
+    getSireKpiTargets(user.companyId),
+  ]);
+  const { avgObservationTarget: OBSERVATION_TARGET } = targets;
+  const canManageTargets = can(user, "sire:manage-targets");
 
   const categoryData: BarDatum[] = Object.entries(data.byCategory)
-    .map(([key, value], i) => ({ label: humanize(key), value, color: paletteColor(i) }))
-    .sort((a, b) => b.value - a.value);
-
-  const rootCauseData: BarDatum[] = Object.entries(data.byRootCause)
     .map(([key, value], i) => ({
-      label: ROOT_CAUSE_LABELS[key as RootCauseCategoryValue] ?? humanize(key),
+      label: humanize(key),
       value,
       color: paletteColor(i),
+      icon: SIRE_OBSERVATION_CATEGORY_ICONS[key as (typeof SIRE_OBSERVATION_CATEGORIES)[number]],
     }))
     .sort((a, b) => b.value - a.value);
 
-  const subCauseDonuts = rootCauseData
-    .map((cat) => {
-      const categoryKey = (Object.keys(data.byRootCause) as string[]).find(
-        (k) => (ROOT_CAUSE_LABELS[k as RootCauseCategoryValue] ?? humanize(k)) === cat.label,
-      )!;
-      const subs = data.bySubRootCause
-        .filter((s) => s.category === categoryKey)
-        .sort((a, b) => b.count - a.count)
-        .map((s, i): DonutDatum => ({
-          label:
-            ROOT_CAUSE_SUBCATEGORY_LABELS[categoryKey as RootCauseCategoryValue]?.[s.subCategory] ??
-            s.subCategory,
-          value: s.count,
-          color: paletteColor(i),
-        }));
-      return { category: cat.label, subs };
-    })
-    .filter((c) => c.subs.length > 0);
+  // All 12 VIQ chapters, zero-filled — a chapter with no observations still
+  // needs a visible bar at 0, not a gap, so the office can see coverage
+  // across the whole VIQ at a glance. Labeled by number + the chapter
+  // title's first word (e.g. "4-Navigation", "5-Safety") rather than a bare
+  // "Ch 4" — recognizable at a glance without needing the full VIQ title.
+  const chapterData: BarDatum[] = VIQ_CHAPTERS.map((c, i) => ({
+    label: `${c.no}-${c.title.split(" ")[0]}`,
+    value: data.byChapter[c.no] ?? 0,
+    color: paletteColor(i),
+  }));
 
   const oilMajors = Array.from(
     new Set(Object.values(data.byVesselOilMajor).flatMap((byOilMajor) => Object.keys(byOilMajor))),
@@ -85,7 +90,16 @@ export default async function SireKpiPage({
       </Link>
       <PageHeader
         title="SIRE KPIs"
-        description="Fleet-wide observation trends — office use only."
+        description={`${isShipboard ? "Observation trends" : "Fleet-wide observation trends"} — office use only.`}
+        actions={
+          canManageTargets && (
+            <Link href="/settings/sire-kpi">
+              <Button type="button" variant="outline" size="sm">
+                <Target className="h-4 w-4" /> Edit Target
+              </Button>
+            </Link>
+          )
+        }
       />
 
       <form className="mb-4 flex flex-wrap items-end gap-2">
@@ -98,14 +112,14 @@ export default async function SireKpiPage({
         <Select name="quarter" defaultValue={quarter ? String(quarter) : ""} className="w-36">
           <option value="">Full Year</option>
           <option value="1">Q1 (Jan–Mar)</option>
-          <option value="2">Q2 (Apr–Jun)</option>
-          <option value="3">Q3 (Jul–Sep)</option>
-          <option value="4">Q4 (Oct–Dec)</option>
+          <option value="2">Q2 (Jan–Jun)</option>
+          <option value="3">Q3 (Jan–Sep)</option>
+          <option value="4">Q4 (Jan–Dec)</option>
         </Select>
         <Button type="submit" variant="outline">Apply</Button>
       </form>
 
-      <div className="mb-6 grid grid-cols-1 gap-3 sm:grid-cols-3">
+      <div className="mb-6 grid grid-cols-1 gap-3 sm:grid-cols-4">
         <Card>
           <CardContent className="pt-4">
             <div className="text-2xl font-semibold tabular-nums">{data.totalInspections}</div>
@@ -121,7 +135,17 @@ export default async function SireKpiPage({
         <Card>
           <CardContent className="pt-4">
             <div className="text-2xl font-semibold tabular-nums">{data.avgPerInspection.toFixed(1)}</div>
-            <div className="mt-0.5 text-xs text-muted-foreground">Average Observations / Inspection (Fleet-wide)</div>
+            <div className="mt-0.5 text-xs text-muted-foreground">Average Observations / Inspection{isShipboard ? "" : " (Fleet-wide)"}</div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="flex items-center justify-center pt-2">
+            <GaugeChart
+              value={data.avgPerInspection}
+              target={OBSERVATION_TARGET}
+              label={`vs Target ≤ ${OBSERVATION_TARGET.toFixed(2)}`}
+              size={130}
+            />
           </CardContent>
         </Card>
       </div>
@@ -131,35 +155,24 @@ export default async function SireKpiPage({
           {
             key: "category",
             label: "By Category",
-            content: <BarChart data={categoryData} />,
+            content: <BarChart data={categoryData} unit="observations" />,
           },
           {
             key: "root-cause",
             label: "By Root Cause",
             content: (
-              <div className="space-y-6">
-                <BarChart data={rootCauseData} />
-                {subCauseDonuts.length > 0 && (
-                  <div>
-                    <div className="mb-3 text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                      Sub-Causes by Category
-                    </div>
-                    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-                      {subCauseDonuts.map((c) => (
-                        <Card key={c.category}>
-                          <CardContent className="pt-4">
-                            <div className="mb-2 text-center text-xs font-semibold uppercase tracking-wide">
-                              {c.category} Sub-Causes
-                            </div>
-                            <DonutChart title={c.category} data={c.subs} />
-                          </CardContent>
-                        </Card>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
+              <RootCausePanel
+                byRootCause={data.byRootCause}
+                bySubRootCause={data.bySubRootCause}
+                totalObservations={data.totalObservations}
+                unit="observations"
+              />
             ),
+          },
+          {
+            key: "chapter",
+            label: "By Chapter",
+            content: <VerticalBarChart data={chapterData} />,
           },
           {
             key: "vessel",

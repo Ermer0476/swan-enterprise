@@ -8,6 +8,7 @@ import {
 } from "@/features/near-miss/actions";
 import { AutoGrowInput, Label, Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { formatDate } from "@/lib/utils";
 
 function SaveButton({ disabled }: { disabled: boolean }) {
   const { pending } = useFormStatus();
@@ -28,12 +29,16 @@ export function OfficeReviewForm({
   nearMissId,
   shoreRemarks,
   reviewedAt = null,
+  shoreRemarksBy = null,
+  shoreRemarksAt = null,
   disabled = false,
   lifecycleActions,
 }: {
   nearMissId: string;
   shoreRemarks: string;
   reviewedAt?: string | null;
+  shoreRemarksBy?: { fullName: string; rank: string | null } | null;
+  shoreRemarksAt?: string | null;
   disabled?: boolean;
   // Lifecycle (advance/delete) sits at the bottom of this card, to the left
   // of Date reviewed — a separate action set from the office-review save,
@@ -75,6 +80,13 @@ export function OfficeReviewForm({
         </div>
         {!disabled && <SaveButton disabled={disabled} />}
       </div>
+      {shoreRemarksBy && (
+        <p className="text-xs text-muted-foreground">
+          — {shoreRemarksBy.fullName}
+          {shoreRemarksBy.rank ? `, ${shoreRemarksBy.rank}` : ""}
+          {shoreRemarksAt ? ` · ${formatDate(shoreRemarksAt)}` : ""}
+        </p>
+      )}
       {state.error && <p className="text-sm text-danger">{state.error}</p>}
       {state.ok && <p className="text-sm text-success">Saved.</p>}
 

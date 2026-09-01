@@ -26,8 +26,17 @@ import { Button } from "@/components/ui/button";
 function SubmitButton() {
   const { pending } = useFormStatus();
   return (
-    <Button type="submit" disabled={pending}>
+    <Button type="submit" name="intent" value="report" disabled={pending}>
       {pending ? "Reporting…" : "Report incident"}
+    </Button>
+  );
+}
+
+function DraftSubmitButton() {
+  const { pending } = useFormStatus();
+  return (
+    <Button type="submit" name="intent" value="draft" variant="outline" disabled={pending}>
+      {pending ? "Saving…" : "Save as Draft"}
     </Button>
   );
 }
@@ -256,8 +265,12 @@ export function NewIncidentForm({
           </div>
 
           <div className="space-y-1.5">
-            <Label htmlFor="location">Location</Label>
-            <AutoGrowInput id="location" name="location" placeholder="e.g. Cargo manifold, main deck" />
+            <Label htmlFor="location">Vessel Position</Label>
+            <AutoGrowInput
+              id="location"
+              name="location"
+              placeholder="e.g. 01°15'N 103°50'E, At Berth Singapore, At Singapore Anchorage"
+            />
           </div>
 
           <div className="space-y-1.5">
@@ -357,6 +370,7 @@ export function NewIncidentForm({
           )}
           <div className="flex items-center gap-2">
             <SubmitButton />
+            <DraftSubmitButton />
             <Link href="/incidents"><Button type="button" variant="ghost">Cancel</Button></Link>
           </div>
         </form>

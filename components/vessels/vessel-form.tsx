@@ -5,6 +5,7 @@ import { useActionState, useEffect, useState } from "react";
 import { useFormStatus } from "react-dom";
 import { FileUp } from "lucide-react";
 import { VESSEL_STATUSES, humanize } from "@/features/vessels/schema";
+import { VESSEL_FLAGS } from "@/lib/vessel-flags";
 import { parseVesselDocumentAction, type ParseVesselDocumentResult } from "@/features/vessels/actions";
 import { Card, CardContent } from "@/components/ui/card";
 import { AutoGrowInput, Input, Label, Select } from "@/components/ui/input";
@@ -29,6 +30,7 @@ export type VesselFormValues = {
   breadth: string;
   depth: string;
   status: string;
+  archivedAt: string;
   capacityCbm: string;
   netTonnage: string;
   deadweight: string;
@@ -45,6 +47,8 @@ export type VesselFormValues = {
   draft: string;
   mainEngine: string;
   serviceSpeed: string;
+  stdFoConsumptionMt: string;
+  stdDoConsumptionMt: string;
   navigationArea: string;
   classNotation: string;
   ownerAddress: string;
@@ -73,6 +77,7 @@ const EMPTY: VesselFormValues = {
   breadth: "",
   depth: "",
   status: "ACTIVE",
+  archivedAt: "",
   capacityCbm: "",
   netTonnage: "",
   deadweight: "",
@@ -89,6 +94,8 @@ const EMPTY: VesselFormValues = {
   draft: "",
   mainEngine: "",
   serviceSpeed: "",
+  stdFoConsumptionMt: "",
+  stdDoConsumptionMt: "",
   navigationArea: "",
   classNotation: "",
   ownerAddress: "",
@@ -176,6 +183,7 @@ export function VesselForm({
   const [parsed, setParsed] = useState<Partial<VesselFormValues> | null>(null);
   const [formVersion, setFormVersion] = useState(0);
   const v = { ...EMPTY, ...values, ...parsed };
+  const [status, setStatus] = useState(v.status);
   const [state, formAction] = useActionState<ActionResult, FormData>(action, {
     ok: false,
     error: null,
@@ -200,8 +208,8 @@ export function VesselForm({
         </div>
         <div className="space-y-1.5">
           <Label htmlFor="code">Vessel Code</Label>
-          <Input id="code" name="code" defaultValue={v.code} placeholder="e.g. SWA" maxLength={6} />
-          <p className="text-xs text-muted-foreground">Prefixed onto this vessel's NCR numbers (e.g. SWA-NCR-2026-0001). Can be filled in later.</p>
+          <Input id="code" name="code" defaultValue={v.code} placeholder="e.g. SWA" maxLength={6} required />
+          <p className="text-xs text-muted-foreground">Prefixed onto every ref number this vessel raises (e.g. SWA-DR-2026-0001, SWA-NCR-2026-0001).</p>
         </div>
         <div className="space-y-1.5">
           <Label htmlFor="imo">IMO Number</Label>
@@ -221,7 +229,10 @@ export function VesselForm({
         </div>
         <div className="space-y-1.5">
           <Label htmlFor="flag">Flag State</Label>
-          <AutoGrowInput id="flag" name="flag" defaultValue={v.flag} />
+          <Select id="flag" name="flag" defaultValue={v.flag}>
+            <option value="">— Select —</option>
+            {VESSEL_FLAGS.map((f) => <option key={f} value={f}>{f}</option>)}
+          </Select>
         </div>
         <div className="space-y-1.5">
           <Label htmlFor="portOfRegistry">Port of Registry</Label>
@@ -275,6 +286,14 @@ export function VesselForm({
           <div className="space-y-1.5">
             <Label htmlFor="serviceSpeed">Service Speed (knots)</Label>
             <Input id="serviceSpeed" name="serviceSpeed" type="number" step="any" defaultValue={v.serviceSpeed} />
+          </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="stdFoConsumptionMt">Standard F.O. Consumption (mt/day)</Label>
+            <Input id="stdFoConsumptionMt" name="stdFoConsumptionMt" type="number" step="any" defaultValue={v.stdFoConsumptionMt} />
+          </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="stdDoConsumptionMt">Standard D.O. Consumption (mt/day)</Label>
+            <Input id="stdDoConsumptionMt" name="stdDoConsumptionMt" type="number" step="any" defaultValue={v.stdDoConsumptionMt} />
           </div>
         </div>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
@@ -383,13 +402,22 @@ export function VesselForm({
         </div>
       </fieldset>
 
-      <div className="space-y-1.5 sm:w-48">
-        <Label htmlFor="status">Status</Label>
-        <Select id="status" name="status" defaultValue={v.status}>
-          {VESSEL_STATUSES.map((s) => (
-            <option key={s} value={s}>{humanize(s)}</option>
-          ))}
-        </Select>
+      <div className="flex flex-wrap gap-4">
+        <div className="space-y-1.5 sm:w-48">
+          <Label htmlFor="status">Status</Label>
+          <Select id="status" name="status" value={status} onChange={(e) => setStatus(e.target.value)}>
+            {VESSEL_STATUSES.map((s) => (
+              <option key={s} value={s}>{humanize(s)}</option>
+            ))}
+          </Select>
+        </div>
+        {status === "SOLD" && (
+          <div className="space-y-1.5 sm:w-48">
+            <Label htmlFor="archivedAt">Archived Date</Label>
+            <Input id="archivedAt" name="archivedAt" type="date" defaultValue={v.archivedAt} />
+            <p className="text-xs text-muted-foreground">Date it actually left the fleet — defaults to today if left blank.</p>
+          </div>
+        )}
       </div>
 
       {state.error && (

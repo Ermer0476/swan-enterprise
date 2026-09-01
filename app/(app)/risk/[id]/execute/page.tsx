@@ -20,6 +20,24 @@ export default async function ExecuteRiskAssessmentPage({
   ]);
   if (!doc) notFound();
 
+  const isShipboard = user.department === "SHIPBOARD";
+  // Master rows (fleet-wide) plus this vessel's own addenda — a shipboard
+  // user shouldn't see another vessel's addendum rows when picking what
+  // applies to their job. Office sees every row on the revision.
+  const hazardRows = (doc.currentRevision?.hazardRows ?? [])
+    .filter((r) => !isShipboard || !r.vesselId || r.vesselId === user.vesselId)
+    .map((r) => ({
+      id: r.id,
+      phase: r.phase,
+      consequence: r.consequence,
+      existingControls: r.existingControls,
+      additionalControls: r.additionalControls,
+      severity: r.severity,
+      likelihood: r.likelihood,
+      resLikelihood: r.resLikelihood,
+      isVesselAddendum: !!r.vesselId,
+    }));
+
   return (
     <div className="mx-auto max-w-2xl">
       <Link
@@ -39,9 +57,10 @@ export default async function ExecuteRiskAssessmentPage({
           <ExecutionForm
             documentId={doc.id}
             vessels={vessels}
-            isShipboard={user.department === "SHIPBOARD"}
+            isShipboard={isShipboard}
             ownVesselId={user.vesselId}
             ownVesselName={vessels.find((v) => v.id === user.vesselId)?.name ?? null}
+            hazardRows={hazardRows}
           />
         </CardContent>
       </Card>

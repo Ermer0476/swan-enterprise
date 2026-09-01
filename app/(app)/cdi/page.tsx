@@ -8,6 +8,8 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input, Select } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Pager } from "@/components/ui/pager";
+import { readPage } from "@/lib/pagination";
 import { formatDate, humanize } from "@/lib/utils";
 import { lifecycleStatusTone } from "@/lib/status";
 import type { InspectionStatus } from "@/lib/generated/prisma";
@@ -19,10 +21,17 @@ export default async function CdiPage({
 }) {
   const user = await requirePermission("cdi:read");
   const sp = await searchParams;
-  const rows = await listCdi(user.companyId, {
-    search: sp.q || undefined,
-    status: (sp.status as InspectionStatus) || undefined,
-  });
+  const isShipboard = user.department === "SHIPBOARD";
+  const vesselId = isShipboard ? user.vesselId ?? "__no-vessel-assigned__" : sp.vesselId || undefined;
+  const { rows, total, page, totalPages } = await listCdi(
+    user.companyId,
+    {
+      search: sp.q || undefined,
+      status: (sp.status as InspectionStatus) || undefined,
+      vesselId,
+    },
+    readPage(sp),
+  );
   const canCreate = can(user, "cdi:create");
 
   return (
@@ -34,7 +43,7 @@ export default async function CdiPage({
           canCreate ? (
             <div className="flex items-center gap-2">
               <Link href="/cdi/kpi">
-                <Button variant="outline"><BarChart3 className="h-4 w-4" /> CDI KPIs</Button>
+                <Button variant="warning"><BarChart3 className="h-4 w-4" /> CDI KPIs</Button>
               </Link>
               <Link href="/cdi/new">
                 <Button><Plus className="h-4 w-4" /> Record Inspection</Button>
@@ -75,6 +84,7 @@ export default async function CdiPage({
                   <th className="px-4 py-2.5 font-medium">Port</th>
                   <th className="px-4 py-2.5 font-medium">Date</th>
                   <th className="px-4 py-2.5 font-medium">Obs.</th>
+                  <th className="px-4 py-2.5 font-medium">CAPA Tracker</th>
                   <th className="px-4 py-2.5 font-medium">Status</th>
                 </tr>
               </thead>
@@ -90,13 +100,17 @@ export default async function CdiPage({
                     <td className="px-4 py-2.5 text-muted-foreground">{r.vessel?.name ?? "—"}</td>
                     <td className="px-4 py-2.5 text-muted-foreground">{r.port ?? "—"}</td>
                     <td className="px-4 py-2.5 text-muted-foreground">{formatDate(r.inspectionDate)}</td>
-                    <td className="px-4 py-2.5 tabular-nums text-muted-foreground">{r._count.observations}</td>
+                    <td className="px-4 py-2.5 tabular-nums text-muted-foreground">{r.obsTotal}</td>
+                    <td className="px-4 py-2.5 tabular-nums text-muted-foreground">
+                      {r.capaTotal > 0 ? `${r.capaClosed}/${r.capaTotal}` : "—"}
+                    </td>
                     <td className="px-4 py-2.5"><Badge tone={lifecycleStatusTone(r.status)}>{humanize(r.status)}</Badge></td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
+          <Pager page={page} totalPages={totalPages} total={total} basePath="/cdi" searchParams={sp} />
         </Card>
       )}
     </>

@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { requirePermission, can } from "@/lib/rbac";
-import { getCdi } from "@/features/cdi/queries";
+import { getCdi, listPersonnelOptions } from "@/features/cdi/queries";
 import { PageHeader } from "@/components/ui/page-header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -18,10 +18,17 @@ export default async function CdiDetailPage({
 }) {
   const user = await requirePermission("cdi:read");
   const { id } = await params;
-  const insp = await getCdi(user.companyId, id);
+  const isShipboard = user.department === "SHIPBOARD";
+  const vesselId = isShipboard ? user.vesselId ?? "__no-vessel-assigned__" : undefined;
+  const insp = await getCdi(user.companyId, id, vesselId);
   if (!insp) notFound();
+  const personnel = await listPersonnelOptions(user.companyId);
 
   const editable = can(user, "cdi:update") && insp.status !== "CLOSED";
+  // The vessel can respond to and close its own observations (response +
+  // status only) without the full office edit permission — `insp` was
+  // already fetched scoped to their own vessel above.
+  const canRespond = isShipboard && can(user, "cdi:respond") && insp.status !== "CLOSED";
   const canClose = can(user, "cdi:close");
   const canDelete = can(user, "cdi:delete");
 
@@ -67,6 +74,8 @@ export default async function CdiDetailPage({
           <ObservationsPanel
             inspectionId={insp.id}
             editable={editable}
+            canRespond={canRespond}
+            personnel={personnel}
             observations={insp.observations.map((o) => ({
               id: o.id,
               questionRef: o.questionRef,
@@ -74,9 +83,18 @@ export default async function CdiDetailPage({
               observation: o.observation,
               response: o.response,
               status: o.status,
+              immediateCause: o.immediateCause,
               rootCauseCategory: o.rootCauseCategory,
               rootCauseSubCategory: o.rootCauseSubCategory,
               rootCause: o.rootCause,
+              correctiveAction: o.correctiveAction,
+              preventiveMeasure: o.preventiveMeasure,
+              responsiblePersonId: o.responsiblePersonId,
+              responsiblePerson: o.responsiblePerson,
+              targetDate: o.targetDate ? o.targetDate.toISOString() : null,
+              actualCompletionDate: o.actualCompletionDate ? o.actualCompletionDate.toISOString() : null,
+              verifiedById: o.verifiedById,
+              verifiedBy: o.verifiedBy,
               attachments: o.attachments.map((a) => ({
                 id: a.id,
                 fileName: a.fileName,

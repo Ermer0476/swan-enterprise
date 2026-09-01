@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { requirePermission } from "@/lib/rbac";
 import { writeAudit } from "@/lib/audit";
+import { allocateRefNo } from "@/lib/ref-sequence";
 import type { NearMissStatus, NearMissKind, CapaStatus } from "@/lib/generated/prisma";
 import { CAPA_PREFIX, CAPA_STATUSES } from "@/features/capa/schema";
 import {
@@ -25,14 +26,15 @@ function nextStatus(current: NearMissStatus): NearMissStatus | null {
 }
 
 // Near Miss and HOR keep their own familiar ref-number prefixes even though
-// they now share one table — each counted independently by kind.
-async function nextRefNo(companyId: string, kind: NearMissKind): Promise<string> {
+// they now share one table — each allocated independently by kind. A
+// vessel-raised report is further prefixed with the vessel's fleet code
+// (SWA-NM-2026-0001) so two ships' Nth report of the year never look alike;
+// shore-raised reports fall into the plain NM-2026-0001 / HOR-2026-0001
+// bucket.
+async function nextRefNo(companyId: string, kind: NearMissKind, vesselCode: string | null): Promise<string> {
   const year = new Date().getFullYear();
-  const prefix = kind === "HOR" ? `HOR-${year}-` : `NM-${year}-`;
-  const count = await prisma.nearMiss.count({
-    where: { companyId, kind, refNo: { startsWith: prefix } },
-  });
-  return `${prefix}${String(count + 1).padStart(4, "0")}`;
+  const base = kind === "HOR" ? `HOR-${year}` : `NM-${year}`;
+  return allocateRefNo(companyId, vesselCode ? `${vesselCode}-${base}` : base);
 }
 
 export async function createNearMissAction(
@@ -73,12 +75,28 @@ export async function createNearMissAction(
     return fail("Select a valid position for your department");
   }
 
-  // "Save as Draft" is a vessel-only workflow step — a draft is invisible to
-  // everyone but its own SHIPBOARD reporter (see queries.ts), so honoring it
-  // for an office user would orphan the record (not even they could see it
-  // again). Anyone else always lands on REPORTED.
-  const status: NearMissStatus =
-    formData.get("intent") === "draft" && user.department === "SHIPBOARD" ? "DRAFT" : "REPORTED";
+  // "Save as Draft" is available to anyone who can create a near miss —
+  // shipboard AND office. A draft stays visible to the vessel fleet-wide
+  // (existing behavior) or to its own creator if raised from the office
+  // (see queries.ts's ownDraft clause), so it's never orphaned either way.
+  const status: NearMissStatus = formData.get("intent") === "draft" ? "DRAFT" : "REPORTED";
+
+  const capaRows = buildCapaRows(d.caAction, d.caResponsible, d.caTargetDate, d.caStatus, d.caClosedDate);
+  // A report can't reach the office with no corrective action plan at all —
+  // if nothing's ready yet, it should stay a Draft until it is.
+  if (status === "REPORTED" && capaRows.length === 0) {
+    return fail("Add at least one corrective action before reporting — or Save as Draft to finish it later.");
+  }
+
+  let vesselCode: string | null = null;
+  if (d.vesselId) {
+    const vessel = await prisma.vessel.findFirst({
+      where: { id: d.vesselId, companyId: user.companyId },
+      select: { code: true },
+    });
+    if (!vessel) return fail("Vessel not found");
+    vesselCode = vessel.code;
+  }
 
   const nm = await prisma.nearMiss.create({
     data: {
@@ -86,7 +104,7 @@ export async function createNearMissAction(
       // A draft hasn't been reported yet, so it doesn't burn a ref number —
       // one is assigned only when reportDraftNearMissAction moves it to
       // REPORTED (or immediately below, for a non-draft submission).
-      refNo: status === "REPORTED" ? await nextRefNo(user.companyId, d.kind) : null,
+      refNo: status === "REPORTED" ? await nextRefNo(user.companyId, d.kind, vesselCode) : null,
       title: d.title,
       reporterName: d.reporterName,
       reporterPosition: d.reporterPosition,
@@ -109,7 +127,6 @@ export async function createNearMissAction(
     },
   });
 
-  const capaRows = buildCapaRows(d.caAction, d.caResponsible, d.caTargetDate, d.caStatus, d.caClosedDate);
   if (capaRows.length > 0) {
     // A corrective action can only be filed as already In Progress/Closed by
     // the vessel itself — an office-filed report always starts every row OPEN.
@@ -178,6 +195,8 @@ export async function saveOfficeReviewAction(
       reviewedAt: parsed.data.reviewedAt ? new Date(parsed.data.reviewedAt) : null,
       status: nm.status === "REPORTED" ? "UNDER_REVIEW" : nm.status,
       updatedBy: user.id,
+      shoreRemarksByUserId: parsed.data.shoreRemarks ? user.id : null,
+      shoreRemarksAt: parsed.data.shoreRemarks ? new Date() : null,
     },
   });
 
@@ -249,17 +268,27 @@ export async function advanceNearMissAction(
   return OK;
 }
 
-/** Vessel-only: submits a Draft for office review — status DRAFT → REPORTED. */
+/** Submits a Draft for office review — status DRAFT → REPORTED. Any
+ * shipboard user can submit any vessel's draft (shared logins); an
+ * office-raised draft can only be submitted by the office user who created
+ * it. */
 export async function reportDraftNearMissAction(formData: FormData): Promise<ActionResult> {
   const user = await requirePermission("nm:create");
-  if (user.department !== "SHIPBOARD") {
-    return fail("Only the vessel can submit a draft for office review");
-  }
   const id = String(formData.get("nearMissId") ?? "");
   const nm = await prisma.nearMiss.findFirst({
     where: { id, companyId: user.companyId, deletedAt: null, status: "DRAFT" },
   });
   if (!nm) return fail("Draft not found");
+  if (user.department !== "SHIPBOARD" && nm.createdBy !== user.id) {
+    return fail("Only the report's creator (or the vessel) can submit this draft");
+  }
+
+  const capaCount = await prisma.capaAction.count({
+    where: { companyId: user.companyId, entityType: "NearMiss", entityId: nm.id, deletedAt: null },
+  });
+  if (capaCount === 0) {
+    return fail("Add at least one corrective action before reporting to the office.");
+  }
 
   const openCapaCount = await prisma.capaAction.count({
     where: {
@@ -278,7 +307,15 @@ export async function reportDraftNearMissAction(formData: FormData): Promise<Act
 
   // Only assigned now — a draft that's abandoned or edited repeatedly never
   // burns a sequence number.
-  const refNo = await nextRefNo(user.companyId, nm.kind);
+  let vesselCode: string | null = null;
+  if (nm.vesselId) {
+    const vessel = await prisma.vessel.findFirst({
+      where: { id: nm.vesselId, companyId: user.companyId },
+      select: { code: true },
+    });
+    vesselCode = vessel?.code ?? null;
+  }
+  const refNo = await nextRefNo(user.companyId, nm.kind, vesselCode);
   await prisma.nearMiss.update({
     where: { id: nm.id },
     data: { status: "REPORTED", refNo, updatedBy: user.id },
@@ -298,11 +335,13 @@ export async function reportDraftNearMissAction(formData: FormData): Promise<Act
 }
 
 /**
- * Vessel-only: fully edits a Draft's own report fields (everything except
- * the corrective action rows, which the shared CAPA tracker already lets the
- * vessel add/remove/edit in place). Locked to DRAFT so a REPORTED/CLOSED
- * record — now visible to and possibly already reviewed by the office —
- * can't be silently rewritten out from under them.
+ * Fully edits a Draft's own report fields (everything except the corrective
+ * action rows, which the shared CAPA tracker already lets the owner
+ * add/remove/edit in place). Any shipboard user can edit any vessel's draft
+ * (shared logins); an office-raised draft can only be edited by the office
+ * user who created it. Locked to DRAFT so a REPORTED/CLOSED record — now
+ * visible to and possibly already reviewed by the office — can't be
+ * silently rewritten out from under them.
  */
 export async function updateDraftNearMissAction(
   nearMissId: string,
@@ -310,13 +349,13 @@ export async function updateDraftNearMissAction(
   formData: FormData,
 ): Promise<ActionResult> {
   const user = await requirePermission("nm:create");
-  if (user.department !== "SHIPBOARD") {
-    return fail("Only the vessel can edit its own draft");
-  }
   const nm = await prisma.nearMiss.findFirst({
     where: { id: nearMissId, companyId: user.companyId, deletedAt: null, status: "DRAFT" },
   });
   if (!nm) return fail("Draft not found");
+  if (user.department !== "SHIPBOARD" && nm.createdBy !== user.id) {
+    return fail("Only the report's creator (or the vessel) can edit this draft");
+  }
 
   const parsed = createNearMissSchema.safeParse({
     title: formData.get("title"),
@@ -385,17 +424,17 @@ export async function updateDraftNearMissAction(
   return OK;
 }
 
-/** Vessel-only: deletes its own Draft — never a REPORTED/CLOSED record (use deleteNearMissAction for those, office-only). */
+/** Deletes its own Draft — never a REPORTED/CLOSED record (use deleteNearMissAction for those, office-only). Any shipboard user may delete any vessel's draft (shared logins); an office-raised draft can only be deleted by its creator. */
 export async function deleteDraftNearMissAction(formData: FormData): Promise<ActionResult> {
   const user = await requirePermission("nm:create");
-  if (user.department !== "SHIPBOARD") {
-    return fail("Only the vessel can delete its own draft");
-  }
   const id = String(formData.get("nearMissId") ?? "");
   const nm = await prisma.nearMiss.findFirst({
     where: { id, companyId: user.companyId, deletedAt: null, status: "DRAFT" },
   });
   if (!nm) return fail("Draft not found");
+  if (user.department !== "SHIPBOARD" && nm.createdBy !== user.id) {
+    return fail("Only the report's creator (or the vessel) can delete this draft");
+  }
 
   await prisma.nearMiss.update({
     where: { id: nm.id },

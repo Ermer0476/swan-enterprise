@@ -17,8 +17,17 @@ type CreateAction = (
 function SubmitButton() {
   const { pending } = useFormStatus();
   return (
-    <Button type="submit" disabled={pending}>
+    <Button type="submit" name="intent" value="report" disabled={pending}>
       {pending ? "Saving…" : "Create audit"}
+    </Button>
+  );
+}
+
+function DraftSubmitButton() {
+  const { pending } = useFormStatus();
+  return (
+    <Button type="submit" name="intent" value="draft" variant="outline" disabled={pending}>
+      {pending ? "Saving…" : "Save as Draft"}
     </Button>
   );
 }
@@ -32,6 +41,7 @@ export function AuditForm({
   isShipboard,
   ownVesselId,
   ownVesselName,
+  supportsDraft = false,
 }: {
   createAction: CreateAction;
   vessels: { id: string; name: string }[];
@@ -41,6 +51,10 @@ export function AuditForm({
   isShipboard: boolean;
   ownVesselId: string | null;
   ownVesselName: string | null;
+  /** Only Internal Audits has a Draft status — External Audits doesn't, so
+   * this stays opt-in rather than showing a button that silently does
+   * nothing on the shared form's other caller. */
+  supportsDraft?: boolean;
 }) {
   const formRef = useRef<HTMLFormElement>(null);
   // The browser resets every field in the <form> the moment a form action
@@ -132,6 +146,7 @@ export function AuditForm({
           {state.error && <p className="text-sm text-danger" role="alert">{state.error}</p>}
           <div className="flex items-center gap-2">
             <SubmitButton />
+            {supportsDraft && <DraftSubmitButton />}
             <Link href={cancelHref}><Button type="button" variant="ghost">Cancel</Button></Link>
           </div>
         </form>

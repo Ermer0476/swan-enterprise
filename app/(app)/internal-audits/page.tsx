@@ -1,16 +1,18 @@
 import Link from "next/link";
-import { Plus, ShieldCheck } from "lucide-react";
+import { Plus, ShieldCheck, CalendarClock } from "lucide-react";
 import { requirePermission, can } from "@/lib/rbac";
-import { listInternalAudits } from "@/features/internal-audits/queries";
+import { listInternalAudits, listInternalAuditSchedule, internalAuditScheduleAlerts } from "@/features/internal-audits/queries";
 import { INSPECTION_STATUSES } from "@/features/internal-audits/schema";
 import { PageHeader } from "@/components/ui/page-header";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input, Select } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Pager } from "@/components/ui/pager";
+import { readPage } from "@/lib/pagination";
 import { formatDate, humanize } from "@/lib/utils";
 import { lifecycleStatusTone } from "@/lib/status";
-import type { InspectionStatus } from "@/lib/generated/prisma";
+import type { InternalAuditStatus } from "@/lib/generated/prisma";
 
 export default async function InternalAuditsPage({
   searchParams,
@@ -19,11 +21,22 @@ export default async function InternalAuditsPage({
 }) {
   const user = await requirePermission("iaudit:read");
   const sp = await searchParams;
-  const rows = await listInternalAudits(user.companyId, {
-    search: sp.q || undefined,
-    status: (sp.status as InspectionStatus) || undefined,
-  });
+  const isShipboard = user.department === "SHIPBOARD";
+  const vesselId = isShipboard ? user.vesselId ?? "__no-vessel-assigned__" : sp.vesselId || undefined;
+  const { rows, total, page, totalPages } = await listInternalAudits(
+    user.companyId,
+    {
+      search: sp.q || undefined,
+      status: (sp.status as InternalAuditStatus) || undefined,
+      vesselId,
+    },
+    user.id,
+    readPage(sp),
+  );
   const canCreate = can(user, "iaudit:create");
+  const scheduleAlertCount = canCreate
+    ? internalAuditScheduleAlerts(await listInternalAuditSchedule(user.companyId, isShipboard ? (user.vesselId ?? undefined) : undefined)).length
+    : 0;
 
   return (
     <>
@@ -32,9 +45,19 @@ export default async function InternalAuditsPage({
         description="Company internal SMS audits and their finding close-out."
         actions={
           canCreate ? (
-            <Link href="/internal-audits/new">
-              <Button><Plus className="h-4 w-4" /> New Audit</Button>
-            </Link>
+            <div className="flex items-center gap-2">
+              <Link href="/internal-audits/schedule" className="relative">
+                <Button variant="outline"><CalendarClock className="h-4 w-4" /> Internal Audit Schedule</Button>
+                {scheduleAlertCount > 0 && (
+                  <span className="absolute -right-2 -top-2 flex h-5 min-w-5 items-center justify-center rounded-full bg-warning px-1.5 text-[11px] font-semibold text-white">
+                    {scheduleAlertCount}
+                  </span>
+                )}
+              </Link>
+              <Link href="/internal-audits/new">
+                <Button><Plus className="h-4 w-4" /> New Audit</Button>
+              </Link>
+            </div>
           ) : undefined
         }
       />
@@ -45,7 +68,9 @@ export default async function InternalAuditsPage({
         </div>
         <Select name="status" defaultValue={sp.status ?? ""} className="w-44">
           <option value="">All statuses</option>
-          {INSPECTION_STATUSES.map((s) => <option key={s} value={s}>{humanize(s)}</option>)}
+          {INSPECTION_STATUSES.filter((s) => s !== "DRAFT" || canCreate).map((s) => (
+            <option key={s} value={s}>{humanize(s)}</option>
+          ))}
         </Select>
         <Button type="submit" variant="outline">Filter</Button>
       </form>
@@ -70,6 +95,7 @@ export default async function InternalAuditsPage({
                   <th className="px-4 py-2.5 font-medium">Vessel</th>
                   <th className="px-4 py-2.5 font-medium">Date</th>
                   <th className="px-4 py-2.5 font-medium">Findings</th>
+                  <th className="px-4 py-2.5 font-medium">CAPA Tracker</th>
                   <th className="px-4 py-2.5 font-medium">Status</th>
                 </tr>
               </thead>
@@ -77,7 +103,7 @@ export default async function InternalAuditsPage({
                 {rows.map((r) => (
                   <tr key={r.id} className="border-b border-border last:border-0 hover:bg-muted/30">
                     <td className="px-4 py-2.5 font-mono text-xs">
-                      <Link href={`/internal-audits/${r.id}`} className="text-accent hover:underline">{r.refNo}</Link>
+                      <Link href={`/internal-audits/${r.id}`} className="text-accent hover:underline">{r.refNo ?? "Draft"}</Link>
                     </td>
                     <td className="px-4 py-2.5">
                       <Link href={`/internal-audits/${r.id}`} className="hover:underline">{r.scope}</Link>
@@ -85,13 +111,26 @@ export default async function InternalAuditsPage({
                     <td className="px-4 py-2.5 text-muted-foreground">{r.standard}</td>
                     <td className="px-4 py-2.5 text-muted-foreground">{r.vessel?.name ?? "Shore"}</td>
                     <td className="px-4 py-2.5 text-muted-foreground">{formatDate(r.auditDate)}</td>
-                    <td className="px-4 py-2.5 tabular-nums text-muted-foreground">{r._count.findings}</td>
+                    <td className="px-4 py-2.5 tabular-nums text-muted-foreground">{r.findingCount}</td>
+                    <td className="px-4 py-2.5">
+                      {r.capaPending === 0 ? (
+                        <span className="text-muted-foreground">—</span>
+                      ) : (
+                        <div className="flex flex-col gap-0.5">
+                          <span>{r.capaPending} Pending</span>
+                          {r.capaOverdue > 0 && (
+                            <span className="text-xs font-medium text-danger">{r.capaOverdue} Overdue</span>
+                          )}
+                        </div>
+                      )}
+                    </td>
                     <td className="px-4 py-2.5"><Badge tone={lifecycleStatusTone(r.status)}>{humanize(r.status)}</Badge></td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
+          <Pager page={page} totalPages={totalPages} total={total} basePath="/internal-audits" searchParams={sp} />
         </Card>
       )}
     </>

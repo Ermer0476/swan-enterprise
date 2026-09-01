@@ -19,7 +19,8 @@ export default async function DrillReportPage({
 }) {
   const user = await requirePermission("drill:read");
   const { id } = await params;
-  const drill = await getDrill(user.companyId, id);
+  const isShipboard = user.department === "SHIPBOARD";
+  const drill = await getDrill(user.companyId, id, isShipboard, user.id, user.vesselId);
   if (!drill) notFound();
 
   const meta = [

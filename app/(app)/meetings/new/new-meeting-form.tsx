@@ -101,7 +101,7 @@ export function NewMeetingForm({
       el.dispatchEvent(new Event("input", { bubbles: true }));
     };
     ["vesselId", "position", "meetingDate", "meetingTime", "chairman",
-      "inCharge", "members", "inAttendance", "forAcknowledgement", "vesselRemarks",
+      "inCharge", "members", "inAttendance", "forAcknowledgement",
     ].forEach(restore);
 
     const agendaCommitteeTypes = fd.getAll("agendaCommitteeType").map(String);
@@ -239,7 +239,6 @@ export function NewMeetingForm({
                       <input type="hidden" name="agendaCommitteeType" value={type} />
                       <input type="hidden" name="agendaCode" value={item.code} />
                       <input type="hidden" name="agendaLabel" value={item.label} />
-                      <input type="hidden" name="agendaShoreComments" value="" />
                       <Label className="text-sm">{item.code}) {item.label}</Label>
                       <AutoGrowInput
                         name="agendaDetails"
@@ -262,7 +261,6 @@ export function NewMeetingForm({
                     <input type="hidden" name="agendaId" value="" />
                     <input type="hidden" name="agendaCommitteeType" value="OTHERS" />
                     <input type="hidden" name="agendaCode" value="" />
-                    <input type="hidden" name="agendaShoreComments" value="" />
                     <div className="flex items-end gap-2">
                       <div className="flex-1 space-y-1">
                         <Label className="text-xs">Topic</Label>
@@ -298,15 +296,10 @@ export function NewMeetingForm({
             )}
           </div>
 
-          <div className="space-y-1.5">
-            <Label htmlFor="vesselRemarks">Vessel remarks</Label>
-            <AutoGrowInput id="vesselRemarks" name="vesselRemarks" className="max-h-none" placeholder="Master's overall closing remarks…" />
-          </div>
-
           {state.error && <p className="text-sm text-danger" role="alert">{state.error}</p>}
           <div className="flex items-center gap-2">
             <ReportSubmitButton />
-            {isShipboard && <DraftSubmitButton />}
+            <DraftSubmitButton />
             <Link href="/meetings"><Button type="button" variant="ghost">Cancel</Button></Link>
           </div>
         </form>

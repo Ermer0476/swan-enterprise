@@ -11,6 +11,13 @@ const secret = new TextEncoder().encode(
   process.env.AUTH_SECRET || "dev-insecure-secret",
 );
 
+// Dev-only "view as Vessel" toggle cookies — set/cleared from
+// lib/view-as.ts (a "use server" actions file, which can only export async
+// functions, so these plain constants live here instead and get imported
+// there). See the override applied in getCurrentUser() below.
+export const VIEW_AS_ACTIVE_COOKIE = "swan_view_as_active";
+export const VIEW_AS_VESSEL_COOKIE = "swan_view_as_vessel";
+
 export type SessionUser = {
   id: string;
   companyId: string;
@@ -94,7 +101,7 @@ export async function getCurrentUser(): Promise<SessionUser | null> {
     }
   }
 
-  return {
+  const base: SessionUser = {
     id: user.id,
     companyId: user.companyId,
     fullName: user.fullName,
@@ -105,6 +112,21 @@ export async function getCurrentUser(): Promise<SessionUser | null> {
     roles: roleNames,
     permissions,
   };
+
+  // Dev-only "view as Vessel" override — Administrators only, see
+  // lib/view-as.ts. Permissions stay the Administrator's own (already a
+  // superset of everything), only department/vesselId are swapped so the
+  // many `department === "SHIPBOARD"` business-logic gates behave like a
+  // real ship login without a second account/login flow for testing.
+  if (roleNames.includes("Administrator")) {
+    const active = jar.get(VIEW_AS_ACTIVE_COOKIE)?.value === "1";
+    const vesselId = jar.get(VIEW_AS_VESSEL_COOKIE)?.value;
+    if (active && vesselId) {
+      return { ...base, department: "SHIPBOARD", vesselId };
+    }
+  }
+
+  return base;
 }
 
 export async function requireUser(): Promise<SessionUser> {

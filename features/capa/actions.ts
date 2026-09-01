@@ -5,6 +5,7 @@ import { prisma } from "@/lib/prisma";
 import { requirePermission } from "@/lib/rbac";
 import { requireUser, type SessionUser } from "@/lib/auth";
 import { writeAudit } from "@/lib/audit";
+import { withUniqueRetry } from "@/lib/retry";
 import type { PermissionKey } from "@/lib/permissions";
 import { addCapaSchema, updateCapaSchema, CAPA_PREFIX } from "./schema";
 
@@ -20,6 +21,15 @@ const fail = (error: string): ActionResult => ({ ok: false, error });
  * used when the permission alone is shared more broadly than who should
  * actually be editing (e.g. Near Miss's corrective actions are vessel-only,
  * but `nm:create` is also held by office roles).
+ *
+ * `respondPermission`/`vesselIdOf` are an optional, narrower access path:
+ * a shipboard user who holds `respondPermission` (but not `permission`) may
+ * update ONLY the `status`/`closedDate` of an EXISTING CAPA item on their own
+ * vessel (resolved via `vesselIdOf`) — they can't add, delete, or edit the
+ * action text/responsible/target date, which stay office-authored. Only the
+ * "lives inside a parent inspection" entity types register this; Incident/
+ * NearMiss/NonConformity keep their existing office-only (or Administrator-
+ * only) editing policy unchanged.
  */
 const REGISTRY: Record<
   string,
@@ -27,16 +37,18 @@ const REGISTRY: Record<
     permission: PermissionKey;
     path: (id: string) => string | Promise<string>;
     guard?: (user: SessionUser) => boolean;
+    respondPermission?: PermissionKey;
+    vesselIdOf?: (id: string) => Promise<string | null>;
   }
 > = {
   Incident: { permission: "incident:update", path: (id) => `/incidents/${id}` },
-  // Corrective actions are owned/monitored by the vessel — office roles hold
-  // `nm:create` too (to report their own near misses) but shouldn't be able
-  // to edit CAPA on someone else's report, so gate on department as well.
+  // Corrective actions can only be edited/closed by the Administrator role —
+  // other roles (including the vessel itself) hold `nm:create` too (to
+  // report near misses) but shouldn't be able to edit CAPA.
   NearMiss: {
     permission: "nm:create",
     path: (id) => `/near-miss/${id}`,
-    guard: (user) => user.department === "SHIPBOARD",
+    guard: (user) => user.roles.includes("Administrator"),
   },
   NonConformity: { permission: "ncr:update", path: (id) => `/non-conformities/${id}` },
   // A deficiency has no page of its own — it lives inside its parent PSC
@@ -51,6 +63,14 @@ const REGISTRY: Record<
       });
       return `/psc/${def?.inspectionId ?? ""}`;
     },
+    respondPermission: "capa:respond",
+    vesselIdOf: async (deficiencyId) => {
+      const def = await prisma.pscDeficiency.findUnique({
+        where: { id: deficiencyId },
+        select: { inspection: { select: { vesselId: true } } },
+      });
+      return def?.inspection.vesselId ?? null;
+    },
   },
   // Same "lives inside its parent" shape as PscDeficiency, one per audit type.
   InternalAuditFinding: {
@@ -62,6 +82,14 @@ const REGISTRY: Record<
       });
       return `/internal-audits/${f?.auditId ?? ""}`;
     },
+    respondPermission: "capa:respond",
+    vesselIdOf: async (findingId) => {
+      const f = await prisma.internalAuditFinding.findUnique({
+        where: { id: findingId },
+        select: { audit: { select: { vesselId: true } } },
+      });
+      return f?.audit.vesselId ?? null;
+    },
   },
   ExternalAuditFinding: {
     permission: "eaudit:update",
@@ -71,6 +99,50 @@ const REGISTRY: Record<
         select: { auditId: true },
       });
       return `/external-audits/${f?.auditId ?? ""}`;
+    },
+    respondPermission: "capa:respond",
+    vesselIdOf: async (findingId) => {
+      const f = await prisma.externalAuditFinding.findUnique({
+        where: { id: findingId },
+        select: { audit: { select: { vesselId: true } } },
+      });
+      return f?.audit.vesselId ?? null;
+    },
+  },
+  FlagInspectionFinding: {
+    permission: "flaginsp:update",
+    path: async (findingId) => {
+      const f = await prisma.flagInspectionFinding.findUnique({
+        where: { id: findingId },
+        select: { auditId: true },
+      });
+      return `/flag-inspections/${f?.auditId ?? ""}`;
+    },
+    respondPermission: "capa:respond",
+    vesselIdOf: async (findingId) => {
+      const f = await prisma.flagInspectionFinding.findUnique({
+        where: { id: findingId },
+        select: { audit: { select: { vesselId: true } } },
+      });
+      return f?.audit.vesselId ?? null;
+    },
+  },
+  CompanyInspectionObservation: {
+    permission: "cinsp:update",
+    path: async (observationId) => {
+      const o = await prisma.companyInspectionObservation.findUnique({
+        where: { id: observationId },
+        select: { inspectionId: true },
+      });
+      return `/company-inspections/${o?.inspectionId ?? ""}`;
+    },
+    respondPermission: "capa:respond",
+    vesselIdOf: async (observationId) => {
+      const o = await prisma.companyInspectionObservation.findUnique({
+        where: { id: observationId },
+        select: { inspection: { select: { vesselId: true } } },
+      });
+      return o?.inspection.vesselId ?? null;
     },
   },
 };
@@ -110,30 +182,35 @@ export async function addCapaAction(
   const d = parsed.data;
 
   // Numbered per (entity, kind): CA-01, CA-02, … / PA-01, PA-02, …
-  const count = await prisma.capaAction.count({
-    where: {
-      companyId: user.companyId,
-      entityType: d.entityType,
-      entityId: d.entityId,
-      kind: d.kind,
-    },
-  });
-  const code = `${CAPA_PREFIX[d.kind]}-${String(count + 1).padStart(2, "0")}`;
+  // Recompute the count and create inside a retry: two concurrent adds would
+  // derive the same code and collide on
+  // @@unique([companyId, entityType, entityId, kind, code]) — retry recomputes.
+  const row = await withUniqueRetry(async () => {
+    const count = await prisma.capaAction.count({
+      where: {
+        companyId: user.companyId,
+        entityType: d.entityType,
+        entityId: d.entityId,
+        kind: d.kind,
+      },
+    });
+    const code = `${CAPA_PREFIX[d.kind]}-${String(count + 1).padStart(2, "0")}`;
 
-  const row = await prisma.capaAction.create({
-    data: {
-      companyId: user.companyId,
-      entityType: d.entityType,
-      entityId: d.entityId,
-      kind: d.kind,
-      code,
-      action: d.action,
-      responsible: d.responsible || null,
-      targetDate: d.targetDate ? new Date(d.targetDate) : null,
-      status: "OPEN",
-      createdBy: user.id,
-      updatedBy: user.id,
-    },
+    return prisma.capaAction.create({
+      data: {
+        companyId: user.companyId,
+        entityType: d.entityType,
+        entityId: d.entityId,
+        kind: d.kind,
+        code,
+        action: d.action,
+        responsible: d.responsible || null,
+        targetDate: d.targetDate ? new Date(d.targetDate) : null,
+        status: "OPEN",
+        createdBy: user.id,
+        updatedBy: user.id,
+      },
+    });
   });
 
   await writeAudit({
@@ -157,8 +234,20 @@ export async function updateCapaAction(formData: FormData): Promise<ActionResult
   });
   if (!existing) return fail("CAPA item not found");
 
-  const { permission, path, guard } = registryFor(existing.entityType);
-  if (!user.permissions.has(permission) || (guard && !guard(user))) {
+  const { permission, path, guard, respondPermission, vesselIdOf } = registryFor(existing.entityType);
+  const hasFullAccess = user.permissions.has(permission) && (!guard || guard(user));
+
+  // Narrower path: the vessel can mark an item done/not done on its own
+  // vessel's inspection, without the full edit permission. Checked only when
+  // full access is absent, since full access is always allowed to do
+  // everything respond access can.
+  let hasRespondAccess = false;
+  if (!hasFullAccess && respondPermission && vesselIdOf && user.permissions.has(respondPermission)) {
+    const entityVesselId = await vesselIdOf(existing.entityId);
+    hasRespondAccess = entityVesselId !== null && entityVesselId === user.vesselId;
+  }
+
+  if (!hasFullAccess && !hasRespondAccess) {
     return fail("You don't have permission to edit this CAPA item");
   }
 
@@ -175,16 +264,25 @@ export async function updateCapaAction(formData: FormData): Promise<ActionResult
   }
   const d = parsed.data;
 
+  // Respond-only access may change status/closedDate alone — action text,
+  // responsible, and target date stay whatever office last set them to,
+  // regardless of what the request body carries.
   await prisma.capaAction.update({
     where: { id: existing.id },
-    data: {
-      action: d.action,
-      responsible: d.responsible || null,
-      targetDate: d.targetDate ? new Date(d.targetDate) : null,
-      status: d.status,
-      closedDate: d.closedDate ? new Date(d.closedDate) : null,
-      updatedBy: user.id,
-    },
+    data: hasFullAccess
+      ? {
+          action: d.action,
+          responsible: d.responsible || null,
+          targetDate: d.targetDate ? new Date(d.targetDate) : null,
+          status: d.status,
+          closedDate: d.closedDate ? new Date(d.closedDate) : null,
+          updatedBy: user.id,
+        }
+      : {
+          status: d.status,
+          closedDate: d.closedDate ? new Date(d.closedDate) : null,
+          updatedBy: user.id,
+        },
   });
 
   revalidatePath(await path(existing.entityId));

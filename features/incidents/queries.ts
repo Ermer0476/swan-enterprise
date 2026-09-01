@@ -1,5 +1,7 @@
 import "server-only";
 import { prisma } from "@/lib/prisma";
+import { getKpiPeriod, startOfToday } from "@/lib/kpi-period";
+import { paginationArgs, paginate } from "@/lib/pagination";
 import type { IncidentStatus, Severity, IncidentType } from "@/lib/generated/prisma";
 import {
   ROOT_CAUSE_LABELS,
@@ -8,44 +10,130 @@ import {
 } from "@/lib/root-cause";
 import { INCIDENT_TYPE_LABELS, INCIDENT_SUBCATEGORY_LABELS, type IncidentTypeValue } from "./schema";
 
+// LTI = FAT + PTD + PPD + LWC; TRC = LTI + RWC + MTC (i.e. every Personal
+// Injury sub-category except FAC) — same OCIMF-style formula as
+// features/exposure-hours/schema.ts, applied here per-incident rather than
+// as a monthly aggregate.
+const LTI_CODES = new Set(["FAT", "PTD", "PPD", "LWC"]);
+const TRC_CODES = new Set(["FAT", "PTD", "PPD", "LWC", "RWC", "MTC"]);
+
 export type IncidentListFilters = {
   search?: string;
   status?: IncidentStatus;
   severity?: Severity;
+  // Office-side "narrow to one vessel" filter — ignored for shipboard
+  // callers, who are already forced to their own vessel below regardless of
+  // what's passed here.
+  vesselId?: string;
 };
 
-/** List incidents for a company, newest first, with optional filters. */
+/**
+ * Drafts are the reporter's own work-in-progress — invisible to everyone
+ * else until "Report Incident" moves it to REPORTED. Any shipboard user
+ * sees every draft fleet-wide (shared vessel logins); an office user only
+ * ever sees the drafts *they themselves* raised (pass their own `userId`).
+ */
+function draftVisibilityClause(isShipboard: boolean, userId?: string) {
+  if (isShipboard) return {};
+  return {
+    OR: [
+      { status: { not: "DRAFT" as const } },
+      ...(userId ? [{ status: "DRAFT" as const, createdBy: userId }] : []),
+    ],
+  };
+}
+
+/** List incidents for a company, newest first, with optional filters. Each
+ * row carries `capaClosed`/`capaTotal` — CAPA attaches directly to the
+ * Incident (not to a sub-entity like SIRE/CDI observations), so this is a
+ * straight per-incident CAPA action count. */
 export async function listIncidents(
   companyId: string,
   filters: IncidentListFilters = {},
+  isShipboard = false,
+  userId?: string,
+  vesselId?: string | null,
+  page = 1,
 ) {
-  return prisma.incident.findMany({
-    where: {
-      companyId,
-      deletedAt: null,
-      status: filters.status,
-      severity: filters.severity,
-      ...(filters.search
-        ? {
-            OR: [
-              { refNo: { contains: filters.search } },
-              { title: { contains: filters.search } },
-            ],
-          }
-        : {}),
-    },
-    include: {
-      vessel: { select: { name: true } },
-      reportedBy: { select: { fullName: true } },
-      typeEntries: { orderBy: { order: "asc" } },
-    },
-    orderBy: [{ occurredAt: "desc" }],
+  const where = {
+    companyId,
+    deletedAt: null,
+    severity: filters.severity,
+    AND: [
+      filters.status ? { status: filters.status } : {},
+      draftVisibilityClause(isShipboard, userId),
+      // Shipboard accounts must only ever see their own vessel's incidents —
+      // forced here (never from a client-supplied filter) so an office-only
+      // fleet-wide view can never leak to a shipboard login. The sentinel
+      // guarantees zero rows rather than an accidental fleet-wide match if a
+      // shipboard user somehow has no vesselId assigned.
+      isShipboard
+        ? { vesselId: vesselId ?? "__no-vessel-assigned__" }
+        : filters.vesselId
+          ? { vesselId: filters.vesselId }
+          : {},
+    ],
+    ...(filters.search
+      ? {
+          OR: [
+            { refNo: { contains: filters.search } },
+            { title: { contains: filters.search } },
+          ],
+        }
+      : {}),
+  };
+
+  const [incidents, total] = await Promise.all([
+    prisma.incident.findMany({
+      where,
+      include: {
+        vessel: { select: { name: true } },
+        reportedBy: { select: { fullName: true } },
+        typeEntries: { orderBy: { order: "asc" } },
+      },
+      orderBy: [{ occurredAt: "desc" }],
+      ...paginationArgs(page),
+    }),
+    prisma.incident.count({ where }),
+  ]);
+
+  const incidentIds = incidents.map((i) => i.id);
+  const capaRows = incidentIds.length
+    ? await prisma.capaAction.findMany({
+        where: { companyId, deletedAt: null, entityType: "Incident", entityId: { in: incidentIds } },
+        select: { entityId: true, status: true },
+      })
+    : [];
+  const capaByIncident = new Map<string, { total: number; closed: number }>();
+  for (const c of capaRows) {
+    const agg = capaByIncident.get(c.entityId) ?? { total: 0, closed: 0 };
+    agg.total += 1;
+    if (c.status === "CLOSED") agg.closed += 1;
+    capaByIncident.set(c.entityId, agg);
+  }
+
+  const rows = incidents.map((inc) => {
+    const capa = capaByIncident.get(inc.id) ?? { total: 0, closed: 0 };
+    return { ...inc, capaClosed: capa.closed, capaTotal: capa.total };
   });
+  return paginate(rows, total, page);
 }
 
-export async function getIncident(companyId: string, id: string) {
+export async function getIncident(
+  companyId: string,
+  id: string,
+  isShipboard = false,
+  userId?: string,
+  vesselId?: string | null,
+) {
   return prisma.incident.findFirst({
-    where: { id, companyId, deletedAt: null },
+    where: {
+      id,
+      companyId,
+      deletedAt: null,
+      AND: [draftVisibilityClause(isShipboard, userId)],
+      ...(isShipboard ? { vesselId: vesselId ?? "__no-vessel-assigned__" } : {}),
+    },
     include: {
       vessel: {
         select: {
@@ -86,6 +174,7 @@ export type IncidentKpis = {
   trc: number;
   fatalities: number;
   openCount: number;
+  openBySeverity: { low: number; medium: number; high: number; critical: number; unspecified: number };
   overdueCount: number;
   capaClosureRate: number | null; // null when there are no CAPA items yet
   avgDaysToClose: number | null; // null when nothing has closed this year
@@ -103,19 +192,47 @@ const OVERDUE_DAYS = 30;
  * that self-assessment actually looks for, computed from data already on
  * hand (no separate man-hours/exposure tracking exists, so this reports
  * counts and rates rather than frequency-per-man-hours).
+ *
+ * Review Frequency: Quarterly · Measurement Period: Rolling 12 Months
+ * (resolved via the shared KPI Period Service — lib/kpi-period.ts), ending
+ * on reportingDate (default: today, the live view). `openCount`/
+ * `overdueCount`/`capaClosureRate` stay live/all-time snapshots — they're
+ * operational counts ("what's open right now"), not period metrics.
  */
-export async function getIncidentKpis(companyId: string): Promise<IncidentKpis> {
-  const yearStart = new Date(new Date().getFullYear(), 0, 1);
+export async function getIncidentKpis(
+  companyId: string,
+  reportingDate: Date = startOfToday(),
+  vesselId?: string,
+): Promise<IncidentKpis> {
+  const today = startOfToday();
+  const asOf = reportingDate < today ? reportingDate : today;
+  const period = getKpiPeriod({ measurementPeriod: "ROLLING_12", reportingDate: asOf });
 
-  const [all, injuryEntriesYtd, capaRows] = await Promise.all([
+  const [inPeriod, open, injuryEntriesInPeriod, capaRows] = await Promise.all([
+    // Bounded to the rolling-12 window at the DB level — this used to fetch
+    // every incident the company has ever had and filter in JS, which grows
+    // unbounded with fleet history instead of with the (fixed-size) window.
     prisma.incident.findMany({
-      where: { companyId, deletedAt: null },
+      where: { companyId, deletedAt: null, ...(vesselId ? { vesselId } : {}), occurredAt: { gte: period.periodStart, lte: period.periodEnd } },
       select: { status: true, occurredAt: true, closedAt: true },
+    }),
+    // openCount/overdueCount are an all-time operational snapshot by design
+    // (see doc comment above) — bounding this to status != CLOSED instead of
+    // fetching the whole table keeps it naturally small (open incidents
+    // don't accumulate the way total history does; they clear as they close).
+    prisma.incident.findMany({
+      where: { companyId, deletedAt: null, ...(vesselId ? { vesselId } : {}), status: { not: "CLOSED" } },
+      select: { occurredAt: true, severity: true },
     }),
     prisma.incidentTypeEntry.findMany({
       where: {
         type: "PERSONAL_INJURY",
-        incident: { companyId, deletedAt: null, occurredAt: { gte: yearStart } },
+        incident: {
+          companyId,
+          deletedAt: null,
+          ...(vesselId ? { vesselId } : {}),
+          occurredAt: { gte: period.periodStart, lte: period.periodEnd },
+        },
       },
       select: { subCategory: true },
     }),
@@ -125,41 +242,46 @@ export async function getIncidentKpis(companyId: string): Promise<IncidentKpis> 
     }),
   ]);
 
-  const ytd = all.filter((i) => i.occurredAt >= yearStart);
-  const lti = injuryEntriesYtd.filter((t) => t.subCategory === "LTI").length;
-  const trc = injuryEntriesYtd.filter((t) =>
-    (["MTC", "RWC", "LTI", "FATALITY"] as string[]).includes(t.subCategory),
-  ).length;
-  const fatalities = injuryEntriesYtd.filter((t) => t.subCategory === "FATALITY").length;
+  const lti = injuryEntriesInPeriod.filter((t) => LTI_CODES.has(t.subCategory)).length;
+  const trc = injuryEntriesInPeriod.filter((t) => TRC_CODES.has(t.subCategory)).length;
+  const fatalities = injuryEntriesInPeriod.filter((t) => t.subCategory === "FAT").length;
 
-  const open = all.filter((i) => i.status !== "CLOSED");
   const now = Date.now();
   const overdueCount = open.filter(
     (i) => now - i.occurredAt.getTime() > OVERDUE_DAYS * 24 * 60 * 60 * 1000,
   ).length;
+
+  const openBySeverity = {
+    low: open.filter((i) => i.severity === "LOW").length,
+    medium: open.filter((i) => i.severity === "MEDIUM").length,
+    high: open.filter((i) => i.severity === "HIGH").length,
+    critical: open.filter((i) => i.severity === "CRITICAL").length,
+    unspecified: open.filter((i) => i.severity === null).length,
+  };
 
   const capaClosureRate =
     capaRows.length > 0
       ? Math.round((capaRows.filter((c) => c.status === "CLOSED").length / capaRows.length) * 100)
       : null;
 
-  const closedYtd = ytd.filter(
+  const closedInPeriod = inPeriod.filter(
     (i): i is typeof i & { closedAt: Date } => i.status === "CLOSED" && i.closedAt !== null,
   );
   const avgDaysToClose =
-    closedYtd.length > 0
+    closedInPeriod.length > 0
       ? Math.round(
-          closedYtd.reduce((sum, i) => sum + (i.closedAt.getTime() - i.occurredAt.getTime()) / 86_400_000, 0) /
-            closedYtd.length,
+          closedInPeriod.reduce((sum, i) => sum + (i.closedAt.getTime() - i.occurredAt.getTime()) / 86_400_000, 0) /
+            closedInPeriod.length,
         )
       : null;
 
   return {
-    totalYtd: ytd.length,
+    totalYtd: inPeriod.length,
     lti,
     trc,
     fatalities,
     openCount: open.length,
+    openBySeverity,
     overdueCount,
     capaClosureRate,
     avgDaysToClose,
@@ -192,9 +314,19 @@ export const REPEAT_THRESHOLD = 2;
  * overview, the sub-category drill-down is where a specific recurring cause
  * (e.g. "Equipment failure" showing up 3 times) actually surfaces.
  */
-export async function getIncidentRootCauseTrends(companyId: string): Promise<RootCauseCategoryTrend[]> {
+export async function getIncidentRootCauseTrends(
+  companyId: string,
+  range?: { from: Date; to: Date },
+  vesselId?: string,
+): Promise<RootCauseCategoryTrend[]> {
   const rows = await prisma.incident.findMany({
-    where: { companyId, deletedAt: null, rootCauseCategory: { not: null } },
+    where: {
+      companyId,
+      deletedAt: null,
+      rootCauseCategory: { not: null },
+      ...(vesselId ? { vesselId } : {}),
+      ...(range ? { occurredAt: { gte: range.from, lte: range.to } } : {}),
+    },
     select: { rootCauseCategory: true, rootCauseSubCategory: true },
   });
 
@@ -243,9 +375,20 @@ export type IncidentTypeCategoryTrend = {
  * dominate the log, and which specific sub-category within each is driving
  * that count, the other half of the trend picture alongside root cause.
  */
-export async function getIncidentTypeTrends(companyId: string): Promise<IncidentTypeCategoryTrend[]> {
+export async function getIncidentTypeTrends(
+  companyId: string,
+  range?: { from: Date; to: Date },
+  vesselId?: string,
+): Promise<IncidentTypeCategoryTrend[]> {
   const rows = await prisma.incidentTypeEntry.findMany({
-    where: { incident: { companyId, deletedAt: null } },
+    where: {
+      incident: {
+        companyId,
+        deletedAt: null,
+        ...(vesselId ? { vesselId } : {}),
+        ...(range ? { occurredAt: { gte: range.from, lte: range.to } } : {}),
+      },
+    },
     select: { type: true, subCategory: true },
   });
 

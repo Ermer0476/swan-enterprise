@@ -8,6 +8,8 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input, Select } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Pager } from "@/components/ui/pager";
+import { readPage } from "@/lib/pagination";
 import { formatDate, humanize, severityTone } from "@/lib/utils";
 import { ncrStatusTone } from "@/features/non-conformities/ui";
 import type { NcrStatus, NcrSource } from "@/lib/generated/prisma";
@@ -19,11 +21,18 @@ export default async function NcrPage({
 }) {
   const user = await requirePermission("ncr:read");
   const sp = await searchParams;
-  const rows = await listNcrs(user.companyId, {
-    search: sp.q || undefined,
-    status: (sp.status as NcrStatus) || undefined,
-    source: (sp.source as NcrSource) || undefined,
-  });
+  const { rows, total, page, totalPages } = await listNcrs(
+    user.companyId,
+    {
+      search: sp.q || undefined,
+      status: (sp.status as NcrStatus) || undefined,
+      source: (sp.source as NcrSource) || undefined,
+    },
+    user.department === "SHIPBOARD",
+    user.id,
+    user.vesselId,
+    readPage(sp),
+  );
   const canCreate = can(user, "ncr:create");
 
   return (
@@ -46,7 +55,9 @@ export default async function NcrPage({
         </div>
         <Select name="status" defaultValue={sp.status ?? ""} className="w-40">
           <option value="">All statuses</option>
-          {NCR_STATUSES.map((s) => <option key={s} value={s}>{humanize(s)}</option>)}
+          {NCR_STATUSES.filter((s) => s !== "DRAFT" || canCreate).map((s) => (
+            <option key={s} value={s}>{humanize(s)}</option>
+          ))}
         </Select>
         <Select name="source" defaultValue={sp.source ?? ""} className="w-44">
           <option value="">Any source</option>
@@ -82,7 +93,7 @@ export default async function NcrPage({
                 {rows.map((r) => (
                   <tr key={r.id} className="border-b border-border last:border-0 hover:bg-muted/30">
                     <td className="px-4 py-2.5 font-mono text-xs">
-                      <Link href={`/non-conformities/${r.id}`} className="text-accent hover:underline">{r.refNo}</Link>
+                      <Link href={`/non-conformities/${r.id}`} className="text-accent hover:underline">{r.refNo ?? "Draft"}</Link>
                     </td>
                     <td className="px-4 py-2.5">
                       <Link href={`/non-conformities/${r.id}`} className="hover:underline">{r.title}</Link>
@@ -97,6 +108,7 @@ export default async function NcrPage({
               </tbody>
             </table>
           </div>
+          <Pager page={page} totalPages={totalPages} total={total} basePath="/non-conformities" searchParams={sp} />
         </Card>
       )}
     </>

@@ -44,7 +44,6 @@ export default async function RiskAssessmentsPage({
     refNo: r.refNo,
     title: r.title,
     category: r.category,
-    vesselName: r.vessel?.name ?? null,
     status: r.status,
     riskLevel: r.currentRevision ? overallRiskBand(r.currentRevision.hazardRows) : null,
     nextReviewDate: r.nextReviewDate ? r.nextReviewDate.toISOString() : null,
@@ -145,8 +144,8 @@ export default async function RiskAssessmentsPage({
               <ul className="divide-y divide-border">
                 {mostUsed.map((d) => (
                   <li key={d.id} className="flex items-center justify-between py-1.5 text-sm">
-                    <Link href={`/risk/${d.id}`} className="hover:underline">
-                      <span className="font-mono text-xs text-muted-foreground">{d.refNo}</span> {d.title}
+                    <Link href={`/risk/${d.id}`} className="text-accent hover:underline">
+                      {d.refNo} <span className="text-muted-foreground">— {d.title}</span>
                     </Link>
                     <span className="whitespace-nowrap text-xs text-muted-foreground">
                       {d.totalUses} uses · {d.lastUsedAt ? formatDate(d.lastUsedAt) : "—"}
@@ -169,8 +168,8 @@ export default async function RiskAssessmentsPage({
               <ul className="divide-y divide-border">
                 {neverUsed.map((d) => (
                   <li key={d.id} className="flex items-center justify-between py-1.5 text-sm">
-                    <Link href={`/risk/${d.id}`} className="hover:underline">
-                      <span className="font-mono text-xs text-muted-foreground">{d.refNo}</span> {d.title}
+                    <Link href={`/risk/${d.id}`} className="text-accent hover:underline">
+                      {d.refNo} <span className="text-muted-foreground">— {d.title}</span>
                     </Link>
                     <span className="whitespace-nowrap text-xs text-muted-foreground">
                       Since {formatDate(d.updatedAt)}

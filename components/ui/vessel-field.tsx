@@ -16,6 +16,8 @@ export function VesselField({
   blankLabel = "— Shore / N/A —",
   required = false,
   label = "Vessel",
+  defaultValue = "",
+  onChange,
 }: {
   vessels: { id: string; name: string }[];
   isShipboard: boolean;
@@ -25,6 +27,13 @@ export function VesselField({
   blankLabel?: string;
   required?: boolean;
   label?: string;
+  /** Pre-selects a vessel in the office dropdown — e.g. carrying forward
+   * whichever vessel the user was already filtered to on the list page. */
+  defaultValue?: string;
+  /** Fires with the newly selected vessel id (office only — shipboard's
+   * vessel is fixed) — used when something else on the page needs to react
+   * to which vessel is selected, e.g. a vessel-specific dropdown list. */
+  onChange?: (vesselId: string) => void;
 }) {
   if (isShipboard) {
     return (
@@ -41,7 +50,13 @@ export function VesselField({
   return (
     <div className="space-y-1.5">
       <Label htmlFor="vesselId">{label}</Label>
-      <Select id="vesselId" name="vesselId" defaultValue="" required={required}>
+      <Select
+        id="vesselId"
+        name="vesselId"
+        defaultValue={defaultValue}
+        required={required}
+        onChange={onChange ? (e) => onChange(e.target.value) : undefined}
+      >
         <option value="" disabled={required}>{blankLabel}</option>
         {vessels.map((v) => (
           <option key={v.id} value={v.id}>{v.name}</option>

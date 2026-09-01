@@ -17,7 +17,7 @@ export type NearMissRowView = {
   occurredAt: string; // ISO
   status: string;
   statusLabel: string;
-  statusTone: "success" | "warning" | "accent" | "neutral";
+  statusTone: "success" | "warning" | "accent" | "danger";
 };
 
 function kindTone(k: string) {

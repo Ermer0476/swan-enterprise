@@ -12,6 +12,7 @@ import { COMMITTEE_TYPE_LABELS, type CommitteeTypeValue } from "@/features/commi
 import { AutoGrowInput, Input, Label, Textarea } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { AttachmentList, type AttachmentView } from "@/components/attachments/attachment-list";
+import { formatDate } from "@/lib/utils";
 
 type MeetingHeader = {
   id: string;
@@ -23,8 +24,15 @@ type MeetingHeader = {
   members: string | null;
   inAttendance: string | null;
   forAcknowledgement: string | null;
-  vesselRemarks: string | null;
+};
+
+type RemarksAuthor = { fullName: string; rank: string | null };
+
+type TypeRemarksView = {
+  committeeType: CommitteeTypeValue;
   shoreRemarks: string | null;
+  updatedByUser?: RemarksAuthor | null;
+  updatedAt?: string | null;
 };
 
 type AgendaItemView = {
@@ -34,8 +42,18 @@ type AgendaItemView = {
   code: string | null;
   label: string;
   details: string | null;
-  shoreComments: string | null;
 };
+
+function attributionCaption(author: RemarksAuthor | null | undefined, at: string | null | undefined) {
+  if (!author) return null;
+  return (
+    <p className="text-xs text-muted-foreground">
+      — {author.fullName}
+      {author.rank ? `, ${author.rank}` : ""}
+      {at ? ` · ${formatDate(at)}` : ""}
+    </p>
+  );
+}
 
 type NewTopic = { key: string; label: string; details: string };
 
@@ -45,6 +63,7 @@ function textOrEmpty(v: string | null): string {
 
 export function MeetingEditForm({
   meeting,
+  typeRemarks,
   agendaItems,
   shipEditable,
   officeEditable,
@@ -53,6 +72,9 @@ export function MeetingEditForm({
   attachments,
 }: {
   meeting: MeetingHeader;
+  /** One overall office reply per committee type actually present in this
+   * meeting — a combined Safety + Health & Hygiene meeting gets two. */
+  typeRemarks: TypeRemarksView[];
   agendaItems: AgendaItemView[];
   /** Ship's own fields — position/date/agenda details/etc. — only while status = DRAFT. */
   shipEditable: boolean;
@@ -73,8 +95,6 @@ export function MeetingEditForm({
     members: textOrEmpty(meeting.members),
     inAttendance: textOrEmpty(meeting.inAttendance),
     forAcknowledgement: textOrEmpty(meeting.forAcknowledgement),
-    vesselRemarks: textOrEmpty(meeting.vesselRemarks),
-    shoreRemarks: textOrEmpty(meeting.shoreRemarks),
   });
   const baseHeader = {
     position: textOrEmpty(meeting.position),
@@ -85,18 +105,22 @@ export function MeetingEditForm({
     members: textOrEmpty(meeting.members),
     inAttendance: textOrEmpty(meeting.inAttendance),
     forAcknowledgement: textOrEmpty(meeting.forAcknowledgement),
-    vesselRemarks: textOrEmpty(meeting.vesselRemarks),
-    shoreRemarks: textOrEmpty(meeting.shoreRemarks),
   };
 
-  const [agendaEdits, setAgendaEdits] = useState<Record<string, { details: string; shoreComments: string }>>(
-    Object.fromEntries(
-      agendaItems.map((a) => [a.id, { details: textOrEmpty(a.details), shoreComments: textOrEmpty(a.shoreComments) }]),
-    ),
+  const [agendaEdits, setAgendaEdits] = useState<Record<string, { details: string }>>(
+    Object.fromEntries(agendaItems.map((a) => [a.id, { details: textOrEmpty(a.details) }])),
   );
-  const baseAgenda = Object.fromEntries(
-    agendaItems.map((a) => [a.id, { details: textOrEmpty(a.details), shoreComments: textOrEmpty(a.shoreComments) }]),
+  const baseAgenda = Object.fromEntries(agendaItems.map((a) => [a.id, { details: textOrEmpty(a.details) }]));
+
+  const [typeRemarksState, setTypeRemarksState] = useState<Record<string, string>>(
+    Object.fromEntries(typeRemarks.map((r) => [r.committeeType, textOrEmpty(r.shoreRemarks)])),
   );
+  const baseTypeRemarks: Record<string, string> = Object.fromEntries(
+    typeRemarks.map((r) => [r.committeeType, textOrEmpty(r.shoreRemarks)]),
+  );
+  function setTypeRemark(type: CommitteeTypeValue, value: string) {
+    setTypeRemarksState((prev) => ({ ...prev, [type]: value }));
+  }
 
   const [newTopics, setNewTopics] = useState<NewTopic[]>([]);
   const [pending, startTransition] = useTransition();
@@ -107,11 +131,8 @@ export function MeetingEditForm({
   function setField<K extends keyof typeof header>(field: K, value: (typeof header)[K]) {
     setHeader((prev) => ({ ...prev, [field]: value }));
   }
-  function setAgendaField(id: string, field: "details" | "shoreComments", value: string) {
-    setAgendaEdits((prev) => ({
-      ...prev,
-      [id]: { ...(prev[id] ?? { details: "", shoreComments: "" }), [field]: value },
-    }));
+  function setAgendaField(id: string, value: string) {
+    setAgendaEdits((prev) => ({ ...prev, [id]: { details: value } }));
   }
   function addTopic() {
     setNewTopics((prev) => [...prev, { key: crypto.randomUUID(), label: "", details: "" }]);
@@ -123,14 +144,31 @@ export function MeetingEditForm({
     setNewTopics((prev) => prev.map((t) => (t.key === key ? { ...t, [field]: value } : t)));
   }
 
+  const grouped = new Map<CommitteeTypeValue, AgendaItemView[]>();
+  for (const a of agendaItems) {
+    const list = grouped.get(a.committeeType) ?? [];
+    list.push(a);
+    grouped.set(a.committeeType, list);
+  }
+  const meetingTypes = Array.from(grouped.keys());
+
   const isDirty = shipEditable
-    ? JSON.stringify({ ...header, shoreRemarks: undefined }) !== JSON.stringify({ ...baseHeader, shoreRemarks: undefined }) ||
+    ? JSON.stringify(header) !== JSON.stringify(baseHeader) ||
       Object.keys(agendaEdits).some((id) => agendaEdits[id]?.details !== baseAgenda[id]?.details) ||
       newTopics.some((t) => t.label.trim() !== "")
     : officeEditable
-      ? header.shoreRemarks !== baseHeader.shoreRemarks ||
-        Object.keys(agendaEdits).some((id) => agendaEdits[id]?.shoreComments !== baseAgenda[id]?.shoreComments)
+      ? meetingTypes.some((t) => (typeRemarksState[t] ?? "") !== (baseTypeRemarks[t] ?? ""))
       : false;
+
+  function buildOfficeReviewFormData(): FormData {
+    const fd = new FormData();
+    fd.set("meetingId", meeting.id);
+    for (const t of meetingTypes) {
+      fd.append("typeRemarksType", t);
+      fd.append("typeRemarksText", typeRemarksState[t] ?? "");
+    }
+    return fd;
+  }
 
   function save() {
     setError(null);
@@ -144,7 +182,6 @@ export function MeetingEditForm({
       fd.set("members", header.members);
       fd.set("inAttendance", header.inAttendance);
       fd.set("forAcknowledgement", header.forAcknowledgement);
-      fd.set("vesselRemarks", header.vesselRemarks);
       for (const a of agendaItems) {
         fd.append("agendaId", a.id);
         fd.append("agendaCommitteeType", a.committeeType);
@@ -166,13 +203,7 @@ export function MeetingEditForm({
         else setNewTopics([]);
       });
     } else if (officeEditable) {
-      const fd = new FormData();
-      fd.set("meetingId", meeting.id);
-      fd.set("shoreRemarks", header.shoreRemarks);
-      for (const a of agendaItems) {
-        fd.append("agendaId", a.id);
-        fd.append("agendaShoreComments", agendaEdits[a.id]?.shoreComments ?? "");
-      }
+      const fd = buildOfficeReviewFormData();
       startTransition(async () => {
         const res = await saveOfficeReviewMeetingAction({ ok: false, error: null }, fd);
         if (!res.ok) setError(res.error);
@@ -185,13 +216,7 @@ export function MeetingEditForm({
    * having been clicked first. */
   function closeOut() {
     setError(null);
-    const fd = new FormData();
-    fd.set("meetingId", meeting.id);
-    fd.set("shoreRemarks", header.shoreRemarks);
-    for (const a of agendaItems) {
-      fd.append("agendaId", a.id);
-      fd.append("agendaShoreComments", agendaEdits[a.id]?.shoreComments ?? "");
-    }
+    const fd = buildOfficeReviewFormData();
     startClosing(async () => {
       const res = await closeMeetingAction({ ok: false, error: null }, fd);
       if (!res.ok) setError(res.error);
@@ -207,12 +232,9 @@ export function MeetingEditForm({
     });
   }
 
-  const grouped = new Map<CommitteeTypeValue, AgendaItemView[]>();
-  for (const a of agendaItems) {
-    const list = grouped.get(a.committeeType) ?? [];
-    list.push(a);
-    grouped.set(a.committeeType, list);
-  }
+  // Every type this meeting covers still needs its own remarks before the
+  // office can close it out — not just one of them.
+  const missingRemarksTypes = meetingTypes.filter((t) => !(typeRemarksState[t] ?? "").trim());
 
   return (
     <div className="space-y-6">
@@ -269,22 +291,26 @@ export function MeetingEditForm({
                     className="max-h-none"
                     value={agendaEdits[a.id]?.details ?? ""}
                     disabled={!shipEditable}
-                    onChange={(e) => setAgendaField(a.id, "details", e.target.value)}
+                    onChange={(e) => setAgendaField(a.id, e.target.value)}
                     placeholder="Discussion details…"
-                  />
-                </div>
-                <div className="space-y-1">
-                  <Label className="text-xs text-muted-foreground">Shore comments</Label>
-                  <AutoGrowInput
-                    className="max-h-none"
-                    value={agendaEdits[a.id]?.shoreComments ?? ""}
-                    disabled={!officeEditable}
-                    onChange={(e) => setAgendaField(a.id, "shoreComments", e.target.value)}
-                    placeholder="Office reply…"
                   />
                 </div>
               </div>
             ))}
+            <div className="space-y-1 border-t border-border pt-3">
+              <Label className="text-xs text-muted-foreground">Company Remarks — {COMMITTEE_TYPE_LABELS[type]}</Label>
+              <AutoGrowInput
+                className="max-h-none"
+                value={typeRemarksState[type] ?? ""}
+                disabled={!officeEditable}
+                onChange={(e) => setTypeRemark(type, e.target.value)}
+                placeholder="Office's overall reply for this committee…"
+              />
+              {attributionCaption(
+                typeRemarks.find((r) => r.committeeType === type)?.updatedByUser,
+                typeRemarks.find((r) => r.committeeType === type)?.updatedAt,
+              )}
+            </div>
           </div>
         ))}
 
@@ -317,17 +343,6 @@ export function MeetingEditForm({
         )}
       </div>
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <div className="space-y-1.5">
-          <Label htmlFor="vesselRemarks">Vessel remarks</Label>
-          <AutoGrowInput id="vesselRemarks" className="max-h-none" value={header.vesselRemarks} disabled={!shipEditable} onChange={(e) => setField("vesselRemarks", e.target.value)} />
-        </div>
-        <div className="space-y-1.5">
-          <Label htmlFor="shoreRemarks">Shore remarks</Label>
-          <AutoGrowInput id="shoreRemarks" className="max-h-none" value={header.shoreRemarks} disabled={!officeEditable} onChange={(e) => setField("shoreRemarks", e.target.value)} />
-        </div>
-      </div>
-
       <div className="space-y-1.5">
         <Label className="text-xs">Attachments</Label>
         <AttachmentList
@@ -357,13 +372,19 @@ export function MeetingEditForm({
               <Button
                 type="button"
                 onClick={closeOut}
-                disabled={closing || !header.shoreRemarks.trim()}
-                title={!header.shoreRemarks.trim() ? "Add shore remarks before closing this meeting out" : undefined}
+                disabled={closing || missingRemarksTypes.length > 0}
+                title={
+                  missingRemarksTypes.length > 0
+                    ? `Add shore remarks for ${missingRemarksTypes.map((t) => COMMITTEE_TYPE_LABELS[t]).join(", ")} before closing this meeting out`
+                    : undefined
+                }
               >
                 {closing ? "Closing…" : "Close"}
               </Button>
-              {!header.shoreRemarks.trim() && (
-                <p className="text-xs text-muted-foreground">Add shore remarks first.</p>
+              {missingRemarksTypes.length > 0 && (
+                <p className="text-xs text-muted-foreground">
+                  Add remarks for {missingRemarksTypes.map((t) => COMMITTEE_TYPE_LABELS[t]).join(", ")} first.
+                </p>
               )}
             </div>
           )}

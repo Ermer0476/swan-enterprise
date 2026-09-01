@@ -27,3 +27,12 @@ export function reviewStatusTone(nextReviewDate: Date | null): { label: string; 
   if (nextReviewDate <= soon) return { label: "Due Soon", tone: "warning" };
   return { label: "Current", tone: "success" };
 }
+
+/** RaFeedbackDisposition → badge tone, for the Vessel Feedback screen. */
+export function dispositionTone(disposition: string | null): Tone {
+  if (disposition === "ADDED_TO_TEMPLATE") return "success";
+  if (disposition === "ALREADY_COVERED") return "neutral";
+  if (disposition === "FURTHER_REVIEW_REQUIRED") return "warning";
+  if (disposition === "NOT_ADDED") return LIFECYCLE_TONE.CLOSED;
+  return "neutral"; // no decision yet
+}

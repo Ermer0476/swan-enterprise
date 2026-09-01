@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { requirePermission } from "@/lib/rbac";
 import { writeAudit } from "@/lib/audit";
+import { allocateRefNo } from "@/lib/ref-sequence";
 import type { ControlledDocStatus } from "@/lib/generated/prisma";
 import { createDocumentSchema, DOCUMENT_STATUSES } from "./schema";
 
@@ -17,13 +18,9 @@ function nextStatus(current: ControlledDocStatus): ControlledDocStatus | null {
   return (DOCUMENT_STATUSES[i + 1] as ControlledDocStatus | undefined) ?? null;
 }
 
-async function nextDocNumber(companyId: string): Promise<string> {
+async function nextDocNumber(companyId: string, vesselCode: string | null): Promise<string> {
   const year = new Date().getFullYear();
-  const prefix = `DOC-${year}-`;
-  const count = await prisma.controlledDocument.count({
-    where: { companyId, docNumber: { startsWith: prefix } },
-  });
-  return `${prefix}${String(count + 1).padStart(4, "0")}`;
+  return allocateRefNo(companyId, vesselCode ? `${vesselCode}-DOC-${year}` : `DOC-${year}`);
 }
 
 export async function createDocumentAction(
@@ -44,10 +41,20 @@ export async function createDocumentAction(
   if (!parsed.success) return fail(parsed.error.issues[0]?.message ?? "Invalid input");
   const d = parsed.data;
 
+  let vesselCode: string | null = null;
+  if (d.vesselId) {
+    const vessel = await prisma.vessel.findFirst({
+      where: { id: d.vesselId, companyId: user.companyId },
+      select: { code: true },
+    });
+    if (!vessel) return fail("Vessel not found");
+    vesselCode = vessel.code;
+  }
+
   const doc = await prisma.controlledDocument.create({
     data: {
       companyId: user.companyId,
-      docNumber: await nextDocNumber(user.companyId),
+      docNumber: await nextDocNumber(user.companyId, vesselCode),
       title: d.title,
       vesselId: d.vesselId || null,
       category: d.category,

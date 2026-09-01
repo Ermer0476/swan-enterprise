@@ -48,7 +48,7 @@ export function AddRevisionForm({
 
   if (!showForm) {
     return (
-      <Button onClick={() => setShowForm(true)}>
+      <Button variant="accent" className="w-56" onClick={() => setShowForm(true)}>
         <Pencil className="h-4 w-4" /> Edit Risk Assessment
       </Button>
     );
@@ -58,7 +58,7 @@ export function AddRevisionForm({
     <form
       ref={formRef}
       action={formAction}
-      className="space-y-4 rounded-md border border-border bg-card p-4"
+      className="w-full space-y-4 rounded-md border border-border bg-card p-4"
     >
       <div className="text-sm font-medium">Edit Risk Assessment — this opens a new draft revision</div>
       <input type="hidden" name="documentId" value={documentId} />

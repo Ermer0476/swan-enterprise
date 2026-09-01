@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { VESSEL_FLAGS } from "@/lib/vessel-flags";
 
 export const VESSEL_STATUSES = ["ACTIVE", "LAID_UP", "DRYDOCK", "SOLD"] as const;
 
@@ -26,22 +27,25 @@ const optionalDate = z.preprocess(blankToUndefined, z.coerce.date().optional());
 
 export const vesselSchema = z.object({
   name: z.string().trim().min(2, "Vessel name is required").max(200),
-  // Short fleet code (e.g. "SWA") prefixed onto this vessel's NCR numbers —
-  // uppercased so "swa" and "SWA" aren't treated as different codes.
+  // Short fleet code (e.g. "SWA") prefixed onto every ref number this
+  // vessel raises (SWA-DR-2026-0001, SWA-NCR-2026-0001, ...) — uppercased
+  // so "swa" and "SWA" aren't treated as different codes. Mandatory: a
+  // vessel can't be saved without one, since every report type needs it.
   code: z
     .string()
     .trim()
     .toUpperCase()
-    .regex(/^[A-Z0-9]{2,6}$/, "Code must be 2-6 letters/numbers")
-    .optional()
-    .or(z.literal("")),
+    .regex(/^[A-Z0-9]{2,6}$/, "Code is required — 2-6 letters/numbers"),
   // Optional — real-fleet vessels can be added before their IMO is on file
   // and filled in later, but if given it must be a valid 7-digit number.
   imo: z.string().trim().regex(/^\d{7}$/, "IMO number must be 7 digits").optional().or(z.literal("")),
   officialNumber: optionalText(50),
   callSign: optionalText(20),
   mmsi: z.string().trim().regex(/^\d{9}$/, "MMSI must be 9 digits").optional().or(z.literal("")),
-  flag: optionalText(100),
+  // Locked to a fixed list (not free text) so the Flag Drill Schedule
+  // module can match a vessel to its flag's required drill set by exact
+  // string equality — see lib/vessel-flags.ts.
+  flag: z.enum(VESSEL_FLAGS).optional().or(z.literal("")),
   type: z.string().trim().min(1, "Type of ship is required").max(100),
   classificationSociety: optionalText(100),
   yearBuilt: optionalYear,
@@ -50,6 +54,11 @@ export const vesselSchema = z.object({
   breadth: optionalNumber,
   depth: optionalNumber,
   status: z.enum(VESSEL_STATUSES),
+  // The actual date the vessel left the fleet (only meaningful when
+  // status is SOLD) — office-entered so it reflects the real sale date,
+  // not whenever someone happened to update the record. Falls back to
+  // today if left blank. Drives when Exposure Hours stops accruing.
+  archivedAt: optionalDate,
   capacityCbm: optionalNumber,
   netTonnage: optionalNumber,
   deadweight: optionalNumber,
@@ -66,6 +75,8 @@ export const vesselSchema = z.object({
   draft: optionalNumber,
   mainEngine: optionalText(200),
   serviceSpeed: optionalNumber,
+  stdFoConsumptionMt: optionalNumber,
+  stdDoConsumptionMt: optionalNumber,
   navigationArea: optionalText(100),
   classNotation: optionalText(200),
   ownerAddress: optionalText(300),

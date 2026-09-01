@@ -1,12 +1,7 @@
 import Link from "next/link";
-import { Plus, AlertTriangle } from "lucide-react";
+import { Plus, AlertTriangle, BarChart3 } from "lucide-react";
 import { requirePermission, can } from "@/lib/rbac";
-import {
-  listIncidents,
-  getIncidentKpis,
-  getIncidentRootCauseTrends,
-  getIncidentTypeTrends,
-} from "@/features/incidents/queries";
+import { listIncidents, listVesselOptions } from "@/features/incidents/queries";
 import {
   INCIDENT_STATUSES,
   INCIDENT_SEVERITIES,
@@ -17,10 +12,9 @@ import { PageHeader } from "@/components/ui/page-header";
 import { Card } from "@/components/ui/card";
 import { Input, Select } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Pager } from "@/components/ui/pager";
+import { readPage } from "@/lib/pagination";
 import { IncidentsTable } from "./incidents-table";
-import { IncidentKpiStrip } from "./incident-kpis";
-import { RootCauseTrends } from "./root-cause-trends";
-import { IncidentTypeTrends } from "./incident-type-trends";
 import type { IncidentStatus, Severity } from "@/lib/generated/prisma";
 
 export default async function IncidentsPage({
@@ -30,16 +24,23 @@ export default async function IncidentsPage({
 }) {
   const user = await requirePermission("incident:read");
   const sp = await searchParams;
+  const isShipboard = user.department === "SHIPBOARD";
 
-  const [incidents, kpis, rootCauseTrends, typeTrends] = await Promise.all([
-    listIncidents(user.companyId, {
-      search: sp.q || undefined,
-      status: (sp.status as IncidentStatus) || undefined,
-      severity: (sp.severity as Severity) || undefined,
-    }),
-    getIncidentKpis(user.companyId),
-    getIncidentRootCauseTrends(user.companyId),
-    getIncidentTypeTrends(user.companyId),
+  const [{ rows: incidents, total, page, totalPages }, vessels] = await Promise.all([
+    listIncidents(
+      user.companyId,
+      {
+        search: sp.q || undefined,
+        status: (sp.status as IncidentStatus) || undefined,
+        severity: (sp.severity as Severity) || undefined,
+        vesselId: sp.vesselId || undefined,
+      },
+      isShipboard,
+      user.id,
+      user.vesselId,
+      readPage(sp),
+    ),
+    isShipboard ? Promise.resolve([]) : listVesselOptions(user.companyId),
   ]);
   const canCreate = can(user, "incident:create");
 
@@ -50,20 +51,19 @@ export default async function IncidentsPage({
         description="Report, investigate and close incidents with root-cause and CAPA tracking."
         actions={
           canCreate ? (
-            <Link href="/incidents/new">
-              <Button>
-                <Plus className="h-4 w-4" /> Report Incident
-              </Button>
-            </Link>
+            <div className="flex items-center gap-2">
+              <Link href="/incidents/kpi">
+                <Button variant="warning"><BarChart3 className="h-4 w-4" /> Incident KPIs</Button>
+              </Link>
+              <Link href="/incidents/new">
+                <Button>
+                  <Plus className="h-4 w-4" /> Report Incident
+                </Button>
+              </Link>
+            </div>
           ) : undefined
         }
       />
-
-      <IncidentKpiStrip kpis={kpis} />
-      <div className="mb-6 grid grid-cols-1 gap-4 md:grid-cols-2">
-        <RootCauseTrends rows={rootCauseTrends} />
-        <IncidentTypeTrends rows={typeTrends} />
-      </div>
 
       <form className="mb-4 flex flex-wrap items-end gap-2">
         <div className="min-w-52 flex-1">
@@ -75,7 +75,7 @@ export default async function IncidentsPage({
         </div>
         <Select name="status" defaultValue={sp.status ?? ""} className="w-48">
           <option value="">All statuses</option>
-          {INCIDENT_STATUSES.map((s) => (
+          {INCIDENT_STATUSES.filter((s) => s !== "DRAFT" || canCreate).map((s) => (
             <option key={s} value={s}>
               {humanize(s)}
             </option>
@@ -89,6 +89,16 @@ export default async function IncidentsPage({
             </option>
           ))}
         </Select>
+        {!isShipboard && (
+          <Select name="vesselId" defaultValue={sp.vesselId ?? ""} className="w-48">
+            <option value="">All vessels</option>
+            {vessels.map((v) => (
+              <option key={v.id} value={v.id}>
+                {v.name}
+              </option>
+            ))}
+          </Select>
+        )}
         <Button type="submit" variant="outline">
           Filter
         </Button>
@@ -117,9 +127,12 @@ export default async function IncidentsPage({
                 severity: inc.severity,
                 occurredAt: inc.occurredAt.toISOString(),
                 status: inc.status,
+                capaClosed: inc.capaClosed,
+                capaTotal: inc.capaTotal,
               }))}
             />
           </div>
+          <Pager page={page} totalPages={totalPages} total={total} basePath="/incidents" searchParams={sp} />
         </Card>
       )}
     </>
