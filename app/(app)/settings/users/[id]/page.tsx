@@ -17,11 +17,67 @@ import {
 } from "@/features/users/derive";
 import { PageHeader } from "@/components/ui/page-header";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
 import { UserForm } from "@/components/users/user-form";
-import { formatDate, humanize } from "@/lib/utils";
+import { cn, formatDate, humanize } from "@/lib/utils";
 import { UserActiveActions } from "./user-active-actions";
 import { SignOutEverywhereAction } from "./sign-out-everywhere-action";
+
+type DetailRow = { label: string; value: string };
+
+/**
+ * A read-only, collapsible detail group. Native <details>/<summary> — no
+ * client JS — with the disclosure marker replaced by a chevron that rotates
+ * when open (animation off under prefers-reduced-motion). Renders nothing
+ * when the group has no populated rows, keeping empty sections out of view.
+ */
+function DetailSection({
+  title,
+  rows,
+  defaultOpen = false,
+}: {
+  title: string;
+  rows: DetailRow[];
+  defaultOpen?: boolean;
+}) {
+  if (rows.length === 0) return null;
+  return (
+    <details
+      open={defaultOpen}
+      className={cn(
+        "rounded-lg border border-border bg-card text-card-foreground shadow-sm",
+        "[&[open]_.detail-chevron]:rotate-180",
+      )}
+    >
+      <summary className="flex cursor-pointer list-none items-center justify-between gap-3 rounded-lg px-5 py-4 hover:bg-muted/40 [&::-webkit-details-marker]:hidden">
+        <span className="text-sm font-semibold text-foreground">{title}</span>
+        <svg
+          viewBox="0 0 20 20"
+          fill="none"
+          aria-hidden="true"
+          className="detail-chevron h-4 w-4 shrink-0 text-muted-foreground transition-transform motion-reduce:transition-none"
+        >
+          <path
+            d="M6 8l4 4 4-4"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      </summary>
+      <div className="border-t border-border px-5 py-4">
+        <dl className="grid grid-cols-1 gap-x-6 gap-y-2 sm:grid-cols-2">
+          {rows.map((row) => (
+            <div key={row.label} className="flex justify-between gap-4 text-sm">
+              <dt className="text-muted-foreground">{row.label}</dt>
+              <dd className="text-right font-medium text-foreground">{row.value}</dd>
+            </div>
+          ))}
+        </dl>
+      </div>
+    </details>
+  );
+}
 
 export default async function EditUserPage({
   params,
@@ -59,39 +115,67 @@ export default async function EditUserPage({
 
   const isSelf = target.id === actor.id;
 
-  // Read-only Employee Masterlist summary. Age and years of service are
-  // DERIVED at render time from the stored dates (nothing is persisted), and
-  // the government IDs are shown as presence only — never the raw number — so
-  // this profile view mirrors what the audit log records. Only fields that
-  // have a value are listed, to keep the panel from becoming a wall of "—".
-  const masterlistRows: { label: string; value: string }[] = [];
-  const addRow = (label: string, value: string | null | undefined) => {
-    if (value) masterlistRows.push({ label, value });
+  // Read-only detail summary, grouped the same way the edit form is (Account,
+  // Personal / Masterlist, Government IDs, Crew / Vessel). Age and years of
+  // service are DERIVED at render time from the stored dates (nothing is
+  // persisted), and the government IDs are shown as presence only — never the
+  // raw number — so this profile view mirrors what the audit log records.
+  // Only fields that have a value are listed, to keep each section from
+  // becoming a wall of "—"; an empty section renders nothing.
+  const push = (
+    rows: DetailRow[],
+    label: string,
+    value: string | null | undefined,
+  ) => {
+    if (value) rows.push({ label, value });
   };
-  addRow("Last name", target.lastName);
-  addRow("First name", target.firstName);
-  addRow("Middle name", target.middleName);
-  addRow("Initials", target.initials);
-  addRow("Gender", target.gender);
-  addRow("Employment status", target.employmentStatus);
-  addRow("Designation", target.designation);
-  addRow(
+
+  const accountRows: DetailRow[] = [];
+  push(accountRows, "Email", target.email);
+  push(accountRows, "Department", humanize(target.department));
+  push(accountRows, "Rank / position", target.rank);
+  push(accountRows, "Employee / Shore ID", target.employeeId);
+  push(accountRows, "Access level", target.accessLevel?.name);
+  push(accountRows, "Department (Ship / Shore)", target.departmentRef?.name);
+  push(
+    accountRows,
+    "System accesses",
+    target.roles.map((r) => r.role.name).join(", ") || null,
+  );
+
+  const personalRows: DetailRow[] = [];
+  push(personalRows, "Last name", target.lastName);
+  push(personalRows, "First name", target.firstName);
+  push(personalRows, "Middle name", target.middleName);
+  push(personalRows, "Initials", target.initials);
+  push(personalRows, "Gender", target.gender);
+  push(personalRows, "Employment status", target.employmentStatus);
+  push(personalRows, "Designation", target.designation);
+  push(
+    personalRows,
     "Date of birth",
     target.birthDate
       ? `${formatDate(target.birthDate)} · ${ageFromBirthDate(target.birthDate)} yrs old`
       : null,
   );
-  addRow(
+  push(
+    personalRows,
     "Date hired",
     target.dateHired
       ? `${formatDate(target.dateHired)} · ${yearsOfServiceFromDateHired(target.dateHired)} yrs of service`
       : null,
   );
-  addRow("Official address", target.officialAddress);
-  addRow("TIN", target.tin ? "On file" : null);
-  addRow("SSS", target.sss ? "On file" : null);
-  addRow("HDMF (Pag-IBIG)", target.hdmf ? "On file" : null);
-  addRow("PhilHealth", target.philHealth ? "On file" : null);
+  push(personalRows, "Official address", target.officialAddress);
+
+  const govRows: DetailRow[] = [];
+  push(govRows, "TIN", target.tin ? "On file" : null);
+  push(govRows, "SSS", target.sss ? "On file" : null);
+  push(govRows, "HDMF (Pag-IBIG)", target.hdmf ? "On file" : null);
+  push(govRows, "PhilHealth", target.philHealth ? "On file" : null);
+
+  const crewRows: DetailRow[] = [];
+  push(crewRows, "Crew ID", target.crewId);
+  push(crewRows, "Vessel", target.vessel?.name);
 
   return (
     <div className="mx-auto max-w-4xl">
@@ -127,23 +211,12 @@ export default async function EditUserPage({
         }
       />
 
-      {masterlistRows.length > 0 && (
-        <Card className="mb-5">
-          <CardContent className="pt-5">
-            <h2 className="mb-3 text-sm font-semibold text-foreground">
-              Employee Masterlist
-            </h2>
-            <dl className="grid grid-cols-1 gap-x-6 gap-y-2 sm:grid-cols-2">
-              {masterlistRows.map((row) => (
-                <div key={row.label} className="flex justify-between gap-4 text-sm">
-                  <dt className="text-muted-foreground">{row.label}</dt>
-                  <dd className="text-right font-medium text-foreground">{row.value}</dd>
-                </div>
-              ))}
-            </dl>
-          </CardContent>
-        </Card>
-      )}
+      <div className="mb-5 space-y-3">
+        <DetailSection title="Account" rows={accountRows} defaultOpen />
+        <DetailSection title="Personal / Masterlist" rows={personalRows} />
+        <DetailSection title="Government IDs" rows={govRows} />
+        <DetailSection title="Crew / Vessel" rows={crewRows} />
+      </div>
 
       <UserForm
         action={updateUserAction}
