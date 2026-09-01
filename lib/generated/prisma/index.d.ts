@@ -13866,6 +13866,20 @@ export namespace Prisma {
     lastLoginAt: Date | null
     employeeId: string | null
     crewId: string | null
+    lastName: string | null
+    firstName: string | null
+    middleName: string | null
+    initials: string | null
+    gender: string | null
+    employmentStatus: string | null
+    designation: string | null
+    birthDate: Date | null
+    dateHired: Date | null
+    officialAddress: string | null
+    tin: string | null
+    sss: string | null
+    hdmf: string | null
+    philHealth: string | null
     mustChangePassword: boolean | null
     sessionsValidFrom: Date | null
     vesselId: string | null
@@ -13891,6 +13905,20 @@ export namespace Prisma {
     lastLoginAt: Date | null
     employeeId: string | null
     crewId: string | null
+    lastName: string | null
+    firstName: string | null
+    middleName: string | null
+    initials: string | null
+    gender: string | null
+    employmentStatus: string | null
+    designation: string | null
+    birthDate: Date | null
+    dateHired: Date | null
+    officialAddress: string | null
+    tin: string | null
+    sss: string | null
+    hdmf: string | null
+    philHealth: string | null
     mustChangePassword: boolean | null
     sessionsValidFrom: Date | null
     vesselId: string | null
@@ -13916,6 +13944,20 @@ export namespace Prisma {
     lastLoginAt: number
     employeeId: number
     crewId: number
+    lastName: number
+    firstName: number
+    middleName: number
+    initials: number
+    gender: number
+    employmentStatus: number
+    designation: number
+    birthDate: number
+    dateHired: number
+    officialAddress: number
+    tin: number
+    sss: number
+    hdmf: number
+    philHealth: number
     mustChangePassword: number
     sessionsValidFrom: number
     vesselId: number
@@ -13943,6 +13985,20 @@ export namespace Prisma {
     lastLoginAt?: true
     employeeId?: true
     crewId?: true
+    lastName?: true
+    firstName?: true
+    middleName?: true
+    initials?: true
+    gender?: true
+    employmentStatus?: true
+    designation?: true
+    birthDate?: true
+    dateHired?: true
+    officialAddress?: true
+    tin?: true
+    sss?: true
+    hdmf?: true
+    philHealth?: true
     mustChangePassword?: true
     sessionsValidFrom?: true
     vesselId?: true
@@ -13968,6 +14024,20 @@ export namespace Prisma {
     lastLoginAt?: true
     employeeId?: true
     crewId?: true
+    lastName?: true
+    firstName?: true
+    middleName?: true
+    initials?: true
+    gender?: true
+    employmentStatus?: true
+    designation?: true
+    birthDate?: true
+    dateHired?: true
+    officialAddress?: true
+    tin?: true
+    sss?: true
+    hdmf?: true
+    philHealth?: true
     mustChangePassword?: true
     sessionsValidFrom?: true
     vesselId?: true
@@ -13993,6 +14063,20 @@ export namespace Prisma {
     lastLoginAt?: true
     employeeId?: true
     crewId?: true
+    lastName?: true
+    firstName?: true
+    middleName?: true
+    initials?: true
+    gender?: true
+    employmentStatus?: true
+    designation?: true
+    birthDate?: true
+    dateHired?: true
+    officialAddress?: true
+    tin?: true
+    sss?: true
+    hdmf?: true
+    philHealth?: true
     mustChangePassword?: true
     sessionsValidFrom?: true
     vesselId?: true
@@ -14091,6 +14175,20 @@ export namespace Prisma {
     lastLoginAt: Date | null
     employeeId: string | null
     crewId: string | null
+    lastName: string | null
+    firstName: string | null
+    middleName: string | null
+    initials: string | null
+    gender: string | null
+    employmentStatus: string | null
+    designation: string | null
+    birthDate: Date | null
+    dateHired: Date | null
+    officialAddress: string | null
+    tin: string | null
+    sss: string | null
+    hdmf: string | null
+    philHealth: string | null
     mustChangePassword: boolean
     sessionsValidFrom: Date | null
     vesselId: string | null
@@ -14133,6 +14231,20 @@ export namespace Prisma {
     lastLoginAt?: boolean
     employeeId?: boolean
     crewId?: boolean
+    lastName?: boolean
+    firstName?: boolean
+    middleName?: boolean
+    initials?: boolean
+    gender?: boolean
+    employmentStatus?: boolean
+    designation?: boolean
+    birthDate?: boolean
+    dateHired?: boolean
+    officialAddress?: boolean
+    tin?: boolean
+    sss?: boolean
+    hdmf?: boolean
+    philHealth?: boolean
     mustChangePassword?: boolean
     sessionsValidFrom?: boolean
     vesselId?: boolean
@@ -14172,6 +14284,20 @@ export namespace Prisma {
     lastLoginAt?: boolean
     employeeId?: boolean
     crewId?: boolean
+    lastName?: boolean
+    firstName?: boolean
+    middleName?: boolean
+    initials?: boolean
+    gender?: boolean
+    employmentStatus?: boolean
+    designation?: boolean
+    birthDate?: boolean
+    dateHired?: boolean
+    officialAddress?: boolean
+    tin?: boolean
+    sss?: boolean
+    hdmf?: boolean
+    philHealth?: boolean
     mustChangePassword?: boolean
     sessionsValidFrom?: boolean
     vesselId?: boolean
@@ -14201,6 +14327,20 @@ export namespace Prisma {
     lastLoginAt?: boolean
     employeeId?: boolean
     crewId?: boolean
+    lastName?: boolean
+    firstName?: boolean
+    middleName?: boolean
+    initials?: boolean
+    gender?: boolean
+    employmentStatus?: boolean
+    designation?: boolean
+    birthDate?: boolean
+    dateHired?: boolean
+    officialAddress?: boolean
+    tin?: boolean
+    sss?: boolean
+    hdmf?: boolean
+    philHealth?: boolean
     mustChangePassword?: boolean
     sessionsValidFrom?: boolean
     vesselId?: boolean
@@ -14230,6 +14370,20 @@ export namespace Prisma {
     lastLoginAt?: boolean
     employeeId?: boolean
     crewId?: boolean
+    lastName?: boolean
+    firstName?: boolean
+    middleName?: boolean
+    initials?: boolean
+    gender?: boolean
+    employmentStatus?: boolean
+    designation?: boolean
+    birthDate?: boolean
+    dateHired?: boolean
+    officialAddress?: boolean
+    tin?: boolean
+    sss?: boolean
+    hdmf?: boolean
+    philHealth?: boolean
     mustChangePassword?: boolean
     sessionsValidFrom?: boolean
     vesselId?: boolean
@@ -14243,7 +14397,7 @@ export namespace Prisma {
     deletedBy?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "companyId" | "fullName" | "email" | "passwordHash" | "department" | "rank" | "active" | "lastLoginAt" | "employeeId" | "crewId" | "mustChangePassword" | "sessionsValidFrom" | "vesselId" | "accessLevelId" | "departmentRefId" | "createdAt" | "updatedAt" | "createdBy" | "updatedBy" | "deletedAt" | "deletedBy", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "companyId" | "fullName" | "email" | "passwordHash" | "department" | "rank" | "active" | "lastLoginAt" | "employeeId" | "crewId" | "lastName" | "firstName" | "middleName" | "initials" | "gender" | "employmentStatus" | "designation" | "birthDate" | "dateHired" | "officialAddress" | "tin" | "sss" | "hdmf" | "philHealth" | "mustChangePassword" | "sessionsValidFrom" | "vesselId" | "accessLevelId" | "departmentRefId" | "createdAt" | "updatedAt" | "createdBy" | "updatedBy" | "deletedAt" | "deletedBy", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     company?: boolean | CompanyDefaultArgs<ExtArgs>
     vessel?: boolean | User$vesselArgs<ExtArgs>
@@ -14302,6 +14456,20 @@ export namespace Prisma {
       lastLoginAt: Date | null
       employeeId: string | null
       crewId: string | null
+      lastName: string | null
+      firstName: string | null
+      middleName: string | null
+      initials: string | null
+      gender: string | null
+      employmentStatus: string | null
+      designation: string | null
+      birthDate: Date | null
+      dateHired: Date | null
+      officialAddress: string | null
+      tin: string | null
+      sss: string | null
+      hdmf: string | null
+      philHealth: string | null
       mustChangePassword: boolean
       sessionsValidFrom: Date | null
       vesselId: string | null
@@ -14760,6 +14928,20 @@ export namespace Prisma {
     readonly lastLoginAt: FieldRef<"User", 'DateTime'>
     readonly employeeId: FieldRef<"User", 'String'>
     readonly crewId: FieldRef<"User", 'String'>
+    readonly lastName: FieldRef<"User", 'String'>
+    readonly firstName: FieldRef<"User", 'String'>
+    readonly middleName: FieldRef<"User", 'String'>
+    readonly initials: FieldRef<"User", 'String'>
+    readonly gender: FieldRef<"User", 'String'>
+    readonly employmentStatus: FieldRef<"User", 'String'>
+    readonly designation: FieldRef<"User", 'String'>
+    readonly birthDate: FieldRef<"User", 'DateTime'>
+    readonly dateHired: FieldRef<"User", 'DateTime'>
+    readonly officialAddress: FieldRef<"User", 'String'>
+    readonly tin: FieldRef<"User", 'String'>
+    readonly sss: FieldRef<"User", 'String'>
+    readonly hdmf: FieldRef<"User", 'String'>
+    readonly philHealth: FieldRef<"User", 'String'>
     readonly mustChangePassword: FieldRef<"User", 'Boolean'>
     readonly sessionsValidFrom: FieldRef<"User", 'DateTime'>
     readonly vesselId: FieldRef<"User", 'String'>
@@ -115994,6 +116176,20 @@ export namespace Prisma {
     lastLoginAt: 'lastLoginAt',
     employeeId: 'employeeId',
     crewId: 'crewId',
+    lastName: 'lastName',
+    firstName: 'firstName',
+    middleName: 'middleName',
+    initials: 'initials',
+    gender: 'gender',
+    employmentStatus: 'employmentStatus',
+    designation: 'designation',
+    birthDate: 'birthDate',
+    dateHired: 'dateHired',
+    officialAddress: 'officialAddress',
+    tin: 'tin',
+    sss: 'sss',
+    hdmf: 'hdmf',
+    philHealth: 'philHealth',
     mustChangePassword: 'mustChangePassword',
     sessionsValidFrom: 'sessionsValidFrom',
     vesselId: 'vesselId',
@@ -119131,6 +119327,20 @@ export namespace Prisma {
     lastLoginAt?: DateTimeNullableFilter<"User"> | Date | string | null
     employeeId?: StringNullableFilter<"User"> | string | null
     crewId?: StringNullableFilter<"User"> | string | null
+    lastName?: StringNullableFilter<"User"> | string | null
+    firstName?: StringNullableFilter<"User"> | string | null
+    middleName?: StringNullableFilter<"User"> | string | null
+    initials?: StringNullableFilter<"User"> | string | null
+    gender?: StringNullableFilter<"User"> | string | null
+    employmentStatus?: StringNullableFilter<"User"> | string | null
+    designation?: StringNullableFilter<"User"> | string | null
+    birthDate?: DateTimeNullableFilter<"User"> | Date | string | null
+    dateHired?: DateTimeNullableFilter<"User"> | Date | string | null
+    officialAddress?: StringNullableFilter<"User"> | string | null
+    tin?: StringNullableFilter<"User"> | string | null
+    sss?: StringNullableFilter<"User"> | string | null
+    hdmf?: StringNullableFilter<"User"> | string | null
+    philHealth?: StringNullableFilter<"User"> | string | null
     mustChangePassword?: BoolFilter<"User"> | boolean
     sessionsValidFrom?: DateTimeNullableFilter<"User"> | Date | string | null
     vesselId?: StringNullableFilter<"User"> | string | null
@@ -119169,6 +119379,20 @@ export namespace Prisma {
     lastLoginAt?: SortOrderInput | SortOrder
     employeeId?: SortOrderInput | SortOrder
     crewId?: SortOrderInput | SortOrder
+    lastName?: SortOrderInput | SortOrder
+    firstName?: SortOrderInput | SortOrder
+    middleName?: SortOrderInput | SortOrder
+    initials?: SortOrderInput | SortOrder
+    gender?: SortOrderInput | SortOrder
+    employmentStatus?: SortOrderInput | SortOrder
+    designation?: SortOrderInput | SortOrder
+    birthDate?: SortOrderInput | SortOrder
+    dateHired?: SortOrderInput | SortOrder
+    officialAddress?: SortOrderInput | SortOrder
+    tin?: SortOrderInput | SortOrder
+    sss?: SortOrderInput | SortOrder
+    hdmf?: SortOrderInput | SortOrder
+    philHealth?: SortOrderInput | SortOrder
     mustChangePassword?: SortOrder
     sessionsValidFrom?: SortOrderInput | SortOrder
     vesselId?: SortOrderInput | SortOrder
@@ -119210,6 +119434,20 @@ export namespace Prisma {
     lastLoginAt?: DateTimeNullableFilter<"User"> | Date | string | null
     employeeId?: StringNullableFilter<"User"> | string | null
     crewId?: StringNullableFilter<"User"> | string | null
+    lastName?: StringNullableFilter<"User"> | string | null
+    firstName?: StringNullableFilter<"User"> | string | null
+    middleName?: StringNullableFilter<"User"> | string | null
+    initials?: StringNullableFilter<"User"> | string | null
+    gender?: StringNullableFilter<"User"> | string | null
+    employmentStatus?: StringNullableFilter<"User"> | string | null
+    designation?: StringNullableFilter<"User"> | string | null
+    birthDate?: DateTimeNullableFilter<"User"> | Date | string | null
+    dateHired?: DateTimeNullableFilter<"User"> | Date | string | null
+    officialAddress?: StringNullableFilter<"User"> | string | null
+    tin?: StringNullableFilter<"User"> | string | null
+    sss?: StringNullableFilter<"User"> | string | null
+    hdmf?: StringNullableFilter<"User"> | string | null
+    philHealth?: StringNullableFilter<"User"> | string | null
     mustChangePassword?: BoolFilter<"User"> | boolean
     sessionsValidFrom?: DateTimeNullableFilter<"User"> | Date | string | null
     vesselId?: StringNullableFilter<"User"> | string | null
@@ -119248,6 +119486,20 @@ export namespace Prisma {
     lastLoginAt?: SortOrderInput | SortOrder
     employeeId?: SortOrderInput | SortOrder
     crewId?: SortOrderInput | SortOrder
+    lastName?: SortOrderInput | SortOrder
+    firstName?: SortOrderInput | SortOrder
+    middleName?: SortOrderInput | SortOrder
+    initials?: SortOrderInput | SortOrder
+    gender?: SortOrderInput | SortOrder
+    employmentStatus?: SortOrderInput | SortOrder
+    designation?: SortOrderInput | SortOrder
+    birthDate?: SortOrderInput | SortOrder
+    dateHired?: SortOrderInput | SortOrder
+    officialAddress?: SortOrderInput | SortOrder
+    tin?: SortOrderInput | SortOrder
+    sss?: SortOrderInput | SortOrder
+    hdmf?: SortOrderInput | SortOrder
+    philHealth?: SortOrderInput | SortOrder
     mustChangePassword?: SortOrder
     sessionsValidFrom?: SortOrderInput | SortOrder
     vesselId?: SortOrderInput | SortOrder
@@ -119279,6 +119531,20 @@ export namespace Prisma {
     lastLoginAt?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
     employeeId?: StringNullableWithAggregatesFilter<"User"> | string | null
     crewId?: StringNullableWithAggregatesFilter<"User"> | string | null
+    lastName?: StringNullableWithAggregatesFilter<"User"> | string | null
+    firstName?: StringNullableWithAggregatesFilter<"User"> | string | null
+    middleName?: StringNullableWithAggregatesFilter<"User"> | string | null
+    initials?: StringNullableWithAggregatesFilter<"User"> | string | null
+    gender?: StringNullableWithAggregatesFilter<"User"> | string | null
+    employmentStatus?: StringNullableWithAggregatesFilter<"User"> | string | null
+    designation?: StringNullableWithAggregatesFilter<"User"> | string | null
+    birthDate?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
+    dateHired?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
+    officialAddress?: StringNullableWithAggregatesFilter<"User"> | string | null
+    tin?: StringNullableWithAggregatesFilter<"User"> | string | null
+    sss?: StringNullableWithAggregatesFilter<"User"> | string | null
+    hdmf?: StringNullableWithAggregatesFilter<"User"> | string | null
+    philHealth?: StringNullableWithAggregatesFilter<"User"> | string | null
     mustChangePassword?: BoolWithAggregatesFilter<"User"> | boolean
     sessionsValidFrom?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
     vesselId?: StringNullableWithAggregatesFilter<"User"> | string | null
@@ -128893,6 +129159,20 @@ export namespace Prisma {
     lastLoginAt?: Date | string | null
     employeeId?: string | null
     crewId?: string | null
+    lastName?: string | null
+    firstName?: string | null
+    middleName?: string | null
+    initials?: string | null
+    gender?: string | null
+    employmentStatus?: string | null
+    designation?: string | null
+    birthDate?: Date | string | null
+    dateHired?: Date | string | null
+    officialAddress?: string | null
+    tin?: string | null
+    sss?: string | null
+    hdmf?: string | null
+    philHealth?: string | null
     mustChangePassword?: boolean
     sessionsValidFrom?: Date | string | null
     createdAt?: Date | string
@@ -128928,6 +129208,20 @@ export namespace Prisma {
     lastLoginAt?: Date | string | null
     employeeId?: string | null
     crewId?: string | null
+    lastName?: string | null
+    firstName?: string | null
+    middleName?: string | null
+    initials?: string | null
+    gender?: string | null
+    employmentStatus?: string | null
+    designation?: string | null
+    birthDate?: Date | string | null
+    dateHired?: Date | string | null
+    officialAddress?: string | null
+    tin?: string | null
+    sss?: string | null
+    hdmf?: string | null
+    philHealth?: string | null
     mustChangePassword?: boolean
     sessionsValidFrom?: Date | string | null
     vesselId?: string | null
@@ -128961,6 +129255,20 @@ export namespace Prisma {
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     employeeId?: NullableStringFieldUpdateOperationsInput | string | null
     crewId?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    middleName?: NullableStringFieldUpdateOperationsInput | string | null
+    initials?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: NullableStringFieldUpdateOperationsInput | string | null
+    employmentStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    designation?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dateHired?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    officialAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    tin?: NullableStringFieldUpdateOperationsInput | string | null
+    sss?: NullableStringFieldUpdateOperationsInput | string | null
+    hdmf?: NullableStringFieldUpdateOperationsInput | string | null
+    philHealth?: NullableStringFieldUpdateOperationsInput | string | null
     mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
     sessionsValidFrom?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -128996,6 +129304,20 @@ export namespace Prisma {
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     employeeId?: NullableStringFieldUpdateOperationsInput | string | null
     crewId?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    middleName?: NullableStringFieldUpdateOperationsInput | string | null
+    initials?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: NullableStringFieldUpdateOperationsInput | string | null
+    employmentStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    designation?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dateHired?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    officialAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    tin?: NullableStringFieldUpdateOperationsInput | string | null
+    sss?: NullableStringFieldUpdateOperationsInput | string | null
+    hdmf?: NullableStringFieldUpdateOperationsInput | string | null
+    philHealth?: NullableStringFieldUpdateOperationsInput | string | null
     mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
     sessionsValidFrom?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     vesselId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -129030,6 +129352,20 @@ export namespace Prisma {
     lastLoginAt?: Date | string | null
     employeeId?: string | null
     crewId?: string | null
+    lastName?: string | null
+    firstName?: string | null
+    middleName?: string | null
+    initials?: string | null
+    gender?: string | null
+    employmentStatus?: string | null
+    designation?: string | null
+    birthDate?: Date | string | null
+    dateHired?: Date | string | null
+    officialAddress?: string | null
+    tin?: string | null
+    sss?: string | null
+    hdmf?: string | null
+    philHealth?: string | null
     mustChangePassword?: boolean
     sessionsValidFrom?: Date | string | null
     vesselId?: string | null
@@ -129054,6 +129390,20 @@ export namespace Prisma {
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     employeeId?: NullableStringFieldUpdateOperationsInput | string | null
     crewId?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    middleName?: NullableStringFieldUpdateOperationsInput | string | null
+    initials?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: NullableStringFieldUpdateOperationsInput | string | null
+    employmentStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    designation?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dateHired?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    officialAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    tin?: NullableStringFieldUpdateOperationsInput | string | null
+    sss?: NullableStringFieldUpdateOperationsInput | string | null
+    hdmf?: NullableStringFieldUpdateOperationsInput | string | null
+    philHealth?: NullableStringFieldUpdateOperationsInput | string | null
     mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
     sessionsValidFrom?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -129076,6 +129426,20 @@ export namespace Prisma {
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     employeeId?: NullableStringFieldUpdateOperationsInput | string | null
     crewId?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    middleName?: NullableStringFieldUpdateOperationsInput | string | null
+    initials?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: NullableStringFieldUpdateOperationsInput | string | null
+    employmentStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    designation?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dateHired?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    officialAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    tin?: NullableStringFieldUpdateOperationsInput | string | null
+    sss?: NullableStringFieldUpdateOperationsInput | string | null
+    hdmf?: NullableStringFieldUpdateOperationsInput | string | null
+    philHealth?: NullableStringFieldUpdateOperationsInput | string | null
     mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
     sessionsValidFrom?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     vesselId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -140675,6 +141039,20 @@ export namespace Prisma {
     lastLoginAt?: SortOrder
     employeeId?: SortOrder
     crewId?: SortOrder
+    lastName?: SortOrder
+    firstName?: SortOrder
+    middleName?: SortOrder
+    initials?: SortOrder
+    gender?: SortOrder
+    employmentStatus?: SortOrder
+    designation?: SortOrder
+    birthDate?: SortOrder
+    dateHired?: SortOrder
+    officialAddress?: SortOrder
+    tin?: SortOrder
+    sss?: SortOrder
+    hdmf?: SortOrder
+    philHealth?: SortOrder
     mustChangePassword?: SortOrder
     sessionsValidFrom?: SortOrder
     vesselId?: SortOrder
@@ -140700,6 +141078,20 @@ export namespace Prisma {
     lastLoginAt?: SortOrder
     employeeId?: SortOrder
     crewId?: SortOrder
+    lastName?: SortOrder
+    firstName?: SortOrder
+    middleName?: SortOrder
+    initials?: SortOrder
+    gender?: SortOrder
+    employmentStatus?: SortOrder
+    designation?: SortOrder
+    birthDate?: SortOrder
+    dateHired?: SortOrder
+    officialAddress?: SortOrder
+    tin?: SortOrder
+    sss?: SortOrder
+    hdmf?: SortOrder
+    philHealth?: SortOrder
     mustChangePassword?: SortOrder
     sessionsValidFrom?: SortOrder
     vesselId?: SortOrder
@@ -140725,6 +141117,20 @@ export namespace Prisma {
     lastLoginAt?: SortOrder
     employeeId?: SortOrder
     crewId?: SortOrder
+    lastName?: SortOrder
+    firstName?: SortOrder
+    middleName?: SortOrder
+    initials?: SortOrder
+    gender?: SortOrder
+    employmentStatus?: SortOrder
+    designation?: SortOrder
+    birthDate?: SortOrder
+    dateHired?: SortOrder
+    officialAddress?: SortOrder
+    tin?: SortOrder
+    sss?: SortOrder
+    hdmf?: SortOrder
+    philHealth?: SortOrder
     mustChangePassword?: SortOrder
     sessionsValidFrom?: SortOrder
     vesselId?: SortOrder
@@ -157301,6 +157707,20 @@ export namespace Prisma {
     lastLoginAt?: Date | string | null
     employeeId?: string | null
     crewId?: string | null
+    lastName?: string | null
+    firstName?: string | null
+    middleName?: string | null
+    initials?: string | null
+    gender?: string | null
+    employmentStatus?: string | null
+    designation?: string | null
+    birthDate?: Date | string | null
+    dateHired?: Date | string | null
+    officialAddress?: string | null
+    tin?: string | null
+    sss?: string | null
+    hdmf?: string | null
+    philHealth?: string | null
     mustChangePassword?: boolean
     sessionsValidFrom?: Date | string | null
     createdAt?: Date | string
@@ -157334,6 +157754,20 @@ export namespace Prisma {
     lastLoginAt?: Date | string | null
     employeeId?: string | null
     crewId?: string | null
+    lastName?: string | null
+    firstName?: string | null
+    middleName?: string | null
+    initials?: string | null
+    gender?: string | null
+    employmentStatus?: string | null
+    designation?: string | null
+    birthDate?: Date | string | null
+    dateHired?: Date | string | null
+    officialAddress?: string | null
+    tin?: string | null
+    sss?: string | null
+    hdmf?: string | null
+    philHealth?: string | null
     mustChangePassword?: boolean
     sessionsValidFrom?: Date | string | null
     vesselId?: string | null
@@ -160013,6 +160447,20 @@ export namespace Prisma {
     lastLoginAt?: DateTimeNullableFilter<"User"> | Date | string | null
     employeeId?: StringNullableFilter<"User"> | string | null
     crewId?: StringNullableFilter<"User"> | string | null
+    lastName?: StringNullableFilter<"User"> | string | null
+    firstName?: StringNullableFilter<"User"> | string | null
+    middleName?: StringNullableFilter<"User"> | string | null
+    initials?: StringNullableFilter<"User"> | string | null
+    gender?: StringNullableFilter<"User"> | string | null
+    employmentStatus?: StringNullableFilter<"User"> | string | null
+    designation?: StringNullableFilter<"User"> | string | null
+    birthDate?: DateTimeNullableFilter<"User"> | Date | string | null
+    dateHired?: DateTimeNullableFilter<"User"> | Date | string | null
+    officialAddress?: StringNullableFilter<"User"> | string | null
+    tin?: StringNullableFilter<"User"> | string | null
+    sss?: StringNullableFilter<"User"> | string | null
+    hdmf?: StringNullableFilter<"User"> | string | null
+    philHealth?: StringNullableFilter<"User"> | string | null
     mustChangePassword?: BoolFilter<"User"> | boolean
     sessionsValidFrom?: DateTimeNullableFilter<"User"> | Date | string | null
     vesselId?: StringNullableFilter<"User"> | string | null
@@ -163945,6 +164393,20 @@ export namespace Prisma {
     lastLoginAt?: Date | string | null
     employeeId?: string | null
     crewId?: string | null
+    lastName?: string | null
+    firstName?: string | null
+    middleName?: string | null
+    initials?: string | null
+    gender?: string | null
+    employmentStatus?: string | null
+    designation?: string | null
+    birthDate?: Date | string | null
+    dateHired?: Date | string | null
+    officialAddress?: string | null
+    tin?: string | null
+    sss?: string | null
+    hdmf?: string | null
+    philHealth?: string | null
     mustChangePassword?: boolean
     sessionsValidFrom?: Date | string | null
     createdAt?: Date | string
@@ -163979,6 +164441,20 @@ export namespace Prisma {
     lastLoginAt?: Date | string | null
     employeeId?: string | null
     crewId?: string | null
+    lastName?: string | null
+    firstName?: string | null
+    middleName?: string | null
+    initials?: string | null
+    gender?: string | null
+    employmentStatus?: string | null
+    designation?: string | null
+    birthDate?: Date | string | null
+    dateHired?: Date | string | null
+    officialAddress?: string | null
+    tin?: string | null
+    sss?: string | null
+    hdmf?: string | null
+    philHealth?: string | null
     mustChangePassword?: boolean
     sessionsValidFrom?: Date | string | null
     vesselId?: string | null
@@ -164054,6 +164530,20 @@ export namespace Prisma {
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     employeeId?: NullableStringFieldUpdateOperationsInput | string | null
     crewId?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    middleName?: NullableStringFieldUpdateOperationsInput | string | null
+    initials?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: NullableStringFieldUpdateOperationsInput | string | null
+    employmentStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    designation?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dateHired?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    officialAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    tin?: NullableStringFieldUpdateOperationsInput | string | null
+    sss?: NullableStringFieldUpdateOperationsInput | string | null
+    hdmf?: NullableStringFieldUpdateOperationsInput | string | null
+    philHealth?: NullableStringFieldUpdateOperationsInput | string | null
     mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
     sessionsValidFrom?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -164088,6 +164578,20 @@ export namespace Prisma {
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     employeeId?: NullableStringFieldUpdateOperationsInput | string | null
     crewId?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    middleName?: NullableStringFieldUpdateOperationsInput | string | null
+    initials?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: NullableStringFieldUpdateOperationsInput | string | null
+    employmentStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    designation?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dateHired?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    officialAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    tin?: NullableStringFieldUpdateOperationsInput | string | null
+    sss?: NullableStringFieldUpdateOperationsInput | string | null
+    hdmf?: NullableStringFieldUpdateOperationsInput | string | null
+    philHealth?: NullableStringFieldUpdateOperationsInput | string | null
     mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
     sessionsValidFrom?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     vesselId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -164290,6 +164794,20 @@ export namespace Prisma {
     lastLoginAt?: Date | string | null
     employeeId?: string | null
     crewId?: string | null
+    lastName?: string | null
+    firstName?: string | null
+    middleName?: string | null
+    initials?: string | null
+    gender?: string | null
+    employmentStatus?: string | null
+    designation?: string | null
+    birthDate?: Date | string | null
+    dateHired?: Date | string | null
+    officialAddress?: string | null
+    tin?: string | null
+    sss?: string | null
+    hdmf?: string | null
+    philHealth?: string | null
     mustChangePassword?: boolean
     sessionsValidFrom?: Date | string | null
     createdAt?: Date | string
@@ -164324,6 +164842,20 @@ export namespace Prisma {
     lastLoginAt?: Date | string | null
     employeeId?: string | null
     crewId?: string | null
+    lastName?: string | null
+    firstName?: string | null
+    middleName?: string | null
+    initials?: string | null
+    gender?: string | null
+    employmentStatus?: string | null
+    designation?: string | null
+    birthDate?: Date | string | null
+    dateHired?: Date | string | null
+    officialAddress?: string | null
+    tin?: string | null
+    sss?: string | null
+    hdmf?: string | null
+    philHealth?: string | null
     mustChangePassword?: boolean
     sessionsValidFrom?: Date | string | null
     vesselId?: string | null
@@ -164662,6 +165194,20 @@ export namespace Prisma {
     lastLoginAt?: Date | string | null
     employeeId?: string | null
     crewId?: string | null
+    lastName?: string | null
+    firstName?: string | null
+    middleName?: string | null
+    initials?: string | null
+    gender?: string | null
+    employmentStatus?: string | null
+    designation?: string | null
+    birthDate?: Date | string | null
+    dateHired?: Date | string | null
+    officialAddress?: string | null
+    tin?: string | null
+    sss?: string | null
+    hdmf?: string | null
+    philHealth?: string | null
     mustChangePassword?: boolean
     sessionsValidFrom?: Date | string | null
     createdAt?: Date | string
@@ -164696,6 +165242,20 @@ export namespace Prisma {
     lastLoginAt?: Date | string | null
     employeeId?: string | null
     crewId?: string | null
+    lastName?: string | null
+    firstName?: string | null
+    middleName?: string | null
+    initials?: string | null
+    gender?: string | null
+    employmentStatus?: string | null
+    designation?: string | null
+    birthDate?: Date | string | null
+    dateHired?: Date | string | null
+    officialAddress?: string | null
+    tin?: string | null
+    sss?: string | null
+    hdmf?: string | null
+    philHealth?: string | null
     mustChangePassword?: boolean
     sessionsValidFrom?: Date | string | null
     vesselId?: string | null
@@ -166296,6 +166856,20 @@ export namespace Prisma {
     lastLoginAt?: Date | string | null
     employeeId?: string | null
     crewId?: string | null
+    lastName?: string | null
+    firstName?: string | null
+    middleName?: string | null
+    initials?: string | null
+    gender?: string | null
+    employmentStatus?: string | null
+    designation?: string | null
+    birthDate?: Date | string | null
+    dateHired?: Date | string | null
+    officialAddress?: string | null
+    tin?: string | null
+    sss?: string | null
+    hdmf?: string | null
+    philHealth?: string | null
     mustChangePassword?: boolean
     sessionsValidFrom?: Date | string | null
     createdAt?: Date | string
@@ -166330,6 +166904,20 @@ export namespace Prisma {
     lastLoginAt?: Date | string | null
     employeeId?: string | null
     crewId?: string | null
+    lastName?: string | null
+    firstName?: string | null
+    middleName?: string | null
+    initials?: string | null
+    gender?: string | null
+    employmentStatus?: string | null
+    designation?: string | null
+    birthDate?: Date | string | null
+    dateHired?: Date | string | null
+    officialAddress?: string | null
+    tin?: string | null
+    sss?: string | null
+    hdmf?: string | null
+    philHealth?: string | null
     mustChangePassword?: boolean
     sessionsValidFrom?: Date | string | null
     accessLevelId?: string | null
@@ -167745,6 +168333,20 @@ export namespace Prisma {
     lastLoginAt?: Date | string | null
     employeeId?: string | null
     crewId?: string | null
+    lastName?: string | null
+    firstName?: string | null
+    middleName?: string | null
+    initials?: string | null
+    gender?: string | null
+    employmentStatus?: string | null
+    designation?: string | null
+    birthDate?: Date | string | null
+    dateHired?: Date | string | null
+    officialAddress?: string | null
+    tin?: string | null
+    sss?: string | null
+    hdmf?: string | null
+    philHealth?: string | null
     mustChangePassword?: boolean
     sessionsValidFrom?: Date | string | null
     createdAt?: Date | string
@@ -167779,6 +168381,20 @@ export namespace Prisma {
     lastLoginAt?: Date | string | null
     employeeId?: string | null
     crewId?: string | null
+    lastName?: string | null
+    firstName?: string | null
+    middleName?: string | null
+    initials?: string | null
+    gender?: string | null
+    employmentStatus?: string | null
+    designation?: string | null
+    birthDate?: Date | string | null
+    dateHired?: Date | string | null
+    officialAddress?: string | null
+    tin?: string | null
+    sss?: string | null
+    hdmf?: string | null
+    philHealth?: string | null
     mustChangePassword?: boolean
     sessionsValidFrom?: Date | string | null
     vesselId?: string | null
@@ -167827,6 +168443,20 @@ export namespace Prisma {
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     employeeId?: NullableStringFieldUpdateOperationsInput | string | null
     crewId?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    middleName?: NullableStringFieldUpdateOperationsInput | string | null
+    initials?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: NullableStringFieldUpdateOperationsInput | string | null
+    employmentStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    designation?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dateHired?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    officialAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    tin?: NullableStringFieldUpdateOperationsInput | string | null
+    sss?: NullableStringFieldUpdateOperationsInput | string | null
+    hdmf?: NullableStringFieldUpdateOperationsInput | string | null
+    philHealth?: NullableStringFieldUpdateOperationsInput | string | null
     mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
     sessionsValidFrom?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -167861,6 +168491,20 @@ export namespace Prisma {
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     employeeId?: NullableStringFieldUpdateOperationsInput | string | null
     crewId?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    middleName?: NullableStringFieldUpdateOperationsInput | string | null
+    initials?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: NullableStringFieldUpdateOperationsInput | string | null
+    employmentStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    designation?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dateHired?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    officialAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    tin?: NullableStringFieldUpdateOperationsInput | string | null
+    sss?: NullableStringFieldUpdateOperationsInput | string | null
+    hdmf?: NullableStringFieldUpdateOperationsInput | string | null
+    philHealth?: NullableStringFieldUpdateOperationsInput | string | null
     mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
     sessionsValidFrom?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     vesselId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -168810,6 +169454,20 @@ export namespace Prisma {
     lastLoginAt?: Date | string | null
     employeeId?: string | null
     crewId?: string | null
+    lastName?: string | null
+    firstName?: string | null
+    middleName?: string | null
+    initials?: string | null
+    gender?: string | null
+    employmentStatus?: string | null
+    designation?: string | null
+    birthDate?: Date | string | null
+    dateHired?: Date | string | null
+    officialAddress?: string | null
+    tin?: string | null
+    sss?: string | null
+    hdmf?: string | null
+    philHealth?: string | null
     mustChangePassword?: boolean
     sessionsValidFrom?: Date | string | null
     createdAt?: Date | string
@@ -168844,6 +169502,20 @@ export namespace Prisma {
     lastLoginAt?: Date | string | null
     employeeId?: string | null
     crewId?: string | null
+    lastName?: string | null
+    firstName?: string | null
+    middleName?: string | null
+    initials?: string | null
+    gender?: string | null
+    employmentStatus?: string | null
+    designation?: string | null
+    birthDate?: Date | string | null
+    dateHired?: Date | string | null
+    officialAddress?: string | null
+    tin?: string | null
+    sss?: string | null
+    hdmf?: string | null
+    philHealth?: string | null
     mustChangePassword?: boolean
     sessionsValidFrom?: Date | string | null
     vesselId?: string | null
@@ -169295,6 +169967,20 @@ export namespace Prisma {
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     employeeId?: NullableStringFieldUpdateOperationsInput | string | null
     crewId?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    middleName?: NullableStringFieldUpdateOperationsInput | string | null
+    initials?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: NullableStringFieldUpdateOperationsInput | string | null
+    employmentStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    designation?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dateHired?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    officialAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    tin?: NullableStringFieldUpdateOperationsInput | string | null
+    sss?: NullableStringFieldUpdateOperationsInput | string | null
+    hdmf?: NullableStringFieldUpdateOperationsInput | string | null
+    philHealth?: NullableStringFieldUpdateOperationsInput | string | null
     mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
     sessionsValidFrom?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -169329,6 +170015,20 @@ export namespace Prisma {
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     employeeId?: NullableStringFieldUpdateOperationsInput | string | null
     crewId?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    middleName?: NullableStringFieldUpdateOperationsInput | string | null
+    initials?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: NullableStringFieldUpdateOperationsInput | string | null
+    employmentStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    designation?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dateHired?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    officialAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    tin?: NullableStringFieldUpdateOperationsInput | string | null
+    sss?: NullableStringFieldUpdateOperationsInput | string | null
+    hdmf?: NullableStringFieldUpdateOperationsInput | string | null
+    philHealth?: NullableStringFieldUpdateOperationsInput | string | null
     mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
     sessionsValidFrom?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     vesselId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -170162,6 +170862,20 @@ export namespace Prisma {
     lastLoginAt?: Date | string | null
     employeeId?: string | null
     crewId?: string | null
+    lastName?: string | null
+    firstName?: string | null
+    middleName?: string | null
+    initials?: string | null
+    gender?: string | null
+    employmentStatus?: string | null
+    designation?: string | null
+    birthDate?: Date | string | null
+    dateHired?: Date | string | null
+    officialAddress?: string | null
+    tin?: string | null
+    sss?: string | null
+    hdmf?: string | null
+    philHealth?: string | null
     mustChangePassword?: boolean
     sessionsValidFrom?: Date | string | null
     createdAt?: Date | string
@@ -170196,6 +170910,20 @@ export namespace Prisma {
     lastLoginAt?: Date | string | null
     employeeId?: string | null
     crewId?: string | null
+    lastName?: string | null
+    firstName?: string | null
+    middleName?: string | null
+    initials?: string | null
+    gender?: string | null
+    employmentStatus?: string | null
+    designation?: string | null
+    birthDate?: Date | string | null
+    dateHired?: Date | string | null
+    officialAddress?: string | null
+    tin?: string | null
+    sss?: string | null
+    hdmf?: string | null
+    philHealth?: string | null
     mustChangePassword?: boolean
     sessionsValidFrom?: Date | string | null
     vesselId?: string | null
@@ -170628,6 +171356,20 @@ export namespace Prisma {
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     employeeId?: NullableStringFieldUpdateOperationsInput | string | null
     crewId?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    middleName?: NullableStringFieldUpdateOperationsInput | string | null
+    initials?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: NullableStringFieldUpdateOperationsInput | string | null
+    employmentStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    designation?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dateHired?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    officialAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    tin?: NullableStringFieldUpdateOperationsInput | string | null
+    sss?: NullableStringFieldUpdateOperationsInput | string | null
+    hdmf?: NullableStringFieldUpdateOperationsInput | string | null
+    philHealth?: NullableStringFieldUpdateOperationsInput | string | null
     mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
     sessionsValidFrom?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -170662,6 +171404,20 @@ export namespace Prisma {
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     employeeId?: NullableStringFieldUpdateOperationsInput | string | null
     crewId?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    middleName?: NullableStringFieldUpdateOperationsInput | string | null
+    initials?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: NullableStringFieldUpdateOperationsInput | string | null
+    employmentStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    designation?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dateHired?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    officialAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    tin?: NullableStringFieldUpdateOperationsInput | string | null
+    sss?: NullableStringFieldUpdateOperationsInput | string | null
+    hdmf?: NullableStringFieldUpdateOperationsInput | string | null
+    philHealth?: NullableStringFieldUpdateOperationsInput | string | null
     mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
     sessionsValidFrom?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     vesselId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -171328,6 +172084,20 @@ export namespace Prisma {
     lastLoginAt?: Date | string | null
     employeeId?: string | null
     crewId?: string | null
+    lastName?: string | null
+    firstName?: string | null
+    middleName?: string | null
+    initials?: string | null
+    gender?: string | null
+    employmentStatus?: string | null
+    designation?: string | null
+    birthDate?: Date | string | null
+    dateHired?: Date | string | null
+    officialAddress?: string | null
+    tin?: string | null
+    sss?: string | null
+    hdmf?: string | null
+    philHealth?: string | null
     mustChangePassword?: boolean
     sessionsValidFrom?: Date | string | null
     createdAt?: Date | string
@@ -171362,6 +172132,20 @@ export namespace Prisma {
     lastLoginAt?: Date | string | null
     employeeId?: string | null
     crewId?: string | null
+    lastName?: string | null
+    firstName?: string | null
+    middleName?: string | null
+    initials?: string | null
+    gender?: string | null
+    employmentStatus?: string | null
+    designation?: string | null
+    birthDate?: Date | string | null
+    dateHired?: Date | string | null
+    officialAddress?: string | null
+    tin?: string | null
+    sss?: string | null
+    hdmf?: string | null
+    philHealth?: string | null
     mustChangePassword?: boolean
     sessionsValidFrom?: Date | string | null
     vesselId?: string | null
@@ -171740,6 +172524,20 @@ export namespace Prisma {
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     employeeId?: NullableStringFieldUpdateOperationsInput | string | null
     crewId?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    middleName?: NullableStringFieldUpdateOperationsInput | string | null
+    initials?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: NullableStringFieldUpdateOperationsInput | string | null
+    employmentStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    designation?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dateHired?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    officialAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    tin?: NullableStringFieldUpdateOperationsInput | string | null
+    sss?: NullableStringFieldUpdateOperationsInput | string | null
+    hdmf?: NullableStringFieldUpdateOperationsInput | string | null
+    philHealth?: NullableStringFieldUpdateOperationsInput | string | null
     mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
     sessionsValidFrom?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -171774,6 +172572,20 @@ export namespace Prisma {
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     employeeId?: NullableStringFieldUpdateOperationsInput | string | null
     crewId?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    middleName?: NullableStringFieldUpdateOperationsInput | string | null
+    initials?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: NullableStringFieldUpdateOperationsInput | string | null
+    employmentStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    designation?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dateHired?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    officialAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    tin?: NullableStringFieldUpdateOperationsInput | string | null
+    sss?: NullableStringFieldUpdateOperationsInput | string | null
+    hdmf?: NullableStringFieldUpdateOperationsInput | string | null
+    philHealth?: NullableStringFieldUpdateOperationsInput | string | null
     mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
     sessionsValidFrom?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     vesselId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -172124,6 +172936,20 @@ export namespace Prisma {
     lastLoginAt?: Date | string | null
     employeeId?: string | null
     crewId?: string | null
+    lastName?: string | null
+    firstName?: string | null
+    middleName?: string | null
+    initials?: string | null
+    gender?: string | null
+    employmentStatus?: string | null
+    designation?: string | null
+    birthDate?: Date | string | null
+    dateHired?: Date | string | null
+    officialAddress?: string | null
+    tin?: string | null
+    sss?: string | null
+    hdmf?: string | null
+    philHealth?: string | null
     mustChangePassword?: boolean
     sessionsValidFrom?: Date | string | null
     createdAt?: Date | string
@@ -172158,6 +172984,20 @@ export namespace Prisma {
     lastLoginAt?: Date | string | null
     employeeId?: string | null
     crewId?: string | null
+    lastName?: string | null
+    firstName?: string | null
+    middleName?: string | null
+    initials?: string | null
+    gender?: string | null
+    employmentStatus?: string | null
+    designation?: string | null
+    birthDate?: Date | string | null
+    dateHired?: Date | string | null
+    officialAddress?: string | null
+    tin?: string | null
+    sss?: string | null
+    hdmf?: string | null
+    philHealth?: string | null
     mustChangePassword?: boolean
     sessionsValidFrom?: Date | string | null
     vesselId?: string | null
@@ -172536,6 +173376,20 @@ export namespace Prisma {
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     employeeId?: NullableStringFieldUpdateOperationsInput | string | null
     crewId?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    middleName?: NullableStringFieldUpdateOperationsInput | string | null
+    initials?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: NullableStringFieldUpdateOperationsInput | string | null
+    employmentStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    designation?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dateHired?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    officialAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    tin?: NullableStringFieldUpdateOperationsInput | string | null
+    sss?: NullableStringFieldUpdateOperationsInput | string | null
+    hdmf?: NullableStringFieldUpdateOperationsInput | string | null
+    philHealth?: NullableStringFieldUpdateOperationsInput | string | null
     mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
     sessionsValidFrom?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -172570,6 +173424,20 @@ export namespace Prisma {
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     employeeId?: NullableStringFieldUpdateOperationsInput | string | null
     crewId?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    middleName?: NullableStringFieldUpdateOperationsInput | string | null
+    initials?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: NullableStringFieldUpdateOperationsInput | string | null
+    employmentStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    designation?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dateHired?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    officialAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    tin?: NullableStringFieldUpdateOperationsInput | string | null
+    sss?: NullableStringFieldUpdateOperationsInput | string | null
+    hdmf?: NullableStringFieldUpdateOperationsInput | string | null
+    philHealth?: NullableStringFieldUpdateOperationsInput | string | null
     mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
     sessionsValidFrom?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     vesselId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -173379,6 +174247,20 @@ export namespace Prisma {
     lastLoginAt?: Date | string | null
     employeeId?: string | null
     crewId?: string | null
+    lastName?: string | null
+    firstName?: string | null
+    middleName?: string | null
+    initials?: string | null
+    gender?: string | null
+    employmentStatus?: string | null
+    designation?: string | null
+    birthDate?: Date | string | null
+    dateHired?: Date | string | null
+    officialAddress?: string | null
+    tin?: string | null
+    sss?: string | null
+    hdmf?: string | null
+    philHealth?: string | null
     mustChangePassword?: boolean
     sessionsValidFrom?: Date | string | null
     createdAt?: Date | string
@@ -173413,6 +174295,20 @@ export namespace Prisma {
     lastLoginAt?: Date | string | null
     employeeId?: string | null
     crewId?: string | null
+    lastName?: string | null
+    firstName?: string | null
+    middleName?: string | null
+    initials?: string | null
+    gender?: string | null
+    employmentStatus?: string | null
+    designation?: string | null
+    birthDate?: Date | string | null
+    dateHired?: Date | string | null
+    officialAddress?: string | null
+    tin?: string | null
+    sss?: string | null
+    hdmf?: string | null
+    philHealth?: string | null
     mustChangePassword?: boolean
     sessionsValidFrom?: Date | string | null
     vesselId?: string | null
@@ -173450,6 +174346,20 @@ export namespace Prisma {
     lastLoginAt?: Date | string | null
     employeeId?: string | null
     crewId?: string | null
+    lastName?: string | null
+    firstName?: string | null
+    middleName?: string | null
+    initials?: string | null
+    gender?: string | null
+    employmentStatus?: string | null
+    designation?: string | null
+    birthDate?: Date | string | null
+    dateHired?: Date | string | null
+    officialAddress?: string | null
+    tin?: string | null
+    sss?: string | null
+    hdmf?: string | null
+    philHealth?: string | null
     mustChangePassword?: boolean
     sessionsValidFrom?: Date | string | null
     createdAt?: Date | string
@@ -173484,6 +174394,20 @@ export namespace Prisma {
     lastLoginAt?: Date | string | null
     employeeId?: string | null
     crewId?: string | null
+    lastName?: string | null
+    firstName?: string | null
+    middleName?: string | null
+    initials?: string | null
+    gender?: string | null
+    employmentStatus?: string | null
+    designation?: string | null
+    birthDate?: Date | string | null
+    dateHired?: Date | string | null
+    officialAddress?: string | null
+    tin?: string | null
+    sss?: string | null
+    hdmf?: string | null
+    philHealth?: string | null
     mustChangePassword?: boolean
     sessionsValidFrom?: Date | string | null
     vesselId?: string | null
@@ -173615,6 +174539,20 @@ export namespace Prisma {
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     employeeId?: NullableStringFieldUpdateOperationsInput | string | null
     crewId?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    middleName?: NullableStringFieldUpdateOperationsInput | string | null
+    initials?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: NullableStringFieldUpdateOperationsInput | string | null
+    employmentStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    designation?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dateHired?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    officialAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    tin?: NullableStringFieldUpdateOperationsInput | string | null
+    sss?: NullableStringFieldUpdateOperationsInput | string | null
+    hdmf?: NullableStringFieldUpdateOperationsInput | string | null
+    philHealth?: NullableStringFieldUpdateOperationsInput | string | null
     mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
     sessionsValidFrom?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -173649,6 +174587,20 @@ export namespace Prisma {
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     employeeId?: NullableStringFieldUpdateOperationsInput | string | null
     crewId?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    middleName?: NullableStringFieldUpdateOperationsInput | string | null
+    initials?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: NullableStringFieldUpdateOperationsInput | string | null
+    employmentStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    designation?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dateHired?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    officialAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    tin?: NullableStringFieldUpdateOperationsInput | string | null
+    sss?: NullableStringFieldUpdateOperationsInput | string | null
+    hdmf?: NullableStringFieldUpdateOperationsInput | string | null
+    philHealth?: NullableStringFieldUpdateOperationsInput | string | null
     mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
     sessionsValidFrom?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     vesselId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -173692,6 +174644,20 @@ export namespace Prisma {
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     employeeId?: NullableStringFieldUpdateOperationsInput | string | null
     crewId?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    middleName?: NullableStringFieldUpdateOperationsInput | string | null
+    initials?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: NullableStringFieldUpdateOperationsInput | string | null
+    employmentStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    designation?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dateHired?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    officialAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    tin?: NullableStringFieldUpdateOperationsInput | string | null
+    sss?: NullableStringFieldUpdateOperationsInput | string | null
+    hdmf?: NullableStringFieldUpdateOperationsInput | string | null
+    philHealth?: NullableStringFieldUpdateOperationsInput | string | null
     mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
     sessionsValidFrom?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -173726,6 +174692,20 @@ export namespace Prisma {
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     employeeId?: NullableStringFieldUpdateOperationsInput | string | null
     crewId?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    middleName?: NullableStringFieldUpdateOperationsInput | string | null
+    initials?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: NullableStringFieldUpdateOperationsInput | string | null
+    employmentStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    designation?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dateHired?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    officialAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    tin?: NullableStringFieldUpdateOperationsInput | string | null
+    sss?: NullableStringFieldUpdateOperationsInput | string | null
+    hdmf?: NullableStringFieldUpdateOperationsInput | string | null
+    philHealth?: NullableStringFieldUpdateOperationsInput | string | null
     mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
     sessionsValidFrom?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     vesselId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -173831,6 +174811,20 @@ export namespace Prisma {
     lastLoginAt?: Date | string | null
     employeeId?: string | null
     crewId?: string | null
+    lastName?: string | null
+    firstName?: string | null
+    middleName?: string | null
+    initials?: string | null
+    gender?: string | null
+    employmentStatus?: string | null
+    designation?: string | null
+    birthDate?: Date | string | null
+    dateHired?: Date | string | null
+    officialAddress?: string | null
+    tin?: string | null
+    sss?: string | null
+    hdmf?: string | null
+    philHealth?: string | null
     mustChangePassword?: boolean
     sessionsValidFrom?: Date | string | null
     createdAt?: Date | string
@@ -173865,6 +174859,20 @@ export namespace Prisma {
     lastLoginAt?: Date | string | null
     employeeId?: string | null
     crewId?: string | null
+    lastName?: string | null
+    firstName?: string | null
+    middleName?: string | null
+    initials?: string | null
+    gender?: string | null
+    employmentStatus?: string | null
+    designation?: string | null
+    birthDate?: Date | string | null
+    dateHired?: Date | string | null
+    officialAddress?: string | null
+    tin?: string | null
+    sss?: string | null
+    hdmf?: string | null
+    philHealth?: string | null
     mustChangePassword?: boolean
     sessionsValidFrom?: Date | string | null
     vesselId?: string | null
@@ -173976,6 +174984,20 @@ export namespace Prisma {
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     employeeId?: NullableStringFieldUpdateOperationsInput | string | null
     crewId?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    middleName?: NullableStringFieldUpdateOperationsInput | string | null
+    initials?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: NullableStringFieldUpdateOperationsInput | string | null
+    employmentStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    designation?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dateHired?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    officialAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    tin?: NullableStringFieldUpdateOperationsInput | string | null
+    sss?: NullableStringFieldUpdateOperationsInput | string | null
+    hdmf?: NullableStringFieldUpdateOperationsInput | string | null
+    philHealth?: NullableStringFieldUpdateOperationsInput | string | null
     mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
     sessionsValidFrom?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -174010,6 +175032,20 @@ export namespace Prisma {
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     employeeId?: NullableStringFieldUpdateOperationsInput | string | null
     crewId?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    middleName?: NullableStringFieldUpdateOperationsInput | string | null
+    initials?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: NullableStringFieldUpdateOperationsInput | string | null
+    employmentStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    designation?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dateHired?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    officialAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    tin?: NullableStringFieldUpdateOperationsInput | string | null
+    sss?: NullableStringFieldUpdateOperationsInput | string | null
+    hdmf?: NullableStringFieldUpdateOperationsInput | string | null
+    philHealth?: NullableStringFieldUpdateOperationsInput | string | null
     mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
     sessionsValidFrom?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     vesselId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -199736,6 +200772,20 @@ export namespace Prisma {
     lastLoginAt?: Date | string | null
     employeeId?: string | null
     crewId?: string | null
+    lastName?: string | null
+    firstName?: string | null
+    middleName?: string | null
+    initials?: string | null
+    gender?: string | null
+    employmentStatus?: string | null
+    designation?: string | null
+    birthDate?: Date | string | null
+    dateHired?: Date | string | null
+    officialAddress?: string | null
+    tin?: string | null
+    sss?: string | null
+    hdmf?: string | null
+    philHealth?: string | null
     mustChangePassword?: boolean
     sessionsValidFrom?: Date | string | null
     vesselId?: string | null
@@ -200764,6 +201814,20 @@ export namespace Prisma {
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     employeeId?: NullableStringFieldUpdateOperationsInput | string | null
     crewId?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    middleName?: NullableStringFieldUpdateOperationsInput | string | null
+    initials?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: NullableStringFieldUpdateOperationsInput | string | null
+    employmentStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    designation?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dateHired?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    officialAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    tin?: NullableStringFieldUpdateOperationsInput | string | null
+    sss?: NullableStringFieldUpdateOperationsInput | string | null
+    hdmf?: NullableStringFieldUpdateOperationsInput | string | null
+    philHealth?: NullableStringFieldUpdateOperationsInput | string | null
     mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
     sessionsValidFrom?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -200797,6 +201861,20 @@ export namespace Prisma {
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     employeeId?: NullableStringFieldUpdateOperationsInput | string | null
     crewId?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    middleName?: NullableStringFieldUpdateOperationsInput | string | null
+    initials?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: NullableStringFieldUpdateOperationsInput | string | null
+    employmentStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    designation?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dateHired?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    officialAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    tin?: NullableStringFieldUpdateOperationsInput | string | null
+    sss?: NullableStringFieldUpdateOperationsInput | string | null
+    hdmf?: NullableStringFieldUpdateOperationsInput | string | null
+    philHealth?: NullableStringFieldUpdateOperationsInput | string | null
     mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
     sessionsValidFrom?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     vesselId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -200830,6 +201908,20 @@ export namespace Prisma {
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     employeeId?: NullableStringFieldUpdateOperationsInput | string | null
     crewId?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    middleName?: NullableStringFieldUpdateOperationsInput | string | null
+    initials?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: NullableStringFieldUpdateOperationsInput | string | null
+    employmentStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    designation?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dateHired?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    officialAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    tin?: NullableStringFieldUpdateOperationsInput | string | null
+    sss?: NullableStringFieldUpdateOperationsInput | string | null
+    hdmf?: NullableStringFieldUpdateOperationsInput | string | null
+    philHealth?: NullableStringFieldUpdateOperationsInput | string | null
     mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
     sessionsValidFrom?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     vesselId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -204787,6 +205879,20 @@ export namespace Prisma {
     lastLoginAt?: Date | string | null
     employeeId?: string | null
     crewId?: string | null
+    lastName?: string | null
+    firstName?: string | null
+    middleName?: string | null
+    initials?: string | null
+    gender?: string | null
+    employmentStatus?: string | null
+    designation?: string | null
+    birthDate?: Date | string | null
+    dateHired?: Date | string | null
+    officialAddress?: string | null
+    tin?: string | null
+    sss?: string | null
+    hdmf?: string | null
+    philHealth?: string | null
     mustChangePassword?: boolean
     sessionsValidFrom?: Date | string | null
     vesselId?: string | null
@@ -204810,6 +205916,20 @@ export namespace Prisma {
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     employeeId?: NullableStringFieldUpdateOperationsInput | string | null
     crewId?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    middleName?: NullableStringFieldUpdateOperationsInput | string | null
+    initials?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: NullableStringFieldUpdateOperationsInput | string | null
+    employmentStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    designation?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dateHired?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    officialAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    tin?: NullableStringFieldUpdateOperationsInput | string | null
+    sss?: NullableStringFieldUpdateOperationsInput | string | null
+    hdmf?: NullableStringFieldUpdateOperationsInput | string | null
+    philHealth?: NullableStringFieldUpdateOperationsInput | string | null
     mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
     sessionsValidFrom?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -204844,6 +205964,20 @@ export namespace Prisma {
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     employeeId?: NullableStringFieldUpdateOperationsInput | string | null
     crewId?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    middleName?: NullableStringFieldUpdateOperationsInput | string | null
+    initials?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: NullableStringFieldUpdateOperationsInput | string | null
+    employmentStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    designation?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dateHired?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    officialAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    tin?: NullableStringFieldUpdateOperationsInput | string | null
+    sss?: NullableStringFieldUpdateOperationsInput | string | null
+    hdmf?: NullableStringFieldUpdateOperationsInput | string | null
+    philHealth?: NullableStringFieldUpdateOperationsInput | string | null
     mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
     sessionsValidFrom?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     vesselId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -204877,6 +206011,20 @@ export namespace Prisma {
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     employeeId?: NullableStringFieldUpdateOperationsInput | string | null
     crewId?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    middleName?: NullableStringFieldUpdateOperationsInput | string | null
+    initials?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: NullableStringFieldUpdateOperationsInput | string | null
+    employmentStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    designation?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dateHired?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    officialAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    tin?: NullableStringFieldUpdateOperationsInput | string | null
+    sss?: NullableStringFieldUpdateOperationsInput | string | null
+    hdmf?: NullableStringFieldUpdateOperationsInput | string | null
+    philHealth?: NullableStringFieldUpdateOperationsInput | string | null
     mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
     sessionsValidFrom?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     vesselId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -204901,6 +206049,20 @@ export namespace Prisma {
     lastLoginAt?: Date | string | null
     employeeId?: string | null
     crewId?: string | null
+    lastName?: string | null
+    firstName?: string | null
+    middleName?: string | null
+    initials?: string | null
+    gender?: string | null
+    employmentStatus?: string | null
+    designation?: string | null
+    birthDate?: Date | string | null
+    dateHired?: Date | string | null
+    officialAddress?: string | null
+    tin?: string | null
+    sss?: string | null
+    hdmf?: string | null
+    philHealth?: string | null
     mustChangePassword?: boolean
     sessionsValidFrom?: Date | string | null
     vesselId?: string | null
@@ -204924,6 +206086,20 @@ export namespace Prisma {
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     employeeId?: NullableStringFieldUpdateOperationsInput | string | null
     crewId?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    middleName?: NullableStringFieldUpdateOperationsInput | string | null
+    initials?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: NullableStringFieldUpdateOperationsInput | string | null
+    employmentStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    designation?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dateHired?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    officialAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    tin?: NullableStringFieldUpdateOperationsInput | string | null
+    sss?: NullableStringFieldUpdateOperationsInput | string | null
+    hdmf?: NullableStringFieldUpdateOperationsInput | string | null
+    philHealth?: NullableStringFieldUpdateOperationsInput | string | null
     mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
     sessionsValidFrom?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -204958,6 +206134,20 @@ export namespace Prisma {
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     employeeId?: NullableStringFieldUpdateOperationsInput | string | null
     crewId?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    middleName?: NullableStringFieldUpdateOperationsInput | string | null
+    initials?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: NullableStringFieldUpdateOperationsInput | string | null
+    employmentStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    designation?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dateHired?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    officialAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    tin?: NullableStringFieldUpdateOperationsInput | string | null
+    sss?: NullableStringFieldUpdateOperationsInput | string | null
+    hdmf?: NullableStringFieldUpdateOperationsInput | string | null
+    philHealth?: NullableStringFieldUpdateOperationsInput | string | null
     mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
     sessionsValidFrom?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     vesselId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -204991,6 +206181,20 @@ export namespace Prisma {
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     employeeId?: NullableStringFieldUpdateOperationsInput | string | null
     crewId?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    middleName?: NullableStringFieldUpdateOperationsInput | string | null
+    initials?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: NullableStringFieldUpdateOperationsInput | string | null
+    employmentStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    designation?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dateHired?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    officialAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    tin?: NullableStringFieldUpdateOperationsInput | string | null
+    sss?: NullableStringFieldUpdateOperationsInput | string | null
+    hdmf?: NullableStringFieldUpdateOperationsInput | string | null
+    philHealth?: NullableStringFieldUpdateOperationsInput | string | null
     mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
     sessionsValidFrom?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     vesselId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -205510,6 +206714,20 @@ export namespace Prisma {
     lastLoginAt?: Date | string | null
     employeeId?: string | null
     crewId?: string | null
+    lastName?: string | null
+    firstName?: string | null
+    middleName?: string | null
+    initials?: string | null
+    gender?: string | null
+    employmentStatus?: string | null
+    designation?: string | null
+    birthDate?: Date | string | null
+    dateHired?: Date | string | null
+    officialAddress?: string | null
+    tin?: string | null
+    sss?: string | null
+    hdmf?: string | null
+    philHealth?: string | null
     mustChangePassword?: boolean
     sessionsValidFrom?: Date | string | null
     accessLevelId?: string | null
@@ -207291,6 +208509,20 @@ export namespace Prisma {
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     employeeId?: NullableStringFieldUpdateOperationsInput | string | null
     crewId?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    middleName?: NullableStringFieldUpdateOperationsInput | string | null
+    initials?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: NullableStringFieldUpdateOperationsInput | string | null
+    employmentStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    designation?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dateHired?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    officialAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    tin?: NullableStringFieldUpdateOperationsInput | string | null
+    sss?: NullableStringFieldUpdateOperationsInput | string | null
+    hdmf?: NullableStringFieldUpdateOperationsInput | string | null
+    philHealth?: NullableStringFieldUpdateOperationsInput | string | null
     mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
     sessionsValidFrom?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -207325,6 +208557,20 @@ export namespace Prisma {
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     employeeId?: NullableStringFieldUpdateOperationsInput | string | null
     crewId?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    middleName?: NullableStringFieldUpdateOperationsInput | string | null
+    initials?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: NullableStringFieldUpdateOperationsInput | string | null
+    employmentStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    designation?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dateHired?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    officialAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    tin?: NullableStringFieldUpdateOperationsInput | string | null
+    sss?: NullableStringFieldUpdateOperationsInput | string | null
+    hdmf?: NullableStringFieldUpdateOperationsInput | string | null
+    philHealth?: NullableStringFieldUpdateOperationsInput | string | null
     mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
     sessionsValidFrom?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     accessLevelId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -207358,6 +208604,20 @@ export namespace Prisma {
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     employeeId?: NullableStringFieldUpdateOperationsInput | string | null
     crewId?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    middleName?: NullableStringFieldUpdateOperationsInput | string | null
+    initials?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: NullableStringFieldUpdateOperationsInput | string | null
+    employmentStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    designation?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dateHired?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    officialAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    tin?: NullableStringFieldUpdateOperationsInput | string | null
+    sss?: NullableStringFieldUpdateOperationsInput | string | null
+    hdmf?: NullableStringFieldUpdateOperationsInput | string | null
+    philHealth?: NullableStringFieldUpdateOperationsInput | string | null
     mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
     sessionsValidFrom?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     accessLevelId?: NullableStringFieldUpdateOperationsInput | string | null
