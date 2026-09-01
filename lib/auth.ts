@@ -99,10 +99,34 @@ export async function getCurrentUser(): Promise<SessionUser | null> {
 
   const user = await prisma.user.findFirst({
     where: { id: uid, active: true, deletedAt: null },
-    include: {
+    // Precise `select`: this runs on EVERY authenticated request, so we fetch
+    // ONLY the columns the SessionUser build below reads — critically, just
+    // `permission.key` instead of full Permission rows (an Administrator joins
+    // 132 permissions; each is now a tiny `{ key }` projection). The output
+    // object is byte-for-byte identical to the old `include`; only the query
+    // shape changes.
+    select: {
+      id: true,
+      companyId: true,
+      fullName: true,
+      email: true,
+      department: true,
+      rank: true,
+      vesselId: true,
+      accessLevelId: true,
+      mustChangePassword: true,
+      // Read only to enforce the revocation guard below — never returned.
+      sessionsValidFrom: true,
       roles: {
-        include: {
-          role: { include: { permissions: { include: { permission: true } } } },
+        select: {
+          role: {
+            select: {
+              name: true,
+              permissions: {
+                select: { permission: { select: { key: true } } },
+              },
+            },
+          },
         },
       },
       // E3: load the access level and its granted keys in the SAME query, so the
@@ -111,7 +135,12 @@ export async function getCurrentUser(): Promise<SessionUser | null> {
       // already on it (see resolveAccessLevel), so its grants and rank persist
       // until the account is reassigned.
       accessLevel: {
-        include: { permissions: { include: { permission: true } } },
+        select: {
+          rank: true,
+          permissions: {
+            select: { permission: { select: { key: true } } },
+          },
+        },
       },
     },
   });
