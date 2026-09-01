@@ -1,10 +1,15 @@
 import { Layers } from "lucide-react";
 import { requirePermission, can } from "@/lib/rbac";
-import { listAccessLevels } from "@/features/access-levels/queries";
+import {
+  listAccessLevels,
+  listAccessLevelPermissionMatrix,
+  actorCeiling,
+} from "@/features/access-levels/queries";
 import { PageHeader } from "@/components/ui/page-header";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { AccessLevelsPanel, type LevelRowView } from "./access-levels-panel";
+import { PermissionMatrix } from "./permission-matrix";
 
 /**
  * Access Levels admin — the editable list of user levels (superadmin, admin,
@@ -28,6 +33,12 @@ export default async function AccessLevelsPage() {
     userCount: l._count.users,
   }));
 
+  // The grant-only permission matrix — editable only with access-level:manage.
+  // Columns are the active levels; the actor's ceiling drives which cells the
+  // grid disables, matching the server's no-escalation refusals.
+  const matrixColumns = canManage ? await listAccessLevelPermissionMatrix(user.companyId) : [];
+  const ceiling = actorCeiling(user);
+
   return (
     <div className="mx-auto max-w-4xl">
       <PageHeader
@@ -49,6 +60,22 @@ export default async function AccessLevelsPage() {
           {canManage ? <AccessLevelsPanel rows={rows} /> : <ReadOnlyTable rows={rows} />}
         </CardContent>
       </Card>
+
+      {canManage && matrixColumns.length > 0 && (
+        <Card className="mt-4">
+          <CardContent className="pt-5">
+            <div className="mb-3">
+              <h2 className="text-sm font-semibold">Permission matrix</h2>
+              <p className="text-xs text-muted-foreground">
+                What each level GRANTS. A user&apos;s effective permissions are the union of their
+                role and their access level, so this only adds — it never removes what a role
+                already gives.
+              </p>
+            </div>
+            <PermissionMatrix columns={matrixColumns} ceiling={ceiling} />
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 }

@@ -22,6 +22,16 @@ export type SessionUser = {
   roles: string[];
   permissions: Set<PermissionKey>;
   /**
+   * The user's access level (E3), or null when unassigned. `permissions` above
+   * is the UNION of the role-derived keys and this level's granted keys — the
+   * matrix GRANTS, it never subtracts, so a null level adds nothing and the set
+   * is identical to today. `accessLevelRank` orders the levels (higher = more
+   * privilege) and backs the no-escalation checks; null when unassigned, which
+   * those checks read as "no ceiling of their own".
+   */
+  accessLevelId: string | null;
+  accessLevelRank: number | null;
+  /**
    * True while the account still holds an admin-issued one-time password. The
    * authenticated layout (app/(app)/layout.tsx) reads this and forces the user
    * to /change-password before any other page renders. A plain column, not a
@@ -95,6 +105,14 @@ export async function getCurrentUser(): Promise<SessionUser | null> {
           role: { include: { permissions: { include: { permission: true } } } },
         },
       },
+      // E3: load the access level and its granted keys in the SAME query, so the
+      // union below costs no second round-trip. A soft-deleted level still
+      // resolves here on purpose — retiring a level doesn't unassign accounts
+      // already on it (see resolveAccessLevel), so its grants and rank persist
+      // until the account is reassigned.
+      accessLevel: {
+        include: { permissions: { include: { permission: true } } },
+      },
     },
   });
   if (!user) return null;
@@ -124,6 +142,16 @@ export async function getCurrentUser(): Promise<SessionUser | null> {
     }
   }
 
+  // E3 union (ADDITIVE): fold the access level's granted keys into the SAME set.
+  // Grant-only — a key already present from a role stays, and a null level adds
+  // nothing, so an existing (null-level) account's effective permissions are
+  // exactly what they were before this shipped.
+  if (user.accessLevel) {
+    for (const alp of user.accessLevel.permissions) {
+      permissions.add(alp.permission.key as PermissionKey);
+    }
+  }
+
   return {
     id: user.id,
     companyId: user.companyId,
@@ -134,6 +162,8 @@ export async function getCurrentUser(): Promise<SessionUser | null> {
     vesselId: user.vesselId,
     roles: roleNames,
     permissions,
+    accessLevelId: user.accessLevelId,
+    accessLevelRank: user.accessLevel?.rank ?? null,
     mustChangePassword: user.mustChangePassword,
   };
 }
