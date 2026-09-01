@@ -44,6 +44,11 @@ export type RolePermission = $Result.DefaultSelection<Prisma.$RolePermissionPayl
  */
 export type UserRole = $Result.DefaultSelection<Prisma.$UserRolePayload>
 /**
+ * Model AccessLevelPermission
+ * 
+ */
+export type AccessLevelPermission = $Result.DefaultSelection<Prisma.$AccessLevelPermissionPayload>
+/**
  * Model AccessLevel
  * 
  */
@@ -366,7 +371,8 @@ export type VoyageLog = $Result.DefaultSelection<Prisma.$VoyageLogPayload>
 export type VoyageLogBunker = $Result.DefaultSelection<Prisma.$VoyageLogBunkerPayload>
 /**
  * Model UnitMaster
- * * Controlled conversion-factor reference data — "Unit Master" per the
+ * *
+ *  * Controlled conversion-factor reference data — "Unit Master" per the
  *  * Environmental spec: an admin-managed table of (metric, unit) →
  *  * (standardUnit, factor), so a crew member can pick whatever unit they
  *  * actually measured in (e.g. Litres) and the software derives the
@@ -1677,6 +1683,16 @@ export class PrismaClient<
   get userRole(): Prisma.UserRoleDelegate<ExtArgs, ClientOptions>;
 
   /**
+   * `prisma.accessLevelPermission`: Exposes CRUD operations for the **AccessLevelPermission** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more AccessLevelPermissions
+    * const accessLevelPermissions = await prisma.accessLevelPermission.findMany()
+    * ```
+    */
+  get accessLevelPermission(): Prisma.AccessLevelPermissionDelegate<ExtArgs, ClientOptions>;
+
+  /**
    * `prisma.accessLevel`: Exposes CRUD operations for the **AccessLevel** model.
     * Example usage:
     * ```ts
@@ -2882,6 +2898,7 @@ export namespace Prisma {
     Permission: 'Permission',
     RolePermission: 'RolePermission',
     UserRole: 'UserRole',
+    AccessLevelPermission: 'AccessLevelPermission',
     AccessLevel: 'AccessLevel',
     Department: 'Department',
     Vessel: 'Vessel',
@@ -2976,7 +2993,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "company" | "user" | "role" | "permission" | "rolePermission" | "userRole" | "accessLevel" | "department" | "vessel" | "auditLog" | "attachment" | "comment" | "capaAction" | "notification" | "workflowDefinition" | "workflowStep" | "workflowInstance" | "workflowAction" | "smsDocument" | "smsRevision" | "incident" | "incidentSofEntry" | "incidentTypeEntry" | "nearMiss" | "nonConformity" | "sireInspection" | "sireObservation" | "sireObservationComment" | "sireQuestionnaireVersion" | "sireQuestionnaireItem" | "pscInspection" | "pscDeficiency" | "cdiInspection" | "cdiObservation" | "internalAudit" | "internalAuditFinding" | "externalAudit" | "externalAuditFinding" | "companyInspection" | "companyInspectionObservation" | "exposureCrewEntry" | "exposureInjuryCase" | "committeeMeeting" | "committeeMeetingAgenda" | "scheduleItem" | "scheduleApplicability" | "emergencyDrill" | "familiarizationRecord" | "familiarizationSession" | "lsaFfeItem" | "crewFamiliarization" | "crewFamiliarizationRecord" | "controlledDocument" | "vesselDocument" | "circular" | "circularAcknowledgement" | "riskAssessmentDocument" | "riskAssessmentRevision" | "riskHazardRow" | "riskAssessmentExecution" | "riskAssessmentRevisionRequest" | "defect" | "voyageLog" | "voyageLogBunker" | "unitMaster" | "referenceListItem" | "environmentRecord" | "garbageLedgerEntry" | "refSequence" | "tmsaAssessment" | "tmsaScore" | "tmsaFinding" | "storesCatalogueItem" | "sparesCatalogueItem" | "openingStockTake" | "inventoryEvent" | "inventoryUpdateDraft" | "requisition" | "requisitionRevision" | "requisitionLine" | "seafarer" | "crewAssignment"
+      modelProps: "company" | "user" | "role" | "permission" | "rolePermission" | "userRole" | "accessLevelPermission" | "accessLevel" | "department" | "vessel" | "auditLog" | "attachment" | "comment" | "capaAction" | "notification" | "workflowDefinition" | "workflowStep" | "workflowInstance" | "workflowAction" | "smsDocument" | "smsRevision" | "incident" | "incidentSofEntry" | "incidentTypeEntry" | "nearMiss" | "nonConformity" | "sireInspection" | "sireObservation" | "sireObservationComment" | "sireQuestionnaireVersion" | "sireQuestionnaireItem" | "pscInspection" | "pscDeficiency" | "cdiInspection" | "cdiObservation" | "internalAudit" | "internalAuditFinding" | "externalAudit" | "externalAuditFinding" | "companyInspection" | "companyInspectionObservation" | "exposureCrewEntry" | "exposureInjuryCase" | "committeeMeeting" | "committeeMeetingAgenda" | "scheduleItem" | "scheduleApplicability" | "emergencyDrill" | "familiarizationRecord" | "familiarizationSession" | "lsaFfeItem" | "crewFamiliarization" | "crewFamiliarizationRecord" | "controlledDocument" | "vesselDocument" | "circular" | "circularAcknowledgement" | "riskAssessmentDocument" | "riskAssessmentRevision" | "riskHazardRow" | "riskAssessmentExecution" | "riskAssessmentRevisionRequest" | "defect" | "voyageLog" | "voyageLogBunker" | "unitMaster" | "referenceListItem" | "environmentRecord" | "garbageLedgerEntry" | "refSequence" | "tmsaAssessment" | "tmsaScore" | "tmsaFinding" | "storesCatalogueItem" | "sparesCatalogueItem" | "openingStockTake" | "inventoryEvent" | "inventoryUpdateDraft" | "requisition" | "requisitionRevision" | "requisitionLine" | "seafarer" | "crewAssignment"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -3421,6 +3438,80 @@ export namespace Prisma {
           count: {
             args: Prisma.UserRoleCountArgs<ExtArgs>
             result: $Utils.Optional<UserRoleCountAggregateOutputType> | number
+          }
+        }
+      }
+      AccessLevelPermission: {
+        payload: Prisma.$AccessLevelPermissionPayload<ExtArgs>
+        fields: Prisma.AccessLevelPermissionFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.AccessLevelPermissionFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AccessLevelPermissionPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.AccessLevelPermissionFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AccessLevelPermissionPayload>
+          }
+          findFirst: {
+            args: Prisma.AccessLevelPermissionFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AccessLevelPermissionPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.AccessLevelPermissionFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AccessLevelPermissionPayload>
+          }
+          findMany: {
+            args: Prisma.AccessLevelPermissionFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AccessLevelPermissionPayload>[]
+          }
+          create: {
+            args: Prisma.AccessLevelPermissionCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AccessLevelPermissionPayload>
+          }
+          createMany: {
+            args: Prisma.AccessLevelPermissionCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.AccessLevelPermissionCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AccessLevelPermissionPayload>[]
+          }
+          delete: {
+            args: Prisma.AccessLevelPermissionDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AccessLevelPermissionPayload>
+          }
+          update: {
+            args: Prisma.AccessLevelPermissionUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AccessLevelPermissionPayload>
+          }
+          deleteMany: {
+            args: Prisma.AccessLevelPermissionDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.AccessLevelPermissionUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.AccessLevelPermissionUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AccessLevelPermissionPayload>[]
+          }
+          upsert: {
+            args: Prisma.AccessLevelPermissionUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AccessLevelPermissionPayload>
+          }
+          aggregate: {
+            args: Prisma.AccessLevelPermissionAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateAccessLevelPermission>
+          }
+          groupBy: {
+            args: Prisma.AccessLevelPermissionGroupByArgs<ExtArgs>
+            result: $Utils.Optional<AccessLevelPermissionGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.AccessLevelPermissionCountArgs<ExtArgs>
+            result: $Utils.Optional<AccessLevelPermissionCountAggregateOutputType> | number
           }
         }
       }
@@ -9150,6 +9241,7 @@ export namespace Prisma {
     permission?: PermissionOmit
     rolePermission?: RolePermissionOmit
     userRole?: UserRoleOmit
+    accessLevelPermission?: AccessLevelPermissionOmit
     accessLevel?: AccessLevelOmit
     department?: DepartmentOmit
     vessel?: VesselOmit
@@ -9904,10 +9996,12 @@ export namespace Prisma {
 
   export type PermissionCountOutputType = {
     roles: number
+    accessLevels: number
   }
 
   export type PermissionCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     roles?: boolean | PermissionCountOutputTypeCountRolesArgs
+    accessLevels?: boolean | PermissionCountOutputTypeCountAccessLevelsArgs
   }
 
   // Custom InputTypes
@@ -9928,6 +10022,13 @@ export namespace Prisma {
     where?: RolePermissionWhereInput
   }
 
+  /**
+   * PermissionCountOutputType without action
+   */
+  export type PermissionCountOutputTypeCountAccessLevelsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AccessLevelPermissionWhereInput
+  }
+
 
   /**
    * Count Type AccessLevelCountOutputType
@@ -9935,10 +10036,12 @@ export namespace Prisma {
 
   export type AccessLevelCountOutputType = {
     users: number
+    permissions: number
   }
 
   export type AccessLevelCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     users?: boolean | AccessLevelCountOutputTypeCountUsersArgs
+    permissions?: boolean | AccessLevelCountOutputTypeCountPermissionsArgs
   }
 
   // Custom InputTypes
@@ -9957,6 +10060,13 @@ export namespace Prisma {
    */
   export type AccessLevelCountOutputTypeCountUsersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: UserWhereInput
+  }
+
+  /**
+   * AccessLevelCountOutputType without action
+   */
+  export type AccessLevelCountOutputTypeCountPermissionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AccessLevelPermissionWhereInput
   }
 
 
@@ -16962,6 +17072,7 @@ export namespace Prisma {
     module?: boolean
     description?: boolean
     roles?: boolean | Permission$rolesArgs<ExtArgs>
+    accessLevels?: boolean | Permission$accessLevelsArgs<ExtArgs>
     _count?: boolean | PermissionCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["permission"]>
 
@@ -16989,6 +17100,7 @@ export namespace Prisma {
   export type PermissionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "key" | "module" | "description", ExtArgs["result"]["permission"]>
   export type PermissionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     roles?: boolean | Permission$rolesArgs<ExtArgs>
+    accessLevels?: boolean | Permission$accessLevelsArgs<ExtArgs>
     _count?: boolean | PermissionCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type PermissionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -16998,6 +17110,7 @@ export namespace Prisma {
     name: "Permission"
     objects: {
       roles: Prisma.$RolePermissionPayload<ExtArgs>[]
+      accessLevels: Prisma.$AccessLevelPermissionPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -17399,6 +17512,7 @@ export namespace Prisma {
   export interface Prisma__PermissionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     roles<T extends Permission$rolesArgs<ExtArgs> = {}>(args?: Subset<T, Permission$rolesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RolePermissionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    accessLevels<T extends Permission$accessLevelsArgs<ExtArgs> = {}>(args?: Subset<T, Permission$accessLevelsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AccessLevelPermissionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -17841,6 +17955,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: RolePermissionScalarFieldEnum | RolePermissionScalarFieldEnum[]
+  }
+
+  /**
+   * Permission.accessLevels
+   */
+  export type Permission$accessLevelsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AccessLevelPermission
+     */
+    select?: AccessLevelPermissionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AccessLevelPermission
+     */
+    omit?: AccessLevelPermissionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AccessLevelPermissionInclude<ExtArgs> | null
+    where?: AccessLevelPermissionWhereInput
+    orderBy?: AccessLevelPermissionOrderByWithRelationInput | AccessLevelPermissionOrderByWithRelationInput[]
+    cursor?: AccessLevelPermissionWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: AccessLevelPermissionScalarFieldEnum | AccessLevelPermissionScalarFieldEnum[]
   }
 
   /**
@@ -19917,6 +20055,1033 @@ export namespace Prisma {
 
 
   /**
+   * Model AccessLevelPermission
+   */
+
+  export type AggregateAccessLevelPermission = {
+    _count: AccessLevelPermissionCountAggregateOutputType | null
+    _min: AccessLevelPermissionMinAggregateOutputType | null
+    _max: AccessLevelPermissionMaxAggregateOutputType | null
+  }
+
+  export type AccessLevelPermissionMinAggregateOutputType = {
+    accessLevelId: string | null
+    permissionId: string | null
+  }
+
+  export type AccessLevelPermissionMaxAggregateOutputType = {
+    accessLevelId: string | null
+    permissionId: string | null
+  }
+
+  export type AccessLevelPermissionCountAggregateOutputType = {
+    accessLevelId: number
+    permissionId: number
+    _all: number
+  }
+
+
+  export type AccessLevelPermissionMinAggregateInputType = {
+    accessLevelId?: true
+    permissionId?: true
+  }
+
+  export type AccessLevelPermissionMaxAggregateInputType = {
+    accessLevelId?: true
+    permissionId?: true
+  }
+
+  export type AccessLevelPermissionCountAggregateInputType = {
+    accessLevelId?: true
+    permissionId?: true
+    _all?: true
+  }
+
+  export type AccessLevelPermissionAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which AccessLevelPermission to aggregate.
+     */
+    where?: AccessLevelPermissionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AccessLevelPermissions to fetch.
+     */
+    orderBy?: AccessLevelPermissionOrderByWithRelationInput | AccessLevelPermissionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: AccessLevelPermissionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AccessLevelPermissions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AccessLevelPermissions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned AccessLevelPermissions
+    **/
+    _count?: true | AccessLevelPermissionCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: AccessLevelPermissionMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: AccessLevelPermissionMaxAggregateInputType
+  }
+
+  export type GetAccessLevelPermissionAggregateType<T extends AccessLevelPermissionAggregateArgs> = {
+        [P in keyof T & keyof AggregateAccessLevelPermission]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateAccessLevelPermission[P]>
+      : GetScalarType<T[P], AggregateAccessLevelPermission[P]>
+  }
+
+
+
+
+  export type AccessLevelPermissionGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AccessLevelPermissionWhereInput
+    orderBy?: AccessLevelPermissionOrderByWithAggregationInput | AccessLevelPermissionOrderByWithAggregationInput[]
+    by: AccessLevelPermissionScalarFieldEnum[] | AccessLevelPermissionScalarFieldEnum
+    having?: AccessLevelPermissionScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: AccessLevelPermissionCountAggregateInputType | true
+    _min?: AccessLevelPermissionMinAggregateInputType
+    _max?: AccessLevelPermissionMaxAggregateInputType
+  }
+
+  export type AccessLevelPermissionGroupByOutputType = {
+    accessLevelId: string
+    permissionId: string
+    _count: AccessLevelPermissionCountAggregateOutputType | null
+    _min: AccessLevelPermissionMinAggregateOutputType | null
+    _max: AccessLevelPermissionMaxAggregateOutputType | null
+  }
+
+  type GetAccessLevelPermissionGroupByPayload<T extends AccessLevelPermissionGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<AccessLevelPermissionGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof AccessLevelPermissionGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], AccessLevelPermissionGroupByOutputType[P]>
+            : GetScalarType<T[P], AccessLevelPermissionGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type AccessLevelPermissionSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    accessLevelId?: boolean
+    permissionId?: boolean
+    accessLevel?: boolean | AccessLevelDefaultArgs<ExtArgs>
+    permission?: boolean | PermissionDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["accessLevelPermission"]>
+
+  export type AccessLevelPermissionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    accessLevelId?: boolean
+    permissionId?: boolean
+    accessLevel?: boolean | AccessLevelDefaultArgs<ExtArgs>
+    permission?: boolean | PermissionDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["accessLevelPermission"]>
+
+  export type AccessLevelPermissionSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    accessLevelId?: boolean
+    permissionId?: boolean
+    accessLevel?: boolean | AccessLevelDefaultArgs<ExtArgs>
+    permission?: boolean | PermissionDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["accessLevelPermission"]>
+
+  export type AccessLevelPermissionSelectScalar = {
+    accessLevelId?: boolean
+    permissionId?: boolean
+  }
+
+  export type AccessLevelPermissionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"accessLevelId" | "permissionId", ExtArgs["result"]["accessLevelPermission"]>
+  export type AccessLevelPermissionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    accessLevel?: boolean | AccessLevelDefaultArgs<ExtArgs>
+    permission?: boolean | PermissionDefaultArgs<ExtArgs>
+  }
+  export type AccessLevelPermissionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    accessLevel?: boolean | AccessLevelDefaultArgs<ExtArgs>
+    permission?: boolean | PermissionDefaultArgs<ExtArgs>
+  }
+  export type AccessLevelPermissionIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    accessLevel?: boolean | AccessLevelDefaultArgs<ExtArgs>
+    permission?: boolean | PermissionDefaultArgs<ExtArgs>
+  }
+
+  export type $AccessLevelPermissionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "AccessLevelPermission"
+    objects: {
+      accessLevel: Prisma.$AccessLevelPayload<ExtArgs>
+      permission: Prisma.$PermissionPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      accessLevelId: string
+      permissionId: string
+    }, ExtArgs["result"]["accessLevelPermission"]>
+    composites: {}
+  }
+
+  type AccessLevelPermissionGetPayload<S extends boolean | null | undefined | AccessLevelPermissionDefaultArgs> = $Result.GetResult<Prisma.$AccessLevelPermissionPayload, S>
+
+  type AccessLevelPermissionCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<AccessLevelPermissionFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: AccessLevelPermissionCountAggregateInputType | true
+    }
+
+  export interface AccessLevelPermissionDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['AccessLevelPermission'], meta: { name: 'AccessLevelPermission' } }
+    /**
+     * Find zero or one AccessLevelPermission that matches the filter.
+     * @param {AccessLevelPermissionFindUniqueArgs} args - Arguments to find a AccessLevelPermission
+     * @example
+     * // Get one AccessLevelPermission
+     * const accessLevelPermission = await prisma.accessLevelPermission.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends AccessLevelPermissionFindUniqueArgs>(args: SelectSubset<T, AccessLevelPermissionFindUniqueArgs<ExtArgs>>): Prisma__AccessLevelPermissionClient<$Result.GetResult<Prisma.$AccessLevelPermissionPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one AccessLevelPermission that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {AccessLevelPermissionFindUniqueOrThrowArgs} args - Arguments to find a AccessLevelPermission
+     * @example
+     * // Get one AccessLevelPermission
+     * const accessLevelPermission = await prisma.accessLevelPermission.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends AccessLevelPermissionFindUniqueOrThrowArgs>(args: SelectSubset<T, AccessLevelPermissionFindUniqueOrThrowArgs<ExtArgs>>): Prisma__AccessLevelPermissionClient<$Result.GetResult<Prisma.$AccessLevelPermissionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first AccessLevelPermission that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AccessLevelPermissionFindFirstArgs} args - Arguments to find a AccessLevelPermission
+     * @example
+     * // Get one AccessLevelPermission
+     * const accessLevelPermission = await prisma.accessLevelPermission.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends AccessLevelPermissionFindFirstArgs>(args?: SelectSubset<T, AccessLevelPermissionFindFirstArgs<ExtArgs>>): Prisma__AccessLevelPermissionClient<$Result.GetResult<Prisma.$AccessLevelPermissionPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first AccessLevelPermission that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AccessLevelPermissionFindFirstOrThrowArgs} args - Arguments to find a AccessLevelPermission
+     * @example
+     * // Get one AccessLevelPermission
+     * const accessLevelPermission = await prisma.accessLevelPermission.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends AccessLevelPermissionFindFirstOrThrowArgs>(args?: SelectSubset<T, AccessLevelPermissionFindFirstOrThrowArgs<ExtArgs>>): Prisma__AccessLevelPermissionClient<$Result.GetResult<Prisma.$AccessLevelPermissionPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more AccessLevelPermissions that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AccessLevelPermissionFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all AccessLevelPermissions
+     * const accessLevelPermissions = await prisma.accessLevelPermission.findMany()
+     * 
+     * // Get first 10 AccessLevelPermissions
+     * const accessLevelPermissions = await prisma.accessLevelPermission.findMany({ take: 10 })
+     * 
+     * // Only select the `accessLevelId`
+     * const accessLevelPermissionWithAccessLevelIdOnly = await prisma.accessLevelPermission.findMany({ select: { accessLevelId: true } })
+     * 
+     */
+    findMany<T extends AccessLevelPermissionFindManyArgs>(args?: SelectSubset<T, AccessLevelPermissionFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AccessLevelPermissionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a AccessLevelPermission.
+     * @param {AccessLevelPermissionCreateArgs} args - Arguments to create a AccessLevelPermission.
+     * @example
+     * // Create one AccessLevelPermission
+     * const AccessLevelPermission = await prisma.accessLevelPermission.create({
+     *   data: {
+     *     // ... data to create a AccessLevelPermission
+     *   }
+     * })
+     * 
+     */
+    create<T extends AccessLevelPermissionCreateArgs>(args: SelectSubset<T, AccessLevelPermissionCreateArgs<ExtArgs>>): Prisma__AccessLevelPermissionClient<$Result.GetResult<Prisma.$AccessLevelPermissionPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many AccessLevelPermissions.
+     * @param {AccessLevelPermissionCreateManyArgs} args - Arguments to create many AccessLevelPermissions.
+     * @example
+     * // Create many AccessLevelPermissions
+     * const accessLevelPermission = await prisma.accessLevelPermission.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends AccessLevelPermissionCreateManyArgs>(args?: SelectSubset<T, AccessLevelPermissionCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many AccessLevelPermissions and returns the data saved in the database.
+     * @param {AccessLevelPermissionCreateManyAndReturnArgs} args - Arguments to create many AccessLevelPermissions.
+     * @example
+     * // Create many AccessLevelPermissions
+     * const accessLevelPermission = await prisma.accessLevelPermission.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many AccessLevelPermissions and only return the `accessLevelId`
+     * const accessLevelPermissionWithAccessLevelIdOnly = await prisma.accessLevelPermission.createManyAndReturn({
+     *   select: { accessLevelId: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends AccessLevelPermissionCreateManyAndReturnArgs>(args?: SelectSubset<T, AccessLevelPermissionCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AccessLevelPermissionPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a AccessLevelPermission.
+     * @param {AccessLevelPermissionDeleteArgs} args - Arguments to delete one AccessLevelPermission.
+     * @example
+     * // Delete one AccessLevelPermission
+     * const AccessLevelPermission = await prisma.accessLevelPermission.delete({
+     *   where: {
+     *     // ... filter to delete one AccessLevelPermission
+     *   }
+     * })
+     * 
+     */
+    delete<T extends AccessLevelPermissionDeleteArgs>(args: SelectSubset<T, AccessLevelPermissionDeleteArgs<ExtArgs>>): Prisma__AccessLevelPermissionClient<$Result.GetResult<Prisma.$AccessLevelPermissionPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one AccessLevelPermission.
+     * @param {AccessLevelPermissionUpdateArgs} args - Arguments to update one AccessLevelPermission.
+     * @example
+     * // Update one AccessLevelPermission
+     * const accessLevelPermission = await prisma.accessLevelPermission.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends AccessLevelPermissionUpdateArgs>(args: SelectSubset<T, AccessLevelPermissionUpdateArgs<ExtArgs>>): Prisma__AccessLevelPermissionClient<$Result.GetResult<Prisma.$AccessLevelPermissionPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more AccessLevelPermissions.
+     * @param {AccessLevelPermissionDeleteManyArgs} args - Arguments to filter AccessLevelPermissions to delete.
+     * @example
+     * // Delete a few AccessLevelPermissions
+     * const { count } = await prisma.accessLevelPermission.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends AccessLevelPermissionDeleteManyArgs>(args?: SelectSubset<T, AccessLevelPermissionDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more AccessLevelPermissions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AccessLevelPermissionUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many AccessLevelPermissions
+     * const accessLevelPermission = await prisma.accessLevelPermission.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends AccessLevelPermissionUpdateManyArgs>(args: SelectSubset<T, AccessLevelPermissionUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more AccessLevelPermissions and returns the data updated in the database.
+     * @param {AccessLevelPermissionUpdateManyAndReturnArgs} args - Arguments to update many AccessLevelPermissions.
+     * @example
+     * // Update many AccessLevelPermissions
+     * const accessLevelPermission = await prisma.accessLevelPermission.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more AccessLevelPermissions and only return the `accessLevelId`
+     * const accessLevelPermissionWithAccessLevelIdOnly = await prisma.accessLevelPermission.updateManyAndReturn({
+     *   select: { accessLevelId: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends AccessLevelPermissionUpdateManyAndReturnArgs>(args: SelectSubset<T, AccessLevelPermissionUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AccessLevelPermissionPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one AccessLevelPermission.
+     * @param {AccessLevelPermissionUpsertArgs} args - Arguments to update or create a AccessLevelPermission.
+     * @example
+     * // Update or create a AccessLevelPermission
+     * const accessLevelPermission = await prisma.accessLevelPermission.upsert({
+     *   create: {
+     *     // ... data to create a AccessLevelPermission
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the AccessLevelPermission we want to update
+     *   }
+     * })
+     */
+    upsert<T extends AccessLevelPermissionUpsertArgs>(args: SelectSubset<T, AccessLevelPermissionUpsertArgs<ExtArgs>>): Prisma__AccessLevelPermissionClient<$Result.GetResult<Prisma.$AccessLevelPermissionPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of AccessLevelPermissions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AccessLevelPermissionCountArgs} args - Arguments to filter AccessLevelPermissions to count.
+     * @example
+     * // Count the number of AccessLevelPermissions
+     * const count = await prisma.accessLevelPermission.count({
+     *   where: {
+     *     // ... the filter for the AccessLevelPermissions we want to count
+     *   }
+     * })
+    **/
+    count<T extends AccessLevelPermissionCountArgs>(
+      args?: Subset<T, AccessLevelPermissionCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], AccessLevelPermissionCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a AccessLevelPermission.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AccessLevelPermissionAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends AccessLevelPermissionAggregateArgs>(args: Subset<T, AccessLevelPermissionAggregateArgs>): Prisma.PrismaPromise<GetAccessLevelPermissionAggregateType<T>>
+
+    /**
+     * Group by AccessLevelPermission.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AccessLevelPermissionGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends AccessLevelPermissionGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: AccessLevelPermissionGroupByArgs['orderBy'] }
+        : { orderBy?: AccessLevelPermissionGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, AccessLevelPermissionGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetAccessLevelPermissionGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the AccessLevelPermission model
+   */
+  readonly fields: AccessLevelPermissionFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for AccessLevelPermission.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__AccessLevelPermissionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    accessLevel<T extends AccessLevelDefaultArgs<ExtArgs> = {}>(args?: Subset<T, AccessLevelDefaultArgs<ExtArgs>>): Prisma__AccessLevelClient<$Result.GetResult<Prisma.$AccessLevelPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    permission<T extends PermissionDefaultArgs<ExtArgs> = {}>(args?: Subset<T, PermissionDefaultArgs<ExtArgs>>): Prisma__PermissionClient<$Result.GetResult<Prisma.$PermissionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the AccessLevelPermission model
+   */
+  interface AccessLevelPermissionFieldRefs {
+    readonly accessLevelId: FieldRef<"AccessLevelPermission", 'String'>
+    readonly permissionId: FieldRef<"AccessLevelPermission", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * AccessLevelPermission findUnique
+   */
+  export type AccessLevelPermissionFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AccessLevelPermission
+     */
+    select?: AccessLevelPermissionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AccessLevelPermission
+     */
+    omit?: AccessLevelPermissionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AccessLevelPermissionInclude<ExtArgs> | null
+    /**
+     * Filter, which AccessLevelPermission to fetch.
+     */
+    where: AccessLevelPermissionWhereUniqueInput
+  }
+
+  /**
+   * AccessLevelPermission findUniqueOrThrow
+   */
+  export type AccessLevelPermissionFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AccessLevelPermission
+     */
+    select?: AccessLevelPermissionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AccessLevelPermission
+     */
+    omit?: AccessLevelPermissionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AccessLevelPermissionInclude<ExtArgs> | null
+    /**
+     * Filter, which AccessLevelPermission to fetch.
+     */
+    where: AccessLevelPermissionWhereUniqueInput
+  }
+
+  /**
+   * AccessLevelPermission findFirst
+   */
+  export type AccessLevelPermissionFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AccessLevelPermission
+     */
+    select?: AccessLevelPermissionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AccessLevelPermission
+     */
+    omit?: AccessLevelPermissionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AccessLevelPermissionInclude<ExtArgs> | null
+    /**
+     * Filter, which AccessLevelPermission to fetch.
+     */
+    where?: AccessLevelPermissionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AccessLevelPermissions to fetch.
+     */
+    orderBy?: AccessLevelPermissionOrderByWithRelationInput | AccessLevelPermissionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for AccessLevelPermissions.
+     */
+    cursor?: AccessLevelPermissionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AccessLevelPermissions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AccessLevelPermissions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of AccessLevelPermissions.
+     */
+    distinct?: AccessLevelPermissionScalarFieldEnum | AccessLevelPermissionScalarFieldEnum[]
+  }
+
+  /**
+   * AccessLevelPermission findFirstOrThrow
+   */
+  export type AccessLevelPermissionFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AccessLevelPermission
+     */
+    select?: AccessLevelPermissionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AccessLevelPermission
+     */
+    omit?: AccessLevelPermissionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AccessLevelPermissionInclude<ExtArgs> | null
+    /**
+     * Filter, which AccessLevelPermission to fetch.
+     */
+    where?: AccessLevelPermissionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AccessLevelPermissions to fetch.
+     */
+    orderBy?: AccessLevelPermissionOrderByWithRelationInput | AccessLevelPermissionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for AccessLevelPermissions.
+     */
+    cursor?: AccessLevelPermissionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AccessLevelPermissions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AccessLevelPermissions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of AccessLevelPermissions.
+     */
+    distinct?: AccessLevelPermissionScalarFieldEnum | AccessLevelPermissionScalarFieldEnum[]
+  }
+
+  /**
+   * AccessLevelPermission findMany
+   */
+  export type AccessLevelPermissionFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AccessLevelPermission
+     */
+    select?: AccessLevelPermissionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AccessLevelPermission
+     */
+    omit?: AccessLevelPermissionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AccessLevelPermissionInclude<ExtArgs> | null
+    /**
+     * Filter, which AccessLevelPermissions to fetch.
+     */
+    where?: AccessLevelPermissionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AccessLevelPermissions to fetch.
+     */
+    orderBy?: AccessLevelPermissionOrderByWithRelationInput | AccessLevelPermissionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing AccessLevelPermissions.
+     */
+    cursor?: AccessLevelPermissionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AccessLevelPermissions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AccessLevelPermissions.
+     */
+    skip?: number
+    distinct?: AccessLevelPermissionScalarFieldEnum | AccessLevelPermissionScalarFieldEnum[]
+  }
+
+  /**
+   * AccessLevelPermission create
+   */
+  export type AccessLevelPermissionCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AccessLevelPermission
+     */
+    select?: AccessLevelPermissionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AccessLevelPermission
+     */
+    omit?: AccessLevelPermissionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AccessLevelPermissionInclude<ExtArgs> | null
+    /**
+     * The data needed to create a AccessLevelPermission.
+     */
+    data: XOR<AccessLevelPermissionCreateInput, AccessLevelPermissionUncheckedCreateInput>
+  }
+
+  /**
+   * AccessLevelPermission createMany
+   */
+  export type AccessLevelPermissionCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many AccessLevelPermissions.
+     */
+    data: AccessLevelPermissionCreateManyInput | AccessLevelPermissionCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * AccessLevelPermission createManyAndReturn
+   */
+  export type AccessLevelPermissionCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AccessLevelPermission
+     */
+    select?: AccessLevelPermissionSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the AccessLevelPermission
+     */
+    omit?: AccessLevelPermissionOmit<ExtArgs> | null
+    /**
+     * The data used to create many AccessLevelPermissions.
+     */
+    data: AccessLevelPermissionCreateManyInput | AccessLevelPermissionCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AccessLevelPermissionIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * AccessLevelPermission update
+   */
+  export type AccessLevelPermissionUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AccessLevelPermission
+     */
+    select?: AccessLevelPermissionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AccessLevelPermission
+     */
+    omit?: AccessLevelPermissionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AccessLevelPermissionInclude<ExtArgs> | null
+    /**
+     * The data needed to update a AccessLevelPermission.
+     */
+    data: XOR<AccessLevelPermissionUpdateInput, AccessLevelPermissionUncheckedUpdateInput>
+    /**
+     * Choose, which AccessLevelPermission to update.
+     */
+    where: AccessLevelPermissionWhereUniqueInput
+  }
+
+  /**
+   * AccessLevelPermission updateMany
+   */
+  export type AccessLevelPermissionUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update AccessLevelPermissions.
+     */
+    data: XOR<AccessLevelPermissionUpdateManyMutationInput, AccessLevelPermissionUncheckedUpdateManyInput>
+    /**
+     * Filter which AccessLevelPermissions to update
+     */
+    where?: AccessLevelPermissionWhereInput
+    /**
+     * Limit how many AccessLevelPermissions to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * AccessLevelPermission updateManyAndReturn
+   */
+  export type AccessLevelPermissionUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AccessLevelPermission
+     */
+    select?: AccessLevelPermissionSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the AccessLevelPermission
+     */
+    omit?: AccessLevelPermissionOmit<ExtArgs> | null
+    /**
+     * The data used to update AccessLevelPermissions.
+     */
+    data: XOR<AccessLevelPermissionUpdateManyMutationInput, AccessLevelPermissionUncheckedUpdateManyInput>
+    /**
+     * Filter which AccessLevelPermissions to update
+     */
+    where?: AccessLevelPermissionWhereInput
+    /**
+     * Limit how many AccessLevelPermissions to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AccessLevelPermissionIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * AccessLevelPermission upsert
+   */
+  export type AccessLevelPermissionUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AccessLevelPermission
+     */
+    select?: AccessLevelPermissionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AccessLevelPermission
+     */
+    omit?: AccessLevelPermissionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AccessLevelPermissionInclude<ExtArgs> | null
+    /**
+     * The filter to search for the AccessLevelPermission to update in case it exists.
+     */
+    where: AccessLevelPermissionWhereUniqueInput
+    /**
+     * In case the AccessLevelPermission found by the `where` argument doesn't exist, create a new AccessLevelPermission with this data.
+     */
+    create: XOR<AccessLevelPermissionCreateInput, AccessLevelPermissionUncheckedCreateInput>
+    /**
+     * In case the AccessLevelPermission was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<AccessLevelPermissionUpdateInput, AccessLevelPermissionUncheckedUpdateInput>
+  }
+
+  /**
+   * AccessLevelPermission delete
+   */
+  export type AccessLevelPermissionDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AccessLevelPermission
+     */
+    select?: AccessLevelPermissionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AccessLevelPermission
+     */
+    omit?: AccessLevelPermissionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AccessLevelPermissionInclude<ExtArgs> | null
+    /**
+     * Filter which AccessLevelPermission to delete.
+     */
+    where: AccessLevelPermissionWhereUniqueInput
+  }
+
+  /**
+   * AccessLevelPermission deleteMany
+   */
+  export type AccessLevelPermissionDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which AccessLevelPermissions to delete
+     */
+    where?: AccessLevelPermissionWhereInput
+    /**
+     * Limit how many AccessLevelPermissions to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * AccessLevelPermission without action
+   */
+  export type AccessLevelPermissionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AccessLevelPermission
+     */
+    select?: AccessLevelPermissionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AccessLevelPermission
+     */
+    omit?: AccessLevelPermissionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AccessLevelPermissionInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Model AccessLevel
    */
 
@@ -20172,6 +21337,7 @@ export namespace Prisma {
     deletedBy?: boolean
     company?: boolean | CompanyDefaultArgs<ExtArgs>
     users?: boolean | AccessLevel$usersArgs<ExtArgs>
+    permissions?: boolean | AccessLevel$permissionsArgs<ExtArgs>
     _count?: boolean | AccessLevelCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["accessLevel"]>
 
@@ -20226,6 +21392,7 @@ export namespace Prisma {
   export type AccessLevelInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     company?: boolean | CompanyDefaultArgs<ExtArgs>
     users?: boolean | AccessLevel$usersArgs<ExtArgs>
+    permissions?: boolean | AccessLevel$permissionsArgs<ExtArgs>
     _count?: boolean | AccessLevelCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type AccessLevelIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -20240,6 +21407,7 @@ export namespace Prisma {
     objects: {
       company: Prisma.$CompanyPayload<ExtArgs>
       users: Prisma.$UserPayload<ExtArgs>[]
+      permissions: Prisma.$AccessLevelPermissionPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -20650,6 +21818,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     company<T extends CompanyDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CompanyDefaultArgs<ExtArgs>>): Prisma__CompanyClient<$Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     users<T extends AccessLevel$usersArgs<ExtArgs> = {}>(args?: Subset<T, AccessLevel$usersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    permissions<T extends AccessLevel$permissionsArgs<ExtArgs> = {}>(args?: Subset<T, AccessLevel$permissionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AccessLevelPermissionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -21108,6 +22277,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: UserScalarFieldEnum | UserScalarFieldEnum[]
+  }
+
+  /**
+   * AccessLevel.permissions
+   */
+  export type AccessLevel$permissionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AccessLevelPermission
+     */
+    select?: AccessLevelPermissionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AccessLevelPermission
+     */
+    omit?: AccessLevelPermissionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AccessLevelPermissionInclude<ExtArgs> | null
+    where?: AccessLevelPermissionWhereInput
+    orderBy?: AccessLevelPermissionOrderByWithRelationInput | AccessLevelPermissionOrderByWithRelationInput[]
+    cursor?: AccessLevelPermissionWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: AccessLevelPermissionScalarFieldEnum | AccessLevelPermissionScalarFieldEnum[]
   }
 
   /**
@@ -116317,6 +117510,14 @@ export namespace Prisma {
   export type UserRoleScalarFieldEnum = (typeof UserRoleScalarFieldEnum)[keyof typeof UserRoleScalarFieldEnum]
 
 
+  export const AccessLevelPermissionScalarFieldEnum: {
+    accessLevelId: 'accessLevelId',
+    permissionId: 'permissionId'
+  };
+
+  export type AccessLevelPermissionScalarFieldEnum = (typeof AccessLevelPermissionScalarFieldEnum)[keyof typeof AccessLevelPermissionScalarFieldEnum]
+
+
   export const AccessLevelScalarFieldEnum: {
     id: 'id',
     companyId: 'companyId',
@@ -119715,6 +120916,7 @@ export namespace Prisma {
     module?: StringFilter<"Permission"> | string
     description?: StringNullableFilter<"Permission"> | string | null
     roles?: RolePermissionListRelationFilter
+    accessLevels?: AccessLevelPermissionListRelationFilter
   }
 
   export type PermissionOrderByWithRelationInput = {
@@ -119723,6 +120925,7 @@ export namespace Prisma {
     module?: SortOrder
     description?: SortOrderInput | SortOrder
     roles?: RolePermissionOrderByRelationAggregateInput
+    accessLevels?: AccessLevelPermissionOrderByRelationAggregateInput
   }
 
   export type PermissionWhereUniqueInput = Prisma.AtLeast<{
@@ -119734,6 +120937,7 @@ export namespace Prisma {
     module?: StringFilter<"Permission"> | string
     description?: StringNullableFilter<"Permission"> | string | null
     roles?: RolePermissionListRelationFilter
+    accessLevels?: AccessLevelPermissionListRelationFilter
   }, "id" | "key">
 
   export type PermissionOrderByWithAggregationInput = {
@@ -119844,6 +121048,50 @@ export namespace Prisma {
     roleId?: StringWithAggregatesFilter<"UserRole"> | string
   }
 
+  export type AccessLevelPermissionWhereInput = {
+    AND?: AccessLevelPermissionWhereInput | AccessLevelPermissionWhereInput[]
+    OR?: AccessLevelPermissionWhereInput[]
+    NOT?: AccessLevelPermissionWhereInput | AccessLevelPermissionWhereInput[]
+    accessLevelId?: StringFilter<"AccessLevelPermission"> | string
+    permissionId?: StringFilter<"AccessLevelPermission"> | string
+    accessLevel?: XOR<AccessLevelScalarRelationFilter, AccessLevelWhereInput>
+    permission?: XOR<PermissionScalarRelationFilter, PermissionWhereInput>
+  }
+
+  export type AccessLevelPermissionOrderByWithRelationInput = {
+    accessLevelId?: SortOrder
+    permissionId?: SortOrder
+    accessLevel?: AccessLevelOrderByWithRelationInput
+    permission?: PermissionOrderByWithRelationInput
+  }
+
+  export type AccessLevelPermissionWhereUniqueInput = Prisma.AtLeast<{
+    accessLevelId_permissionId?: AccessLevelPermissionAccessLevelIdPermissionIdCompoundUniqueInput
+    AND?: AccessLevelPermissionWhereInput | AccessLevelPermissionWhereInput[]
+    OR?: AccessLevelPermissionWhereInput[]
+    NOT?: AccessLevelPermissionWhereInput | AccessLevelPermissionWhereInput[]
+    accessLevelId?: StringFilter<"AccessLevelPermission"> | string
+    permissionId?: StringFilter<"AccessLevelPermission"> | string
+    accessLevel?: XOR<AccessLevelScalarRelationFilter, AccessLevelWhereInput>
+    permission?: XOR<PermissionScalarRelationFilter, PermissionWhereInput>
+  }, "accessLevelId_permissionId">
+
+  export type AccessLevelPermissionOrderByWithAggregationInput = {
+    accessLevelId?: SortOrder
+    permissionId?: SortOrder
+    _count?: AccessLevelPermissionCountOrderByAggregateInput
+    _max?: AccessLevelPermissionMaxOrderByAggregateInput
+    _min?: AccessLevelPermissionMinOrderByAggregateInput
+  }
+
+  export type AccessLevelPermissionScalarWhereWithAggregatesInput = {
+    AND?: AccessLevelPermissionScalarWhereWithAggregatesInput | AccessLevelPermissionScalarWhereWithAggregatesInput[]
+    OR?: AccessLevelPermissionScalarWhereWithAggregatesInput[]
+    NOT?: AccessLevelPermissionScalarWhereWithAggregatesInput | AccessLevelPermissionScalarWhereWithAggregatesInput[]
+    accessLevelId?: StringWithAggregatesFilter<"AccessLevelPermission"> | string
+    permissionId?: StringWithAggregatesFilter<"AccessLevelPermission"> | string
+  }
+
   export type AccessLevelWhereInput = {
     AND?: AccessLevelWhereInput | AccessLevelWhereInput[]
     OR?: AccessLevelWhereInput[]
@@ -119862,6 +121110,7 @@ export namespace Prisma {
     deletedBy?: StringNullableFilter<"AccessLevel"> | string | null
     company?: XOR<CompanyScalarRelationFilter, CompanyWhereInput>
     users?: UserListRelationFilter
+    permissions?: AccessLevelPermissionListRelationFilter
   }
 
   export type AccessLevelOrderByWithRelationInput = {
@@ -119879,6 +121128,7 @@ export namespace Prisma {
     deletedBy?: SortOrderInput | SortOrder
     company?: CompanyOrderByWithRelationInput
     users?: UserOrderByRelationAggregateInput
+    permissions?: AccessLevelPermissionOrderByRelationAggregateInput
   }
 
   export type AccessLevelWhereUniqueInput = Prisma.AtLeast<{
@@ -119900,6 +121150,7 @@ export namespace Prisma {
     deletedBy?: StringNullableFilter<"AccessLevel"> | string | null
     company?: XOR<CompanyScalarRelationFilter, CompanyWhereInput>
     users?: UserListRelationFilter
+    permissions?: AccessLevelPermissionListRelationFilter
   }, "id" | "companyId_name">
 
   export type AccessLevelOrderByWithAggregationInput = {
@@ -129624,6 +130875,7 @@ export namespace Prisma {
     module: string
     description?: string | null
     roles?: RolePermissionCreateNestedManyWithoutPermissionInput
+    accessLevels?: AccessLevelPermissionCreateNestedManyWithoutPermissionInput
   }
 
   export type PermissionUncheckedCreateInput = {
@@ -129632,6 +130884,7 @@ export namespace Prisma {
     module: string
     description?: string | null
     roles?: RolePermissionUncheckedCreateNestedManyWithoutPermissionInput
+    accessLevels?: AccessLevelPermissionUncheckedCreateNestedManyWithoutPermissionInput
   }
 
   export type PermissionUpdateInput = {
@@ -129640,6 +130893,7 @@ export namespace Prisma {
     module?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     roles?: RolePermissionUpdateManyWithoutPermissionNestedInput
+    accessLevels?: AccessLevelPermissionUpdateManyWithoutPermissionNestedInput
   }
 
   export type PermissionUncheckedUpdateInput = {
@@ -129648,6 +130902,7 @@ export namespace Prisma {
     module?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     roles?: RolePermissionUncheckedUpdateManyWithoutPermissionNestedInput
+    accessLevels?: AccessLevelPermissionUncheckedUpdateManyWithoutPermissionNestedInput
   }
 
   export type PermissionCreateManyInput = {
@@ -129739,6 +130994,40 @@ export namespace Prisma {
     roleId?: StringFieldUpdateOperationsInput | string
   }
 
+  export type AccessLevelPermissionCreateInput = {
+    accessLevel: AccessLevelCreateNestedOneWithoutPermissionsInput
+    permission: PermissionCreateNestedOneWithoutAccessLevelsInput
+  }
+
+  export type AccessLevelPermissionUncheckedCreateInput = {
+    accessLevelId: string
+    permissionId: string
+  }
+
+  export type AccessLevelPermissionUpdateInput = {
+    accessLevel?: AccessLevelUpdateOneRequiredWithoutPermissionsNestedInput
+    permission?: PermissionUpdateOneRequiredWithoutAccessLevelsNestedInput
+  }
+
+  export type AccessLevelPermissionUncheckedUpdateInput = {
+    accessLevelId?: StringFieldUpdateOperationsInput | string
+    permissionId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type AccessLevelPermissionCreateManyInput = {
+    accessLevelId: string
+    permissionId: string
+  }
+
+  export type AccessLevelPermissionUpdateManyMutationInput = {
+
+  }
+
+  export type AccessLevelPermissionUncheckedUpdateManyInput = {
+    accessLevelId?: StringFieldUpdateOperationsInput | string
+    permissionId?: StringFieldUpdateOperationsInput | string
+  }
+
   export type AccessLevelCreateInput = {
     id?: string
     name: string
@@ -129753,6 +131042,7 @@ export namespace Prisma {
     deletedBy?: string | null
     company: CompanyCreateNestedOneWithoutAccessLevelsInput
     users?: UserCreateNestedManyWithoutAccessLevelInput
+    permissions?: AccessLevelPermissionCreateNestedManyWithoutAccessLevelInput
   }
 
   export type AccessLevelUncheckedCreateInput = {
@@ -129769,6 +131059,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     deletedBy?: string | null
     users?: UserUncheckedCreateNestedManyWithoutAccessLevelInput
+    permissions?: AccessLevelPermissionUncheckedCreateNestedManyWithoutAccessLevelInput
   }
 
   export type AccessLevelUpdateInput = {
@@ -129785,6 +131076,7 @@ export namespace Prisma {
     deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     company?: CompanyUpdateOneRequiredWithoutAccessLevelsNestedInput
     users?: UserUpdateManyWithoutAccessLevelNestedInput
+    permissions?: AccessLevelPermissionUpdateManyWithoutAccessLevelNestedInput
   }
 
   export type AccessLevelUncheckedUpdateInput = {
@@ -129801,6 +131093,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     users?: UserUncheckedUpdateManyWithoutAccessLevelNestedInput
+    permissions?: AccessLevelPermissionUncheckedUpdateManyWithoutAccessLevelNestedInput
   }
 
   export type AccessLevelCreateManyInput = {
@@ -141320,6 +142613,16 @@ export namespace Prisma {
     updatedAt?: SortOrder
   }
 
+  export type AccessLevelPermissionListRelationFilter = {
+    every?: AccessLevelPermissionWhereInput
+    some?: AccessLevelPermissionWhereInput
+    none?: AccessLevelPermissionWhereInput
+  }
+
+  export type AccessLevelPermissionOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type PermissionCountOrderByAggregateInput = {
     id?: SortOrder
     key?: SortOrder
@@ -141394,6 +142697,31 @@ export namespace Prisma {
   export type UserRoleMinOrderByAggregateInput = {
     userId?: SortOrder
     roleId?: SortOrder
+  }
+
+  export type AccessLevelScalarRelationFilter = {
+    is?: AccessLevelWhereInput
+    isNot?: AccessLevelWhereInput
+  }
+
+  export type AccessLevelPermissionAccessLevelIdPermissionIdCompoundUniqueInput = {
+    accessLevelId: string
+    permissionId: string
+  }
+
+  export type AccessLevelPermissionCountOrderByAggregateInput = {
+    accessLevelId?: SortOrder
+    permissionId?: SortOrder
+  }
+
+  export type AccessLevelPermissionMaxOrderByAggregateInput = {
+    accessLevelId?: SortOrder
+    permissionId?: SortOrder
+  }
+
+  export type AccessLevelPermissionMinOrderByAggregateInput = {
+    accessLevelId?: SortOrder
+    permissionId?: SortOrder
   }
 
   export type AccessLevelCompanyIdNameCompoundUniqueInput = {
@@ -150995,11 +152323,25 @@ export namespace Prisma {
     connect?: RolePermissionWhereUniqueInput | RolePermissionWhereUniqueInput[]
   }
 
+  export type AccessLevelPermissionCreateNestedManyWithoutPermissionInput = {
+    create?: XOR<AccessLevelPermissionCreateWithoutPermissionInput, AccessLevelPermissionUncheckedCreateWithoutPermissionInput> | AccessLevelPermissionCreateWithoutPermissionInput[] | AccessLevelPermissionUncheckedCreateWithoutPermissionInput[]
+    connectOrCreate?: AccessLevelPermissionCreateOrConnectWithoutPermissionInput | AccessLevelPermissionCreateOrConnectWithoutPermissionInput[]
+    createMany?: AccessLevelPermissionCreateManyPermissionInputEnvelope
+    connect?: AccessLevelPermissionWhereUniqueInput | AccessLevelPermissionWhereUniqueInput[]
+  }
+
   export type RolePermissionUncheckedCreateNestedManyWithoutPermissionInput = {
     create?: XOR<RolePermissionCreateWithoutPermissionInput, RolePermissionUncheckedCreateWithoutPermissionInput> | RolePermissionCreateWithoutPermissionInput[] | RolePermissionUncheckedCreateWithoutPermissionInput[]
     connectOrCreate?: RolePermissionCreateOrConnectWithoutPermissionInput | RolePermissionCreateOrConnectWithoutPermissionInput[]
     createMany?: RolePermissionCreateManyPermissionInputEnvelope
     connect?: RolePermissionWhereUniqueInput | RolePermissionWhereUniqueInput[]
+  }
+
+  export type AccessLevelPermissionUncheckedCreateNestedManyWithoutPermissionInput = {
+    create?: XOR<AccessLevelPermissionCreateWithoutPermissionInput, AccessLevelPermissionUncheckedCreateWithoutPermissionInput> | AccessLevelPermissionCreateWithoutPermissionInput[] | AccessLevelPermissionUncheckedCreateWithoutPermissionInput[]
+    connectOrCreate?: AccessLevelPermissionCreateOrConnectWithoutPermissionInput | AccessLevelPermissionCreateOrConnectWithoutPermissionInput[]
+    createMany?: AccessLevelPermissionCreateManyPermissionInputEnvelope
+    connect?: AccessLevelPermissionWhereUniqueInput | AccessLevelPermissionWhereUniqueInput[]
   }
 
   export type RolePermissionUpdateManyWithoutPermissionNestedInput = {
@@ -151016,6 +152358,20 @@ export namespace Prisma {
     deleteMany?: RolePermissionScalarWhereInput | RolePermissionScalarWhereInput[]
   }
 
+  export type AccessLevelPermissionUpdateManyWithoutPermissionNestedInput = {
+    create?: XOR<AccessLevelPermissionCreateWithoutPermissionInput, AccessLevelPermissionUncheckedCreateWithoutPermissionInput> | AccessLevelPermissionCreateWithoutPermissionInput[] | AccessLevelPermissionUncheckedCreateWithoutPermissionInput[]
+    connectOrCreate?: AccessLevelPermissionCreateOrConnectWithoutPermissionInput | AccessLevelPermissionCreateOrConnectWithoutPermissionInput[]
+    upsert?: AccessLevelPermissionUpsertWithWhereUniqueWithoutPermissionInput | AccessLevelPermissionUpsertWithWhereUniqueWithoutPermissionInput[]
+    createMany?: AccessLevelPermissionCreateManyPermissionInputEnvelope
+    set?: AccessLevelPermissionWhereUniqueInput | AccessLevelPermissionWhereUniqueInput[]
+    disconnect?: AccessLevelPermissionWhereUniqueInput | AccessLevelPermissionWhereUniqueInput[]
+    delete?: AccessLevelPermissionWhereUniqueInput | AccessLevelPermissionWhereUniqueInput[]
+    connect?: AccessLevelPermissionWhereUniqueInput | AccessLevelPermissionWhereUniqueInput[]
+    update?: AccessLevelPermissionUpdateWithWhereUniqueWithoutPermissionInput | AccessLevelPermissionUpdateWithWhereUniqueWithoutPermissionInput[]
+    updateMany?: AccessLevelPermissionUpdateManyWithWhereWithoutPermissionInput | AccessLevelPermissionUpdateManyWithWhereWithoutPermissionInput[]
+    deleteMany?: AccessLevelPermissionScalarWhereInput | AccessLevelPermissionScalarWhereInput[]
+  }
+
   export type RolePermissionUncheckedUpdateManyWithoutPermissionNestedInput = {
     create?: XOR<RolePermissionCreateWithoutPermissionInput, RolePermissionUncheckedCreateWithoutPermissionInput> | RolePermissionCreateWithoutPermissionInput[] | RolePermissionUncheckedCreateWithoutPermissionInput[]
     connectOrCreate?: RolePermissionCreateOrConnectWithoutPermissionInput | RolePermissionCreateOrConnectWithoutPermissionInput[]
@@ -151028,6 +152384,20 @@ export namespace Prisma {
     update?: RolePermissionUpdateWithWhereUniqueWithoutPermissionInput | RolePermissionUpdateWithWhereUniqueWithoutPermissionInput[]
     updateMany?: RolePermissionUpdateManyWithWhereWithoutPermissionInput | RolePermissionUpdateManyWithWhereWithoutPermissionInput[]
     deleteMany?: RolePermissionScalarWhereInput | RolePermissionScalarWhereInput[]
+  }
+
+  export type AccessLevelPermissionUncheckedUpdateManyWithoutPermissionNestedInput = {
+    create?: XOR<AccessLevelPermissionCreateWithoutPermissionInput, AccessLevelPermissionUncheckedCreateWithoutPermissionInput> | AccessLevelPermissionCreateWithoutPermissionInput[] | AccessLevelPermissionUncheckedCreateWithoutPermissionInput[]
+    connectOrCreate?: AccessLevelPermissionCreateOrConnectWithoutPermissionInput | AccessLevelPermissionCreateOrConnectWithoutPermissionInput[]
+    upsert?: AccessLevelPermissionUpsertWithWhereUniqueWithoutPermissionInput | AccessLevelPermissionUpsertWithWhereUniqueWithoutPermissionInput[]
+    createMany?: AccessLevelPermissionCreateManyPermissionInputEnvelope
+    set?: AccessLevelPermissionWhereUniqueInput | AccessLevelPermissionWhereUniqueInput[]
+    disconnect?: AccessLevelPermissionWhereUniqueInput | AccessLevelPermissionWhereUniqueInput[]
+    delete?: AccessLevelPermissionWhereUniqueInput | AccessLevelPermissionWhereUniqueInput[]
+    connect?: AccessLevelPermissionWhereUniqueInput | AccessLevelPermissionWhereUniqueInput[]
+    update?: AccessLevelPermissionUpdateWithWhereUniqueWithoutPermissionInput | AccessLevelPermissionUpdateWithWhereUniqueWithoutPermissionInput[]
+    updateMany?: AccessLevelPermissionUpdateManyWithWhereWithoutPermissionInput | AccessLevelPermissionUpdateManyWithWhereWithoutPermissionInput[]
+    deleteMany?: AccessLevelPermissionScalarWhereInput | AccessLevelPermissionScalarWhereInput[]
   }
 
   export type RoleCreateNestedOneWithoutPermissionsInput = {
@@ -151086,6 +152456,34 @@ export namespace Prisma {
     update?: XOR<XOR<RoleUpdateToOneWithWhereWithoutUsersInput, RoleUpdateWithoutUsersInput>, RoleUncheckedUpdateWithoutUsersInput>
   }
 
+  export type AccessLevelCreateNestedOneWithoutPermissionsInput = {
+    create?: XOR<AccessLevelCreateWithoutPermissionsInput, AccessLevelUncheckedCreateWithoutPermissionsInput>
+    connectOrCreate?: AccessLevelCreateOrConnectWithoutPermissionsInput
+    connect?: AccessLevelWhereUniqueInput
+  }
+
+  export type PermissionCreateNestedOneWithoutAccessLevelsInput = {
+    create?: XOR<PermissionCreateWithoutAccessLevelsInput, PermissionUncheckedCreateWithoutAccessLevelsInput>
+    connectOrCreate?: PermissionCreateOrConnectWithoutAccessLevelsInput
+    connect?: PermissionWhereUniqueInput
+  }
+
+  export type AccessLevelUpdateOneRequiredWithoutPermissionsNestedInput = {
+    create?: XOR<AccessLevelCreateWithoutPermissionsInput, AccessLevelUncheckedCreateWithoutPermissionsInput>
+    connectOrCreate?: AccessLevelCreateOrConnectWithoutPermissionsInput
+    upsert?: AccessLevelUpsertWithoutPermissionsInput
+    connect?: AccessLevelWhereUniqueInput
+    update?: XOR<XOR<AccessLevelUpdateToOneWithWhereWithoutPermissionsInput, AccessLevelUpdateWithoutPermissionsInput>, AccessLevelUncheckedUpdateWithoutPermissionsInput>
+  }
+
+  export type PermissionUpdateOneRequiredWithoutAccessLevelsNestedInput = {
+    create?: XOR<PermissionCreateWithoutAccessLevelsInput, PermissionUncheckedCreateWithoutAccessLevelsInput>
+    connectOrCreate?: PermissionCreateOrConnectWithoutAccessLevelsInput
+    upsert?: PermissionUpsertWithoutAccessLevelsInput
+    connect?: PermissionWhereUniqueInput
+    update?: XOR<XOR<PermissionUpdateToOneWithWhereWithoutAccessLevelsInput, PermissionUpdateWithoutAccessLevelsInput>, PermissionUncheckedUpdateWithoutAccessLevelsInput>
+  }
+
   export type CompanyCreateNestedOneWithoutAccessLevelsInput = {
     create?: XOR<CompanyCreateWithoutAccessLevelsInput, CompanyUncheckedCreateWithoutAccessLevelsInput>
     connectOrCreate?: CompanyCreateOrConnectWithoutAccessLevelsInput
@@ -151099,11 +152497,25 @@ export namespace Prisma {
     connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
   }
 
+  export type AccessLevelPermissionCreateNestedManyWithoutAccessLevelInput = {
+    create?: XOR<AccessLevelPermissionCreateWithoutAccessLevelInput, AccessLevelPermissionUncheckedCreateWithoutAccessLevelInput> | AccessLevelPermissionCreateWithoutAccessLevelInput[] | AccessLevelPermissionUncheckedCreateWithoutAccessLevelInput[]
+    connectOrCreate?: AccessLevelPermissionCreateOrConnectWithoutAccessLevelInput | AccessLevelPermissionCreateOrConnectWithoutAccessLevelInput[]
+    createMany?: AccessLevelPermissionCreateManyAccessLevelInputEnvelope
+    connect?: AccessLevelPermissionWhereUniqueInput | AccessLevelPermissionWhereUniqueInput[]
+  }
+
   export type UserUncheckedCreateNestedManyWithoutAccessLevelInput = {
     create?: XOR<UserCreateWithoutAccessLevelInput, UserUncheckedCreateWithoutAccessLevelInput> | UserCreateWithoutAccessLevelInput[] | UserUncheckedCreateWithoutAccessLevelInput[]
     connectOrCreate?: UserCreateOrConnectWithoutAccessLevelInput | UserCreateOrConnectWithoutAccessLevelInput[]
     createMany?: UserCreateManyAccessLevelInputEnvelope
     connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+  }
+
+  export type AccessLevelPermissionUncheckedCreateNestedManyWithoutAccessLevelInput = {
+    create?: XOR<AccessLevelPermissionCreateWithoutAccessLevelInput, AccessLevelPermissionUncheckedCreateWithoutAccessLevelInput> | AccessLevelPermissionCreateWithoutAccessLevelInput[] | AccessLevelPermissionUncheckedCreateWithoutAccessLevelInput[]
+    connectOrCreate?: AccessLevelPermissionCreateOrConnectWithoutAccessLevelInput | AccessLevelPermissionCreateOrConnectWithoutAccessLevelInput[]
+    createMany?: AccessLevelPermissionCreateManyAccessLevelInputEnvelope
+    connect?: AccessLevelPermissionWhereUniqueInput | AccessLevelPermissionWhereUniqueInput[]
   }
 
   export type CompanyUpdateOneRequiredWithoutAccessLevelsNestedInput = {
@@ -151128,6 +152540,20 @@ export namespace Prisma {
     deleteMany?: UserScalarWhereInput | UserScalarWhereInput[]
   }
 
+  export type AccessLevelPermissionUpdateManyWithoutAccessLevelNestedInput = {
+    create?: XOR<AccessLevelPermissionCreateWithoutAccessLevelInput, AccessLevelPermissionUncheckedCreateWithoutAccessLevelInput> | AccessLevelPermissionCreateWithoutAccessLevelInput[] | AccessLevelPermissionUncheckedCreateWithoutAccessLevelInput[]
+    connectOrCreate?: AccessLevelPermissionCreateOrConnectWithoutAccessLevelInput | AccessLevelPermissionCreateOrConnectWithoutAccessLevelInput[]
+    upsert?: AccessLevelPermissionUpsertWithWhereUniqueWithoutAccessLevelInput | AccessLevelPermissionUpsertWithWhereUniqueWithoutAccessLevelInput[]
+    createMany?: AccessLevelPermissionCreateManyAccessLevelInputEnvelope
+    set?: AccessLevelPermissionWhereUniqueInput | AccessLevelPermissionWhereUniqueInput[]
+    disconnect?: AccessLevelPermissionWhereUniqueInput | AccessLevelPermissionWhereUniqueInput[]
+    delete?: AccessLevelPermissionWhereUniqueInput | AccessLevelPermissionWhereUniqueInput[]
+    connect?: AccessLevelPermissionWhereUniqueInput | AccessLevelPermissionWhereUniqueInput[]
+    update?: AccessLevelPermissionUpdateWithWhereUniqueWithoutAccessLevelInput | AccessLevelPermissionUpdateWithWhereUniqueWithoutAccessLevelInput[]
+    updateMany?: AccessLevelPermissionUpdateManyWithWhereWithoutAccessLevelInput | AccessLevelPermissionUpdateManyWithWhereWithoutAccessLevelInput[]
+    deleteMany?: AccessLevelPermissionScalarWhereInput | AccessLevelPermissionScalarWhereInput[]
+  }
+
   export type UserUncheckedUpdateManyWithoutAccessLevelNestedInput = {
     create?: XOR<UserCreateWithoutAccessLevelInput, UserUncheckedCreateWithoutAccessLevelInput> | UserCreateWithoutAccessLevelInput[] | UserUncheckedCreateWithoutAccessLevelInput[]
     connectOrCreate?: UserCreateOrConnectWithoutAccessLevelInput | UserCreateOrConnectWithoutAccessLevelInput[]
@@ -151140,6 +152566,20 @@ export namespace Prisma {
     update?: UserUpdateWithWhereUniqueWithoutAccessLevelInput | UserUpdateWithWhereUniqueWithoutAccessLevelInput[]
     updateMany?: UserUpdateManyWithWhereWithoutAccessLevelInput | UserUpdateManyWithWhereWithoutAccessLevelInput[]
     deleteMany?: UserScalarWhereInput | UserScalarWhereInput[]
+  }
+
+  export type AccessLevelPermissionUncheckedUpdateManyWithoutAccessLevelNestedInput = {
+    create?: XOR<AccessLevelPermissionCreateWithoutAccessLevelInput, AccessLevelPermissionUncheckedCreateWithoutAccessLevelInput> | AccessLevelPermissionCreateWithoutAccessLevelInput[] | AccessLevelPermissionUncheckedCreateWithoutAccessLevelInput[]
+    connectOrCreate?: AccessLevelPermissionCreateOrConnectWithoutAccessLevelInput | AccessLevelPermissionCreateOrConnectWithoutAccessLevelInput[]
+    upsert?: AccessLevelPermissionUpsertWithWhereUniqueWithoutAccessLevelInput | AccessLevelPermissionUpsertWithWhereUniqueWithoutAccessLevelInput[]
+    createMany?: AccessLevelPermissionCreateManyAccessLevelInputEnvelope
+    set?: AccessLevelPermissionWhereUniqueInput | AccessLevelPermissionWhereUniqueInput[]
+    disconnect?: AccessLevelPermissionWhereUniqueInput | AccessLevelPermissionWhereUniqueInput[]
+    delete?: AccessLevelPermissionWhereUniqueInput | AccessLevelPermissionWhereUniqueInput[]
+    connect?: AccessLevelPermissionWhereUniqueInput | AccessLevelPermissionWhereUniqueInput[]
+    update?: AccessLevelPermissionUpdateWithWhereUniqueWithoutAccessLevelInput | AccessLevelPermissionUpdateWithWhereUniqueWithoutAccessLevelInput[]
+    updateMany?: AccessLevelPermissionUpdateManyWithWhereWithoutAccessLevelInput | AccessLevelPermissionUpdateManyWithWhereWithoutAccessLevelInput[]
+    deleteMany?: AccessLevelPermissionScalarWhereInput | AccessLevelPermissionScalarWhereInput[]
   }
 
   export type CompanyCreateNestedOneWithoutDepartmentsInput = {
@@ -160381,6 +161821,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     deletedBy?: string | null
     users?: UserCreateNestedManyWithoutAccessLevelInput
+    permissions?: AccessLevelPermissionCreateNestedManyWithoutAccessLevelInput
   }
 
   export type AccessLevelUncheckedCreateWithoutCompanyInput = {
@@ -160396,6 +161837,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     deletedBy?: string | null
     users?: UserUncheckedCreateNestedManyWithoutAccessLevelInput
+    permissions?: AccessLevelPermissionUncheckedCreateNestedManyWithoutAccessLevelInput
   }
 
   export type AccessLevelCreateOrConnectWithoutCompanyInput = {
@@ -162904,6 +164346,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     deletedBy?: string | null
     company: CompanyCreateNestedOneWithoutAccessLevelsInput
+    permissions?: AccessLevelPermissionCreateNestedManyWithoutAccessLevelInput
   }
 
   export type AccessLevelUncheckedCreateWithoutUsersInput = {
@@ -162919,6 +164362,7 @@ export namespace Prisma {
     updatedBy?: string | null
     deletedAt?: Date | string | null
     deletedBy?: string | null
+    permissions?: AccessLevelPermissionUncheckedCreateNestedManyWithoutAccessLevelInput
   }
 
   export type AccessLevelCreateOrConnectWithoutUsersInput = {
@@ -163836,6 +165280,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     company?: CompanyUpdateOneRequiredWithoutAccessLevelsNestedInput
+    permissions?: AccessLevelPermissionUpdateManyWithoutAccessLevelNestedInput
   }
 
   export type AccessLevelUncheckedUpdateWithoutUsersInput = {
@@ -163851,6 +165296,7 @@ export namespace Prisma {
     updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    permissions?: AccessLevelPermissionUncheckedUpdateManyWithoutAccessLevelNestedInput
   }
 
   export type DepartmentUpsertWithoutUsersInput = {
@@ -164541,6 +165987,24 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type AccessLevelPermissionCreateWithoutPermissionInput = {
+    accessLevel: AccessLevelCreateNestedOneWithoutPermissionsInput
+  }
+
+  export type AccessLevelPermissionUncheckedCreateWithoutPermissionInput = {
+    accessLevelId: string
+  }
+
+  export type AccessLevelPermissionCreateOrConnectWithoutPermissionInput = {
+    where: AccessLevelPermissionWhereUniqueInput
+    create: XOR<AccessLevelPermissionCreateWithoutPermissionInput, AccessLevelPermissionUncheckedCreateWithoutPermissionInput>
+  }
+
+  export type AccessLevelPermissionCreateManyPermissionInputEnvelope = {
+    data: AccessLevelPermissionCreateManyPermissionInput | AccessLevelPermissionCreateManyPermissionInput[]
+    skipDuplicates?: boolean
+  }
+
   export type RolePermissionUpsertWithWhereUniqueWithoutPermissionInput = {
     where: RolePermissionWhereUniqueInput
     update: XOR<RolePermissionUpdateWithoutPermissionInput, RolePermissionUncheckedUpdateWithoutPermissionInput>
@@ -164555,6 +166019,30 @@ export namespace Prisma {
   export type RolePermissionUpdateManyWithWhereWithoutPermissionInput = {
     where: RolePermissionScalarWhereInput
     data: XOR<RolePermissionUpdateManyMutationInput, RolePermissionUncheckedUpdateManyWithoutPermissionInput>
+  }
+
+  export type AccessLevelPermissionUpsertWithWhereUniqueWithoutPermissionInput = {
+    where: AccessLevelPermissionWhereUniqueInput
+    update: XOR<AccessLevelPermissionUpdateWithoutPermissionInput, AccessLevelPermissionUncheckedUpdateWithoutPermissionInput>
+    create: XOR<AccessLevelPermissionCreateWithoutPermissionInput, AccessLevelPermissionUncheckedCreateWithoutPermissionInput>
+  }
+
+  export type AccessLevelPermissionUpdateWithWhereUniqueWithoutPermissionInput = {
+    where: AccessLevelPermissionWhereUniqueInput
+    data: XOR<AccessLevelPermissionUpdateWithoutPermissionInput, AccessLevelPermissionUncheckedUpdateWithoutPermissionInput>
+  }
+
+  export type AccessLevelPermissionUpdateManyWithWhereWithoutPermissionInput = {
+    where: AccessLevelPermissionScalarWhereInput
+    data: XOR<AccessLevelPermissionUpdateManyMutationInput, AccessLevelPermissionUncheckedUpdateManyWithoutPermissionInput>
+  }
+
+  export type AccessLevelPermissionScalarWhereInput = {
+    AND?: AccessLevelPermissionScalarWhereInput | AccessLevelPermissionScalarWhereInput[]
+    OR?: AccessLevelPermissionScalarWhereInput[]
+    NOT?: AccessLevelPermissionScalarWhereInput | AccessLevelPermissionScalarWhereInput[]
+    accessLevelId?: StringFilter<"AccessLevelPermission"> | string
+    permissionId?: StringFilter<"AccessLevelPermission"> | string
   }
 
   export type RoleCreateWithoutPermissionsInput = {
@@ -164589,6 +166077,7 @@ export namespace Prisma {
     key: string
     module: string
     description?: string | null
+    accessLevels?: AccessLevelPermissionCreateNestedManyWithoutPermissionInput
   }
 
   export type PermissionUncheckedCreateWithoutRolesInput = {
@@ -164596,6 +166085,7 @@ export namespace Prisma {
     key: string
     module: string
     description?: string | null
+    accessLevels?: AccessLevelPermissionUncheckedCreateNestedManyWithoutPermissionInput
   }
 
   export type PermissionCreateOrConnectWithoutRolesInput = {
@@ -164652,6 +166142,7 @@ export namespace Prisma {
     key?: StringFieldUpdateOperationsInput | string
     module?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    accessLevels?: AccessLevelPermissionUpdateManyWithoutPermissionNestedInput
   }
 
   export type PermissionUncheckedUpdateWithoutRolesInput = {
@@ -164659,6 +166150,7 @@ export namespace Prisma {
     key?: StringFieldUpdateOperationsInput | string
     module?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    accessLevels?: AccessLevelPermissionUncheckedUpdateManyWithoutPermissionNestedInput
   }
 
   export type UserCreateWithoutRolesInput = {
@@ -164929,6 +166421,134 @@ export namespace Prisma {
     permissions?: RolePermissionUncheckedUpdateManyWithoutRoleNestedInput
   }
 
+  export type AccessLevelCreateWithoutPermissionsInput = {
+    id?: string
+    name: string
+    rank: number
+    description?: string | null
+    isSystem?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    company: CompanyCreateNestedOneWithoutAccessLevelsInput
+    users?: UserCreateNestedManyWithoutAccessLevelInput
+  }
+
+  export type AccessLevelUncheckedCreateWithoutPermissionsInput = {
+    id?: string
+    companyId: string
+    name: string
+    rank: number
+    description?: string | null
+    isSystem?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    users?: UserUncheckedCreateNestedManyWithoutAccessLevelInput
+  }
+
+  export type AccessLevelCreateOrConnectWithoutPermissionsInput = {
+    where: AccessLevelWhereUniqueInput
+    create: XOR<AccessLevelCreateWithoutPermissionsInput, AccessLevelUncheckedCreateWithoutPermissionsInput>
+  }
+
+  export type PermissionCreateWithoutAccessLevelsInput = {
+    id?: string
+    key: string
+    module: string
+    description?: string | null
+    roles?: RolePermissionCreateNestedManyWithoutPermissionInput
+  }
+
+  export type PermissionUncheckedCreateWithoutAccessLevelsInput = {
+    id?: string
+    key: string
+    module: string
+    description?: string | null
+    roles?: RolePermissionUncheckedCreateNestedManyWithoutPermissionInput
+  }
+
+  export type PermissionCreateOrConnectWithoutAccessLevelsInput = {
+    where: PermissionWhereUniqueInput
+    create: XOR<PermissionCreateWithoutAccessLevelsInput, PermissionUncheckedCreateWithoutAccessLevelsInput>
+  }
+
+  export type AccessLevelUpsertWithoutPermissionsInput = {
+    update: XOR<AccessLevelUpdateWithoutPermissionsInput, AccessLevelUncheckedUpdateWithoutPermissionsInput>
+    create: XOR<AccessLevelCreateWithoutPermissionsInput, AccessLevelUncheckedCreateWithoutPermissionsInput>
+    where?: AccessLevelWhereInput
+  }
+
+  export type AccessLevelUpdateToOneWithWhereWithoutPermissionsInput = {
+    where?: AccessLevelWhereInput
+    data: XOR<AccessLevelUpdateWithoutPermissionsInput, AccessLevelUncheckedUpdateWithoutPermissionsInput>
+  }
+
+  export type AccessLevelUpdateWithoutPermissionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    rank?: IntFieldUpdateOperationsInput | number
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isSystem?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    company?: CompanyUpdateOneRequiredWithoutAccessLevelsNestedInput
+    users?: UserUpdateManyWithoutAccessLevelNestedInput
+  }
+
+  export type AccessLevelUncheckedUpdateWithoutPermissionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    rank?: IntFieldUpdateOperationsInput | number
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isSystem?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    users?: UserUncheckedUpdateManyWithoutAccessLevelNestedInput
+  }
+
+  export type PermissionUpsertWithoutAccessLevelsInput = {
+    update: XOR<PermissionUpdateWithoutAccessLevelsInput, PermissionUncheckedUpdateWithoutAccessLevelsInput>
+    create: XOR<PermissionCreateWithoutAccessLevelsInput, PermissionUncheckedCreateWithoutAccessLevelsInput>
+    where?: PermissionWhereInput
+  }
+
+  export type PermissionUpdateToOneWithWhereWithoutAccessLevelsInput = {
+    where?: PermissionWhereInput
+    data: XOR<PermissionUpdateWithoutAccessLevelsInput, PermissionUncheckedUpdateWithoutAccessLevelsInput>
+  }
+
+  export type PermissionUpdateWithoutAccessLevelsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    key?: StringFieldUpdateOperationsInput | string
+    module?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    roles?: RolePermissionUpdateManyWithoutPermissionNestedInput
+  }
+
+  export type PermissionUncheckedUpdateWithoutAccessLevelsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    key?: StringFieldUpdateOperationsInput | string
+    module?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    roles?: RolePermissionUncheckedUpdateManyWithoutPermissionNestedInput
+  }
+
   export type CompanyCreateWithoutAccessLevelsInput = {
     id?: string
     name: string
@@ -165172,6 +166792,24 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type AccessLevelPermissionCreateWithoutAccessLevelInput = {
+    permission: PermissionCreateNestedOneWithoutAccessLevelsInput
+  }
+
+  export type AccessLevelPermissionUncheckedCreateWithoutAccessLevelInput = {
+    permissionId: string
+  }
+
+  export type AccessLevelPermissionCreateOrConnectWithoutAccessLevelInput = {
+    where: AccessLevelPermissionWhereUniqueInput
+    create: XOR<AccessLevelPermissionCreateWithoutAccessLevelInput, AccessLevelPermissionUncheckedCreateWithoutAccessLevelInput>
+  }
+
+  export type AccessLevelPermissionCreateManyAccessLevelInputEnvelope = {
+    data: AccessLevelPermissionCreateManyAccessLevelInput | AccessLevelPermissionCreateManyAccessLevelInput[]
+    skipDuplicates?: boolean
+  }
+
   export type CompanyUpsertWithoutAccessLevelsInput = {
     update: XOR<CompanyUpdateWithoutAccessLevelsInput, CompanyUncheckedUpdateWithoutAccessLevelsInput>
     create: XOR<CompanyCreateWithoutAccessLevelsInput, CompanyUncheckedCreateWithoutAccessLevelsInput>
@@ -165329,6 +166967,22 @@ export namespace Prisma {
   export type UserUpdateManyWithWhereWithoutAccessLevelInput = {
     where: UserScalarWhereInput
     data: XOR<UserUpdateManyMutationInput, UserUncheckedUpdateManyWithoutAccessLevelInput>
+  }
+
+  export type AccessLevelPermissionUpsertWithWhereUniqueWithoutAccessLevelInput = {
+    where: AccessLevelPermissionWhereUniqueInput
+    update: XOR<AccessLevelPermissionUpdateWithoutAccessLevelInput, AccessLevelPermissionUncheckedUpdateWithoutAccessLevelInput>
+    create: XOR<AccessLevelPermissionCreateWithoutAccessLevelInput, AccessLevelPermissionUncheckedCreateWithoutAccessLevelInput>
+  }
+
+  export type AccessLevelPermissionUpdateWithWhereUniqueWithoutAccessLevelInput = {
+    where: AccessLevelPermissionWhereUniqueInput
+    data: XOR<AccessLevelPermissionUpdateWithoutAccessLevelInput, AccessLevelPermissionUncheckedUpdateWithoutAccessLevelInput>
+  }
+
+  export type AccessLevelPermissionUpdateManyWithWhereWithoutAccessLevelInput = {
+    where: AccessLevelPermissionScalarWhereInput
+    data: XOR<AccessLevelPermissionUpdateManyMutationInput, AccessLevelPermissionUncheckedUpdateManyWithoutAccessLevelInput>
   }
 
   export type CompanyCreateWithoutDepartmentsInput = {
@@ -205398,6 +207052,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     users?: UserUpdateManyWithoutAccessLevelNestedInput
+    permissions?: AccessLevelPermissionUpdateManyWithoutAccessLevelNestedInput
   }
 
   export type AccessLevelUncheckedUpdateWithoutCompanyInput = {
@@ -205413,6 +207068,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     users?: UserUncheckedUpdateManyWithoutAccessLevelNestedInput
+    permissions?: AccessLevelPermissionUncheckedUpdateManyWithoutAccessLevelNestedInput
   }
 
   export type AccessLevelUncheckedUpdateManyWithoutCompanyInput = {
@@ -206394,6 +208050,10 @@ export namespace Prisma {
     roleId: string
   }
 
+  export type AccessLevelPermissionCreateManyPermissionInput = {
+    accessLevelId: string
+  }
+
   export type RolePermissionUpdateWithoutPermissionInput = {
     role?: RoleUpdateOneRequiredWithoutPermissionsNestedInput
   }
@@ -206404,6 +208064,18 @@ export namespace Prisma {
 
   export type RolePermissionUncheckedUpdateManyWithoutPermissionInput = {
     roleId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type AccessLevelPermissionUpdateWithoutPermissionInput = {
+    accessLevel?: AccessLevelUpdateOneRequiredWithoutPermissionsNestedInput
+  }
+
+  export type AccessLevelPermissionUncheckedUpdateWithoutPermissionInput = {
+    accessLevelId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type AccessLevelPermissionUncheckedUpdateManyWithoutPermissionInput = {
+    accessLevelId?: StringFieldUpdateOperationsInput | string
   }
 
   export type UserCreateManyAccessLevelInput = {
@@ -206442,6 +208114,10 @@ export namespace Prisma {
     updatedBy?: string | null
     deletedAt?: Date | string | null
     deletedBy?: string | null
+  }
+
+  export type AccessLevelPermissionCreateManyAccessLevelInput = {
+    permissionId: string
   }
 
   export type UserUpdateWithoutAccessLevelInput = {
@@ -206576,6 +208252,18 @@ export namespace Prisma {
     updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type AccessLevelPermissionUpdateWithoutAccessLevelInput = {
+    permission?: PermissionUpdateOneRequiredWithoutAccessLevelsNestedInput
+  }
+
+  export type AccessLevelPermissionUncheckedUpdateWithoutAccessLevelInput = {
+    permissionId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type AccessLevelPermissionUncheckedUpdateManyWithoutAccessLevelInput = {
+    permissionId?: StringFieldUpdateOperationsInput | string
   }
 
   export type UserCreateManyDepartmentRefInput = {
