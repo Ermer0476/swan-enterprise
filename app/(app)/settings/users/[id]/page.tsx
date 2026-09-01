@@ -11,7 +11,6 @@ import {
   listVesselOptions,
 } from "@/features/users/queries";
 import { formatCrewName } from "@/features/crewing/ui";
-import { listAccessLevelOptions } from "@/features/access-levels/queries";
 import { listDepartmentOptions } from "@/features/departments/queries";
 import { MIN_PASSWORD_LENGTH } from "@/features/users/schema";
 import {
@@ -95,24 +94,20 @@ export default async function EditUserPage({
   const target = await getUser(actor.companyId, id);
   if (!target) notFound();
 
-  const [roles, vessels, accessLevels, departments, crewRecord] = await Promise.all([
+  const [roles, vessels, departments, crewRecord] = await Promise.all([
     listRoleOptions(actor.companyId),
     listVesselOptions(actor.companyId),
-    listAccessLevelOptions(actor.companyId),
     listDepartmentOptions(actor.companyId),
     // The crew (Seafarer) record this login belongs to, if any — read-only.
     getUserCrewRecord(actor.companyId, id),
   ]);
 
-  // If this account is on a level/department that has since been deactivated,
-  // it won't be in the active-only option lists. Merge it back in so the form
+  // If this account is on a department that has since been deactivated, it
+  // won't be in the active-only option list. Merge it back in so the form
   // shows the real current value and a re-save preserves it rather than
   // silently clearing it (the resolver in actions.ts keeps retired-but-owned
-  // values on purpose).
-  const accessLevelOptions =
-    target.accessLevel && !accessLevels.some((a) => a.id === target.accessLevel!.id)
-      ? [...accessLevels, { id: target.accessLevel.id, name: target.accessLevel.name }]
-      : accessLevels;
+  // values on purpose). The access level is no longer set from this form — its
+  // current value is carried through as-is — so no merge is needed for it.
   const departmentOptions =
     target.departmentRef && !departments.some((d) => d.id === target.departmentRef!.id)
       ? [...departments, target.departmentRef]
@@ -242,7 +237,6 @@ export default async function EditUserPage({
         action={updateUserAction}
         roles={roles}
         vessels={vessels}
-        accessLevels={accessLevelOptions}
         departments={departmentOptions}
         values={{
           id: target.id,
