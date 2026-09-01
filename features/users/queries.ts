@@ -145,3 +145,29 @@ export function activeAdminWhere(companyId: string) {
     },
   };
 }
+
+/**
+ * The crew (Seafarer) record linked to a login, if any — for the read-only
+ * "Crew record" line on the user detail page. Company-scoped. Selects only the
+ * seafarer's id, crew code and name parts: NO sensitive tier (§3.1) is read
+ * here, and there is no `include` that would pull a password or a masterlist
+ * field. A foreign or deleted user reads as no link.
+ */
+export async function getUserCrewRecord(companyId: string, userId: string) {
+  const row = await prisma.user.findFirst({
+    where: { id: userId, companyId, deletedAt: null },
+    select: {
+      seafarer: {
+        select: {
+          id: true,
+          crewCode: true,
+          lastName: true,
+          firstName: true,
+          middleName: true,
+          suffix: true,
+        },
+      },
+    },
+  });
+  return row?.seafarer ?? null;
+}

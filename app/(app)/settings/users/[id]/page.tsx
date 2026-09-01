@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
@@ -5,9 +6,11 @@ import { requirePermission } from "@/lib/rbac";
 import { updateUserAction } from "@/features/users/actions";
 import {
   getUser,
+  getUserCrewRecord,
   listRoleOptions,
   listVesselOptions,
 } from "@/features/users/queries";
+import { formatCrewName } from "@/features/crewing/ui";
 import { listAccessLevelOptions } from "@/features/access-levels/queries";
 import { listDepartmentOptions } from "@/features/departments/queries";
 import { MIN_PASSWORD_LENGTH } from "@/features/users/schema";
@@ -22,7 +25,7 @@ import { cn, formatDate, humanize } from "@/lib/utils";
 import { UserActiveActions } from "./user-active-actions";
 import { SignOutEverywhereAction } from "./sign-out-everywhere-action";
 
-type DetailRow = { label: string; value: string };
+type DetailRow = { label: string; value: ReactNode };
 
 /**
  * A read-only, collapsible detail group. Native <details>/<summary> — no
@@ -92,11 +95,13 @@ export default async function EditUserPage({
   const target = await getUser(actor.companyId, id);
   if (!target) notFound();
 
-  const [roles, vessels, accessLevels, departments] = await Promise.all([
+  const [roles, vessels, accessLevels, departments, crewRecord] = await Promise.all([
     listRoleOptions(actor.companyId),
     listVesselOptions(actor.companyId),
     listAccessLevelOptions(actor.companyId),
     listDepartmentOptions(actor.companyId),
+    // The crew (Seafarer) record this login belongs to, if any — read-only.
+    getUserCrewRecord(actor.companyId, id),
   ]);
 
   // If this account is on a level/department that has since been deactivated,
@@ -125,7 +130,7 @@ export default async function EditUserPage({
   const push = (
     rows: DetailRow[],
     label: string,
-    value: string | null | undefined,
+    value: ReactNode,
   ) => {
     if (value) rows.push({ label, value });
   };
@@ -174,6 +179,21 @@ export default async function EditUserPage({
   push(govRows, "PhilHealth", target.philHealth ? "On file" : null);
 
   const crewRows: DetailRow[] = [];
+  // The linked crew record, if this login IS a seafarer. A link to the biodata
+  // page; the office manages the tie from that side (link / unlink / create).
+  push(
+    crewRows,
+    "Crew record",
+    crewRecord ? (
+      <Link
+        href={`/crewing/seafarers/${crewRecord.id}`}
+        className="text-primary hover:underline"
+      >
+        {crewRecord.crewCode ? `${crewRecord.crewCode} — ` : ""}
+        {formatCrewName(crewRecord, "list")}
+      </Link>
+    ) : null,
+  );
   push(crewRows, "Crew ID", target.crewId);
   push(crewRows, "Vessel", target.vessel?.name);
 
