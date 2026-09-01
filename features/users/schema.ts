@@ -179,7 +179,8 @@ function datesConsistent(
 }
 
 /**
- * Builds a display `fullName` as `LAST, FIRST MIDDLE`, skipping any blank part.
+ * Builds a display `fullName` in natural order `First Middle Last`, skipping
+ * any blank part.
  *
  * Shared on purpose — createUserAction, updateUserAction and a future
  * masterlist importer all compose a name here so the three can never spell one
@@ -198,13 +199,11 @@ export function composeFullName(parts: {
   firstName?: string | null;
   middleName?: string | null;
 }): string | null {
-  const last = (parts.lastName ?? "").trim();
-  const first = (parts.firstName ?? "").trim();
-  const middle = (parts.middleName ?? "").trim();
-  if (!last && !first && !middle) return null;
-  const given = [first, middle].filter(Boolean).join(" ");
-  if (last && given) return `${last}, ${given}`;
-  return last || given;
+  const composed = [parts.firstName, parts.middleName, parts.lastName]
+    .map((part) => (part ?? "").trim())
+    .filter(Boolean)
+    .join(" ");
+  return composed || null;
 }
 
 const detailFields = {
@@ -237,7 +236,7 @@ const detailFields = {
   accessLevelId: z.string().uuid("Select a valid access level").optional().or(z.literal("")),
   departmentRefId: z.string().uuid("Select a valid department").optional().or(z.literal("")),
   // ── Employee Masterlist (E1) — all optional, additive. Names feed the
-  //    composed `LAST, FIRST MIDDLE` fullName in the action; the rest are
+  //    composed natural-order `First Middle Last` fullName in the action; the rest are
   //    HR reference fields shown on the profile. Nothing here is a security
   //    signal. Government IDs use the lenient phGovId check and are stored
   //    as typed (never normalized). ──
