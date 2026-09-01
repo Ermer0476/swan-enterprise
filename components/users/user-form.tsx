@@ -2,13 +2,14 @@
 
 import Link from "next/link";
 import * as React from "react";
-import { useActionState, useEffect, useState } from "react";
+import { useActionState, useEffect, useId, useState } from "react";
 import { useFormStatus } from "react-dom";
 import { GENDERS, MIN_PASSWORD_LENGTH } from "@/features/users/schema";
 import { cn } from "@/lib/utils";
 import { Card, CardContent } from "@/components/ui/card";
 import { AutoGrowInput, Input, Label, Select } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { GovIdDocs, type GovIdItem } from "@/components/users/govid-docs";
 
 // Same shape as every other module's, including the per-field breakdown.
 export type { ActionResult } from "@/features/shared/action-result";
@@ -236,6 +237,18 @@ const SECTION_FIELDS: Record<SectionId, readonly string[]> = {
  * long form isn't shown all at once. All controls stay mounted while
  * collapsed (see CollapsibleSection) so nothing drops out of the submission.
  *
+ * ── Why the fields sit OUTSIDE the <form> element and reference it by id ──
+ * The Government IDs section embeds <GovIdDocs>, whose upload/remove controls
+ * are their OWN <form>s posting to their own server actions. A <form> may not
+ * be nested inside another <form> (invalid HTML), so the account form cannot
+ * physically wrap the uploader. Rather than reorder the sections, the account
+ * <form> is a thin element at the bottom holding only the submit buttons (so
+ * useFormStatus still sees pending) and the hidden userId; every field control
+ * is associated to it by the HTML `form={formId}` attribute. A form's FormData
+ * includes every control that names it as its form owner, wherever it sits in
+ * the DOM — so the payload is identical to a wrapping <form>, while the
+ * uploader's <form>s remain siblings, never nested.
+ *
  * Saving is two-step — "Save" then "Yes, save" — a confirmation before an
  * account is created or changed.
  */
@@ -252,6 +265,8 @@ export function UserForm({
   passwordHint,
   rolesLockedReason,
   cancelHref,
+  userId,
+  govIdItems,
 }: {
   action: (prev: ActionResult, formData: FormData) => Promise<ActionResult>;
   roles: RoleOption[];
@@ -266,6 +281,13 @@ export function UserForm({
   /** Set when the admin is editing their own account — see SELF_ROLE_CHANGE. */
   rolesLockedReason?: string;
   cancelHref: string;
+  /**
+   * Edit mode only: the account these documents attach to, and the gov-ID
+   * scan/photo rows. Absent on create (no account to attach to yet), so the
+   * uploader is not rendered and a hint is shown instead.
+   */
+  userId?: string;
+  govIdItems?: GovIdItem[];
 }) {
   const [form, setForm] = useState<UserFormValues>(values);
   // The consolidated single "Access level" = one company Role. On edit,
@@ -285,6 +307,10 @@ export function UserForm({
     ok: false,
     error: null,
   });
+
+  // The account <form> lives at the bottom; every field control associates to
+  // it by this id (see the component doc-comment).
+  const formId = useId();
 
   // Drop back out of the confirmation step once the action has answered, so a
   // refused save can be corrected and re-confirmed.
@@ -316,6 +342,10 @@ export function UserForm({
   const shipDepartments = departments.filter((d) => d.side === "SHIP");
   const shoreDepartments = departments.filter((d) => d.side === "SHORE");
 
+  // Show the ID-document uploader only in edit mode (an account exists to
+  // attach files to). On create there is nothing to post against yet.
+  const showGovIdDocs = Boolean(userId) && Array.isArray(govIdItems);
+
   // Gender is lenient: the dropdown offers the known set but a legacy/unknown
   // value (any spelling) must survive a re-save, so it is appended as its own
   // option rather than dropped. Mirrors how the edit page keeps a retired
@@ -329,9 +359,7 @@ export function UserForm({
   return (
     <Card>
       <CardContent className="pt-5">
-        <form action={formAction} className="space-y-4">
-          {form.id && <input type="hidden" name="userId" value={form.id} />}
-
+        <div className="space-y-4">
           {/* ── Account — the sign-in essentials, open by default. ── */}
           <CollapsibleSection
             id="account"
@@ -351,6 +379,7 @@ export function UserForm({
                 <Input
                   id="fullName"
                   name="fullName"
+                  form={formId}
                   value={form.fullName}
                   onChange={(e) => setForm({ ...form, fullName: e.target.value })}
                   placeholder="e.g. Capt. Ramon Reyes"
@@ -367,6 +396,7 @@ export function UserForm({
                 <Input
                   id="email"
                   name="email"
+                  form={formId}
                   type="email"
                   inputMode="email"
                   value={form.email}
@@ -384,6 +414,7 @@ export function UserForm({
                 <Input
                   id="rank"
                   name="rank"
+                  form={formId}
                   value={form.rank}
                   onChange={(e) => setForm({ ...form, rank: e.target.value })}
                   placeholder="e.g. Master, Marine Supt"
@@ -399,6 +430,7 @@ export function UserForm({
                 <Input
                   id="employeeId"
                   name="employeeId"
+                  form={formId}
                   value={form.employeeId}
                   onChange={(e) => setForm({ ...form, employeeId: e.target.value })}
                   placeholder="e.g. SW-0142"
@@ -429,6 +461,7 @@ export function UserForm({
                   // hidden inputs below re-post the current role(s) unchanged so
                   // the save leaves this account's access untouched.
                   name={rolesLocked ? undefined : "roleId"}
+                  form={formId}
                   value={roleId}
                   disabled={rolesLocked}
                   onChange={(e) => setRoleId(e.target.value)}
@@ -442,10 +475,10 @@ export function UserForm({
               {/* accessLevelId is no longer set from this form; preserve the
                   account's current value (blank for a new account) so nothing
                   already assigned is silently cleared. */}
-              <input type="hidden" name="accessLevelId" value={form.accessLevelId} />
+              <input type="hidden" name="accessLevelId" form={formId} value={form.accessLevelId} />
               {rolesLocked &&
                 form.roleIds.map((id) => (
-                  <input key={id} type="hidden" name="roleIds" value={id} />
+                  <input key={id} type="hidden" name="roleIds" form={formId} value={id} />
                 ))}
               <Field
                 id="departmentRefId"
@@ -456,6 +489,7 @@ export function UserForm({
                 <Select
                   id="departmentRefId"
                   name="departmentRefId"
+                  form={formId}
                   value={form.departmentRefId}
                   onChange={(e) => setForm({ ...form, departmentRefId: e.target.value })}
                 >
@@ -489,6 +523,7 @@ export function UserForm({
                   <Input
                     id="password"
                     name="password"
+                    form={formId}
                     type={showPassword ? "text" : "password"}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
@@ -535,6 +570,7 @@ export function UserForm({
                 <Input
                   id="lastName"
                   name="lastName"
+                  form={formId}
                   value={form.lastName}
                   onChange={(e) => setForm({ ...form, lastName: e.target.value })}
                   autoComplete="off"
@@ -544,6 +580,7 @@ export function UserForm({
                 <Input
                   id="firstName"
                   name="firstName"
+                  form={formId}
                   value={form.firstName}
                   onChange={(e) => setForm({ ...form, firstName: e.target.value })}
                   autoComplete="off"
@@ -553,6 +590,7 @@ export function UserForm({
                 <Input
                   id="middleName"
                   name="middleName"
+                  form={formId}
                   value={form.middleName}
                   onChange={(e) => setForm({ ...form, middleName: e.target.value })}
                   autoComplete="off"
@@ -567,6 +605,7 @@ export function UserForm({
                 <Input
                   id="initials"
                   name="initials"
+                  form={formId}
                   value={form.initials}
                   onChange={(e) => setForm({ ...form, initials: e.target.value })}
                   autoComplete="off"
@@ -576,6 +615,7 @@ export function UserForm({
                 <Select
                   id="gender"
                   name="gender"
+                  form={formId}
                   value={form.gender}
                   onChange={(e) => setForm({ ...form, gender: e.target.value })}
                 >
@@ -597,6 +637,7 @@ export function UserForm({
                 <Input
                   id="employmentStatus"
                   name="employmentStatus"
+                  form={formId}
                   value={form.employmentStatus}
                   onChange={(e) => setForm({ ...form, employmentStatus: e.target.value })}
                   autoComplete="off"
@@ -611,6 +652,7 @@ export function UserForm({
                 <Input
                   id="designation"
                   name="designation"
+                  form={formId}
                   value={form.designation}
                   onChange={(e) => setForm({ ...form, designation: e.target.value })}
                   autoComplete="off"
@@ -620,6 +662,7 @@ export function UserForm({
                 <Input
                   id="birthDate"
                   name="birthDate"
+                  form={formId}
                   type="date"
                   value={form.birthDate}
                   onChange={(e) => setForm({ ...form, birthDate: e.target.value })}
@@ -634,6 +677,7 @@ export function UserForm({
                 <Input
                   id="dateHired"
                   name="dateHired"
+                  form={formId}
                   type="date"
                   value={form.dateHired}
                   onChange={(e) => setForm({ ...form, dateHired: e.target.value })}
@@ -649,6 +693,7 @@ export function UserForm({
               <AutoGrowInput
                 id="officialAddress"
                 name="officialAddress"
+                form={formId}
                 value={form.officialAddress}
                 onChange={(e) => setForm({ ...form, officialAddress: e.target.value })}
                 autoComplete="off"
@@ -657,7 +702,12 @@ export function UserForm({
           </CollapsibleSection>
 
           {/* ── Government IDs ──
-              Validated leniently and stored as typed. */}
+              The four ID numbers (validated leniently, stored as typed) AND,
+              in edit mode, the scan/photo of each ID — consolidated here so
+              there is one obvious place for both. <GovIdDocs> carries its own
+              upload/remove <form>s; it sits in this section but OUTSIDE the
+              account <form> element (which is the thin one at the bottom), so
+              no <form> is nested inside another. */}
           <CollapsibleSection
             id="govId"
             title="Government IDs"
@@ -675,6 +725,7 @@ export function UserForm({
                 <Input
                   id="tin"
                   name="tin"
+                  form={formId}
                   inputMode="numeric"
                   value={form.tin}
                   onChange={(e) => setForm({ ...form, tin: e.target.value })}
@@ -690,6 +741,7 @@ export function UserForm({
                 <Input
                   id="sss"
                   name="sss"
+                  form={formId}
                   inputMode="numeric"
                   value={form.sss}
                   onChange={(e) => setForm({ ...form, sss: e.target.value })}
@@ -705,6 +757,7 @@ export function UserForm({
                 <Input
                   id="hdmf"
                   name="hdmf"
+                  form={formId}
                   inputMode="numeric"
                   value={form.hdmf}
                   onChange={(e) => setForm({ ...form, hdmf: e.target.value })}
@@ -720,12 +773,27 @@ export function UserForm({
                 <Input
                   id="philHealth"
                   name="philHealth"
+                  form={formId}
                   inputMode="numeric"
                   value={form.philHealth}
                   onChange={(e) => setForm({ ...form, philHealth: e.target.value })}
                   autoComplete="off"
                 />
               </Field>
+            </div>
+
+            {/* ID scans/photos. Editing an existing account → the interactive
+                uploader; creating one → a hint, since there is no account to
+                attach a file to until it is saved. */}
+            <div className="space-y-2 border-t border-border pt-4">
+              <p className="text-sm font-medium text-foreground">ID documents (scan/photo)</p>
+              {showGovIdDocs ? (
+                <GovIdDocs userId={userId!} items={govIdItems!} editable />
+              ) : (
+                <p className="text-xs text-muted-foreground">
+                  Save the user first, then upload ID scans on edit.
+                </p>
+              )}
             </div>
           </CollapsibleSection>
 
@@ -747,6 +815,7 @@ export function UserForm({
                 <Input
                   id="crewId"
                   name="crewId"
+                  form={formId}
                   value={form.crewId}
                   onChange={(e) => setForm({ ...form, crewId: e.target.value })}
                   placeholder="e.g. 2026-00042"
@@ -762,6 +831,7 @@ export function UserForm({
                 <Select
                   id="vesselId"
                   name="vesselId"
+                  form={formId}
                   value={form.vesselId}
                   onChange={(e) => setForm({ ...form, vesselId: e.target.value })}
                 >
@@ -781,25 +851,33 @@ export function UserForm({
             <p className="text-sm text-success" role="status">Saved.</p>
           )}
 
-          {/* ── Save, then confirm ── */}
-          {confirming ? (
-            <ConfirmRow
-              prompt={confirmPrompt}
-              submitLabel={submitLabel}
-              pendingLabel={pendingLabel}
-              onCancel={() => setConfirming(false)}
-            />
-          ) : (
-            <div className="flex items-center gap-2">
-              <Button type="button" onClick={() => setConfirming(true)}>
-                {submitLabel}
-              </Button>
-              <Link href={cancelHref}>
-                <Button type="button" variant="ghost">Cancel</Button>
-              </Link>
-            </div>
-          )}
-        </form>
+          {/* ── The account <form> itself: thin, at the bottom, holding only
+              the hidden userId and the submit controls. Every field above
+              names it via `form={formId}`; useFormStatus inside ConfirmRow
+              works because the submit button is a real child of this form. ── */}
+          <form id={formId} action={formAction}>
+            {form.id && <input type="hidden" name="userId" value={form.id} />}
+
+            {/* ── Save, then confirm ── */}
+            {confirming ? (
+              <ConfirmRow
+                prompt={confirmPrompt}
+                submitLabel={submitLabel}
+                pendingLabel={pendingLabel}
+                onCancel={() => setConfirming(false)}
+              />
+            ) : (
+              <div className="flex items-center gap-2">
+                <Button type="button" onClick={() => setConfirming(true)}>
+                  {submitLabel}
+                </Button>
+                <Link href={cancelHref}>
+                  <Button type="button" variant="ghost">Cancel</Button>
+                </Link>
+              </div>
+            )}
+          </form>
+        </div>
       </CardContent>
     </Card>
   );
