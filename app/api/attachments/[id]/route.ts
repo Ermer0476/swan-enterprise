@@ -21,6 +21,16 @@ export async function GET(
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
 
+  // Government-ID scans/photos are sensitive PII: company scope above is not
+  // enough — only office users who manage accounts may view them. Every other
+  // attachment type keeps the company-scope-only rule.
+  if (
+    attachment.entityType.startsWith("user-govid:") &&
+    !user.permissions.has("admin:manage-users")
+  ) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
+
   let buffer: Buffer;
   try {
     buffer = await readAttachmentFile(attachment.fileKey);

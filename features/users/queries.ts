@@ -216,3 +216,48 @@ export async function getUserCrewRecord(companyId: string, userId: string) {
   });
   return row?.seafarer ?? null;
 }
+
+/**
+ * A user's government-ID documents (scans/photos), keyed by gov-ID type.
+ * These live in the shared Attachment table under an entityType of
+ * `user-govid:<TYPE>` with entityId = the user's id (see
+ * `features/users/govid-docs-actions.ts`). Single-slot per type, so we take
+ * the newest live row for each type and return a plain map the detail page
+ * reads directly. Company-scoped like every other read here.
+ */
+export async function listUserGovIdDocs(companyId: string, userId: string) {
+  const rows = await prisma.attachment.findMany({
+    where: {
+      companyId,
+      entityId: userId,
+      entityType: { startsWith: "user-govid:" },
+      deletedAt: null,
+    },
+    orderBy: { createdAt: "desc" },
+    select: {
+      id: true,
+      entityType: true,
+      fileName: true,
+      mimeType: true,
+      sizeBytes: true,
+    },
+  });
+
+  const byType = new Map<
+    string,
+    { id: string; fileName: string; mimeType: string; sizeBytes: number }
+  >();
+  for (const row of rows) {
+    const type = row.entityType.slice("user-govid:".length);
+    // Newest-first order means the first row seen per type is the live one.
+    if (!byType.has(type)) {
+      byType.set(type, {
+        id: row.id,
+        fileName: row.fileName,
+        mimeType: row.mimeType,
+        sizeBytes: row.sizeBytes,
+      });
+    }
+  }
+  return byType;
+}
