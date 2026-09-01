@@ -1,5 +1,6 @@
 import "server-only";
 import { prisma } from "@/lib/prisma";
+import type { SessionUser } from "@/lib/auth";
 
 /**
  * Reads for the Access Levels admin.
@@ -35,4 +36,44 @@ export async function listAccessLevelOptions(companyId: string) {
     orderBy: [{ rank: "desc" }, { name: "asc" }],
     select: { id: true, name: true, rank: true },
   });
+}
+
+/**
+ * The E3 permission-matrix columns: each ACTIVE level with the set of permission
+ * KEYS it currently grants. Active-only (deletedAt: null) so the columns are the
+ * live, assignable vocabulary — a retired level isn't shown to be tuned. Highest
+ * rank first so the grid reads left-to-right most→least privileged.
+ */
+export async function listAccessLevelPermissionMatrix(companyId: string) {
+  const levels = await prisma.accessLevel.findMany({
+    where: { companyId, deletedAt: null },
+    orderBy: [{ rank: "desc" }, { name: "asc" }],
+    select: {
+      id: true,
+      name: true,
+      rank: true,
+      permissions: { select: { permission: { select: { key: true } } } },
+    },
+  });
+  return levels.map((l) => ({
+    id: l.id,
+    name: l.name,
+    rank: l.rank,
+    keys: l.permissions.map((p) => p.permission.key),
+  }));
+}
+
+export type AccessLevelMatrixColumn = Awaited<
+  ReturnType<typeof listAccessLevelPermissionMatrix>
+>[number];
+
+/**
+ * The actor's own ceiling for the grid: their rank (null when they have no level
+ * of their own) and their effective permission set — the union of role and own
+ * access-level keys that getCurrentUser already folded onto `permissions`. The
+ * grid disables the columns ranked above `rank` and the rows whose key is not in
+ * `keys`, matching the server's no-escalation refusals exactly.
+ */
+export function actorCeiling(user: SessionUser): { rank: number | null; keys: string[] } {
+  return { rank: user.accessLevelRank, keys: [...user.permissions] };
 }
