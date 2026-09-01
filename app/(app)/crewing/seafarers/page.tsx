@@ -10,6 +10,8 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input, Select } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Pager } from "@/components/ui/pager";
+import { readPage } from "@/lib/pagination";
 import { formatDate } from "@/lib/utils";
 
 /**
@@ -37,7 +39,11 @@ export default async function SeafarerRegisterPage({
     ? (sp.active as SeafarerActiveFilter)
     : "ACTIVE";
 
-  const rows = await listSeafarers(user, { search: sp.q || undefined, active });
+  const { rows, total, page, totalPages } = await listSeafarers(
+    user,
+    { search: sp.q || undefined, active },
+    readPage(sp),
+  );
   const canCreate = can(user, "crew:create");
 
   return (
@@ -162,6 +168,13 @@ export default async function SeafarerRegisterPage({
               </tbody>
             </table>
           </div>
+          <Pager
+            page={page}
+            totalPages={totalPages}
+            total={total}
+            basePath="/crewing/seafarers"
+            searchParams={sp}
+          />
         </Card>
       )}
     </>

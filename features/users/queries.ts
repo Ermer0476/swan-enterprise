@@ -1,5 +1,6 @@
 import "server-only";
 import { prisma } from "@/lib/prisma";
+import { paginationArgs, paginate, type Paginated } from "@/lib/pagination";
 import type { PermissionKey } from "@/lib/permissions";
 
 /**
@@ -51,22 +52,66 @@ const USER_SELECT = {
 
 export type UserFilters = { search?: string; active?: boolean };
 
-export async function listUsers(companyId: string, filters: UserFilters = {}) {
+/** The list's `where`, shared by the paginated screen read and the full-list
+ *  export so the two can never diverge on what a filter means. */
+function usersWhere(companyId: string, filters: UserFilters) {
+  return {
+    companyId,
+    deletedAt: null,
+    ...(filters.active === undefined ? {} : { active: filters.active }),
+    ...(filters.search
+      ? {
+          OR: [
+            { fullName: { contains: filters.search, mode: "insensitive" as const } },
+            { email: { contains: filters.search, mode: "insensitive" as const } },
+            { rank: { contains: filters.search, mode: "insensitive" as const } },
+            // E1 gave every masterlist employee an ID; searching by it is what
+            // a crewing clerk reaches for first, so it belongs in the OR.
+            { employeeId: { contains: filters.search, mode: "insensitive" as const } },
+          ],
+        }
+      : {}),
+  };
+}
+
+/** How many accounts a page of User Management shows. The client's request:
+ *  20 rows, numbered navigation beneath the table. */
+const USERS_PAGE_SIZE = 20;
+
+/**
+ * User Management's paginated screen read — 20 to a page, server-side
+ * `skip`/`take`, so a company with hundreds of accounts never ships the whole
+ * table into an RSC payload. `page` is clamped to the last page here, not in
+ * the URL, so a stale or hand-typed `?page=999` lands on the last page of rows
+ * rather than an empty table.
+ */
+export async function listUsers(
+  companyId: string,
+  filters: UserFilters = {},
+  page = 1,
+): Promise<Paginated<Awaited<ReturnType<typeof listAllUsers>>[number]>> {
+  const where = usersWhere(companyId, filters);
+  const total = await prisma.user.count({ where });
+  const totalPages = Math.max(1, Math.ceil(total / USERS_PAGE_SIZE));
+  const safePage = Math.min(Math.max(1, page), totalPages);
+  const rows = await prisma.user.findMany({
+    where,
+    select: USER_SELECT,
+    orderBy: [{ fullName: "asc" }],
+    ...paginationArgs(safePage, USERS_PAGE_SIZE),
+  });
+  return paginate(rows, total, safePage, USERS_PAGE_SIZE);
+}
+
+/**
+ * The whole filtered list, unpaginated — the export's read (features/users/
+ * export.ts). The export must carry every matching account, not one screen of
+ * them, and it reuses `USER_SELECT` so `passwordHash` stays structurally
+ * unreachable there too.
+ */
+export async function listAllUsers(companyId: string, filters: UserFilters = {}) {
   return prisma.user.findMany({
-    where: {
-      companyId,
-      deletedAt: null,
-      ...(filters.active === undefined ? {} : { active: filters.active }),
-      ...(filters.search
-        ? {
-            OR: [
-              { fullName: { contains: filters.search, mode: "insensitive" as const } },
-              { email: { contains: filters.search, mode: "insensitive" as const } },
-              { rank: { contains: filters.search, mode: "insensitive" as const } },
-            ],
-          }
-        : {}),
-    },
+    where: usersWhere(companyId, filters),
     select: USER_SELECT,
     orderBy: [{ fullName: "asc" }],
   });

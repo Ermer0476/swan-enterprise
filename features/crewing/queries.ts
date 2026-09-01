@@ -1,5 +1,6 @@
 import "server-only";
 import { prisma } from "@/lib/prisma";
+import { paginationArgs, paginate, type Paginated } from "@/lib/pagination";
 import type { SessionUser } from "@/lib/auth";
 import type { Prisma } from "@/lib/generated/prisma";
 import { can } from "@/lib/rbac";
@@ -177,30 +178,49 @@ export type SeafarerRegisterRow = Prisma.SeafarerGetPayload<{
  * this batch renders a sensitive column in a list, so nothing in this batch
  * ships one to a browser.
  *
- * No pagination and no `take`: the register is 100–150 people (§14 R7). Do not
- * copy Voyage Reports' pagination here — copy its select discipline instead.
+ * Paginated (20/page) — see the note on `listSeafarers` below. Copy Voyage
+ * Reports' pagination AND its select discipline here.
  *
  * NO VESSEL BOUNDARY ON THE NESTED ASSIGNMENT, deliberately: this query returns
- * the whole register, so the boundary that protects it is the DEPARTMENT, and
+ * the register, so the boundary that protects it is the DEPARTMENT, and
  * the page enforces it with `requireOfficeOrNotFound` before asking — the same
  * boundary, stated the same way, as `getSeafarer` and `findSeafarerForOffice`.
  * Filtering the nested vessel while every parent row is unfiltered would
  * protect nothing that gate does not already protect.
+ *
+ * PAGINATED, 20 to a page (client request: 20 rows with numbered navigation).
+ * This supersedes the module's earlier "the register is 100–150 people, do not
+ * paginate it" note: the client now wants the same paged table here as on the
+ * other list screens, and server-side `skip`/`take` costs nothing at that
+ * scale while keeping every list in the app one shape. Ordering stays
+ * `lastName, firstName` — both real columns — so a page boundary is coherent
+ * (page 2 is the next 20 in the same order), unlike the crew list whose order
+ * is a code map. `page` is clamped to the last page, so `?page=999` lands on
+ * real rows, never an empty table.
  */
+const SEAFARER_REGISTER_PAGE_SIZE = 20;
+
 export async function listSeafarers(
   user: SessionUser,
   filters: SeafarerFilters = {},
-): Promise<SeafarerRegisterRow[]> {
-  return prisma.seafarer.findMany({
-    where: {
-      companyId: user.companyId,
-      deletedAt: null,
-      ...activeWhere(filters.active),
-      ...searchWhere(filters.search),
-    },
+  page = 1,
+): Promise<Paginated<SeafarerRegisterRow>> {
+  const where = {
+    companyId: user.companyId,
+    deletedAt: null,
+    ...activeWhere(filters.active),
+    ...searchWhere(filters.search),
+  };
+  const total = await prisma.seafarer.count({ where });
+  const totalPages = Math.max(1, Math.ceil(total / SEAFARER_REGISTER_PAGE_SIZE));
+  const safePage = Math.min(Math.max(1, page), totalPages);
+  const rows = await prisma.seafarer.findMany({
+    where,
     select: SEAFARER_REGISTER_SELECT,
     orderBy: [{ lastName: "asc" }, { firstName: "asc" }],
+    ...paginationArgs(safePage, SEAFARER_REGISTER_PAGE_SIZE),
   });
+  return paginate(rows, total, safePage, SEAFARER_REGISTER_PAGE_SIZE);
 }
 
 /**

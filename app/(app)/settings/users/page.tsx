@@ -6,6 +6,8 @@ import { PageHeader } from "@/components/ui/page-header";
 import { Card } from "@/components/ui/card";
 import { Input, Select } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Pager } from "@/components/ui/pager";
+import { readPage } from "@/lib/pagination";
 import { UsersTable, type UserRowView } from "./users-table";
 
 export default async function UsersPage({
@@ -17,7 +19,11 @@ export default async function UsersPage({
   const sp = await searchParams;
   const active =
     sp.status === "active" ? true : sp.status === "inactive" ? false : undefined;
-  const users = await listUsers(user.companyId, { search: sp.q || undefined, active });
+  const { rows: userRecords, total, page, totalPages } = await listUsers(
+    user.companyId,
+    { search: sp.q || undefined, active },
+    readPage(sp),
+  );
   const canCreate = can(user, "admin:manage-users");
 
   // The export download carries the SAME filter the admin is looking at, so
@@ -28,7 +34,7 @@ export default async function UsersPage({
   if (sp.status) exportParams.set("status", sp.status);
   const exportHref = `/settings/users/export${exportParams.toString() ? `?${exportParams.toString()}` : ""}`;
 
-  const rows: UserRowView[] = users.map((u) => ({
+  const rows: UserRowView[] = userRecords.map((u) => ({
     id: u.id,
     fullName: u.fullName,
     email: u.email,
@@ -65,8 +71,8 @@ export default async function UsersPage({
 
       <form className="mb-4 flex flex-wrap items-end gap-2">
         <div className="min-w-52 flex-1">
-          <Input name="q" aria-label="Search by name, email or rank"
-            placeholder="Search by name, email or rank…" defaultValue={sp.q ?? ""} />
+          <Input name="q" aria-label="Search by name, email, rank or employee ID"
+            placeholder="Search by name, email, rank or employee ID…" defaultValue={sp.q ?? ""} />
         </div>
         <Select name="status" defaultValue={sp.status ?? ""} className="w-40">
           <option value="">All statuses</option>
@@ -91,6 +97,13 @@ export default async function UsersPage({
           <div className="overflow-x-auto">
             <UsersTable rows={rows} />
           </div>
+          <Pager
+            page={page}
+            totalPages={totalPages}
+            total={total}
+            basePath="/settings/users"
+            searchParams={sp}
+          />
         </Card>
       )}
     </>
