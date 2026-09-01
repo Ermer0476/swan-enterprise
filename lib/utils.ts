@@ -10,10 +10,16 @@ export function cn(...inputs: ClassValue[]): string {
 export function formatDate(value: Date | string | null | undefined): string {
   if (!value) return "—";
   const d = typeof value === "string" ? new Date(value) : value;
+  // Fixed timeZone so the server (UTC) and the browser (e.g. Asia/Manila, UTC+8)
+  // always render the SAME calendar day. Without it, a time-bearing date near
+  // midnight formats as a different day on each side → a React hydration
+  // mismatch on every dated row, which makes the list re-render and clicks feel
+  // dropped (needing a second click).
   return d.toLocaleDateString("en-GB", {
     day: "2-digit",
     month: "short",
     year: "numeric",
+    timeZone: "UTC",
   });
 }
 
