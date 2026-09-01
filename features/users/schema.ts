@@ -219,7 +219,7 @@ const detailFields = {
   // uniqueness ("one live account per employee ID") is enforced in the action,
   // not here.
   employeeId: z.string().trim().max(60).optional().or(z.literal("")),
-  // The crew ID for a shore user who came from the ships. Format YYYY-99999,
+  // The crew ID for a shore user who came from the ships. Format YY-NNNN,
   // validated only when non-empty; blank = a non-seafarer. Uniqueness ("one
   // live account per crew ID") is enforced in the action, not here.
   crewId: z
