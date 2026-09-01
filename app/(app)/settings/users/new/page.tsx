@@ -3,17 +3,15 @@ import { ArrowLeft } from "lucide-react";
 import { requirePermission } from "@/lib/rbac";
 import { createUserAction } from "@/features/users/actions";
 import { listRoleOptions, listVesselOptions } from "@/features/users/queries";
-import { listAccessLevelOptions } from "@/features/access-levels/queries";
 import { listDepartmentOptions } from "@/features/departments/queries";
 import { PageHeader } from "@/components/ui/page-header";
 import { UserForm } from "@/components/users/user-form";
 
 export default async function NewUserPage() {
   const user = await requirePermission("admin:manage-users");
-  const [roles, vessels, accessLevels, departments] = await Promise.all([
+  const [roles, vessels, departments] = await Promise.all([
     listRoleOptions(user.companyId),
     listVesselOptions(user.companyId),
-    listAccessLevelOptions(user.companyId),
     listDepartmentOptions(user.companyId),
   ]);
 
@@ -35,7 +33,6 @@ export default async function NewUserPage() {
         action={createUserAction}
         roles={roles}
         vessels={vessels}
-        accessLevels={accessLevels}
         departments={departments}
         submitLabel="Save"
         pendingLabel="Saving…"

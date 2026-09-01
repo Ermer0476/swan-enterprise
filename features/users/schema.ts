@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { DEPARTMENTS } from "@/features/sms-manual/schema";
 import { CREW_ID_RE, CREW_ID_FORMAT_MESSAGE } from "@/features/crewing/crew-id";
 
 /**
@@ -85,6 +84,10 @@ export const DEPARTMENT_UNAVAILABLE =
   "The selected department is not available. Pick another.";
 export const VESSEL_UNAVAILABLE =
   "The selected vessel is not available. Pick another.";
+// A ship-side Department (Ship / Shore) derives department = SHIPBOARD, which
+// drives vessel scope — so it cannot stand without a vessel to scope to.
+export const SHIP_REQUIRES_VESSEL =
+  "A ship-side department needs a vessel. Pick the vessel this account is assigned to.";
 export const SELF_ROLE_CHANGE =
   "You can't change your own system accesses. Ask another administrator to do it.";
 export const SELF_DEPARTMENT_CHANGE =
@@ -207,12 +210,10 @@ export function composeFullName(parts: {
 const detailFields = {
   fullName: z.string().trim().min(2, "Full name is required").max(120),
   email: emailField,
-  // The legacy security-signal department enum (SHIPBOARD drives vessel scope,
-  // and can match a WorkflowStep.approverDept). Mirrors DepartmentType — see
-  // features/sms-manual/schema.ts. Nobody may change their own (SELF_*).
-  department: z.enum(DEPARTMENTS, {
-    errorMap: () => ({ message: "Select a department" }),
-  }),
+  // NOTE: the legacy security-signal `department` (DepartmentType) enum is no
+  // longer posted by the form. It is DERIVED on save from the chosen
+  // "Department (Ship / Shore)" — see deriveDepartment() in actions.ts — so it
+  // is intentionally absent here.
   rank: z.string().trim().max(60).optional().or(z.literal("")),
   // The company's own staff / shore / employee ID. Free text, optional —
   // uniqueness ("one live account per employee ID") is enforced in the action,
@@ -255,11 +256,14 @@ const detailFields = {
   sss: phGovId("SSS", [10]),
   hdmf: phGovId("HDMF (Pag-IBIG)", [12]),
   philHealth: phGovId("PhilHealth", [12]),
-  // "System accesses" in the client's process doc. At least one, so a saved
-  // account can actually reach something once it signs in.
+  // The single consolidated "Access level" = the company's Role that drives
+  // requirePermission for this account. The form posts one (`roleId`); the
+  // action normalises it into this one-element array (and still accepts a
+  // legacy `roleIds` payload). At least one is required, so a saved account
+  // can actually reach something once it signs in.
   roleIds: z
-    .array(z.string().uuid("Select a valid system access"))
-    .min(1, "Select at least one system access"),
+    .array(z.string().uuid("Select a valid access level"))
+    .min(1, "Select an access level"),
 };
 
 export const createUserSchema = z

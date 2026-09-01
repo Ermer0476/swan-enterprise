@@ -4,9 +4,8 @@ import Link from "next/link";
 import * as React from "react";
 import { useActionState, useEffect, useState } from "react";
 import { useFormStatus } from "react-dom";
-import { DEPARTMENTS } from "@/features/sms-manual/schema";
 import { GENDERS, MIN_PASSWORD_LENGTH } from "@/features/users/schema";
-import { cn, humanize } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import { Card, CardContent } from "@/components/ui/card";
 import { AutoGrowInput, Input, Label, Select } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -161,7 +160,6 @@ export type UserFormValues = {
 };
 
 export type RoleOption = { id: string; name: string; description: string | null };
-export type AccessLevelOption = { id: string; name: string };
 export type DepartmentOption = { id: string; name: string; side: "SHIP" | "SHORE" };
 
 const EMPTY: UserFormValues = {
@@ -202,11 +200,10 @@ const SECTION_FIELDS: Record<SectionId, readonly string[]> = {
   account: [
     "fullName",
     "email",
-    "department",
     "rank",
     "employeeId",
+    "roleId",
     "roleIds",
-    "accessLevelId",
     "departmentRefId",
     "password",
   ],
@@ -246,7 +243,6 @@ export function UserForm({
   action,
   roles,
   vessels,
-  accessLevels,
   departments,
   values = EMPTY,
   submitLabel,
@@ -260,7 +256,6 @@ export function UserForm({
   action: (prev: ActionResult, formData: FormData) => Promise<ActionResult>;
   roles: RoleOption[];
   vessels: { id: string; name: string }[];
-  accessLevels: AccessLevelOption[];
   departments: DepartmentOption[];
   values?: UserFormValues;
   submitLabel: string;
@@ -273,6 +268,10 @@ export function UserForm({
   cancelHref: string;
 }) {
   const [form, setForm] = useState<UserFormValues>(values);
+  // The consolidated single "Access level" = one company Role. On edit,
+  // preselect the user's current (primary) role — the first of their roles;
+  // an existing multi-role account is collapsed to this one on save.
+  const [roleId, setRoleId] = useState<string>(values.roleIds[0] ?? "");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [confirming, setConfirming] = useState(false);
@@ -322,15 +321,6 @@ export function UserForm({
   // option rather than dropped. Mirrors how the edit page keeps a retired
   // access level selectable.
   const genderIsKnown = GENDERS.some((g) => g === form.gender);
-
-  function toggleRole(roleId: string, checked: boolean) {
-    setForm((f) => ({
-      ...f,
-      roleIds: checked
-        ? [...f.roleIds, roleId]
-        : f.roleIds.filter((id) => id !== roleId),
-    }));
-  }
 
   function toggleSection(id: SectionId) {
     setOpenSections((s) => ({ ...s, [id]: !s[id] }));
@@ -386,23 +376,6 @@ export function UserForm({
                 />
               </Field>
               <Field
-                id="department"
-                label="Department"
-                error={fieldErrors?.department}
-                hint="Drives which rank list they see when filing a report. Nobody can change their own."
-              >
-                <Select
-                  id="department"
-                  name="department"
-                  value={form.department}
-                  onChange={(e) => setForm({ ...form, department: e.target.value })}
-                >
-                  {DEPARTMENTS.map((d) => (
-                    <option key={d} value={d}>{humanize(d)}</option>
-                  ))}
-                </Select>
-              </Field>
-              <Field
                 id="rank"
                 label="Rank / position"
                 error={fieldErrors?.rank}
@@ -434,90 +407,51 @@ export function UserForm({
               </Field>
             </div>
 
-            {/* System accesses — a checkbox group, so its required marker and
-                its "at least one" error hang off the group rather than any
-                single checkbox. */}
-            <div className="space-y-2">
-              <Label>
-                System accesses
-                {!rolesLocked && <RequiredMark />}
-              </Label>
-              <p className="text-xs leading-snug text-muted-foreground">
-                {rolesLockedReason ??
-                  "At least one — an account with no access can sign in but reach nothing. Roles are shown in full under Settings › Access Levels / Roles."}
-              </p>
-              {fieldErrors?.roleIds && (
-                <p className="text-xs font-medium leading-snug text-danger" role="alert">
-                  {fieldErrors.roleIds}
-                </p>
-              )}
-              <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-                {roles.map((r) => {
-                  const checked = form.roleIds.includes(r.id);
-                  return (
-                    <label
-                      key={r.id}
-                      className="flex cursor-pointer items-start gap-2 rounded-md border border-border p-2.5 hover:bg-muted/40"
-                    >
-                      <input
-                        type="checkbox"
-                        // A disabled checkbox posts nothing, which would submit
-                        // an empty access list; the hidden inputs below keep the
-                        // current roles in the payload when they're locked.
-                        name={rolesLocked ? undefined : "roleIds"}
-                        value={r.id}
-                        checked={checked}
-                        disabled={rolesLocked}
-                        onChange={(e) => toggleRole(r.id, e.target.checked)}
-                        className="mt-0.5 h-4 w-4 shrink-0 rounded border-input"
-                      />
-                      <span className="text-sm">
-                        <span className="font-medium">{r.name}</span>
-                        {r.description && (
-                          <span className="block text-xs text-muted-foreground">
-                            {r.description}
-                          </span>
-                        )}
-                      </span>
-                    </label>
-                  );
-                })}
-              </div>
+            {/* Access level & department, plus the password. "Access level" is
+                the single consolidated control: one company Role, which drives
+                requirePermission for this account (the RBAC engine). The
+                Department (Ship / Shore) also derives the security department on
+                save — ship ⇒ SHIPBOARD (needs a vessel), shore/none ⇒ ADMIN. */}
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <Field
+                id="roleId"
+                label="Access level"
+                required={!rolesLocked}
+                error={fieldErrors?.roleId ?? fieldErrors?.roleIds}
+                hint={
+                  rolesLockedReason ??
+                  "What this account can do once it signs in. Roles are managed under Settings › Access Levels / Roles."
+                }
+              >
+                <Select
+                  id="roleId"
+                  // A disabled select posts nothing; when locked (self-edit) the
+                  // hidden inputs below re-post the current role(s) unchanged so
+                  // the save leaves this account's access untouched.
+                  name={rolesLocked ? undefined : "roleId"}
+                  value={roleId}
+                  disabled={rolesLocked}
+                  onChange={(e) => setRoleId(e.target.value)}
+                >
+                  <option value="">— Select an access level —</option>
+                  {roles.map((r) => (
+                    <option key={r.id} value={r.id}>{r.name}</option>
+                  ))}
+                </Select>
+              </Field>
+              {/* accessLevelId is no longer set from this form; preserve the
+                  account's current value (blank for a new account) so nothing
+                  already assigned is silently cleared. */}
+              <input type="hidden" name="accessLevelId" value={form.accessLevelId} />
               {rolesLocked &&
                 form.roleIds.map((id) => (
                   <input key={id} type="hidden" name="roleIds" value={id} />
                 ))}
-            </div>
-
-            {/* Access level & department (data-driven), plus the password.
-                The Department here is the editable org department from
-                Settings › Departments — separate from the legacy "Department"
-                enum above, which drives rank lists and security
-                (lib/user-access.ts) and is unchanged. */}
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-              <Field
-                id="accessLevelId"
-                label="Access level"
-                error={fieldErrors?.accessLevelId}
-                hint="The user's level from Settings › Access Levels. Optional."
-              >
-                <Select
-                  id="accessLevelId"
-                  name="accessLevelId"
-                  value={form.accessLevelId}
-                  onChange={(e) => setForm({ ...form, accessLevelId: e.target.value })}
-                >
-                  <option value="">— None —</option>
-                  {accessLevels.map((a) => (
-                    <option key={a.id} value={a.id}>{a.name}</option>
-                  ))}
-                </Select>
-              </Field>
               <Field
                 id="departmentRefId"
                 label="Department (Ship / Shore)"
                 error={fieldErrors?.departmentRefId}
-                hint="The editable department from Settings › Departments. Optional, and separate from the security/rank Department above."
+                hint="From Settings › Departments. A ship-side choice puts this account on shipboard scope and needs a vessel below; a shore choice keeps it ashore."
               >
                 <Select
                   id="departmentRefId"

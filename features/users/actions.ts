@@ -19,9 +19,9 @@ import {
   LAST_ADMIN,
   ROLE_NOT_FOUND,
   SELF_DEACTIVATE,
-  SELF_DEPARTMENT_CHANGE,
   SELF_ROLE_CHANGE,
   setUserActiveSchema,
+  SHIP_REQUIRES_VESSEL,
   signOutEverywhereSchema,
   updateUserSchema,
   USER_NOT_FOUND,
@@ -35,6 +35,26 @@ import { failFromZod, type ActionResult } from "@/features/shared/action-result"
 export type { ActionResult };
 const OK: ActionResult = { ok: true, error: null };
 const fail = (error: string): ActionResult => ({ ok: false, error });
+/** A refusal that also pins its message to one form field. */
+const failField = (field: string, error: string): ActionResult => ({
+  ok: false,
+  error,
+  fieldErrors: { [field]: error },
+});
+
+/**
+ * Derive the required, non-null security `department` (DepartmentType) from the
+ * chosen data-driven "Department (Ship / Shore)". `department` is the security
+ * signal — SHIPBOARD ⇒ vessel scope (lib/user-access.ts) — and the column is
+ * NOT NULL, so it is ALWAYS written and never left unset.
+ *
+ *   Ship / Shore side === "SHIP"   → "SHIPBOARD"  (ship scope; a vessel is REQUIRED)
+ *   Ship / Shore side === "SHORE"  → "ADMIN"      (a neutral shore value; never SHIPBOARD)
+ *   no Ship / Shore department set → "ADMIN"      (default; NEVER SHIPBOARD unless explicitly ship)
+ */
+function deriveDepartment(side: "SHIP" | "SHORE" | null | undefined): "SHIPBOARD" | "ADMIN" {
+  return side === "SHIP" ? "SHIPBOARD" : "ADMIN";
+}
 
 /**
  * Audit a government ID by PRESENCE only, never by value. A TIN/SSS/HDMF/
@@ -69,11 +89,19 @@ const SHORE_ONLY = "User management is available from an office account only.";
 class AdminFloorError extends Error {}
 
 /**
- * Checkbox groups post one entry per ticked box. Deduplicated because the
- * same role posted twice would otherwise fail the "did every id resolve?"
- * count below and collide on UserRole's composite primary key.
+ * The role(s) this submission assigns.
+ *
+ * The consolidated "Access level" control is a SINGLE select posting `roleId`
+ * — exactly one role (UserRole = one row). Backward-compat: an older payload
+ * posts `roleIds` instead — the retired multi-checkbox "System accesses", and
+ * the self-edit lock, which re-posts the user's current roles under that name
+ * so a self-save leaves them untouched. Deduplicated because the same role
+ * posted twice would otherwise fail the "did every id resolve?" count below
+ * and collide on UserRole's composite primary key.
  */
-function roleIdsFrom(formData: FormData): string[] {
+function submittedRoleIds(formData: FormData): string[] {
+  const single = String(formData.get("roleId") ?? "").trim();
+  if (single) return [single];
   return [
     ...new Set(
       formData
@@ -137,7 +165,9 @@ async function resolveVessel(companyId: string, id: string): Promise<VesselResul
  * offer active ones. Assigning a retired-but-owned value is a legitimate state,
  * not a privilege boundary, so company scope is the only check that belongs here.
  */
-type RefResult = { ok: true; value: { id: string; name: string } | null } | { ok: false };
+type RefResult =
+  | { ok: true; value: { id: string; name: string; side: "SHIP" | "SHORE" } | null }
+  | { ok: false };
 
 // Access level carries its `rank` too, for the E3 no-escalation check at the
 // assignment site (an actor with a level may not assign one above their own).
@@ -158,7 +188,8 @@ async function resolveDepartmentRef(companyId: string, id: string): Promise<RefR
   if (!id) return { ok: true, value: null };
   const row = await prisma.department.findFirst({
     where: { id, companyId },
-    select: { id: true, name: true },
+    // `side` drives the derived security department (deriveDepartment).
+    select: { id: true, name: true, side: true },
   });
   return row ? { ok: true, value: row } : { ok: false };
 }
@@ -246,7 +277,6 @@ export async function createUserAction(
   const parsed = createUserSchema.safeParse({
     fullName: formData.get("fullName"),
     email: formData.get("email"),
-    department: formData.get("department"),
     rank: formData.get("rank"),
     employeeId: formData.get("employeeId"),
     crewId: formData.get("crewId"),
@@ -267,7 +297,7 @@ export async function createUserAction(
     sss: formData.get("sss"),
     hdmf: formData.get("hdmf"),
     philHealth: formData.get("philHealth"),
-    roleIds: roleIdsFrom(formData),
+    roleIds: submittedRoleIds(formData),
     password: formData.get("password"),
   });
   if (!parsed.success) return failFromZod(parsed.error);
@@ -294,6 +324,13 @@ export async function createUserAction(
   const departmentRef = await resolveDepartmentRef(actor.companyId, d.departmentRefId || "");
   if (!departmentRef.ok) return fail(DEPARTMENT_UNAVAILABLE);
 
+  // Derive the required security department from the chosen Ship / Shore
+  // department. A ship-side selection scopes to a vessel, so it must have one.
+  const department = deriveDepartment(departmentRef.value?.side);
+  if (department === "SHIPBOARD" && !vessel.vessel) {
+    return failField("vesselId", SHIP_REQUIRES_VESSEL);
+  }
+
   if (await emailTaken(d.email)) return fail(EMAIL_TAKEN);
   if (await employeeIdTaken(actor.companyId, (d.employeeId || "").trim()))
     return fail(EMPLOYEE_ID_TAKEN);
@@ -317,7 +354,7 @@ export async function createUserAction(
         fullName,
         email: d.email,
         passwordHash,
-        department: d.department,
+        department,
         rank: d.rank || null,
         employeeId: d.employeeId?.trim() || null,
         crewId: d.crewId?.trim() || null,
@@ -366,7 +403,7 @@ export async function createUserAction(
     summary: `${actor.fullName} created user ${created.fullName} (${created.email}) with ${roles.map((r) => r.name).join(", ")}`,
     metadata: {
       email: created.email,
-      department: d.department,
+      department,
       employeeId: d.employeeId?.trim() || null,
       crewId: d.crewId?.trim() || null,
       roles: roles.map((r) => r.name),
@@ -407,7 +444,6 @@ export async function updateUserAction(
     userId: formData.get("userId"),
     fullName: formData.get("fullName"),
     email: formData.get("email"),
-    department: formData.get("department"),
     rank: formData.get("rank"),
     employeeId: formData.get("employeeId"),
     crewId: formData.get("crewId"),
@@ -428,7 +464,7 @@ export async function updateUserAction(
     sss: formData.get("sss"),
     hdmf: formData.get("hdmf"),
     philHealth: formData.get("philHealth"),
-    roleIds: roleIdsFrom(formData),
+    roleIds: submittedRoleIds(formData),
     password: formData.get("password"),
   });
   if (!parsed.success) return failFromZod(parsed.error);
@@ -468,6 +504,17 @@ export async function updateUserAction(
   const departmentRef = await resolveDepartmentRef(actor.companyId, d.departmentRefId || "");
   if (!departmentRef.ok) return fail(DEPARTMENT_UNAVAILABLE);
 
+  // Derive the required security department from the chosen Ship / Shore
+  // department. An admin may NOT change their OWN security department (it can
+  // widen approval authority and is the SHIPBOARD⇒vessel-scope signal), so a
+  // self-edit keeps the stored value exactly — the same invariant the old
+  // SELF_DEPARTMENT_CHANGE guard held, now that the field is derived, not typed.
+  const department =
+    target.id === actor.id ? target.department : deriveDepartment(departmentRef.value?.side);
+  if (department === "SHIPBOARD" && !vessel.vessel) {
+    return failField("vesselId", SHIP_REQUIRES_VESSEL);
+  }
+
   const currentRoleIds = new Set(target.roles.map((r) => r.roleId));
   const nextRoleIds = roles.map((r) => r.id);
   const rolesChanged =
@@ -479,15 +526,6 @@ export async function updateUserAction(
   // path by which one account quietly grants itself more than it was given,
   // with nobody else in the loop.
   if (target.id === actor.id && rolesChanged) return fail(SELF_ROLE_CHANGE);
-
-  // Department is not a label. Workflow steps can name an approving
-  // department (WorkflowStep.approverDept), so moving your own account into
-  // another one widens your own approval authority — the same escalation
-  // SELF_ROLE_CHANGE blocks, reached by a quieter route. It is also the legacy
-  // security signal (SHIPBOARD ⇒ vessel scope, lib/user-access.ts).
-  if (target.id === actor.id && d.department !== target.department) {
-    return fail(SELF_DEPARTMENT_CHANGE);
-  }
 
   const adminIds = await adminRoleIds(actor.companyId);
   const wasAdmin = [...currentRoleIds].some((id) => adminIds.has(id));
@@ -525,7 +563,7 @@ export async function updateUserAction(
         data: {
           fullName,
           email: d.email,
-          department: d.department,
+          department,
           rank: d.rank || null,
           employeeId: d.employeeId?.trim() || null,
           crewId: d.crewId?.trim() || null,
