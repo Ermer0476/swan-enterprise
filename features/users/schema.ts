@@ -97,6 +97,109 @@ const emailField = z
   .email("Enter a valid email address")
   .max(200, "Email address is too long");
 
+// ─── Employee Masterlist (E1) field helpers ─────────────────────────────────
+// Every masterlist field is additive and optional. These factories keep the
+// "trim, bound, allow blank" shape identical across the dozen new fields so no
+// two of them drift, mirroring how `rank`/`employeeId` above are written.
+
+/** Trimmed, length-bounded, optional-or-blank free text. Output: string | undefined. */
+const optText = (max: number) =>
+  z.string().trim().max(max).optional().or(z.literal(""));
+
+/**
+ * The genders the form offers, matched case-insensitively. DELIBERATELY not a
+ * hard enum: the legacy masterlist holds free-form values, so an unknown one is
+ * accepted as typed rather than rejected on import or re-save. Kept only as the
+ * dropdown's option list and as documentation of the canonical spellings.
+ */
+export const GENDERS = ["Male", "Female"] as const;
+
+/**
+ * A Philippine government ID, validated leniently. Blank passes (the field is
+ * optional). Otherwise spaces and dashes are stripped and the remainder must be
+ * all digits of an allowed length — a soft field error, never a hard refusal
+ * that would block saving the rest of the account. The stored value is the
+ * user's original trimmed text: this only *checks* a normalized copy, it does
+ * NOT normalize what gets written (numbers are kept exactly as the HR clerk
+ * typed them, dashes and all).
+ */
+function phGovId(label: string, allowedLengths: readonly number[]) {
+  const lengths = allowedLengths.join(" or ");
+  return z
+    .string()
+    .trim()
+    .max(30)
+    .optional()
+    .or(z.literal(""))
+    .refine(
+      (v) => {
+        if (!v) return true;
+        const digits = v.replace(/[\s-]/g, "");
+        return /^\d+$/.test(digits) && allowedLengths.includes(digits.length);
+      },
+      { message: `${label} must be ${lengths} digits.` },
+    );
+}
+
+/**
+ * An optional calendar date from a <input type="date"> (or a blank). Blank and
+ * a missing field both resolve to `null`; anything else is coerced and an
+ * impossible date (e.g. 2026-02-30, which parses to Invalid Date) is rejected.
+ * Output: Date | null, so the action writes it straight through.
+ */
+const optDate = z.preprocess(
+  (v) => (v === "" || v === null || v === undefined ? null : v),
+  z.union([z.null(), z.coerce.date()]),
+);
+
+/**
+ * Cross-field guard shared by create and update: a hire date before the date
+ * of birth is a data-entry slip, not a real record. Pathed onto `dateHired` so
+ * the message lands on that input rather than floating at the top of the form.
+ * Only fires when both dates are present.
+ */
+function datesConsistent(
+  d: { birthDate: Date | null; dateHired: Date | null },
+  ctx: z.RefinementCtx,
+) {
+  if (d.birthDate && d.dateHired && d.dateHired.getTime() < d.birthDate.getTime()) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ["dateHired"],
+      message: "Date hired can't be before the date of birth.",
+    });
+  }
+}
+
+/**
+ * Builds a display `fullName` as `LAST, FIRST MIDDLE`, skipping any blank part.
+ *
+ * Shared on purpose — createUserAction, updateUserAction and a future
+ * masterlist importer all compose a name here so the three can never spell one
+ * differently. Lives in schema.ts (not actions.ts) because a "use server"
+ * module may only export async functions, and this is the same reason the
+ * refusal messages live here too.
+ *
+ * Returns `null` when NO name part is supplied; the callers read that as "the
+ * masterlist name fields were left blank, keep the fullName the form already
+ * has" — the legacy edit path that only touched the single Full name box.
+ * Parts are trimmed; internal spacing (compound surnames like "Dela Cruz") is
+ * left untouched. Degrades gracefully when only some parts exist.
+ */
+export function composeFullName(parts: {
+  lastName?: string | null;
+  firstName?: string | null;
+  middleName?: string | null;
+}): string | null {
+  const last = (parts.lastName ?? "").trim();
+  const first = (parts.firstName ?? "").trim();
+  const middle = (parts.middleName ?? "").trim();
+  if (!last && !first && !middle) return null;
+  const given = [first, middle].filter(Boolean).join(" ");
+  if (last && given) return `${last}, ${given}`;
+  return last || given;
+}
+
 const detailFields = {
   fullName: z.string().trim().min(2, "Full name is required").max(120),
   email: emailField,
@@ -128,6 +231,26 @@ const detailFields = {
   // see lib/user-access.ts. Blank = unassigned.
   accessLevelId: z.string().uuid("Select a valid access level").optional().or(z.literal("")),
   departmentRefId: z.string().uuid("Select a valid department").optional().or(z.literal("")),
+  // ── Employee Masterlist (E1) — all optional, additive. Names feed the
+  //    composed `LAST, FIRST MIDDLE` fullName in the action; the rest are
+  //    HR reference fields shown on the profile. Nothing here is a security
+  //    signal. Government IDs use the lenient phGovId check and are stored
+  //    as typed (never normalized). ──
+  lastName: optText(60),
+  firstName: optText(60),
+  middleName: optText(60),
+  initials: optText(12),
+  // Lenient: known set matched case-insensitively at the UI, unknowns accepted.
+  gender: optText(30),
+  employmentStatus: optText(60),
+  designation: optText(100),
+  birthDate: optDate,
+  dateHired: optDate,
+  officialAddress: optText(300),
+  tin: phGovId("TIN", [9, 12]),
+  sss: phGovId("SSS", [10]),
+  hdmf: phGovId("HDMF (Pag-IBIG)", [12]),
+  philHealth: phGovId("PhilHealth", [12]),
   // "System accesses" in the client's process doc. At least one, so a saved
   // account can actually reach something once it signs in.
   roleIds: z
@@ -135,17 +258,21 @@ const detailFields = {
     .min(1, "Select at least one system access"),
 };
 
-export const createUserSchema = z.object({
-  ...detailFields,
-  password: passwordField,
-});
+export const createUserSchema = z
+  .object({
+    ...detailFields,
+    password: passwordField,
+  })
+  .superRefine(datesConsistent);
 
-export const updateUserSchema = z.object({
-  userId: z.string().uuid(),
-  ...detailFields,
-  // Optional on update: blank means "leave the current password alone".
-  password: passwordField.or(z.literal("")).optional(),
-});
+export const updateUserSchema = z
+  .object({
+    userId: z.string().uuid(),
+    ...detailFields,
+    // Optional on update: blank means "leave the current password alone".
+    password: passwordField.or(z.literal("")).optional(),
+  })
+  .superRefine(datesConsistent);
 
 export const setUserActiveSchema = z.object({
   userId: z.string().uuid(),

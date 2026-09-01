@@ -5,10 +5,10 @@ import * as React from "react";
 import { useActionState, useEffect, useState } from "react";
 import { useFormStatus } from "react-dom";
 import { DEPARTMENTS } from "@/features/sms-manual/schema";
-import { MIN_PASSWORD_LENGTH } from "@/features/users/schema";
+import { GENDERS, MIN_PASSWORD_LENGTH } from "@/features/users/schema";
 import { humanize } from "@/lib/utils";
 import { Card, CardContent } from "@/components/ui/card";
-import { Input, Label, Select } from "@/components/ui/input";
+import { AutoGrowInput, Input, Label, Select } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 // Same shape as every other module's, including the per-field breakdown.
@@ -71,6 +71,23 @@ export type UserFormValues = {
   accessLevelId: string;
   departmentRefId: string;
   roleIds: string[];
+  // ── Employee Masterlist (E1). birthDate/dateHired are held as YYYY-MM-DD
+  //    strings for <input type="date">; the pages map Date → that on the way
+  //    in, and the action coerces back to a Date on the way out. ──
+  lastName: string;
+  firstName: string;
+  middleName: string;
+  initials: string;
+  gender: string;
+  employmentStatus: string;
+  designation: string;
+  birthDate: string;
+  dateHired: string;
+  officialAddress: string;
+  tin: string;
+  sss: string;
+  hdmf: string;
+  philHealth: string;
 };
 
 export type RoleOption = { id: string; name: string; description: string | null };
@@ -88,6 +105,20 @@ const EMPTY: UserFormValues = {
   accessLevelId: "",
   departmentRefId: "",
   roleIds: [],
+  lastName: "",
+  firstName: "",
+  middleName: "",
+  initials: "",
+  gender: "",
+  employmentStatus: "",
+  designation: "",
+  birthDate: "",
+  dateHired: "",
+  officialAddress: "",
+  tin: "",
+  sss: "",
+  hdmf: "",
+  philHealth: "",
 };
 
 /**
@@ -152,6 +183,12 @@ export function UserForm({
 
   const shipDepartments = departments.filter((d) => d.side === "SHIP");
   const shoreDepartments = departments.filter((d) => d.side === "SHORE");
+
+  // Gender is lenient: the dropdown offers the known set but a legacy/unknown
+  // value (any spelling) must survive a re-save, so it is appended as its own
+  // option rather than dropped. Mirrors how the edit page keeps a retired
+  // access level selectable.
+  const genderIsKnown = GENDERS.some((g) => g === form.gender);
 
   function toggleRole(roleId: string, checked: boolean) {
     setForm((f) => ({
@@ -266,6 +303,209 @@ export function UserForm({
                 autoComplete="off"
               />
             </Field>
+          </div>
+
+          {/* ── 1b. Personal / Masterlist (E1) ──
+              All optional. The name parts drive the composed
+              "LAST, FIRST MIDDLE" fullName in the action; the rest are HR
+              reference fields. Government IDs are validated leniently and
+              stored as typed. */}
+          <div className="space-y-4 border-t border-border pt-5">
+            <div>
+              <h3 className="text-sm font-semibold text-foreground">Personal / Masterlist</h3>
+              <p className="text-xs leading-snug text-muted-foreground">
+                Optional HR details. Fill the name parts to file this person as
+                “Last, First Middle”; leave them blank to keep the Full name above.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <Field id="lastName" label="Last name" error={fieldErrors?.lastName}>
+                <Input
+                  id="lastName"
+                  name="lastName"
+                  value={form.lastName}
+                  onChange={(e) => setForm({ ...form, lastName: e.target.value })}
+                  autoComplete="off"
+                />
+              </Field>
+              <Field id="firstName" label="First name" error={fieldErrors?.firstName}>
+                <Input
+                  id="firstName"
+                  name="firstName"
+                  value={form.firstName}
+                  onChange={(e) => setForm({ ...form, firstName: e.target.value })}
+                  autoComplete="off"
+                />
+              </Field>
+              <Field id="middleName" label="Middle name" error={fieldErrors?.middleName}>
+                <Input
+                  id="middleName"
+                  name="middleName"
+                  value={form.middleName}
+                  onChange={(e) => setForm({ ...form, middleName: e.target.value })}
+                  autoComplete="off"
+                />
+              </Field>
+              <Field
+                id="initials"
+                label="Initials"
+                error={fieldErrors?.initials}
+                hint="e.g. R.R.R."
+              >
+                <Input
+                  id="initials"
+                  name="initials"
+                  value={form.initials}
+                  onChange={(e) => setForm({ ...form, initials: e.target.value })}
+                  autoComplete="off"
+                />
+              </Field>
+              <Field id="gender" label="Gender" error={fieldErrors?.gender}>
+                <Select
+                  id="gender"
+                  name="gender"
+                  value={form.gender}
+                  onChange={(e) => setForm({ ...form, gender: e.target.value })}
+                >
+                  <option value="">— Not set —</option>
+                  {GENDERS.map((g) => (
+                    <option key={g} value={g}>{g}</option>
+                  ))}
+                  {form.gender && !genderIsKnown && (
+                    <option value={form.gender}>{form.gender}</option>
+                  )}
+                </Select>
+              </Field>
+              <Field
+                id="employmentStatus"
+                label="Employment status"
+                error={fieldErrors?.employmentStatus}
+                hint="e.g. Regular, Probationary, Contractual."
+              >
+                <Input
+                  id="employmentStatus"
+                  name="employmentStatus"
+                  value={form.employmentStatus}
+                  onChange={(e) => setForm({ ...form, employmentStatus: e.target.value })}
+                  autoComplete="off"
+                />
+              </Field>
+              <Field
+                id="designation"
+                label="Designation"
+                error={fieldErrors?.designation}
+                hint="Their masterlist job title — separate from the Rank above."
+              >
+                <Input
+                  id="designation"
+                  name="designation"
+                  value={form.designation}
+                  onChange={(e) => setForm({ ...form, designation: e.target.value })}
+                  autoComplete="off"
+                />
+              </Field>
+              <Field id="birthDate" label="Date of birth" error={fieldErrors?.birthDate}>
+                <Input
+                  id="birthDate"
+                  name="birthDate"
+                  type="date"
+                  value={form.birthDate}
+                  onChange={(e) => setForm({ ...form, birthDate: e.target.value })}
+                />
+              </Field>
+              <Field
+                id="dateHired"
+                label="Date hired"
+                error={fieldErrors?.dateHired}
+                hint="Can't be before the date of birth."
+              >
+                <Input
+                  id="dateHired"
+                  name="dateHired"
+                  type="date"
+                  value={form.dateHired}
+                  onChange={(e) => setForm({ ...form, dateHired: e.target.value })}
+                />
+              </Field>
+            </div>
+
+            <Field
+              id="officialAddress"
+              label="Official address"
+              error={fieldErrors?.officialAddress}
+            >
+              <AutoGrowInput
+                id="officialAddress"
+                name="officialAddress"
+                value={form.officialAddress}
+                onChange={(e) => setForm({ ...form, officialAddress: e.target.value })}
+                autoComplete="off"
+              />
+            </Field>
+
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <Field
+                id="tin"
+                label="TIN"
+                error={fieldErrors?.tin}
+                hint="9 or 12 digits. Dashes optional."
+              >
+                <Input
+                  id="tin"
+                  name="tin"
+                  inputMode="numeric"
+                  value={form.tin}
+                  onChange={(e) => setForm({ ...form, tin: e.target.value })}
+                  autoComplete="off"
+                />
+              </Field>
+              <Field
+                id="sss"
+                label="SSS"
+                error={fieldErrors?.sss}
+                hint="10 digits. Dashes optional."
+              >
+                <Input
+                  id="sss"
+                  name="sss"
+                  inputMode="numeric"
+                  value={form.sss}
+                  onChange={(e) => setForm({ ...form, sss: e.target.value })}
+                  autoComplete="off"
+                />
+              </Field>
+              <Field
+                id="hdmf"
+                label="HDMF (Pag-IBIG)"
+                error={fieldErrors?.hdmf}
+                hint="12 digits. Dashes optional."
+              >
+                <Input
+                  id="hdmf"
+                  name="hdmf"
+                  inputMode="numeric"
+                  value={form.hdmf}
+                  onChange={(e) => setForm({ ...form, hdmf: e.target.value })}
+                  autoComplete="off"
+                />
+              </Field>
+              <Field
+                id="philHealth"
+                label="PhilHealth"
+                error={fieldErrors?.philHealth}
+                hint="12 digits. Dashes optional."
+              >
+                <Input
+                  id="philHealth"
+                  name="philHealth"
+                  inputMode="numeric"
+                  value={form.philHealth}
+                  onChange={(e) => setForm({ ...form, philHealth: e.target.value })}
+                  autoComplete="off"
+                />
+              </Field>
+            </div>
           </div>
 
           {/* ── 2. System accesses ──

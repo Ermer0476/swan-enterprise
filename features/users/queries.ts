@@ -20,6 +20,23 @@ const USER_SELECT = {
   rank: true,
   employeeId: true,
   crewId: true,
+  // ── Employee Masterlist (E1). Added one at a time to the explicit select —
+  //    this stays a `select`, never an `include`, so passwordHash can never
+  //    ride along into an RSC payload. ──
+  lastName: true,
+  firstName: true,
+  middleName: true,
+  initials: true,
+  gender: true,
+  employmentStatus: true,
+  designation: true,
+  birthDate: true,
+  dateHired: true,
+  officialAddress: true,
+  tin: true,
+  sss: true,
+  hdmf: true,
+  philHealth: true,
   active: true,
   lastLoginAt: true,
   createdAt: true,

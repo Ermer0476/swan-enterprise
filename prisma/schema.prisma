@@ -452,6 +452,27 @@ model User {
   employeeId String?
   crewId     String?
 
+  // ── Employee Masterlist fields (E1, ADDITIVE — all nullable) ──
+  // Ported one-for-one from the legacy Employee Masterlist so a User row can
+  // carry the same HR identity the old system held. Every column is nullable
+  // and unbackfilled: no existing row changes, and nothing here is a security
+  // signal (the `department` enum above stays that). Government IDs are stored
+  // as typed (never normalized) and are audited PRESENCE-ONLY, never by value.
+  lastName         String?
+  firstName        String?
+  middleName       String?
+  initials         String?
+  gender           String?
+  employmentStatus String?
+  designation      String?
+  birthDate        DateTime?
+  dateHired        DateTime?
+  officialAddress  String?
+  tin              String?
+  sss              String?
+  hdmf             String?
+  philHealth       String?
+
   // ── First-login / forced password change + session revocation (ADDITIVE) ──
   // `mustChangePassword` gates the account into /change-password before any
   // other page renders (set true by admin-issued one-time passwords). Default

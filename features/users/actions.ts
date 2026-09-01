@@ -9,6 +9,7 @@ import { hashPassword } from "@/lib/auth";
 import { activeAdminWhere, adminRoleIds } from "./queries";
 import {
   ACCESS_LEVEL_UNAVAILABLE,
+  composeFullName,
   createUserSchema,
   CREW_ID_TAKEN,
   DEPARTMENT_UNAVAILABLE,
@@ -33,6 +34,19 @@ import { failFromZod, type ActionResult } from "@/features/shared/action-result"
 export type { ActionResult };
 const OK: ActionResult = { ok: true, error: null };
 const fail = (error: string): ActionResult => ({ ok: false, error });
+
+/**
+ * Audit a government ID by PRESENCE only, never by value. A TIN/SSS/HDMF/
+ * PhilHealth number is exactly the kind of PII that must not be copied into an
+ * audit row that a wider set of eyes can read — the log records that one was
+ * set or cleared, and stops there.
+ */
+const idPresence = (v: string | null | undefined): "set" | "cleared" =>
+  v && v.trim() ? "set" : "cleared";
+
+/** A stored date rendered as a bare `YYYY-MM-DD` for the audit metadata, or null. */
+const auditDate = (d: Date | null): string | null =>
+  d ? d.toISOString().slice(0, 10) : null;
 
 /**
  * User management is an office-only function — the same gate the reference
@@ -232,6 +246,20 @@ export async function createUserAction(
     vesselId: formData.get("vesselId"),
     accessLevelId: formData.get("accessLevelId"),
     departmentRefId: formData.get("departmentRefId"),
+    lastName: formData.get("lastName"),
+    firstName: formData.get("firstName"),
+    middleName: formData.get("middleName"),
+    initials: formData.get("initials"),
+    gender: formData.get("gender"),
+    employmentStatus: formData.get("employmentStatus"),
+    designation: formData.get("designation"),
+    birthDate: formData.get("birthDate"),
+    dateHired: formData.get("dateHired"),
+    officialAddress: formData.get("officialAddress"),
+    tin: formData.get("tin"),
+    sss: formData.get("sss"),
+    hdmf: formData.get("hdmf"),
+    philHealth: formData.get("philHealth"),
     roleIds: roleIdsFrom(formData),
     password: formData.get("password"),
   });
@@ -259,12 +287,17 @@ export async function createUserAction(
   // stored, returned, audited or logged.
   const passwordHash = await hashPassword(d.password);
 
+  // `LAST, FIRST MIDDLE` when the masterlist name parts were filled in;
+  // otherwise the single Full name box the admin typed. Both the composed
+  // name and the parts are written in the same statement below.
+  const fullName = composeFullName(d) ?? d.fullName;
+
   let created: { id: string; fullName: string; email: string };
   try {
     created = await prisma.user.create({
       data: {
         companyId: actor.companyId,
-        fullName: d.fullName,
+        fullName,
         email: d.email,
         passwordHash,
         department: d.department,
@@ -274,6 +307,21 @@ export async function createUserAction(
         vesselId: vessel.vessel?.id ?? null,
         accessLevelId: accessLevel.value?.id ?? null,
         departmentRefId: departmentRef.value?.id ?? null,
+        // ── Employee Masterlist (E1) — stored as typed; gov IDs unnormalized ──
+        lastName: d.lastName || null,
+        firstName: d.firstName || null,
+        middleName: d.middleName || null,
+        initials: d.initials || null,
+        gender: d.gender || null,
+        employmentStatus: d.employmentStatus || null,
+        designation: d.designation || null,
+        birthDate: d.birthDate,
+        dateHired: d.dateHired,
+        officialAddress: d.officialAddress || null,
+        tin: d.tin || null,
+        sss: d.sss || null,
+        hdmf: d.hdmf || null,
+        philHealth: d.philHealth || null,
         active: true,
         // The password above is admin-issued and one-time: the new account is
         // forced to /change-password on its first authenticated request and
@@ -308,6 +356,21 @@ export async function createUserAction(
       vessel: vessel.vessel?.name ?? null,
       accessLevel: accessLevel.value?.name ?? null,
       departmentRef: departmentRef.value?.name ?? null,
+      // Employee Masterlist (E1). Government IDs are recorded PRESENCE-ONLY.
+      lastName: d.lastName || null,
+      firstName: d.firstName || null,
+      middleName: d.middleName || null,
+      initials: d.initials || null,
+      gender: d.gender || null,
+      employmentStatus: d.employmentStatus || null,
+      designation: d.designation || null,
+      birthDate: auditDate(d.birthDate),
+      dateHired: auditDate(d.dateHired),
+      officialAddress: d.officialAddress || null,
+      tin: idPresence(d.tin),
+      sss: idPresence(d.sss),
+      hdmf: idPresence(d.hdmf),
+      philHealth: idPresence(d.philHealth),
     },
   });
 
@@ -334,6 +397,20 @@ export async function updateUserAction(
     vesselId: formData.get("vesselId"),
     accessLevelId: formData.get("accessLevelId"),
     departmentRefId: formData.get("departmentRefId"),
+    lastName: formData.get("lastName"),
+    firstName: formData.get("firstName"),
+    middleName: formData.get("middleName"),
+    initials: formData.get("initials"),
+    gender: formData.get("gender"),
+    employmentStatus: formData.get("employmentStatus"),
+    designation: formData.get("designation"),
+    birthDate: formData.get("birthDate"),
+    dateHired: formData.get("dateHired"),
+    officialAddress: formData.get("officialAddress"),
+    tin: formData.get("tin"),
+    sss: formData.get("sss"),
+    hdmf: formData.get("hdmf"),
+    philHealth: formData.get("philHealth"),
     roleIds: roleIdsFrom(formData),
     password: formData.get("password"),
   });
@@ -400,6 +477,11 @@ export async function updateUserAction(
 
   const passwordHash = d.password ? await hashPassword(d.password) : null;
 
+  // Same rule as create: `LAST, FIRST MIDDLE` when the masterlist name parts
+  // are supplied, otherwise the single Full name box (a legacy edit that never
+  // filled the parts). fullName and the parts are written in one statement.
+  const fullName = composeFullName(d) ?? d.fullName;
+
   try {
     await prisma.$transaction(async (tx) => {
       // nextRoleIds is never empty (the schema requires one), so this can't
@@ -414,7 +496,7 @@ export async function updateUserAction(
       await tx.user.update({
         where: { id: target.id },
         data: {
-          fullName: d.fullName,
+          fullName,
           email: d.email,
           department: d.department,
           rank: d.rank || null,
@@ -423,6 +505,21 @@ export async function updateUserAction(
           vesselId: vessel.vessel?.id ?? null,
           accessLevelId: accessLevel.value?.id ?? null,
           departmentRefId: departmentRef.value?.id ?? null,
+          // ── Employee Masterlist (E1) — stored as typed; gov IDs unnormalized ──
+          lastName: d.lastName || null,
+          firstName: d.firstName || null,
+          middleName: d.middleName || null,
+          initials: d.initials || null,
+          gender: d.gender || null,
+          employmentStatus: d.employmentStatus || null,
+          designation: d.designation || null,
+          birthDate: d.birthDate,
+          dateHired: d.dateHired,
+          officialAddress: d.officialAddress || null,
+          tin: d.tin || null,
+          sss: d.sss || null,
+          hdmf: d.hdmf || null,
+          philHealth: d.philHealth || null,
           // A password reset revokes every session that account already has.
           // The two writes are in one statement inside one transaction on
           // purpose: a reset that persists but does not revoke is the exact
@@ -481,7 +578,7 @@ export async function updateUserAction(
     entityType: "User",
     entityId: target.id,
     summary:
-      `${actor.fullName} updated user ${d.fullName} (${d.email})` +
+      `${actor.fullName} updated user ${fullName} (${d.email})` +
       (changes.length ? ` — ${changes.join("; ")}` : ""),
     metadata: {
       rolesAdded: added,
@@ -493,6 +590,21 @@ export async function updateUserAction(
       vessel: vessel.vessel?.name ?? null,
       accessLevel: accessLevel.value?.name ?? null,
       departmentRef: departmentRef.value?.name ?? null,
+      // Employee Masterlist (E1). Government IDs are recorded PRESENCE-ONLY.
+      lastName: d.lastName || null,
+      firstName: d.firstName || null,
+      middleName: d.middleName || null,
+      initials: d.initials || null,
+      gender: d.gender || null,
+      employmentStatus: d.employmentStatus || null,
+      designation: d.designation || null,
+      birthDate: auditDate(d.birthDate),
+      dateHired: auditDate(d.dateHired),
+      officialAddress: d.officialAddress || null,
+      tin: idPresence(d.tin),
+      sss: idPresence(d.sss),
+      hdmf: idPresence(d.hdmf),
+      philHealth: idPresence(d.philHealth),
     },
   });
 
