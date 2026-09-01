@@ -354,3 +354,33 @@ export async function listVesselOptions(companyId: string) {
     orderBy: { name: "asc" },
   });
 }
+
+/**
+ * The login account linked to a seafarer, if any — id and email only.
+ *
+ * A DEDICATED loader, deliberately NOT a field on `SEAFARER_OPERATIONAL_SELECT`:
+ * that select is nested inside the crew-list query a Master reads, and a login
+ * email must not ride onto a ship's crew list ("safe on a printed crew list").
+ * This runs once, on the office-only seafarer record, behind admin:manage-users.
+ * Company-scoped; a foreign or deleted seafarer reads as no link.
+ */
+export async function getSeafarerLogin(user: SessionUser, seafarerId: string) {
+  const row = await prisma.seafarer.findFirst({
+    where: { id: seafarerId, companyId: user.companyId, deletedAt: null },
+    select: { user: { select: { id: true, email: true } } },
+  });
+  return row?.user ?? null;
+}
+
+/**
+ * Company logins not yet tied to any seafarer — the "link existing" picker on
+ * the seafarer record. Active, live accounts whose one-to-one `seafarer`
+ * back-relation is empty. No passwordHash or any masterlist field is selected.
+ */
+export async function listUnlinkedUserOptions(companyId: string) {
+  return prisma.user.findMany({
+    where: { companyId, deletedAt: null, active: true, seafarer: null },
+    select: { id: true, email: true, fullName: true },
+    orderBy: [{ fullName: "asc" }],
+  });
+}

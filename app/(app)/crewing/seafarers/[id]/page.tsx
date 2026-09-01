@@ -3,7 +3,13 @@ import { notFound } from "next/navigation";
 import { ArrowLeft, Pencil } from "lucide-react";
 import { requirePermission, can } from "@/lib/rbac";
 import { requireOfficeOrNotFound } from "@/features/crewing/visibility";
-import { getSeafarer, listSeafarerService, listVesselOptions } from "@/features/crewing/queries";
+import {
+  getSeafarer,
+  listSeafarerService,
+  listVesselOptions,
+  getSeafarerLogin,
+  listUnlinkedUserOptions,
+} from "@/features/crewing/queries";
 import { formatCrewName, vesselLabel } from "@/features/crewing/ui";
 import {
   assignmentStatus,
@@ -19,6 +25,7 @@ import { Button } from "@/components/ui/button";
 import { formatDate } from "@/lib/utils";
 import { SeafarerRowActions } from "./seafarer-row-actions";
 import { CrewChangePanel } from "./crew-change-panel";
+import { SeafarerLoginLink } from "./seafarer-login-link";
 
 /**
  * One seafarer's record. Office only, and the ONE surface in this module where
@@ -43,12 +50,18 @@ export default async function SeafarerDetailPage({
 
   const { id } = await params;
   const canAssign = can(user, "crew:assign");
-  const [detail, service, vessels] = await Promise.all([
+  // Creating or attaching a login is user management, not crew record-keeping,
+  // so the crew ↔ login control is gated on admin:manage-users — the same key
+  // the actions re-check server-side.
+  const canManageUsers = can(user, "admin:manage-users");
+  const [detail, service, vessels, login, unlinkedUsers] = await Promise.all([
     getSeafarer(user, id),
     listSeafarerService(user, id),
     // The vessels a sign-on / transfer may name. Only fetched for a caller who
     // can record crew changes — nobody else sees the controls.
     canAssign ? listVesselOptions(user.companyId) : Promise.resolve([]),
+    canManageUsers ? getSeafarerLogin(user, id) : Promise.resolve(null),
+    canManageUsers ? listUnlinkedUserOptions(user.companyId) : Promise.resolve([]),
   ]);
   if (!detail) notFound();
 
@@ -170,6 +183,14 @@ export default async function SeafarerDetailPage({
           </dl>
         </CardContent>
       </Card>
+
+      {canManageUsers && (
+        <SeafarerLoginLink
+          seafarerId={s.id}
+          linked={login}
+          unlinkedUsers={unlinkedUsers}
+        />
+      )}
 
       {detail.tier === "RESTRICTED" ? (
         <Card className="mb-6">
