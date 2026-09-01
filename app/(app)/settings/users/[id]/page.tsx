@@ -8,8 +8,10 @@ import {
   getUser,
   getUserCrewRecord,
   listRoleOptions,
+  listUserGovIdDocs,
   listVesselOptions,
 } from "@/features/users/queries";
+import { GovIdDocs, type GovIdItem } from "@/components/users/govid-docs";
 import { formatCrewName } from "@/features/crewing/ui";
 import { listDepartmentOptions } from "@/features/departments/queries";
 import { MIN_PASSWORD_LENGTH } from "@/features/users/schema";
@@ -36,12 +38,14 @@ function DetailSection({
   title,
   rows,
   defaultOpen = false,
+  children,
 }: {
   title: string;
   rows: DetailRow[];
   defaultOpen?: boolean;
+  children?: ReactNode;
 }) {
-  if (rows.length === 0) return null;
+  if (rows.length === 0 && !children) return null;
   return (
     <details
       open={defaultOpen}
@@ -68,14 +72,17 @@ function DetailSection({
         </svg>
       </summary>
       <div className="border-t border-border px-5 py-4">
-        <dl className="grid grid-cols-1 gap-x-6 gap-y-2 sm:grid-cols-2">
-          {rows.map((row) => (
-            <div key={row.label} className="flex justify-between gap-4 text-sm">
-              <dt className="text-muted-foreground">{row.label}</dt>
-              <dd className="text-right font-medium text-foreground">{row.value}</dd>
-            </div>
-          ))}
-        </dl>
+        {rows.length > 0 && (
+          <dl className="grid grid-cols-1 gap-x-6 gap-y-2 sm:grid-cols-2">
+            {rows.map((row) => (
+              <div key={row.label} className="flex justify-between gap-4 text-sm">
+                <dt className="text-muted-foreground">{row.label}</dt>
+                <dd className="text-right font-medium text-foreground">{row.value}</dd>
+              </div>
+            ))}
+          </dl>
+        )}
+        {children}
       </div>
     </details>
   );
@@ -94,12 +101,14 @@ export default async function EditUserPage({
   const target = await getUser(actor.companyId, id);
   if (!target) notFound();
 
-  const [roles, vessels, departments, crewRecord] = await Promise.all([
+  const [roles, vessels, departments, crewRecord, govIdDocs] = await Promise.all([
     listRoleOptions(actor.companyId),
     listVesselOptions(actor.companyId),
     listDepartmentOptions(actor.companyId),
     // The crew (Seafarer) record this login belongs to, if any — read-only.
     getUserCrewRecord(actor.companyId, id),
+    // Gov-ID scan/photo documents, keyed by gov-ID type.
+    listUserGovIdDocs(actor.companyId, id),
   ]);
 
   // If this account is on a department that has since been deactivated, it
@@ -167,11 +176,15 @@ export default async function EditUserPage({
   );
   push(personalRows, "Official address", target.officialAddress);
 
-  const govRows: DetailRow[] = [];
-  push(govRows, "TIN", target.tin ? "On file" : null);
-  push(govRows, "SSS", target.sss ? "On file" : null);
-  push(govRows, "HDMF (Pag-IBIG)", target.hdmf ? "On file" : null);
-  push(govRows, "PhilHealth", target.philHealth ? "On file" : null);
+  // Gov-ID rows now carry BOTH the number-presence (never the value) and an
+  // upload/view/remove control for a scan/photo of the ID, so they render
+  // through the interactive GovIdDocs component rather than the read-only dl.
+  const govIdItems: GovIdItem[] = [
+    { type: "TIN", label: "TIN", numberOnFile: Boolean(target.tin), doc: govIdDocs.get("TIN") ?? null },
+    { type: "SSS", label: "SSS", numberOnFile: Boolean(target.sss), doc: govIdDocs.get("SSS") ?? null },
+    { type: "HDMF", label: "HDMF (Pag-IBIG)", numberOnFile: Boolean(target.hdmf), doc: govIdDocs.get("HDMF") ?? null },
+    { type: "PHILHEALTH", label: "PhilHealth", numberOnFile: Boolean(target.philHealth), doc: govIdDocs.get("PHILHEALTH") ?? null },
+  ];
 
   const crewRows: DetailRow[] = [];
   // The linked crew record, if this login IS a seafarer. A link to the biodata
@@ -229,7 +242,9 @@ export default async function EditUserPage({
       <div className="mb-5 space-y-3">
         <DetailSection title="Account" rows={accountRows} defaultOpen />
         <DetailSection title="Personal / Masterlist" rows={personalRows} />
-        <DetailSection title="Government IDs" rows={govRows} />
+        <DetailSection title="Government IDs" rows={[]}>
+          <GovIdDocs userId={target.id} items={govIdItems} editable />
+        </DetailSection>
         <DetailSection title="Crew / Vessel" rows={crewRows} />
       </div>
 
