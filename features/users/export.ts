@@ -1,13 +1,13 @@
 import "server-only";
 import * as XLSX from "xlsx";
-import { listUsers, type UserFilters } from "./queries";
+import { listAllUsers, type UserFilters } from "./queries";
 import { ageFromBirthDate, yearsOfServiceFromDateHired } from "./derive";
 
 /**
  * Employee Masterlist export (E2).
  *
  * Builds an .xlsx workbook from the same company-scoped, soft-delete-filtered
- * read every other User Management screen uses (`listUsers`), so the export can
+ * read every other User Management screen uses (`listAllUsers`), so the export can
  * never widen what the caller is allowed to see. The column order is the
  * client's masterlist template verbatim — the import parser (E2) locates its
  * columns by these same labels, so a file exported here round-trips straight
@@ -16,7 +16,7 @@ import { ageFromBirthDate, yearsOfServiceFromDateHired } from "./derive";
  * AGE and YEARS OF SERVICE are DERIVED at export time from the stored
  * birth/hire dates (never stored, so they cannot drift) via the same
  * render-only helpers the profile page uses. `passwordHash` is structurally
- * unreachable here: `listUsers` selects an explicit field list that never names
+ * unreachable here: `listAllUsers` selects an explicit field list that never names
  * it, so it cannot ride along into the workbook.
  */
 
@@ -56,7 +56,7 @@ export async function buildUsersExport(
   companyId: string,
   filters: UserFilters,
 ): Promise<{ buffer: Buffer; rowCount: number }> {
-  const users = await listUsers(companyId, filters);
+  const users = await listAllUsers(companyId, filters);
 
   const dataRows: (string | number)[][] = users.map((u, i) => [
     i + 1,
