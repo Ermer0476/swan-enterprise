@@ -9,10 +9,14 @@ import { diffFields } from "@/lib/audit-diff";
 import {
   ACCESS_LEVEL_NOT_FOUND,
   ACCESS_LEVEL_SYSTEM_LOCKED,
+  ACCESS_LEVEL_RANK_ABOVE,
+  PERMISSION_NOT_IN_CEILING,
   accessLevelNameTaken,
   saveAccessLevelSchema,
+  saveAccessLevelPermissionsSchema,
   toggleAccessLevelSchema,
 } from "./schema";
+import type { PermissionKey } from "@/lib/permissions";
 import { failFromZod, type ActionResult } from "@/features/shared/action-result";
 
 export type { ActionResult };
@@ -85,6 +89,111 @@ export async function saveAccessLevelAction(
     if (isUniqueViolation(err)) return fail(accessLevelNameTaken(d.name));
     throw err;
   }
+
+  revalidatePath("/settings/access-levels");
+  return OK;
+}
+
+/**
+ * Sets exactly which permissions an access level GRANTS (E3 matrix). Gated
+ * `access-level:manage`. Two no-escalation guards, both mirrored by disabled
+ * cells in the grid so the UI never offers what this rejects:
+ *
+ *  - RANK: an actor who has a level of their own may not edit a level ranked
+ *    above it. An actor with no level is bounded only by the subset rule below.
+ *  - CEILING: the submitted set must be a SUBSET of the actor's own effective
+ *    permissions (roles ∪ own access level — already unioned onto
+ *    `actor.permissions` by getCurrentUser). You can't grant what you don't
+ *    hold; with no level of your own, that ceiling is just your role permissions.
+ *
+ * The replace is CEILING-SCOPED: it adds submitted keys and removes only the
+ * keys the actor controls (within their ceiling) that were unchecked. Keys
+ * already on the level that lie OUTSIDE the actor's ceiling are PRESERVED — the
+ * grid shows those disabled-but-checked, and browsers don't submit disabled
+ * inputs, so a naive "match the submission exactly" would silently drop a grant
+ * the actor can't even see and had no intent to touch.
+ */
+export async function saveAccessLevelPermissionsAction(
+  formData: FormData,
+): Promise<ActionResult> {
+  const actor = await requirePermission("access-level:manage");
+
+  const parsed = saveAccessLevelPermissionsSchema.safeParse({
+    accessLevelId: formData.get("accessLevelId"),
+    permissionKeys: formData.getAll("permissionKeys"),
+  });
+  if (!parsed.success) return failFromZod(parsed.error);
+  const submitted = parsed.data.permissionKeys as PermissionKey[];
+
+  // Target level, own company. A deactivated level is still editable here — same
+  // doctrine as resolveAccessLevel (retiring doesn't unassign accounts on it).
+  const target = await prisma.accessLevel.findFirst({
+    where: { id: parsed.data.accessLevelId, companyId: actor.companyId },
+    select: { id: true, name: true, rank: true },
+  });
+  if (!target) return fail(ACCESS_LEVEL_NOT_FOUND);
+
+  // Rank guard — only bites when the actor HAS a level of their own.
+  if (actor.accessLevelRank !== null && target.rank > actor.accessLevelRank) {
+    return fail(ACCESS_LEVEL_RANK_ABOVE);
+  }
+
+  // Ceiling (subset) guard.
+  const ceiling = actor.permissions;
+  if (submitted.some((k) => !ceiling.has(k))) return fail(PERMISSION_NOT_IN_CEILING);
+
+  // Current grants on this level (keys + ids), and the submitted keys resolved to
+  // ids. Every submitted key passed the subset check, so it is a real permission
+  // the actor holds and therefore exists in the catalog.
+  const [submittedPerms, current] = await Promise.all([
+    prisma.permission.findMany({
+      where: { key: { in: submitted } },
+      select: { id: true, key: true },
+    }),
+    prisma.accessLevelPermission.findMany({
+      where: { accessLevelId: target.id },
+      select: { permissionId: true, permission: { select: { key: true } } },
+    }),
+  ]);
+  const idByKey = new Map(submittedPerms.map((p) => [p.key, p.id] as const));
+  const currentKeys = new Set(current.map((c) => c.permission.key));
+  const currentIdByKey = new Map(current.map((c) => [c.permission.key, c.permissionId] as const));
+  const submittedSet = new Set<string>(submitted);
+
+  const addedKeys = submitted.filter((k) => !currentKeys.has(k));
+  // Remove only keys within the actor's ceiling that were unchecked; preserve
+  // out-of-ceiling grants the actor can't see or touch.
+  const removedKeys = [...currentKeys].filter(
+    (k) => ceiling.has(k as PermissionKey) && !submittedSet.has(k),
+  );
+
+  if (addedKeys.length === 0 && removedKeys.length === 0) return OK;
+
+  const addData = addedKeys.map((k) => ({
+    accessLevelId: target.id,
+    permissionId: idByKey.get(k) as string,
+  }));
+  const removeIds = removedKeys.map((k) => currentIdByKey.get(k) as string);
+
+  await prisma.$transaction(async (tx) => {
+    if (removeIds.length > 0) {
+      await tx.accessLevelPermission.deleteMany({
+        where: { accessLevelId: target.id, permissionId: { in: removeIds } },
+      });
+    }
+    if (addData.length > 0) {
+      await tx.accessLevelPermission.createMany({ data: addData, skipDuplicates: true });
+    }
+  });
+
+  await writeAudit({
+    actor,
+    action: "UPDATE",
+    entityType: "AccessLevel",
+    entityId: target.id,
+    summary: `Updated permissions for access level ${target.name} (+${addedKeys.length} / -${removedKeys.length})`,
+    metadata: { added: addedKeys, removed: removedKeys },
+  });
 
   revalidatePath("/settings/access-levels");
   return OK;

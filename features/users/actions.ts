@@ -9,6 +9,7 @@ import { hashPassword } from "@/lib/auth";
 import { activeAdminWhere, adminRoleIds } from "./queries";
 import {
   ACCESS_LEVEL_UNAVAILABLE,
+  ACCESS_LEVEL_ABOVE_SELF,
   composeFullName,
   createUserSchema,
   CREW_ID_TAKEN,
@@ -138,11 +139,17 @@ async function resolveVessel(companyId: string, id: string): Promise<VesselResul
  */
 type RefResult = { ok: true; value: { id: string; name: string } | null } | { ok: false };
 
-async function resolveAccessLevel(companyId: string, id: string): Promise<RefResult> {
+// Access level carries its `rank` too, for the E3 no-escalation check at the
+// assignment site (an actor with a level may not assign one above their own).
+type AccessLevelResult =
+  | { ok: true; value: { id: string; name: string; rank: number } | null }
+  | { ok: false };
+
+async function resolveAccessLevel(companyId: string, id: string): Promise<AccessLevelResult> {
   if (!id) return { ok: true, value: null };
   const row = await prisma.accessLevel.findFirst({
     where: { id, companyId },
-    select: { id: true, name: true },
+    select: { id: true, name: true, rank: true },
   });
   return row ? { ok: true, value: row } : { ok: false };
 }
@@ -274,6 +281,16 @@ export async function createUserAction(
 
   const accessLevel = await resolveAccessLevel(actor.companyId, d.accessLevelId || "");
   if (!accessLevel.ok) return fail(ACCESS_LEVEL_UNAVAILABLE);
+  // E3 no-escalation: an actor who has an access level of their own may not
+  // assign one ranked above it. Only bites when the actor HAS a level
+  // (accessLevelRank !== null); a level-less admin is unbounded by rank here.
+  if (
+    actor.accessLevelRank !== null &&
+    accessLevel.value &&
+    accessLevel.value.rank > actor.accessLevelRank
+  ) {
+    return fail(ACCESS_LEVEL_ABOVE_SELF);
+  }
   const departmentRef = await resolveDepartmentRef(actor.companyId, d.departmentRefId || "");
   if (!departmentRef.ok) return fail(DEPARTMENT_UNAVAILABLE);
 
@@ -438,6 +455,16 @@ export async function updateUserAction(
 
   const accessLevel = await resolveAccessLevel(actor.companyId, d.accessLevelId || "");
   if (!accessLevel.ok) return fail(ACCESS_LEVEL_UNAVAILABLE);
+  // E3 no-escalation: an actor who has an access level of their own may not
+  // assign one ranked above it. Only bites when the actor HAS a level
+  // (accessLevelRank !== null); a level-less admin is unbounded by rank here.
+  if (
+    actor.accessLevelRank !== null &&
+    accessLevel.value &&
+    accessLevel.value.rank > actor.accessLevelRank
+  ) {
+    return fail(ACCESS_LEVEL_ABOVE_SELF);
+  }
   const departmentRef = await resolveDepartmentRef(actor.companyId, d.departmentRefId || "");
   if (!departmentRef.ok) return fail(DEPARTMENT_UNAVAILABLE);
 

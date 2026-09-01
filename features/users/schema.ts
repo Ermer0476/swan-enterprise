@@ -77,6 +77,10 @@ export const ROLE_NOT_FOUND =
   "One of the selected system accesses is not available.";
 export const ACCESS_LEVEL_UNAVAILABLE =
   "The selected access level is not available. Pick another.";
+// E3 no-escalation: an actor who has an access level of their own may not
+// assign one ranked above it. Only bites when the actor HAS a level.
+export const ACCESS_LEVEL_ABOVE_SELF =
+  "You can't assign an access level ranked above your own.";
 export const DEPARTMENT_UNAVAILABLE =
   "The selected department is not available. Pick another.";
 export const VESSEL_UNAVAILABLE =
