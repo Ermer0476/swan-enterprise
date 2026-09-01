@@ -6,7 +6,7 @@ import { useActionState, useEffect, useState } from "react";
 import { useFormStatus } from "react-dom";
 import { DEPARTMENTS } from "@/features/sms-manual/schema";
 import { GENDERS, MIN_PASSWORD_LENGTH } from "@/features/users/schema";
-import { humanize } from "@/lib/utils";
+import { cn, humanize } from "@/lib/utils";
 import { Card, CardContent } from "@/components/ui/card";
 import { AutoGrowInput, Input, Label, Select } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -55,6 +55,76 @@ function Field({
           {error}
         </p>
       )}
+    </div>
+  );
+}
+
+/**
+ * One collapsible group of fields. The header is a real <button> that toggles
+ * an `aria-expanded` content region — the accessible minimum, matching Capt's
+ * Card/Tailwind styling.
+ *
+ * The content is kept mounted and merely `hidden` when collapsed, NOT
+ * unmounted: this form is submitted as native FormData off the DOM, so an
+ * unmounted input would silently drop out of the payload. `hidden`
+ * (display:none) controls still post, and disabled ones are the only ones
+ * excluded — so nothing here is disabled. The chevron animation is disabled
+ * under prefers-reduced-motion.
+ */
+function CollapsibleSection({
+  id,
+  title,
+  description,
+  open,
+  onToggle,
+  children,
+}: {
+  id: string;
+  title: string;
+  description?: string;
+  open: boolean;
+  onToggle: () => void;
+  children: React.ReactNode;
+}) {
+  const contentId = `user-section-${id}`;
+  return (
+    <div className="rounded-md border border-border">
+      <button
+        type="button"
+        onClick={onToggle}
+        aria-expanded={open}
+        aria-controls={contentId}
+        className="flex w-full items-center justify-between gap-3 rounded-md px-4 py-3 text-left hover:bg-muted/40"
+      >
+        <span>
+          <span className="block text-sm font-semibold text-foreground">{title}</span>
+          {description && (
+            <span className="mt-0.5 block text-xs leading-snug text-muted-foreground">
+              {description}
+            </span>
+          )}
+        </span>
+        <svg
+          viewBox="0 0 20 20"
+          fill="none"
+          aria-hidden="true"
+          className={cn(
+            "h-4 w-4 shrink-0 text-muted-foreground transition-transform motion-reduce:transition-none",
+            open && "rotate-180",
+          )}
+        >
+          <path
+            d="M6 8l4 4 4-4"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      </button>
+      <div id={contentId} hidden={!open} className="space-y-4 border-t border-border p-4">
+        {children}
+      </div>
     </div>
   );
 }
@@ -121,6 +191,41 @@ const EMPTY: UserFormValues = {
   philHealth: "",
 };
 
+// Which field (form `name`) lives in which collapsible section — used to
+// auto-expand a collapsed section when the server reports an error in one of
+// its fields, so an admin is never stuck on a hidden invalid field. Order
+// matters: the render order below matches these keys.
+const SECTION_IDS = ["account", "personal", "govId", "crewVessel"] as const;
+type SectionId = (typeof SECTION_IDS)[number];
+
+const SECTION_FIELDS: Record<SectionId, readonly string[]> = {
+  account: [
+    "fullName",
+    "email",
+    "department",
+    "rank",
+    "employeeId",
+    "roleIds",
+    "accessLevelId",
+    "departmentRefId",
+    "password",
+  ],
+  personal: [
+    "lastName",
+    "firstName",
+    "middleName",
+    "initials",
+    "gender",
+    "employmentStatus",
+    "designation",
+    "birthDate",
+    "dateHired",
+    "officialAddress",
+  ],
+  govId: ["tin", "sss", "hdmf", "philHealth"],
+  crewVessel: ["crewId", "vesselId"],
+};
+
 /**
  * Create/edit form for a user account, shared by both pages.
  *
@@ -128,6 +233,11 @@ const EMPTY: UserFormValues = {
  * reset the <form>, which on a rejected submission would otherwise wipe
  * everything the admin just typed; holding the values in state instead makes
  * that reset a no-op.
+ *
+ * The fields are grouped into collapsible sections — Account (open by
+ * default), Personal / Masterlist, Government IDs and Crew / Vessel — so the
+ * long form isn't shown all at once. All controls stay mounted while
+ * collapsed (see CollapsibleSection) so nothing drops out of the submission.
  *
  * Saving is two-step — "Save" then "Yes, save" — a confirmation before an
  * account is created or changed.
@@ -166,6 +276,12 @@ export function UserForm({
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [confirming, setConfirming] = useState(false);
+  const [openSections, setOpenSections] = useState<Record<SectionId, boolean>>({
+    account: true,
+    personal: false,
+    govId: false,
+    crewVessel: false,
+  });
   const [state, formAction] = useActionState<ActionResult, FormData>(action, {
     ok: false,
     error: null,
@@ -176,6 +292,23 @@ export function UserForm({
   useEffect(() => {
     setConfirming(false);
     if (state.ok) setPassword("");
+  }, [state]);
+
+  // A rejected submission can flag a field inside a collapsed section. Expand
+  // any section that owns a flagged field so the error is visible and the
+  // admin can fix it — never leave them stuck on a hidden invalid field.
+  useEffect(() => {
+    const fe = state.fieldErrors;
+    if (!fe) return;
+    const flagged = Object.keys(fe);
+    if (flagged.length === 0) return;
+    setOpenSections((prev) => {
+      const next = { ...prev };
+      for (const sid of SECTION_IDS) {
+        if (SECTION_FIELDS[sid].some((f) => flagged.includes(f))) next[sid] = true;
+      }
+      return next;
+    });
   }, [state]);
 
   const rolesLocked = Boolean(rolesLockedReason);
@@ -199,126 +332,270 @@ export function UserForm({
     }));
   }
 
+  function toggleSection(id: SectionId) {
+    setOpenSections((s) => ({ ...s, [id]: !s[id] }));
+  }
+
   return (
     <Card>
       <CardContent className="pt-5">
-        <form action={formAction} className="space-y-5">
+        <form action={formAction} className="space-y-4">
           {form.id && <input type="hidden" name="userId" value={form.id} />}
 
-          {/* ── 1. User details ── */}
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <Field
-              id="fullName"
-              label="Full name"
-              required
-              error={fieldErrors?.fullName}
-              hint="As it should appear on reports this person files."
-            >
-              <Input
+          {/* ── Account — the sign-in essentials, open by default. ── */}
+          <CollapsibleSection
+            id="account"
+            title="Account"
+            description="Sign-in details and system access."
+            open={openSections.account}
+            onToggle={() => toggleSection("account")}
+          >
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <Field
                 id="fullName"
-                name="fullName"
-                value={form.fullName}
-                onChange={(e) => setForm({ ...form, fullName: e.target.value })}
-                placeholder="e.g. Capt. Ramon Reyes"
-                autoComplete="off"
-              />
-            </Field>
-            <Field
-              id="email"
-              label="Email (sign-in name)"
-              required
-              error={fieldErrors?.email}
-              hint="This is what they type to sign in, so it has to be one they can reach."
-            >
-              <Input
-                id="email"
-                name="email"
-                type="email"
-                inputMode="email"
-                value={form.email}
-                onChange={(e) => setForm({ ...form, email: e.target.value })}
-                placeholder="e.g. rreyes@swanshipping.com"
-                autoComplete="off"
-              />
-            </Field>
-            <Field
-              id="department"
-              label="Department"
-              error={fieldErrors?.department}
-              hint="Drives which rank list they see when filing a report. Nobody can change their own."
-            >
-              <Select
-                id="department"
-                name="department"
-                value={form.department}
-                onChange={(e) => setForm({ ...form, department: e.target.value })}
+                label="Full name"
+                required
+                error={fieldErrors?.fullName}
+                hint="As it should appear on reports this person files."
               >
-                {DEPARTMENTS.map((d) => (
-                  <option key={d} value={d}>{humanize(d)}</option>
-                ))}
-              </Select>
-            </Field>
-            <Field
-              id="rank"
-              label="Rank / position"
-              error={fieldErrors?.rank}
-              hint="Their rank on board or title ashore — shown next to their name on the records they raise."
-            >
-              <Input
+                <Input
+                  id="fullName"
+                  name="fullName"
+                  value={form.fullName}
+                  onChange={(e) => setForm({ ...form, fullName: e.target.value })}
+                  placeholder="e.g. Capt. Ramon Reyes"
+                  autoComplete="off"
+                />
+              </Field>
+              <Field
+                id="email"
+                label="Email (sign-in name)"
+                required
+                error={fieldErrors?.email}
+                hint="This is what they type to sign in, so it has to be one they can reach."
+              >
+                <Input
+                  id="email"
+                  name="email"
+                  type="email"
+                  inputMode="email"
+                  value={form.email}
+                  onChange={(e) => setForm({ ...form, email: e.target.value })}
+                  placeholder="e.g. rreyes@swanshipping.com"
+                  autoComplete="off"
+                />
+              </Field>
+              <Field
+                id="department"
+                label="Department"
+                error={fieldErrors?.department}
+                hint="Drives which rank list they see when filing a report. Nobody can change their own."
+              >
+                <Select
+                  id="department"
+                  name="department"
+                  value={form.department}
+                  onChange={(e) => setForm({ ...form, department: e.target.value })}
+                >
+                  {DEPARTMENTS.map((d) => (
+                    <option key={d} value={d}>{humanize(d)}</option>
+                  ))}
+                </Select>
+              </Field>
+              <Field
                 id="rank"
-                name="rank"
-                value={form.rank}
-                onChange={(e) => setForm({ ...form, rank: e.target.value })}
-                placeholder="e.g. Master, Marine Supt"
-                autoComplete="off"
-              />
-            </Field>
-            <Field
-              id="employeeId"
-              label="Employee / Shore ID"
-              error={fieldErrors?.employeeId}
-              hint="The company's own staff number for this person. Must be unique."
-            >
-              <Input
+                label="Rank / position"
+                error={fieldErrors?.rank}
+                hint="Their rank on board or title ashore — shown next to their name on the records they raise."
+              >
+                <Input
+                  id="rank"
+                  name="rank"
+                  value={form.rank}
+                  onChange={(e) => setForm({ ...form, rank: e.target.value })}
+                  placeholder="e.g. Master, Marine Supt"
+                  autoComplete="off"
+                />
+              </Field>
+              <Field
                 id="employeeId"
-                name="employeeId"
-                value={form.employeeId}
-                onChange={(e) => setForm({ ...form, employeeId: e.target.value })}
-                placeholder="e.g. SW-0142"
-                autoComplete="off"
-              />
-            </Field>
-            <Field
-              id="crewId"
-              label="Crew ID"
-              error={fieldErrors?.crewId}
-              hint="For a shore staff member who came from the ships. Format 2026-00042. Leave blank for non-seafarers."
-            >
-              <Input
-                id="crewId"
-                name="crewId"
-                value={form.crewId}
-                onChange={(e) => setForm({ ...form, crewId: e.target.value })}
-                placeholder="e.g. 2026-00042"
-                autoComplete="off"
-              />
-            </Field>
-          </div>
-
-          {/* ── 1b. Personal / Masterlist (E1) ──
-              All optional. The name parts drive the composed
-              "LAST, FIRST MIDDLE" fullName in the action; the rest are HR
-              reference fields. Government IDs are validated leniently and
-              stored as typed. */}
-          <div className="space-y-4 border-t border-border pt-5">
-            <div>
-              <h3 className="text-sm font-semibold text-foreground">Personal / Masterlist</h3>
-              <p className="text-xs leading-snug text-muted-foreground">
-                Optional HR details. Fill the name parts to file this person as
-                “Last, First Middle”; leave them blank to keep the Full name above.
-              </p>
+                label="Employee / Shore ID"
+                error={fieldErrors?.employeeId}
+                hint="The company's own staff number for this person. Must be unique."
+              >
+                <Input
+                  id="employeeId"
+                  name="employeeId"
+                  value={form.employeeId}
+                  onChange={(e) => setForm({ ...form, employeeId: e.target.value })}
+                  placeholder="e.g. SW-0142"
+                  autoComplete="off"
+                />
+              </Field>
             </div>
 
+            {/* System accesses — a checkbox group, so its required marker and
+                its "at least one" error hang off the group rather than any
+                single checkbox. */}
+            <div className="space-y-2">
+              <Label>
+                System accesses
+                {!rolesLocked && <RequiredMark />}
+              </Label>
+              <p className="text-xs leading-snug text-muted-foreground">
+                {rolesLockedReason ??
+                  "At least one — an account with no access can sign in but reach nothing. Roles are shown in full under Settings › Access Levels / Roles."}
+              </p>
+              {fieldErrors?.roleIds && (
+                <p className="text-xs font-medium leading-snug text-danger" role="alert">
+                  {fieldErrors.roleIds}
+                </p>
+              )}
+              <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                {roles.map((r) => {
+                  const checked = form.roleIds.includes(r.id);
+                  return (
+                    <label
+                      key={r.id}
+                      className="flex cursor-pointer items-start gap-2 rounded-md border border-border p-2.5 hover:bg-muted/40"
+                    >
+                      <input
+                        type="checkbox"
+                        // A disabled checkbox posts nothing, which would submit
+                        // an empty access list; the hidden inputs below keep the
+                        // current roles in the payload when they're locked.
+                        name={rolesLocked ? undefined : "roleIds"}
+                        value={r.id}
+                        checked={checked}
+                        disabled={rolesLocked}
+                        onChange={(e) => toggleRole(r.id, e.target.checked)}
+                        className="mt-0.5 h-4 w-4 shrink-0 rounded border-input"
+                      />
+                      <span className="text-sm">
+                        <span className="font-medium">{r.name}</span>
+                        {r.description && (
+                          <span className="block text-xs text-muted-foreground">
+                            {r.description}
+                          </span>
+                        )}
+                      </span>
+                    </label>
+                  );
+                })}
+              </div>
+              {rolesLocked &&
+                form.roleIds.map((id) => (
+                  <input key={id} type="hidden" name="roleIds" value={id} />
+                ))}
+            </div>
+
+            {/* Access level & department (data-driven), plus the password.
+                The Department here is the editable org department from
+                Settings › Departments — separate from the legacy "Department"
+                enum above, which drives rank lists and security
+                (lib/user-access.ts) and is unchanged. */}
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <Field
+                id="accessLevelId"
+                label="Access level"
+                error={fieldErrors?.accessLevelId}
+                hint="The user's level from Settings › Access Levels. Optional."
+              >
+                <Select
+                  id="accessLevelId"
+                  name="accessLevelId"
+                  value={form.accessLevelId}
+                  onChange={(e) => setForm({ ...form, accessLevelId: e.target.value })}
+                >
+                  <option value="">— None —</option>
+                  {accessLevels.map((a) => (
+                    <option key={a.id} value={a.id}>{a.name}</option>
+                  ))}
+                </Select>
+              </Field>
+              <Field
+                id="departmentRefId"
+                label="Department (Ship / Shore)"
+                error={fieldErrors?.departmentRefId}
+                hint="The editable department from Settings › Departments. Optional, and separate from the security/rank Department above."
+              >
+                <Select
+                  id="departmentRefId"
+                  name="departmentRefId"
+                  value={form.departmentRefId}
+                  onChange={(e) => setForm({ ...form, departmentRefId: e.target.value })}
+                >
+                  <option value="">— None —</option>
+                  {shipDepartments.length > 0 && (
+                    <optgroup label="Ship">
+                      {shipDepartments.map((d) => (
+                        <option key={d.id} value={d.id}>{d.name}</option>
+                      ))}
+                    </optgroup>
+                  )}
+                  {shoreDepartments.length > 0 && (
+                    <optgroup label="Shore">
+                      {shoreDepartments.map((d) => (
+                        <option key={d.id} value={d.id}>{d.name}</option>
+                      ))}
+                    </optgroup>
+                  )}
+                </Select>
+              </Field>
+
+              {/* Password — two controls on one row (the box and its Show
+                  toggle), so this one stays hand-wired rather than going
+                  through <Field>, which takes a single child. */}
+              <div className="space-y-1.5">
+                <Label htmlFor="password">
+                  {passwordRequired ? "Temporary password" : "New password"}
+                  {passwordRequired && <RequiredMark />}
+                </Label>
+                <div className="flex gap-2">
+                  <Input
+                    id="password"
+                    name="password"
+                    type={showPassword ? "text" : "password"}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    autoComplete="new-password"
+                    minLength={passwordRequired ? MIN_PASSWORD_LENGTH : undefined}
+                    required={passwordRequired}
+                    aria-describedby={fieldErrors?.password ? "password-hint password-error" : "password-hint"}
+                    aria-invalid={fieldErrors?.password ? true : undefined}
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => setShowPassword((s) => !s)}
+                  >
+                    {showPassword ? "Hide" : "Show"}
+                  </Button>
+                </div>
+                <p id="password-hint" className="text-xs leading-snug text-muted-foreground">
+                  {passwordHint} At least {MIN_PASSWORD_LENGTH} characters — keep it something you can
+                  read out over the phone or radio.
+                </p>
+                {fieldErrors?.password && (
+                  <p id="password-error" className="text-xs font-medium leading-snug text-danger" role="alert">
+                    {fieldErrors.password}
+                  </p>
+                )}
+              </div>
+            </div>
+          </CollapsibleSection>
+
+          {/* ── Personal / Masterlist (E1) ──
+              All optional. The name parts drive the composed
+              "LAST, FIRST MIDDLE" fullName in the action; the rest are HR
+              reference fields. */}
+          <CollapsibleSection
+            id="personal"
+            title="Personal / Masterlist"
+            description="Optional HR details. Fill the name parts to file this person as “Last, First Middle”; leave them blank to keep the Full name above."
+            open={openSections.personal}
+            onToggle={() => toggleSection("personal")}
+          >
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <Field id="lastName" label="Last name" error={fieldErrors?.lastName}>
                 <Input
@@ -443,7 +720,17 @@ export function UserForm({
                 autoComplete="off"
               />
             </Field>
+          </CollapsibleSection>
 
+          {/* ── Government IDs ──
+              Validated leniently and stored as typed. */}
+          <CollapsibleSection
+            id="govId"
+            title="Government IDs"
+            description="Optional. Digits only; dashes are ignored."
+            open={openSections.govId}
+            onToggle={() => toggleSection("govId")}
+          >
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <Field
                 id="tin"
@@ -506,180 +793,52 @@ export function UserForm({
                 />
               </Field>
             </div>
-          </div>
+          </CollapsibleSection>
 
-          {/* ── 2. System accesses ──
-              A checkbox group, so its required marker and its "at least one"
-              error hang off the group rather than any single checkbox. */}
-          <div className="space-y-2">
-            <Label>
-              System accesses
-              {!rolesLocked && <RequiredMark />}
-            </Label>
-            <p className="text-xs leading-snug text-muted-foreground">
-              {rolesLockedReason ??
-                "At least one — an account with no access can sign in but reach nothing. Roles are shown in full under Settings › Access Levels / Roles."}
-            </p>
-            {fieldErrors?.roleIds && (
-              <p className="text-xs font-medium leading-snug text-danger" role="alert">
-                {fieldErrors.roleIds}
-              </p>
-            )}
-            <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-              {roles.map((r) => {
-                const checked = form.roleIds.includes(r.id);
-                return (
-                  <label
-                    key={r.id}
-                    className="flex cursor-pointer items-start gap-2 rounded-md border border-border p-2.5 hover:bg-muted/40"
-                  >
-                    <input
-                      type="checkbox"
-                      // A disabled checkbox posts nothing, which would submit
-                      // an empty access list; the hidden inputs below keep the
-                      // current roles in the payload when they're locked.
-                      name={rolesLocked ? undefined : "roleIds"}
-                      value={r.id}
-                      checked={checked}
-                      disabled={rolesLocked}
-                      onChange={(e) => toggleRole(r.id, e.target.checked)}
-                      className="mt-0.5 h-4 w-4 shrink-0 rounded border-input"
-                    />
-                    <span className="text-sm">
-                      <span className="font-medium">{r.name}</span>
-                      {r.description && (
-                        <span className="block text-xs text-muted-foreground">
-                          {r.description}
-                        </span>
-                      )}
-                    </span>
-                  </label>
-                );
-              })}
-            </div>
-            {rolesLocked &&
-              form.roleIds.map((id) => (
-                <input key={id} type="hidden" name="roleIds" value={id} />
-              ))}
-          </div>
-
-          {/* ── 3. Access level & department (data-driven) ──
-              Both optional. The Department here is the editable org
-              department from Settings › Departments — separate from the
-              legacy "Department" enum above, which drives rank lists and
-              security (lib/user-access.ts) and is unchanged. */}
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <Field
-              id="accessLevelId"
-              label="Access level"
-              error={fieldErrors?.accessLevelId}
-              hint="The user's level from Settings › Access Levels. Optional."
-            >
-              <Select
-                id="accessLevelId"
-                name="accessLevelId"
-                value={form.accessLevelId}
-                onChange={(e) => setForm({ ...form, accessLevelId: e.target.value })}
+          {/* ── Crew / Vessel ── */}
+          <CollapsibleSection
+            id="crewVessel"
+            title="Crew / Vessel"
+            description="Seafarer link and the vessel this account represents."
+            open={openSections.crewVessel}
+            onToggle={() => toggleSection("crewVessel")}
+          >
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <Field
+                id="crewId"
+                label="Crew ID"
+                error={fieldErrors?.crewId}
+                hint="For a shore staff member who came from the ships. Format 2026-00042. Leave blank for non-seafarers."
               >
-                <option value="">— None —</option>
-                {accessLevels.map((a) => (
-                  <option key={a.id} value={a.id}>{a.name}</option>
-                ))}
-              </Select>
-            </Field>
-            <Field
-              id="departmentRefId"
-              label="Department (Ship / Shore)"
-              error={fieldErrors?.departmentRefId}
-              hint="The editable department from Settings › Departments. Optional, and separate from the security/rank Department above."
-            >
-              <Select
-                id="departmentRefId"
-                name="departmentRefId"
-                value={form.departmentRefId}
-                onChange={(e) => setForm({ ...form, departmentRefId: e.target.value })}
-              >
-                <option value="">— None —</option>
-                {shipDepartments.length > 0 && (
-                  <optgroup label="Ship">
-                    {shipDepartments.map((d) => (
-                      <option key={d.id} value={d.id}>{d.name}</option>
-                    ))}
-                  </optgroup>
-                )}
-                {shoreDepartments.length > 0 && (
-                  <optgroup label="Shore">
-                    {shoreDepartments.map((d) => (
-                      <option key={d.id} value={d.id}>{d.name}</option>
-                    ))}
-                  </optgroup>
-                )}
-              </Select>
-            </Field>
-          </div>
-
-          {/* ── 4. Vessel access ── */}
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <Field
-              id="vesselId"
-              label="Vessel access"
-              error={fieldErrors?.vesselId}
-              hint="The vessel this account represents. A shipboard account is tied to its own ship; an office account files against any vessel."
-            >
-              <Select
-                id="vesselId"
-                name="vesselId"
-                value={form.vesselId}
-                onChange={(e) => setForm({ ...form, vesselId: e.target.value })}
-              >
-                <option value="">— Office account (all vessels) —</option>
-                {vessels.map((v) => (
-                  <option key={v.id} value={v.id}>{v.name}</option>
-                ))}
-              </Select>
-            </Field>
-
-            {/* ── 5. Password ──
-                Two controls on one row (the box and its Show toggle), so this
-                one stays hand-wired rather than going through <Field>, which
-                takes a single child. */}
-            <div className="space-y-1.5">
-              <Label htmlFor="password">
-                {passwordRequired ? "Temporary password" : "New password"}
-                {passwordRequired && <RequiredMark />}
-              </Label>
-              <div className="flex gap-2">
                 <Input
-                  id="password"
-                  name="password"
-                  type={showPassword ? "text" : "password"}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  autoComplete="new-password"
-                  minLength={passwordRequired ? MIN_PASSWORD_LENGTH : undefined}
-                  required={passwordRequired}
-                  aria-describedby={fieldErrors?.password ? "password-hint password-error" : "password-hint"}
-                  aria-invalid={fieldErrors?.password ? true : undefined}
+                  id="crewId"
+                  name="crewId"
+                  value={form.crewId}
+                  onChange={(e) => setForm({ ...form, crewId: e.target.value })}
+                  placeholder="e.g. 2026-00042"
+                  autoComplete="off"
                 />
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => setShowPassword((s) => !s)}
+              </Field>
+              <Field
+                id="vesselId"
+                label="Vessel access"
+                error={fieldErrors?.vesselId}
+                hint="The vessel this account represents. A shipboard account is tied to its own ship; an office account files against any vessel."
+              >
+                <Select
+                  id="vesselId"
+                  name="vesselId"
+                  value={form.vesselId}
+                  onChange={(e) => setForm({ ...form, vesselId: e.target.value })}
                 >
-                  {showPassword ? "Hide" : "Show"}
-                </Button>
-              </div>
-              <p id="password-hint" className="text-xs leading-snug text-muted-foreground">
-                {passwordHint} At least {MIN_PASSWORD_LENGTH} characters — keep it something you can
-                read out over the phone or radio.
-              </p>
-              {fieldErrors?.password && (
-                <p id="password-error" className="text-xs font-medium leading-snug text-danger" role="alert">
-                  {fieldErrors.password}
-                </p>
-              )}
+                  <option value="">— Office account (all vessels) —</option>
+                  {vessels.map((v) => (
+                    <option key={v.id} value={v.id}>{v.name}</option>
+                  ))}
+                </Select>
+              </Field>
             </div>
-          </div>
+          </CollapsibleSection>
 
           {state.error && (
             <p className="text-sm text-danger" role="alert">{state.error}</p>
@@ -688,7 +847,7 @@ export function UserForm({
             <p className="text-sm text-success" role="status">Saved.</p>
           )}
 
-          {/* ── 6 & 7. Save, then confirm ── */}
+          {/* ── Save, then confirm ── */}
           {confirming ? (
             <ConfirmRow
               prompt={confirmPrompt}
