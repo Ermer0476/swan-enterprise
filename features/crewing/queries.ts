@@ -254,8 +254,16 @@ export async function getSeafarer(user: SessionUser, id: string): Promise<Seafar
  * `listSeafarers` is: a crew list is a browse surface, and nothing on it is a
  * sensitive column.
  *
- * `orderBy` is the assignment's dates; rank seniority is applied in the page,
- * because RANK_SENIORITY is a code map and not a database column.
+ * ORDERED BY SIGN-ON DATE, NEWEST FIRST — a client decision (drop the in-page
+ * rank-seniority sort). This is the change that makes true server-side
+ * pagination possible: the list used to be re-sorted in the page by
+ * `rankSeniority(rankCode)`, a code map and not a database column, so a DB
+ * `skip`/`take` would have paged the wrong order. `actualSignOnDate: "desc"` is
+ * a real column, so a page boundary is coherent (page 2 is the next 20 in the
+ * same order). `id` is the tiebreaker so the order is fully deterministic and
+ * rows never shuffle between pages when sign-on dates tie (or are null under the
+ * ALL scope). Paginated 20/page, mirroring `listSeafarers`; `page` is clamped to
+ * the last page so `?page=999` lands on real rows, never an empty table.
  */
 const CREW_ASSIGNMENT_LIST_SELECT = {
   id: true,
@@ -288,27 +296,38 @@ export type CrewListFilters = {
   scope?: "ABOARD" | "ALL";
 };
 
+const CREW_LIST_PAGE_SIZE = 20;
+
 export async function listCrewAssignments(
   user: SessionUser,
   filters: CrewListFilters = {},
-): Promise<CrewAssignmentListRow[]> {
-  return prisma.crewAssignment.findMany({
-    where: {
-      companyId: user.companyId,
-      deletedAt: null,
-      // AND, never a spread — a spread would silently drop either the
-      // boundary or the filter beside it. See lib/vessel-scope.ts.
-      AND: [crewAssignmentScopeFor(user)],
-      ...(filters.vesselId ? { vesselId: filters.vesselId } : {}),
-      // "Aboard" is `actualSignOffDate: null` AND actually joined — a planned
-      // assignment has neither date and is nobody's crew yet.
-      ...(filters.scope === "ALL"
-        ? {}
-        : { actualSignOffDate: null, actualSignOnDate: { not: null } }),
-    },
+  page = 1,
+): Promise<Paginated<CrewAssignmentListRow>> {
+  const where: Prisma.CrewAssignmentWhereInput = {
+    companyId: user.companyId,
+    deletedAt: null,
+    // AND, never a spread — a spread would silently drop either the
+    // boundary or the filter beside it. See lib/vessel-scope.ts.
+    AND: [crewAssignmentScopeFor(user)],
+    ...(filters.vesselId ? { vesselId: filters.vesselId } : {}),
+    // "Aboard" is `actualSignOffDate: null` AND actually joined — a planned
+    // assignment has neither date and is nobody's crew yet.
+    ...(filters.scope === "ALL"
+      ? {}
+      : { actualSignOffDate: null, actualSignOnDate: { not: null } }),
+  };
+  const total = await prisma.crewAssignment.count({ where });
+  const totalPages = Math.max(1, Math.ceil(total / CREW_LIST_PAGE_SIZE));
+  const safePage = Math.min(Math.max(1, page), totalPages);
+  const rows = await prisma.crewAssignment.findMany({
+    where,
     select: CREW_ASSIGNMENT_LIST_SELECT,
-    orderBy: [{ actualSignOnDate: "desc" }, { plannedSignOnDate: "desc" }],
+    // Newest sign-on first, with `id` as a stable tiebreaker so the order is
+    // deterministic across page boundaries. See the docstring above.
+    orderBy: [{ actualSignOnDate: "desc" }, { id: "asc" }],
+    ...paginationArgs(safePage, CREW_LIST_PAGE_SIZE),
   });
+  return paginate(rows, total, safePage, CREW_LIST_PAGE_SIZE);
 }
 
 /**
