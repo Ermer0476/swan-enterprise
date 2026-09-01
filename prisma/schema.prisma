@@ -551,7 +551,8 @@ model Permission {
   module      String // e.g. "sms", "incident"
   description String?
 
-  roles RolePermission[]
+  roles        RolePermission[]
+  accessLevels AccessLevelPermission[]
 }
 
 model RolePermission {
@@ -572,6 +573,20 @@ model UserRole {
   @@id([userId, roleId])
 }
 
+// Grants a permission to an access level (E3). ADDITIVE / grant-only: a user's
+// effective permissions are the UNION of their role permissions and their
+// access level's permissions here — this table never subtracts what a role
+// already gives. Every existing account has accessLevelId = null, so this
+// changes nothing for them the day it ships. Mirrors RolePermission exactly.
+model AccessLevelPermission {
+  accessLevelId String
+  accessLevel   AccessLevel @relation(fields: [accessLevelId], references: [id], onDelete: Cascade)
+  permissionId  String
+  permission    Permission  @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@id([accessLevelId, permissionId])
+}
+
 // ─── Access levels & departments (data-driven) ──────────────────────────────
 
 // A named access level, ranked. The NAME/RANK are editable data; seeded rows
@@ -588,7 +603,8 @@ model AccessLevel {
   // Seeded rows can't be deleted from the UI — only deactivated.
   isSystem    Boolean @default(false)
 
-  users User[]
+  users       User[]
+  permissions AccessLevelPermission[]
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
@@ -675,31 +691,31 @@ model Vessel {
   nextDryDockDue  DateTime?
 
   // Ship's Particulars — from the vessel's official particulars sheet.
-  portOfRegistry  String?
-  lbp             Float? // Length Between Perpendiculars (m)
-  draft           Float? // Draft, extreme (m)
-  mainEngine      String? // e.g. "HITACHI MAN B&W 6S35ME-B9.7-HPSCR x 1 set"
-  serviceSpeed    Float? // knots
+  portOfRegistry     String?
+  lbp                Float? // Length Between Perpendiculars (m)
+  draft              Float? // Draft, extreme (m)
+  mainEngine         String? // e.g. "HITACHI MAN B&W 6S35ME-B9.7-HPSCR x 1 set"
+  serviceSpeed       Float? // knots
   // Standard daily consumption from sea trial — manually set per vessel
   // (not derived from voyage-log history), used as the KPI dashboard's
   // fuel-consumption threshold line.
   stdFoConsumptionMt Float? // mt/day
   stdDoConsumptionMt Float? // mt/day
-  navigationArea  String? // e.g. "OCEAN GOING"
-  classNotation   String?
-  ownerAddress    String?
-  builder         String?
-  keelLaidDate    DateTime?
-  launchingDate   DateTime?
-  deliveryDate    DateTime?
-  totalComplement Int? // Grand total complement (persons)
-  satPhone        String? // V-SAT / satellite phone number
-  vesselEmail     String?
+  navigationArea     String? // e.g. "OCEAN GOING"
+  classNotation      String?
+  ownerAddress       String?
+  builder            String?
+  keelLaidDate       DateTime?
+  launchingDate      DateTime?
+  deliveryDate       DateTime?
+  totalComplement    Int? // Grand total complement (persons)
+  satPhone           String? // V-SAT / satellite phone number
+  vesselEmail        String?
   // When this vessel left the fleet (sold / no longer managed) — set
   // automatically when status is changed to SOLD (and cleared if changed
   // back). Drives the "vessels under management by year" fleet history
   // chart, which needs an exact exit year, not just the current status.
-  archivedAt      DateTime?
+  archivedAt         DateTime?
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
@@ -737,9 +753,9 @@ model Vessel {
   environmentRecords             EnvironmentRecord[]
   storesCatalogueItems           StoresCatalogueItem[]
   sparesCatalogueItems           SparesCatalogueItem[]
-  openingStockTake                OpeningStockTake?
+  openingStockTake               OpeningStockTake?
   inventoryEvents                InventoryEvent[]
-  inventoryUpdateDrafts           InventoryUpdateDraft[]
+  inventoryUpdateDrafts          InventoryUpdateDraft[]
   requisitions                   Requisition[]
   crewAssignments                CrewAssignment[]
 
@@ -1335,7 +1351,7 @@ model SireQuestionnaireVersion {
   companyId String
   company   Company @relation(fields: [companyId], references: [id])
 
-  label String // e.g. the uploaded filename, or a typed label
+  label     String // e.g. the uploaded filename, or a typed label
   // Exactly one active version per company at a time — enforced in
   // features/sire-questionnaire/actions.ts (deactivate-then-activate in a
   // transaction), not a DB constraint, matching how "current revision"
@@ -1672,11 +1688,11 @@ model CompanyInspectionObservation {
   inspection   CompanyInspection @relation(fields: [inspectionId], references: [id], onDelete: Cascade)
 
   // Stable per-inspection ordinal for "Observation No. N", same as SireObservation.seq.
-  seq         Int
-  chapter     Int? // VIQ_CHAPTERS in features/sire/schema.ts — reused as-is
-  category    SireObservationCategory?
-  viqRef      String? // "Question number", e.g. "3.5.1"
-  observation String // "Finding / Inspector observation" in the UI
+  seq            Int
+  chapter        Int? // VIQ_CHAPTERS in features/sire/schema.ts — reused as-is
+  category       SireObservationCategory?
+  viqRef         String? // "Question number", e.g. "3.5.1"
+  observation    String // "Finding / Inspector observation" in the UI
   immediateCause String?
 
   rootCauseCategory    RootCauseCategory?
@@ -2654,15 +2670,15 @@ model VoyageLog {
   // Steaming Time / Port Stay are manual entries — the report's own Date +
   // Report Time is the single timestamp for this entry (no separate
   // From/To period range).
-  steamingTimeHrs Float?
-  obsSpeedKn      Float?
-  meSpeedKn       Float?
-  rpm             Float?
-  slipPct         Float?
-  beaufortScale   Int?
-  portStayHrs     Float?
+  steamingTimeHrs  Float?
+  obsSpeedKn       Float?
+  meSpeedKn        Float?
+  rpm              Float?
+  slipPct          Float?
+  beaufortScale    Int?
+  portStayHrs      Float?
   totalPortStayHrs Float? // running total across every While-in-Port entry this voyage — same "voyage to date" treatment as totalSteamingTimeHrs
-  offHireHrs      Float? // stays manual — a charter-party/commercial call, not inferable from vesselStatus
+  offHireHrs       Float? // stays manual — a charter-party/commercial call, not inferable from vesselStatus
 
   // Total FO/DO (and their ROB) are derived at read time by summing the
   // per-grade `bunkers` ledger below, grouped by category — no longer
@@ -2694,20 +2710,20 @@ model VoyageLog {
   // only (a vessel alongside has nothing to log here), same fields the
   // office's own dashboard is likely already deriving informally from the
   // narrative SOF text — capturing them structured here instead.
-  distanceRunNm          Float?
-  totalDistanceRunNm     Float?
-  dtgNextPortNm          Float? // Distance To Go
-  totalSteamingTimeHrs   Float?
-  distanceLogNm          Float?
-  generalAvgSpeedKn      Float?
-  engineDistanceNm       Float?
-  totalEngineDistanceNm  Float?
+  distanceRunNm           Float?
+  totalDistanceRunNm      Float?
+  dtgNextPortNm           Float? // Distance To Go
+  totalSteamingTimeHrs    Float?
+  distanceLogNm           Float?
+  generalAvgSpeedKn       Float?
+  engineDistanceNm        Float?
+  totalEngineDistanceNm   Float?
   generalAvgEngineSpeedKn Float?
-  weatherCondition       String?
-  generalAvgSlipPct      Float?
-  barometer              Float?
-  exhaustTempUnit        String?
-  exhaustGasTemp         String?
+  weatherCondition        String?
+  generalAvgSlipPct       Float?
+  barometer               Float?
+  exhaustTempUnit         String?
+  exhaustGasTemp          String?
 
   etaNextPortDate DateTime?
   etaNextPortTime String?
@@ -2719,7 +2735,7 @@ model VoyageLog {
   // Free-text per-tank Bottom-Middle-Top readings, e.g. "TK1 - 14.8, 14.0,
   // 0.0 / TK2 - 17.1, 16.2, 18.5" — the real form flows this as one line
   // covering however many tanks a voyage has, not a fixed column count.
-  cargoTemp String? @db.Text
+  cargoTemp         String? @db.Text
 
   agentName    String?
   agentTel     String?
@@ -2809,17 +2825,19 @@ enum UnitMasterMetric {
   CARGO
 }
 
-/** Controlled conversion-factor reference data — "Unit Master" per the
+/**
+ * Controlled conversion-factor reference data — "Unit Master" per the
  * Environmental spec: an admin-managed table of (metric, unit) →
  * (standardUnit, factor), so a crew member can pick whatever unit they
  * actually measured in (e.g. Litres) and the software derives the
  * standardized figure (e.g. m³) FOR them — never the other way around.
  * `factor` converts 1 unit of `unit` into `standardUnit`. Not editable from
- * any normal data-entry screen — only from the admin-only Unit Master page. */
+ * any normal data-entry screen — only from the admin-only Unit Master page.
+ */
 model UnitMaster {
-  id        String   @id @default(uuid())
+  id        String           @id @default(uuid())
   companyId String
-  company   Company  @relation(fields: [companyId], references: [id])
+  company   Company          @relation(fields: [companyId], references: [id])
   metric    UnitMasterMetric
   unit      String // e.g. "m3", "L", "MT", "CBM"
   unitLabel String // display label, e.g. "Litres (L)"
@@ -2893,13 +2911,13 @@ model EnvironmentRecord {
   // Garbage. The one MARPOL-waste category the crew may log in a unit
   // other than the standard, so the derived total also carries its
   // Unit-Master-normalized figure (see UnitMaster above).
-  sewageDischargedAtSea       Float? // as entered, in sewageUnit
-  sewageDischargedToFacility  Float? // as entered, in sewageUnit
-  sewageUnit                  String? // UnitMaster.unit for metric SEWAGE — applies to both quantities above
-  sewageQuantityNormalized    Float? // derived: (sewageDischargedAtSea + sewageDischargedToFacility) * matching UnitMaster.toStandardFactor, in sewageQuantityStandardUnit
-  sewageQuantityStandardUnit  String? // UnitMaster.standardUnit at the time this was saved (e.g. "m3") — kept alongside the number so a later Unit Master edit can't silently reinterpret an old entry
-  sewageReceptionFacility     String? // name/location of the facility sewageDischargedToFacility was landed at
-  sewageRemarks                String?
+  sewageDischargedAtSea      Float? // as entered, in sewageUnit
+  sewageDischargedToFacility Float? // as entered, in sewageUnit
+  sewageUnit                 String? // UnitMaster.unit for metric SEWAGE — applies to both quantities above
+  sewageQuantityNormalized   Float? // derived: (sewageDischargedAtSea + sewageDischargedToFacility) * matching UnitMaster.toStandardFactor, in sewageQuantityStandardUnit
+  sewageQuantityStandardUnit String? // UnitMaster.standardUnit at the time this was saved (e.g. "m3") — kept alongside the number so a later Unit Master edit can't silently reinterpret an old entry
+  sewageReceptionFacility    String? // name/location of the facility sewageDischargedToFacility was landed at
+  sewageRemarks              String?
 
   // Grey Water — always m³, no unit picker.
   greyWaterGenerated  Float?
@@ -2923,14 +2941,14 @@ model EnvironmentRecord {
   // MT⇄CBM factor is cargo-density-specific, not a fixed physical constant
   // — so it's a controlled, admin-set factor rather than something this app
   // calculates itself.
-  cargoLoaded                Float?
-  cargoDischarged            Float?
-  cargoType                  String?
-  cargoUnit                  String? // UnitMaster.unit for metric CARGO — applies to both cargoLoaded and cargoDischarged
-  cargoLoadedNormalized      Float? // derived, in cargoStandardUnit
-  cargoDischargedNormalized  Float? // derived, in cargoStandardUnit
-  cargoStandardUnit          String? // UnitMaster.standardUnit at time of save (e.g. "MT")
-  cargoPort                  String?
+  cargoLoaded               Float?
+  cargoDischarged           Float?
+  cargoType                 String?
+  cargoUnit                 String? // UnitMaster.unit for metric CARGO — applies to both cargoLoaded and cargoDischarged
+  cargoLoadedNormalized     Float? // derived, in cargoStandardUnit
+  cargoDischargedNormalized Float? // derived, in cargoStandardUnit
+  cargoStandardUnit         String? // UnitMaster.standardUnit at time of save (e.g. "MT")
+  cargoPort                 String?
 
   // Stern Tube / Lube Oil — always in the company's one chosen unit (set via
   // Unit Master's isDefault row for future use; entered plainly for now,
@@ -2951,7 +2969,7 @@ model EnvironmentRecord {
   bilgeRemarks       String?
 
   // Sludge — always m³, no unit picker.
-  sludgeGenerated             Float?
+  sludgeGenerated              Float?
   sludgeRetained               Float?
   sludgeTransferredIncinerator Float?
   sludgeLandedAshore           Float?
@@ -2971,14 +2989,14 @@ model EnvironmentRecord {
 }
 
 model GarbageLedgerEntry {
-  id                   String            @id @default(uuid())
-  companyId            String
-  environmentRecordId  String
-  environmentRecord    EnvironmentRecord @relation(fields: [environmentRecordId], references: [id], onDelete: Cascade)
-  category             GarbageCategory
-  overboardToSeaCbm    Float?
-  incineratedCbm       Float?
-  dischargeAshoreCbm   Float?
+  id                  String            @id @default(uuid())
+  companyId           String
+  environmentRecordId String
+  environmentRecord   EnvironmentRecord @relation(fields: [environmentRecordId], references: [id], onDelete: Cascade)
+  category            GarbageCategory
+  overboardToSeaCbm   Float?
+  incineratedCbm      Float?
+  dischargeAshoreCbm  Float?
   // Total Garbage is NOT stored — derived at read time as the sum of the
   // three fields above, same convention as VoyageLogBunker.consumed.
 
@@ -3038,13 +3056,13 @@ model TmsaAssessment {
 
   code             String // "1.2.3" — element.stage.question
   elementNumber    Int // base element 1..13
-  elementCode      String @default("") // "1", "1A"
+  elementCode      String               @default("") // "1", "1A"
   stage            Int // Stage 1..4
-  questionNo       Int    @default(0)
-  kpiDescription   String @db.Text // the KPI question text
+  questionNo       Int                  @default(0)
+  kpiDescription   String               @db.Text // the KPI question text
   complianceStatus TmsaComplianceStatus
-  remarks          String? @db.Text // Swan's narrative answer (Company Response)
-  bpg              String? @db.Text // Best Practice Guidance
+  remarks          String?              @db.Text // Swan's narrative answer (Company Response)
+  bpg              String?              @db.Text // Best Practice Guidance
 
   revision      Int               @default(1) // Rev 1 = the upload baseline
   responseState TmsaResponseState @default(ON_OCIMF)
@@ -3109,23 +3127,23 @@ model TmsaFinding {
   companyId String
   company   Company @relation(fields: [companyId], references: [id])
 
-  code        String // e.g. "TMSA-001"
-  seq         Int // numeric order parsed from code, for stable sorting
-  auditYear   Int
-  elementCode String // "1", "1A", ... "13"
-  elementBase Int // numeric base element (1..13) for grouping
-  stageQ      String // raw "Stage/Q" from the report, e.g. "2.0"
+  code             String // e.g. "TMSA-001"
+  seq              Int // numeric order parsed from code, for stable sorting
+  auditYear        Int
+  elementCode      String // "1", "1A", ... "13"
+  elementBase      Int // numeric base element (1..13) for grouping
+  stageQ           String // raw "Stage/Q" from the report, e.g. "2.0"
   // TMSA numbering (Element.Stage.Question) parsed from the observation, so a
   // finding maps to a specific KPI. questionNo = 0 when only element+stage known.
-  stage       Int    @default(0)
-  questionNo  Int    @default(0)
-  kpiRef      String @default("") // "1.2.1" or "1.2" when question unknown
-  source      String // Internal, Equinor, Chevron, ...
-  observation String @db.Text
-  correctiveAction String @db.Text
-  status      TmsaFindingStatus @default(OPEN)
-  responsible String
-  target      String // free text: date, "COMPLETED", "Ongoing", "Q3 2026", ...
+  stage            Int               @default(0)
+  questionNo       Int               @default(0)
+  kpiRef           String            @default("") // "1.2.1" or "1.2" when question unknown
+  source           String // Internal, Equinor, Chevron, ...
+  observation      String            @db.Text
+  correctiveAction String            @db.Text
+  status           TmsaFindingStatus @default(OPEN)
+  responsible      String
+  target           String // free text: date, "COMPLETED", "Ongoing", "Q3 2026", ...
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
@@ -3213,9 +3231,9 @@ model StoresCatalogueItem {
   // coding isn't actually used onboard; items are identified by description
   // + physical location instead. Kept as an optional field for whichever
   // items a user does want to code.
-  impaCode String?
-  name     String
-  category StoresCategory
+  impaCode   String?
+  name       String
+  category   StoresCategory
   // Reuses RequisitionDepartment (Deck/Engine) — the same "which onboard
   // department" concept as on a Requisition, just at the catalogue-item
   // level so Opening Stock Take / Inventory can group by department first.
@@ -3223,7 +3241,7 @@ model StoresCatalogueItem {
   // items still belong to one department or the other.
   department RequisitionDepartment @default(DECK)
   unit       String // "pc", "ltr", "kg", ...
-  active     Boolean @default(true)
+  active     Boolean               @default(true)
 
   // The sub-heading within a location on the real sheets — sometimes an
   // equipment name ("Cargo Heater"), sometimes a purpose ("Use for Cargo
@@ -3232,7 +3250,7 @@ model StoresCatalogueItem {
   subGroup String?
   // Free-text specs/part numbers/notes — mirrors the real form's REMARKS
   // column (e.g. "440V 1KW", "Part No. B05-0030").
-  remarks String? @db.Text
+  remarks  String? @db.Text
 
   // Medicine
   requiresExpiryTracking Boolean @default(false)
@@ -3377,7 +3395,7 @@ model InventoryEvent {
   // "Box No. 3"). Split out so the same physical area (many box numbers)
   // consolidates to one Location suggestion instead of a distinct string
   // per box.
-  remarks String?
+  remarks  String?
 
   // Loose reference back to what generated this event — same non-FK-string
   // convention as above, for a "why did ROB change" audit trail without a
@@ -3505,9 +3523,9 @@ model RequisitionRevision {
   // e.g. the supplier never quoted, or never shipped a line. Whatever was
   // already received (if any) stays posted; the requisition just stops
   // waiting on the rest.
-  closedAt     DateTime?
-  closedBy     String?
-  closeReason  String?
+  closedAt    DateTime?
+  closedBy    String?
+  closeReason String?
 
   currentOf Requisition? @relation("CurrentRevision") // back-pointer, populated only when this IS the current revision
 
@@ -3522,7 +3540,7 @@ model RequisitionRevision {
 }
 
 model RequisitionLine {
-  id         String               @id @default(uuid())
+  id         String              @id @default(uuid())
   companyId  String
   revisionId String
   revision   RequisitionRevision @relation(fields: [revisionId], references: [id], onDelete: Cascade)
@@ -3534,15 +3552,15 @@ model RequisitionLine {
   // its own unit/impaCode, always read live from the catalogue instead.
   // Lets the requester hand office a starting point when they already know
   // it, without that becoming an official catalogue entry on its own.
-  unit     String?
-  impaCode String?
+  unit                    String?
+  impaCode                String?
 
   qtyRequested     Float
   robAtRequestTime Float? // snapshot of computed ROB when the line was added
   // Requisition-specific context (e.g. "for engine overhaul", "urgent — main
   // engine down") — independent of the catalogue item's own remarks, which
   // just describe the item itself. Editable regardless of item type.
-  remarks String?
+  remarks          String?
 
   // Office screening (once the requisition reaches SENT_TO_OFFICE) — kept
   // separate from qtyRequested rather than overwriting it, so what the
