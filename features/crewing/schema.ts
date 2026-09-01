@@ -29,9 +29,9 @@ const optionalText = (max: number) =>
  * The crew ID is MANDATORY on the register — every seafarer ends up with one —
  * but "mandatory" is satisfied by AUTO-ISSUE, not by forcing the clerk to type
  * a value. So a blank crewCode on the CREATE form is legitimate and means
- * "assign the next 2026-#####"; createSeafarerAction mints it inside the
+ * "assign the next YY-NNNN"; createSeafarerAction mints it inside the
  * create transaction (see mintCrewId). What is NOT legitimate is a MALFORMED
- * manual value: if the clerk types something, it must be a real `YYYY-99999`.
+ * manual value: if the clerk types something, it must be a real `YY-NNNN`.
  * That is the only rule the schema can enforce without the database — the
  * mandatory-ness lives in the action, where the mint happens.
  */
@@ -46,7 +46,7 @@ const createCrewCodeField = z
 /**
  * The EDIT form tolerates a legacy value. Before this module minted crew IDs,
  * crewCode was free text ("the manning agent's own number"), so the register
- * holds stored values that predate the `YYYY-99999` shape. Re-saving such a man
+ * holds stored values that predate the `YY-NNNN` shape. Re-saving such a man
  * — even editing only his surname — must not be refused because his old crew
  * code doesn't match today's format. The schema therefore only bounds the
  * length here; updateSeafarerAction enforces the format on a CHANGED, non-empty

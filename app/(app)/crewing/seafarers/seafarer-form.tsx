@@ -139,9 +139,10 @@ export function SeafarerForm({
   }, [state]);
 
   const fieldErrors = state.fieldErrors;
-  // The issue year the auto-assign hint quotes — the same year
-  // createSeafarerAction mints under. Read at render so it rolls over.
-  const crewIdYear = new Date().getFullYear();
+  // The two-digit issue year the auto-assign hint quotes — the same year
+  // createSeafarerAction mints under (crew IDs look like 24-0653). Read at
+  // render so it rolls over.
+  const crewIdYear = String(new Date().getFullYear() % 100).padStart(2, "0");
 
   return (
     <form ref={formRef} action={formAction} className="space-y-6">
@@ -195,8 +196,8 @@ export function SeafarerForm({
               error={fieldErrors?.crewCode}
               hint={
                 mode === "create"
-                  ? `Leave blank to auto-assign the next ${crewIdYear}-#####, or enter an existing crew ID. It is also the only way the ship can tell two men of the same name apart.`
-                  : "A legacy value is kept as it is; a new one must look like 2026-00042 (year, dash, five digits)."
+                  ? `Leave blank to auto-assign the next ${crewIdYear}-NNNN, or enter an existing crew ID. It is also the only way the ship can tell two men of the same name apart.`
+                  : "A legacy value is kept as it is; a new one must look like 24-0653 (2-digit year, dash, sequence)."
               }
             >
               <Input
@@ -204,7 +205,7 @@ export function SeafarerForm({
                 name="crewCode"
                 defaultValue={values.crewCode}
                 autoComplete="off"
-                placeholder={mode === "create" ? `${crewIdYear}-00042` : undefined}
+                placeholder={mode === "create" ? `${crewIdYear}-0001` : undefined}
               />
             </Field>
           </div>

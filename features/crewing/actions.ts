@@ -225,7 +225,7 @@ export async function createSeafarerAction(
     created = await prisma.$transaction(async (tx) => {
       /**
        * ── THE CREW ID: AUTO-ISSUE OR MANUAL, BOTH INSIDE THE TRANSACTION ──
-       * Blank → mint the next `YYYY-#####`. Typed → the value the clerk entered.
+       * Blank → mint the next `YY-NNNN`. Typed → the value the clerk entered.
        * On the AUTO path the advisory lock MUST be the first statement: it
        * serialises concurrent auto-issues for this (company, year), the only
        * guard against two creates minting the same N+1 (crewCode has no unique
@@ -363,7 +363,7 @@ export async function updateSeafarerAction(
 
   /**
    * Tolerate the legacy value, enforce the shape on a change. A crewCode that
-   * predates the `YYYY-99999` mint is free text; re-saving the man unchanged
+   * predates the `YY-NNNN` mint is free text; re-saving the man unchanged
    * must not be refused for it. But if the clerk TYPES a new crew ID, it has to
    * be well formed. `d.crewCode` is already trimmed by the schema.
    */
