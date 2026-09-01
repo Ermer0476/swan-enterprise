@@ -64,7 +64,11 @@ export async function startSession(userId: string): Promise<void> {
   jar.set(COOKIE, token, {
     httpOnly: true,
     sameSite: "lax",
-    secure: process.env.NODE_ENV === "production",
+    // Opt-in Secure. Default OFF so the app works over plain HTTP on a LAN IP
+    // (the current deployment). A `Secure` cookie is never sent back over HTTP,
+    // which would trap the user in an endless redirect to /login. Set
+    // COOKIE_SECURE="true" in .env only when the app is served over HTTPS.
+    secure: process.env.COOKIE_SECURE === "true",
     path: "/",
     maxAge: 60 * 60 * 24 * 30,
   });
