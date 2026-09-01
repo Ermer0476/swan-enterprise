@@ -11,7 +11,7 @@ import {
   listUserGovIdDocs,
   listVesselOptions,
 } from "@/features/users/queries";
-import { GovIdDocs, type GovIdItem } from "@/components/users/govid-docs";
+import { type GovIdItem } from "@/components/users/govid-docs";
 import { formatCrewName } from "@/features/crewing/ui";
 import { listDepartmentOptions } from "@/features/departments/queries";
 import { MIN_PASSWORD_LENGTH } from "@/features/users/schema";
@@ -242,9 +242,6 @@ export default async function EditUserPage({
       <div className="mb-5 space-y-3">
         <DetailSection title="Account" rows={accountRows} defaultOpen />
         <DetailSection title="Personal / Masterlist" rows={personalRows} />
-        <DetailSection title="Government IDs" rows={[]}>
-          <GovIdDocs userId={target.id} items={govIdItems} editable />
-        </DetailSection>
         <DetailSection title="Crew / Vessel" rows={crewRows} />
       </div>
 
@@ -253,6 +250,10 @@ export default async function EditUserPage({
         roles={roles}
         vessels={vessels}
         departments={departmentOptions}
+        // Edit mode: the account exists, so the Government IDs section renders
+        // the interactive scan/photo uploader next to the ID-number fields.
+        userId={target.id}
+        govIdItems={govIdItems}
         values={{
           id: target.id,
           fullName: target.fullName,
