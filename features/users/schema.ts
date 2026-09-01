@@ -274,6 +274,42 @@ export const updateUserSchema = z
   })
   .superRefine(datesConsistent);
 
+/**
+ * One row of an Employee Masterlist import (E2), validated with the SAME field
+ * rules as the create/edit form's masterlist fields — the very `optText`,
+ * `phGovId`, `optDate`, `emailField` and `datesConsistent` pieces `detailFields`
+ * is built from, so an imported value can never be looser than a typed one.
+ *
+ * Only the masterlist columns live here: no `department`, `roleIds`, `password`
+ * or access assignments. Those are NOT in the sheet — the commit action supplies
+ * them from doctrine (a default department, the guest access level and a minimal
+ * role) for a newly-created account, and leaves them untouched on an update.
+ * `email` is optional (present only on the CREATE path); the government IDs are
+ * checked leniently and stored as typed, exactly as on the form.
+ */
+export const masterlistImportRowSchema = z
+  .object({
+    lastName: optText(60),
+    firstName: optText(60),
+    middleName: optText(60),
+    initials: optText(12),
+    gender: optText(30),
+    employeeId: z.string().trim().max(60).optional().or(z.literal("")),
+    employmentStatus: optText(60),
+    designation: optText(100),
+    birthDate: optDate,
+    dateHired: optDate,
+    officialAddress: optText(300),
+    tin: phGovId("TIN", [9, 12]),
+    sss: phGovId("SSS", [10]),
+    hdmf: phGovId("HDMF (Pag-IBIG)", [12]),
+    philHealth: phGovId("PhilHealth", [12]),
+    email: emailField.optional().or(z.literal("")),
+  })
+  .superRefine(datesConsistent);
+
+export type MasterlistImportRow = z.infer<typeof masterlistImportRowSchema>;
+
 export const setUserActiveSchema = z.object({
   userId: z.string().uuid(),
   active: z.enum(["true", "false"]).transform((v) => v === "true"),

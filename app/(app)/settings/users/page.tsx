@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Plus, Users as UsersIcon } from "lucide-react";
+import { Plus, Upload, Download, Users as UsersIcon } from "lucide-react";
 import { requirePermission, can } from "@/lib/rbac";
 import { listUsers } from "@/features/users/queries";
 import { PageHeader } from "@/components/ui/page-header";
@@ -19,6 +19,14 @@ export default async function UsersPage({
     sp.status === "active" ? true : sp.status === "inactive" ? false : undefined;
   const users = await listUsers(user.companyId, { search: sp.q || undefined, active });
   const canCreate = can(user, "admin:manage-users");
+
+  // The export download carries the SAME filter the admin is looking at, so
+  // what downloads matches what's on screen. A plain <a> (not <Link>) so the
+  // route — which writes an EXPORT audit row — is never hit by Link prefetch.
+  const exportParams = new URLSearchParams();
+  if (sp.q) exportParams.set("q", sp.q);
+  if (sp.status) exportParams.set("status", sp.status);
+  const exportHref = `/settings/users/export${exportParams.toString() ? `?${exportParams.toString()}` : ""}`;
 
   const rows: UserRowView[] = users.map((u) => ({
     id: u.id,
@@ -40,9 +48,17 @@ export default async function UsersPage({
         description="Accounts, their system accesses and vessel access. Deactivating an account refuses it at sign-in immediately."
         actions={
           canCreate ? (
-            <Link href="/settings/users/new">
-              <Button><Plus className="h-4 w-4" /> Create New User</Button>
-            </Link>
+            <div className="flex flex-wrap items-center gap-2">
+              <a href={exportHref}>
+                <Button variant="outline"><Download className="h-4 w-4" /> Export</Button>
+              </a>
+              <Link href="/settings/users/import">
+                <Button variant="outline"><Upload className="h-4 w-4" /> Import</Button>
+              </Link>
+              <Link href="/settings/users/new">
+                <Button><Plus className="h-4 w-4" /> Create New User</Button>
+              </Link>
+            </div>
           ) : undefined
         }
       />
