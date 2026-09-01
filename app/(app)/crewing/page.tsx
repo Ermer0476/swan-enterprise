@@ -9,12 +9,14 @@ import {
   ASSIGNMENT_STATUS_LABELS,
   daysAboard,
 } from "@/features/crewing/status";
-import { rankLabel, rankSeniority } from "@/lib/crew-ranks";
+import { rankLabel } from "@/lib/crew-ranks";
 import { PageHeader } from "@/components/ui/page-header";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Select } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Pager } from "@/components/ui/pager";
+import { readPage } from "@/lib/pagination";
 import { formatDate } from "@/lib/utils";
 
 /**
@@ -46,21 +48,17 @@ export default async function CrewingPage({
   // this says; passing it would be theatre. The office's picker is real.
   const vesselFilter = isShipboard ? undefined : sp.vessel || undefined;
 
-  const [rows, vessels] = await Promise.all([
-    listCrewAssignments(user, { vesselId: vesselFilter, scope }),
+  const [{ rows, total, page, totalPages }, vessels] = await Promise.all([
+    listCrewAssignments(user, { vesselId: vesselFilter, scope }, readPage(sp)),
     isShipboard ? Promise.resolve([]) : listVesselOptions(user.companyId),
   ]);
 
   // `now` is computed once, on the server, and passed into every derived value.
   const now = new Date();
 
-  // Rank seniority is a code map (lib/crew-ranks.ts), not a database column, so
-  // the ordering that matters to a Master happens here, not in the query.
-  const ordered = [...rows].sort((a, b) => {
-    const rank = rankSeniority(a.rankCode) - rankSeniority(b.rankCode);
-    if (rank !== 0) return rank;
-    return a.seafarer.lastName.localeCompare(b.seafarer.lastName);
-  });
+  // Ordering is the DB's, by sign-on date newest-first (a client decision).
+  // The old in-page rank-seniority re-sort is gone: it sorted by a code map,
+  // not a column, which is exactly what made server-side pagination impossible.
 
   const canSeeRegister = !isShipboard && can(user, "crew:read");
   const canManage = !isShipboard && can(user, "crew:assign");
@@ -105,7 +103,7 @@ export default async function CrewingPage({
         </Button>
       </form>
 
-      {ordered.length === 0 ? (
+      {rows.length === 0 ? (
         <Card className="flex flex-col items-center justify-center gap-2 py-16 text-center">
           <Users className="h-8 w-8 text-muted-foreground" />
           <p className="text-sm font-medium">
@@ -133,7 +131,7 @@ export default async function CrewingPage({
                 </tr>
               </thead>
               <tbody>
-                {ordered.map((row) => {
+                {rows.map((row) => {
                   const status = assignmentStatus(row);
                   const days = daysAboard(row, now);
                   return (
@@ -187,6 +185,13 @@ export default async function CrewingPage({
               </tbody>
             </table>
           </div>
+          <Pager
+            page={page}
+            totalPages={totalPages}
+            total={total}
+            basePath="/crewing"
+            searchParams={sp}
+          />
         </Card>
       )}
     </>
