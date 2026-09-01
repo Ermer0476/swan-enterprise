@@ -14260,6 +14260,7 @@ export namespace Prisma {
     vessel?: boolean | User$vesselArgs<ExtArgs>
     accessLevel?: boolean | User$accessLevelArgs<ExtArgs>
     departmentRef?: boolean | User$departmentRefArgs<ExtArgs>
+    seafarer?: boolean | User$seafarerArgs<ExtArgs>
     roles?: boolean | User$rolesArgs<ExtArgs>
     ownedDocs?: boolean | User$ownedDocsArgs<ExtArgs>
     reportedIncidents?: boolean | User$reportedIncidentsArgs<ExtArgs>
@@ -14403,6 +14404,7 @@ export namespace Prisma {
     vessel?: boolean | User$vesselArgs<ExtArgs>
     accessLevel?: boolean | User$accessLevelArgs<ExtArgs>
     departmentRef?: boolean | User$departmentRefArgs<ExtArgs>
+    seafarer?: boolean | User$seafarerArgs<ExtArgs>
     roles?: boolean | User$rolesArgs<ExtArgs>
     ownedDocs?: boolean | User$ownedDocsArgs<ExtArgs>
     reportedIncidents?: boolean | User$reportedIncidentsArgs<ExtArgs>
@@ -14434,6 +14436,7 @@ export namespace Prisma {
       vessel: Prisma.$VesselPayload<ExtArgs> | null
       accessLevel: Prisma.$AccessLevelPayload<ExtArgs> | null
       departmentRef: Prisma.$DepartmentPayload<ExtArgs> | null
+      seafarer: Prisma.$SeafarerPayload<ExtArgs> | null
       roles: Prisma.$UserRolePayload<ExtArgs>[]
       ownedDocs: Prisma.$SmsDocumentPayload<ExtArgs>[]
       reportedIncidents: Prisma.$IncidentPayload<ExtArgs>[]
@@ -14879,6 +14882,7 @@ export namespace Prisma {
     vessel<T extends User$vesselArgs<ExtArgs> = {}>(args?: Subset<T, User$vesselArgs<ExtArgs>>): Prisma__VesselClient<$Result.GetResult<Prisma.$VesselPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     accessLevel<T extends User$accessLevelArgs<ExtArgs> = {}>(args?: Subset<T, User$accessLevelArgs<ExtArgs>>): Prisma__AccessLevelClient<$Result.GetResult<Prisma.$AccessLevelPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     departmentRef<T extends User$departmentRefArgs<ExtArgs> = {}>(args?: Subset<T, User$departmentRefArgs<ExtArgs>>): Prisma__DepartmentClient<$Result.GetResult<Prisma.$DepartmentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    seafarer<T extends User$seafarerArgs<ExtArgs> = {}>(args?: Subset<T, User$seafarerArgs<ExtArgs>>): Prisma__SeafarerClient<$Result.GetResult<Prisma.$SeafarerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     roles<T extends User$rolesArgs<ExtArgs> = {}>(args?: Subset<T, User$rolesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserRolePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     ownedDocs<T extends User$ownedDocsArgs<ExtArgs> = {}>(args?: Subset<T, User$ownedDocsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SmsDocumentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     reportedIncidents<T extends User$reportedIncidentsArgs<ExtArgs> = {}>(args?: Subset<T, User$reportedIncidentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IncidentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -15403,6 +15407,25 @@ export namespace Prisma {
      */
     include?: DepartmentInclude<ExtArgs> | null
     where?: DepartmentWhereInput
+  }
+
+  /**
+   * User.seafarer
+   */
+  export type User$seafarerArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Seafarer
+     */
+    select?: SeafarerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Seafarer
+     */
+    omit?: SeafarerOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SeafarerInclude<ExtArgs> | null
+    where?: SeafarerWhereInput
   }
 
   /**
@@ -113405,6 +113428,7 @@ export namespace Prisma {
     active: boolean | null
     redactedAt: Date | null
     redactedBy: string | null
+    userId: string | null
     createdAt: Date | null
     updatedAt: Date | null
     createdBy: string | null
@@ -113431,6 +113455,7 @@ export namespace Prisma {
     active: boolean | null
     redactedAt: Date | null
     redactedBy: string | null
+    userId: string | null
     createdAt: Date | null
     updatedAt: Date | null
     createdBy: string | null
@@ -113457,6 +113482,7 @@ export namespace Prisma {
     active: number
     redactedAt: number
     redactedBy: number
+    userId: number
     createdAt: number
     updatedAt: number
     createdBy: number
@@ -113485,6 +113511,7 @@ export namespace Prisma {
     active?: true
     redactedAt?: true
     redactedBy?: true
+    userId?: true
     createdAt?: true
     updatedAt?: true
     createdBy?: true
@@ -113511,6 +113538,7 @@ export namespace Prisma {
     active?: true
     redactedAt?: true
     redactedBy?: true
+    userId?: true
     createdAt?: true
     updatedAt?: true
     createdBy?: true
@@ -113537,6 +113565,7 @@ export namespace Prisma {
     active?: true
     redactedAt?: true
     redactedBy?: true
+    userId?: true
     createdAt?: true
     updatedAt?: true
     createdBy?: true
@@ -113636,6 +113665,7 @@ export namespace Prisma {
     active: boolean
     redactedAt: Date | null
     redactedBy: string | null
+    userId: string | null
     createdAt: Date
     updatedAt: Date
     createdBy: string | null
@@ -113679,6 +113709,7 @@ export namespace Prisma {
     active?: boolean
     redactedAt?: boolean
     redactedBy?: boolean
+    userId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     createdBy?: boolean
@@ -113686,6 +113717,7 @@ export namespace Prisma {
     deletedAt?: boolean
     deletedBy?: boolean
     company?: boolean | CompanyDefaultArgs<ExtArgs>
+    user?: boolean | Seafarer$userArgs<ExtArgs>
     assignments?: boolean | Seafarer$assignmentsArgs<ExtArgs>
     _count?: boolean | SeafarerCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["seafarer"]>
@@ -113708,6 +113740,7 @@ export namespace Prisma {
     active?: boolean
     redactedAt?: boolean
     redactedBy?: boolean
+    userId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     createdBy?: boolean
@@ -113715,6 +113748,7 @@ export namespace Prisma {
     deletedAt?: boolean
     deletedBy?: boolean
     company?: boolean | CompanyDefaultArgs<ExtArgs>
+    user?: boolean | Seafarer$userArgs<ExtArgs>
   }, ExtArgs["result"]["seafarer"]>
 
   export type SeafarerSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -113735,6 +113769,7 @@ export namespace Prisma {
     active?: boolean
     redactedAt?: boolean
     redactedBy?: boolean
+    userId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     createdBy?: boolean
@@ -113742,6 +113777,7 @@ export namespace Prisma {
     deletedAt?: boolean
     deletedBy?: boolean
     company?: boolean | CompanyDefaultArgs<ExtArgs>
+    user?: boolean | Seafarer$userArgs<ExtArgs>
   }, ExtArgs["result"]["seafarer"]>
 
   export type SeafarerSelectScalar = {
@@ -113762,6 +113798,7 @@ export namespace Prisma {
     active?: boolean
     redactedAt?: boolean
     redactedBy?: boolean
+    userId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     createdBy?: boolean
@@ -113770,23 +113807,27 @@ export namespace Prisma {
     deletedBy?: boolean
   }
 
-  export type SeafarerOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "companyId" | "crewCode" | "lastName" | "firstName" | "middleName" | "suffix" | "nationality" | "dateOfBirth" | "contactPhone" | "contactEmail" | "nextOfKinName" | "nextOfKinRelationship" | "nextOfKinPhone" | "active" | "redactedAt" | "redactedBy" | "createdAt" | "updatedAt" | "createdBy" | "updatedBy" | "deletedAt" | "deletedBy", ExtArgs["result"]["seafarer"]>
+  export type SeafarerOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "companyId" | "crewCode" | "lastName" | "firstName" | "middleName" | "suffix" | "nationality" | "dateOfBirth" | "contactPhone" | "contactEmail" | "nextOfKinName" | "nextOfKinRelationship" | "nextOfKinPhone" | "active" | "redactedAt" | "redactedBy" | "userId" | "createdAt" | "updatedAt" | "createdBy" | "updatedBy" | "deletedAt" | "deletedBy", ExtArgs["result"]["seafarer"]>
   export type SeafarerInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     company?: boolean | CompanyDefaultArgs<ExtArgs>
+    user?: boolean | Seafarer$userArgs<ExtArgs>
     assignments?: boolean | Seafarer$assignmentsArgs<ExtArgs>
     _count?: boolean | SeafarerCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type SeafarerIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     company?: boolean | CompanyDefaultArgs<ExtArgs>
+    user?: boolean | Seafarer$userArgs<ExtArgs>
   }
   export type SeafarerIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     company?: boolean | CompanyDefaultArgs<ExtArgs>
+    user?: boolean | Seafarer$userArgs<ExtArgs>
   }
 
   export type $SeafarerPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Seafarer"
     objects: {
       company: Prisma.$CompanyPayload<ExtArgs>
+      user: Prisma.$UserPayload<ExtArgs> | null
       assignments: Prisma.$CrewAssignmentPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -113853,6 +113894,16 @@ export namespace Prisma {
        */
       redactedAt: Date | null
       redactedBy: string | null
+      /**
+       * ── Crew ↔ login link (ADDITIVE, nullable) ──
+       * The login account that IS this seafarer, if one exists. One-to-one and
+       * OPTIONAL on both sides: a seafarer may have no login (most do not), and a
+       * login may have no crew record. `@unique` makes it one-to-one — a given
+       * User can be the login of at most one Seafarer. Nullable and unbackfilled,
+       * so no existing row is affected. The office links/creates the login from
+       * the seafarer record; see features/crewing/link-actions.ts.
+       */
+      userId: string | null
       createdAt: Date
       updatedAt: Date
       createdBy: string | null
@@ -114254,6 +114305,7 @@ export namespace Prisma {
   export interface Prisma__SeafarerClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     company<T extends CompanyDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CompanyDefaultArgs<ExtArgs>>): Prisma__CompanyClient<$Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    user<T extends Seafarer$userArgs<ExtArgs> = {}>(args?: Subset<T, Seafarer$userArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     assignments<T extends Seafarer$assignmentsArgs<ExtArgs> = {}>(args?: Subset<T, Seafarer$assignmentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CrewAssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -114301,6 +114353,7 @@ export namespace Prisma {
     readonly active: FieldRef<"Seafarer", 'Boolean'>
     readonly redactedAt: FieldRef<"Seafarer", 'DateTime'>
     readonly redactedBy: FieldRef<"Seafarer", 'String'>
+    readonly userId: FieldRef<"Seafarer", 'String'>
     readonly createdAt: FieldRef<"Seafarer", 'DateTime'>
     readonly updatedAt: FieldRef<"Seafarer", 'DateTime'>
     readonly createdBy: FieldRef<"Seafarer", 'String'>
@@ -114700,6 +114753,25 @@ export namespace Prisma {
      * Limit how many Seafarers to delete.
      */
     limit?: number
+  }
+
+  /**
+   * Seafarer.user
+   */
+  export type Seafarer$userArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
   }
 
   /**
@@ -117922,6 +117994,7 @@ export namespace Prisma {
     active: 'active',
     redactedAt: 'redactedAt',
     redactedBy: 'redactedBy',
+    userId: 'userId',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
     createdBy: 'createdBy',
@@ -119356,6 +119429,7 @@ export namespace Prisma {
     vessel?: XOR<VesselNullableScalarRelationFilter, VesselWhereInput> | null
     accessLevel?: XOR<AccessLevelNullableScalarRelationFilter, AccessLevelWhereInput> | null
     departmentRef?: XOR<DepartmentNullableScalarRelationFilter, DepartmentWhereInput> | null
+    seafarer?: XOR<SeafarerNullableScalarRelationFilter, SeafarerWhereInput> | null
     roles?: UserRoleListRelationFilter
     ownedDocs?: SmsDocumentListRelationFilter
     reportedIncidents?: IncidentListRelationFilter
@@ -119408,6 +119482,7 @@ export namespace Prisma {
     vessel?: VesselOrderByWithRelationInput
     accessLevel?: AccessLevelOrderByWithRelationInput
     departmentRef?: DepartmentOrderByWithRelationInput
+    seafarer?: SeafarerOrderByWithRelationInput
     roles?: UserRoleOrderByRelationAggregateInput
     ownedDocs?: SmsDocumentOrderByRelationAggregateInput
     reportedIncidents?: IncidentOrderByRelationAggregateInput
@@ -119463,6 +119538,7 @@ export namespace Prisma {
     vessel?: XOR<VesselNullableScalarRelationFilter, VesselWhereInput> | null
     accessLevel?: XOR<AccessLevelNullableScalarRelationFilter, AccessLevelWhereInput> | null
     departmentRef?: XOR<DepartmentNullableScalarRelationFilter, DepartmentWhereInput> | null
+    seafarer?: XOR<SeafarerNullableScalarRelationFilter, SeafarerWhereInput> | null
     roles?: UserRoleListRelationFilter
     ownedDocs?: SmsDocumentListRelationFilter
     reportedIncidents?: IncidentListRelationFilter
@@ -128549,6 +128625,7 @@ export namespace Prisma {
     active?: BoolFilter<"Seafarer"> | boolean
     redactedAt?: DateTimeNullableFilter<"Seafarer"> | Date | string | null
     redactedBy?: StringNullableFilter<"Seafarer"> | string | null
+    userId?: StringNullableFilter<"Seafarer"> | string | null
     createdAt?: DateTimeFilter<"Seafarer"> | Date | string
     updatedAt?: DateTimeFilter<"Seafarer"> | Date | string
     createdBy?: StringNullableFilter<"Seafarer"> | string | null
@@ -128556,6 +128633,7 @@ export namespace Prisma {
     deletedAt?: DateTimeNullableFilter<"Seafarer"> | Date | string | null
     deletedBy?: StringNullableFilter<"Seafarer"> | string | null
     company?: XOR<CompanyScalarRelationFilter, CompanyWhereInput>
+    user?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     assignments?: CrewAssignmentListRelationFilter
   }
 
@@ -128577,6 +128655,7 @@ export namespace Prisma {
     active?: SortOrder
     redactedAt?: SortOrderInput | SortOrder
     redactedBy?: SortOrderInput | SortOrder
+    userId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     createdBy?: SortOrderInput | SortOrder
@@ -128584,11 +128663,13 @@ export namespace Prisma {
     deletedAt?: SortOrderInput | SortOrder
     deletedBy?: SortOrderInput | SortOrder
     company?: CompanyOrderByWithRelationInput
+    user?: UserOrderByWithRelationInput
     assignments?: CrewAssignmentOrderByRelationAggregateInput
   }
 
   export type SeafarerWhereUniqueInput = Prisma.AtLeast<{
     id?: string
+    userId?: string
     AND?: SeafarerWhereInput | SeafarerWhereInput[]
     OR?: SeafarerWhereInput[]
     NOT?: SeafarerWhereInput | SeafarerWhereInput[]
@@ -128615,8 +128696,9 @@ export namespace Prisma {
     deletedAt?: DateTimeNullableFilter<"Seafarer"> | Date | string | null
     deletedBy?: StringNullableFilter<"Seafarer"> | string | null
     company?: XOR<CompanyScalarRelationFilter, CompanyWhereInput>
+    user?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     assignments?: CrewAssignmentListRelationFilter
-  }, "id">
+  }, "id" | "userId">
 
   export type SeafarerOrderByWithAggregationInput = {
     id?: SortOrder
@@ -128636,6 +128718,7 @@ export namespace Prisma {
     active?: SortOrder
     redactedAt?: SortOrderInput | SortOrder
     redactedBy?: SortOrderInput | SortOrder
+    userId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     createdBy?: SortOrderInput | SortOrder
@@ -128668,6 +128751,7 @@ export namespace Prisma {
     active?: BoolWithAggregatesFilter<"Seafarer"> | boolean
     redactedAt?: DateTimeNullableWithAggregatesFilter<"Seafarer"> | Date | string | null
     redactedBy?: StringNullableWithAggregatesFilter<"Seafarer"> | string | null
+    userId?: StringNullableWithAggregatesFilter<"Seafarer"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Seafarer"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Seafarer"> | Date | string
     createdBy?: StringNullableWithAggregatesFilter<"Seafarer"> | string | null
@@ -129185,6 +129269,7 @@ export namespace Prisma {
     vessel?: VesselCreateNestedOneWithoutUsersInput
     accessLevel?: AccessLevelCreateNestedOneWithoutUsersInput
     departmentRef?: DepartmentCreateNestedOneWithoutUsersInput
+    seafarer?: SeafarerCreateNestedOneWithoutUserInput
     roles?: UserRoleCreateNestedManyWithoutUserInput
     ownedDocs?: SmsDocumentCreateNestedManyWithoutOwnerInput
     reportedIncidents?: IncidentCreateNestedManyWithoutReportedByInput
@@ -129233,6 +129318,7 @@ export namespace Prisma {
     updatedBy?: string | null
     deletedAt?: Date | string | null
     deletedBy?: string | null
+    seafarer?: SeafarerUncheckedCreateNestedOneWithoutUserInput
     roles?: UserRoleUncheckedCreateNestedManyWithoutUserInput
     ownedDocs?: SmsDocumentUncheckedCreateNestedManyWithoutOwnerInput
     reportedIncidents?: IncidentUncheckedCreateNestedManyWithoutReportedByInput
@@ -129281,6 +129367,7 @@ export namespace Prisma {
     vessel?: VesselUpdateOneWithoutUsersNestedInput
     accessLevel?: AccessLevelUpdateOneWithoutUsersNestedInput
     departmentRef?: DepartmentUpdateOneWithoutUsersNestedInput
+    seafarer?: SeafarerUpdateOneWithoutUserNestedInput
     roles?: UserRoleUpdateManyWithoutUserNestedInput
     ownedDocs?: SmsDocumentUpdateManyWithoutOwnerNestedInput
     reportedIncidents?: IncidentUpdateManyWithoutReportedByNestedInput
@@ -129329,6 +129416,7 @@ export namespace Prisma {
     updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    seafarer?: SeafarerUncheckedUpdateOneWithoutUserNestedInput
     roles?: UserRoleUncheckedUpdateManyWithoutUserNestedInput
     ownedDocs?: SmsDocumentUncheckedUpdateManyWithoutOwnerNestedInput
     reportedIncidents?: IncidentUncheckedUpdateManyWithoutReportedByNestedInput
@@ -139902,6 +139990,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     deletedBy?: string | null
     company: CompanyCreateNestedOneWithoutSeafarersInput
+    user?: UserCreateNestedOneWithoutSeafarerInput
     assignments?: CrewAssignmentCreateNestedManyWithoutSeafarerInput
   }
 
@@ -139923,6 +140012,7 @@ export namespace Prisma {
     active?: boolean
     redactedAt?: Date | string | null
     redactedBy?: string | null
+    userId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -139956,6 +140046,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     company?: CompanyUpdateOneRequiredWithoutSeafarersNestedInput
+    user?: UserUpdateOneWithoutSeafarerNestedInput
     assignments?: CrewAssignmentUpdateManyWithoutSeafarerNestedInput
   }
 
@@ -139977,6 +140068,7 @@ export namespace Prisma {
     active?: BoolFieldUpdateOperationsInput | boolean
     redactedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     redactedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -140004,6 +140096,7 @@ export namespace Prisma {
     active?: boolean
     redactedAt?: Date | string | null
     redactedBy?: string | null
+    userId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -140055,6 +140148,7 @@ export namespace Prisma {
     active?: BoolFieldUpdateOperationsInput | boolean
     redactedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     redactedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -140985,6 +141079,11 @@ export namespace Prisma {
   export type DepartmentNullableScalarRelationFilter = {
     is?: DepartmentWhereInput | null
     isNot?: DepartmentWhereInput | null
+  }
+
+  export type SeafarerNullableScalarRelationFilter = {
+    is?: SeafarerWhereInput | null
+    isNot?: SeafarerWhereInput | null
   }
 
   export type UserRoleListRelationFilter = {
@@ -148118,6 +148217,7 @@ export namespace Prisma {
     active?: SortOrder
     redactedAt?: SortOrder
     redactedBy?: SortOrder
+    userId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     createdBy?: SortOrder
@@ -148144,6 +148244,7 @@ export namespace Prisma {
     active?: SortOrder
     redactedAt?: SortOrder
     redactedBy?: SortOrder
+    userId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     createdBy?: SortOrder
@@ -148170,6 +148271,7 @@ export namespace Prisma {
     active?: SortOrder
     redactedAt?: SortOrder
     redactedBy?: SortOrder
+    userId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     createdBy?: SortOrder
@@ -150328,6 +150430,12 @@ export namespace Prisma {
     connect?: DepartmentWhereUniqueInput
   }
 
+  export type SeafarerCreateNestedOneWithoutUserInput = {
+    create?: XOR<SeafarerCreateWithoutUserInput, SeafarerUncheckedCreateWithoutUserInput>
+    connectOrCreate?: SeafarerCreateOrConnectWithoutUserInput
+    connect?: SeafarerWhereUniqueInput
+  }
+
   export type UserRoleCreateNestedManyWithoutUserInput = {
     create?: XOR<UserRoleCreateWithoutUserInput, UserRoleUncheckedCreateWithoutUserInput> | UserRoleCreateWithoutUserInput[] | UserRoleUncheckedCreateWithoutUserInput[]
     connectOrCreate?: UserRoleCreateOrConnectWithoutUserInput | UserRoleCreateOrConnectWithoutUserInput[]
@@ -150389,6 +150497,12 @@ export namespace Prisma {
     connectOrCreate?: SireObservationCommentCreateOrConnectWithoutAuthorInput | SireObservationCommentCreateOrConnectWithoutAuthorInput[]
     createMany?: SireObservationCommentCreateManyAuthorInputEnvelope
     connect?: SireObservationCommentWhereUniqueInput | SireObservationCommentWhereUniqueInput[]
+  }
+
+  export type SeafarerUncheckedCreateNestedOneWithoutUserInput = {
+    create?: XOR<SeafarerCreateWithoutUserInput, SeafarerUncheckedCreateWithoutUserInput>
+    connectOrCreate?: SeafarerCreateOrConnectWithoutUserInput
+    connect?: SeafarerWhereUniqueInput
   }
 
   export type UserRoleUncheckedCreateNestedManyWithoutUserInput = {
@@ -150502,6 +150616,16 @@ export namespace Prisma {
     delete?: DepartmentWhereInput | boolean
     connect?: DepartmentWhereUniqueInput
     update?: XOR<XOR<DepartmentUpdateToOneWithWhereWithoutUsersInput, DepartmentUpdateWithoutUsersInput>, DepartmentUncheckedUpdateWithoutUsersInput>
+  }
+
+  export type SeafarerUpdateOneWithoutUserNestedInput = {
+    create?: XOR<SeafarerCreateWithoutUserInput, SeafarerUncheckedCreateWithoutUserInput>
+    connectOrCreate?: SeafarerCreateOrConnectWithoutUserInput
+    upsert?: SeafarerUpsertWithoutUserInput
+    disconnect?: SeafarerWhereInput | boolean
+    delete?: SeafarerWhereInput | boolean
+    connect?: SeafarerWhereUniqueInput
+    update?: XOR<XOR<SeafarerUpdateToOneWithWhereWithoutUserInput, SeafarerUpdateWithoutUserInput>, SeafarerUncheckedUpdateWithoutUserInput>
   }
 
   export type UserRoleUpdateManyWithoutUserNestedInput = {
@@ -150628,6 +150752,16 @@ export namespace Prisma {
     update?: SireObservationCommentUpdateWithWhereUniqueWithoutAuthorInput | SireObservationCommentUpdateWithWhereUniqueWithoutAuthorInput[]
     updateMany?: SireObservationCommentUpdateManyWithWhereWithoutAuthorInput | SireObservationCommentUpdateManyWithWhereWithoutAuthorInput[]
     deleteMany?: SireObservationCommentScalarWhereInput | SireObservationCommentScalarWhereInput[]
+  }
+
+  export type SeafarerUncheckedUpdateOneWithoutUserNestedInput = {
+    create?: XOR<SeafarerCreateWithoutUserInput, SeafarerUncheckedCreateWithoutUserInput>
+    connectOrCreate?: SeafarerCreateOrConnectWithoutUserInput
+    upsert?: SeafarerUpsertWithoutUserInput
+    disconnect?: SeafarerWhereInput | boolean
+    delete?: SeafarerWhereInput | boolean
+    connect?: SeafarerWhereUniqueInput
+    update?: XOR<XOR<SeafarerUpdateToOneWithWhereWithoutUserInput, SeafarerUpdateWithoutUserInput>, SeafarerUncheckedUpdateWithoutUserInput>
   }
 
   export type UserRoleUncheckedUpdateManyWithoutUserNestedInput = {
@@ -155992,6 +156126,12 @@ export namespace Prisma {
     connect?: CompanyWhereUniqueInput
   }
 
+  export type UserCreateNestedOneWithoutSeafarerInput = {
+    create?: XOR<UserCreateWithoutSeafarerInput, UserUncheckedCreateWithoutSeafarerInput>
+    connectOrCreate?: UserCreateOrConnectWithoutSeafarerInput
+    connect?: UserWhereUniqueInput
+  }
+
   export type CrewAssignmentCreateNestedManyWithoutSeafarerInput = {
     create?: XOR<CrewAssignmentCreateWithoutSeafarerInput, CrewAssignmentUncheckedCreateWithoutSeafarerInput> | CrewAssignmentCreateWithoutSeafarerInput[] | CrewAssignmentUncheckedCreateWithoutSeafarerInput[]
     connectOrCreate?: CrewAssignmentCreateOrConnectWithoutSeafarerInput | CrewAssignmentCreateOrConnectWithoutSeafarerInput[]
@@ -156012,6 +156152,16 @@ export namespace Prisma {
     upsert?: CompanyUpsertWithoutSeafarersInput
     connect?: CompanyWhereUniqueInput
     update?: XOR<XOR<CompanyUpdateToOneWithWhereWithoutSeafarersInput, CompanyUpdateWithoutSeafarersInput>, CompanyUncheckedUpdateWithoutSeafarersInput>
+  }
+
+  export type UserUpdateOneWithoutSeafarerNestedInput = {
+    create?: XOR<UserCreateWithoutSeafarerInput, UserUncheckedCreateWithoutSeafarerInput>
+    connectOrCreate?: UserCreateOrConnectWithoutSeafarerInput
+    upsert?: UserUpsertWithoutSeafarerInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutSeafarerInput, UserUpdateWithoutSeafarerInput>, UserUncheckedUpdateWithoutSeafarerInput>
   }
 
   export type CrewAssignmentUpdateManyWithoutSeafarerNestedInput = {
@@ -157732,6 +157882,7 @@ export namespace Prisma {
     vessel?: VesselCreateNestedOneWithoutUsersInput
     accessLevel?: AccessLevelCreateNestedOneWithoutUsersInput
     departmentRef?: DepartmentCreateNestedOneWithoutUsersInput
+    seafarer?: SeafarerCreateNestedOneWithoutUserInput
     roles?: UserRoleCreateNestedManyWithoutUserInput
     ownedDocs?: SmsDocumentCreateNestedManyWithoutOwnerInput
     reportedIncidents?: IncidentCreateNestedManyWithoutReportedByInput
@@ -157779,6 +157930,7 @@ export namespace Prisma {
     updatedBy?: string | null
     deletedAt?: Date | string | null
     deletedBy?: string | null
+    seafarer?: SeafarerUncheckedCreateNestedOneWithoutUserInput
     roles?: UserRoleUncheckedCreateNestedManyWithoutUserInput
     ownedDocs?: SmsDocumentUncheckedCreateNestedManyWithoutOwnerInput
     reportedIncidents?: IncidentUncheckedCreateNestedManyWithoutReportedByInput
@@ -160319,6 +160471,7 @@ export namespace Prisma {
     updatedBy?: string | null
     deletedAt?: Date | string | null
     deletedBy?: string | null
+    user?: UserCreateNestedOneWithoutSeafarerInput
     assignments?: CrewAssignmentCreateNestedManyWithoutSeafarerInput
   }
 
@@ -160339,6 +160492,7 @@ export namespace Prisma {
     active?: boolean
     redactedAt?: Date | string | null
     redactedBy?: string | null
+    userId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -162367,6 +162521,7 @@ export namespace Prisma {
     active?: BoolFilter<"Seafarer"> | boolean
     redactedAt?: DateTimeNullableFilter<"Seafarer"> | Date | string | null
     redactedBy?: StringNullableFilter<"Seafarer"> | string | null
+    userId?: StringNullableFilter<"Seafarer"> | string | null
     createdAt?: DateTimeFilter<"Seafarer"> | Date | string
     updatedAt?: DateTimeFilter<"Seafarer"> | Date | string
     createdBy?: StringNullableFilter<"Seafarer"> | string | null
@@ -162804,6 +162959,65 @@ export namespace Prisma {
   export type DepartmentCreateOrConnectWithoutUsersInput = {
     where: DepartmentWhereUniqueInput
     create: XOR<DepartmentCreateWithoutUsersInput, DepartmentUncheckedCreateWithoutUsersInput>
+  }
+
+  export type SeafarerCreateWithoutUserInput = {
+    id?: string
+    crewCode?: string | null
+    lastName: string
+    firstName: string
+    middleName?: string | null
+    suffix?: string | null
+    nationality?: string | null
+    dateOfBirth?: Date | string | null
+    contactPhone?: string | null
+    contactEmail?: string | null
+    nextOfKinName?: string | null
+    nextOfKinRelationship?: string | null
+    nextOfKinPhone?: string | null
+    active?: boolean
+    redactedAt?: Date | string | null
+    redactedBy?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    company: CompanyCreateNestedOneWithoutSeafarersInput
+    assignments?: CrewAssignmentCreateNestedManyWithoutSeafarerInput
+  }
+
+  export type SeafarerUncheckedCreateWithoutUserInput = {
+    id?: string
+    companyId: string
+    crewCode?: string | null
+    lastName: string
+    firstName: string
+    middleName?: string | null
+    suffix?: string | null
+    nationality?: string | null
+    dateOfBirth?: Date | string | null
+    contactPhone?: string | null
+    contactEmail?: string | null
+    nextOfKinName?: string | null
+    nextOfKinRelationship?: string | null
+    nextOfKinPhone?: string | null
+    active?: boolean
+    redactedAt?: Date | string | null
+    redactedBy?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    assignments?: CrewAssignmentUncheckedCreateNestedManyWithoutSeafarerInput
+  }
+
+  export type SeafarerCreateOrConnectWithoutUserInput = {
+    where: SeafarerWhereUniqueInput
+    create: XOR<SeafarerCreateWithoutUserInput, SeafarerUncheckedCreateWithoutUserInput>
   }
 
   export type UserRoleCreateWithoutUserInput = {
@@ -163680,6 +163894,71 @@ export namespace Prisma {
     deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
+  export type SeafarerUpsertWithoutUserInput = {
+    update: XOR<SeafarerUpdateWithoutUserInput, SeafarerUncheckedUpdateWithoutUserInput>
+    create: XOR<SeafarerCreateWithoutUserInput, SeafarerUncheckedCreateWithoutUserInput>
+    where?: SeafarerWhereInput
+  }
+
+  export type SeafarerUpdateToOneWithWhereWithoutUserInput = {
+    where?: SeafarerWhereInput
+    data: XOR<SeafarerUpdateWithoutUserInput, SeafarerUncheckedUpdateWithoutUserInput>
+  }
+
+  export type SeafarerUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    crewCode?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    middleName?: NullableStringFieldUpdateOperationsInput | string | null
+    suffix?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
+    dateOfBirth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    contactPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    contactEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    nextOfKinName?: NullableStringFieldUpdateOperationsInput | string | null
+    nextOfKinRelationship?: NullableStringFieldUpdateOperationsInput | string | null
+    nextOfKinPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    active?: BoolFieldUpdateOperationsInput | boolean
+    redactedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    redactedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    company?: CompanyUpdateOneRequiredWithoutSeafarersNestedInput
+    assignments?: CrewAssignmentUpdateManyWithoutSeafarerNestedInput
+  }
+
+  export type SeafarerUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    crewCode?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    middleName?: NullableStringFieldUpdateOperationsInput | string | null
+    suffix?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
+    dateOfBirth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    contactPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    contactEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    nextOfKinName?: NullableStringFieldUpdateOperationsInput | string | null
+    nextOfKinRelationship?: NullableStringFieldUpdateOperationsInput | string | null
+    nextOfKinPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    active?: BoolFieldUpdateOperationsInput | boolean
+    redactedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    redactedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    assignments?: CrewAssignmentUncheckedUpdateManyWithoutSeafarerNestedInput
+  }
+
   export type UserRoleUpsertWithWhereUniqueWithoutUserInput = {
     where: UserRoleWhereUniqueInput
     update: XOR<UserRoleUpdateWithoutUserInput, UserRoleUncheckedUpdateWithoutUserInput>
@@ -164419,6 +164698,7 @@ export namespace Prisma {
     vessel?: VesselCreateNestedOneWithoutUsersInput
     accessLevel?: AccessLevelCreateNestedOneWithoutUsersInput
     departmentRef?: DepartmentCreateNestedOneWithoutUsersInput
+    seafarer?: SeafarerCreateNestedOneWithoutUserInput
     ownedDocs?: SmsDocumentCreateNestedManyWithoutOwnerInput
     reportedIncidents?: IncidentCreateNestedManyWithoutReportedByInput
     reportedNearMisses?: NearMissCreateNestedManyWithoutReportedByInput
@@ -164466,6 +164746,7 @@ export namespace Prisma {
     updatedBy?: string | null
     deletedAt?: Date | string | null
     deletedBy?: string | null
+    seafarer?: SeafarerUncheckedCreateNestedOneWithoutUserInput
     ownedDocs?: SmsDocumentUncheckedCreateNestedManyWithoutOwnerInput
     reportedIncidents?: IncidentUncheckedCreateNestedManyWithoutReportedByInput
     reportedNearMisses?: NearMissUncheckedCreateNestedManyWithoutReportedByInput
@@ -164556,6 +164837,7 @@ export namespace Prisma {
     vessel?: VesselUpdateOneWithoutUsersNestedInput
     accessLevel?: AccessLevelUpdateOneWithoutUsersNestedInput
     departmentRef?: DepartmentUpdateOneWithoutUsersNestedInput
+    seafarer?: SeafarerUpdateOneWithoutUserNestedInput
     ownedDocs?: SmsDocumentUpdateManyWithoutOwnerNestedInput
     reportedIncidents?: IncidentUpdateManyWithoutReportedByNestedInput
     reportedNearMisses?: NearMissUpdateManyWithoutReportedByNestedInput
@@ -164603,6 +164885,7 @@ export namespace Prisma {
     updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    seafarer?: SeafarerUncheckedUpdateOneWithoutUserNestedInput
     ownedDocs?: SmsDocumentUncheckedUpdateManyWithoutOwnerNestedInput
     reportedIncidents?: IncidentUncheckedUpdateManyWithoutReportedByNestedInput
     reportedNearMisses?: NearMissUncheckedUpdateManyWithoutReportedByNestedInput
@@ -164819,6 +165102,7 @@ export namespace Prisma {
     company: CompanyCreateNestedOneWithoutUsersInput
     vessel?: VesselCreateNestedOneWithoutUsersInput
     departmentRef?: DepartmentCreateNestedOneWithoutUsersInput
+    seafarer?: SeafarerCreateNestedOneWithoutUserInput
     roles?: UserRoleCreateNestedManyWithoutUserInput
     ownedDocs?: SmsDocumentCreateNestedManyWithoutOwnerInput
     reportedIncidents?: IncidentCreateNestedManyWithoutReportedByInput
@@ -164866,6 +165150,7 @@ export namespace Prisma {
     updatedBy?: string | null
     deletedAt?: Date | string | null
     deletedBy?: string | null
+    seafarer?: SeafarerUncheckedCreateNestedOneWithoutUserInput
     roles?: UserRoleUncheckedCreateNestedManyWithoutUserInput
     ownedDocs?: SmsDocumentUncheckedCreateNestedManyWithoutOwnerInput
     reportedIncidents?: IncidentUncheckedCreateNestedManyWithoutReportedByInput
@@ -165219,6 +165504,7 @@ export namespace Prisma {
     company: CompanyCreateNestedOneWithoutUsersInput
     vessel?: VesselCreateNestedOneWithoutUsersInput
     accessLevel?: AccessLevelCreateNestedOneWithoutUsersInput
+    seafarer?: SeafarerCreateNestedOneWithoutUserInput
     roles?: UserRoleCreateNestedManyWithoutUserInput
     ownedDocs?: SmsDocumentCreateNestedManyWithoutOwnerInput
     reportedIncidents?: IncidentCreateNestedManyWithoutReportedByInput
@@ -165266,6 +165552,7 @@ export namespace Prisma {
     updatedBy?: string | null
     deletedAt?: Date | string | null
     deletedBy?: string | null
+    seafarer?: SeafarerUncheckedCreateNestedOneWithoutUserInput
     roles?: UserRoleUncheckedCreateNestedManyWithoutUserInput
     ownedDocs?: SmsDocumentUncheckedCreateNestedManyWithoutOwnerInput
     reportedIncidents?: IncidentUncheckedCreateNestedManyWithoutReportedByInput
@@ -166881,6 +167168,7 @@ export namespace Prisma {
     company: CompanyCreateNestedOneWithoutUsersInput
     accessLevel?: AccessLevelCreateNestedOneWithoutUsersInput
     departmentRef?: DepartmentCreateNestedOneWithoutUsersInput
+    seafarer?: SeafarerCreateNestedOneWithoutUserInput
     roles?: UserRoleCreateNestedManyWithoutUserInput
     ownedDocs?: SmsDocumentCreateNestedManyWithoutOwnerInput
     reportedIncidents?: IncidentCreateNestedManyWithoutReportedByInput
@@ -166928,6 +167216,7 @@ export namespace Prisma {
     updatedBy?: string | null
     deletedAt?: Date | string | null
     deletedBy?: string | null
+    seafarer?: SeafarerUncheckedCreateNestedOneWithoutUserInput
     roles?: UserRoleUncheckedCreateNestedManyWithoutUserInput
     ownedDocs?: SmsDocumentUncheckedCreateNestedManyWithoutOwnerInput
     reportedIncidents?: IncidentUncheckedCreateNestedManyWithoutReportedByInput
@@ -168359,6 +168648,7 @@ export namespace Prisma {
     vessel?: VesselCreateNestedOneWithoutUsersInput
     accessLevel?: AccessLevelCreateNestedOneWithoutUsersInput
     departmentRef?: DepartmentCreateNestedOneWithoutUsersInput
+    seafarer?: SeafarerCreateNestedOneWithoutUserInput
     roles?: UserRoleCreateNestedManyWithoutUserInput
     ownedDocs?: SmsDocumentCreateNestedManyWithoutOwnerInput
     reportedIncidents?: IncidentCreateNestedManyWithoutReportedByInput
@@ -168406,6 +168696,7 @@ export namespace Prisma {
     updatedBy?: string | null
     deletedAt?: Date | string | null
     deletedBy?: string | null
+    seafarer?: SeafarerUncheckedCreateNestedOneWithoutUserInput
     roles?: UserRoleUncheckedCreateNestedManyWithoutUserInput
     ownedDocs?: SmsDocumentUncheckedCreateNestedManyWithoutOwnerInput
     reportedIncidents?: IncidentUncheckedCreateNestedManyWithoutReportedByInput
@@ -168469,6 +168760,7 @@ export namespace Prisma {
     vessel?: VesselUpdateOneWithoutUsersNestedInput
     accessLevel?: AccessLevelUpdateOneWithoutUsersNestedInput
     departmentRef?: DepartmentUpdateOneWithoutUsersNestedInput
+    seafarer?: SeafarerUpdateOneWithoutUserNestedInput
     roles?: UserRoleUpdateManyWithoutUserNestedInput
     ownedDocs?: SmsDocumentUpdateManyWithoutOwnerNestedInput
     reportedIncidents?: IncidentUpdateManyWithoutReportedByNestedInput
@@ -168516,6 +168808,7 @@ export namespace Prisma {
     updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    seafarer?: SeafarerUncheckedUpdateOneWithoutUserNestedInput
     roles?: UserRoleUncheckedUpdateManyWithoutUserNestedInput
     ownedDocs?: SmsDocumentUncheckedUpdateManyWithoutOwnerNestedInput
     reportedIncidents?: IncidentUncheckedUpdateManyWithoutReportedByNestedInput
@@ -169480,6 +169773,7 @@ export namespace Prisma {
     vessel?: VesselCreateNestedOneWithoutUsersInput
     accessLevel?: AccessLevelCreateNestedOneWithoutUsersInput
     departmentRef?: DepartmentCreateNestedOneWithoutUsersInput
+    seafarer?: SeafarerCreateNestedOneWithoutUserInput
     roles?: UserRoleCreateNestedManyWithoutUserInput
     reportedIncidents?: IncidentCreateNestedManyWithoutReportedByInput
     reportedNearMisses?: NearMissCreateNestedManyWithoutReportedByInput
@@ -169527,6 +169821,7 @@ export namespace Prisma {
     updatedBy?: string | null
     deletedAt?: Date | string | null
     deletedBy?: string | null
+    seafarer?: SeafarerUncheckedCreateNestedOneWithoutUserInput
     roles?: UserRoleUncheckedCreateNestedManyWithoutUserInput
     reportedIncidents?: IncidentUncheckedCreateNestedManyWithoutReportedByInput
     reportedNearMisses?: NearMissUncheckedCreateNestedManyWithoutReportedByInput
@@ -169993,6 +170288,7 @@ export namespace Prisma {
     vessel?: VesselUpdateOneWithoutUsersNestedInput
     accessLevel?: AccessLevelUpdateOneWithoutUsersNestedInput
     departmentRef?: DepartmentUpdateOneWithoutUsersNestedInput
+    seafarer?: SeafarerUpdateOneWithoutUserNestedInput
     roles?: UserRoleUpdateManyWithoutUserNestedInput
     reportedIncidents?: IncidentUpdateManyWithoutReportedByNestedInput
     reportedNearMisses?: NearMissUpdateManyWithoutReportedByNestedInput
@@ -170040,6 +170336,7 @@ export namespace Prisma {
     updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    seafarer?: SeafarerUncheckedUpdateOneWithoutUserNestedInput
     roles?: UserRoleUncheckedUpdateManyWithoutUserNestedInput
     reportedIncidents?: IncidentUncheckedUpdateManyWithoutReportedByNestedInput
     reportedNearMisses?: NearMissUncheckedUpdateManyWithoutReportedByNestedInput
@@ -170888,6 +171185,7 @@ export namespace Prisma {
     vessel?: VesselCreateNestedOneWithoutUsersInput
     accessLevel?: AccessLevelCreateNestedOneWithoutUsersInput
     departmentRef?: DepartmentCreateNestedOneWithoutUsersInput
+    seafarer?: SeafarerCreateNestedOneWithoutUserInput
     roles?: UserRoleCreateNestedManyWithoutUserInput
     ownedDocs?: SmsDocumentCreateNestedManyWithoutOwnerInput
     reportedNearMisses?: NearMissCreateNestedManyWithoutReportedByInput
@@ -170935,6 +171233,7 @@ export namespace Prisma {
     updatedBy?: string | null
     deletedAt?: Date | string | null
     deletedBy?: string | null
+    seafarer?: SeafarerUncheckedCreateNestedOneWithoutUserInput
     roles?: UserRoleUncheckedCreateNestedManyWithoutUserInput
     ownedDocs?: SmsDocumentUncheckedCreateNestedManyWithoutOwnerInput
     reportedNearMisses?: NearMissUncheckedCreateNestedManyWithoutReportedByInput
@@ -171382,6 +171681,7 @@ export namespace Prisma {
     vessel?: VesselUpdateOneWithoutUsersNestedInput
     accessLevel?: AccessLevelUpdateOneWithoutUsersNestedInput
     departmentRef?: DepartmentUpdateOneWithoutUsersNestedInput
+    seafarer?: SeafarerUpdateOneWithoutUserNestedInput
     roles?: UserRoleUpdateManyWithoutUserNestedInput
     ownedDocs?: SmsDocumentUpdateManyWithoutOwnerNestedInput
     reportedNearMisses?: NearMissUpdateManyWithoutReportedByNestedInput
@@ -171429,6 +171729,7 @@ export namespace Prisma {
     updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    seafarer?: SeafarerUncheckedUpdateOneWithoutUserNestedInput
     roles?: UserRoleUncheckedUpdateManyWithoutUserNestedInput
     ownedDocs?: SmsDocumentUncheckedUpdateManyWithoutOwnerNestedInput
     reportedNearMisses?: NearMissUncheckedUpdateManyWithoutReportedByNestedInput
@@ -172110,6 +172411,7 @@ export namespace Prisma {
     vessel?: VesselCreateNestedOneWithoutUsersInput
     accessLevel?: AccessLevelCreateNestedOneWithoutUsersInput
     departmentRef?: DepartmentCreateNestedOneWithoutUsersInput
+    seafarer?: SeafarerCreateNestedOneWithoutUserInput
     roles?: UserRoleCreateNestedManyWithoutUserInput
     ownedDocs?: SmsDocumentCreateNestedManyWithoutOwnerInput
     reportedIncidents?: IncidentCreateNestedManyWithoutReportedByInput
@@ -172157,6 +172459,7 @@ export namespace Prisma {
     updatedBy?: string | null
     deletedAt?: Date | string | null
     deletedBy?: string | null
+    seafarer?: SeafarerUncheckedCreateNestedOneWithoutUserInput
     roles?: UserRoleUncheckedCreateNestedManyWithoutUserInput
     ownedDocs?: SmsDocumentUncheckedCreateNestedManyWithoutOwnerInput
     reportedIncidents?: IncidentUncheckedCreateNestedManyWithoutReportedByInput
@@ -172550,6 +172853,7 @@ export namespace Prisma {
     vessel?: VesselUpdateOneWithoutUsersNestedInput
     accessLevel?: AccessLevelUpdateOneWithoutUsersNestedInput
     departmentRef?: DepartmentUpdateOneWithoutUsersNestedInput
+    seafarer?: SeafarerUpdateOneWithoutUserNestedInput
     roles?: UserRoleUpdateManyWithoutUserNestedInput
     ownedDocs?: SmsDocumentUpdateManyWithoutOwnerNestedInput
     reportedIncidents?: IncidentUpdateManyWithoutReportedByNestedInput
@@ -172597,6 +172901,7 @@ export namespace Prisma {
     updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    seafarer?: SeafarerUncheckedUpdateOneWithoutUserNestedInput
     roles?: UserRoleUncheckedUpdateManyWithoutUserNestedInput
     ownedDocs?: SmsDocumentUncheckedUpdateManyWithoutOwnerNestedInput
     reportedIncidents?: IncidentUncheckedUpdateManyWithoutReportedByNestedInput
@@ -172962,6 +173267,7 @@ export namespace Prisma {
     vessel?: VesselCreateNestedOneWithoutUsersInput
     accessLevel?: AccessLevelCreateNestedOneWithoutUsersInput
     departmentRef?: DepartmentCreateNestedOneWithoutUsersInput
+    seafarer?: SeafarerCreateNestedOneWithoutUserInput
     roles?: UserRoleCreateNestedManyWithoutUserInput
     ownedDocs?: SmsDocumentCreateNestedManyWithoutOwnerInput
     reportedIncidents?: IncidentCreateNestedManyWithoutReportedByInput
@@ -173009,6 +173315,7 @@ export namespace Prisma {
     updatedBy?: string | null
     deletedAt?: Date | string | null
     deletedBy?: string | null
+    seafarer?: SeafarerUncheckedCreateNestedOneWithoutUserInput
     roles?: UserRoleUncheckedCreateNestedManyWithoutUserInput
     ownedDocs?: SmsDocumentUncheckedCreateNestedManyWithoutOwnerInput
     reportedIncidents?: IncidentUncheckedCreateNestedManyWithoutReportedByInput
@@ -173402,6 +173709,7 @@ export namespace Prisma {
     vessel?: VesselUpdateOneWithoutUsersNestedInput
     accessLevel?: AccessLevelUpdateOneWithoutUsersNestedInput
     departmentRef?: DepartmentUpdateOneWithoutUsersNestedInput
+    seafarer?: SeafarerUpdateOneWithoutUserNestedInput
     roles?: UserRoleUpdateManyWithoutUserNestedInput
     ownedDocs?: SmsDocumentUpdateManyWithoutOwnerNestedInput
     reportedIncidents?: IncidentUpdateManyWithoutReportedByNestedInput
@@ -173449,6 +173757,7 @@ export namespace Prisma {
     updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    seafarer?: SeafarerUncheckedUpdateOneWithoutUserNestedInput
     roles?: UserRoleUncheckedUpdateManyWithoutUserNestedInput
     ownedDocs?: SmsDocumentUncheckedUpdateManyWithoutOwnerNestedInput
     reportedIncidents?: IncidentUncheckedUpdateManyWithoutReportedByNestedInput
@@ -174273,6 +174582,7 @@ export namespace Prisma {
     vessel?: VesselCreateNestedOneWithoutUsersInput
     accessLevel?: AccessLevelCreateNestedOneWithoutUsersInput
     departmentRef?: DepartmentCreateNestedOneWithoutUsersInput
+    seafarer?: SeafarerCreateNestedOneWithoutUserInput
     roles?: UserRoleCreateNestedManyWithoutUserInput
     ownedDocs?: SmsDocumentCreateNestedManyWithoutOwnerInput
     reportedIncidents?: IncidentCreateNestedManyWithoutReportedByInput
@@ -174320,6 +174630,7 @@ export namespace Prisma {
     updatedBy?: string | null
     deletedAt?: Date | string | null
     deletedBy?: string | null
+    seafarer?: SeafarerUncheckedCreateNestedOneWithoutUserInput
     roles?: UserRoleUncheckedCreateNestedManyWithoutUserInput
     ownedDocs?: SmsDocumentUncheckedCreateNestedManyWithoutOwnerInput
     reportedIncidents?: IncidentUncheckedCreateNestedManyWithoutReportedByInput
@@ -174372,6 +174683,7 @@ export namespace Prisma {
     vessel?: VesselCreateNestedOneWithoutUsersInput
     accessLevel?: AccessLevelCreateNestedOneWithoutUsersInput
     departmentRef?: DepartmentCreateNestedOneWithoutUsersInput
+    seafarer?: SeafarerCreateNestedOneWithoutUserInput
     roles?: UserRoleCreateNestedManyWithoutUserInput
     ownedDocs?: SmsDocumentCreateNestedManyWithoutOwnerInput
     reportedIncidents?: IncidentCreateNestedManyWithoutReportedByInput
@@ -174419,6 +174731,7 @@ export namespace Prisma {
     updatedBy?: string | null
     deletedAt?: Date | string | null
     deletedBy?: string | null
+    seafarer?: SeafarerUncheckedCreateNestedOneWithoutUserInput
     roles?: UserRoleUncheckedCreateNestedManyWithoutUserInput
     ownedDocs?: SmsDocumentUncheckedCreateNestedManyWithoutOwnerInput
     reportedIncidents?: IncidentUncheckedCreateNestedManyWithoutReportedByInput
@@ -174565,6 +174878,7 @@ export namespace Prisma {
     vessel?: VesselUpdateOneWithoutUsersNestedInput
     accessLevel?: AccessLevelUpdateOneWithoutUsersNestedInput
     departmentRef?: DepartmentUpdateOneWithoutUsersNestedInput
+    seafarer?: SeafarerUpdateOneWithoutUserNestedInput
     roles?: UserRoleUpdateManyWithoutUserNestedInput
     ownedDocs?: SmsDocumentUpdateManyWithoutOwnerNestedInput
     reportedIncidents?: IncidentUpdateManyWithoutReportedByNestedInput
@@ -174612,6 +174926,7 @@ export namespace Prisma {
     updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    seafarer?: SeafarerUncheckedUpdateOneWithoutUserNestedInput
     roles?: UserRoleUncheckedUpdateManyWithoutUserNestedInput
     ownedDocs?: SmsDocumentUncheckedUpdateManyWithoutOwnerNestedInput
     reportedIncidents?: IncidentUncheckedUpdateManyWithoutReportedByNestedInput
@@ -174670,6 +174985,7 @@ export namespace Prisma {
     vessel?: VesselUpdateOneWithoutUsersNestedInput
     accessLevel?: AccessLevelUpdateOneWithoutUsersNestedInput
     departmentRef?: DepartmentUpdateOneWithoutUsersNestedInput
+    seafarer?: SeafarerUpdateOneWithoutUserNestedInput
     roles?: UserRoleUpdateManyWithoutUserNestedInput
     ownedDocs?: SmsDocumentUpdateManyWithoutOwnerNestedInput
     reportedIncidents?: IncidentUpdateManyWithoutReportedByNestedInput
@@ -174717,6 +175033,7 @@ export namespace Prisma {
     updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    seafarer?: SeafarerUncheckedUpdateOneWithoutUserNestedInput
     roles?: UserRoleUncheckedUpdateManyWithoutUserNestedInput
     ownedDocs?: SmsDocumentUncheckedUpdateManyWithoutOwnerNestedInput
     reportedIncidents?: IncidentUncheckedUpdateManyWithoutReportedByNestedInput
@@ -174837,6 +175154,7 @@ export namespace Prisma {
     vessel?: VesselCreateNestedOneWithoutUsersInput
     accessLevel?: AccessLevelCreateNestedOneWithoutUsersInput
     departmentRef?: DepartmentCreateNestedOneWithoutUsersInput
+    seafarer?: SeafarerCreateNestedOneWithoutUserInput
     roles?: UserRoleCreateNestedManyWithoutUserInput
     ownedDocs?: SmsDocumentCreateNestedManyWithoutOwnerInput
     reportedIncidents?: IncidentCreateNestedManyWithoutReportedByInput
@@ -174884,6 +175202,7 @@ export namespace Prisma {
     updatedBy?: string | null
     deletedAt?: Date | string | null
     deletedBy?: string | null
+    seafarer?: SeafarerUncheckedCreateNestedOneWithoutUserInput
     roles?: UserRoleUncheckedCreateNestedManyWithoutUserInput
     ownedDocs?: SmsDocumentUncheckedCreateNestedManyWithoutOwnerInput
     reportedIncidents?: IncidentUncheckedCreateNestedManyWithoutReportedByInput
@@ -175010,6 +175329,7 @@ export namespace Prisma {
     vessel?: VesselUpdateOneWithoutUsersNestedInput
     accessLevel?: AccessLevelUpdateOneWithoutUsersNestedInput
     departmentRef?: DepartmentUpdateOneWithoutUsersNestedInput
+    seafarer?: SeafarerUpdateOneWithoutUserNestedInput
     roles?: UserRoleUpdateManyWithoutUserNestedInput
     ownedDocs?: SmsDocumentUpdateManyWithoutOwnerNestedInput
     reportedIncidents?: IncidentUpdateManyWithoutReportedByNestedInput
@@ -175057,6 +175377,7 @@ export namespace Prisma {
     updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    seafarer?: SeafarerUncheckedUpdateOneWithoutUserNestedInput
     roles?: UserRoleUncheckedUpdateManyWithoutUserNestedInput
     ownedDocs?: SmsDocumentUncheckedUpdateManyWithoutOwnerNestedInput
     reportedIncidents?: IncidentUncheckedUpdateManyWithoutReportedByNestedInput
@@ -199590,6 +199911,107 @@ export namespace Prisma {
     create: XOR<CompanyCreateWithoutSeafarersInput, CompanyUncheckedCreateWithoutSeafarersInput>
   }
 
+  export type UserCreateWithoutSeafarerInput = {
+    id?: string
+    fullName: string
+    email: string
+    passwordHash: string
+    department: $Enums.DepartmentType
+    rank?: string | null
+    active?: boolean
+    lastLoginAt?: Date | string | null
+    employeeId?: string | null
+    crewId?: string | null
+    lastName?: string | null
+    firstName?: string | null
+    middleName?: string | null
+    initials?: string | null
+    gender?: string | null
+    employmentStatus?: string | null
+    designation?: string | null
+    birthDate?: Date | string | null
+    dateHired?: Date | string | null
+    officialAddress?: string | null
+    tin?: string | null
+    sss?: string | null
+    hdmf?: string | null
+    philHealth?: string | null
+    mustChangePassword?: boolean
+    sessionsValidFrom?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    company: CompanyCreateNestedOneWithoutUsersInput
+    vessel?: VesselCreateNestedOneWithoutUsersInput
+    accessLevel?: AccessLevelCreateNestedOneWithoutUsersInput
+    departmentRef?: DepartmentCreateNestedOneWithoutUsersInput
+    roles?: UserRoleCreateNestedManyWithoutUserInput
+    ownedDocs?: SmsDocumentCreateNestedManyWithoutOwnerInput
+    reportedIncidents?: IncidentCreateNestedManyWithoutReportedByInput
+    reportedNearMisses?: NearMissCreateNestedManyWithoutReportedByInput
+    raisedNcrs?: NonConformityCreateNestedManyWithoutRaisedByInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    sireResponsibleFor?: SireObservationCreateNestedManyWithoutResponsiblePersonInput
+    sireVerifierFor?: SireObservationCreateNestedManyWithoutVerifiedByInput
+    sireComments?: SireObservationCommentCreateNestedManyWithoutAuthorInput
+  }
+
+  export type UserUncheckedCreateWithoutSeafarerInput = {
+    id?: string
+    companyId: string
+    fullName: string
+    email: string
+    passwordHash: string
+    department: $Enums.DepartmentType
+    rank?: string | null
+    active?: boolean
+    lastLoginAt?: Date | string | null
+    employeeId?: string | null
+    crewId?: string | null
+    lastName?: string | null
+    firstName?: string | null
+    middleName?: string | null
+    initials?: string | null
+    gender?: string | null
+    employmentStatus?: string | null
+    designation?: string | null
+    birthDate?: Date | string | null
+    dateHired?: Date | string | null
+    officialAddress?: string | null
+    tin?: string | null
+    sss?: string | null
+    hdmf?: string | null
+    philHealth?: string | null
+    mustChangePassword?: boolean
+    sessionsValidFrom?: Date | string | null
+    vesselId?: string | null
+    accessLevelId?: string | null
+    departmentRefId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: string | null
+    updatedBy?: string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    roles?: UserRoleUncheckedCreateNestedManyWithoutUserInput
+    ownedDocs?: SmsDocumentUncheckedCreateNestedManyWithoutOwnerInput
+    reportedIncidents?: IncidentUncheckedCreateNestedManyWithoutReportedByInput
+    reportedNearMisses?: NearMissUncheckedCreateNestedManyWithoutReportedByInput
+    raisedNcrs?: NonConformityUncheckedCreateNestedManyWithoutRaisedByInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    sireResponsibleFor?: SireObservationUncheckedCreateNestedManyWithoutResponsiblePersonInput
+    sireVerifierFor?: SireObservationUncheckedCreateNestedManyWithoutVerifiedByInput
+    sireComments?: SireObservationCommentUncheckedCreateNestedManyWithoutAuthorInput
+  }
+
+  export type UserCreateOrConnectWithoutSeafarerInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutSeafarerInput, UserUncheckedCreateWithoutSeafarerInput>
+  }
+
   export type CrewAssignmentCreateWithoutSeafarerInput = {
     id?: string
     rankCode: string
@@ -199791,6 +200213,113 @@ export namespace Prisma {
     crewAssignments?: CrewAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
+  export type UserUpsertWithoutSeafarerInput = {
+    update: XOR<UserUpdateWithoutSeafarerInput, UserUncheckedUpdateWithoutSeafarerInput>
+    create: XOR<UserCreateWithoutSeafarerInput, UserUncheckedCreateWithoutSeafarerInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutSeafarerInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutSeafarerInput, UserUncheckedUpdateWithoutSeafarerInput>
+  }
+
+  export type UserUpdateWithoutSeafarerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fullName?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    department?: EnumDepartmentTypeFieldUpdateOperationsInput | $Enums.DepartmentType
+    rank?: NullableStringFieldUpdateOperationsInput | string | null
+    active?: BoolFieldUpdateOperationsInput | boolean
+    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    employeeId?: NullableStringFieldUpdateOperationsInput | string | null
+    crewId?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    middleName?: NullableStringFieldUpdateOperationsInput | string | null
+    initials?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: NullableStringFieldUpdateOperationsInput | string | null
+    employmentStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    designation?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dateHired?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    officialAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    tin?: NullableStringFieldUpdateOperationsInput | string | null
+    sss?: NullableStringFieldUpdateOperationsInput | string | null
+    hdmf?: NullableStringFieldUpdateOperationsInput | string | null
+    philHealth?: NullableStringFieldUpdateOperationsInput | string | null
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    sessionsValidFrom?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    company?: CompanyUpdateOneRequiredWithoutUsersNestedInput
+    vessel?: VesselUpdateOneWithoutUsersNestedInput
+    accessLevel?: AccessLevelUpdateOneWithoutUsersNestedInput
+    departmentRef?: DepartmentUpdateOneWithoutUsersNestedInput
+    roles?: UserRoleUpdateManyWithoutUserNestedInput
+    ownedDocs?: SmsDocumentUpdateManyWithoutOwnerNestedInput
+    reportedIncidents?: IncidentUpdateManyWithoutReportedByNestedInput
+    reportedNearMisses?: NearMissUpdateManyWithoutReportedByNestedInput
+    raisedNcrs?: NonConformityUpdateManyWithoutRaisedByNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    sireResponsibleFor?: SireObservationUpdateManyWithoutResponsiblePersonNestedInput
+    sireVerifierFor?: SireObservationUpdateManyWithoutVerifiedByNestedInput
+    sireComments?: SireObservationCommentUpdateManyWithoutAuthorNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutSeafarerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    fullName?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    department?: EnumDepartmentTypeFieldUpdateOperationsInput | $Enums.DepartmentType
+    rank?: NullableStringFieldUpdateOperationsInput | string | null
+    active?: BoolFieldUpdateOperationsInput | boolean
+    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    employeeId?: NullableStringFieldUpdateOperationsInput | string | null
+    crewId?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    middleName?: NullableStringFieldUpdateOperationsInput | string | null
+    initials?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: NullableStringFieldUpdateOperationsInput | string | null
+    employmentStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    designation?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dateHired?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    officialAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    tin?: NullableStringFieldUpdateOperationsInput | string | null
+    sss?: NullableStringFieldUpdateOperationsInput | string | null
+    hdmf?: NullableStringFieldUpdateOperationsInput | string | null
+    philHealth?: NullableStringFieldUpdateOperationsInput | string | null
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    sessionsValidFrom?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    vesselId?: NullableStringFieldUpdateOperationsInput | string | null
+    accessLevelId?: NullableStringFieldUpdateOperationsInput | string | null
+    departmentRefId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    roles?: UserRoleUncheckedUpdateManyWithoutUserNestedInput
+    ownedDocs?: SmsDocumentUncheckedUpdateManyWithoutOwnerNestedInput
+    reportedIncidents?: IncidentUncheckedUpdateManyWithoutReportedByNestedInput
+    reportedNearMisses?: NearMissUncheckedUpdateManyWithoutReportedByNestedInput
+    raisedNcrs?: NonConformityUncheckedUpdateManyWithoutRaisedByNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    sireResponsibleFor?: SireObservationUncheckedUpdateManyWithoutResponsiblePersonNestedInput
+    sireVerifierFor?: SireObservationUncheckedUpdateManyWithoutVerifiedByNestedInput
+    sireComments?: SireObservationCommentUncheckedUpdateManyWithoutAuthorNestedInput
+  }
+
   export type CrewAssignmentUpsertWithWhereUniqueWithoutSeafarerInput = {
     where: CrewAssignmentWhereUniqueInput
     update: XOR<CrewAssignmentUpdateWithoutSeafarerInput, CrewAssignmentUncheckedUpdateWithoutSeafarerInput>
@@ -199968,6 +200497,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     deletedBy?: string | null
     company: CompanyCreateNestedOneWithoutSeafarersInput
+    user?: UserCreateNestedOneWithoutSeafarerInput
   }
 
   export type SeafarerUncheckedCreateWithoutAssignmentsInput = {
@@ -199988,6 +200518,7 @@ export namespace Prisma {
     active?: boolean
     redactedAt?: Date | string | null
     redactedBy?: string | null
+    userId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -200471,6 +201002,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     company?: CompanyUpdateOneRequiredWithoutSeafarersNestedInput
+    user?: UserUpdateOneWithoutSeafarerNestedInput
   }
 
   export type SeafarerUncheckedUpdateWithoutAssignmentsInput = {
@@ -200491,6 +201023,7 @@ export namespace Prisma {
     active?: BoolFieldUpdateOperationsInput | boolean
     redactedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     redactedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -201772,6 +202305,7 @@ export namespace Prisma {
     active?: boolean
     redactedAt?: Date | string | null
     redactedBy?: string | null
+    userId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: string | null
@@ -201839,6 +202373,7 @@ export namespace Prisma {
     vessel?: VesselUpdateOneWithoutUsersNestedInput
     accessLevel?: AccessLevelUpdateOneWithoutUsersNestedInput
     departmentRef?: DepartmentUpdateOneWithoutUsersNestedInput
+    seafarer?: SeafarerUpdateOneWithoutUserNestedInput
     roles?: UserRoleUpdateManyWithoutUserNestedInput
     ownedDocs?: SmsDocumentUpdateManyWithoutOwnerNestedInput
     reportedIncidents?: IncidentUpdateManyWithoutReportedByNestedInput
@@ -201886,6 +202421,7 @@ export namespace Prisma {
     updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    seafarer?: SeafarerUncheckedUpdateOneWithoutUserNestedInput
     roles?: UserRoleUncheckedUpdateManyWithoutUserNestedInput
     ownedDocs?: SmsDocumentUncheckedUpdateManyWithoutOwnerNestedInput
     reportedIncidents?: IncidentUncheckedUpdateManyWithoutReportedByNestedInput
@@ -204960,6 +205496,7 @@ export namespace Prisma {
     updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    user?: UserUpdateOneWithoutSeafarerNestedInput
     assignments?: CrewAssignmentUpdateManyWithoutSeafarerNestedInput
   }
 
@@ -204980,6 +205517,7 @@ export namespace Prisma {
     active?: BoolFieldUpdateOperationsInput | boolean
     redactedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     redactedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -205006,6 +205544,7 @@ export namespace Prisma {
     active?: BoolFieldUpdateOperationsInput | boolean
     redactedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     redactedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -205941,6 +206480,7 @@ export namespace Prisma {
     company?: CompanyUpdateOneRequiredWithoutUsersNestedInput
     vessel?: VesselUpdateOneWithoutUsersNestedInput
     departmentRef?: DepartmentUpdateOneWithoutUsersNestedInput
+    seafarer?: SeafarerUpdateOneWithoutUserNestedInput
     roles?: UserRoleUpdateManyWithoutUserNestedInput
     ownedDocs?: SmsDocumentUpdateManyWithoutOwnerNestedInput
     reportedIncidents?: IncidentUpdateManyWithoutReportedByNestedInput
@@ -205988,6 +206528,7 @@ export namespace Prisma {
     updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    seafarer?: SeafarerUncheckedUpdateOneWithoutUserNestedInput
     roles?: UserRoleUncheckedUpdateManyWithoutUserNestedInput
     ownedDocs?: SmsDocumentUncheckedUpdateManyWithoutOwnerNestedInput
     reportedIncidents?: IncidentUncheckedUpdateManyWithoutReportedByNestedInput
@@ -206111,6 +206652,7 @@ export namespace Prisma {
     company?: CompanyUpdateOneRequiredWithoutUsersNestedInput
     vessel?: VesselUpdateOneWithoutUsersNestedInput
     accessLevel?: AccessLevelUpdateOneWithoutUsersNestedInput
+    seafarer?: SeafarerUpdateOneWithoutUserNestedInput
     roles?: UserRoleUpdateManyWithoutUserNestedInput
     ownedDocs?: SmsDocumentUpdateManyWithoutOwnerNestedInput
     reportedIncidents?: IncidentUpdateManyWithoutReportedByNestedInput
@@ -206158,6 +206700,7 @@ export namespace Prisma {
     updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    seafarer?: SeafarerUncheckedUpdateOneWithoutUserNestedInput
     roles?: UserRoleUncheckedUpdateManyWithoutUserNestedInput
     ownedDocs?: SmsDocumentUncheckedUpdateManyWithoutOwnerNestedInput
     reportedIncidents?: IncidentUncheckedUpdateManyWithoutReportedByNestedInput
@@ -208534,6 +209077,7 @@ export namespace Prisma {
     company?: CompanyUpdateOneRequiredWithoutUsersNestedInput
     accessLevel?: AccessLevelUpdateOneWithoutUsersNestedInput
     departmentRef?: DepartmentUpdateOneWithoutUsersNestedInput
+    seafarer?: SeafarerUpdateOneWithoutUserNestedInput
     roles?: UserRoleUpdateManyWithoutUserNestedInput
     ownedDocs?: SmsDocumentUpdateManyWithoutOwnerNestedInput
     reportedIncidents?: IncidentUpdateManyWithoutReportedByNestedInput
@@ -208581,6 +209125,7 @@ export namespace Prisma {
     updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    seafarer?: SeafarerUncheckedUpdateOneWithoutUserNestedInput
     roles?: UserRoleUncheckedUpdateManyWithoutUserNestedInput
     ownedDocs?: SmsDocumentUncheckedUpdateManyWithoutOwnerNestedInput
     reportedIncidents?: IncidentUncheckedUpdateManyWithoutReportedByNestedInput
