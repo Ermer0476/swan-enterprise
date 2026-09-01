@@ -506,6 +506,11 @@ model User {
   deletedAt DateTime?
   deletedBy String?
 
+  // ── Crew ↔ login link (ADDITIVE) — back-relation of Seafarer.userId ──
+  // The seafarer (crew biodata) record this login belongs to, if any. Optional
+  // one-to-one; the FK and its @unique live on Seafarer.userId.
+  seafarer Seafarer? @relation("SeafarerLogin")
+
   roles              UserRole[]
   ownedDocs          SmsDocument[]            @relation("DocumentOwner")
   reportedIncidents  Incident[]               @relation("IncidentReporter")
@@ -3625,6 +3630,16 @@ model Seafarer {
   /// window against this live database is the expensive part.
   redactedAt DateTime?
   redactedBy String?
+
+  /// ── Crew ↔ login link (ADDITIVE, nullable) ──
+  /// The login account that IS this seafarer, if one exists. One-to-one and
+  /// OPTIONAL on both sides: a seafarer may have no login (most do not), and a
+  /// login may have no crew record. `@unique` makes it one-to-one — a given
+  /// User can be the login of at most one Seafarer. Nullable and unbackfilled,
+  /// so no existing row is affected. The office links/creates the login from
+  /// the seafarer record; see features/crewing/link-actions.ts.
+  userId String? @unique
+  user   User?   @relation("SeafarerLogin", fields: [userId], references: [id])
 
   assignments CrewAssignment[]
 
