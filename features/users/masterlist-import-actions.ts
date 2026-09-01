@@ -32,12 +32,26 @@ const MAX_IMPORT_FILE_SIZE = 100 * 1024 * 1024; // 100MB
  * security signal (SHIPBOARD ⇒ vessel scope, and it can match a
  * WorkflowStep.approverDept), so the imported account is deliberately NOT put on
  * SHIPBOARD: it is a shore masterlist record. ADMIN is a neutral shore value;
- * the account's actual authority is floored by its minimal role (fewest
- * permissions) and the guest access level, and an administrator can correct the
+ * the account's actual authority is floored by its resolved role (the role its
+ * designation names, else a safe default) and the guest access level, and an
+ * administrator can correct the
  * department afterwards on the edit page. Existing accounts keep their own
  * department — import never changes it.
  */
 const IMPORT_DEFAULT_DEPARTMENT = "ADMIN" as const;
+
+/**
+ * Roles that must never be handed out as the import's *default* (fallback) role.
+ * These are elevated / compliance roles: Administrator (full platform),
+ * DPA (Designated Person Ashore — NCR close-out authority) and General Manager
+ * (top-management sign-off). A bulk import that fell back to "fewest permissions"
+ * used to land on DPA (tied at the lowest permission count with General Manager,
+ * and first alphabetically) — a compliance role, wrong as a neutral default.
+ * This set only governs the safe-default pool; a row whose DESIGNATION *explicitly*
+ * names one of these still matches it via the priority-1 name match. Compared
+ * against Role.name case-insensitively.
+ */
+const DEFAULT_ROLE_EXCLUSIONS = new Set(["administrator", "dpa", "general manager"]);
 
 // ─── Step 1: parse (no writes) ───────────────────────────────────────────────
 
@@ -200,8 +214,9 @@ function toSchemaInput(row: IncomingRow) {
  *  - employeeId matches a live account     → UPDATE its masterlist fields ONLY
  *      (never password, roles, accessLevel or the `department` security signal)
  *  - employeeId new, row has an email       → CREATE a guest account with a
- *      minimal role and a one-time password (mustChangePassword), same doctrine
- *      as createUserAction
+ *      resolved role (its DESIGNATION's role, else a safe default that is never
+ *      an elevated/compliance role) and a one-time password (mustChangePassword),
+ *      same doctrine as createUserAction
  *  - employeeId new, no email               → SKIP (nothing to create an account with)
  *  - any field fails the E1 field rules     → error (that row only)
  *
@@ -222,11 +237,9 @@ export async function commitUserImportAction(
     return commitFail("No rows to import");
   }
 
-  // Resolved once, shared by every CREATE this run. The guest access level and
-  // a minimal role are looked up by their meaning, not hard-coded ids: the
-  // guest level by name, the minimal role as this company's role with the
-  // fewest permissions (ties broken by name) — the least authority an account
-  // can be given while still being able to sign in.
+  // Resolved once, shared by every CREATE this run. The guest access level is
+  // looked up by name, not a hard-coded id — the least authority an account can
+  // hold while still being able to sign in.
   const guest = await prisma.accessLevel.findFirst({
     where: { companyId: actor.companyId, name: { equals: "guest", mode: "insensitive" } },
     select: { id: true },
@@ -235,8 +248,22 @@ export async function commitUserImportAction(
     where: { companyId: actor.companyId },
     select: { id: true, name: true, _count: { select: { permissions: true } } },
   });
-  roles.sort((a, b) => a._count.permissions - b._count.permissions || a.name.localeCompare(b.name));
-  const minimalRole = roles[0] ?? null;
+
+  // Priority-1 lookup: a row's DESIGNATION → the role that bears that exact name
+  // (trimmed, case-insensitive). Built once and reused per row.
+  const roleByName = new Map(roles.map((r) => [r.name.trim().toLowerCase(), { id: r.id, name: r.name }]));
+
+  // Priority-2 fallback: the least-privileged *safe* role — fewest permissions,
+  // ties broken by name — after excluding the elevated/compliance roles that
+  // must never be a bulk-import default. In Capt's data this lands on
+  // "Ship Officer" (44 perms), never DPA (11, but excluded). If a company has no
+  // safe candidate at all this is null, and such rows become errors below rather
+  // than silently receiving an elevated role.
+  const safeDefaultRole =
+    roles
+      .filter((r) => !DEFAULT_ROLE_EXCLUSIONS.has(r.name.trim().toLowerCase()))
+      .sort((a, b) => a._count.permissions - b._count.permissions || a.name.localeCompare(b.name))
+      .map((r) => ({ id: r.id, name: r.name }))[0] ?? null;
 
   const results: UserImportRowResult[] = [];
   let created = 0;
@@ -319,8 +346,18 @@ export async function commitUserImportAction(
         push("error", "Cannot create a new account without a name (LAST / FIRST)");
         continue;
       }
-      if (!minimalRole) {
-        push("error", "No role exists to assign — create a role before importing new accounts");
+      // Resolve the role for this NEW account (create path only; the update path
+      // above never touches roles). Priority 1: an exact, case-insensitive name
+      // match on the row's DESIGNATION (e.g. "QHSE Manager" → the QHSE Manager
+      // role). Priority 2: the safe default computed once for this run. A company
+      // with no safe default and no designation match cannot be given a role
+      // without escalating privilege, so the row is an error, not a silent grant.
+      const designation = (d.designation ?? "").trim();
+      const designationMatch = (designation && roleByName.get(designation.toLowerCase())) || null;
+      const resolvedRole = designationMatch ?? safeDefaultRole;
+      const roleReason = designationMatch ? "matched designation" : "default";
+      if (!resolvedRole) {
+        push("error", "No safe default role available; assign manually");
         continue;
       }
 
@@ -359,10 +396,10 @@ export async function commitUserImportAction(
             mustChangePassword: true,
             createdBy: actor.id,
             updatedBy: actor.id,
-            roles: { create: [{ roleId: minimalRole.id }] },
+            roles: { create: [{ roleId: resolvedRole.id }] },
           },
         });
-        push("created", `Created ${composed} (${email}) with guest access and role "${minimalRole.name}"`);
+        push("created", `Created ${composed} (${email}) with guest access and role "${resolvedRole.name}" (${roleReason})`);
       } catch (err) {
         if (isUniqueViolation(err)) {
           push("error", "That email address is already registered");
